@@ -690,6 +690,17 @@ namespace Quaver.Screens.Options
                         }, 0.85f));
                     })),
 
+                // Quick Exit
+                new OptionsItem(this, "Quick Exit", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Quick Exit", ConfigManager.KeyQuickExit),
+                        }, 0.85f));
+                    })),
+
                 // Restart Map
                 new OptionsItem(this, "Toggle Scoreboard Display", new TextButton(UserInterface.BlankBox,
                     Fonts.Exo2Regular24, "Change", 0.50f,

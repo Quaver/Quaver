@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,12 +87,6 @@ namespace Quaver.Screens.Results.UI
                     SkinManager.Skin.SoundBack.CreateChannel().Play();
                     Screen.Exit(() => Screen.GoBackToMenu());
                 }),
-                // Watch Repaly Button
-                CreateButton("Watch Replay", (sender, args) =>
-                {
-                    SkinManager.Skin.SoundClick.CreateChannel().Play();
-                    Screen.Exit(() => Screen.WatchReplay());
-                }),
                 // Export Replay Button
                 CreateButton("Export Replay", (sender, args) =>
                 {
@@ -105,6 +100,34 @@ namespace Quaver.Screens.Results.UI
                     Screen.Exit(() => Screen.RetryMap());
                 })
             };
+
+            switch (Screen.Type)
+            {
+                case ResultsScreenType.FromGameplay:
+                case ResultsScreenType.FromReplayFile:
+                    // Watch Replay Button
+                    Buttons.Add(CreateButton("Watch Replay", (sender, args) =>
+                    {
+                        SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                        Screen.Exit(() => Screen.WatchReplay());
+                    }));
+                    break;
+                case ResultsScreenType.FromLocalScore:
+                    if (Screen.LocalReplayPath != null && File.Exists(Screen.LocalReplayPath))
+                    {
+                        // Watch Replay Button
+                        Buttons.Add(CreateButton("Watch Replay", (sender, args) =>
+                        {
+                            SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                            Screen.Exit(() => Screen.WatchReplay());
+                        }));
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             // Go through each button and initialize the sprite further.
             for (var i = 0; i < Buttons.Count; i++)

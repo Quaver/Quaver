@@ -69,6 +69,11 @@ namespace Quaver.Screens.Results
         public ScoreProcessor ScoreProcessor { get; private set; }
 
         /// <summary>
+        ///     The local replay path if it exists.
+        /// </summary>
+        public string LocalReplayPath { get; private set; }
+
+        /// <summary>
         ///     The user's scroll speed.
         /// </summary>
         private int ScrollSpeed => Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
@@ -137,31 +142,21 @@ namespace Quaver.Screens.Results
             MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
             Qua = MapManager.Selected.Value.Qua;
 
-            var localPath = $"{ConfigManager.DataDirectory.Value}/r/{score.Id}.qr";
+            LocalReplayPath = $"{ConfigManager.DataDirectory.Value}/r/{score.Id}.qr";
 
-            // Try to find replay w/ local score id.
-            // Otherwise we want to find
-            if (File.Exists(localPath))
+            Replay = new Replay(score.Mode, score.Name, score.Mods, score.MapMd5)
             {
-                Replay = new Replay(localPath);
-            }
-            // Otherwise we want to create an "artificial" replay with the local score data.
-            else
-            {
-                Replay = new Replay(score.Mode, score.Name, score.Mods, score.MapMd5)
-                {
-                    Date = Convert.ToDateTime(score.DateTime, CultureInfo.InvariantCulture),
-                    Score = score.Score,
-                    Accuracy = (float)score.Accuracy,
-                    MaxCombo = score.MaxCombo,
-                    CountMarv = score.CountMarv,
-                    CountPerf = score.CountPerf,
-                    CountGreat = score.CountGreat,
-                    CountGood = score.CountGood,
-                    CountOkay = score.CountOkay,
-                    CountMiss = score.CountMiss
-                };
-            }
+                Date = Convert.ToDateTime(score.DateTime, CultureInfo.InvariantCulture),
+                Score = score.Score,
+                Accuracy = (float)score.Accuracy,
+                MaxCombo = score.MaxCombo,
+                CountMarv = score.CountMarv,
+                CountPerf = score.CountPerf,
+                CountGreat = score.CountGreat,
+                CountGood = score.CountGood,
+                CountOkay = score.CountOkay,
+                CountMiss = score.CountMiss
+            };
 
             ScoreProcessor = new ScoreProcessorKeys(Replay);
             Type = ResultsScreenType.FromLocalScore;
@@ -258,13 +253,15 @@ namespace Quaver.Screens.Results
             {
                 // Populate the replay with values from the score processor.
                 Replay = GameplayScreen.ReplayCapturer.Replay;
+                Replay.PauseCount = GameplayScreen.PauseCount;
+
                 ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
-
                 Replay.FromScoreProcessor(ScoreProcessor);
-            }
 
-            // TODO: Rich Presence
-            //ChangeDiscordPresence();
+                // Remove paused modifier if enabled.
+                if (ModManager.IsActivated(ModIdentifier.Paused))
+                    ModManager.RemoveMod(ModIdentifier.Paused);
+            }
 
             // Submit score
             SubmitScore();
@@ -315,7 +312,9 @@ namespace Quaver.Screens.Results
             var scoreId = 0;
             try
             {
-                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed);
+                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                    GameplayScreen.PauseCount);
+
                 scoreId = LocalScoreCache.InsertScoreIntoDatabase(localScore);
             }
             catch (Exception e)
@@ -393,6 +392,18 @@ namespace Quaver.Screens.Results
         {
             NotificationManager.Show(NotificationLevel.Info, "One moment, we're exporting your replay.");
 
+            if (Type == ResultsScreenType.FromLocalScore)
+            {
+                try
+                {
+                    Replay = new Replay(LocalReplayPath);
+                }
+                catch (Exception e)
+                {
+                    // ignored.
+                }
+            }
+
             if (!Replay.HasData)
             {
                 NotificationManager.Show(NotificationLevel.Error, "This replay doesn't have any data!");
@@ -401,7 +412,7 @@ namespace Quaver.Screens.Results
 
             if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
             {
-                NotificationManager.Show(NotificationLevel.Error, "Exporting autoplay replays is disabled."); ;
+                NotificationManager.Show(NotificationLevel.Error, "Exporting autoplay replays is disabled.");
                 return;
             }
 
@@ -467,6 +478,24 @@ namespace Quaver.Screens.Results
         public void WatchReplay()
         {
             var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+
+            // If the replay is from a local score, then read the replay here.
+            // NOTE: If loading from gameplay/replay file, the replay to use is already established.
+            if (Type == ResultsScreenType.FromLocalScore)
+            {
+                try
+                {
+                    Replay = new Replay(LocalReplayPath);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, LogType.Runtime);
+                    ScreenManager.ChangeScreen(new SelectScreen());
+                    NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
+                    return;
+                }
+            }
+
             ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
         }
 
