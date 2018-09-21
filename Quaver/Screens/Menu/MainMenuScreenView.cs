@@ -143,7 +143,15 @@ namespace Quaver.Screens.Menu
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
+                try
+                {
+                    ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
+                }
             }),
         }, new List<ToolbarItem>
         {

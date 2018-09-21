@@ -118,6 +118,7 @@
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoSliderVelocities.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaModPaused.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
     <Compile Include="Modifiers\ModType.cs" />
