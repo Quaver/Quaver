@@ -146,7 +146,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     screenView.UpdateScoreboardUsers();
 
                     // Add new hit stat data.
-                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Miss,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -209,7 +209,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                     // Add new hit stat data.
-                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Okay,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Okay,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 

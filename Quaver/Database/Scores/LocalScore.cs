@@ -101,9 +101,9 @@ namespace Quaver.Database.Scores
         public int ScrollSpeed { get; set; }
 
         /// <summary>
-        ///     String that contains the judgement breakdown the user received.
+        ///     String that contains the hit breakdown the user received.
         /// </summary>
-        public string JudgementBreakdown { get; set; }
+        public string HitBreakdown { get; set; }
 
         /// <summary>
         ///     The amount of times paused during the score.
@@ -139,7 +139,7 @@ namespace Quaver.Database.Scores
                 Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 PauseCount =  pauseCount,
-                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown())
+                HitBreakdown = GzipHelper.Compress(processor.GetHitBreakdown())
             };
 
             return score;

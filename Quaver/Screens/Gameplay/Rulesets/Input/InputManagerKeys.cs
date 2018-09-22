@@ -183,13 +183,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             var time = (int) Ruleset.Screen.Timing.Time;
             var hitDifference = (int) (hitObject.TrueStartTime - time);
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference);
+            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Press);
 
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
                 return;
 
-            var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference,
+            var stat = new HitStat(HitStatType.Hit, KeyPressType.Press, hitObject.Info, time, judgement, hitDifference,
                                         Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
             Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -331,14 +331,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Calculate Score + Get Judgement.
             var hitDifference = (int) (manager.HeldLongNotes[noteIndex].TrueEndTime - (int) Ruleset.Screen.Timing.Time);
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference, true);
+            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Release);
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
 
                 // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
+                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
                                             judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -364,7 +364,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                 // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
+                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
                                             Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
 
