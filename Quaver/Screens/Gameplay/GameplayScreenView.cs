@@ -363,7 +363,7 @@ namespace Quaver.Screens.Gameplay
                     while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                         bot.Name = Bot.GenerateRandomName();
 
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, new List<HitStat>(),
+                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.HitStats,
                         UserInterface.UnknownAvatar, ModManager.Mods)
                     {
                         Parent = Container,
