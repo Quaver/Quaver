@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
@@ -34,6 +34,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         /// </summary>
         public SpriteText DifficultyName { get; private set; }
 
+        /// <summary>
+        ///     The rating of the map
+        /// </summary>
+        public SpriteText DifficultyRating { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -50,6 +55,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
 
             CreateGradeAchieved();
             CreateDifficultyName();
+            CreateDifficultyRating();
             Clicked += (sender, args) => Section.SelectDifficulty(Section.Mapset, Map);
 
             Section.ScrollContainer.AddContainedDrawable(this);
@@ -92,6 +98,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
 
             DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
         }
+
+        private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.DifficultyRating))
+        {
+            Parent = this,
+            TextScale = 0.46f,
+            TextColor = Color.White,
+            Alignment = Alignment.MidRight,
+            TextAlignment = Alignment.MidRight,
+            X = -10f
+        };
 
         /// <inheritdoc />
         /// <summary>

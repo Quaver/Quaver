@@ -219,7 +219,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             Parent = Brightness,
             Alignment = Alignment.TopRight,
             TextAlignment = Alignment.TopRight,
-            X = 20,
+            X = -20,
             Y = 20
         };
 
