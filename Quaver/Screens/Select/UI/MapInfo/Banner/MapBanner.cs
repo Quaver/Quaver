@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
@@ -55,7 +55,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Text that displays the current song's difficulty.
         /// </summary>
-        public SpriteText TextDifficulty { get; private set; }
+        public SpriteText TextDifficultyName { get; private set; }
 
         /// <summary>
         ///     Text that displays the creator of the map.
@@ -200,7 +200,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Difficulty text
         /// </summary>
-        private void CreateDifficultyText() => TextDifficulty = new SpriteText(Fonts.Exo2BoldItalic24,
+        private void CreateDifficultyText() => TextDifficultyName = new SpriteText(Fonts.Exo2BoldItalic24,
             MapManager.Selected.Value.DifficultyName,  0.50f)
         {
             Parent = Brightness,
@@ -244,11 +244,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             var textTitleSize = TextTitle.MeasureString() / 2f;
             TextTitle.Position = new ScalableVector2(textTitleSize.X + leftSideSpacing, TextArtist.Y + textArtistSize.Y + 15);
 
-            var textDifficultySize = TextDifficulty.MeasureString() / 2f;
-            TextDifficulty.Position = new ScalableVector2(textDifficultySize.X + leftSideSpacing, TextTitle.Y + textTitleSize.Y + 15);
+            var textDifficultySize = TextDifficultyName.MeasureString() / 2f;
+            TextDifficultyName.Position = new ScalableVector2(textDifficultySize.X + leftSideSpacing, TextTitle.Y + textTitleSize.Y + 15);
 
             var textCreatorSize = TextCreator.MeasureString() / 2f;
-            TextCreator.Position = new ScalableVector2(textCreatorSize.X + leftSideSpacing, TextDifficulty.Y + textDifficultySize.Y + 15);
+            TextCreator.Position = new ScalableVector2(textCreatorSize.X + leftSideSpacing, TextDifficultyName.Y + textDifficultySize.Y + 15);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             // Update song information text
             TextArtist.Text = MapManager.Selected.Value.Artist;
             TextTitle.Text = MapManager.Selected.Value.Title;
-            TextDifficulty.Text = MapManager.Selected.Value.DifficultyName;
+            TextDifficultyName.Text = MapManager.Selected.Value.DifficultyName;
             TextCreator.Text = $"- By: {MapManager.Selected.Value.Creator}";
             RealignSongInformationText();
 
