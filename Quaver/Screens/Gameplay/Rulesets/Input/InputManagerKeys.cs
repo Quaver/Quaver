@@ -31,7 +31,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         internal ReplayInputManagerKeys ReplayInputManager { get; }
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="mode"></param>
@@ -68,7 +68,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
             Ruleset = ruleset;
 
-            // Init replay 
+            // Init replay
             if (Ruleset.Screen != null && Ruleset.Screen.InReplayMode)
                 ReplayInputManager = new ReplayInputManagerKeys(Ruleset.Screen);
         }
@@ -78,7 +78,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>Sta
         public void HandleInput(double dt)
         {
-            // Handle replay input if necessary.  
+            // Handle replay input if necessary.
             if (ReplayInputManager != null)
             {
                 // Grab the previous replay frame that we're on.
@@ -97,7 +97,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
             for (var i = 0; i < BindingStore.Count; i++)
             {
-                // Keeps track of if this key input is is important enough for us to want to 
+                // Keeps track of if this key input is is important enough for us to want to
                 // update more things like animations, score, etc.
                 var needsUpdating = false;
 
@@ -131,7 +131,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 if (!needsUpdating)
                     continue;
 
-                // Update the receptor of the playfield 
+                // Update the receptor of the playfield
                 var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
                 playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
 
@@ -153,7 +153,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 // If the key was released during this frame.
                 else
                 {
-                    // Find the index of the actual closest LN and handle the key release 
+                    // Find the index of the actual closest LN and handle the key release
                     // if so.
                     for (var j = 0; j < manager.HeldLongNotes.Count; j++)
                     {
@@ -180,8 +180,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             HitObjectManager.PlayObjectHitSounds(manager.ObjectPool[objectIndex].Info);
 
             //NEW
-            var time = Ruleset.Screen.Timing.Time;
-            var hitDifference = hitObject.TrueStartTime - (float)time;
+            var time = (int) Ruleset.Screen.Timing.Time;
+            var hitDifference = (int) (hitObject.TrueStartTime - time);
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
             var judgement = processor.CalculateScore(hitDifference);
 
@@ -329,7 +329,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             playfield.Stage.HitLightingObjects[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
 
             // Calculate Score + Get Judgement.
-            var hitDifference = manager.HeldLongNotes[noteIndex].TrueEndTime - (float)Ruleset.Screen.Timing.Time;
+            var hitDifference = (int) (manager.HeldLongNotes[noteIndex].TrueEndTime - (int) Ruleset.Screen.Timing.Time);
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
             var judgement = processor.CalculateScore(hitDifference, true);
 
@@ -338,7 +338,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             {
 
                 // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
                                             judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -346,7 +346,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 screenView.UpdateScoreboardUsers();
 
                 // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement(judgement, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time);
+                playfield.Stage.HitError.AddJudgement(judgement, manager.HeldLongNotes[noteIndex].TrueEndTime - (int) Ruleset.Screen.Timing.Time);
 
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
@@ -364,7 +364,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                 // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
                                             Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -385,7 +385,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             if (manager.HeldLongNotes.Count == 0)
                 return;
 
-            // Check which window the object has 
+            // Check which window the object has
             var receivedJudgementIndex = -1;
 
             // Stores the hit time difference. Declared out of scope of the loop so we can use it
