@@ -17,6 +17,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Modifiers;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
@@ -341,7 +342,8 @@ namespace Quaver.Screens.Gameplay
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar,
+                    ModManager.Mods)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
@@ -361,7 +363,8 @@ namespace Quaver.Screens.Gameplay
                     while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                         bot.Name = Bot.GenerateRandomName();
 
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, new List<HitStat>(), UserInterface.UnknownAvatar)
+                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, new List<HitStat>(),
+                        UserInterface.UnknownAvatar, ModManager.Mods)
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -404,7 +407,7 @@ namespace Quaver.Screens.Gameplay
                 }
 
                 var user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name} #{i + 1}",
-                    stats, UserInterface.UnknownAvatar)
+                    stats, UserInterface.UnknownAvatar, mapScores[i].Mods)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft

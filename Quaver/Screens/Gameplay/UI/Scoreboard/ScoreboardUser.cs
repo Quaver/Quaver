@@ -97,7 +97,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// <param name="stats"></param>
         /// <param name="avatar"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
-        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<HitStat> stats, Texture2D avatar)
+        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<HitStat> stats, Texture2D avatar, ModIdentifier mods)
         {
             Screen = screen;
             HitStats = stats;
@@ -132,7 +132,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, ModManager.Mods) : Screen.Ruleset.ScoreProcessor;
+                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods) : Screen.Ruleset.ScoreProcessor;
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
