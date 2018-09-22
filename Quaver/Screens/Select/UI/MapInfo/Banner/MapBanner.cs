@@ -53,9 +53,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         public SpriteText TextTitle { get; private set; }
 
         /// <summary>
-        ///     Text that displays the current song's difficulty.
+        ///     Text that displays the current song's difficulty name.
         /// </summary>
         public SpriteText TextDifficultyName { get; private set; }
+
+        /// <summary>
+        ///     Text that displays the current song difficulty title
+        /// </summary>
+        public SpriteText TextDifficultyRating { get; private set; }
 
         /// <summary>
         ///     Text that displays the creator of the map.
@@ -119,7 +124,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             CreateArtistText();
             CreateTitleText();
-            CreateDifficultyText();
+            CreateDifficultyNameText();
+            CreateDifficultyRatingText();
             CreateCreatorText();
             CreateModsText();
             RealignSongInformationText();
@@ -200,11 +206,21 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Difficulty text
         /// </summary>
-        private void CreateDifficultyText() => TextDifficultyName = new SpriteText(Fonts.Exo2BoldItalic24,
+        private void CreateDifficultyNameText() => TextDifficultyName = new SpriteText(Fonts.Exo2BoldItalic24,
             MapManager.Selected.Value.DifficultyName,  0.50f)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
+        };
+
+        private void CreateDifficultyRatingText() => TextDifficultyRating = new SpriteText(Fonts.Exo2BoldItalic24,
+            MapManager.Selected.Value.DifficultyName, 0.50f)
+        {
+            Parent = Brightness,
+            Alignment = Alignment.TopRight,
+            TextAlignment = Alignment.TopRight,
+            X = 20,
+            Y = 20
         };
 
         /// <summary>
@@ -350,6 +366,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             TextArtist.Text = MapManager.Selected.Value.Artist;
             TextTitle.Text = MapManager.Selected.Value.Title;
             TextDifficultyName.Text = MapManager.Selected.Value.DifficultyName;
+            TextDifficultyRating.Text = string.Format("{0:N2}", MapManager.Selected.Value.DifficultyRating);
             TextCreator.Text = $"- By: {MapManager.Selected.Value.Creator}";
             RealignSongInformationText();
 
