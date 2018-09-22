@@ -221,6 +221,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             TextAlignment = Alignment.TopRight,
             X = -20,
             Y = 20
+            // todo: set text color to match diff gradient
         };
 
         /// <summary>

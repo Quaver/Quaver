@@ -107,6 +107,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             Alignment = Alignment.MidRight,
             TextAlignment = Alignment.MidRight,
             X = -10f
+            // todo: set text color to match diff gradient
         };
 
         /// <inheritdoc />
