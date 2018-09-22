@@ -99,7 +99,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
         }
 
-        private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.DifficultyRating))
+        private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.QssData.OverallDifficulty))
         {
             Parent = this,
             TextScale = 0.46f,

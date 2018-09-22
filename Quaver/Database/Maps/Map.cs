@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Qss;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using SQLite;
@@ -148,6 +149,12 @@ namespace Quaver.Database.Maps
         public Qua Qua { get; set; }
 
         /// <summary>
+        ///     Computed Data relating to the map's difficulty
+        /// </summary>
+        [Ignore]
+        public QssData QssData { get; set; }
+
+        /// <summary>
         ///     The mapset the map belongs to.
         /// </summary>
         [Ignore]
@@ -207,16 +214,19 @@ namespace Quaver.Database.Maps
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
                     qua = Qua.Parse(quaPath);
+                    QssData = QuaverStrainSolver.GetQssData(qua);
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
+                    QssData = QuaverStrainSolver.GetQssData(qua);
                     break;
                 case MapGame.Etterna:
                     // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                     // other than through this means.
                     var sm = StepManiaFile.Parse(MapManager.EtternaFolder + Directory + "/" + Path).ToQua();
                     qua = sm.Find(x => x.DifficultyName == DifficultyName);
+                    QssData = QuaverStrainSolver.GetQssData(qua);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();

@@ -341,7 +341,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             };
 
             // Create container for difficulty
-            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.DifficultyRating:0.##}")
+            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.QssData.OverallDifficulty:0.##}")
             {
                 Parent = Brightness,
                 Alignment = Alignment.BotLeft,
