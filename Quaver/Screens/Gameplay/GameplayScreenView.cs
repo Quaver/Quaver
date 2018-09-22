@@ -418,11 +418,14 @@ namespace Quaver.Screens.Gameplay
                 {
                     var processor = user.Processor as ScoreProcessorKeys;
 
-                    if (stats[j].HitDifference == int.MinValue)
+                    if (stats[j].KeyPressType == KeyPressType.None)
                         processor?.CalculateScore(Judgement.Miss);
                     else
                     {
-                        processor?.CalculateScore(user.HitStats[j].HitDifference, user.HitStats[j].KeyPressType);
+                        var judgement = processor?.CalculateScore(user.HitStats[j].HitDifference, user.HitStats[j].KeyPressType);
+
+                        if (judgement == Judgement.Ghost)
+                            processor.CalculateScore(Judgement.Miss);
                     }
                 }
 

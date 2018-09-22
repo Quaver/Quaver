@@ -216,14 +216,20 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             if (HitStats.Count - 1 < CurrentHitStat)
                 return;
 
-            // Check how many judgements
             var processor = (ScoreProcessorKeys) Processor;
 
-            if (HitStats[CurrentHitStat].HitDifference == int.MinValue)
+            if (HitStats[CurrentHitStat].KeyPressType == KeyPressType.None)
                 processor.CalculateScore(Judgement.Miss);
             else
             {
                 var judgement = processor.CalculateScore(HitStats[CurrentHitStat].HitDifference, HitStats[CurrentHitStat].KeyPressType);
+
+                if (judgement == Judgement.Ghost)
+                {
+                    judgement = Judgement.Miss;
+                    processor.CalculateScore(Judgement.Miss);
+                }
+
                 HitBurst.PerformJudgementAnimation(judgement);
             }
 
