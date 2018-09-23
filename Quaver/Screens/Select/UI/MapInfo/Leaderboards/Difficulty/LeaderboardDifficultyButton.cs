@@ -102,7 +102,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.StrainRatingData.OverallDifficulty))
         {
             Parent = this,
-            TextScale = 0.46f,
+            Font = Fonts.Exo2Bold24,
+            TextScale = 0.8f, //0.46f,
             TextColor = Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(Map.StrainRatingData.OverallDifficulty)),
             Alignment = Alignment.MidRight,
             TextAlignment = Alignment.MidRight,
