@@ -324,12 +324,12 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             {
                 curMap.LoadQua();
                 Console.WriteLine(curMap.DifficultyName);
-                Console.WriteLine(curMap.StrainRatingData.AverageNoteDensity);
-                Console.WriteLine("Roll/Trill: " + curMap.StrainRatingData.Roll);
-                Console.WriteLine("Simple Jack: " + curMap.StrainRatingData.SJack);
-                Console.WriteLine("Tech Jack: " + curMap.StrainRatingData.TJack);
-                Console.WriteLine("Bracket: " + curMap.StrainRatingData.Bracket);
-                Console.WriteLine(curMap.StrainRatingData.DebugString);
+                Console.WriteLine(curMap.StrainSolver.AverageNoteDensity);
+                Console.WriteLine("Roll/Trill: " + curMap.StrainSolver.Roll);
+                Console.WriteLine("Simple Jack: " + curMap.StrainSolver.SJack);
+                Console.WriteLine("Tech Jack: " + curMap.StrainSolver.TJack);
+                Console.WriteLine("Bracket: " + curMap.StrainSolver.Bracket);
+                Console.WriteLine(curMap.StrainSolver.DebugString);
                 Console.WriteLine();
             }
 

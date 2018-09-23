@@ -324,7 +324,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             };
 
             // Create container for difficulty
-            Difficulty = new MetadataContainer("DIFFICULTY", string.Format("{0:N2}", MapManager.Selected.Value.StrainRatingData.OverallDifficulty))
+            Difficulty = new MetadataContainer("DIFFICULTY", string.Format("{0:N2}", MapManager.Selected.Value.StrainSolver.OverallDifficulty))
             {
                 Parent = Brightness,
                 Alignment = Alignment.BotLeft,
@@ -354,7 +354,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             RealignSongInformationText();
 
             // Update other metadata
-            var diff = MapManager.Selected.Value.StrainRatingData.OverallDifficulty;
+            var diff = MapManager.Selected.Value.StrainSolver.OverallDifficulty;
             Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(diff)));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 

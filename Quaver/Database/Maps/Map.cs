@@ -152,7 +152,7 @@ namespace Quaver.Database.Maps
         ///     Computed Data relating to the map's difficulty
         /// </summary>
         [Ignore]
-        public StrainRatingData StrainRatingData { get; set; }
+        public StrainSolver StrainSolver { get; set; }
 
         /// <summary>
         ///     The mapset the map belongs to.
@@ -214,19 +214,19 @@ namespace Quaver.Database.Maps
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
                     qua = Qua.Parse(quaPath);
-                    StrainRatingData = new StrainRatingData(qua);
+                    StrainSolver = new StrainSolver(qua);
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
-                    StrainRatingData = new StrainRatingData(qua);
+                    StrainSolver = new StrainSolver(qua);
                     break;
                 case MapGame.Etterna:
                     // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                     // other than through this means.
                     var sm = StepManiaFile.Parse(MapManager.EtternaFolder + Directory + "/" + Path).ToQua();
                     qua = sm.Find(x => x.DifficultyName == DifficultyName);
-                    StrainRatingData = new StrainRatingData(qua);
+                    StrainSolver = new StrainSolver(qua);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
