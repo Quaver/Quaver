@@ -309,21 +309,21 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             {
                 MapsetButtons[previousMapsetIndex].DisplayAsDeselected();
                 MapsetButtons[mapsetIndex].DisplayAsSelected();
-
-                // Calculate difficulty for every map in the mapset
-                // TODO: there should already be a general difficulty of every map from the cache
-                // TODO: StrainRatingData should only be applied to a single selected map, so we don't have to calculate difficulties here
-                foreach (var curMap in Screen.AvailableMapsets[mapsetIndex].Maps)
-                {
-                    curMap.LoadQua();
-                    Console.WriteLine(curMap.DifficultyName);
-                    Console.WriteLine(curMap.StrainRatingData.AverageNoteDensity);
-                }
             }
 
             // Change the selected indexes.
             SelectedMapsetIndex = mapsetIndex;
             SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x.Md5Checksum == map.Md5Checksum);
+
+            // Calculate difficulty for every map in the mapset
+            // TODO: there should already be a general difficulty of every map from the cache
+            // TODO: StrainRatingData should only be applied to a single selected map, so we don't have to calculate difficulties here
+            foreach (var curMap in Screen.AvailableMapsets[SelectedMapsetIndex].Maps)
+            {
+                curMap.LoadQua();
+                Console.WriteLine(curMap.DifficultyName);
+                Console.WriteLine(curMap.StrainRatingData.AverageNoteDensity);
+            }
 
             // Happens when a user searches for a map that's already in the selected set.
             // TODO: Fix this.
