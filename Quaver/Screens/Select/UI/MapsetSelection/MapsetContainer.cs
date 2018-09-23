@@ -318,11 +318,18 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Calculate difficulty for every map in the mapset
             // TODO: there should already be a general difficulty of every map from the cache
             // TODO: StrainRatingData should only be applied to a single selected map, so we don't have to calculate difficulties here
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine(Screen.AvailableMapsets[SelectedMapsetIndex].Title);
             foreach (var curMap in Screen.AvailableMapsets[SelectedMapsetIndex].Maps)
             {
                 curMap.LoadQua();
                 Console.WriteLine(curMap.DifficultyName);
                 Console.WriteLine(curMap.StrainRatingData.AverageNoteDensity);
+                Console.WriteLine("Roll/Trill: " + curMap.StrainRatingData.Roll);
+                Console.WriteLine("Simple Jack: " + curMap.StrainRatingData.SJack);
+                Console.WriteLine("Tech Jack: " + curMap.StrainRatingData.TJack);
+                Console.WriteLine("Bracket: " + curMap.StrainRatingData.Bracket);
+                Console.WriteLine();
             }
 
             // Happens when a user searches for a map that's already in the selected set.
