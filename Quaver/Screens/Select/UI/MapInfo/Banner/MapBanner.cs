@@ -58,11 +58,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         public SpriteText TextDifficultyName { get; private set; }
 
         /// <summary>
-        ///     Text that displays the current song difficulty title
-        /// </summary>
-        public SpriteText TextDifficultyRating { get; private set; }
-
-        /// <summary>
         ///     Text that displays the creator of the map.
         /// </summary>
         public SpriteText TextCreator { get; private set; }
@@ -125,7 +120,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             CreateArtistText();
             CreateTitleText();
             CreateDifficultyNameText();
-            CreateDifficultyRatingText();
             CreateCreatorText();
             CreateModsText();
             RealignSongInformationText();
@@ -211,17 +205,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
-        };
-
-        private void CreateDifficultyRatingText() => TextDifficultyRating = new SpriteText(Fonts.Exo2BoldItalic24,
-            MapManager.Selected.Value.DifficultyName, 0.50f)
-        {
-            Parent = Brightness,
-            Alignment = Alignment.TopRight,
-            TextAlignment = Alignment.TopRight,
-            X = -20,
-            Y = 20
-            // todo: set text color to match diff gradient
         };
 
         /// <summary>
@@ -341,7 +324,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             };
 
             // Create container for difficulty
-            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.StrainRatingData.OverallDifficulty:0.##}")
+            Difficulty = new MetadataContainer("DIFFICULTY", string.Format("{0:N2}", MapManager.Selected.Value.StrainRatingData.OverallDifficulty))
             {
                 Parent = Brightness,
                 Alignment = Alignment.BotLeft,
@@ -367,12 +350,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             TextArtist.Text = MapManager.Selected.Value.Artist;
             TextTitle.Text = MapManager.Selected.Value.Title;
             TextDifficultyName.Text = MapManager.Selected.Value.DifficultyName;
-            TextDifficultyRating.Text = string.Format("{0:N2}", MapManager.Selected.Value.DifficultyRating);
             TextCreator.Text = $"- By: {MapManager.Selected.Value.Creator}";
             RealignSongInformationText();
 
             // Update other metadata
-            Difficulty.UpdateValue($"{MapManager.Selected.Value.DifficultyRating:0.##}");
+            Difficulty.UpdateValue(string.Format("{0:N2}", MapManager.Selected.Value.StrainRatingData.OverallDifficulty));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 
             var bpm = (int) MapManager.Selected.Value.Bpm;
