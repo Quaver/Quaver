@@ -329,6 +329,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 Console.WriteLine("Simple Jack: " + curMap.StrainRatingData.SJack);
                 Console.WriteLine("Tech Jack: " + curMap.StrainRatingData.TJack);
                 Console.WriteLine("Bracket: " + curMap.StrainRatingData.Bracket);
+                Console.WriteLine(curMap.StrainRatingData.DebugString);
                 Console.WriteLine();
             }
 
