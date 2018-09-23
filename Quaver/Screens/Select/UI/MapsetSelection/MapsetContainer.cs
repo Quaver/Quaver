@@ -316,8 +316,8 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 foreach (var curMap in Screen.AvailableMapsets[mapsetIndex].Maps)
                 {
                     curMap.LoadQua();
-                    Console.WriteLine(map.DifficultyName);
-                    Console.WriteLine(map.StrainRatingData.AverageNoteDensity);
+                    Console.WriteLine(curMap.DifficultyName);
+                    Console.WriteLine(curMap.StrainRatingData.AverageNoteDensity);
                 }
             }
 
