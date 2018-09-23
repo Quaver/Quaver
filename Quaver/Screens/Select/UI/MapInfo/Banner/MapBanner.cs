@@ -354,7 +354,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             RealignSongInformationText();
 
             // Update other metadata
-            Difficulty.UpdateValue(string.Format("{0:N2}", MapManager.Selected.Value.StrainRatingData.OverallDifficulty));
+            var diff = MapManager.Selected.Value.StrainRatingData.OverallDifficulty;
+            Difficulty.UpdateValue(string.Format("{0:N2}", diff), API.Qss.Colors.GetStrainRatingColor(diff));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 
             var bpm = (int) MapManager.Selected.Value.Bpm;

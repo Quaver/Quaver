@@ -1,4 +1,4 @@
-﻿using Quaver.Assets;
+using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;
@@ -60,10 +60,15 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         ///     Updates the value of the metadata container.
         /// </summary>
         /// <param name="text"></param>
-        public void UpdateValue(string text)
+        public void UpdateValue(string text, Color? textcolor = null)
         {
             ValueText.Text = text.ToUpper();
             AlignText();
+
+            if (textcolor != null)
+            {
+                ValueText.TextColor = (Color)textcolor;
+            }
         }
     }
 }
