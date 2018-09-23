@@ -47,6 +47,18 @@ namespace Quaver.Graphics
         /// </summary>
         public static readonly Color Swan = ColorHelper.HexToColor("#db88c2");
 
+        /// <summary>
+        ///     Converts Xna Color to SystemDrawing Color
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static System.Drawing.Color XnaToSystemDrawing(Color color) => System.Drawing.Color.FromArgb(color.R, color.G, color.B);
+
+        /// <summary>
+        ///     Converts SystemDrawing Color to Xna Color
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Color SystemDrawingToXna(Color color) => new Color(color.R, color.G, color.B, color.A);
     }
 }
