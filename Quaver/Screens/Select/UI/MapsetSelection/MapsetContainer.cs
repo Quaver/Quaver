@@ -339,6 +339,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
 
             // Change the actual map.
             MapManager.Selected.Value = map;
+            MapManager.Selected.Value.LoadQua();
 
             // Scroll to the new mapset.
             ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
