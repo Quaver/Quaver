@@ -103,11 +103,10 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         {
             Parent = this,
             TextScale = 0.46f,
-            TextColor = Color.White,
+            TextColor = Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(Map.StrainRatingData.OverallDifficulty)),
             Alignment = Alignment.MidRight,
             TextAlignment = Alignment.MidRight,
             X = -10f
-            // todo: set text color to match diff gradient
         };
 
         /// <inheritdoc />
