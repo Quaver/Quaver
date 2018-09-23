@@ -355,7 +355,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             // Update other metadata
             var diff = MapManager.Selected.Value.StrainRatingData.OverallDifficulty;
-            Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.XnaToSystemDrawing(API.Qss.Colors.GetStrainRatingColor(diff)));
+            Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(diff)));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 
             var bpm = (int) MapManager.Selected.Value.Bpm;

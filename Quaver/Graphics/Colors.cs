@@ -59,6 +59,6 @@ namespace Quaver.Graphics
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static Color SystemDrawingToXna(Color color) => new Color(color.R, color.G, color.B, color.A);
+        public static Color SystemDrawingToXna(System.Drawing.Color color) => new Color(color.R, color.G, color.B, color.A);
     }
 }
