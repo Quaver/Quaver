@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver", "Quaver\Quaver.csproj", "{54050897-0E54-427B-8BE1-EFE75784B5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver", "Quaver\Quaver.csproj", "{54050897-0E54-427B-8BE1-EFE75784B5FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.API", "Quaver.API\Quaver.API\Quaver.API.csproj", "{80CC83DF-8CFF-47F1-A703-3FB8BC20B943}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Resources", "Quaver.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{1C7E427C-6F18-4912-8994-16193CE2AF46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Shaders", "Quaver.Shaders\Quaver.Shaders.csproj", "{063A0120-56DA-4A2C-91EA-26932CFBA171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Shaders", "Quaver.Shaders\Quaver.Shaders.csproj", "{063A0120-56DA-4A2C-91EA-26932CFBA171}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.DesktopGL.Core", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj", "{BDCB1605-28B6-4773-AE12-DA4285821EDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
