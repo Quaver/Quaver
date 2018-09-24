@@ -4,11 +4,22 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.11.0" />
+    <None Remove="Icon.bmp" />
+    <None Remove="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.bmp" />
+    <EmbeddedResource Include="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+    <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
@@ -25,6 +36,10 @@
     <Reference Include="INIFileParser">
       <HintPath>INIFileParser.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Graphics\Dialogs\" />
   </ItemGroup>
 
 </Project>

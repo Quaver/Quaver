@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Assets;
@@ -100,15 +99,17 @@ namespace Quaver.Screens.Menu
                 var openFileDialog = new OpenFileDialog()
                 {
                     InitialDirectory = "c:\\",
-                    Filter = "Mapset (*.qp, *.osz, *.sm)| *.qp; *.osz; *.sm;",
-                    FilterIndex = 0,
-                    RestoreDirectory = true,
-                    Multiselect = true
+                    AllowMultiple = true,
                 };
 
+                Task.Run(async () =>
+                {
+                    await openFileDialog.ShowAsync();
+                });
+
                 // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
-                    return;
+                //if (openFileDialog.ShowDialog() != DialogResult.OK)
+                //    return;
 
                 // Run the converter for all selected files
                 Task.Run(() =>
@@ -125,8 +126,8 @@ namespace Quaver.Screens.Menu
                     }
                     // When all the maps have been converted, select the last imported map and make that the selected one.
                 }).ContinueWith(t => MapsetImporter.AfterImport());
-            }),
-            new ToolbarItem("Watch Replay", () =>
+            }),*/
+            /*new ToolbarItem("Watch Replay", () =>
             {
                 // Create the openFileDialog object.
                 var openFileDialog = new OpenFileDialog()
