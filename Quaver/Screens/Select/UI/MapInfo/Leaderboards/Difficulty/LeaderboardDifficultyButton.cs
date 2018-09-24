@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -104,7 +105,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             Parent = this,
             Font = Fonts.Exo2Bold24,
             TextScale = 0.8f, //0.46f,
-            TextColor = Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(Map.StrainSolver.OverallDifficulty)),
+            TextColor = Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(Map.StrainSolver.OverallDifficulty)),
             Alignment = Alignment.MidRight,
             TextAlignment = Alignment.MidRight,
             X = -10f

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -355,7 +356,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             // Update other metadata
             var diff = MapManager.Selected.Value.StrainSolver.OverallDifficulty;
-            Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.SystemDrawingToXna(API.Qss.Colors.GetStrainRatingColor(diff)));
+            Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(diff)));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 
             var bpm = (int) MapManager.Selected.Value.Bpm;
