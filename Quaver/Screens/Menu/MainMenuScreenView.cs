@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Assets;
@@ -94,7 +94,7 @@ namespace Quaver.Screens.Menu
         private void CreateToolbar() => Toolbar = new Toolbar(new List<ToolbarItem>
         {
             new ToolbarItem("Home", () => Console.WriteLine("Already Home!"), true),
-            new ToolbarItem("Import Mapset", () =>
+            /*new ToolbarItem("Import Mapset", () =>
             {
                 // Create the openFileDialog object.
                 var openFileDialog = new OpenFileDialog()
@@ -151,7 +151,7 @@ namespace Quaver.Screens.Menu
                     Logger.LogError(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
-            })
+            })*/
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),
