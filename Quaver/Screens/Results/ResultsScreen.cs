@@ -30,6 +30,7 @@ using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
+using Wobble.Graphics;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Results
