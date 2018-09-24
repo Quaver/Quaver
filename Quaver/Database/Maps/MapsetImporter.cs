@@ -1,13 +1,19 @@
 using System;
 using System.IO;
 using System.Linq;
-
+using Quaver.API.Replays;
 using Quaver.Config;
+using Quaver.Graphics.Notifications;
 using Quaver.Logging;
+using Quaver.Parsers.Etterna;
+using Quaver.Parsers.Osu;
+using Quaver.Scheduling;
+using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using Wobble;
+using Wobble.Screens;
 
 namespace Quaver.Database.Maps
 {
@@ -104,9 +110,91 @@ namespace Quaver.Database.Maps
                 map.ChangeSelected();
             }
 
-            Logger.LogSuccess("Successfully completed the conversion task.", LogType.Runtime);
-
+            NotificationManager.Show(NotificationLevel.Success, "Successfully imported mapset!");
             QueueReady = false;
+        }
+
+        /// <summary>
+        ///     Allows files to be dropped into the window.
+        /// </summary>
+        internal static void OnFileDropped(object sender, string e)
+        {
+            // TODO: Don't perform these actions automatically. Wait until an actual good time
+            // TODO: Since some require screen/map changes.
+
+            // Quaver Mapset
+            if (e.EndsWith(".qp"))
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Importing mapset - please wait...");
+
+                Scheduler.RunThread(() =>
+                {
+                    try
+                    {
+                        Import(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
+                    }
+
+                    AfterImport();
+                });
+            }
+            // Quaver Replay
+            else if (e.EndsWith(".qr"))
+            {
+                try
+                {
+                    ScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
+                }
+            }
+            // osu! beatmap archive
+            else if (e.EndsWith(".osz"))
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Importing .osz file - please wait...");
+
+                Scheduler.RunThread(() =>
+                {
+                    try
+                    {
+                        Osu.ConvertOsz(e, 0);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
+                    }
+
+                    AfterImport();
+                });
+            }
+            // StepMania file
+            else if (e.EndsWith(".sm"))
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Importing .sm file - please wait...");
+
+                Scheduler.RunThread(() =>
+                {
+                    try
+                    {
+                        StepManiaConverter.ConvertSm(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
+                    }
+
+                    AfterImport();
+                });
+            }
         }
     }
 }

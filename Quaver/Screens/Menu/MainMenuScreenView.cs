@@ -93,66 +93,6 @@ namespace Quaver.Screens.Menu
         private void CreateToolbar() => Toolbar = new Toolbar(new List<ToolbarItem>
         {
             new ToolbarItem("Home", () => Console.WriteLine("Already Home!"), true),
-            /*new ToolbarItem("Import Mapset", () =>
-            {
-                // Create the openFileDialog object.
-                var openFileDialog = new OpenFileDialog()
-                {
-                    InitialDirectory = "c:\\",
-                    AllowMultiple = true,
-                };
-
-                Task.Run(async () =>
-                {
-                    await openFileDialog.ShowAsync();
-                });
-
-                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
-                //if (openFileDialog.ShowDialog() != DialogResult.OK)
-                //    return;
-
-                // Run the converter for all selected files
-                Task.Run(() =>
-                {
-                    Logger.LogImportant($"Importing mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
-                    for (var i = 0; i < openFileDialog.FileNames.Length; i++)
-                    {
-                        if (openFileDialog.FileNames[i].EndsWith(".osz"))
-                            Osu.ConvertOsz(openFileDialog.FileNames[i], i);
-                        else if (openFileDialog.FileNames[i].EndsWith(".qp"))
-                            MapsetImporter.Import(openFileDialog.FileNames[i]);
-                        else if (openFileDialog.FileNames[i].EndsWith(".sm"))
-                            StepManiaConverter.ConvertSm(openFileDialog.FileNames[i]);
-                    }
-                    // When all the maps have been converted, select the last imported map and make that the selected one.
-                }).ContinueWith(t => MapsetImporter.AfterImport());
-            }),*/
-            /*new ToolbarItem("Watch Replay", () =>
-            {
-                // Create the openFileDialog object.
-                var openFileDialog = new OpenFileDialog()
-                {
-                    InitialDirectory = ConfigManager.GameDirectory.Value,
-                    Filter = "Replay (*.qr)| *.qr;",
-                    FilterIndex = 0,
-                    RestoreDirectory = true,
-                    Multiselect = false
-                };
-
-                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                try
-                {
-                    ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
-                }
-            })*/
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),
