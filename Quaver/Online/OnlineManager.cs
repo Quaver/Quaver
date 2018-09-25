@@ -4,12 +4,16 @@ using Amib.Threading;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
 using Quaver.Logging;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
+using Quaver.Server.Common.Packets.Server;
 using Steamworks;
 using WebSocketSharp;
 using Logger = Quaver.Logging.Logger;
@@ -34,6 +38,11 @@ namespace Quaver.Online
                 _client = value;
             }
         }
+
+        /// <summary>
+        ///     If we're currently connected to the server.
+        /// </summary>
+        public static bool Connected => Client?.Socket != null;
 
         /// <summary>
         ///     The user client for self (the current client.)
@@ -86,6 +95,13 @@ namespace Quaver.Online
             Client.OnLoginSuccess += OnLoginSuccess;
             Client.OnUserDisconnected += OnUserDisconnected;
             Client.OnUserConnected += OnUserConnected;
+            Client.OnAvailableChatChannel += ChatManager.OnAvailableChatChannel;
+            Client.OnJoinedChatChannel += ChatManager.OnJoinedChatChannel;
+            Client.OnChatMessageReceived += ChatManager.OnChatMessageReceived;
+            Client.OnLeftChatChannel += ChatManager.OnLeftChatChannel;
+            Client.OnFailedToJoinChatChannel += ChatManager.OnFailedToJoinChatChannel;
+            Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
+            Client.OnNotificationReceived += OnNotificationReceived;
         }
 
         /// <summary>
@@ -180,20 +196,13 @@ namespace Quaver.Online
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             Self = e.Self;
+            ChatManager.MuteTimeLeft = Self.MuteTimeEnd - (long) TimeHelper.GetUnixTimestampMilliseconds();
+
+            OnlineUsers.Add(e.Self.Id, e.Self);
             NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.Username}");
 
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.Username;
-
-            // For every online user, we'll make a new "User" object for them. It won't contain any data for now,
-            // other than their user id. We'll only grab the rest of their data if the client needs it.
-            foreach (var id in e.OnlineUsers)
-            {
-                if (id == e.Self.Id)
-                    OnlineUsers[id] = e.Self;
-                else
-                    OnlineUsers[id] = new User { Id = id };
-            }
 
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
@@ -205,12 +214,12 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnUserConnected(object sender, UserConnectedEventArgs e)
         {
-            if (OnlineUsers.ContainsKey(e.UserId))
+            if (OnlineUsers.ContainsKey(e.User.Id))
                 return;
 
-            OnlineUsers.Add(e.UserId, new User { Id = e.UserId });
+            OnlineUsers.Add(e.User.Id, e.User);
 
-            Console.WriteLine($"User: ${e.UserId} has connected to the server.");
+            Console.WriteLine($"User: {e.User.Username} [{e.User.SteamId}] (#{e.User.Id}) has connected to the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
@@ -226,6 +235,34 @@ namespace Quaver.Online
 
             Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+        }
+
+        /// <summary>
+        ///     Called when the user receives a notification from the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnNotificationReceived(object sender, NotificationEventArgs e)
+        {
+            NotificationLevel level;
+
+            switch (e.Type)
+            {
+                case ServerNotificationType.Error:
+                    level = NotificationLevel.Error;
+                    break;
+                case ServerNotificationType.Success:
+                    level = NotificationLevel.Success;
+                    break;
+                case ServerNotificationType.Info:
+                    level = NotificationLevel.Info;
+                    break;
+                default:
+                    level = NotificationLevel.Default;
+                    break;
+            }
+
+            NotificationManager.Show(level, e.Content);
         }
     }
 }

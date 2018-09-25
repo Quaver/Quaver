@@ -137,7 +137,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var hitObject = (GameplayHitObjectKeys)ObjectPool[i];
 
                 // If the user misses the note.
-                if (Ruleset.Screen.Timing.Time > hitObject.TrueStartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
+                if ((int) Ruleset.Screen.Timing.Time > hitObject.TrueStartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
                     // Add a miss to their score.
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
@@ -146,7 +146,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     screenView.UpdateScoreboardUsers();
 
                     // Add new hit stat data.
-                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, Ruleset.Screen.Timing.Time, Judgement.Miss,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -200,16 +200,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var hitObject = (GameplayHitObjectKeys)HeldLongNotes[i];
 
                 // If the LN's release was missed. (Counts as an okay instead of a miss.)
-                if (Ruleset.Screen.Timing.Time > hitObject.TrueEndTime + window)
+                if ((int) Ruleset.Screen.Timing.Time > hitObject.TrueEndTime + window)
                 {
-                    // The judgement that is given when a user completely misses the release.
+                    // The judgement that is given when a user completely fails to release.
                     const Judgement missedJudgement = Judgement.Okay;
 
                     // Calc new score.
                     Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                     // Add new hit stat data.
-                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, Ruleset.Screen.Timing.Time, Judgement.Okay,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int) Ruleset.Screen.Timing.Time, Judgement.Okay,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 

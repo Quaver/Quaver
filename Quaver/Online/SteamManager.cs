@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Logging;
 using Steamworks;
+using Wobble;
 
 namespace Quaver.Online
 {
@@ -38,7 +39,12 @@ namespace Quaver.Online
         /// </summary>
         public static bool AuthSessionTicketValidated { get; private set; }
 
-#region Callbacks
+        /// <summary>
+        ///     The user's steam avatar.
+        /// </summary>
+        public static Texture2D UserAvatar { get; set; }
+
+        #region Callbacks
 
         /// <summary>
         ///     The callback that will be ran when the client requests for an auth session ticket
@@ -58,7 +64,7 @@ namespace Quaver.Online
             // Make sure the game is started with Steam.
             if (SteamAPI.RestartAppIfNecessary((AppId_t) ApplicationId))
             {
-                Application.Exit();
+                Environment.Exit(0);
                 return;
             }
 
@@ -129,6 +135,35 @@ namespace Quaver.Online
                     Logger.LogError("Could not generate an auth session ticket!", LogType.Runtime);
                     return;
             }
+        }
+
+        /// <summary>
+        ///     Gets a small steam avatar.
+        /// </summary>
+        /// <param name="steamId"></param>
+        /// <returns></returns>
+        public static Texture2D GetAvatar(ulong steamId)
+        {
+            var avatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(steamId));
+
+            Texture2D ret = null;
+
+            var bIsValid = SteamUtils.GetImageSize(avatar, out var imageWidth, out var imageHeight);
+
+            if (!bIsValid)
+                return null;
+
+            var image = new byte[imageWidth * imageHeight * 4];
+
+            bIsValid = SteamUtils.GetImageRGBA(avatar, image, (int)(imageWidth * imageHeight * 4));
+
+            if (!bIsValid)
+                return null;
+
+            ret = new Texture2D(GameBase.Game.GraphicsDevice, (int)imageWidth, (int)imageHeight);
+
+            ret.SetData(image);
+            return ret;
         }
     }
 }

@@ -101,9 +101,14 @@ namespace Quaver.Database.Scores
         public int ScrollSpeed { get; set; }
 
         /// <summary>
-        ///     String that contains the judgement breakdown the user received.
+        ///     String that contains the hit breakdown the user received.
         /// </summary>
-        public string JudgementBreakdown { get; set; }
+        public string HitBreakdown { get; set; }
+
+        /// <summary>
+        ///     The amount of times paused during the score.
+        /// </summary>
+        public int PauseCount { get; set; }
 
         /// <summary>
         ///     Creates a local score object from a score processor.
@@ -113,7 +118,7 @@ namespace Quaver.Database.Scores
         /// <param name="name"></param>
         /// <param name="scrollSpeed"></param>
         /// <returns></returns>
-        public static LocalScore FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed)
+        public static LocalScore FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount)
         {
             var score = new LocalScore()
             {
@@ -133,7 +138,8 @@ namespace Quaver.Database.Scores
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
                 Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
-                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown())
+                PauseCount =  pauseCount,
+                HitBreakdown = GzipHelper.Compress(processor.GetHitBreakdown())
             };
 
             return score;

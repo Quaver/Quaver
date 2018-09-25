@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Config;
@@ -450,7 +449,7 @@ namespace Quaver.Screens.Options
         private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Question, new List<OptionsItem>()
         {
             // Select osu!.db file
-            new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            /*new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
             (sender, e) =>
             {
                 // Create the openFileDialog object.
@@ -470,13 +469,14 @@ namespace Quaver.Screens.Options
                 ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
 
                 NotificationManager.Show(NotificationLevel.Success, $".db file has been set. You can now \"Load peppy! beatmaps\"");
-            })),
+            })),*/
+
             // Load osu! beatmaps, although we can't use osu! as actual text because... trademark :thumbsup:
             new OptionsItem(this, "Load peppy! beatmaps", new Checkbox(ConfigManager.AutoLoadOsuBeatmaps, new Vector2(20, 20),
                 FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
 
             // Select Etterna Cache Folder
-            new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            /*new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
             (sender, e) =>
             {
                 using(var fbd = new FolderBrowserDialog())
@@ -487,7 +487,7 @@ namespace Quaver.Screens.Options
                 }
 
                 NotificationManager.Show(NotificationLevel.Success, $"Etterna Cache Folder has been set. You can now \"Load Etterna Charts\"");
-            })),
+            })),*/
 
             // Load charts from etterna.
             new OptionsItem(this, "Load Etterna Charts", new Checkbox(ConfigManager.AutoLoadEtternaCharts, new Vector2(20, 20),
@@ -687,6 +687,17 @@ namespace Quaver.Screens.Options
                         DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                         {
                             new KeybindingOptionStore("Quick Restart", ConfigManager.KeyRestartMap),
+                        }, 0.85f));
+                    })),
+
+                // Quick Exit
+                new OptionsItem(this, "Quick Exit", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Quick Exit", ConfigManager.KeyQuickExit),
                         }, 0.85f));
                     })),
 

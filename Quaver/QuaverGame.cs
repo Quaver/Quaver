@@ -17,6 +17,7 @@ using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
@@ -89,6 +90,9 @@ namespace Quaver
             // Apply all graphics changes
             Graphics.ApplyChanges();
 
+            // Handle file dropped event.
+            Window.FileDropped += MapsetImporter.OnFileDropped;
+
             base.Initialize();
         }
 
@@ -104,8 +108,12 @@ namespace Quaver
             // Load all game assets.
             FontAwesome.Load();
             Fonts.Load();
+            BitmapFonts.Load();
             Titles.Load();
             UserInterface.Load();
+
+            // Load steam avatar
+            SteamManager.UserAvatar = SteamManager.GetAvatar(SteamUser.GetSteamID().m_SteamID);
 
             // Load the user's skin
             SkinManager.Load();
@@ -156,6 +164,7 @@ namespace Quaver
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
+            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
         }
 

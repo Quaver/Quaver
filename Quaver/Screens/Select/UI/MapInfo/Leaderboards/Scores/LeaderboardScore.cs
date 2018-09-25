@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Assets;
@@ -6,6 +6,7 @@ using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
 using Wobble.Discord.RPC;
@@ -109,7 +110,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Parent = this,
             Alignment = Alignment.TopLeft,
             Size = new ScalableVector2(Height, Height),
-            Image = ConfigManager.Username.Value == Score.Name ? UserInterface.YouAvatar : UserInterface.UnknownAvatar,
+            Image = ConfigManager.Username.Value == Score.Name ? SteamManager.UserAvatar : UserInterface.UnknownAvatar,
             X = 50
         };
 

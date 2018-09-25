@@ -1,392 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9BA48B4E-6C2A-42CD-8739-9E4E4C6A083A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Quaver</RootNamespace>
-    <AssemblyName>Quaver</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="Assets\FontAwesome.cs" />
-    <Compile Include="Assets\Fonts.cs" />
-    <Compile Include="Assets\Titles.cs" />
-    <Compile Include="Assets\UserInterface.cs" />
-    <Compile Include="Audio\AudioEngine.cs" />
-    <Compile Include="Audio\Visualizer.cs" />
-    <Compile Include="Config\ConfigHelper.cs" />
-    <Compile Include="Config\ConfigManager.cs" />
-    <Compile Include="Database\Maps\Map.cs" />
-    <Compile Include="Database\Maps\MapCache.cs" />
-    <Compile Include="Database\Maps\MapManager.cs" />
-    <Compile Include="Database\Maps\Mapset.cs" />
-    <Compile Include="Database\Maps\MapsetHelper.cs" />
-    <Compile Include="Database\Maps\MapsetImporter.cs" />
-    <Compile Include="Database\Scores\LocalScore.cs" />
-    <Compile Include="Database\Scores\LocalScoreCache.cs" />
-    <Compile Include="Graphics\Backgrounds\BackgroundLoadedEventArgs.cs" />
-    <Compile Include="Graphics\Backgrounds\BackgroundManager.cs" />
-    <Compile Include="Graphics\Colors.cs" />
-    <Compile Include="Graphics\Graphing\Graph.cs" />
-    <Compile Include="Graphics\HeaderedContainer.cs" />
-    <Compile Include="Graphics\Notifications\Notification.cs" />
-    <Compile Include="Graphics\Notifications\NotificationLevel.cs" />
-    <Compile Include="Graphics\Notifications\NotificationManager.cs" />
-    <Compile Include="Graphics\NumberDisplay.cs" />
-    <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
-    <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
-    <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
-    <Compile Include="Helpers\ColorHelper.cs" />
-    <Compile Include="Helpers\GzipHelper.cs" />
-    <Compile Include="Helpers\ListHelper.cs" />
-    <Compile Include="Helpers\ObjectHelper.cs" />
-    <Compile Include="Helpers\ReplayHelper.cs" />
-    <Compile Include="Helpers\ResourceHelper.cs" />
-    <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\XnaKeyHelper.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Modifiers\IGameplayModifier.cs" />
-    <Compile Include="Modifiers\ModManager.cs" />
-    <Compile Include="Modifiers\ModsChangedEventArgs.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModNoSliderVelocities.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
-    <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
-    <Compile Include="Modifiers\ModType.cs" />
-    <Compile Include="Online\OnlineManager.cs" />
-    <Compile Include="Online\SteamManager.cs" />
-    <Compile Include="Parsers\Etterna\Etterna.cs" />
-    <Compile Include="Parsers\Etterna\EtternaCache.cs" />
-    <Compile Include="Parsers\Etterna\StepManiaConverter.cs" />
-    <Compile Include="Parsers\Osu\Osu.cs" />
-    <Compile Include="QuaverGame.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduling\CommonTaskScheduler.cs" />
-    <Compile Include="Scheduling\Scheduler.cs" />
-    <Compile Include="Screens\Connecting\ConnectingScreen.cs" />
-    <Compile Include="Screens\Connecting\ConnectingScreenView.cs" />
-    <Compile Include="Screens\Connecting\UI\ConnectingContainer.cs" />
-    <Compile Include="Screens\Connecting\UI\UsernameSelectionDialog.cs" />
-    <Compile Include="Screens\Connecting\UI\UsernameSelectionTextbox.cs" />
-    <Compile Include="Screens\Edit\EditorScreen.cs" />
-    <Compile Include="Screens\Edit\EditorScreenView.cs" />
-    <Compile Include="Screens\Edit\Input\EditorInputManager.cs" />
-    <Compile Include="Screens\Edit\Rulesets\EditorRuleset.cs" />
-    <Compile Include="Screens\Edit\Rulesets\IEditorPlayfield.cs" />
-    <Compile Include="Screens\Edit\Rulesets\Keys\EditorRulesetKeys.cs" />
-    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorHitObjectKeys.cs" />
-    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorPlayfieldKeys.cs" />
-    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorScrollContainerKeys.cs" />
-    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorSnapLinesKeys.cs" />
-    <Compile Include="Screens\Edit\UI\EditorSeekBar.cs" />
-    <Compile Include="Screens\Edit\UI\EditorSongTimeDisplay.cs" />
-    <Compile Include="Screens\Gameplay\GameplayAudioTiming.cs" />
-    <Compile Include="Screens\Gameplay\IGameplayInputManager.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Input\InputBindingKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Input\InputManagerKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Input\ReplayInputManagerKeys.cs" />
-    <Compile Include="Screens\Gameplay\Replays\ReplayCapturer.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\GameplayRuleset.cs" />
-    <Compile Include="Screens\Gameplay\GameplayScreen.cs" />
-    <Compile Include="Screens\Gameplay\GameplayScreenView.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\HitObjects\GameplayHitObject.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\HitObjects\HitObjectManager.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\IGameplayPlayfield.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\GameplayRulesetKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\HitObjects\GameplayHitObjectKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\HitObjects\HitObjectManagerKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\ColumnLighting.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\GameplayPlayfieldKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\GameplayPlayfieldKeysStage.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\Health\HealthBarKeys.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\HitLighting.cs" />
-    <Compile Include="Screens\Gameplay\UI\Counter\JudgementCounterItem.cs" />
-    <Compile Include="Screens\Gameplay\UI\GradeDisplay.cs" />
-    <Compile Include="Screens\Gameplay\UI\Health\HealthBar.cs" />
-    <Compile Include="Screens\Gameplay\UI\HitErrorBar.cs" />
-    <Compile Include="Screens\Gameplay\UI\Counter\JudgementCounter.cs" />
-    <Compile Include="Screens\Gameplay\UI\JudgementHitBurst.cs" />
-    <Compile Include="Screens\Gameplay\UI\KeysPerSecond.cs" />
-    <Compile Include="Screens\Gameplay\UI\PauseScreen.cs" />
-    <Compile Include="Screens\Gameplay\UI\Scoreboard\Scoreboard.cs" />
-    <Compile Include="Screens\Gameplay\UI\Scoreboard\ScoreboardUser.cs" />
-    <Compile Include="Screens\Gameplay\UI\Scoreboard\ScoreboardUserType.cs" />
-    <Compile Include="Screens\Gameplay\UI\SkipDisplay.cs" />
-    <Compile Include="Screens\Gameplay\UI\SongInformation.cs" />
-    <Compile Include="Screens\Gameplay\UI\SongTimeProgressBar.cs" />
-    <Compile Include="Screens\IGameScreenComponent.cs" />
-    <Compile Include="Screens\Loading\MapLoadingScreen.cs" />
-    <Compile Include="Screens\Loading\MapLoadingScreenView.cs" />
-    <Compile Include="Screens\Menu\MainMenuScreen.cs" />
-    <Compile Include="Screens\Menu\MainMenuScreenView.cs" />
-    <Compile Include="Screens\Menu\UI\BottomToolbar\BottomBar.cs" />
-    <Compile Include="Screens\Menu\UI\BottomToolbar\LogoButton.cs" />
-    <Compile Include="Screens\Menu\UI\Buttons\Navigation\NavigationButton.cs" />
-    <Compile Include="Screens\Menu\UI\Buttons\Navigation\NavigationButtonContainer.cs" />
-    <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\Health\HealthBarKeysAlignment.cs" />
-    <Compile Include="Screens\Gameplay\UI\Health\HealthBarType.cs" />
-    <Compile Include="Screens\Options\Keybindings\KeybindDialog.cs" />
-    <Compile Include="Screens\Options\Keybindings\KeybindingOptionStore.cs" />
-    <Compile Include="Screens\Options\Keybindings\KeybindSprite.cs" />
-    <Compile Include="Screens\Options\OptionsDialog.cs" />
-    <Compile Include="Screens\Options\OptionsItem.cs" />
-    <Compile Include="Screens\Options\OptionsSection.cs" />
-    <Compile Include="Screens\Options\OptionsSectionIcon.cs" />
-    <Compile Include="Screens\Results\Input\ResultsInputManager.cs" />
-    <Compile Include="Screens\Results\ResultsScreen.cs" />
-    <Compile Include="Screens\Results\ResultsScreenType.cs" />
-    <Compile Include="Screens\Results\ResultsScreenView.cs" />
-    <Compile Include="Screens\Results\UI\JudgementBreakdown.cs" />
-    <Compile Include="Screens\Results\UI\MapInformation.cs" />
-    <Compile Include="Screens\Results\UI\ResultsButtonContainer.cs" />
-    <Compile Include="Screens\Results\UI\ScoreResults\ScoreResultsInfoItem.cs" />
-    <Compile Include="Screens\Results\UI\ScoreResults\ScoreResultsTable.cs" />
-    <Compile Include="Screens\Results\UI\Statistics\HealthGraph.cs" />
-    <Compile Include="Screens\Results\UI\Statistics\HitOffsetGraph.cs" />
-    <Compile Include="Screens\Results\UI\Statistics\ResultsScoreStatistics.cs" />
-    <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
-    <Compile Include="Screens\Select\SelectScreen.cs" />
-    <Compile Include="Screens\Select\SelectScreenView.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Actions\ActionsBanner.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Banner\MapBanner.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Banner\MetadataContainer.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Banner\RankedStatusFlag.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Difficulty\LeaderboardDifficultyButton.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Difficulty\LeaderboardSectionDifficulty.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Leaderboard.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSectionType.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSection.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSectionButton.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Scores\LeaderboardScore.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Scores\LeaderboardSectionGlobal.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Scores\LeaderboardSectionLocal.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Scores\LeaderboardSectionScores.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\MapInfoContainer.cs" />
-    <Compile Include="Screens\Select\UI\MapsetSelection\MapsetButton.cs" />
-    <Compile Include="Screens\Select\UI\MapsetSelection\MapsetContainer.cs" />
-    <Compile Include="Screens\Select\UI\Mods\ModsDialog.cs" />
-    <Compile Include="Screens\Select\UI\Mods\ModsDialogModifier.cs" />
-    <Compile Include="Screens\Select\UI\Mods\ModsDialogModifierBool.cs" />
-    <Compile Include="Screens\Select\UI\Mods\ModsDialogOption.cs" />
-    <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
-    <Compile Include="Screens\Select\UI\Search\MapsetSearchOrderer.cs" />
-    <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />
-    <Compile Include="Screens\Splash\SplashScreen.cs" />
-    <Compile Include="Screens\Splash\SplashScreenView.cs" />
-    <Compile Include="Skinning\SkinKeys.cs" />
-    <Compile Include="Skinning\SkinKeysFolder.cs" />
-    <Compile Include="Skinning\SkinManager.cs" />
-    <Compile Include="Skinning\SkinStore.cs" />
+    <None Remove="Icon.bmp" />
+    <None Remove="Icon.ico" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
-    </Reference>
-    <Reference Include="Ether.Network, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
-      <HintPath>INIFileParser.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedBass, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\ManagedBass.2.0.4\lib\net45\ManagedBass.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoGame.Framework.DesktopGL.3.6.0.1625\lib\net40\MonoGame.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="osu-database-reader, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HoLLy.osu.DatabaseReader.2.1.0\lib\net40\osu-database-reader.dll</HintPath>
-    </Reference>
-    <Reference Include="osu.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\osu.Shared.1.0.2\lib\net20\osu.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="SmartThreadPool, Version=2.2.4.0, Culture=neutral, PublicKeyToken=1126fe8b671e8a79">
-      <HintPath>..\packages\SmartThreadPool.dll.2.2.4\lib\net45\SmartThreadPool.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_green, Version=1.1.11.121, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_v2, Version=1.1.11.121, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.core, Version=1.1.11.121, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.core.1.1.11\lib\net45\SQLitePCLRaw.core.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.1.11.121, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.11\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
-    </Reference>
-    <Reference Include="Steamworks.NET, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>Steamworks.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Windows.Forms.DataVisualization.Design" />
-    <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll.config">
-      <Link>MonoGame.Framework.dll.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="app.manifest" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Steamworks.NET.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Icon.bmp" />
     <EmbeddedResource Include="Icon.ico" />
-    <Content Include="INIFileParser.dll">
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.22.0" />
+    <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
+    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
+    <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj" />
+    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
+    <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="INIFileParser">
+      <HintPath>INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="Steamworks.NET">
+      <HintPath>Steamworks.NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Graphics\Dialogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="steam_api64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
-      <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
-      <Name>Quaver.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj">
-      <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>
-      <Name>Quaver.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj">
-      <Project>{0fac1785-7b84-4fb9-aefc-f8ead89b5d6e}</Project>
-      <Name>Quaver.Server.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj">
-      <Project>{880b9bdb-f9fd-4845-adba-efdbe3ab6cef}</Project>
-      <Name>Quaver.Server.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj">
-      <Project>{07b693c1-b9bc-449e-8639-926118c9b088}</Project>
-      <Name>Quaver.Shaders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj">
-      <Project>{da74528d-b500-4c5a-977e-76a756e65c63}</Project>
-      <Name>Wobble</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
-  <PropertyGroup>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      <XmlFiles Include="$(OutputPath)\*.xml" />
-      <XmlFiles Include="$(OutputPath)\*.dll.config" />
-      <XmlFiles Include="$(OutputPath)\*.pdb" />
-    </ItemGroup>
-    <Delete Files="@(XmlFiles)" />
-  </Target>
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
-  </Target>
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" />
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" />
+
 </Project>

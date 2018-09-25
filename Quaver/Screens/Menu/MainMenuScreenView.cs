@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Assets;
@@ -22,6 +21,7 @@ using Quaver.Screens.Menu.UI.Buttons.Navigation;
 using Quaver.Screens.Options;
 using Quaver.Screens.Results;
 using Quaver.Screens.Select;
+using Quaver.Screens.Test.Chat;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
@@ -94,56 +94,6 @@ namespace Quaver.Screens.Menu
         private void CreateToolbar() => Toolbar = new Toolbar(new List<ToolbarItem>
         {
             new ToolbarItem("Home", () => Console.WriteLine("Already Home!"), true),
-            new ToolbarItem("Import Mapset", () =>
-            {
-                // Create the openFileDialog object.
-                var openFileDialog = new OpenFileDialog()
-                {
-                    InitialDirectory = "c:\\",
-                    Filter = "Mapset (*.qp, *.osz, *.sm)| *.qp; *.osz; *.sm;",
-                    FilterIndex = 0,
-                    RestoreDirectory = true,
-                    Multiselect = true
-                };
-
-                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                // Run the converter for all selected files
-                Task.Run(() =>
-                {
-                    Logger.LogImportant($"Importing mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
-                    for (var i = 0; i < openFileDialog.FileNames.Length; i++)
-                    {
-                        if (openFileDialog.FileNames[i].EndsWith(".osz"))
-                            Osu.ConvertOsz(openFileDialog.FileNames[i], i);
-                        else if (openFileDialog.FileNames[i].EndsWith(".qp"))
-                            MapsetImporter.Import(openFileDialog.FileNames[i]);
-                        else if (openFileDialog.FileNames[i].EndsWith(".sm"))
-                            StepManiaConverter.ConvertSm(openFileDialog.FileNames[i]);
-                    }
-                    // When all the maps have been converted, select the last imported map and make that the selected one.
-                }).ContinueWith(t => MapsetImporter.AfterImport());
-            }),
-            new ToolbarItem("Watch Replay", () =>
-            {
-                // Create the openFileDialog object.
-                var openFileDialog = new OpenFileDialog()
-                {
-                    InitialDirectory = ConfigManager.GameDirectory.Value,
-                    Filter = "Replay (*.qr)| *.qr;",
-                    FilterIndex = 0,
-                    RestoreDirectory = true,
-                    Multiselect = false
-                };
-
-                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
-            })
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),

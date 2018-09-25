@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
