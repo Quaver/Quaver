@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Assets;
-using Quaver.Graphics.Graphing;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Point = System.Drawing.Point;
@@ -29,7 +28,7 @@ namespace Quaver.Screens.Results.UI.Statistics
             Alignment = Alignment.TopCenter;
             Y = 10;
 
-            Image = Graph.CreateStaticLine(points, new Vector2(Width, Height), 2);
+            // Image = Graph.CreateStaticLine(points, new Vector2(Width, Height), 2);
 
             // Create the text that displays 100% label.
             var health100Text = new SpriteText(Fonts.Exo2Regular24, $"Health (100%)")
@@ -69,7 +68,9 @@ namespace Quaver.Screens.Results.UI.Statistics
         /// </summary>
         public override void Destroy()
         {
-            Task.Run(() => Image.Dispose());
+            // TODO: When graphs are hooked back up.
+            // Image.Dispose();
+
             base.Destroy();
         }
     }

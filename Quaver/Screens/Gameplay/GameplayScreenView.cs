@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
@@ -15,6 +17,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Modifiers;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
@@ -339,7 +342,8 @@ namespace Quaver.Screens.Gameplay
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar,
+                    ModManager.Mods)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
@@ -359,7 +363,8 @@ namespace Quaver.Screens.Gameplay
                     while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                         bot.Name = Bot.GenerateRandomName();
 
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, UserInterface.UnknownAvatar)
+                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.HitStats,
+                        UserInterface.UnknownAvatar, ModManager.Mods)
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -388,22 +393,41 @@ namespace Quaver.Screens.Gameplay
             for (var i = 0; i < 5 && i < mapScores.Count; i++)
             {
                 // Decompress score
-                var scoreJudgements = new List<Judgement>();
+                var breakdownHits = GzipHelper.Decompress(mapScores[i].HitBreakdown).Split(',');
 
-                // Decompress the local score and add all the judgements to the list
-                foreach (var c in GzipHelper.Decompress(mapScores[i].JudgementBreakdown))
-                    scoreJudgements.Add((Judgement)int.Parse(c.ToString()));
+                var stats = new List<HitStat>();
+
+                // Get all of the hit stats for the score.
+                foreach (var hit in breakdownHits)
+                {
+                    if (string.IsNullOrEmpty(hit))
+                        continue;
+
+                    stats.Add(HitStat.FromBreakdownItem(hit));
+                }
 
                 var user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name} #{i + 1}",
-                    scoreJudgements, UserInterface.UnknownAvatar)
+                    stats, UserInterface.UnknownAvatar, mapScores[i].Mods)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
                 };
 
                 // Make sure the user's score is updated with the current user.
-                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < user.UserJudgements.Count; j++)
-                    user.Processor.CalculateScore(user.UserJudgements[j]);
+                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < stats.Count; j++)
+                {
+                    var processor = user.Processor as ScoreProcessorKeys;
+
+                    if (stats[j].KeyPressType == KeyPressType.None)
+                        processor?.CalculateScore(Judgement.Miss);
+                    else
+                    {
+                        var judgement = processor?.CalculateScore(user.HitStats[j].HitDifference, user.HitStats[j].KeyPressType);
+
+                        if (judgement == Judgement.Ghost)
+                            processor.CalculateScore(Judgement.Miss);
+                    }
+                }
 
                 Scoreboard.Users.Add(user);
             }
