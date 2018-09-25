@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Resources;
 using System.Text.RegularExpressions;
 using IniParser;
 using IniParser.Model;
@@ -11,6 +12,7 @@ using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Resources;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
@@ -217,7 +219,7 @@ namespace Quaver.Skinning
         private void LoadUniversalElements()
         {
             const string cursor = "main-cursor";
-            Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", cursor);
+            Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", QuaverResources.main_cursor);
 
             LoadGradeElements();
             LoadJudgements();
@@ -235,10 +237,22 @@ namespace Quaver.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
+        internal static Texture2D LoadSingleTexture(string path, byte[] resource, string extension = ".png")
         {
             path += extension;
-            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : ResourceHelper.LoadTextureByName(resource, ImageFormat.Png);
+            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : AssetLoader.LoadTexture2D(resource);
+        }
+
+        /// <summary>
+        ///     Loads a single texture element.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="resource"></param>
+        /// <param name="extension"></param>
+        internal static Texture2D LoadSingleTexture(ResourceManager rm, string path, string resource, string extension = ".png")
+        {
+            path += extension;
+            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : AssetLoader.LoadTexture2D(rm, resource);
         }
 
         /// <summary>
@@ -282,9 +296,9 @@ namespace Quaver.Skinning
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
-                return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource)};
+                return new List<Texture2D> { LoadSingleTexture(QuaverResources.ResourceManager, $"{dir}/{element}", resource)};
 
-            return AssetLoader.LoadSpritesheetFromTexture(ResourceHelper.LoadTextureByName($"{resource}_{rows}x{columns}", ImageFormat.Png), rows, columns);
+            return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(QuaverResources.ResourceManager, $"{resource}_{rows}x{columns}"), rows, columns);
         }
 
         /// <summary>
@@ -324,7 +338,45 @@ namespace Quaver.Skinning
                     continue;
 
                 var element = $"grade-small-{grade.ToString().ToLower()}";
-                Grades[grade] = LoadSingleTexture($"{Dir}/Grades/{element}", element);
+
+                byte[] defaultGrade = null;
+
+                switch (grade)
+                {
+                    case Grade.None:
+                        break;
+                    case Grade.A:
+                        defaultGrade = QuaverResources.grade_small_a;
+                        break;
+                    case Grade.B:
+                        defaultGrade = QuaverResources.grade_small_b;
+                        break;
+                    case Grade.C:
+                        defaultGrade = QuaverResources.grade_small_c;
+                        break;
+                    case Grade.D:
+                        defaultGrade = QuaverResources.grade_small_d;
+                        break;
+                    case Grade.F:
+                        defaultGrade = QuaverResources.grade_small_f;
+                        break;
+                    case Grade.S:
+                        defaultGrade = QuaverResources.grade_small_s;
+                        break;
+                    case Grade.SS:
+                        defaultGrade = QuaverResources.grade_small_ss;
+                        break;
+                    case Grade.X:
+                        defaultGrade = QuaverResources.grade_small_x;
+                        break;
+                    case Grade.XX:
+                        defaultGrade = QuaverResources.grade_small_xx;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                Grades[grade] = LoadSingleTexture($"{Dir}/Grades/{element}", defaultGrade);
             }
         }
 
@@ -338,43 +390,15 @@ namespace Quaver.Skinning
             // Load Judgements
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
-                if (j == Judgement.Ghost)
-                    return;
-                
                 var element = $"judge-{j.ToString().ToLower()}";
 
-                /*
-                switch (j)
-                {
-                    case Judgement.Marv:
-                       //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 15);
-                        break;
-                    case Judgement.Perf:
-                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 12);
-                        break;
-                    case Judgement.Great:
-                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 7);
-                        break;
-                    case Judgement.Good:
-                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 8);
-                        break;
-                    case Judgement.Okay:
-                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 9);
-                        break;
-                    case Judgement.Miss:
-                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 16);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-                */
-
-               Judgements[j] = new List<Texture2D>() { LoadSingleTexture($"{Dir}/{folder}/{element}", element) };
+                
+               Judgements[j] = new List<Texture2D>() { LoadSingleTexture(QuaverResources.ResourceManager, $"{Dir}/{folder}/{element}", element) };
             }
-
+            
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
-            JudgementOverlay = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
+            JudgementOverlay = LoadSingleTexture(QuaverResources.ResourceManager, $"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
         }
 
         /// <summary>
@@ -388,28 +412,28 @@ namespace Quaver.Skinning
             {
                 // Score
                 var scoreElement = $"score-{i}";
-                ScoreDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{scoreElement}", $"{scoreElement}");
+                ScoreDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{scoreElement}", $"{scoreElement}");
 
                 // Combo
                 var comboElement = $"combo-{i}";
-                ComboDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{comboElement}", comboElement);
+                ComboDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{comboElement}", comboElement);
 
                 // Song Time
                 var songTimeElement = $"song-time-{i}";
-                SongTimeDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{songTimeElement}", songTimeElement);
+                SongTimeDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{songTimeElement}", songTimeElement);
             }
 
             const string scoreDecimal = "score-decimal";
-            ScoreDisplayDecimal = LoadSingleTexture($"{numberDisplayFolder}/{scoreDecimal}", scoreDecimal);
+            ScoreDisplayDecimal = LoadSingleTexture($"{numberDisplayFolder}/{scoreDecimal}", QuaverResources.score_decimal);
 
             const string scorePercent = "score-percent";
-            ScoreDisplayPercent = LoadSingleTexture($"{numberDisplayFolder}/{scorePercent}", scorePercent);
+            ScoreDisplayPercent = LoadSingleTexture($"{numberDisplayFolder}/{scorePercent}", QuaverResources.score_percent);
 
             const string songTimeColon = "song-time-colon";
-            SongTimeDisplayColon = LoadSingleTexture($"{numberDisplayFolder}/{songTimeColon}", songTimeColon);
+            SongTimeDisplayColon = LoadSingleTexture($"{numberDisplayFolder}/{songTimeColon}", QuaverResources.song_time_colon);
 
             const string songTimeMinus = "song-time-minus";
-            SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", songTimeMinus);
+            SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", QuaverResources.song_time_minus);
         }
 
         /// <summary>
@@ -420,16 +444,16 @@ namespace Quaver.Skinning
             var pauseFolder = $"{Dir}/Pause/";
 
             const string pauseBackground = "pause-background";
-            PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", pauseBackground);
+            PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", QuaverResources.pause_background);
 
             const string pauseContinue = "pause-continue";
-            PauseContinue = LoadSingleTexture($"{pauseFolder}/{pauseContinue}", pauseContinue);
+            PauseContinue = LoadSingleTexture($"{pauseFolder}/{pauseContinue}", QuaverResources.pause_continue);
 
             const string pauseRetry = "pause-retry";
-            PauseRetry = LoadSingleTexture($"{pauseFolder}/{pauseRetry}", pauseRetry);
+            PauseRetry = LoadSingleTexture($"{pauseFolder}/{pauseRetry}", QuaverResources.pause_retry);
 
             const string pauseBack = "pause-back";
-            PauseBack = LoadSingleTexture($"{pauseFolder}/{pauseBack}", pauseBack);
+            PauseBack = LoadSingleTexture($"{pauseFolder}/{pauseBack}", QuaverResources.pause_back);
         }
 
         /// <summary>
@@ -440,10 +464,10 @@ namespace Quaver.Skinning
             var scoreboardFolder = $"{Dir}/Scoreboard/";
 
             const string scoreboard = "scoreboard";
-            Scoreboard = LoadSingleTexture($"{scoreboardFolder}/{scoreboard}", scoreboard);
+            Scoreboard = LoadSingleTexture($"{scoreboardFolder}/{scoreboard}", QuaverResources.scoreboard);
 
             const string scoreboardOther = "scoreboard-other";
-            ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", scoreboardOther);
+            ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", QuaverResources.scoreboard_other);
         }
 
         /// <summary>

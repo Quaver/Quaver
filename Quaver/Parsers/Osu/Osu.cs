@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ionic.Zip;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Logging;
+using SharpCompress.Archives;
+using SharpCompress.Common;
 
 namespace Quaver.Parsers.Osu
 {
@@ -27,9 +29,16 @@ namespace Quaver.Parsers.Osu
 
             try
             {
-                using (var archive = new ZipFile(fileName))
+
+                using (var archive = ArchiveFactory.Open(fileName))
                 {
-                    archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (!entry.IsDirectory)
+                        {
+                            entry.WriteToDirectory(extractPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                        }
+                    }
                 }
 
                 // Now that we have them, proceed to convert them.

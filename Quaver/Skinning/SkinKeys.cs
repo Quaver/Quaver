@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Graphics;
+using Quaver.Resources;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Screens.Gameplay.UI.Health;
 
@@ -578,7 +579,7 @@ namespace Quaver.Skinning
             var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
 
-            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
+            return SkinStore.LoadSingleTexture(QuaverResources.ResourceManager, $"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>

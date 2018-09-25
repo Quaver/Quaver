@@ -23,9 +23,7 @@
 * [Contributing](https://github.com/Swan/Quaver#contributing)
 
 # Requirements
-* .NET 4.7.1
-* [Monogame Framework 3.6](http://www.monogame.net/)
-* Up to date and initialized submodules
+* [.NET Core 2.1 SDK](https://www.microsoft.com/net/download)
 
 # Compiling
 * Clone the Quaver repository using git clone (`git clone https://github.com/Swan/Quaver`)

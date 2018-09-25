@@ -22,6 +22,7 @@ using Quaver.Screens.Gameplay.Replays;
 using Quaver.Screens.Gameplay.Rulesets;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Screens.Menu;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
