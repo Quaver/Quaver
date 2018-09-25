@@ -30,6 +30,7 @@ using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
+using Wobble.Graphics;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Results
@@ -185,6 +186,7 @@ namespace Quaver.Screens.Results
             }
 
             View = new ResultsScreenView(this);
+
             InputManager = new ResultsInputManager(this);
         }
 
@@ -263,7 +265,8 @@ namespace Quaver.Screens.Results
                     ModManager.RemoveMod(ModIdentifier.Paused);
             }
 
-            // Submit score
+            // Stop capturing the replay at this point to get ready for score submission.
+            GameplayScreen.ReplayCapturer.ShouldCapture = false;
             SubmitScore();
         }
 
@@ -344,7 +347,7 @@ namespace Quaver.Screens.Results
             for (var i = 0; i < ScoreProcessor.Stats.Count; i++)
             {
                 var stat = ScoreProcessor.Stats[i];
-                str += $"{i},{stat.HitDifference}\r\n";
+                str += $"{stat.ToString()}\r\n";
             }
 
             File.WriteAllText(ConfigManager.DataDirectory + "/last_hit_data.txt", str);

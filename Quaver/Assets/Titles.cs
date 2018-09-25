@@ -17,6 +17,6 @@ namespace Quaver.Assets
         /// <summary>
         ///     Loads all the titles for the game.
         /// </summary>
-        public static void Load() => Default = AssetLoader.LoadTexture2D(QuaverResources.title_default, ImageFormat.Png);
+        public static void Load() => Default = AssetLoader.LoadTexture2D(QuaverResources.title_default);
     }
 }

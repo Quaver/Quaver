@@ -8,9 +8,9 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Assets;
 using Quaver.Graphics;
-using Quaver.Graphics.Graphing;
 using Quaver.Skinning;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;
@@ -53,8 +53,8 @@ namespace Quaver.Screens.Results.UI.Statistics
             Y = 10;
 
             // Create the actual graph and set it to this sprite's texture.
-            Image = Graph.CreateStaticScatterPlot(points, new Vector2(Width, Height), Colors.XnaToSystemDrawing(Color.Black),
-                                                        3, judgementLineColors, judgementLineColors);
+            //Image = Graph.CreateStaticScatterPlot(points, new Vector2(Width, Height), Colors.XnaToSystemDrawing(Color.Black),
+            //                                            3, judgementLineColors, judgementLineColors);
 
             // Create the text that displays the early miss indicator.
             var earlyText = new SpriteText(Fonts.Exo2Regular24, $"Early (-{missValue}ms)")
@@ -93,7 +93,9 @@ namespace Quaver.Screens.Results.UI.Statistics
         /// </summary>
         public override void Destroy()
         {
-            Task.Run(() => Image.Dispose());
+            // TODO: When graphs are hooked back up.
+            // Image.Dispose();
+
             base.Destroy();
         }
     }

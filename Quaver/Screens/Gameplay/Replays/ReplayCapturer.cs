@@ -35,6 +35,11 @@ namespace Quaver.Screens.Gameplay.Replays
         private ReplayKeyPressState LastKeyPressState { get; set; }
 
         /// <summary>
+        ///     If the replay should be captured.
+        /// </summary>
+        public bool ShouldCapture { get; set; } = true;
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -50,6 +55,8 @@ namespace Quaver.Screens.Gameplay.Replays
                 TimePlayed = Screen.TimePlayed
             };
 
+            Console.WriteLine(Screen.MapHash);
+
             // Add sample first frame.
             Replay.AddFrame(-10000, 0);
         }
@@ -64,7 +71,7 @@ namespace Quaver.Screens.Gameplay.Replays
         /// <param name="gameTime"></param>
         public void Capture(GameTime gameTime)
         {
-            if (Screen.IsPaused || Screen.Failed || Screen.IsPlayComplete)
+            if (Screen.IsPaused || !ShouldCapture)
                 return;
 
             TimeSinceLastCapture += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -76,7 +83,7 @@ namespace Quaver.Screens.Gameplay.Replays
                 AddFrame(currentPressState);
 
             if (Screen.LastRecordedCombo != Screen.Ruleset.ScoreProcessor.Combo)
-                AddFrame(currentPressState); ;
+                AddFrame(currentPressState);
 
             // Add frame for 60 fps.
             if (TimeSinceLastCapture >= 1000 / 60f)
@@ -91,7 +98,7 @@ namespace Quaver.Screens.Gameplay.Replays
         /// <summary>
         ///     Adds a replay frame with the correct key press state.
         /// </summary>
-        private void AddFrame(ReplayKeyPressState state) => Replay.AddFrame((float)Screen.Timing.Time, state);
+        private void AddFrame(ReplayKeyPressState state) => Replay.AddFrame((int)Screen.Timing.Time, state);
 
         /// <summary>
         ///     Gets the current key press state from the binding store.

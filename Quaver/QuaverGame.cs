@@ -90,6 +90,9 @@ namespace Quaver
             // Apply all graphics changes
             Graphics.ApplyChanges();
 
+            // Handle file dropped event.
+            Window.FileDropped += MapsetImporter.OnFileDropped;
+
             base.Initialize();
         }
 

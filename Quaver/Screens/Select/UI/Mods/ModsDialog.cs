@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;

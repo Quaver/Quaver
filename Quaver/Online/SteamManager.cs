@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Logging;
 using Steamworks;
@@ -65,7 +64,7 @@ namespace Quaver.Online
             // Make sure the game is started with Steam.
             if (SteamAPI.RestartAppIfNecessary((AppId_t) ApplicationId))
             {
-                Application.Exit();
+                Environment.Exit(0);
                 return;
             }
 

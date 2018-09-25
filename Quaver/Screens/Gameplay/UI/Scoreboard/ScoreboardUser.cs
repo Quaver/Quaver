@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Assets;
 using Quaver.Modifiers;
 using Quaver.Skinning;
@@ -44,7 +45,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         ///     The list of order judgements the user has gotten, so we can calculate their score
         ///     as the user plays the map.
         /// </summary>
-        public List<Judgement> UserJudgements { get; }
+        public List<HitStat> HitStats { get; }
 
         /// <summary>
         ///     The avatar for the user.
@@ -72,9 +73,9 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         private JudgementHitBurst HitBurst { get; }
 
         /// <summary>
-        ///     The current judgement we're on in the list of them to calculate their score.
+        ///     The current HitStat we're on in the list of them to calculate their score.
         /// </summary>
-        private int CurrentJudgement { get; set; }
+        private int CurrentHitStat { get; set; }
 
         /// <summary>
         ///     The user's raw username.
@@ -93,13 +94,13 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// <param name="screen"></param>
         /// <param name="type"></param>
         /// <param name="username"></param>
-        /// <param name="judgements"></param>
+        /// <param name="stats"></param>
         /// <param name="avatar"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
-        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar)
+        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<HitStat> stats, Texture2D avatar, ModIdentifier mods)
         {
             Screen = screen;
-            UserJudgements = judgements;
+            HitStats = stats;
             UsernameRaw = username;
             Type = type;
             Size = new ScalableVector2(260, 50);
@@ -131,7 +132,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, ModManager.Mods) : Screen.Ruleset.ScoreProcessor;
+                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods) : Screen.Ruleset.ScoreProcessor;
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -197,7 +198,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         }
 
         /// <summary>
-        ///     Calculates score for a given object. Essentially it just calcs for the next judgement.
+        ///     Calculates score for a given object. Essentially it just calcs for the next Hitstat.
         /// </summary>
         internal void CalculateScoreForNextObject()
         {
@@ -212,15 +213,29 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             }
 
             // If the user doesn't have any more judgements then don't update them.
-            if (UserJudgements.Count - 1 < CurrentJudgement)
+            if (HitStats.Count - 1 < CurrentHitStat)
                 return;
 
-            // Check how many judgements
-            Processor.CalculateScore(UserJudgements[CurrentJudgement]);
-            HitBurst.PerformJudgementAnimation(UserJudgements[CurrentJudgement]);
+            var processor = (ScoreProcessorKeys) Processor;
+
+            if (HitStats[CurrentHitStat].KeyPressType == KeyPressType.None)
+                processor.CalculateScore(Judgement.Miss);
+            else
+            {
+                var judgement = processor.CalculateScore(HitStats[CurrentHitStat].HitDifference, HitStats[CurrentHitStat].KeyPressType);
+
+                if (judgement == Judgement.Ghost)
+                {
+                    judgement = Judgement.Miss;
+                    processor.CalculateScore(Judgement.Miss);
+                }
+
+                HitBurst.PerformJudgementAnimation(judgement);
+            }
+
             SetTextColorBasedOnHealth();
 
-            CurrentJudgement++;
+            CurrentHitStat++;
         }
 
         /// <summary>
