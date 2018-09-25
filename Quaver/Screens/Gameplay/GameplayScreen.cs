@@ -251,7 +251,6 @@ namespace Quaver.Screens.Gameplay
         {
             Timing.Update(gameTime);
 
-
             if (!Failed && !IsPlayComplete)
             {
                 HandleResuming();

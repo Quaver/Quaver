@@ -390,9 +390,10 @@ namespace Quaver.Skinning
             // Load Judgements
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
-                var element = $"judge-{j.ToString().ToLower()}";
+                if (j == Judgement.Ghost)
+                    return;
 
-                
+                var element = $"judge-{j.ToString().ToLower()}";           
                Judgements[j] = new List<Texture2D>() { LoadSingleTexture(QuaverResources.ResourceManager, $"{Dir}/{folder}/{element}", element) };
             }
             
