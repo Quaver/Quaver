@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
+using Quaver.Modifiers;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -323,14 +325,14 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Console.WriteLine(Screen.AvailableMapsets[SelectedMapsetIndex].Title);
             foreach (var curMap in Screen.AvailableMapsets[SelectedMapsetIndex].Maps)
             {
-                curMap.LoadQua();
+                var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
                 Console.WriteLine(curMap.DifficultyName);
-                Console.WriteLine(curMap.StrainSolver.AverageNoteDensity);
-                Console.WriteLine("Roll/Trill: " + curMap.StrainSolver.Roll);
-                Console.WriteLine("Simple Jack: " + curMap.StrainSolver.SJack);
-                Console.WriteLine("Tech Jack: " + curMap.StrainSolver.TJack);
-                Console.WriteLine("Bracket: " + curMap.StrainSolver.Bracket);
-                Console.WriteLine(curMap.StrainSolver.DebugString);
+                Console.WriteLine(diff.AverageNoteDensity);
+                Console.WriteLine("Roll/Trill: " + diff.Roll);
+                Console.WriteLine("Simple Jack: " + diff.SJack);
+                Console.WriteLine("Tech Jack: " + diff.TJack);
+                Console.WriteLine("Bracket: " + diff.Bracket);
+                Console.WriteLine(diff.DebugString);
                 Console.WriteLine();
             }
 

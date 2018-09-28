@@ -78,7 +78,7 @@ namespace Quaver.Database.Maps
         public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss");
 
         /// <summary>
-        ///     The difficulty rating of the map.
+        ///     The difficulty rating of the map. Assumes rate = 1.0
         /// </summary>
         public float DifficultyRating { get; set; }
 
@@ -138,6 +138,12 @@ namespace Quaver.Database.Maps
         public int LocalOffset { get; set; }
 
         /// <summary>
+        ///     The difficulty rating of the map with the current song rate.
+        /// </summary>
+        [Ignore]
+        public float DifficultyRatingWithCurrentRate { get; set; }
+
+        /// <summary>
         ///     Determines if this map is an osu! map.
         /// </summary>
         [Ignore]
@@ -189,7 +195,7 @@ namespace Quaver.Database.Maps
             Tags = qua.Tags,
             SongLength =  qua.Length,
             Mode = qua.Mode,
-            DifficultyRating = qua.SolveDifficulty().OverallDifficulty();
+            DifficultyRating = qua.SolveDifficulty().OverallDifficulty
         };
 
         /// <summary>
@@ -252,8 +258,18 @@ namespace Quaver.Database.Maps
             Scores.Value?.Clear();
         }
 
+        /// <summary>
+        ///     Solves Difficulty of a map and returns Difficulty Data.
+        /// </summary>
+        /// <param name="rate"></param>
+        /// <returns></returns>
         public StrainSolver SolveDifficulty(float rate = 1)
         {
+            // Load Qua Automatically if it hasn't been loaded yet
+            if (Qua == null)
+                Qua = LoadQua();
+
+            // Solve Difficulty
             return Qua.SolveDifficulty(rate);
         }
     }

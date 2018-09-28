@@ -100,12 +100,12 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
         }
 
-        private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.StrainSolver.OverallDifficulty))
+        private void CreateDifficultyRating() => DifficultyRating = new SpriteText(Fonts.Exo2Regular24, string.Format("{0:N2}", Map.DifficultyRating))
         {
             Parent = this,
             Font = Fonts.Exo2Bold24,
             TextScale = 0.8f, //0.46f,
-            TextColor = Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(Map.StrainSolver.OverallDifficulty)),
+            TextColor = Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(Map.DifficultyRating)),
             Alignment = Alignment.MidRight,
             TextAlignment = Alignment.MidRight,
             X = -10f
