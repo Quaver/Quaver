@@ -252,9 +252,9 @@ namespace Quaver.Database.Maps
             Scores.Value?.Clear();
         }
 
-        public StrainSolver SolveDifficulty()
+        public StrainSolver SolveDifficulty(float rate = 1)
         {
-            return Qua.SolveDifficulty();
+            return Qua.SolveDifficulty(rate);
         }
     }
 
