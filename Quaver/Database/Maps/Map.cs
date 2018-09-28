@@ -150,13 +150,6 @@ namespace Quaver.Database.Maps
         public Qua Qua { get; set; }
 
         /// <summary>
-        ///     Computed Data relating to the map's difficulty
-        ///     todo: Use StrainSolver instead of StrainSolverKeys
-        /// </summary>
-        [Ignore]
-        public StrainSolverKeys StrainSolver { get; set; }
-
-        /// <summary>
         ///     The mapset the map belongs to.
         /// </summary>
         [Ignore]
@@ -196,7 +189,7 @@ namespace Quaver.Database.Maps
             Tags = qua.Tags,
             SongLength =  qua.Length,
             Mode = qua.Mode,
-            DifficultyRating = qua.AverageNotesPerSecond()
+            DifficultyRating = qua.CalculateDifficulty().OverallDifficulty();
         };
 
         /// <summary>
@@ -216,19 +209,16 @@ namespace Quaver.Database.Maps
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
                     qua = Qua.Parse(quaPath);
-                    StrainSolver = new StrainSolverKeys(qua);
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
-                    StrainSolver = new StrainSolverKeys(qua);
                     break;
                 case MapGame.Etterna:
                     // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                     // other than through this means.
                     var sm = StepManiaFile.Parse(MapManager.EtternaFolder + Directory + "/" + Path).ToQua();
                     qua = sm.Find(x => x.DifficultyName == DifficultyName);
-                    StrainSolver = new StrainSolverKeys(qua);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -260,6 +250,11 @@ namespace Quaver.Database.Maps
         {
             Scores.UnHookEventHandlers();
             Scores.Value?.Clear();
+        }
+
+        public StrainSolver CalculateDifficulty()
+        {
+            return Qua.CalculateDifficulty();
         }
     }
 
