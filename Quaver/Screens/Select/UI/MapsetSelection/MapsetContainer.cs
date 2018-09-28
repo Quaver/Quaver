@@ -108,8 +108,22 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Permit backgrounds to fade in now.
             BackgroundManager.PermittedToFadeIn = true;
 
+            // Listen to when mods get changed
+            ModManager.ModsChanged += OnModsChanged;
+
             InitializeMapsetButtons();
             SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex], true);
+        }
+
+        /// <summary>
+        ///     Whenever game modifiers changed, update the text of it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            // Select current map and recalculate diff
+            SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex], true, true);
         }
 
         /// <inheritdoc />
@@ -157,6 +171,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         /// </summary>
         public override void Destroy()
         {
+            ModManager.ModsChanged -= OnModsChanged;
             MapsetButtons.ForEach(x => x.Destroy());
             base.Destroy();
         }
@@ -327,7 +342,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             {
                 var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
                 Console.WriteLine(curMap.DifficultyName);
-                Console.WriteLine(diff.AverageNoteDensity);
+                Console.WriteLine(diff.OverallDifficulty + ", " + diff.AverageNoteDensity);
                 Console.WriteLine("Roll/Trill: " + diff.Roll);
                 Console.WriteLine("Simple Jack: " + diff.SJack);
                 Console.WriteLine("Tech Jack: " + diff.TJack);
