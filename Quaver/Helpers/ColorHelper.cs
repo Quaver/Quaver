@@ -15,7 +15,7 @@ namespace Quaver.Helpers
         /// </summary>
         /// <param name="rating"></param>
         /// <returns></returns>
-        [Obsolete("Please use Colokrs class in Quaver.API")]
+        [Obsolete("Please use Colors class in Quaver.API")]
         internal static Color DifficultyToColor(float rating)
         {
             // Easy
