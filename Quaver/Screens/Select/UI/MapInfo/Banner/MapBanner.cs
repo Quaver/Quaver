@@ -325,7 +325,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             };
 
             // Create container for difficulty
-            Difficulty = new MetadataContainer("DIFFICULTY", string.Format("{0:N2}", MapManager.Selected.Value.DifficultyRatingWithCurrentRate))
+            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.DifficultyRatingWithCurrentRate:0.##}")
             {
                 Parent = Brightness,
                 Alignment = Alignment.BotLeft,
@@ -356,7 +356,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             // Update other metadata
             var diff = MapManager.Selected.Value.DifficultyRatingWithCurrentRate;
-            Difficulty.UpdateValue(string.Format("{0:N2}", diff), Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(diff)));
+            Difficulty.UpdateValue($"{diff:0.##}", Colors.SystemDrawingToXna(StrainColors.GetStrainRatingColor(diff)));
             Length.UpdateValue(TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"));
 
             var bpm = (int) MapManager.Selected.Value.Bpm;
