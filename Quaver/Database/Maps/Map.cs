@@ -189,7 +189,7 @@ namespace Quaver.Database.Maps
             Tags = qua.Tags,
             SongLength =  qua.Length,
             Mode = qua.Mode,
-            DifficultyRating = qua.CalculateDifficulty().OverallDifficulty();
+            DifficultyRating = qua.SolveDifficulty().OverallDifficulty();
         };
 
         /// <summary>
@@ -252,9 +252,9 @@ namespace Quaver.Database.Maps
             Scores.Value?.Clear();
         }
 
-        public StrainSolver CalculateDifficulty()
+        public StrainSolver SolveDifficulty()
         {
-            return Qua.CalculateDifficulty();
+            return Qua.SolveDifficulty();
         }
     }
 
