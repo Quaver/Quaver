@@ -340,15 +340,18 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Console.WriteLine(Screen.AvailableMapsets[SelectedMapsetIndex].Title);
             foreach (var curMap in Screen.AvailableMapsets[SelectedMapsetIndex].Maps)
             {
-                var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
-                Console.WriteLine(curMap.DifficultyName);
-                Console.WriteLine(diff.OverallDifficulty + ", " + diff.AverageNoteDensity);
-                Console.WriteLine("Roll/Trill: " + diff.Roll);
-                Console.WriteLine("Simple Jack: " + diff.SJack);
-                Console.WriteLine("Tech Jack: " + diff.TJack);
-                Console.WriteLine("Bracket: " + diff.Bracket);
-                Console.WriteLine(diff.DebugString);
-                Console.WriteLine();
+                if (curMap.DifficultyRatingWithCurrentRate <= 0 || forceDifficultySelectorUpdate)
+                {
+                    var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
+                    Console.WriteLine(curMap.DifficultyName);
+                    Console.WriteLine(diff.OverallDifficulty + ", " + diff.AverageNoteDensity);
+                    Console.WriteLine("Roll/Trill: " + diff.Roll);
+                    Console.WriteLine("Simple Jack: " + diff.SJack);
+                    Console.WriteLine("Tech Jack: " + diff.TJack);
+                    Console.WriteLine("Bracket: " + diff.Bracket);
+                    Console.WriteLine(diff.DebugString);
+                    Console.WriteLine();
+                }
             }
 
             // Happens when a user searches for a map that's already in the selected set.
