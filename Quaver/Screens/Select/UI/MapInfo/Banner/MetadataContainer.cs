@@ -65,10 +65,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             ValueText.Text = text.ToUpper();
             AlignText();
 
+            // If text color is not null, reassign its color
             if (textcolor != null)
-            {
                 ValueText.TextColor = (Color)textcolor;
-            }
         }
     }
 }
