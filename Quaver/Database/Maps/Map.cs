@@ -269,8 +269,12 @@ namespace Quaver.Database.Maps
             if (Qua == null)
                 Qua = LoadQua();
 
-            // Solve Difficulty
-            return Qua.SolveDifficulty(rate);
+            // Sovle Difficulty
+            var strainSolver = Qua.SolveDifficulty(rate);
+            DifficultyRatingWithCurrentRate = strainSolver.OverallDifficulty;
+
+            // Return data
+            return strainSolver;
         }
     }
 
