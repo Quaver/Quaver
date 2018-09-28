@@ -336,13 +336,14 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Calculate difficulty for every map in the mapset
             // TODO: there should already be a general difficulty of every map from the cache
             // TODO: StrainRatingData should only be applied to a single selected map, so we don't have to calculate difficulties here
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine(Screen.AvailableMapsets[SelectedMapsetIndex].Title);
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine(Screen.AvailableMapsets[SelectedMapsetIndex].Title);
             foreach (var curMap in Screen.AvailableMapsets[SelectedMapsetIndex].Maps)
             {
                 if (curMap.DifficultyRatingWithCurrentRate <= 0 || forceDifficultySelectorUpdate)
                 {
                     var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
+                    /*
                     Console.WriteLine(curMap.DifficultyName);
                     Console.WriteLine(diff.OverallDifficulty + ", " + diff.AverageNoteDensity);
                     Console.WriteLine("Roll/Trill: " + diff.Roll);
@@ -350,7 +351,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                     Console.WriteLine("Tech Jack: " + diff.TJack);
                     Console.WriteLine("Bracket: " + diff.Bracket);
                     Console.WriteLine(diff.DebugString);
-                    Console.WriteLine();
+                    Console.WriteLine();*/
                 }
             }
 
