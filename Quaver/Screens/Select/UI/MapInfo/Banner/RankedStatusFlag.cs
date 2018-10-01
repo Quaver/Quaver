@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
@@ -57,6 +58,10 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
                 case RankedStatus.NotSubmitted:
                     Tint = ColorHelper.HexToColor("#bb2424");
                     TextStatus.Text = "Not Submitted";
+                    break;
+                case RankedStatus.Unranked:
+                    Tint = Color.Silver;
+                    TextStatus.Text = "Unranked";
                     break;
                 case RankedStatus.Ranked:
                     Tint = ColorHelper.HexToColor("#75e475");
