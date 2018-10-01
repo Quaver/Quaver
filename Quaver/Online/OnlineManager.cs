@@ -278,7 +278,11 @@ namespace Quaver.Online
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
             var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
-            var map = mapsets.First().Maps.Find(x => x.Id == e.Id && x.Md5Checksum == e.Md5);
+
+            if (mapsets.Count == 0)
+                return;
+
+            var map = mapsets.First().Maps.Find(x => x.MapId == e.Id && x.Md5Checksum == e.Md5);
 
             switch (e.Code)
             {

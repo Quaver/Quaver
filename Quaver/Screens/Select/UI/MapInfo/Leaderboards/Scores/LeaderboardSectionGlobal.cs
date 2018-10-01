@@ -29,7 +29,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             if (!OnlineManager.Connected)
                 return null;
 
-            OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.Id, MapManager.Selected.Value.Md5Checksum);
+            OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
 
             return new List<LocalScore>();
         }
