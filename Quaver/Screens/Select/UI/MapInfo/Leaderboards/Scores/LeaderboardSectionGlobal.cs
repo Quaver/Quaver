@@ -2,6 +2,7 @@
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Online;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 {
@@ -23,6 +24,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected sealed override List<LocalScore> FetchScores() => new List<LocalScore>();
+        protected sealed override List<LocalScore> FetchScores()
+        {
+            if (!OnlineManager.Connected)
+                return null;
+
+            OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.Id, MapManager.Selected.Value.Md5Checksum);
+
+            return new List<LocalScore>();
+        }
     }
 }

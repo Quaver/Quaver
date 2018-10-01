@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Amib.Threading;
+using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Logging;
 using Quaver.Online.Chat;
@@ -9,6 +12,7 @@ using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
+using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
@@ -102,6 +106,7 @@ namespace Quaver.Online
             Client.OnFailedToJoinChatChannel += ChatManager.OnFailedToJoinChatChannel;
             Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
             Client.OnNotificationReceived += OnNotificationReceived;
+            Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
         }
 
         /// <summary>
@@ -263,6 +268,39 @@ namespace Quaver.Online
             }
 
             NotificationManager.Show(level, e.Content);
+        }
+
+        /// <summary>
+        ///     Called when retrieving online scores or updates about our map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
+        {
+            var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
+            var map = mapsets.First().Maps.Find(x => x.Id == e.Id && x.Md5Checksum == e.Md5);
+
+            switch (e.Code)
+            {
+                case OnlineScoresResponseCode.NotSubmitted:
+                    map.RankedStatus = RankedStatus.NotSubmitted;
+                    break;
+                case OnlineScoresResponseCode.NeedsUpdate:
+                    break;
+                case OnlineScoresResponseCode.Unranked:
+                    map.RankedStatus = RankedStatus.Unranked;
+                    break;
+                case OnlineScoresResponseCode.Ranked:
+                    map.RankedStatus = RankedStatus.Ranked;
+                    break;
+                case OnlineScoresResponseCode.DanCourse:
+                    map.RankedStatus = RankedStatus.DanCourse;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Logger.LogInfo($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
         }
     }
 }
