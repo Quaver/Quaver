@@ -16,7 +16,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             ScrollContainer.Alpha = 0;
 
-            // TOOD: REPLACE WITH ONLINE SCORES
             FetchAndUpdateLeaderboards(null);
         }
 
@@ -29,9 +28,12 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             if (!OnlineManager.Connected)
                 return null;
 
-            OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
+            var scores = OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
 
-            return new List<LocalScore>();
+            var localScores = new List<LocalScore>();
+            scores?.Scores?.ForEach(x => localScores.Add(LocalScore.FromOnlineScoreboardScore(x)));
+
+            return localScores;
         }
     }
 }

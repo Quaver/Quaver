@@ -284,7 +284,7 @@ namespace Quaver.Online
 
             var map = mapsets.First().Maps.Find(x => x.MapId == e.Id && x.Md5Checksum == e.Md5);
 
-            switch (e.Code)
+            switch (e.Response.Code)
             {
                 case OnlineScoresResponseCode.NotSubmitted:
                     map.RankedStatus = RankedStatus.NotSubmitted;
@@ -303,6 +303,7 @@ namespace Quaver.Online
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
 
             Logger.LogInfo($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
         }

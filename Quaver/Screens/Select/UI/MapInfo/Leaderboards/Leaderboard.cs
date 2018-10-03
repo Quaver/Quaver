@@ -162,7 +162,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             {
                 case LeaderboardSectionType.Local:
                     var localLeaderboard = (LeaderboardSectionLocal) Sections[LeaderboardSectionType.Local];
-                    localLeaderboard.FetchAndUpdateLeaderboards(MapManager.Selected.Value.Scores.Value);
+                    localLeaderboard.FetchAndUpdateLeaderboards(null);
                     break;
                 // Ignore.
                 case LeaderboardSectionType.Global:
