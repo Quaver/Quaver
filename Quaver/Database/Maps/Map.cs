@@ -263,14 +263,14 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="rate"></param>
         /// <returns></returns>
-        public StrainSolver SolveDifficulty(float rate = 1)
+        public StrainSolver SolveDifficulty(ModIdentifier mods)
         {
             // Load Qua Automatically if it hasn't been loaded yet
             if (Qua == null)
                 Qua = LoadQua();
 
             // Sovle Difficulty
-            var strainSolver = Qua.SolveDifficulty(rate);
+            var strainSolver = Qua.SolveDifficulty(mods);
             DifficultyRatingWithCurrentRate = strainSolver.OverallDifficulty;
 
             // Return data

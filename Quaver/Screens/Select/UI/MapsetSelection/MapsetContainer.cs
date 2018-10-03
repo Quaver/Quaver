@@ -342,7 +342,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             {
                 if (curMap.DifficultyRatingWithCurrentRate <= 0 || forceDifficultySelectorUpdate)
                 {
-                    var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModHelper.GetRateFromMods(ModManager.Mods));
+                    var diff = (StrainSolverKeys)curMap.SolveDifficulty(ModManager.Mods);
                     /*
                     Console.WriteLine(curMap.DifficultyName);
                     Console.WriteLine(diff.OverallDifficulty + ", " + diff.AverageNoteDensity);
