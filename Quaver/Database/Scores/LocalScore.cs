@@ -1,7 +1,11 @@
-﻿using Quaver.API.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Helpers;
+using Quaver.Server.Client.Structures;
 using SQLite;
 
 namespace Quaver.Database.Scores
@@ -111,6 +115,12 @@ namespace Quaver.Database.Scores
         public int PauseCount { get; set; }
 
         /// <summary>
+        ///     If the score is an online score.
+        /// </summary>
+        [Ignore]
+        public bool IsOnline { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -143,6 +153,41 @@ namespace Quaver.Database.Scores
             };
 
             return score;
+        }
+
+        /// <summary>
+        ///     Converts an OnlineScoreboardScore to a local score.
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        public static LocalScore FromOnlineScoreboardScore(OnlineScoreboardScore score)
+        {
+            // Unix timestamp is seconds past epoch
+            var dtDateTime = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(score.Timestamp / 1000f).ToLocalTime();
+
+            var localScore = new LocalScore()
+            {
+                IsOnline = true,
+                Id = score.Id,
+                MapMd5 = score.MapMd5,
+                Name = score.Username,
+                DateTime = dtDateTime.ToString(CultureInfo.InvariantCulture),
+                Mode = score.Mode,
+                Score = score.TotalScore,
+                Grade = GradeHelper.GetGradeFromAccuracy((float) score.Accuracy),
+                Accuracy = score.Accuracy,
+                MaxCombo = score.MaxCombo,
+                CountMarv = score.CountMarv,
+                CountPerf = score.CountPerf,
+                CountGreat = score.CountGreat,
+                CountGood = score.CountGood,
+                CountOkay = score.CountOkay,
+                CountMiss = score.CountMiss,
+                Mods = score.Mods
+            };
+
+            return localScore;
         }
     }
 }
