@@ -343,7 +343,7 @@ namespace Quaver.Online
         public static string GetRichPresenceLargeKeyText(GameMode mode)
         {
             var presence = DiscordManager.Client.CurrentPresence;
-            presence.Assets.LargeImageText = $"Swan";
+            presence.Assets.LargeImageText = ConfigManager.Username.Value;
 
             // Don't continue if not connected online. Only set to username.
             if (!Connected)
