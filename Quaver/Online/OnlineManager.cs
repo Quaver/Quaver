@@ -327,12 +327,10 @@ namespace Quaver.Online
                 return;
 
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
-            Console.WriteLine(JsonConvert.SerializeObject(e.Response));
 
             // Update rich presence.
             var presence = DiscordManager.Client.CurrentPresence;
             presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
-            Console.WriteLine(presence.Assets.LargeImageText);
 
             DiscordManager.Client.SetPresence(presence);
         }
