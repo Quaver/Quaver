@@ -240,9 +240,12 @@ namespace Quaver.Screens.Results
             {
                 NotificationManager.Show(NotificationLevel.Info, "Submitting score...");
 
-                OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
-                    ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
-                    SteamManager.PTicket));
+                Scheduler.RunThread(() =>
+                {
+                    OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
+                        ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                        SteamManager.PTicket));
+                });
             }
         }
 
