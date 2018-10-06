@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amib.Threading;
+using Newtonsoft.Json;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -108,6 +109,7 @@ namespace Quaver.Online
             Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
             Client.OnNotificationReceived += OnNotificationReceived;
             Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
+            Client.OnScoreSubmitted += OnScoreSubmitted;
         }
 
         /// <summary>
@@ -309,8 +311,30 @@ namespace Quaver.Online
                     throw new ArgumentOutOfRangeException();
             }
 
+            // TODO: Update map in db with new status...
 
             Logger.LogInfo($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when we've successfully submitted a score to the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
+        {
+            if (e.Response.Status != 200)
+                return;
+
+            Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
+            Console.WriteLine(JsonConvert.SerializeObject(e.Response));
+
+            // Update rich presence.
+            var presence = DiscordManager.Client.CurrentPresence;
+            presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
+            Console.WriteLine(presence.Assets.LargeImageText);
+
+            DiscordManager.Client.SetPresence(presence);
         }
 
         /// <summary>
