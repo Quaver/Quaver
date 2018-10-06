@@ -139,7 +139,7 @@ namespace Quaver.Online.Chat
                 return;
 
             // Get the user if they're online.
-            var receiver = OnlineManager.OnlineUsers.Values.ToList().Find(x => x.Username == chan.Name);
+            var receiver = OnlineManager.OnlineUsers.Values.ToList().Find(x => x.OnlineUser.Username == chan.Name);
 
             // Don't bother sending the message if they're not online.
             if (receiver == null)
@@ -150,7 +150,7 @@ namespace Quaver.Online.Chat
 
             // If the user is muted, then let the user know this.
             if (receiver.IsMuted)
-                QuaverBot.SendMessage(chan, $"Oops! {receiver.Username} is muted for another: {receiver.GetMuteTimeLeftString()}.");
+                QuaverBot.SendMessage(chan, $"Oops! {receiver.OnlineUser.Username} is muted for another: {receiver.GetMuteTimeLeftString()}.");
         }
 
          /// <summary>
@@ -246,7 +246,7 @@ namespace Quaver.Online.Chat
 
             // If the channel is private, then we want to use the sender's username,
             // otherwise we should use the channel's name.
-            var channel = isPrivate ? JoinedChatChannels.Find(x => x.Name == e.Message.Sender.Username)
+            var channel = isPrivate ? JoinedChatChannels.Find(x => x.Name == e.Message.Sender.OnlineUser.Username)
                                         : JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
 
             // In the event that the chat channel doesn't already exist, we'll want to add a new one in.
@@ -255,7 +255,7 @@ namespace Quaver.Online.Chat
             {
                 channel = new ChatChannel
                 {
-                    Name = e.Message.Sender.Username,
+                    Name = e.Message.Sender.OnlineUser.Username,
                     Description = "Private Message"
                 };
 
@@ -285,7 +285,8 @@ namespace Quaver.Online.Chat
             // Private message notification.
             if (channel.IsPrivate)
             {
-                var avatar = e.Message.Sender.Username == OnlineManager.Self.Username ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
+                var avatar = e.Message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
+                    ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
 
                 // Only show notification if the chat window isn't open.
                 if (!IsActive)
@@ -294,7 +295,7 @@ namespace Quaver.Online.Chat
                     // TODO: Add better sound for this.
                     SkinManager.Skin.SoundClick.CreateChannel()?.Play();
 
-                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.Sender.Username} has sent you a message. Click here to read it.",
+                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.Sender.OnlineUser.Username} has sent you a message. Click here to read it.",
                         (o, args) =>
                         {
                             while (!IsActive)
@@ -368,10 +369,10 @@ namespace Quaver.Online.Chat
             if (!OnlineManager.OnlineUsers.ContainsKey(e.UserId))
                 return;
 
-            OnlineManager.OnlineUsers[e.UserId].MuteTimeEnd = e.EndTime;
+            OnlineManager.OnlineUsers[e.UserId].OnlineUser.MuteEndTime = e.EndTime;
 
             // If the mute is for the current user, then display a message in chat.
-            if (e.UserId != OnlineManager.Self.Id || Dialog.ActiveChannel == null)
+            if (e.UserId != OnlineManager.Self.OnlineUser.Id || Dialog.ActiveChannel == null)
                 return;
 
             MuteTimeLeft = e.EndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();

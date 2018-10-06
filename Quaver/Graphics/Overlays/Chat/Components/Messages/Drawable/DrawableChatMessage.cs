@@ -62,7 +62,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Message = message;
 
             // The avatar used for the chat message
-            var userAvatar = message.Sender.Username == OnlineManager.Self.Username ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
+            var userAvatar = message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
+                ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
 
             Avatar = new Sprite
             {
@@ -91,8 +92,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             var timespan = TimeSpan.FromMilliseconds(Message.Time);
             var date = (new DateTime(1970, 1, 1) + timespan).ToLocalTime();
 
-            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {Message.Sender.Username}",
-                14, Colors.GetUserChatColor(Message.Sender.UserGroups), Alignment.MidLeft, (int) WindowManager.Width)
+            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {Message.Sender.OnlineUser.Username}",
+                14, Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups), Alignment.MidLeft, (int) WindowManager.Width)
             {
                 Parent = this,
                 X = Avatar.Width + Avatar.X + 5,
@@ -119,7 +120,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (!Message.Sender.IsSpecial)
                 return;
 
-            ChatBadge = new ChatBadge(Message.Sender.UserGroups)
+            ChatBadge = new ChatBadge(Message.Sender.OnlineUser.UserGroups)
             {
                 Parent = this,
                 X = TextUsername.X + TextUsername.Width + 5,

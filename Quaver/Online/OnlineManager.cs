@@ -201,13 +201,13 @@ namespace Quaver.Online
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             Self = e.Self;
-            ChatManager.MuteTimeLeft = Self.MuteTimeEnd - (long) TimeHelper.GetUnixTimestampMilliseconds();
+            ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
 
-            OnlineUsers.Add(e.Self.Id, e.Self);
-            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.Username}");
+            OnlineUsers.Add(e.Self.OnlineUser.Id, e.Self);
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.OnlineUser.Username}");
 
             // Make sure the config username is changed.
-            ConfigManager.Username.Value = Self.Username;
+            ConfigManager.Username.Value = Self.OnlineUser.Username;
 
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
@@ -219,12 +219,12 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnUserConnected(object sender, UserConnectedEventArgs e)
         {
-            if (OnlineUsers.ContainsKey(e.User.Id))
+            if (OnlineUsers.ContainsKey(e.User.OnlineUser.Id))
                 return;
 
-            OnlineUsers.Add(e.User.Id, e.User);
+            OnlineUsers.Add(e.User.OnlineUser.Id, e.User);
 
-            Console.WriteLine($"User: {e.User.Username} [{e.User.SteamId}] (#{e.User.Id}) has connected to the server.");
+            Console.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 

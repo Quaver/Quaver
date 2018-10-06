@@ -37,7 +37,7 @@ namespace Quaver.Online.Chat
             var userStr = "";
 
             foreach (var user in OnlineManager.OnlineUsers)
-                userStr += user.Value.Username + ", ";
+                userStr += user.Value.OnlineUser.Username + ", ";
 
             SendMessage(ChatManager.Dialog.ActiveChannel,
                 $"There are {OnlineManager.OnlineUsers.Count} users online.\n\n" +
@@ -66,14 +66,14 @@ namespace Quaver.Online.Chat
 
             // Check to see if that player is actually online
             // var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
-            var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.Username,
+            var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.OnlineUser.Username,
                                     username, StringComparison.CurrentCultureIgnoreCase));
 
             // User is online, so we'll need to join/switch to that chat channel.
             if (foundUser != null)
             {
                 // Check to see if the chat already is open, in that case just open it.
-                var joinedChannel = ChatManager.JoinedChatChannels.Find(x => string.Equals(x.Name, foundUser.Username,
+                var joinedChannel = ChatManager.JoinedChatChannels.Find(x => string.Equals(x.Name, foundUser.OnlineUser.Username,
                                         StringComparison.CurrentCultureIgnoreCase));
 
                 // In the event that the channel is already open, we want to just switch to it.
@@ -87,7 +87,7 @@ namespace Quaver.Online.Chat
                 {
                     var newChannel = new ChatChannel
                     {
-                        Name = foundUser.Username,
+                        Name = foundUser.OnlineUser.Username,
                         Description = "Private Message"
                     };
 
