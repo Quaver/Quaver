@@ -20,6 +20,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Packets.Server;
 using Steamworks;
 using WebSocketSharp;
+using Wobble.Discord;
 using Logger = Quaver.Logging.Logger;
 
 namespace Quaver.Online
@@ -209,6 +210,10 @@ namespace Quaver.Online
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
 
+            var presence = DiscordManager.Client.CurrentPresence;
+            presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
+            DiscordManager.Client.SetPresence(presence);
+
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
@@ -306,6 +311,31 @@ namespace Quaver.Online
 
 
             Logger.LogInfo($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Gets the large key text for discord rich presence.
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public static string GetRichPresenceLargeKeyText(GameMode mode)
+        {
+            var presence = DiscordManager.Client.CurrentPresence;
+            presence.Assets.LargeImageText = $"Swan";
+
+            // Don't continue if not connected online. Only set to username.
+            if (!Connected)
+                return presence.Assets.LargeImageText;
+
+            if (Self.Stats.ContainsKey(mode))
+            {
+                var stats = Self.Stats[mode];
+
+                if (stats.Rank != -1 && stats.CountryRank != -1)
+                    presence.Assets.LargeImageText += $" - Global: #{stats.Rank} | {Self.OnlineUser.CountryFlag}: #{stats.CountryRank}";
+            }
+
+            return presence.Assets.LargeImageText;
         }
     }
 }
