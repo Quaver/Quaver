@@ -1,29 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <StartupObject />
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Icon.bmp" />
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj" />
@@ -33,7 +28,6 @@
     <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="INIFileParser">
       <HintPath>INIFileParser.dll</HintPath>
@@ -42,15 +36,9 @@
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Graphics\Dialogs\" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Update="steam_api64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
