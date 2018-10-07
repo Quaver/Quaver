@@ -245,7 +245,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (Ruleset.Screen.Timing.Time > hitObject.TrueStartTime)
                     {
                         hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                        hitObject.PositionY = HitPositionOffset;
+                        hitObject.PositionY = hitObject.PositionY = hitObject.GetPosFromOffset((float)Ruleset.Screen.Timing.Time);
                     }
                     else
                     {
