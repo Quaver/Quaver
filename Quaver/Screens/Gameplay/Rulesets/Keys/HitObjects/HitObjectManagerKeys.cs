@@ -237,6 +237,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Start looping the long note body.
                     if (!hitObject.LongNoteBodySprite.IsLooping && !Ruleset.Screen.IsPaused)
                         hitObject.LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+
                     // If it is looping however and the game is paused, we'll want to stop the loop.
                     else if (hitObject.LongNoteBodySprite.IsLooping && Ruleset.Screen.IsPaused)
                         hitObject.LongNoteBodySprite.StopLoop();
