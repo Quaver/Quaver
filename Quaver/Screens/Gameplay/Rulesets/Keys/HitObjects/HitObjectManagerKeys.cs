@@ -244,10 +244,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Set the long note size and position.
                     if (Ruleset.Screen.Timing.Time > hitObject.TrueStartTime)
                     {
-                        //                              (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * HitObjectManagerKeys.ScrollSpeed);
-                        //                              (ulong)(hitObject.InitialLongNoteSize * ScrollSpeed * (1 - (Ruleset.Screen.Timing.Time - hitObject.TrueStartTime) / (hitObject.TrueEndTime - hitObject.TrueStartTime)));
-                        hitObject.CurrentLongNoteSize = (ulong)((hitObject.TrueEndTime - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                        hitObject.PositionY = hitObject.GetPosFromOffset((float)Ruleset.Screen.Timing.Time);
+                        hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
+                        hitObject.PositionY = HitPositionOffset;
                     }
                     else
                     {
