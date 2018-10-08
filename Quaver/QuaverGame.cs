@@ -151,6 +151,19 @@ namespace Quaver
             BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
             DialogManager.Update(gameTime);
+
+            // Global Input
+#if DEBUG
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
+            {
+                ConfigManager.DebugDisplayLogMessages.Value = !ConfigManager.DebugDisplayLogMessages.Value;
+
+                NotificationManager.Show(NotificationLevel.Info,
+                    ConfigManager.DebugDisplayLogMessages.Value
+                        ? $"You are now displaying debug log messages. Press F5 to toggle them off."
+                        : $"You are now hiding debug log messages. Press F5 to toggle them on.");
+            }
+#endif
         }
 
         /// <inheritdoc />
@@ -183,6 +196,10 @@ namespace Quaver
         private static void PerformGameSetup()
         {
             ConfigManager.Initialize();
+
+            Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
+            ConfigManager.DebugDisplayLogMessages.ValueChanged += (o, e) => Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
+
             DeleteTemporaryFiles();
 
             LocalScoreCache.CreateTable();
@@ -202,7 +219,6 @@ namespace Quaver
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
             {
                 AudioTrack.GlobalVolume = e.Value;
-                AudioSample.GlobalVolume = e.Value;
             };
 
             // Change track volume whenever it changed
