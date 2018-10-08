@@ -35,8 +35,13 @@ using Wobble.Screens;
 
 namespace Quaver.Screens.Gameplay
 {
-    public class GameplayScreen : Screen
+    public class GameplayScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Gameplay;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -623,9 +628,9 @@ namespace Quaver.Screens.Gameplay
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
                     if (InReplayMode)
-                        ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
                     else
-                        ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
+                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
                 return;

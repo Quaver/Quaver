@@ -319,7 +319,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // TODO: Fix this.
             if (SelectedMapIndex == -1)
             {
-                ScreenManager.ChangeScreen(new SelectScreen());
+                QuaverScreenManager.ChangeScreen(new SelectScreen());
                 return;
             }
 

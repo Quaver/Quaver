@@ -81,7 +81,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
                 // Export Replay Button
                 CreateButton("Edit Map", (sender, args) =>
                 {
-                    ScreenManager.ChangeScreen(new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    QuaverScreenManager.ChangeScreen(new EditorScreen(MapManager.Selected.Value.LoadQua()));
                 }),
             };
 

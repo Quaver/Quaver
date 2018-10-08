@@ -17,13 +17,13 @@ namespace Quaver.Modifiers.Mods.Mania
 
         /// <inheritdoc />
         /// <summary>
-        ///     Identifier (None. Speed is a Type and doesn't have an identifier)
+        ///     Identifier (None. Speed is a ResultsScreenType and doesn't have an identifier)
         /// </summary>
         public ModIdentifier ModIdentifier { get; set; }
 
         /// <inheritdoc />
         /// <summary>
-        ///     Type
+        ///     ResultsScreenType
         /// </summary>
         public ModType Type { get; set; } = ModType.Speed;
 

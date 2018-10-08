@@ -234,14 +234,14 @@ namespace Quaver.Screens.Connecting
         ///     Exits to a specified screen whenever OnExitScreen is called.
         /// </summary>
         /// <param name="screen"></param>
-        public void ExitToScreen(Screen screen)
+        public void ExitToScreen(QuaverScreen screen)
         {
             IsExitingScreen = true;
 
             ScreenTransitioner.Transformations.Clear();
             ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, ScreenTransitioner.Alpha, 1, 600));
 
-            OnExitScreen += () => ScreenManager.ChangeScreen(screen);
+            OnExitScreen += () => QuaverScreenManager.ChangeScreen(screen);
         }
 
         /// <summary>

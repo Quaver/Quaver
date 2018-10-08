@@ -9,8 +9,13 @@ using Wobble.Screens;
 
 namespace Quaver.Screens.Loading
 {
-    public class MapLoadingScreen : Screen
+    public class MapLoadingScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Loading;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

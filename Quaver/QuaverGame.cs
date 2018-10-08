@@ -16,6 +16,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Scheduling;
+using Quaver.Screens;
 using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
@@ -121,7 +122,7 @@ namespace Quaver
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            ScreenManager.ChangeScreen(new SplashScreen());
+            QuaverScreenManager.ChangeScreen(new SplashScreen());
         }
 
         /// <inheritdoc />

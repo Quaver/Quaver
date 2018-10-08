@@ -121,7 +121,7 @@ namespace Quaver.Screens.Menu
                 UserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
                 () =>
                 {
-                    ScreenManager.ChangeScreen(new SelectScreen());
+                    QuaverScreenManager.ChangeScreen(new SelectScreen());
                 })
             {
                 Alignment = Alignment.TopCenter,

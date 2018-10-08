@@ -93,7 +93,7 @@ namespace Quaver.Screens.Gameplay.UI
                     return;
 
                 SkinManager.Skin.SoundRetry.CreateChannel().Play();
-                ScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             })
             {
                 Parent = this,

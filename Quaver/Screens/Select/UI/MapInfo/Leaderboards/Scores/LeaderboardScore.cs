@@ -88,7 +88,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             CreateModsText();
 
             section.ScrollContainer.AddContainedDrawable(this);
-            Clicked += (sender, args) => ScreenManager.ChangeScreen(new ResultsScreen(Score));
+            Clicked += (sender, args) => QuaverScreenManager.ChangeScreen(new ResultsScreen(Score));
         }
 
         /// <inheritdoc />

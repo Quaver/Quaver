@@ -188,7 +188,7 @@ namespace Quaver.Screens.Splash
 
             // Change screens after fading for a bit.
             if (TimeSinceFadingOut > 700)
-                ScreenManager.ChangeScreen(new ConnectingScreen());
+                QuaverScreenManager.ChangeScreen(new ConnectingScreen());
 
             Container?.Update(gameTime);
         }
