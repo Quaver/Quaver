@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Wobble;
 using Wobble.Logging;
 using Wobble.Screens;
 
@@ -16,6 +17,10 @@ namespace Quaver.Screens
         public static void ChangeScreen(QuaverScreen screen)
         {
             Logger.Debug($"Changed to Screen '{screen.Type}'", LogType.Runtime);
+
+            var game = (QuaverGame) GameBase.Game;
+            game.CurrentScreen = screen;
+
             ScreenManager.ChangeScreen(screen);
         }
     }

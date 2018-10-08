@@ -51,6 +51,11 @@ namespace Quaver
         /// </summary>
         public VolumeController VolumeController { get; private set; }
 
+        /// <summary>
+        ///     The current activated screen.
+        /// </summary>
+        public QuaverScreen CurrentScreen { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
