@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Amib.Threading;
 using Newtonsoft.Json;
@@ -214,7 +215,7 @@ namespace Quaver.Online
             presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
             DiscordManager.Client.SetPresence(presence);
 
-            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+            Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
         /// <summary>
@@ -229,8 +230,8 @@ namespace Quaver.Online
 
             OnlineUsers.Add(e.User.OnlineUser.Id, e.User);
 
-            Console.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
-            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+            Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
+            Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
         /// <summary>
@@ -243,8 +244,8 @@ namespace Quaver.Online
             if (OnlineUsers.ContainsKey(e.UserId))
                 OnlineUsers.Remove(e.UserId);
 
-            Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
-            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+            Trace.WriteLine($"User: #{e.UserId} has disconnected from the server.");
+            Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
         /// <summary>
