@@ -296,6 +296,11 @@ namespace Quaver.Config
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
 
         /// <summary>
+        ///     Dictates whether or not to display debug log messages.
+        /// </summary>
+        internal static Bindable<bool> DebugDisplayLogMessages { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -424,6 +429,7 @@ namespace Quaver.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
@@ -490,6 +496,7 @@ namespace Quaver.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
+                    DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
