@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Config;
+using Quaver.Online;
 
 namespace Quaver
 {
@@ -31,10 +33,11 @@ namespace Quaver
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            ConfigManager.Initialize();
+            SteamManager.Initialize();
+
             using (var game = new QuaverGame())
-            {
                 game.Run();
-            }
         }
     }
 }

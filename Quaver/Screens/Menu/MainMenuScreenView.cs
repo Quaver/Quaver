@@ -20,6 +20,7 @@ using Quaver.Screens.Menu.UI.Buttons.Navigation;
 using Quaver.Screens.Options;
 using Quaver.Screens.Results;
 using Quaver.Screens.Select;
+using Quaver.Screens.Test.Chat;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;

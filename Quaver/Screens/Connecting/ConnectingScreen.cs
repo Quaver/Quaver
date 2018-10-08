@@ -1,3 +1,4 @@
+using Quaver.Online;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Connecting
@@ -16,6 +17,10 @@ namespace Quaver.Screens.Connecting
 
         /// <summary>
         /// </summary>
-        public ConnectingScreen() => View = new ConnectingScreenView(this);
+        public ConnectingScreen()
+        {
+            OnlineManager.Login();
+            View = new ConnectingScreenView(this);
+        }
     }
 }

@@ -19,6 +19,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
@@ -26,6 +27,8 @@ using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
 using Quaver.Screens.Select;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Helpers;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
@@ -236,6 +239,19 @@ namespace Quaver.Screens.Results
             Scheduler.RunThread(SaveHitData);
             Scheduler.RunThread(SaveHealthData);
 #endif
+
+            // Submit score if online
+            if (OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Submitting score...");
+
+                Scheduler.RunThread(() =>
+                {
+                    OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
+                        ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                        SteamManager.PTicket));
+                });
+            }
         }
 
         /// <summary>

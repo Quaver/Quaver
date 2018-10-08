@@ -17,6 +17,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Screens.Gameplay.Replays;
 using Quaver.Screens.Gameplay.Rulesets;
 using Quaver.Screens.Gameplay.Rulesets.Input;
@@ -707,6 +708,7 @@ namespace Quaver.Screens.Gameplay
                 End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate)
             };
 
+            presence.Assets.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordManager.Client.SetPresence(presence);
         }
     }

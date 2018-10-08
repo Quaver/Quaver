@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -9,6 +9,11 @@ namespace Quaver.Screens.Connecting.UI
 {
     public class UsernameSelectionDialog : DialogScreen
     {
+        /// <summary>
+        ///     Reference to the parent ScreenView.
+        /// </summary>
+        private ConnectingScreenView View { get; }
+
         /// <summary>
         ///     The containing box for the dialog.
         /// </summary>
@@ -37,8 +42,13 @@ namespace Quaver.Screens.Connecting.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="view"></param>
         /// <param name="backgroundAlpha"></param>
-        public UsernameSelectionDialog(float backgroundAlpha) : base(backgroundAlpha) => CreateContent();
+        public UsernameSelectionDialog(ConnectingScreenView view, float backgroundAlpha) : base(backgroundAlpha)
+        {
+            View = view;
+            CreateContent();;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -79,7 +89,7 @@ namespace Quaver.Screens.Connecting.UI
 
             TextContent2.Y = TextContent.Y + TextContent2.MeasureString().Y / 2f + 10;
 
-            Textbox = new UsernameSelectionTextbox()
+            Textbox = new UsernameSelectionTextbox(View)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,

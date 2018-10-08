@@ -6,8 +6,12 @@ using osu_database_reader;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
+using Quaver.Online;
 using Quaver.Screens.Connecting.UI;
 using Quaver.Screens.Menu;
+using Quaver.Server.Client.Events.Disconnnection;
+using Quaver.Server.Client.Events.Login;
+using Quaver.Server.Client.Handlers;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -92,8 +96,7 @@ namespace Quaver.Screens.Connecting
 
             CreateQuitButton();
             CreateScreenTransitioner();
-
-            OnFailure();
+            HookToOnlineEvents();
         }
 
         /// <inheritdoc />
@@ -128,6 +131,15 @@ namespace Quaver.Screens.Connecting
         {
             Container?.Destroy();
             OnExitScreen = null;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnLoginSuccess -= OnLoginSuccess;
+                OnlineManager.Client.OnLoginFailed -= OnLoginFailed;
+                OnlineManager.Client.OnChooseUsername -= OnChooseUsername;
+                OnlineManager.Client.OnChooseUsernameResponse -= OnChooseUsernameResponse;
+                OnlineManager.Client.OnDisconnection -= OnDisconnection;
+            }
         }
 
         /// <summary>
@@ -202,20 +214,13 @@ namespace Quaver.Screens.Connecting
             Parent = Container,
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
             Tint = Color.Black,
-            Alpha = 1,
-            Transformations =
-            {
-                new Transformation(TransformationProperty.Alpha, Easing.EaseInQuint, 1, 0, 1000)
-            }
+            Alpha = 0,
         };
 
         /// <summary>
         ///     When connection to the server was a success.
         /// </summary>
-        private void OnConnected()
-        {
-            ConnectingContainer.OnConnected();
-        }
+        private void OnConnected() => ConnectingContainer.OnConnected();
 
         /// <summary>
         ///     When the connection to the server was a failure.
@@ -227,7 +232,20 @@ namespace Quaver.Screens.Connecting
         /// </summary>
         public void Connect()
         {
-            NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in official releases.");
+            OnlineManager.Login();
+            HookToOnlineEvents();
+        }
+
+        /// <summary>
+        ///     Adds event handlers for all related online events.
+        /// </summary>
+        private void HookToOnlineEvents()
+        {
+            OnlineManager.Client.OnLoginSuccess += OnLoginSuccess;
+            OnlineManager.Client.OnLoginFailed += OnLoginFailed;
+            OnlineManager.Client.OnChooseUsername += OnChooseUsername;
+            OnlineManager.Client.OnChooseUsernameResponse += OnChooseUsernameResponse;
+            OnlineManager.Client.OnDisconnection += OnDisconnection;
         }
 
         /// <summary>
@@ -239,7 +257,7 @@ namespace Quaver.Screens.Connecting
             IsExitingScreen = true;
 
             ScreenTransitioner.Transformations.Clear();
-            ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, ScreenTransitioner.Alpha, 1, 600));
+            ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, ScreenTransitioner.Alpha, 1, 1000));
 
             OnExitScreen += () => QuaverScreenManager.ChangeScreen(screen);
         }
@@ -257,6 +275,64 @@ namespace Quaver.Screens.Connecting
 
             if (TimeElapsedSinceExitInitiated > 1200)
                 OnExitScreen?.Invoke();
+        }
+
+        /// <summary>
+        ///     Called when successfully logging into the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLoginSuccess(object sender, LoginReplyEventArgs e)
+        {
+            OnConnected();
+
+            ExitToScreen(new MainMenuScreen());
+        }
+
+        /// <summary>
+        ///     When the login fails, this'll be called.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLoginFailed(object sender, FailureToLoginEventArgs e) => OnFailure();
+
+        /// <summary>
+        ///     When receiving that we have to choose a username again.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChooseUsername(object sender, ChooseAUsernameEventArgs e) => DialogManager.Show(new UsernameSelectionDialog(this, 0.75f));
+
+        /// <summary>
+        ///     Called when receiving a response from the server about the client's username choice.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChooseUsernameResponse(object sender, ChooseAUsernameResponseEventArgs e)
+        {
+            if (e.Status == 200)
+                return;
+
+            // If it wasn't successful, have them pick another username.
+            DialogManager.Show(new UsernameSelectionDialog(this, 0.75f));
+        }
+
+        /// <summary>
+        ///     Called when disconnected from the server/failed to connect to the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisconnection(object sender, DisconnectedEventArgs e)
+        {
+            // If the user can't initially connect to the server (server is down.)
+            switch (e.CloseEventArgs.Code)
+            {
+                // Error ocurred while connecting.
+                case 1006:
+                case 1002:
+                    OnFailure();
+                    return;
+            }
         }
     }
 }
