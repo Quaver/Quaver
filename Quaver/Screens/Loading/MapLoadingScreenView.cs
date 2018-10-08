@@ -109,7 +109,7 @@ namespace Quaver.Screens.Loading
                         throw new ArgumentOutOfRangeException();
                 }
 
-                ScreenManager.ChangeScreen(new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<LocalScore>()));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<LocalScore>()));
             }
             catch (Exception e)
             {

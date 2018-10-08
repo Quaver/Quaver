@@ -101,7 +101,7 @@ namespace Quaver.Screens.Results.UI
                 })
             };
 
-            switch (Screen.Type)
+            switch (Screen.ResultsScreenType)
             {
                 case ResultsScreenType.FromGameplay:
                 case ResultsScreenType.FromReplayFile:

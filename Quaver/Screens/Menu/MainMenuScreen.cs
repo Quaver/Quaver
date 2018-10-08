@@ -10,8 +10,13 @@ using Wobble.Screens;
 
 namespace Quaver.Screens.Menu
 {
-    public class MainMenuScreen : Screen
+    public class MainMenuScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Menu;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -23,8 +23,13 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Select
 {
-    public class SelectScreen : Screen
+    public class SelectScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Select;
+
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
@@ -85,7 +90,7 @@ namespace Quaver.Screens.Select
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
-                ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+                QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new ModsDialog());

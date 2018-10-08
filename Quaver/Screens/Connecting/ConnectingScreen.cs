@@ -1,9 +1,14 @@
-﻿using Wobble.Screens;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Connecting
 {
-    public class ConnectingScreen : Screen
+    public class ConnectingScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Connecting;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

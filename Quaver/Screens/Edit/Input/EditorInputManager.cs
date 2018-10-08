@@ -90,7 +90,7 @@ namespace Quaver.Screens.Edit.Input
         private void HandleExit()
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                QuaverScreenManager.ChangeScreen(new MainMenuScreen());
         }
     }
 }

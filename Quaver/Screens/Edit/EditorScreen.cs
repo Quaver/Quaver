@@ -28,8 +28,13 @@ using Wobble.Screens;
 
 namespace Quaver.Screens.Edit
 {
-    public class EditorScreen : Screen
+    public class EditorScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Edit;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -126,7 +131,7 @@ namespace Quaver.Screens.Edit
                 }
                 catch (Exception)
                 {
-                    ScreenManager.ChangeScreen(new MainMenuScreen());
+                    QuaverScreenManager.ChangeScreen(new MainMenuScreen());
                     NotificationManager.Show(NotificationLevel.Error, "A track needs to be loaded in order to use the editor!");
                 }
             }
@@ -187,7 +192,7 @@ namespace Quaver.Screens.Edit
 
             if (qua != null)
             {
-                ScreenManager.ChangeScreen(new EditorScreen(qua));
+                QuaverScreenManager.ChangeScreen(new EditorScreen(qua));
             }
             else
                 NotificationManager.Show(NotificationLevel.Error, "An error ocurred when trying to edit this map.");

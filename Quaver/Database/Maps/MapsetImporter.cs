@@ -7,6 +7,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Parsers.Etterna;
 using Quaver.Parsers.Osu;
 using Quaver.Scheduling;
+using Quaver.Screens;
 using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
@@ -147,7 +148,7 @@ namespace Quaver.Database.Maps
             {
                 try
                 {
-                    ScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
+                    QuaverScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
                 }
                 catch (Exception ex)
                 {

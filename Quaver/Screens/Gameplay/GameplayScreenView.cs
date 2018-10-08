@@ -136,7 +136,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     The results screen to be loaded in the future on play completion.
         /// </summary>
-        private Screen FutureResultsScreen { get; set; }
+        private QuaverScreen FutureResultsScreen { get; set; }
 
         /// <summary>
         ///     When the results screen has successfully loaded, we'll be considered clear
@@ -498,7 +498,7 @@ namespace Quaver.Screens.Gameplay
             {
                 // Change background dim before switching screens.
                 BackgroundManager.Background.Dim = 0;
-                ScreenManager.ChangeScreen(FutureResultsScreen);
+                QuaverScreenManager.ChangeScreen(FutureResultsScreen);
             }
         }
 

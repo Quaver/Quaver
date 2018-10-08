@@ -8,8 +8,13 @@ using Wobble.Screens;
 
 namespace Quaver.Screens.Splash
 {
-    public class SplashScreen : Screen
+    public class SplashScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Splash;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

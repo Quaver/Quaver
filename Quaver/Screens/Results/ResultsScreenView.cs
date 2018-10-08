@@ -219,7 +219,7 @@ namespace Quaver.Screens.Results
             var resultsScreen = (ResultsScreen)Screen;
 
             // Only add data if we're coming originally from gameplay.
-            if (resultsScreen.Type == ResultsScreenType.FromGameplay)
+            if (resultsScreen.ResultsScreenType == ResultsScreenType.FromGameplay)
             {
                 stats.Add(new StatisticContainer("Hit Offset", new HitOffsetGraph(resultsScreen.ScoreProcessor)));
                 stats.Add(new StatisticContainer("Health", new HealthGraph(resultsScreen.ScoreProcessor)));
