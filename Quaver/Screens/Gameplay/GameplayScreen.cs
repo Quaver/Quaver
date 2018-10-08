@@ -16,7 +16,6 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Screens.Gameplay.Replays;
 using Quaver.Screens.Gameplay.Rulesets;
@@ -31,6 +30,7 @@ using Wobble.Discord;
 using Wobble.Discord.RPC;
 using Wobble.Graphics.Transformations;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Gameplay
@@ -421,7 +421,7 @@ namespace Quaver.Screens.Gameplay
                 if (gameTime == null)
                 {
                     const string log = "Cannot pause if GameTime is null";
-                    Logger.LogError(log, LogType.Runtime);
+                    Logger.Error(log, LogType.Runtime);
 
                     throw new InvalidOperationException(log);
                 }
@@ -667,7 +667,7 @@ namespace Quaver.Screens.Gameplay
             }
             catch (AudioEngineException)
             {
-                Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+                Logger.Warning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
 
                 // If there is no audio file, make sure the actual song time is set to the skip time.
                 const int actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)

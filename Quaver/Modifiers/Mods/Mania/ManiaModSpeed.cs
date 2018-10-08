@@ -4,7 +4,6 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
-using Quaver.Logging;
 
 namespace Quaver.Modifiers.Mods.Mania
 {

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Wobble;
+using Wobble.Logging;
 
 namespace Quaver.Parsers.Etterna
 {
@@ -34,7 +34,7 @@ namespace Quaver.Parsers.Etterna
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
                 }
 
                 try
@@ -43,14 +43,14 @@ namespace Quaver.Parsers.Etterna
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
                 }
 
-                Logger.LogSuccess("StepMania file has been successfully converted!", LogType.Runtime);
+                Logger.Important("StepMania file has been successfully converted!", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }

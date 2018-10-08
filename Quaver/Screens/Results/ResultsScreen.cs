@@ -18,7 +18,6 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
@@ -31,6 +30,7 @@ using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Results
@@ -280,7 +280,7 @@ namespace Quaver.Screens.Results
             // Send the user back to the song select screen with an error if there was no found mapset.
             if (mapset == null)
             {
-                Logger.LogError($"You do not have the map that this replay is for", LogType.Runtime);
+                Logger.Error($"You do not have the map that this replay is for", LogType.Runtime);
                 ScreenManager.ChangeScreen(new MainMenuScreen());
                 return;
             }
@@ -323,7 +323,7 @@ namespace Quaver.Screens.Results
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There was an error saving your score. Check Runtime.log for more details.");
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
 
             try
@@ -333,7 +333,7 @@ namespace Quaver.Screens.Results
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -384,7 +384,7 @@ namespace Quaver.Screens.Results
             }
             catch (Exception e)
             {
-                Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
+                Logger.Error($"There was an error when writing debug replay files: {e}", LogType.Runtime);
             }
         }
 
@@ -492,7 +492,7 @@ namespace Quaver.Screens.Results
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
                     ScreenManager.ChangeScreen(new SelectScreen());
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                     return;

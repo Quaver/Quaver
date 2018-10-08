@@ -15,7 +15,6 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
@@ -33,6 +32,7 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -111,9 +111,6 @@ namespace Quaver
             // Load the user's skin
             SkinManager.Load();
 
-            // Initialize the logger now that we have fonts loaded
-            Logger.Initialize();
-
             // Create the global FPS counter.
             CreateFpsCounter();
             VolumeController = new VolumeController() {Parent = GlobalUserInterface};
@@ -168,7 +165,6 @@ namespace Quaver
             base.Draw(gameTime);
 
             GameBase.DefaultSpriteBatchOptions.Begin();
-            Logger.Draw(gameTime);
             SpriteBatch.End();
 
             NotificationManager.Draw(gameTime);
@@ -178,7 +174,7 @@ namespace Quaver
 
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
-
+            LogManager.Draw(gameTime);
         }
 
         /// <summary>

@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
-using Quaver.Logging;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using Wobble.Logging;
 
 namespace Quaver.Parsers.Osu
 {
@@ -100,8 +100,8 @@ namespace Quaver.Parsers.Osu
             }
             catch (Exception e)
             {
-                Logger.LogError($"Error: There was an issue converting the .osz", LogType.Runtime, 3f);
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error($"Error: There was an issue converting the .osz", LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
             // Delete the entire temp directory regardless of the outcome.
             finally
