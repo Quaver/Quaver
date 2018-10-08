@@ -23,6 +23,8 @@ using Quaver.Screens.Gameplay.Rulesets;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Screens.Menu;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -472,6 +474,7 @@ namespace Quaver.Screens.Gameplay
                 DiscordManager.Client.CurrentPresence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time.";
                 DiscordManager.Client.CurrentPresence.Timestamps = null;
                 DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
                 // Fade in the transitioner.
                 screenView.Transitioner.Transformations.Clear();
@@ -500,6 +503,7 @@ namespace Quaver.Screens.Gameplay
             // Deactivate pause screen.
             screenView.PauseScreen.Deactivate();
             SetRichPresence();
+            OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
         }
 
         /// <summary>
@@ -710,6 +714,26 @@ namespace Quaver.Screens.Gameplay
 
             presence.Assets.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordManager.Client.SetPresence(presence);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus()
+        {
+            ClientStatus status;
+
+            if (InReplayMode)
+                status = ClientStatus.Watching;
+            else if (IsResumeInProgress)
+                status = ClientStatus.Playing;
+            else if (IsPaused)
+                status = ClientStatus.Paused;
+            else
+                status = ClientStatus.Playing;
+
+            return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, Map.ToString(), (long) ModManager.Mods);
         }
     }
 }

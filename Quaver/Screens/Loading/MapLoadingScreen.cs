@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Database.Scores;
+using Quaver.Server.Common.Objects;
 using Wobble.Audio.Tracks;
 using Wobble.Screens;
 
@@ -34,5 +35,11 @@ namespace Quaver.Screens.Loading
             View = new MapLoadingScreenView(this);
             AudioTrack.AllowPlayback = false;
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => null;
     }
 }

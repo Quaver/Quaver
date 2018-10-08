@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Common.Objects;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Splash
@@ -38,5 +39,11 @@ namespace Quaver.Screens.Splash
             TimeActive += gameTime.ElapsedGameTime.TotalMilliseconds;
             base.Update(gameTime);
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => null;
     }
 }

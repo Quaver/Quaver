@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Quaver.Online;
 using Wobble;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -22,6 +23,11 @@ namespace Quaver.Screens
             game.CurrentScreen = screen;
 
             ScreenManager.ChangeScreen(screen);
+
+            // Update client status on the server.
+            var status = screen.GetClientStatus();
+            if (status != null)
+                OnlineManager.Client?.UpdateClientStatus(status);
         }
     }
 }

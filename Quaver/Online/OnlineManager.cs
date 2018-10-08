@@ -20,6 +20,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Packets.Server;
 using Steamworks;
+using Wobble;
 using Wobble.Discord;
 using Wobble.Logging;
 
@@ -214,6 +215,10 @@ namespace Quaver.Online
             var presence = DiscordManager.Client.CurrentPresence;
             presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
             DiscordManager.Client.SetPresence(presence);
+
+            // Send client status update packet.
+            var game = (QuaverGame) GameBase.Game;
+            Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
 
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }

@@ -28,7 +28,9 @@ using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
 using Quaver.Screens.Select;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
+using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
@@ -558,5 +560,11 @@ namespace Quaver.Screens.Results
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "",
+            (byte) GameplayScreen.Map.Mode, "", (long) ModManager.Mods);
     }
 }
