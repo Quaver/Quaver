@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
-using Quaver.Logging;
 using Quaver.Modifiers.Mods;
 using Quaver.Modifiers.Mods.Mania;
+using Wobble.Logging;
 
 namespace Quaver.Modifiers
 {
@@ -127,7 +127,7 @@ namespace Quaver.Modifiers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -185,7 +185,7 @@ namespace Quaver.Modifiers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 

@@ -4,8 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <StartupObject />
+    <StartupObject>Quaver.Program</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Graphics\Dialogs\**" />
+    <EmbeddedResource Remove="Graphics\Dialogs\**" />
+    <None Remove="Graphics\Dialogs\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Icon.bmp" />
@@ -35,10 +41,6 @@
     <Reference Include="INIFileParser">
       <HintPath>INIFileParser.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Graphics\Dialogs\" />
   </ItemGroup>
 
 </Project>

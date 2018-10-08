@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.Config;
-using Quaver.Logging;
 using SQLite;
+using Wobble.Logging;
 
 namespace Quaver.Database.Scores
 {
@@ -26,11 +26,11 @@ namespace Quaver.Database.Scores
                 var conn = new SQLiteConnection(DatabasePath);
                 conn.CreateTable<LocalScore>();
 
-                Logger.LogSuccess("LocalScores SQLite table has been created", LogType.Runtime);
+                Logger.Important("LocalScores SQLite table has been created", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }
@@ -54,7 +54,7 @@ namespace Quaver.Database.Scores
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 return new List<LocalScore>();
             }
         }
@@ -75,7 +75,7 @@ namespace Quaver.Database.Scores
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }
@@ -90,11 +90,11 @@ namespace Quaver.Database.Scores
             try
             {
                 new SQLiteConnection(DatabasePath).Delete(score);
-                Logger.LogSuccess($"Successfully deleted score from map: {score.MapMd5} from the database.", LogType.Runtime);
+                Logger.Important($"Successfully deleted score from map: {score.MapMd5} from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }

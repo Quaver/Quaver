@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Logging;
 
 namespace Quaver.Config
 {
@@ -341,9 +341,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-
-            Logger.Initialize();
-            Logger.LogSuccess("quaver.cfg config file successfully read.", LogType.Runtime);
+            Logger.Important("Config file has been successfully read.", LogType.Runtime);
         }
 
         /// <summary>
@@ -678,7 +676,7 @@ namespace Quaver.Config
 
                 // If too many attempts were made.
                 if (attempts == 2)
-                    Logger.LogError("Too many write attempts to the config file have been made.", LogType.Runtime);
+                    Logger.Error("Too many write attempts to the config file have been made.", LogType.Runtime);
             }
 
             LastWrite = GameBase.Game.TimeRunning;

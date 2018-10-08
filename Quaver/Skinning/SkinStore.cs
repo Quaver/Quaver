@@ -11,12 +11,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Resources;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
 using Wobble.Graphics;
+using Wobble.Logging;
 
 namespace Quaver.Skinning
 {
@@ -319,7 +319,7 @@ namespace Quaver.Skinning
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
 
             // Load the default if the path doesn't exist

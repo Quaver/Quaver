@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
-using Quaver.Logging;
 using Quaver.Resources;
 using Wobble.Assets;
+using Wobble.Logging;
 
 namespace Quaver.Helpers
 {
@@ -25,7 +25,7 @@ namespace Quaver.Helpers
             }
             catch (Exception e)
             {
-                Logger.LogError($"Element: {element} was not found in QuaverResources", LogType.Runtime);
+                Logger.Error($"Element: {element} was not found in QuaverResources", LogType.Runtime);
                 return UserInterface.BlankBox;
             }
         }

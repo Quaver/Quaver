@@ -11,7 +11,6 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Toolbar;
-using Quaver.Logging;
 using Quaver.Parsers.Etterna;
 using Quaver.Parsers.Osu;
 using Quaver.Screens.Edit;

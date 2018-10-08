@@ -9,11 +9,11 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
-using Quaver.Logging;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Menu;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Loading
@@ -66,7 +66,7 @@ namespace Quaver.Screens.Loading
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Quaver.Screens.Loading
                 catch (AudioEngineException e)
                 {
                     Console.WriteLine(e);
-                    Logger.LogWarning("Audio file could not be loaded, but proceeding anyway!", LogType.Runtime);
+                    Logger.Warning("Audio file could not be loaded, but proceeding anyway!", LogType.Runtime);
                 }
 
                 // Get the MD5 Hash of the played map and change the state.
@@ -113,7 +113,7 @@ namespace Quaver.Screens.Loading
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }

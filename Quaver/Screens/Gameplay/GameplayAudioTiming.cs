@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
-using Quaver.Logging;
 using Wobble.Audio;
+using Wobble.Logging;
 
 namespace Quaver.Screens.Gameplay
 {
@@ -44,7 +44,7 @@ namespace Quaver.Screens.Gameplay
             }
             catch (AudioEngineException e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
 
             // Set the base time to - the start delay.
