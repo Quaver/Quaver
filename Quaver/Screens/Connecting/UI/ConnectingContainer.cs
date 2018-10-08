@@ -142,7 +142,7 @@ namespace Quaver.Screens.Connecting.UI
                 PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
                     WindowManager.Width + RetryButton.Width + 5, 750));
 
-                View.ExitToScreen(new MainMenuScreen());
+                View.ExitToScreen(new MenuScreen());
             })
             {
                 Parent = this,

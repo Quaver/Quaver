@@ -110,6 +110,7 @@ namespace Quaver
 
             // Load all game assets.
             FontAwesome.Load();
+            BitmapFonts.Load();
             Fonts.Load();
             Titles.Load();
             UserInterface.Load();
