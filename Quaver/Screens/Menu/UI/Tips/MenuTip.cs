@@ -32,7 +32,7 @@ namespace Quaver.Screens.Menu.UI.Tips
         public MenuTip()
         {
             Tint = Color.Black;
-            Alpha = 0.35f;
+            Alpha = 0.25f;
 
             CreateTextTip();
             CreateTextTipContent();
