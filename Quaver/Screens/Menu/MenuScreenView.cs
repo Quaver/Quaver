@@ -1,12 +1,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Screens.Menu.UI.Buttons;
+using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Tips;
+using Quaver.Screens.Options;
+using Quaver.Screens.Select;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -39,6 +46,16 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public MenuTip Tip { get; set; }
 
+        /// <summary>
+        ///    The button to exit the game.
+        /// </summary>
+        public ToolButton PowerButton { get; set; }
+
+        /// <summary>
+        ///     The button to access the game settings.
+        /// </summary>
+        public ToolButton SettingsButton { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -49,6 +66,16 @@ namespace Quaver.Screens.Menu
             CreateLines();
             CreateMiddleContainer();
             CreateMenuTip();
+            CreateToolButtons();
+
+            /*var btn = new TextButton(WobbleAssets.WhiteBox, Fonts.Exo2Regular24, "Change Screen.")
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(300, 200)
+            };
+
+            btn.Clicked += (o, e) => QuaverScreenManager.ChangeScreen(new SelectScreen());*/
         }
 
         /// <inheritdoc />
@@ -70,10 +97,7 @@ namespace Quaver.Screens.Menu
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy()
-        {
-            Container?.Destroy();
-        }
+        public override void Destroy() => Container?.Destroy();
 
         /// <summary>
         ///     Create
@@ -92,7 +116,7 @@ namespace Quaver.Screens.Menu
             TopLine = new Line(Vector2.Zero, Color.White, 1)
             {
                 Parent = Container,
-                Position = new ScalableVector2(65, 62),
+                Position = new ScalableVector2(65, 50),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -101,7 +125,7 @@ namespace Quaver.Screens.Menu
             BottomLine = new Line(Vector2.Zero, Color.White, 1)
             {
                 Parent = Container,
-                Position = new ScalableVector2(65, WindowManager.Height - 62),
+                Position = new ScalableVector2(65, WindowManager.Height - 50),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -137,6 +161,30 @@ namespace Quaver.Screens.Menu
             };
 
             MiddleContainer.AddContainedDrawable(Tip);
+        }
+
+        /// <summary>
+        ///     Creates tool buttons to the bottom right of the screen.
+        /// </summary>
+        private void CreateToolButtons()
+        {
+            PowerButton = new ToolButton(FontAwesome.PowerOff, (o, e) => DialogManager.Show(new QuitDialog()))
+            {
+                Alignment = Alignment.BotRight,
+                Y = Tip.Y
+            };
+
+            MiddleContainer.AddContainedDrawable(PowerButton);
+
+            SettingsButton = new ToolButton(FontAwesome.Cog, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
+            {
+                Parent = MiddleContainer,
+                Alignment = Alignment.BotRight,
+                Y = Tip.Y,
+                X = PowerButton.X - PowerButton.Width - 5
+            };
+
+            MiddleContainer.AddContainedDrawable(SettingsButton);
         }
     }
 }
