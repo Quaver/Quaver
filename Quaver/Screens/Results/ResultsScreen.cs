@@ -286,7 +286,7 @@ namespace Quaver.Screens.Results
             if (mapset == null)
             {
                 Logger.Error($"You do not have the map that this replay is for", LogType.Runtime);
-                QuaverScreenManager.ChangeScreen(new MainMenuScreen());
+                QuaverScreenManager.ChangeScreen(new MenuScreen());
                 return;
             }
 
@@ -541,6 +541,5 @@ namespace Quaver.Screens.Results
             DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {score} {acc} {combo}";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
-
     }
 }

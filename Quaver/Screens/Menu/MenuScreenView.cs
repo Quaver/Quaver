@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Graphics;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
+using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Tips;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
@@ -27,9 +30,9 @@ namespace Quaver.Screens.Menu
         public BackgroundImage Background { get; set; }
 
         /// <summary>
-        ///     The line on the top.
+        ///    The navbar at the top of the screen.
         /// </summary>
-        public Line TopLine { get; set; }
+        public Navbar Navbar { get; set; }
 
         /// <summary>
         ///     The line on the bottom.
@@ -63,19 +66,11 @@ namespace Quaver.Screens.Menu
         public MenuScreenView(Screen screen) : base(screen)
         {
             CreateBackground();
+            CreateNavbar();
             CreateLines();
             CreateMiddleContainer();
             CreateMenuTip();
             CreateToolButtons();
-
-            /*var btn = new TextButton(WobbleAssets.WhiteBox, Fonts.Exo2Regular24, "Change Screen.")
-            {
-                Parent = Container,
-                Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(300, 200)
-            };
-
-            btn.Clicked += (o, e) => QuaverScreenManager.ChangeScreen(new SelectScreen());*/
         }
 
         /// <inheritdoc />
@@ -102,31 +97,36 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.ConnectingBackground, 0, false)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.ConnectingBackground, 15, false)
         {
             Parent = Container,
             SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
         };
 
         /// <summary>
+        ///     Creates the navbar.
+        /// </summary>
+        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>()
+        {
+            new NavbarItem("Home", true),
+            new NavbarItem("Leaderboard"),
+            new NavbarItem("Challenges")
+        }, new List<NavbarItem>()
+        {
+            new NavbarItemUser()
+        }) { Parent = Container };
+
+        /// <summary>
         ///     Creates the top and bottom lines.
         /// </summary>
         private void CreateLines()
         {
-            TopLine = new Line(Vector2.Zero, Color.White, 1)
+            BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(65, 50),
-                UsePreviousSpriteBatchOptions = true
-            };
-
-            TopLine.EndPosition = new Vector2(WindowManager.Width - TopLine.X, TopLine.AbsolutePosition.Y);
-
-            BottomLine = new Line(Vector2.Zero, Color.White, 1)
-            {
-                Parent = Container,
-                Position = new ScalableVector2(65, WindowManager.Height - 50),
-                UsePreviousSpriteBatchOptions = true
+                Position = new ScalableVector2(65, WindowManager.Height - 65),
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0.65f
             };
 
             BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
@@ -136,11 +136,11 @@ namespace Quaver.Screens.Menu
         ///     Creates a ScrollContainer for all of the content int he middle of the screen.
         /// </summary>
         private void CreateMiddleContainer() => MiddleContainer = new ScrollContainer(
-                new ScalableVector2(TopLine.EndPosition.X - TopLine.X, BottomLine.Y - TopLine.Y),
-                new ScalableVector2(TopLine.EndPosition.X - TopLine.X, BottomLine.Y - TopLine.Y))
+                new ScalableVector2(Navbar.Line.EndPosition.X - Navbar.Line.X, BottomLine.Y - Navbar.Line.Y),
+                new ScalableVector2(Navbar.Line.EndPosition.X - Navbar.Line.X, BottomLine.Y - Navbar.Line.Y))
         {
             Parent = Container,
-            Position = new ScalableVector2(TopLine.X, TopLine.Y),
+            Position = new ScalableVector2(Navbar.Line.X, Navbar.Line.Y),
             Alpha = 0,
             SpriteBatchOptions =
             {
