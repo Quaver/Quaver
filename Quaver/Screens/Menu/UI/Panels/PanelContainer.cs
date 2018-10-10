@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Wobble.Graphics;
+using Wobble.Graphics.Transformations;
 
 namespace Quaver.Screens.Menu.UI.Panels
 {
@@ -29,7 +30,11 @@ namespace Quaver.Screens.Menu.UI.Panels
 
                 panel.Parent = this;
                 panel.Alignment = Alignment.MidLeft;
-                panel.X = StartingX + i * panel.Width + (i * 10);
+
+                panel.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 0,
+                    StartingX + i * panel.Width + i * 10, 1000 + 100 * i));
+
+                panel.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuint, 0, 1, 500 + 100 * i));
             }
         }
     }

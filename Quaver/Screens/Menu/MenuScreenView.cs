@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics;
+using Quaver.Helpers;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Navigation;
@@ -13,6 +14,7 @@ using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
@@ -65,6 +67,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public PanelContainer PanelContainer { get; set; }
 
+        /// <summary>
+        ///     The text that says "Main Menu"
+        /// </summary>
+        public SpriteTextBitmap MainMenuText { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -78,6 +85,7 @@ namespace Quaver.Screens.Menu
             CreateMenuTip();
             CreateToolButtons();
             CreatePanelContainer();
+            CreateTextMainMenu();
         }
 
         /// <inheritdoc />
@@ -198,18 +206,44 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the panels for the screen.
         /// </summary>
-        private void CreatePanelContainer()
+        private void CreatePanelContainer() => PanelContainer = new PanelContainer(new List<Panel>()
         {
-            PanelContainer = new PanelContainer(new List<Panel>()
+            new Panel("Single Player", "Play offline and compete for scoreboard ranks", UserInterface.ThumbnailSinglePlayer),
+            new Panel("Competitive", "Compete against players all over the world", UserInterface.ThumbnailCompetitive),
+            new Panel("Custom Games", "Play multiplayer games with your friends", UserInterface.ThumbnailCustomGames),
+            new Panel("Editor", "Create or edit a map to any song you'd like", UserInterface.ThumbnailEditor),
+        })
+        {
+            Parent = Container
+        };
+
+        /// <summary>
+        ///     Creates the text that says "Main Menu"
+        /// </summary>
+        private void CreateTextMainMenu()
+        {
+            /*var mainMenuBackground = new Sprite()
             {
-                new Panel("Single Player", "Play offline and compete for scoreboard ranks", UserInterface.ThumbnailSinglePlayer),
-                new Panel("Competitive", "Compete against players all over the world", UserInterface.ThumbnailCompetitive),
-                new Panel("Custom Games", "Play multiplayer games with your friends", UserInterface.ThumbnailCustomGames),
-                new Panel("Editor", "Create or edit a map to any song you'd like", UserInterface.ThumbnailEditor),
-            })
-            {
-                Parent = Container
+                Parent = Container,
+                X = 62,
+                Y = Navbar.Line.Y + 20,
+                Tint = Color.Black,
+                Alpha = 0.0f
             };
+
+            MainMenuText = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "Main Menu", 32, ColorHelper.HexToColor("#7ebfe0"),
+                Alignment.MidLeft, int.MaxValue)
+            {
+                Parent = mainMenuBackground,
+                Alignment = Alignment.MidCenter,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+            };
+
+            mainMenuBackground.Size = new ScalableVector2(MainMenuText.Width + 10, MainMenuText.Height + 10);
+            */
         }
     }
 }
