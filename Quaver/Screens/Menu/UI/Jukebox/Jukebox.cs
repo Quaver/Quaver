@@ -8,12 +8,14 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Screens.Gameplay.UI;
 using Quaver.Skinning;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 
@@ -62,6 +64,11 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         public SpriteTextBitmap SongTitleText { get; set; }
 
         /// <summary>
+        ///     The song time progress bar.
+        /// </summary>
+        public ProgressBar ProgressBar { get; set; }
+
+        /// <summary>
         ///     Selects new random maps to play.
         /// </summary>
         public Random RNG { get; set; } = new Random();
@@ -101,6 +108,11 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             JukeboxText.Size = new ScalableVector2(JukeboxText.Width * 0.60f, JukeboxText.Height * 0.60f);
 
             CreateSongTitleContainer();
+            CreateProgressBar();
+
+            // Add the contained drawable afterwards, so that it appears on top of the progress bar.
+            SongTitleContainer.AddContainedDrawable(SongTitleText);
+
             CreateControlButtons();
         }
 
@@ -118,6 +130,14 @@ namespace Quaver.Screens.Menu.UI.Jukebox
 
                 SongTitleText.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                     SongTitleText.X, -SongTitleText.Width, 6000));
+            }
+
+            // Set progress bar time.
+            if (AudioEngine.Track != null)
+            {
+                ProgressBar.Bindable.MaxValue = AudioEngine.Track.Length;
+                ProgressBar.Bindable.MinValue = 0;
+                ProgressBar.Bindable.Value = AudioEngine.Track.Position;
             }
 
             // Start selecting random tracks.
@@ -284,6 +304,24 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             // Update
             Logger.Debug($"Selected random jukebox track: {MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
                          $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Creates the jukebox progress bar.
+        /// </summary>
+        private void CreateProgressBar()
+        {
+            ProgressBar = new ProgressBar(new Vector2(SongTitleContainer.Width, SongTitleContainer.Height - 4), 0,
+                AudioEngine.Track != null ? AudioEngine.Track.Length : int.MaxValue, 0, Color.Transparent, Colors.MainAccent)
+            {
+                Alignment = Alignment.MidLeft,
+                ActiveBar =
+                {
+                    Alpha = 0.1f
+                }
+            };
+
+            SongTitleContainer.AddContainedDrawable(ProgressBar);
         }
     }
 }
