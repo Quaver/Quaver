@@ -17,6 +17,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -171,10 +172,11 @@ namespace Quaver.Screens.Menu
         {
             Tip = new MenuTip()
             {
-                X = 0,
                 Alignment = Alignment.BotLeft,
-                Y = -5
             };
+
+            Tip.Y = Tip.Height;
+            Tip.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, Tip.Y, -5, 1100));
 
             MiddleContainer.AddContainedDrawable(Tip);
         }
@@ -184,20 +186,33 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreateToolButtons()
         {
+            const int targetY = -5;
+            const int animationTime = 1100;
+
             PowerButton = new ToolButton(FontAwesome.PowerOff, (o, e) => DialogManager.Show(new QuitDialog()))
             {
                 Alignment = Alignment.BotRight,
-                Y = Tip.Y
             };
+
+            PowerButton.Y = PowerButton.Height;
+
+            // Add transformation to move it up.
+            PowerButton.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint,
+                PowerButton.Y, targetY, animationTime));
 
             MiddleContainer.AddContainedDrawable(PowerButton);
 
+            // Create settings button
             SettingsButton = new ToolButton(FontAwesome.Cog, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
             {
                 Parent = MiddleContainer,
                 Alignment = Alignment.BotRight,
-                Y = Tip.Y,
-                X = PowerButton.X - PowerButton.Width - 5
+                Y = PowerButton.Y,
+                X = PowerButton.X - PowerButton.Width - 5,
+                Transformations =
+                {
+                    new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, PowerButton.Y, targetY, animationTime)
+                }
             };
 
             MiddleContainer.AddContainedDrawable(SettingsButton);
