@@ -125,7 +125,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         ///     Creates the top line on top of the containing box.
         /// </summary>
         private void CreateTopLine() => TopLine = new Line(new Vector2(WindowManager.Width, ContainingBox.AbsolutePosition.Y),
-            Color.White, 1)
+            Colors.MainAccent, 1)
         {
             Parent = ContainingBox,
             Alpha = 0.75f,
@@ -154,7 +154,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateDividerLine()
         {
-            DividerLine = new Line(Vector2.Zero, Color.White, 1)
+            DividerLine = new Line(Vector2.Zero, Colors.MainAccent, 1)
             {
                 Parent = AreYouSure,
                 Alignment = Alignment.TopCenter,
