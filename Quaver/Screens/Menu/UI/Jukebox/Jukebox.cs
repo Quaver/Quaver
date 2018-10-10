@@ -253,6 +253,9 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void SelectRandomTrack()
         {
+            if (MapManager.Mapsets.Count == 0)
+                return;
+
             var randomSet = RNG.Next(0, MapManager.Mapsets.Count);
             var randomMap = RNG.Next(0, MapManager.Mapsets[randomSet].Maps.Count);
 
