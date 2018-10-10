@@ -132,11 +132,18 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             }
 
             // Set progress bar time.
-            if (AudioEngine.Track != null)
+            try
             {
-                ProgressBar.Bindable.MaxValue = AudioEngine.Track.Length;
-                ProgressBar.Bindable.MinValue = 0;
-                ProgressBar.Bindable.Value = AudioEngine.Track.Position;
+                if (AudioEngine.Track != null)
+                {
+                    ProgressBar.Bindable.MaxValue = AudioEngine.Track.Length;
+                    ProgressBar.Bindable.MinValue = 0;
+                    ProgressBar.Bindable.Value = AudioEngine.Track.Position;
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
             }
 
             // Start selecting random tracks.
