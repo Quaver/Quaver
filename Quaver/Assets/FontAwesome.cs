@@ -55,6 +55,8 @@ namespace Quaver.Assets
         public static Texture2D Keyboard { get; set; }
         public static Texture2D Search { get; set; }
         public static Texture2D ArrowCircle { get; set; }
+        public static Texture2D StepBackward { get; set; }
+        public static Texture2D StepForward { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -110,6 +112,8 @@ namespace Quaver.Assets
             Keyboard = AssetLoader.LoadTexture2D(QuaverResources.fa_keyboard);
             Search = AssetLoader.LoadTexture2D(QuaverResources.fa_magnifying_glass);
             ArrowCircle = AssetLoader.LoadTexture2D(QuaverResources.fa_right_arrow_in_a_circle);
+            StepBackward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_backward);
+            StepForward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_forward);
         }
     }
 }

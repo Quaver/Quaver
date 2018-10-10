@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -6,6 +7,7 @@ using Quaver.Graphics;
 using Quaver.Helpers;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
+using Quaver.Screens.Menu.UI.Jukebox;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
@@ -73,6 +75,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public SpriteTextBitmap MainMenuText { get; set; }
 
+        /// <summary>
+        ///     The jukebox to play music.
+        /// </summary>
+        public Jukebox Jukebox { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -86,7 +93,8 @@ namespace Quaver.Screens.Menu
             CreateMenuTip();
             CreateToolButtons();
             CreatePanelContainer();
-            CreateTextMainMenu();
+            // CreateTextMainMenu();
+            CreateJukebox();
         }
 
         /// <inheritdoc />
@@ -237,7 +245,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreateTextMainMenu()
         {
-            /*var mainMenuBackground = new Sprite()
+            var mainMenuBackground = new Sprite()
             {
                 Parent = Container,
                 X = 62,
@@ -258,7 +266,20 @@ namespace Quaver.Screens.Menu
             };
 
             mainMenuBackground.Size = new ScalableVector2(MainMenuText.Width + 10, MainMenuText.Height + 10);
-            */
+        }
+
+        /// <summary>
+        ///     Creates and aligns the jukebox sprite.
+        /// </summary>
+        private void CreateJukebox()
+        {
+            Jukebox = new Jukebox()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                X = 65,
+                Y = PanelContainer.Panels.First().Y - PanelContainer.Panels.First().Height / 2f - 38
+            };
         }
     }
 }
