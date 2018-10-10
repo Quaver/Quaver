@@ -6,6 +6,7 @@ using Quaver.Graphics;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Navigation;
+using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
@@ -59,6 +60,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public ToolButton SettingsButton { get; set; }
 
+        /// <summary>
+        ///     Contains all the panels for the screen.
+        /// </summary>
+        public PanelContainer PanelContainer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -71,6 +77,7 @@ namespace Quaver.Screens.Menu
             CreateMiddleContainer();
             CreateMenuTip();
             CreateToolButtons();
+            CreatePanelContainer();
         }
 
         /// <inheritdoc />
@@ -97,7 +104,7 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.ConnectingBackground, 15, false)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 15, false)
         {
             Parent = Container,
             SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
@@ -110,7 +117,8 @@ namespace Quaver.Screens.Menu
         {
             new NavbarItem("Home", true),
             new NavbarItem("Leaderboard"),
-            new NavbarItem("Challenges")
+            new NavbarItem("Challenges"),
+            new NavbarItem("Play (Temp)", false, (sender, args) => QuaverScreenManager.ChangeScreen(new SelectScreen()))
         }, new List<NavbarItem>()
         {
             new NavbarItemUser()
@@ -185,6 +193,23 @@ namespace Quaver.Screens.Menu
             };
 
             MiddleContainer.AddContainedDrawable(SettingsButton);
+        }
+
+        /// <summary>
+        ///     Creates the panels for the screen.
+        /// </summary>
+        private void CreatePanelContainer()
+        {
+            PanelContainer = new PanelContainer(new List<Panel>()
+            {
+                new Panel("Single Player", "Play offline and compete for scoreboard ranks", UserInterface.ThumbnailSinglePlayer),
+                new Panel("Competitive", "Compete against players all over the world", UserInterface.ThumbnailCompetitive),
+                new Panel("Custom Games", "Play multiplayer games with your friends", UserInterface.ThumbnailCustomGames),
+                new Panel("Editor", "Create or edit a map to any song you'd like", UserInterface.ThumbnailEditor),
+            })
+            {
+                Parent = Container
+            };
         }
     }
 }
