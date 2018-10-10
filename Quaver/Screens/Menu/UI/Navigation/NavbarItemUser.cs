@@ -72,7 +72,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
             Size = new ScalableVector2(25, 25),
             Alignment = Alignment.MidLeft,
             Image = UserInterface.UnknownAvatar,
-            X = 25
+            X = 25,
         };
 
         /// <summary>

@@ -126,7 +126,7 @@ namespace Quaver.Screens.Menu.UI.Panels
                 Height = MathHelper.Lerp(Height, OriginalSize.Y.Value, (float) Math.Min(dt / 30, 1));
 
                 Border.Thickness = MathHelper.Lerp(Border.Thickness, 0, (float) Math.Min(dt / 30, 1));
-                Border.FadeToColor(Colors.MainAccent, dt, 30);
+                Border.FadeToColor(Color.Transparent, dt, 30);
             }
 
             // Always make sure thumbnail is at the correct size

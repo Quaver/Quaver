@@ -70,7 +70,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// </summary>
         private void CreateQuaverLogo()
         {
-            QuaverLogo = new Sprite
+            /*QuaverLogo = new Sprite
             {
                 Parent = Line,
                 Image = UserInterface.BlankBox,
@@ -78,7 +78,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 Size = new ScalableVector2(150, 45)
             };
 
-            QuaverLogo.Y -= QuaverLogo.Height;
+            QuaverLogo.Y -= QuaverLogo.Height;*/
         }
 
         /// <summary>
@@ -86,7 +86,8 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// </summary>
         private void AlignLeftItems()
         {
-            var startingX = QuaverLogo.X + QuaverLogo.Width;
+            //var startingX = QuaverLogo.X + QuaverLogo.Width;
+            var startingX = 0;
 
             for (var i = 0; i < LeftAlignedItems.Count; i++)
             {
