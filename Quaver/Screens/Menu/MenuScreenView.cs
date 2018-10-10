@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -276,9 +277,9 @@ namespace Quaver.Screens.Menu
             Jukebox = new Jukebox()
             {
                 Parent = Container,
-                Alignment = Alignment.MidLeft,
-                X = 65,
-                Y = PanelContainer.Panels.First().Y - PanelContainer.Panels.First().Height / 2f - 38
+                Alignment = Alignment.TopRight,
+                Y = Navbar.Line.Y + 10,
+                X = -65
             };
         }
     }

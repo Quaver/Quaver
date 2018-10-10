@@ -87,14 +87,13 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(124, Height),
-                Tint = Colors.MainAccent,
-                Alpha = 0.55f
+                Tint = Color.Black,
+                Alpha = 0.45f
             };
 
             AddBorder(Color.White, 2);
-            Border.Alpha = 0.85f;
 
-            JukeboxText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBoldItalic, "Jukebox", 24, Color.White,
+            JukeboxText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Jukebox", 24, Color.White,
                 Alignment.MidLeft, int.MaxValue)
             {
                 Parent = TitleBackground,
