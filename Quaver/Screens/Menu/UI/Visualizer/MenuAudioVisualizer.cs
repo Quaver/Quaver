@@ -74,7 +74,8 @@ namespace Quaver.Screens.Menu.UI.Visualizer
             if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                 return;
 
-            Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+            if (AudioEngine.Track.IsPlaying)
+                Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
 
             for (var i = 0; i < Bars.Count; i++)
             {
