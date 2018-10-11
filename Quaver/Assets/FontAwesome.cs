@@ -57,6 +57,7 @@ namespace Quaver.Assets
         public static Texture2D ArrowCircle { get; set; }
         public static Texture2D StepBackward { get; set; }
         public static Texture2D StepForward { get; set; }
+        public static Texture2D Undo { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -114,6 +115,7 @@ namespace Quaver.Assets
             ArrowCircle = AssetLoader.LoadTexture2D(QuaverResources.fa_right_arrow_in_a_circle);
             StepBackward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_backward);
             StepForward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_forward);
+            Undo = AssetLoader.LoadTexture2D(QuaverResources.fa_undo_arrow);
         }
     }
 }

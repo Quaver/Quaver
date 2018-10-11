@@ -43,14 +43,14 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         public JukeboxButton PreviousButton { get; set; }
 
         /// <summary>
-        ///     The button to play the track.
+        ///     The button to restart the track
         /// </summary>
-        public JukeboxButton PlayButton { get; set; }
+        public JukeboxButton RestartButton { get; set; }
 
         /// <summary>
         ///     The button to pause/unpause the track.
         /// </summary>
-        public JukeboxButton PauseButton { get; set; }
+        public JukeboxButton PauseResumeButton { get; set; }
 
         /// <summary>
         ///     The button to select the next track.
@@ -359,8 +359,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         private void CreateControlButtons()
         {
             CreateNextSongButton();
-            CreatePauseButton();
-            CreatePlayButton();
+            CreatePauseResumeButton();
+            CreateRestartButton();
             CreatePreviousSongButton();
         }
 
@@ -386,11 +386,11 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         }
 
         /// <summary>
-        ///     Creates the pause control button.
+        ///     Creates the pause/resume control button.
         /// </summary>
-        private void CreatePauseButton()
+        private void CreatePauseResumeButton()
         {
-            PauseButton = new JukeboxButton(FontAwesome.Pause)
+            PauseResumeButton = new JukeboxButton(FontAwesome.Pause)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -398,7 +398,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 X = NextButton.X - NextButton.Width - 10
             };
 
-            PauseButton.Clicked += (o, e) =>
+            PauseResumeButton.Clicked += (o, e) =>
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
 
@@ -406,26 +406,33 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     return;
 
                 if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
+                {
                     AudioEngine.Track.Play();
+                    PauseResumeButton.Image = FontAwesome.Pause;
+                }
                 else
+                {
                     AudioEngine.Track.Pause();
+                    PauseResumeButton.Image = FontAwesome.Play;
+                }
             };
         }
 
         /// <summary>
-        ///     Creates the play control button.
+        ///     Creates the restart button
         /// </summary>
-        private void CreatePlayButton()
+        private void CreateRestartButton()
         {
-            PlayButton = new JukeboxButton(FontAwesome.Play)
+            RestartButton = new JukeboxButton(FontAwesome.Undo)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(Height * 0.50f, Height * 0.50f),
-                X = PauseButton.X - PauseButton.Width - 10
+                X = PauseResumeButton.X - PauseResumeButton.Width - 10,
+                SpriteBatchOptions = new SpriteBatchOptions()
             };
 
-            PlayButton.Clicked += (o, e) =>
+            RestartButton.Clicked += (o, e) =>
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
 
@@ -451,7 +458,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(Height * 0.50f, Height * 0.50f),
-                X = PlayButton.X - PlayButton.Width - 10
+                X = RestartButton.X - RestartButton.Width - 10
             };
 
             PreviousButton.Clicked += (o, e) =>
