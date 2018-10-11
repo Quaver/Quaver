@@ -13,6 +13,7 @@ using Quaver.Screens.Menu.UI.Jukebox;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
+using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
 using Wobble;
@@ -82,6 +83,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public Jukebox Jukebox { get; set; }
 
+        /// <summary>
+        ///     The audio visualizer for the music
+        /// </summary>
+        public MenuAudioVisualizer Visualizer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -89,6 +95,7 @@ namespace Quaver.Screens.Menu
         public MenuScreenView(Screen screen) : base(screen)
         {
             CreateBackground();
+            CreateAudioVisualizer();
             CreateNavbar();
             CreateLines();
             CreateMiddleContainer();
@@ -286,6 +293,15 @@ namespace Quaver.Screens.Menu
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + 20,
             X = -65
+        };
+
+        /// <summary>
+        ///     Creates the audio visaulizer container for the screen
+        /// </summary>12
+        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+        {
+            Parent = Container,
+            Alignment = Alignment.BotLeft
         };
 
         /// <summary>
