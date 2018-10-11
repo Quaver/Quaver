@@ -12,11 +12,23 @@ namespace Quaver.Screens.Gameplay
     /// </summary>
     public class GameplayAudioPosition
     {
+        /// <summary>
+        ///     List of slider velocities used for the current map
+        /// </summary>
         public List<SliderVelocityInfo> ScrollVelocities = new List<SliderVelocityInfo>();
 
+        /// <summary>
+        ///     Current position for Hit Objects
+        /// </summary>
         public ulong Position { get; private set; }
 
-        public float ScrollSpeed { get; set; } = 20; //todo: temp. reference from actual scroll speed variable and remove later
+        /// <summary>
+        ///     Current SV index used for optimization when using UpdateCurrentPosition()
+        /// </summary>
+        private int SvIndex { get; set; } = 0;
+
+        //todo: temp. reference from actual scroll speed variable and remove later
+        public float ScrollSpeed { get; set; } = 20;
 
         /// <summary>
         ///     Generate Hit Object Position from .Qua Scroll Velocities
@@ -125,6 +137,23 @@ namespace Quaver.Screens.Gameplay
 
         public void UpdateCurrentPosition(float time)
         {
+            // Update SV index if necessary
+            if (SvIndex != ScrollVelocities.Count - 1 && time >= ScrollVelocities[SvIndex + 1].StartTime)
+            {
+                // todo: we might have to loop since its possible to pass multiple SV timing points that are closer together than delta-time 
+                SvIndex++;
+            }
+
+            if (SvIndex >= ScrollVelocities.Count - 1)
+            {
+
+            }
+
+            else
+            {
+
+            }
+
             // todo: add variables and optimization
             Position = GetPositionFromTime(time);
         }
