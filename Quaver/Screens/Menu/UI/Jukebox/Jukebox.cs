@@ -14,6 +14,7 @@ using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Skinning;
 using Wobble.Audio.Tracks;
+using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
@@ -214,6 +215,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
                                  $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
                                  $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+
+                    ChangeDiscordPresenceToSongTitle();
                 });
             }
             catch (Exception e)
@@ -227,6 +230,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     LoadingNextTrack = true;
                     Logger.Error($"Failed to load track 3 times in a row. Stopping Jukebox", LogType.Runtime);
                 }
+
+                ChangeDiscordPresenceToIdle();
             }
         }
 
@@ -409,11 +414,13 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 {
                     AudioEngine.Track.Play();
                     PauseResumeButton.Image = FontAwesome.Pause;
+                    ChangeDiscordPresenceToSongTitle();
                 }
                 else
                 {
                     AudioEngine.Track.Pause();
                     PauseResumeButton.Image = FontAwesome.Play;
+                    ChangeDiscordPresenceToIdle();
                 }
             };
         }
@@ -506,6 +513,26 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             {
                 SelectNextTrack(Direction.Forward);
             }
+        }
+
+        /// <summary>
+        ///     Changes the discord presence to a listening state.
+        /// </summary>
+        private static void ChangeDiscordPresenceToSongTitle()
+        {
+            DiscordManager.Client.CurrentPresence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
+            DiscordManager.Client.CurrentPresence.State = "In the Menus - Listening ♫";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+        }
+
+        /// <summary>
+        ///     Changes the discord presence to an idle state
+        /// </summary>
+        private static void ChangeDiscordPresenceToIdle()
+        {
+            DiscordManager.Client.CurrentPresence.Details = $"Idle";
+            DiscordManager.Client.CurrentPresence.State = "In the Menus";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
     }
 }

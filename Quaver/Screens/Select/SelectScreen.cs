@@ -61,7 +61,7 @@ namespace Quaver.Screens.Select
             AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(AvailableMapsets);
 
             DiscordManager.Client.CurrentPresence.Details = "Selecting a song";
-            DiscordManager.Client.CurrentPresence.State = "In the menus";
+            DiscordManager.Client.CurrentPresence.State = "In the Menus";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
 
             View = new SelectScreenView(this);

@@ -27,10 +27,6 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public MenuScreen()
         {
-            DiscordManager.Client.CurrentPresence.Details = "Idle";
-            DiscordManager.Client.CurrentPresence.State = "In the menus";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
-
             try
             {
                 ModManager.RemoveSpeedMods();

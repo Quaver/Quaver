@@ -130,7 +130,7 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 15, false)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20, false)
         {
             Parent = Container,
             SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
