@@ -192,15 +192,12 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreateMenuTip()
         {
-            Tip = new MenuTip()
+            Tip = new MenuTip
             {
+                Parent = MiddleContainer,
                 Alignment = Alignment.BotLeft,
+                Y = -5,
             };
-
-            Tip.Y = Tip.Height;
-            Tip.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, Tip.Y, -5, 1100));
-
-            MiddleContainer.AddContainedDrawable(Tip);
         }
 
         /// <summary>
