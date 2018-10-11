@@ -115,6 +115,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             {
                 TrackListQueue.Add(MapManager.Selected.Value);
                 TrackListQueuePosition++;
+                ChangeDiscordPresenceToSongTitle();
             }
 
             Size = new ScalableVector2(614, 40);
