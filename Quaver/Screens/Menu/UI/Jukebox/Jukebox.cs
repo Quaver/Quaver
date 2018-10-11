@@ -10,6 +10,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Skinning;
 using Wobble.Audio.Tracks;
@@ -75,7 +76,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         ///     The list of tracks (maps) that were played during this jukebox section,
         ///     so we can go to the previous/next song.
         /// </summary>
-        public List<Map> TrackListQueue { get; set; } = new List<Map>();
+        private List<Map> TrackListQueue { get; } = new List<Map>();
 
         /// <summary>
         ///     The current track in the queue we're currently on.
@@ -84,7 +85,12 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         ///     Started at -1 because there may not be any tracks to begin with.
         ///     Meaning... the user doesn't have any mapsets loaded.
         /// </summary>
-        public int TrackListQueuePosition { get; set; } = -1;
+        private int TrackListQueuePosition { get; set; } = -1;
+
+        /// <summary>
+        ///     Dictates if we're in the middle of loading the next track on a new thread.
+        /// </summary>
+        private bool LoadingNextTrack { get; set; }
 
         /// <summary>
         ///     Selects new random maps to play.
@@ -164,25 +170,34 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            try
+            LoadingNextTrack = true;
+
+            Scheduler.RunThread(() =>
             {
-                AudioEngine.LoadCurrentTrack();
-                AudioEngine.Track.Play();
-            }
-            catch (Exception e)
-            {
-                Logger.Error($"Track for map: could not be loaded.", LogType.Runtime);
-            }
+                try
+                {
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track.Play();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Track for map: could not be loaded.", LogType.Runtime);
+                }
+                finally
+                {
+                    LoadingNextTrack = false;
+                }
+                // Update the song title's text with the new one.
+                UpdateSongTitleText();
 
-            // Update the song title's text with the new one.
-            UpdateSongTitleText();
+                // Clear current song title animations.
+                lock (SongTitleText.Transformations)
+                    SongTitleText.Transformations.Clear();
 
-            // Clear current song title animations.
-            SongTitleText.Transformations.Clear();
-
-            Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
-                         $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
-                         $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+                Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
+                             $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
+                             $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+            });
         }
 
         /// <summary>
@@ -457,9 +472,15 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void SelectNextTrackIfFinished()
         {
+            // Don't execute if we're in the middle of loading a new track.
+            if (LoadingNextTrack)
+                return;
+
             // Start selecting random tracks.
             if (MapManager.Mapsets.Count != 0 && AudioEngine.Track == null || AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
+            {
                 SelectNextTrack(Direction.Forward);
+            }
         }
     }
 }
