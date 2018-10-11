@@ -86,6 +86,7 @@ namespace Quaver.Screens.Gameplay
             // If the audio track is playing, use that time.
             if (AudioEngine.Track.IsPlaying)
                 Time = AudioEngine.Track.Time;
+
             // Otherwise use deltatime to calculate the proposed time.
             else
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
