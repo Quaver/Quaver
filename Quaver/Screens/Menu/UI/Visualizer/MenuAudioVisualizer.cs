@@ -60,29 +60,36 @@ namespace Quaver.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            InterpolateBars();
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Changes the height of the bars.
+        /// </summary>
+        private void InterpolateBars()
+        {
             var spectrumData = new float[2048];
 
-            if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
+            if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
+                return;
+
+            Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+
+            for (var i = 0; i < Bars.Count; i++)
             {
-                Bass.ChannelGetData(AudioEngine.Track.Stream, spectrumData, (int)DataFlags.FFT2048);
+                var bar = Bars[i];
 
-                for (var i = 0; i < Bars.Count; i++)
+                var targetHeight = spectrumData[i] * MaxBarHeight;
+
+                // Lock the transformations to prevent any current updates.
+                lock (bar.Transformations)
                 {
-                    var bar = Bars[i];
-
-                    var targetHeight = spectrumData[i] * MaxBarHeight;
-
-                    lock (bar.Transformations)
-                    {
-                        bar.Transformations.Clear();
-
-                        bar.Transformations.Add(new Transformation(TransformationProperty.Height, Easing.Linear,
-                            bar.Height, targetHeight, 50f));
-                    }
+                    bar.Transformations.Clear();
+                    bar.Transformations.Add(new Transformation(TransformationProperty.Height, Easing.Linear,
+                        bar.Height, targetHeight, 50f));
                 }
             }
-
-            base.Update(gameTime);
         }
     }
 }

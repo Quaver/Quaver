@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -97,6 +97,11 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         public Random RNG { get; } = new Random();
 
+        /// <summary>
+        ///
+        /// </summary>
+        private int LoadFailures { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -105,7 +110,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             TrackListQueue = new List<Map>();
 
             // If a track is already playing, add it to the queue.
-            if (MapManager.Selected.Value != null)
+            if (MapManager.Selected != null && MapManager.Selected.Value != null)
             {
                 TrackListQueue.Add(MapManager.Selected.Value);
                 TrackListQueuePosition++;
@@ -148,65 +153,81 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             if (MapManager.Mapsets.Count == 0)
                 return;
 
-            switch (direction)
+            try
             {
-                case Direction.Forward:
-                    // We ran out of songs to play in the queue, so we need to pick a random one.
-                    if (TrackListQueuePosition == TrackListQueue.Count - 1)
+                switch (direction)
+                {
+                    case Direction.Forward:
+                        // We ran out of songs to play in the queue, so we need to pick a random one.
+                        if (TrackListQueuePosition == TrackListQueue.Count - 1)
+                        {
+                            var randomSet = RNG.Next(0, MapManager.Mapsets.Count);
+                            var randomMap = RNG.Next(0, MapManager.Mapsets[randomSet].Maps.Count);
+
+                            MapManager.Selected.Value = MapManager.Mapsets[randomSet].Maps[randomMap];
+                            TrackListQueue.Add(MapManager.Selected.Value);
+                        }
+                        else
+                        {
+                            MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition + 1];
+                        }
+
+                        TrackListQueuePosition++;
+                        break;
+                    case Direction.Backward:
+                        // Don't allow backwards skipping if there arent any tracks before.
+                        if (TrackListQueuePosition - 1 < 0)
+                            return;
+
+                        TrackListQueuePosition--;
+                        MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition];
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                }
+
+                LoadingNextTrack = true;
+
+                Scheduler.RunThread(() =>
+                {
+                    try
                     {
-                        var randomSet = RNG.Next(0, MapManager.Mapsets.Count);
-                        var randomMap = RNG.Next(0, MapManager.Mapsets[randomSet].Maps.Count);
-
-                        MapManager.Selected.Value = MapManager.Mapsets[randomSet].Maps[randomMap];
-                        TrackListQueue.Add(MapManager.Selected.Value);
+                        AudioEngine.LoadCurrentTrack();
+                        AudioEngine.Track.Play();
                     }
-                    else
+                    catch (Exception e)
                     {
-                        MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition + 1];
+                        Logger.Error($"Track for map: could not be loaded.", LogType.Runtime);
                     }
+                    finally
+                    {
+                        LoadingNextTrack = false;
+                        LoadFailures = 0;
+                    }
+                    // Update the song title's text with the new one.
+                    UpdateSongTitleText();
 
-                    TrackListQueuePosition++;
-                    break;
-                case Direction.Backward:
-                    // Don't allow backwards skipping if there arent any tracks before.
-                    if (TrackListQueuePosition - 1 < 0)
-                        return;
+                    // Clear current song title animations.
+                    lock (SongTitleText.Transformations)
+                        SongTitleText.Transformations.Clear();
 
-                    TrackListQueuePosition--;
-                    MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition];
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
+                                 $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
+                                 $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+                });
             }
-
-            LoadingNextTrack = true;
-
-            Scheduler.RunThread(() =>
+            catch (Exception e)
             {
-                try
-                {
-                    AudioEngine.LoadCurrentTrack();
-                    AudioEngine.Track.Play();
-                }
-                catch (Exception e)
-                {
-                    Logger.Error($"Track for map: could not be loaded.", LogType.Runtime);
-                }
-                finally
-                {
-                    LoadingNextTrack = false;
-                }
-                // Update the song title's text with the new one.
-                UpdateSongTitleText();
+                Logger.Error(e, LogType.Runtime);
+                LoadFailures++;
 
-                // Clear current song title animations.
-                lock (SongTitleText.Transformations)
-                    SongTitleText.Transformations.Clear();
-
-                Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
-                             $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
-                             $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
-            });
+                // If we fail to load a track 3 times, then turn off the jukebox...
+                if (LoadFailures == 3)
+                {
+                    LoadingNextTrack = true;
+                    Logger.Error($"Failed to load track 3 times in a row. Stopping Jukebox", LogType.Runtime);
+                }
+            }
         }
 
         /// <summary>
@@ -270,7 +291,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         private void UpdateSongTitleText()
         {
             // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-            if (MapManager.Selected.Value != null)
+            if (MapManager.Selected != null && MapManager.Selected.Value != null)
                 SongTitleText.Text = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
             else
                 SongTitleText.Text = $"No tracks available to play";
@@ -486,7 +507,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 return;
 
             // Start selecting random tracks.
-            if (MapManager.Mapsets.Count != 0 && AudioEngine.Track == null || AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
+            if (MapManager.Mapsets.Count != 0 && AudioEngine.Track == null || AudioEngine.Track != null &&
+                AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
             {
                 SelectNextTrack(Direction.Forward);
             }

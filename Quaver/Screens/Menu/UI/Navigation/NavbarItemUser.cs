@@ -80,7 +80,9 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// </summary>
         private void CreateUsername()
         {
-            UsernameText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBoldItalic, ConfigManager.Username.Value, 24, Color.White,
+            var username = !string.IsNullOrEmpty(ConfigManager.Username.Value) ? ConfigManager.Username.Value : "Player";
+
+            UsernameText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBoldItalic, username, 24, Color.White,
                 Alignment.MidLeft, int.MaxValue)
             {
                 Parent = this,

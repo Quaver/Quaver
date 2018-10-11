@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
@@ -309,7 +310,16 @@ namespace Quaver.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnSinglePlayerPanelClicked(object sender, EventArgs e) => QuaverScreenManager.ChangeScreen(new SelectScreen());
+        private static void OnSinglePlayerPanelClicked(object sender, EventArgs e)
+        {
+            if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try downloading some!");
+                return;
+            }
+
+            QuaverScreenManager.ChangeScreen(new SelectScreen());
+        }
 
         /// <summary>
         ///     Called when the competitive panel is clicked.

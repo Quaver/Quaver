@@ -379,7 +379,7 @@ namespace Quaver.Config
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
             AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
-            Username = ReadValue(@"Username", "", data);
+            Username = ReadValue(@"Username", "Player", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
