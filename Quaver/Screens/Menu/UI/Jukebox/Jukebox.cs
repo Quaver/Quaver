@@ -38,22 +38,22 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Button to select the previous track.
         /// </summary>
-        public ImageButton PreviousButton { get; set; }
+        public JukeboxButton PreviousButton { get; set; }
 
         /// <summary>
         ///     The button to play the track.
         /// </summary>
-        public ImageButton PlayButton { get; set; }
+        public JukeboxButton PlayButton { get; set; }
 
         /// <summary>
         ///     The button to pause/unpause the track.
         /// </summary>
-        public ImageButton PauseButton { get; set; }
+        public JukeboxButton PauseButton { get; set; }
 
         /// <summary>
         ///     The button to select the next track.
         /// </summary>
-        public ImageButton NextButton { get; set; }
+        public JukeboxButton NextButton { get; set; }
 
         /// <summary>
         ///     The container that holds the song title.
@@ -281,7 +281,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateNextSongButton()
         {
-            NextButton = new ImageButton(FontAwesome.StepForward)
+            NextButton = new JukeboxButton(FontAwesome.StepForward)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -303,7 +303,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePauseButton()
         {
-            PauseButton = new ImageButton(FontAwesome.Pause)
+            PauseButton = new JukeboxButton(FontAwesome.Pause)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -340,7 +340,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePlayButton()
         {
-            PlayButton = new ImageButton(FontAwesome.Play)
+            PlayButton = new JukeboxButton(FontAwesome.Play)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -371,7 +371,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePreviousSongButton()
         {
-            PreviousButton = new ImageButton(FontAwesome.StepBackward)
+            PreviousButton = new JukeboxButton(FontAwesome.StepBackward)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
