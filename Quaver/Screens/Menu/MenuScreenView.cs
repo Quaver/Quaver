@@ -134,6 +134,7 @@ namespace Quaver.Screens.Menu
         private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
         {
             new NavbarItem("Home", true),
+            new NavbarItem("Download Maps"),
             new NavbarItem("Leaderboard"),
             new NavbarItem("Challenges"),
         }, new List<NavbarItem>

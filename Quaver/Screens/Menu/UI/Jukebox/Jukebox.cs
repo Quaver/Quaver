@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -71,6 +72,21 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         public ProgressBar SongTimeProgressBar { get; set; }
 
         /// <summary>
+        ///     The list of tracks (maps) that were played during this jukebox section,
+        ///     so we can go to the previous/next song.
+        /// </summary>
+        public List<Map> TrackListQueue { get; set; } = new List<Map>();
+
+        /// <summary>
+        ///     The current track in the queue we're currently on.
+        ///     Basically the index of <see cref="TrackListQueue"/>
+        ///
+        ///     Started at -1 because there may not be any tracks to begin with.
+        ///     Meaning... the user doesn't have any mapsets loaded.
+        /// </summary>
+        public int TrackListQueuePosition { get; set; } = -1;
+
+        /// <summary>
         ///     Selects new random maps to play.
         /// </summary>
         public Random RNG { get; } = new Random();
@@ -112,15 +128,41 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Selects a random map to be selected. (and for the track to play.)
         /// </summary>
-        private void SelectNextTrack()
+        private void SelectNextTrack(Direction direction)
         {
             if (MapManager.Mapsets.Count == 0)
                 return;
 
-            var randomSet = RNG.Next(0, MapManager.Mapsets.Count);
-            var randomMap = RNG.Next(0, MapManager.Mapsets[randomSet].Maps.Count);
+            switch (direction)
+            {
+                case Direction.Forward:
+                    // We ran out of songs to play in the queue, so we need to pick a random one.
+                    if (TrackListQueuePosition == TrackListQueue.Count - 1)
+                    {
+                        var randomSet = RNG.Next(0, MapManager.Mapsets.Count);
+                        var randomMap = RNG.Next(0, MapManager.Mapsets[randomSet].Maps.Count);
 
-            MapManager.Selected.Value = MapManager.Mapsets[randomSet].Maps[randomMap];
+                        MapManager.Selected.Value = MapManager.Mapsets[randomSet].Maps[randomMap];
+                        TrackListQueue.Add(MapManager.Selected.Value);
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition + 1];
+                    }
+
+                    TrackListQueuePosition++;
+                    break;
+                case Direction.Backward:
+                    // Don't allow backwards skipping if there arent any tracks before.
+                    if (TrackListQueuePosition == 0)
+                        return;
+
+                    TrackListQueuePosition--;
+                    MapManager.Selected.Value = TrackListQueue[TrackListQueuePosition];
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
 
             try
             {
@@ -138,7 +180,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             // Clear current song title animations.
             SongTitleText.Transformations.Clear();
 
-            Logger.Debug($"Selected random jukebox track: {MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
+            Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
+                         $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
                          $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
         }
 
@@ -293,7 +336,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
 
-                SelectNextTrack();
+                SelectNextTrack(Direction.Forward);
                 NotificationManager.Show(NotificationLevel.Info, "Selecting next track");
             };
         }
@@ -382,7 +425,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             PreviousButton.Clicked += (o, e) =>
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                SelectNextTrack(Direction.Backward);
             };
         }
 
@@ -416,7 +459,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         {
             // Start selecting random tracks.
             if (MapManager.Mapsets.Count != 0 && AudioEngine.Track == null || AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
-                SelectNextTrack();
+                SelectNextTrack(Direction.Forward);
         }
     }
 }
