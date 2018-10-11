@@ -44,7 +44,8 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <param name="title"></param>
         /// <param name="description"></param>
         /// <param name="activeThumbnail"></param>
-        public Panel(string title, string description, Texture2D activeThumbnail)
+        /// <param name="onClick"></param>
+        public Panel(string title, string description, Texture2D activeThumbnail, EventHandler onClick = null) : base (onClick)
         {
             Size = new ScalableVector2(OriginalSize.X.Value, OriginalSize.Y.Value);
 

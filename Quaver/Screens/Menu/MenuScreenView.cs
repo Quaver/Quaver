@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics;
+using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
@@ -135,7 +136,6 @@ namespace Quaver.Screens.Menu
             new NavbarItem("Home", true),
             new NavbarItem("Leaderboard"),
             new NavbarItem("Challenges"),
-            new NavbarItem("Play (Temp)", false, (sender, args) => QuaverScreenManager.ChangeScreen(new SelectScreen()))
         }, new List<NavbarItem>
         {
             new NavbarItemUser()
@@ -230,19 +230,19 @@ namespace Quaver.Screens.Menu
         {
             // Single Player
             new Panel("Single Player", "Play offline and compete for scoreboard ranks",
-                UserInterface.ThumbnailSinglePlayer),
+                UserInterface.ThumbnailSinglePlayer, OnSinglePlayerPanelClicked),
 
             // Compettive
             new Panel("Competitive", "Compete against players all over the world",
-                UserInterface.ThumbnailCompetitive),
+                UserInterface.ThumbnailCompetitive, OnCompetitivePanelClicked),
 
             // Custom Games
             new Panel("Custom Games", "Play multiplayer games with your friends",
-                UserInterface.ThumbnailCustomGames),
+                UserInterface.ThumbnailCustomGames, OnCustomGamesPanelClicked),
 
             // Editor
             new Panel("Editor", "Create or edit a map to any song you'd like",
-                UserInterface.ThumbnailEditor),
+                UserInterface.ThumbnailEditor, OnEditorPanelClicked),
         })
         {
             Parent = Container
@@ -286,5 +286,45 @@ namespace Quaver.Screens.Menu
             Y = Navbar.Line.Y + 20,
             X = -65
         };
+
+        /// <summary>
+        ///     Called when the single player panel is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnSinglePlayerPanelClicked(object sender, EventArgs e) => QuaverScreenManager.ChangeScreen(new SelectScreen());
+
+        /// <summary>
+        ///     Called when the competitive panel is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnCompetitivePanelClicked(object sender, EventArgs e)
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+        }
+
+        /// <summary>
+        ///     Called when the custom games panel is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnCustomGamesPanelClicked(object sender, EventArgs e)
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+        }
+
+        /// <summary>
+        ///     Called when the editor panel is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnEditorPanelClicked(object sender, EventArgs e)
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+        }
     }
 }
