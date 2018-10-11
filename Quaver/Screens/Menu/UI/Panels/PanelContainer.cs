@@ -51,7 +51,7 @@ namespace Quaver.Screens.Menu.UI.Panels
                 panel.Alignment = Alignment.MidLeft;
 
                 panel.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 0,
-                    StartingX + i * panel.Width + i * 10, 1000 + 100 * i));
+                    StartingX + i * panel.Width + i * 10, 600 + 100 * i));
 
                 panel.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha,
                     Easing.EaseOutQuint, 0, 1, 500 + 100 * i));
