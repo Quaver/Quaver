@@ -76,7 +76,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         ///     The list of tracks (maps) that were played during this jukebox section,
         ///     so we can go to the previous/next song.
         /// </summary>
-        private List<Map> TrackListQueue { get; } = new List<Map>();
+        private List<Map> TrackListQueue { get; }
 
         /// <summary>
         ///     The current track in the queue we're currently on.
@@ -102,6 +102,15 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         public Jukebox()
         {
+            TrackListQueue = new List<Map>();
+
+            // If a track is already playing, add it to the queue.
+            if (MapManager.Selected.Value != null)
+            {
+                TrackListQueue.Add(MapManager.Selected.Value);
+                TrackListQueuePosition++;
+            }
+
             Size = new ScalableVector2(614, 40);
             Tint = Color.Black;
             Alpha = 0.55f;
@@ -160,7 +169,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     break;
                 case Direction.Backward:
                     // Don't allow backwards skipping if there arent any tracks before.
-                    if (TrackListQueuePosition == 0)
+                    if (TrackListQueuePosition - 1 < 0)
                         return;
 
                     TrackListQueuePosition--;
