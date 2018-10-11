@@ -77,7 +77,7 @@ namespace Quaver.Screens.Menu.UI.Visualizer
                         bar.Transformations.Clear();
 
                         bar.Transformations.Add(new Transformation(TransformationProperty.Height, Easing.Linear,
-                            bar.Height, targetHeight, 20f));
+                            bar.Height, targetHeight, 50f));
                     }
                 }
             }
