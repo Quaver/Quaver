@@ -14,11 +14,13 @@ using Quaver.Screens.Menu.UI.Jukebox;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
+using Quaver.Screens.Menu.UI.User;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
@@ -89,6 +91,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public MenuAudioVisualizer Visualizer { get; set; }
 
+        /// <summary>
+        ///     The user's profile when the click on their name in the navbar.
+        /// </summary>
+        public UserProfileContainer UserProfile { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -104,6 +111,7 @@ namespace Quaver.Screens.Menu
             CreateToolButtons();
             CreatePanelContainer();
             CreateJukebox();
+            CreateUserProfile();
         }
 
         /// <inheritdoc />
@@ -147,7 +155,7 @@ namespace Quaver.Screens.Menu
             new NavbarItem("Challenges"),
         }, new List<NavbarItem>
         {
-            new NavbarItemUser()
+            new NavbarItemUser(this)
         }) { Parent = Container };
 
         /// <summary>
@@ -304,6 +312,20 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Alignment = Alignment.BotLeft
         };
+
+        /// <summary>
+        ///     Creates the container for user profiles.
+        /// </summary>
+        private void CreateUserProfile()
+        {
+            UserProfile = new UserProfileContainer(this)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = Navbar.Line.Y + Navbar.Line.Thickness,
+                X = -65
+            };
+        }
 
         /// <summary>
         ///     Called when the single player panel is clicked.

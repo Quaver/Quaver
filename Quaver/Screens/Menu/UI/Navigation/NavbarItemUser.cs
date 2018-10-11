@@ -13,6 +13,11 @@ namespace Quaver.Screens.Menu.UI.Navigation
     public class NavbarItemUser : NavbarItem
     {
         /// <summary>
+        ///     Reference to the parent menu screen view.
+        /// </summary>
+        public MenuScreenView View { get; }
+
+        /// <summary>
         ///     The user's avatar.
         /// </summary>
         public Sprite Avatar { get; private set; }
@@ -25,8 +30,10 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
-        public NavbarItemUser()
+        public NavbarItemUser(MenuScreenView view)
         {
+            View = view;
+
             Selected = false;
             UsePreviousSpriteBatchOptions = true;
             Size = new ScalableVector2(175, 45);
@@ -36,6 +43,8 @@ namespace Quaver.Screens.Menu.UI.Navigation
             CreateAvatar();
             CreateUsername();
             CreateBottomLine();
+
+            Clicked += OnClick;
         }
 
         /// <inheritdoc />
@@ -46,7 +55,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (IsHovered)
+            if (IsHovered || Selected)
                 Alpha = MathHelper.Lerp(Alpha, 0.25f, (float) Math.Min(dt / 60, 1));
             else
                 Alpha = MathHelper.Lerp(Alpha, 0f, (float) Math.Min(dt / 60, 1));
@@ -121,5 +130,16 @@ namespace Quaver.Screens.Menu.UI.Navigation
         ///     Realigns the size of the item.
         /// </summary>
         private void Resize() => Width = Avatar.X + Avatar.Width + UsernameText.Width + Avatar.X + 5;
+
+        /// <summary>
+        ///     Called when the button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClick(object sender, EventArgs e)
+        {
+            Selected = !Selected;
+            View.UserProfile?.PerformClickAnimation(Selected);
+        }
     }
 }
