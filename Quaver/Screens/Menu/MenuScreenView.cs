@@ -283,7 +283,7 @@ namespace Quaver.Screens.Menu
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            Y = Navbar.Line.Y + 10,
+            Y = Navbar.Line.Y + 20,
             X = -65
         };
     }
