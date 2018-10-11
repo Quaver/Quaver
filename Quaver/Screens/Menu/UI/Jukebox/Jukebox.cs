@@ -382,7 +382,6 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
 
                 SelectNextTrack(Direction.Forward);
-                NotificationManager.Show(NotificationLevel.Info, "Selecting next track");
             };
         }
 
@@ -406,20 +405,10 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                     return;
 
-                string action;
-
                 if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
-                {
                     AudioEngine.Track.Play();
-                    action = "Resumed Track";
-                }
                 else
-                {
                     AudioEngine.Track.Pause();
-                    action = "Paused Track";
-                }
-
-                NotificationManager.Show(NotificationLevel.Info, action);
             };
         }
 
@@ -449,8 +438,6 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 {
                     Logger.Error($"Failed to load track", LogType.Runtime);
                 }
-
-                NotificationManager.Show(NotificationLevel.Info, "Play");
             };
         }
 
