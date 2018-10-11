@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using osu_database_reader;
+using Quaver.Modifiers;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Wobble.Discord;
 using Wobble.Graphics.UI.Dialogs;
@@ -28,6 +30,15 @@ namespace Quaver.Screens.Menu
             DiscordManager.Client.CurrentPresence.Details = "Idle";
             DiscordManager.Client.CurrentPresence.State = "In the menus";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+
+            try
+            {
+                ModManager.RemoveSpeedMods();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
 
             View = new MenuScreenView(this);
         }
