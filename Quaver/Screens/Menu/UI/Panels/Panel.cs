@@ -16,87 +16,42 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <summary>
         ///     The thumbnail image for the panel.
         /// </summary>
-        public Sprite Thumbnail { get; set; }
+        public Sprite Thumbnail { get; private set; }
 
         /// <summary>
         ///     Contains the heading for the panel.
         /// </summary>
-        public Sprite HeadingContainer { get; set; }
+        public Sprite HeadingContainer { get; private set; }
 
         /// <summary>
         ///     The title of the panel.
         /// </summary>
-        public SpriteTextBitmap Title { get; set; }
+        public SpriteTextBitmap Title { get; private set; }
 
         /// <summary>
         ///     The description of the panel.
         /// </summary>
-        public SpriteTextBitmap Description { get; set; }
+        public SpriteTextBitmap Description { get; private set; }
 
         /// <summary>
         ///     The original size of the panel.
         /// </summary>
-        public ScalableVector2 OriginalSize { get; } = new ScalableVector2(302, 302);
+        private ScalableVector2 OriginalSize { get; } = new ScalableVector2(302, 302);
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="title"></param>
         /// <param name="description"></param>
-        /// <param name="image"></param>
-        public Panel(string title, string description, Texture2D image)
+        /// <param name="activeThumbnail"></param>
+        public Panel(string title, string description, Texture2D activeThumbnail)
         {
             Size = new ScalableVector2(OriginalSize.X.Value, OriginalSize.Y.Value);
 
-            Thumbnail = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, Height - 100),
-                Image = image,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
-            };
-
-            HeadingContainer = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, 100),
-                Y = Thumbnail.Height,
-                Tint = ColorHelper.HexToColor("#EEEEEE")
-            };
-
-            Title = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, title.ToUpper(), 24,
-                ColorHelper.HexToColor("#383939"), Alignment.MidCenter, (int) Width)
-            {
-                Parent = HeadingContainer,
-                Alignment = Alignment.TopLeft,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                X = 10,
-                Y = 6
-            };
-
-            Title.Size = new ScalableVector2(Title.Width * 0.95f, Title.Height * 0.95f);
-
-            Description = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, description, 20,
-                ColorHelper.HexToColor("#383939"),
-                Alignment.MidLeft, (int) (Width * 1.75f))
-            {
-                Parent = HeadingContainer,
-                Alignment = Alignment.TopLeft,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                X = 15,
-                Y = Title.Y + Title.Height + 0
-            };
-
-            Description.Size = new ScalableVector2(Description.Width * 0.50f, Description.Height * 0.50f);
+            CreateThumbnail(activeThumbnail);
+            CreateHeadingContainer();
+            CreateTitleText(title);
+            CreateDescriptionText(description);
 
             AddBorder(Color.White, 0);
         }
@@ -106,6 +61,16 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
+        {
+            PerformHoverAnimation(gameTime);
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Performs the border and size hover animation for the panel.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void PerformHoverAnimation(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -137,8 +102,77 @@ namespace Quaver.Screens.Menu.UI.Panels
             HeadingContainer.Width = Width;
             HeadingContainer.Height = 100;
             HeadingContainer.Y = Thumbnail.Height;
+        }
 
-            base.Update(gameTime);
+        /// <summary>
+        ///     Creates the thumbnail sprite.
+        /// </summary>
+        /// <param name="image"></param>
+        private void CreateThumbnail(Texture2D image) => Thumbnail = new Sprite()
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width, Height - 100),
+            Image = image,
+            SpriteBatchOptions = new SpriteBatchOptions()
+            {
+                BlendState = BlendState.NonPremultiplied
+            }
+        };
+
+        /// <summary>
+        ///     Creates the heading container sprite.
+        /// </summary>
+        private void CreateHeadingContainer() => HeadingContainer = new Sprite()
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width, 100),
+            Y = Thumbnail.Height,
+            Tint = ColorHelper.HexToColor("#EEEEEE")
+        };
+
+        /// <summary>
+        ///     Creates the text that displays the title of the panel.
+        /// </summary>
+        /// <param name="title"></param>
+        private void CreateTitleText(string title)
+        {
+            Title = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, title.ToUpper(), 24,
+                ColorHelper.HexToColor("#383939"), Alignment.MidCenter, (int) Width)
+            {
+                Parent = HeadingContainer,
+                Alignment = Alignment.TopLeft,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+                X = 10,
+                Y = 6
+            };
+
+            Title.Size = new ScalableVector2(Title.Width * 0.95f, Title.Height * 0.95f);
+        }
+
+        /// <summary>
+        ///     Creates the text that displays the description of the panel.
+        /// </summary>
+        /// <param name="description"></param>
+        private void CreateDescriptionText(string description)
+        {
+            Description = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, description, 20,
+                ColorHelper.HexToColor("#383939"),
+                Alignment.MidLeft, (int) (Width * 1.75f))
+            {
+                Parent = HeadingContainer,
+                Alignment = Alignment.TopLeft,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+                X = 15,
+                Y = Title.Y + Title.Height + 0
+            };
+
+            Description.Size = new ScalableVector2(Description.Width * 0.50f, Description.Height * 0.50f);
         }
     }
 }

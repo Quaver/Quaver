@@ -94,7 +94,6 @@ namespace Quaver.Screens.Menu
             CreateMenuTip();
             CreateToolButtons();
             CreatePanelContainer();
-            // CreateTextMainMenu();
             CreateJukebox();
         }
 
@@ -131,13 +130,13 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the navbar.
         /// </summary>
-        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>()
+        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
         {
             new NavbarItem("Home", true),
             new NavbarItem("Leaderboard"),
             new NavbarItem("Challenges"),
             new NavbarItem("Play (Temp)", false, (sender, args) => QuaverScreenManager.ChangeScreen(new SelectScreen()))
-        }, new List<NavbarItem>()
+        }, new List<NavbarItem>
         {
             new NavbarItemUser()
         }) { Parent = Container };
@@ -168,10 +167,7 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Position = new ScalableVector2(Navbar.Line.X, Navbar.Line.Y),
             Alpha = 0,
-            SpriteBatchOptions =
-            {
-                BlendState = BlendState.NonPremultiplied
-            },
+            SpriteBatchOptions = { BlendState = BlendState.NonPremultiplied },
         };
 
         /// <summary>
@@ -232,10 +228,21 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreatePanelContainer() => PanelContainer = new PanelContainer(new List<Panel>()
         {
-            new Panel("Single Player", "Play offline and compete for scoreboard ranks", UserInterface.ThumbnailSinglePlayer),
-            new Panel("Competitive", "Compete against players all over the world", UserInterface.ThumbnailCompetitive),
-            new Panel("Custom Games", "Play multiplayer games with your friends", UserInterface.ThumbnailCustomGames),
-            new Panel("Editor", "Create or edit a map to any song you'd like", UserInterface.ThumbnailEditor),
+            // Single Player
+            new Panel("Single Player", "Play offline and compete for scoreboard ranks",
+                UserInterface.ThumbnailSinglePlayer),
+
+            // Compettive
+            new Panel("Competitive", "Compete against players all over the world",
+                UserInterface.ThumbnailCompetitive),
+
+            // Custom Games
+            new Panel("Custom Games", "Play multiplayer games with your friends",
+                UserInterface.ThumbnailCustomGames),
+
+            // Editor
+            new Panel("Editor", "Create or edit a map to any song you'd like",
+                UserInterface.ThumbnailEditor),
         })
         {
             Parent = Container
@@ -272,15 +279,12 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates and aligns the jukebox sprite.
         /// </summary>
-        private void CreateJukebox()
+        private void CreateJukebox() => Jukebox = new Jukebox
         {
-            Jukebox = new Jukebox()
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-                Y = Navbar.Line.Y + 10,
-                X = -65
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            Y = Navbar.Line.Y + 10,
+            X = -65
+        };
     }
 }

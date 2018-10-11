@@ -29,9 +29,9 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         public Sprite TitleBackground { get; set; }
 
         /// <summary>
-        ///     The text that says "Jukebox"
+        ///     The text that says "Now Playing"
         /// </summary>
-        public SpriteTextBitmap JukeboxText { get; set; }
+        public SpriteTextBitmap NowPlayingText { get; set; }
 
         /// <summary>
         ///     Button to select the previous track.
@@ -86,14 +86,14 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(124, Height),
+                Size = new ScalableVector2(130, Height),
                 Tint = Color.Black,
                 Alpha = 0.45f
             };
 
             AddBorder(Color.White, 2);
 
-            JukeboxText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Jukebox", 24, Color.White,
+            NowPlayingText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Now Playing", 24, Color.White,
                 Alignment.MidLeft, int.MaxValue)
             {
                 Parent = TitleBackground,
@@ -101,10 +101,11 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 SpriteBatchOptions = new SpriteBatchOptions()
                 {
                     BlendState = BlendState.NonPremultiplied
-                }
+                },
+                X = 2
             };
 
-            JukeboxText.Size = new ScalableVector2(JukeboxText.Width * 0.60f, JukeboxText.Height * 0.60f);
+            NowPlayingText.Size = new ScalableVector2(NowPlayingText.Width * 0.60f, NowPlayingText.Height * 0.60f);
 
             CreateSongTitleContainer();
             CreateProgressBar();
