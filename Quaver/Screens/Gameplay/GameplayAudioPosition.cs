@@ -122,7 +122,7 @@ namespace Quaver.Screens.Gameplay
                         StartTime = qua.TimingPoints[i].StartTime,
                         Multiplier = (float)(qua.TimingPoints[i].Bpm / commonBpm)
                     };
-                    ScrollVelocities.Add(asd);
+                    ScrollVelocities.Add(sv);
                 }
             }
 
