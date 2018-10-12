@@ -112,7 +112,7 @@ namespace Quaver.Screens.Gameplay
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public long GetPositionFromTime(float time)
+        public long GetPositionFromTime(double time)
         {
             long curPos = 0;
 
@@ -147,7 +147,7 @@ namespace Quaver.Screens.Gameplay
         /// <param name="time"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public long GetPositionFromTime(float time, int index)
+        public long GetPositionFromTime(double time, int index)
         {
             long curPos = 0;
 
@@ -187,7 +187,7 @@ namespace Quaver.Screens.Gameplay
         ///     Update Current position of the hit objects
         /// </summary>
         /// <param name="audioTime"></param>
-        public void UpdateCurrentPosition(float audioTime)
+        public void UpdateCurrentPosition(double audioTime)
         {
             // Update SV index if necessary
             while (SvIndex < VelocityPositionMarkers.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
@@ -195,7 +195,6 @@ namespace Quaver.Screens.Gameplay
                 SvIndex++;
             }
 
-            // todo: add variables and optimization
             Position = GetPositionFromTime(audioTime, SvIndex);
         }
     }

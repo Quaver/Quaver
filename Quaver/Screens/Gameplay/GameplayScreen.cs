@@ -48,6 +48,11 @@ namespace Quaver.Screens.Gameplay
         public GameplayAudioTiming Timing { get; }
 
         /// <summary>
+        ///     The audio position of the map used for SVs
+        /// </summary>
+        public GameplayAudioPosition Positioning { get; }
+
+        /// <summary>
         ///     The ruleset for the game mode of the map.
         /// </summary>
         public GameplayRuleset Ruleset { get; private set; }
@@ -217,6 +222,7 @@ namespace Quaver.Screens.Gameplay
             LoadedReplay = replay;
 
             Timing = new GameplayAudioTiming(this);
+            Positioning = new GameplayAudioPosition(map);
 
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
@@ -250,6 +256,7 @@ namespace Quaver.Screens.Gameplay
         public override void Update(GameTime gameTime)
         {
             Timing.Update(gameTime);
+            Positioning.UpdateCurrentPosition(Timing.Time);
 
             if (!Failed && !IsPlayComplete)
             {
