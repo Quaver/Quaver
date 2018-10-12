@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -40,16 +41,18 @@ namespace Quaver.Screens.Gameplay
         /// <param name="qua"></param>
         public GameplayAudioPosition(Qua qua)
         {
-            //todo: temp
+            // Find average bpm
+            var commonBpm = qua.GetCommonBpm();
+
+            // Create first timing point
+            // todo: this might be temporary
             var asd = new SliderVelocityInfo()
             {
                 StartTime = 0,
-                Multiplier = 1
+                Multiplier = (float)(qua.TimingPoints[0].Bpm / commonBpm)
             };
             ScrollVelocities.Add(asd);
 
-
-            //ScrollVelocities = qua.SliderVelocities;
             // Create SV multiplier timing points
             var index = 0;
             for (var i = 0; i < qua.TimingPoints.Count; i++)
@@ -62,7 +65,7 @@ namespace Quaver.Screens.Gameplay
                         var sv = new SliderVelocityInfo()
                         {
                             StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = qua.SliderVelocities[j].Multiplier
+                            Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
                     }
@@ -79,19 +82,19 @@ namespace Quaver.Screens.Gameplay
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
                         }
 
-                        // SV starts is in between two timing points
+                        // SV start is in between two timing points
                         else if (qua.SliderVelocities[j].StartTime >= qua.TimingPoints[i].StartTime
                             && qua.SliderVelocities[j].StartTime < qua.TimingPoints[i + 1].StartTime)
                         {
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
                         }
@@ -107,7 +110,7 @@ namespace Quaver.Screens.Gameplay
             }
 
             // Compute for Change Points
-            long position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
+            var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
             VelocityPositionMarkers.Add(position);
             // todo: remove. debugging.
             //Console.WriteLine("SV added: " + position + ", multiplier: " + ScrollVelocities[0].Multiplier);
