@@ -246,8 +246,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (Ruleset.Screen.Timing.Time > hitObject.TrueStartTime)
                     {
                         // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                        hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Positioning.Position) * ScrollSpeed);
-                        hitObject.PositionY = hitObject.PositionY = hitObject.GetPosFromOffset((float)Ruleset.Screen.Timing.Time);
+                        hitObject.CurrentLongNoteSize = (long)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Positioning.Position) * ScrollSpeed);
+                        hitObject.PositionY = hitObject.GetPosFromOffset();
                     }
                     else
                     {
@@ -256,6 +256,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     }
 
                     // Update the sprite positions of the object.
+                    Console.WriteLine("LongNoteOffsetYFromReceptor: " + hitObject.LongNoteOffsetYFromReceptor + ", Size: " + hitObject.CurrentLongNoteSize);
                     hitObject.UpdateSpritePositions();
                 }
             }

@@ -89,8 +89,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
             // Disregard non-long note objects after this point, so we can initailize them separately.
 
             // todo: remove. debugging
-            Console.Out.WriteLine("------------------------------------");
-            Console.Out.WriteLine("START: " + hitObject.OffsetYFromReceptor);
+            //Console.Out.WriteLine("------------------------------------");
+            //Console.Out.WriteLine("START: " + hitObject.OffsetYFromReceptor);
 
             if (!hitObject.IsLongNote)
                 return hitObject;
@@ -99,11 +99,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
             // (OLD) hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
             hitObject.LongNoteOffsetYFromReceptor = Screen.Positioning.GetPositionFromTime(info.EndTime);
 
-            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * HitObjectManagerKeys.ScrollSpeed);
+            hitObject.InitialLongNoteSize = (long)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * HitObjectManagerKeys.ScrollSpeed);
             hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
 
             // todo: remove. debugging
-            Console.Out.WriteLine("END: " + hitObject.LongNoteOffsetYFromReceptor);
+            //Console.Out.WriteLine("END: " + hitObject.LongNoteOffsetYFromReceptor);
 
             return hitObject;
         }

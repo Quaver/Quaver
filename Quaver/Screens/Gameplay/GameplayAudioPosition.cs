@@ -199,7 +199,9 @@ namespace Quaver.Screens.Gameplay
                 SvIndex++;
             }
             Position = GetPositionFromTime(audioTime, SvIndex);
-            Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
+
+            // todo: remove this. debugging
+            //Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
         }
     }
 }

@@ -64,12 +64,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The initial size of this object's long note.
         /// </summary>
-        public ulong InitialLongNoteSize { get; set; }
+        public long InitialLongNoteSize { get; set; }
 
         /// <summary>
         ///     The current size of this object's long note.
         /// </summary>
-        public ulong CurrentLongNoteSize { get; set; }
+        public long CurrentLongNoteSize { get; set; }
 
         /// <summary>
         ///      The offset of the long note body from the hit object.
@@ -214,7 +214,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Calculates the position from the offset.
+        ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
         public float GetPosFromOffset(float offset)
@@ -224,6 +224,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
             // (OLD) return (float) (manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
             return (float)(manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Positioning.Position)) * speed) - HitObjectSprite.Height;
+        }
+
+        /// <summary>
+        ///     Calculate the position of the Hit Object to be right on top of its hit position
+        /// </summary>
+        /// <returns></returns>
+        public float GetPosFromOffset()
+        {
+            var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
+
+            return manager.HitPositionOffset - HitObjectSprite.Height;
         }
 
         /// <summary>
