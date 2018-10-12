@@ -72,7 +72,10 @@ namespace Quaver.Screens.Gameplay
                             Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
-                        svFound = true;
+
+                        // Toggle SvFound if inheriting point is overlapping timing point
+                        if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                            svFound = true;
                     }
                 }
 
@@ -90,7 +93,10 @@ namespace Quaver.Screens.Gameplay
                                 Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
-                            svFound = true;
+
+                            // Toggle SvFound if inheriting point is overlapping timing point
+                            if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                                svFound = true;
                         }
 
                         // SV start is in between two timing points
@@ -103,7 +109,10 @@ namespace Quaver.Screens.Gameplay
                                 Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
-                            svFound = true;
+
+                            // Toggle SvFound if inheriting point is overlapping timing point
+                            if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                                svFound = true;
                         }
 
                         // Update current index if SV falls out of range for optimization
