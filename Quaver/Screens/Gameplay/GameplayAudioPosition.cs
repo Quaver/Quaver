@@ -43,6 +43,7 @@ namespace Quaver.Screens.Gameplay
         {
             // Find average bpm
             var commonBpm = qua.GetCommonBpm();
+            //Console.Out.WriteLine("common BPM: " + commonBpm);
 
             // Create first timing point
             // todo: this might be temporary
@@ -75,10 +76,7 @@ namespace Quaver.Screens.Gameplay
 
                         // Toggle SvFound if inheriting point is overlapping timing point
                         if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
-                        {
                             svFound = true;
-                            Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[i].StartTime);
-                        }
                     }
                 }
 
@@ -99,10 +97,7 @@ namespace Quaver.Screens.Gameplay
 
                             // Toggle SvFound if inheriting point is overlapping timing point
                             if (Math.Abs(sv.StartTime - qua.TimingPoints[0].StartTime) < 1)
-                            {
                                 svFound = true;
-                                Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[0].StartTime);
-                            }
                         }
 
                         // SV start is in between two timing points
@@ -118,10 +113,7 @@ namespace Quaver.Screens.Gameplay
 
                             // Toggle SvFound if inheriting point is overlapping timing point
                             if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
-                            {
                                 svFound = true;
-                                Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[i].StartTime);
-                            }
                         }
 
                         // Update current index if SV falls out of range for optimization
