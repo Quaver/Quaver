@@ -47,12 +47,12 @@ namespace Quaver.Screens.Gameplay
             // Create first timing point
             // todo: this might be temporary
             /*
-            var sv = new SliderVelocityInfo()
+            var firstSv = new SliderVelocityInfo()
             {
                 StartTime = 0,
-                Multiplier = (float)(qua.TimingPoints[0].Bpm / commonBpm)
+                Multiplier = (float)(qua.TimingPoints[0].Bpm / commonBpm) * 2
             };
-            ScrollVelocities.Add(sv);
+            ScrollVelocities.Add(firstSv);
             */
 
             // Create SV multiplier timing points
@@ -75,7 +75,10 @@ namespace Quaver.Screens.Gameplay
 
                         // Toggle SvFound if inheriting point is overlapping timing point
                         if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                        {
                             svFound = true;
+                            Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[i].StartTime);
+                        }
                     }
                 }
 
@@ -95,8 +98,11 @@ namespace Quaver.Screens.Gameplay
                             ScrollVelocities.Add(sv);
 
                             // Toggle SvFound if inheriting point is overlapping timing point
-                            if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                            if (Math.Abs(sv.StartTime - qua.TimingPoints[0].StartTime) < 1)
+                            {
                                 svFound = true;
+                                Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[0].StartTime);
+                            }
                         }
 
                         // SV start is in between two timing points
@@ -112,7 +118,10 @@ namespace Quaver.Screens.Gameplay
 
                             // Toggle SvFound if inheriting point is overlapping timing point
                             if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
+                            {
                                 svFound = true;
+                                Console.Out.WriteLine("SV FOUND: " + sv.StartTime + ", aaa: " + qua.TimingPoints[i].StartTime);
+                            }
                         }
 
                         // Update current index if SV falls out of range for optimization
@@ -124,6 +133,7 @@ namespace Quaver.Screens.Gameplay
                     }
                 }
 
+                // Create BPM SV if no inheriting point is overlapping the current timing point
                 if (!svFound)
                 {
                     var sv = new SliderVelocityInfo()
@@ -134,6 +144,9 @@ namespace Quaver.Screens.Gameplay
                     ScrollVelocities.Add(sv);
                 }
             }
+
+            // Sort list
+            ScrollVelocities = ScrollVelocities.OrderBy(o => o.StartTime).ToList();
 
             // Compute for Change Points
             var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
