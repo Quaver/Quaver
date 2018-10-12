@@ -98,13 +98,15 @@ namespace Quaver.Screens.Gameplay
             }
 
             // Compute for Change Points
-            long position = 0;
-            VelocityPositionMarkers.Add(0);
+            long position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
+            VelocityPositionMarkers.Add(position);
+            Console.WriteLine("SV added: " + position);
 
             for (var i = 0; i < ScrollVelocities.Count - 1; i++)
             {
                 position += (long)((ScrollVelocities[i + 1].StartTime - ScrollVelocities[i].StartTime) * ScrollVelocities[i].Multiplier);
                 VelocityPositionMarkers.Add(position);
+                Console.WriteLine("SV added: " + position);
             }
         }
 
@@ -155,7 +157,7 @@ namespace Quaver.Screens.Gameplay
             // Time starts before the first SV point
             if (index == 0)
             {
-                curPos = (long)((time - ScrollVelocities[0].StartTime) * ScrollVelocities[0].Multiplier);
+                curPos = (long)(time * ScrollVelocities[0].Multiplier);
             }
 
             // Time starts after the first SV point and before the last SV point
@@ -163,7 +165,7 @@ namespace Quaver.Screens.Gameplay
             {
                 // Get position
                 curPos += VelocityPositionMarkers[index];
-                curPos += (long)((time - ScrollVelocities[index - 1].StartTime) * ScrollVelocities[index - 1].Multiplier);
+                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier);
             }
 
             // Time starts after the last SV point
@@ -201,7 +203,7 @@ namespace Quaver.Screens.Gameplay
             Position = GetPositionFromTime(audioTime, SvIndex);
 
             // todo: remove this. debugging
-            //Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
+            Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
         }
     }
 }

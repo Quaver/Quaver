@@ -256,7 +256,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     }
 
                     // Update the sprite positions of the object.
-                    Console.WriteLine("LongNoteOffsetYFromReceptor: " + hitObject.LongNoteOffsetYFromReceptor + ", Size: " + hitObject.CurrentLongNoteSize);
                     hitObject.UpdateSpritePositions();
                 }
             }
