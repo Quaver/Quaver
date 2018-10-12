@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Modifiers;
 
 namespace Quaver.Screens.Gameplay
 {
@@ -44,17 +47,6 @@ namespace Quaver.Screens.Gameplay
             // Find average bpm
             var commonBpm = qua.GetCommonBpm();
             //Console.Out.WriteLine("common BPM: " + commonBpm);
-
-            // Create first timing point
-            // todo: this might be temporary
-            /*
-            var firstSv = new SliderVelocityInfo()
-            {
-                StartTime = 0,
-                Multiplier = (float)(qua.TimingPoints[0].Bpm / commonBpm) * 2
-            };
-            ScrollVelocities.Add(firstSv);
-            */
 
             // Create SV multiplier timing points
             var index = 0;
@@ -143,15 +135,11 @@ namespace Quaver.Screens.Gameplay
             // Compute for Change Points
             var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
             VelocityPositionMarkers.Add(position);
-            // todo: remove. debugging.
-            //Console.WriteLine("SV added: " + position + ", multiplier: " + ScrollVelocities[0].Multiplier);
 
             for (var i = 1; i < ScrollVelocities.Count; i++)
             {
                 position += (long)((ScrollVelocities[i].StartTime - ScrollVelocities[i - 1].StartTime) * ScrollVelocities[i - 1].Multiplier);
                 VelocityPositionMarkers.Add(position);
-                // todo: remove. debugging
-                //Console.WriteLine("SV added: " + position + ", multiplier: " + ScrollVelocities[i].Multiplier);
             }
         }
 
@@ -197,6 +185,11 @@ namespace Quaver.Screens.Gameplay
         /// <returns></returns>
         public long GetPositionFromTime(double time, int index)
         {
+            // NoSV Modifier is toggled on
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
+                return (long)time;
+
+            // Continue if SV is enabled
             long curPos = 0;
 
             // Time starts before the first SV point
@@ -249,9 +242,6 @@ namespace Quaver.Screens.Gameplay
                 SvIndex++;
             }
             Position = GetPositionFromTime(audioTime, SvIndex);
-
-            // todo: remove this. debugging
-            //Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
         }
     }
 }
