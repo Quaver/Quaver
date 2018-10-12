@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Config;
 using Quaver.Database.Maps;
 
 namespace Quaver.Screens.Gameplay
@@ -154,7 +155,7 @@ namespace Quaver.Screens.Gameplay
             // Time starts before the first SV point
             if (index == 0)
             {
-                curPos = (long)((ScrollVelocities[0].StartTime - time) * ScrollVelocities[0].Multiplier);
+                curPos = (long)((time - ScrollVelocities[0].StartTime) * ScrollVelocities[0].Multiplier);
             }
 
             // Time starts after the first SV point and before the last SV point
@@ -162,7 +163,7 @@ namespace Quaver.Screens.Gameplay
             {
                 // Get position
                 curPos += VelocityPositionMarkers[index];
-                curPos += (long)((ScrollVelocities[index].StartTime - ScrollVelocities[index - 1].StartTime) * ScrollVelocities[index - 1].Multiplier);
+                curPos += (long)((time - ScrollVelocities[index - 1].StartTime) * ScrollVelocities[index - 1].Multiplier);
             }
 
             // Time starts after the last SV point
@@ -189,13 +190,16 @@ namespace Quaver.Screens.Gameplay
         /// <param name="audioTime"></param>
         public void UpdateCurrentPosition(double audioTime)
         {
+            // Use necessary hit offset
+            audioTime -= ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset;
+
             // Update SV index if necessary
             while (SvIndex < VelocityPositionMarkers.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
             {
                 SvIndex++;
             }
-
             Position = GetPositionFromTime(audioTime, SvIndex);
+            Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
         }
     }
 }

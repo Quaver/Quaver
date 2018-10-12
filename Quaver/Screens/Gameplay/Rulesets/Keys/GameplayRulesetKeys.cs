@@ -75,7 +75,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
             var hitObject = new GameplayHitObjectKeys(this, info)
             {
                 Width = playfield.LaneSize,
-                OffsetYFromReceptor = info.StartTime
+                OffsetYFromReceptor = Screen.Positioning.GetPositionFromTime(info.StartTime)
             };
 
             // Calculate position & offset from the receptor.
@@ -87,14 +87,23 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
                 hitObject.SnapIndex = GameplayHitObject.GetBeatSnap(info, hitObject.GetTimingPoint(Map.TimingPoints));
 
             // Disregard non-long note objects after this point, so we can initailize them separately.
+
+            // todo: remove. debugging
+            Console.Out.WriteLine("------------------------------------");
+            Console.Out.WriteLine("START: " + hitObject.OffsetYFromReceptor);
+
             if (!hitObject.IsLongNote)
                 return hitObject;
 
             // TODO: Handle SV's.
-            hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
+            // (OLD) hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
+            hitObject.LongNoteOffsetYFromReceptor = Screen.Positioning.GetPositionFromTime(info.EndTime);
 
             hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * HitObjectManagerKeys.ScrollSpeed);
             hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
+
+            // todo: remove. debugging
+            Console.Out.WriteLine("END: " + hitObject.LongNoteOffsetYFromReceptor);
 
             return hitObject;
         }
