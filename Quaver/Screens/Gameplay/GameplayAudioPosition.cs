@@ -46,17 +46,21 @@ namespace Quaver.Screens.Gameplay
 
             // Create first timing point
             // todo: this might be temporary
-            var asd = new SliderVelocityInfo()
+            /*
+            var sv = new SliderVelocityInfo()
             {
                 StartTime = 0,
                 Multiplier = (float)(qua.TimingPoints[0].Bpm / commonBpm)
             };
-            ScrollVelocities.Add(asd);
+            ScrollVelocities.Add(sv);
+            */
 
             // Create SV multiplier timing points
             var index = 0;
             for (var i = 0; i < qua.TimingPoints.Count; i++)
             {
+                var svFound = false;
+
                 // SV starts after the last timing point
                 if (i == qua.TimingPoints.Count - 1)
                 {
@@ -68,6 +72,7 @@ namespace Quaver.Screens.Gameplay
                             Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
+                        svFound = true;
                     }
                 }
 
@@ -85,6 +90,7 @@ namespace Quaver.Screens.Gameplay
                                 Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
+                            svFound = true;
                         }
 
                         // SV start is in between two timing points
@@ -97,6 +103,7 @@ namespace Quaver.Screens.Gameplay
                                 Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
+                            svFound = true;
                         }
 
                         // Update current index if SV falls out of range for optimization
@@ -106,6 +113,16 @@ namespace Quaver.Screens.Gameplay
                             break;
                         }
                     }
+                }
+
+                if (!svFound)
+                {
+                    var sv = new SliderVelocityInfo()
+                    {
+                        StartTime = qua.TimingPoints[i].StartTime,
+                        Multiplier = (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                    };
+                    ScrollVelocities.Add(asd);
                 }
             }
 
