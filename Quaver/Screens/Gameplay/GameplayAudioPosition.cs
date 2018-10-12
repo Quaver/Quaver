@@ -33,9 +33,6 @@ namespace Quaver.Screens.Gameplay
         /// </summary>
         private int SvIndex { get; set; } = 0;
 
-        //todo: temp. reference from actual scroll speed variable and remove later
-        public float ScrollSpeed { get; set; } = 20;
-
         /// <summary>
         ///     Generate Hit Object Position from .Qua Scroll Velocities
         /// </summary>
@@ -111,7 +108,7 @@ namespace Quaver.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Get Hit Object position from audio time (Unoptimized.)
+        ///     Get Hit Object (End/Start) position from audio time (Unoptimized.)
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
@@ -144,7 +141,7 @@ namespace Quaver.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Get Hit Object position from audio time.
+        ///     Get Hit Object (End/Start) position from audio time and SV Index.
         ///     Index used for optimization
         /// </summary>
         /// <param name="time"></param>
@@ -186,16 +183,20 @@ namespace Quaver.Screens.Gameplay
             return curPos;
         }
 
-        public void UpdateCurrentPosition(float time)
+        /// <summary>
+        ///     Update Current position of the hit objects
+        /// </summary>
+        /// <param name="audioTime"></param>
+        public void UpdateCurrentPosition(float audioTime)
         {
             // Update SV index if necessary
-            while (SvIndex < VelocityPositionMarkers.Count && time >= ScrollVelocities[SvIndex].StartTime)
+            while (SvIndex < VelocityPositionMarkers.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
             {
                 SvIndex++;
             }
 
             // todo: add variables and optimization
-            Position = GetPositionFromTime(time, SvIndex);
+            Position = GetPositionFromTime(audioTime, SvIndex);
         }
     }
 }
