@@ -40,6 +40,15 @@ namespace Quaver.Screens.Gameplay
         /// <param name="qua"></param>
         public GameplayAudioPosition(Qua qua)
         {
+            //todo: temp
+            var asd = new SliderVelocityInfo()
+            {
+                StartTime = 0,
+                Multiplier = 1
+            };
+            ScrollVelocities.Add(asd);
+
+
             //ScrollVelocities = qua.SliderVelocities;
             // Create SV multiplier timing points
             var index = 0;
@@ -53,7 +62,7 @@ namespace Quaver.Screens.Gameplay
                         var sv = new SliderVelocityInfo()
                         {
                             StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = 1 //qua.SliderVelocities[j].Multiplier
+                            Multiplier = qua.SliderVelocities[j].Multiplier
                         };
                         ScrollVelocities.Add(sv);
                     }
@@ -70,7 +79,7 @@ namespace Quaver.Screens.Gameplay
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = 1 //qua.SliderVelocities[j].Multiplier
+                                Multiplier = qua.SliderVelocities[j].Multiplier
                             };
                             ScrollVelocities.Add(sv);
                         }
@@ -82,7 +91,7 @@ namespace Quaver.Screens.Gameplay
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = 1 //qua.SliderVelocities[j].Multiplier
+                                Multiplier = qua.SliderVelocities[j].Multiplier
                             };
                             ScrollVelocities.Add(sv);
                         }
@@ -100,13 +109,15 @@ namespace Quaver.Screens.Gameplay
             // Compute for Change Points
             long position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
             VelocityPositionMarkers.Add(position);
-            Console.WriteLine("SV added: " + position);
+            // todo: remove. debugging.
+            //Console.WriteLine("SV added: " + position + ", multiplier: " + ScrollVelocities[0].Multiplier);
 
-            for (var i = 0; i < ScrollVelocities.Count - 1; i++)
+            for (var i = 1; i < ScrollVelocities.Count; i++)
             {
-                position += (long)((ScrollVelocities[i + 1].StartTime - ScrollVelocities[i].StartTime) * ScrollVelocities[i].Multiplier);
+                position += (long)((ScrollVelocities[i].StartTime - ScrollVelocities[i - 1].StartTime) * ScrollVelocities[i - 1].Multiplier);
                 VelocityPositionMarkers.Add(position);
-                Console.WriteLine("SV added: " + position);
+                // todo: remove. debugging
+                //Console.WriteLine("SV added: " + position + ", multiplier: " + ScrollVelocities[i].Multiplier);
             }
         }
 
@@ -163,6 +174,9 @@ namespace Quaver.Screens.Gameplay
             // Time starts after the first SV point and before the last SV point
             else if (index < VelocityPositionMarkers.Count)
             {
+                // Reference the correct ScrollVelocities index by subracting 1
+                index--;
+
                 // Get position
                 curPos += VelocityPositionMarkers[index];
                 curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier);
@@ -196,14 +210,14 @@ namespace Quaver.Screens.Gameplay
             audioTime -= ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset;
 
             // Update SV index if necessary
-            while (SvIndex < VelocityPositionMarkers.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
+            while (SvIndex < ScrollVelocities.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
             {
                 SvIndex++;
             }
             Position = GetPositionFromTime(audioTime, SvIndex);
 
             // todo: remove this. debugging
-            Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
+            //Console.Out.WriteLine("pos: " + Position + ", index: " + SvIndex);
         }
     }
 }
