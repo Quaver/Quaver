@@ -15,15 +15,21 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     List of slider velocities used for the current map
         /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities = new List<SliderVelocityInfo>();
+        public List<SliderVelocityInfo> ScrollVelocities { get; set; } = new List<SliderVelocityInfo>();
+
+        /// <summary>
+        ///     List of added hit object positions calculated from SV. Used for optimization
+        /// </summary>
+        public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
         /// <summary>
         ///     Current position for Hit Objects
         /// </summary>
-        public ulong Position { get; private set; }
+        public long Position { get; private set; }
 
         /// <summary>
         ///     Current SV index used for optimization when using UpdateCurrentPosition()
+        ///     Default value is 0. "0" means that Current time has not passed first SV point yet.
         /// </summary>
         private int SvIndex { get; set; } = 0;
 
@@ -92,44 +98,89 @@ namespace Quaver.Screens.Gameplay
                     }
                 }
             }
+
+            // Compute for Change Points
+            long position = 0;
+            VelocityPositionMarkers.Add(0);
+
+            for (var i = 0; i < ScrollVelocities.Count - 1; i++)
+            {
+                position += (long)((ScrollVelocities[i + 1].StartTime - ScrollVelocities[i].StartTime) * ScrollVelocities[i].Multiplier);
+                VelocityPositionMarkers.Add(position);
+            }
         }
 
         /// <summary>
-        ///     Get Hit Object position from audio time
+        ///     Get Hit Object position from audio time (Unoptimized.)
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public ulong GetPositionFromTime(float time)
+        public long GetPositionFromTime(float time)
         {
-            ulong curPos = 0;
+            long curPos = 0;
 
-            // Time starts before the first SV point
             if (time < ScrollVelocities[0].StartTime)
             {
-                // todo: implment constant to calculate SV before first SV timing point
+                curPos = GetPositionFromTime(time, 0);
             }
-
-            // Time starts after the first SV point
+            else if (time >= ScrollVelocities[ScrollVelocities.Count - 1].StartTime)
+            {
+                curPos = GetPositionFromTime(time, ScrollVelocities.Count);
+            }
             else
             {
-                // Calculate position with Time and SV
-                for (var i = 0; i < ScrollVelocities.Count - 1; i++)
+                // Get index
+                for(var i = 0; i < ScrollVelocities.Count; i++)
                 {
-                    if (time > ScrollVelocities[i + 1].StartTime)
+                    if (time < ScrollVelocities[i].StartTime)
                     {
-                        curPos += (ulong)((ScrollVelocities[i + 1].StartTime - ScrollVelocities[i].StartTime) * ScrollVelocities[i].Multiplier * ScrollSpeed);
-                    }
-                    else
-                    {
-                        curPos += (ulong)((time - ScrollVelocities[i].StartTime) * ScrollVelocities[i].Multiplier * ScrollSpeed);
+                        curPos = GetPositionFromTime(time, i);
                         break;
                     }
                 }
+            }
 
-                // Add extra position if Time starts after the last SV point
-                if (time >= ScrollVelocities[ScrollVelocities.Count - 1].StartTime)
-                    curPos += (ulong)((time - ScrollVelocities[ScrollVelocities.Count - 1].StartTime) * ScrollVelocities[ScrollVelocities.Count - 1].Multiplier * ScrollSpeed);
+            return curPos;
+        }
 
+        /// <summary>
+        ///     Get Hit Object position from audio time.
+        ///     Index used for optimization
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public long GetPositionFromTime(float time, int index)
+        {
+            long curPos = 0;
+
+            // Time starts before the first SV point
+            if (index == 0)
+            {
+                curPos = (long)((ScrollVelocities[0].StartTime - time) * ScrollVelocities[0].Multiplier);
+            }
+
+            // Time starts after the first SV point and before the last SV point
+            else if (index < VelocityPositionMarkers.Count)
+            {
+                // Get position
+                curPos += VelocityPositionMarkers[index];
+                curPos += (long)((ScrollVelocities[index].StartTime - ScrollVelocities[index - 1].StartTime) * ScrollVelocities[index - 1].Multiplier);
+            }
+
+            // Time starts after the last SV point
+            else
+            {
+                // Throw exception if index exceeds list size for some reason
+                if (index > VelocityPositionMarkers.Count)
+                    throw new Exception("index exceeds Velocity Position Marker List Size");
+
+                // Reference the correct ScrollVelocities index by subracting 1
+                index--;
+
+                // Get position
+                curPos += VelocityPositionMarkers[index];
+                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier);
             }
 
             return curPos;
@@ -138,24 +189,13 @@ namespace Quaver.Screens.Gameplay
         public void UpdateCurrentPosition(float time)
         {
             // Update SV index if necessary
-            if (SvIndex != ScrollVelocities.Count - 1 && time >= ScrollVelocities[SvIndex + 1].StartTime)
+            while (SvIndex < VelocityPositionMarkers.Count && time >= ScrollVelocities[SvIndex].StartTime)
             {
-                // todo: we might have to loop since its possible to pass multiple SV timing points that are closer together than delta-time 
                 SvIndex++;
             }
 
-            if (SvIndex >= ScrollVelocities.Count - 1)
-            {
-
-            }
-
-            else
-            {
-
-            }
-
             // todo: add variables and optimization
-            Position = GetPositionFromTime(time);
+            Position = GetPositionFromTime(time, SvIndex);
         }
     }
 }
