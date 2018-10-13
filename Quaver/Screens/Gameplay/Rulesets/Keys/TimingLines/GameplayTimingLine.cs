@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
+namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
 {
     public class GameplayTimingLine
     {
@@ -14,18 +14,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private GameplayPlayfieldKeys Playfield { get; set; }
 
-        private float StartTime { get; set; }
-
         private GameplayRulesetKeys Ruleset { get; set; }
+
+        private TimingLineInfo Info { get; set; }
 
         private Sprite TimingLineSprite { get; set; }
 
         public GameplayTimingLine(GameplayRulesetKeys ruleset) => Ruleset = ruleset;
 
-        public void InitializeSprite(IGameplayPlayfield playfield, float startTime)
+        public void InitializeSprite(IGameplayPlayfield playfield, TimingLineInfo info)
         {
             Playfield = (GameplayPlayfieldKeys)playfield;
-            StartTime = startTime;
+            Info = info;
             /*
             TimingLineSprite = new Sprite()
             {
