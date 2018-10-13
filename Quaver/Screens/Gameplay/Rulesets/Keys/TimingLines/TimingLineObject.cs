@@ -1,4 +1,4 @@
-using Quaver.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Assets;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
 using System;
@@ -27,9 +27,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         private Sprite TimingLineSprite { get; set; }
 
         /// <summary>
+        ///     Track offset of the current Timing Line
+        /// </summary>
+        public float TrackOffset { get; private set; }
+
+        /// <summary>
         ///     Position of the current Timing Line
         /// </summary>
         public float PositionY { get; private set; }
+
+        /// <summary>
+        ///     Offset 
+        /// </summary>
+        public static float GlobalYOffset { get; set; } = 0;
 
         /// <summary>
         ///     Creates and initializes a new Timing Line Object
@@ -38,14 +48,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         /// <param name="info"></param>
         public TimingLineObject(GameplayRulesetKeys ruleset, TimingLineInfo info)
         {
+            var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Ruleset = ruleset;
             Info = info;
 
-            // todo: implement sprite position, size, and parent
+            // Initialize Sprite
             TimingLineSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(0, PositionY)
+                Width = playfield.Width,
+                Height = 2,
+                Parent = playfield.Stage.TimingLineContainer,
+                Image = UserInterface.BlankBox
             };
         }
 
@@ -58,7 +72,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             // Calculate Sprite Position
             var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            PositionY = (float)(manager.HitPositionOffset + (Info.OffsetYFromReceptor - trackPosition) * speed);
+            TrackOffset = Info.TrackOffset - trackPosition;
+            PositionY = (float)(manager.HitPositionOffset + (TrackOffset * speed)) + GlobalYOffset;
 
             // Update Sprite Position
             TimingLineSprite.Y = PositionY;

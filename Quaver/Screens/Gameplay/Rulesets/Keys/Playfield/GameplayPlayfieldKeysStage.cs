@@ -10,6 +10,7 @@ using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Health;
 using Quaver.Skinning;
@@ -37,6 +38,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The container that holds all of the HitObjects.
         /// </summary>
         public Container HitObjectContainer { get; private set; }
+
+        /// <summary>
+        ///     The Container that holds every Timing Line object
+        /// </summary>
+        public Container TimingLineContainer { get; private set; }
 
         /// <summary>
         ///     The left side of the stage.
@@ -129,12 +135,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
             // the receptors first, or the playfield first.
             if (Skin.ReceptorsOverHitObjects)
             {
+                CreateTimingLineContainer();
                 CreateHitObjectContainer();
                 CreateReceptorsAndLighting();
             }
             else
             {
                 CreateReceptorsAndLighting();
+                CreateTimingLineContainer();
                 CreateHitObjectContainer();
             }
 
@@ -282,6 +290,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     Creates the HitObjectContainer
         /// </summary>
         private void CreateHitObjectContainer() => HitObjectContainer = new Container
+        {
+            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
+            Alignment = Alignment.TopCenter,
+            Parent = Playfield.ForegroundContainer
+        };
+
+        private void CreateTimingLineContainer() => TimingLineContainer = new Container
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,

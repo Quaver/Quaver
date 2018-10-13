@@ -14,7 +14,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         /// <summary>
         ///     The Timing line's Y offset from the receptor
         /// </summary>
-        public long OffsetYFromReceptor { get; set; }
+        public long TrackOffset { get; set; }
 
         /// <summary>
         ///     information used for the lines representing every 4 beats on the playfield
@@ -24,7 +24,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         public TimingLineInfo (float startTime, long offset)
         {
             StartTime = startTime;
-            OffsetYFromReceptor = offset;
+            TrackOffset = offset;
         }
     }
 }

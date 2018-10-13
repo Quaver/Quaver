@@ -1,4 +1,6 @@
 using Quaver.API.Maps;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Skinning;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,27 +32,38 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         /// <summary>
         ///     The position at which the next TimingLine must be at in order to add a new TimingLine object to the pool.
         /// </summary>
-        private float CreateObjectPosition { get; set; }
+        private float CreateObjectPosition { get; set; } = 1500;
 
         /// <summary>
         ///     The position at which the earliest TimingLine object must be at before its recycled.
         /// </summary>
-        private float RecycleObjectPosition { get; set; }
+        private float RecycleObjectPosition { get; set; } = -1500;
 
         /// <summary>
-        ///     The Timing Line's Y-Offset. Is calculated by skin hit object element Y size and hit position.
+        ///     Convert from BPM to measure length in milliseconds. (4 beats)
         /// </summary>
-        private float ObjectYOffset { get; set; }
+        public float BpmToMeasureLengthMs { get; } = 4 * 60 * 1000;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
-        public TimingLineManager(Qua map, GameplayRulesetKeys ruleset)
+        public TimingLineManager(GameplayRuleset ruleset)
         {
-            Ruleset = ruleset;
-            GenerateTimingLineInfo(map);
+            // Set Reference variables
+            Ruleset = (GameplayRulesetKeys)ruleset;
+
+            // Set Time Line Y offset from skin
+            /*
+            var reference = SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldHitObjects[0][0];
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            var offset = playfield.LaneSize * reference.Height / reference.Width / 2;
+            TimingLineObject.GlobalYOffset = GameplayRulesetKeys.IsDownscroll ? offset + 3 : offset + 1;
+            */
+
+            // Initialize Object Pool
+            GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
 
@@ -61,29 +74,36 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         private void GenerateTimingLineInfo(Qua map)
         {
             Info = new Queue<TimingLineInfo>();
-            float songPos = 0;
             var index = 0;
 
             // set initial increment that will update songPos by 4 beat lengths
             // todo: use constant variables
-            var increment = (4 * 60 * 1000) / map.TimingPoints[index].Bpm;
+            var songPos = map.TimingPoints[index].StartTime;
+            var increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
+
+            // Create first Timing Line Info
+            var offset = Ruleset.Screen.Positioning.GetPositionFromTime(songPos);
+            var info = new TimingLineInfo(songPos, offset);
+            Info.Enqueue(info);
+
             while (songPos < map.Length)
             {
                 // Update songpos with increment
                 songPos += increment;
 
                 // If songPos exceeds the next timing point (if next timing point exists):
-                // Reset songPos to the next timing point and update increment
-                // subtract Timing Point StartTime by 1 to add more tolerance when finding next Timing Point
+                // - Reset songPos to the next timing point and update increment
+                // - subtract Timing Point StartTime by 1 to add more tolerance when finding next Timing Point
                 if (index + 1 < map.TimingPoints.Count && songPos >= map.TimingPoints[index + 1].StartTime - 1)
                 {
                     index++;
                     songPos = map.TimingPoints[index].StartTime;
-                    increment = (4 * 60 * 1000) / map.TimingPoints[index].Bpm;
+                    increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
                 }
 
-                var offset = Ruleset.Screen.Positioning.GetPositionFromTime(songPos);
-                var info = new TimingLineInfo(songPos, offset);
+                // Create Timing Line Info
+                offset = Ruleset.Screen.Positioning.GetPositionFromTime(songPos);
+                info = new TimingLineInfo(songPos, offset);
                 Info.Enqueue(info);
             }
         }
@@ -97,7 +117,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             Pool = new Queue<TimingLineObject>();
 
             // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
-            for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().OffsetYFromReceptor < CreateObjectPosition); i++)
+            for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.Positioning.Position < CreateObjectPosition); i++)
             {
                 var info = Info.Dequeue();
                 CreatePoolObject(info);
@@ -115,8 +135,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
                 line.UpdateSpritePosition(Ruleset.Screen.Positioning.Position);
             }
 
+            if (Pool.Count > 0)
+                Console.Out.WriteLine(Pool.Peek().TrackOffset);
+
             // Recycle necessary pool objects
-            while (Pool.Count > 0 && Pool.Peek().PositionY < RecycleObjectPosition)
+            while (Pool.Count > 0 && Pool.Peek().TrackOffset <= RecycleObjectPosition)
             {
                 var line = Pool.Dequeue();
                 if (Info.Count > 0)
@@ -128,7 +151,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && Info.Peek().OffsetYFromReceptor < CreateObjectPosition)
+            while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.Positioning.Position < CreateObjectPosition)
             {
                 var info = Info.Dequeue();
                 CreatePoolObject(info);

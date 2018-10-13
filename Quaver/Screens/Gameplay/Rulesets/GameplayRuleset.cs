@@ -76,7 +76,7 @@ namespace Quaver.Screens.Gameplay.Rulesets
         ///     Updates the game ruleset.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             if (!Screen.Failed)
                 HitObjectManager.Update(gameTime);

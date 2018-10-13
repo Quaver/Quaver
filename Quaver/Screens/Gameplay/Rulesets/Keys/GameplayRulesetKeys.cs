@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
@@ -14,12 +15,18 @@ using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines;
 using Quaver.Skinning;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys
 {
     public class GameplayRulesetKeys : GameplayRuleset
     {
+        /// <summary>
+        ///     The Timing Line Object Manager
+        /// </summary>
+        public TimingLineManager TimingLineManager { get; private set; }
+
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
@@ -45,8 +52,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
-        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
+        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => TimingLineManager = CreateTimingLineManager();
+
+        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+            TimingLineManager.UpdateObjectPool();
         }
 
         /// <inheritdoc />
@@ -119,5 +135,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <returns></returns>
         protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Map.Mode);
+
+        /// <summary>
+        ///     Create the Timing Line Objects Manager
+        /// </summary>
+        /// <returns></returns>
+        private TimingLineManager CreateTimingLineManager() => new TimingLineManager(this);
     }
 }
