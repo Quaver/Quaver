@@ -129,12 +129,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
         {
             Ruleset = ruleset;
+            Info = info;
 
             // Get the GameplayPlayfieldKeys instance rather than just the interface type.
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
             // Set Hit Object Variables
-            PositionX = Playfield.Stage.Receptors[Info.Lane - 1].X;
+            PositionX = Playfield.Stage.Receptors[info.Lane - 1].X;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()

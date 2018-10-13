@@ -139,7 +139,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
                 {
                     var hitObjectInfo = lane.Dequeue();
-                    Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
+                    //Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
                     CreatePoolObject(hitObjectInfo);
                 }
             }
@@ -270,6 +270,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (hitObject.IsLongNote)
                     {
                         KillPoolObject(hitObject);
+                        //RecyclePoolObject(hitObject);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
                         // Add a duplicate stat since it's an LN, and it counts as two misses.
@@ -280,8 +281,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Otherwise recycle the object.
                     else
                     {
-                        RecyclePoolObject(hitObject);
+                        //RecyclePoolObject(hitObject);
+                        KillPoolObject(hitObject);
                     }
+                    //RecyclePoolObject(hitObject);
                 }
             }
 
@@ -304,7 +307,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
             // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
-            foreach (var lane in ObjectPool)
+            foreach (var lane in HeldLongNotes)
             {
                 while (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.EndTime + window)
                 {
