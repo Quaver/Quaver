@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Config;
@@ -23,7 +24,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Reference to the Keys ruleset.
         /// </summary>
-        private GameplayRulesetKeys Ruleset { get; }
+        private GameplayRulesetKeys Ruleset { get; set; }
 
         /// <summary>
         ///     Reference to the actual playfield.
@@ -39,12 +40,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     If the note is a long note.
         ///     In .qua format, long notes are defined as if the end time is greater than 0.
         /// </summary>
-        public bool IsLongNote => Info.EndTime > 0;
+        public bool IsLongNote { get; private set; }
 
         /// <summary>
         ///     The X position of the object.
         /// </summary>
-        public float PositionX => Playfield.Stage.Receptors[Info.Lane - 1].X;
+        public float PositionX { get; private set; }
 
         /// <summary>
         ///     The Y position of the HitObject.
@@ -114,26 +115,34 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private int Index => Info.Lane - 1;
 
+        /// <summary>
+        ///     Y offset from the receptor. Calculated from hit body size and global offset
+        /// </summary>
+        public static float HitPositionOffset { get; set; } = 0;
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(GameplayRulesetKeys ruleset, HitObjectInfo info) : base(info)
+        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
         {
             Ruleset = ruleset;
 
             // Get the GameplayPlayfieldKeys instance rather than just the interface type.
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
+            // Set Hit Object Variables
+            PositionX = Playfield.Stage.Receptors[Info.Lane - 1].X;
+
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(PositionX, PositionY),
+                Position = new ScalableVector2(PositionX, 0),
                 SpriteEffect = Effects,
-                Image = GetHitObjectTexture(),
+                Image = GetHitObjectTexture()
             };
 
             // Update hit body's size to match image ratio
@@ -146,7 +155,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(Playfield.LaneSize, InitialLongNoteSize),
-                Position = new ScalableVector2(PositionX, PositionY),
+                Position = new ScalableVector2(PositionX, 0),
                 Parent = Playfield.Stage.HitObjectContainer
             };
 
@@ -154,7 +163,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteEndSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(PositionX, PositionY),
+                Position = new ScalableVector2(PositionX, 0),
                 Size = new ScalableVector2(Playfield.LaneSize, 0),
                 Parent = Playfield.Stage.HitObjectContainer,
                 SpriteEffect = Effects
@@ -180,18 +189,31 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public override void Initialize(HitObjectInfo info)
         {
             // Update Hit Object State
-            CurrentlyBeingHeld = false;
             Info = info;
+            HitObjectSprite.Tint = Color.White; // todo: reference this in Colors class
+            IsLongNote = Info.EndTime > 0;
+            TrackOffset = Ruleset.Screen.Positioning.GetPositionFromTime(info.StartTime);
+            CurrentlyBeingHeld = false;
 
+            // Update Hit Object State depending if its an LN or not
             if (!IsLongNote)
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
-                return;
+                LongNoteTrackOffset = 0;
+            }
+            else
+            {
+                LongNoteBodySprite.Tint = Color.White; // todo: reference this in Colors class
+                LongNoteEndSprite.Tint = Color.White; // todo: reference this in Colors class
+                LongNoteEndSprite.Visible = true;
+                LongNoteBodySprite.Visible = true;
+                LongNoteTrackOffset = Ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
             }
 
             // Update Positions
-            GetPosFromOffset(Ruleset.Screen.Positioning.Position);
+            //PositionY = GetPosFromOffset(Ruleset.Screen.Positioning.Position);
+            UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
         }
 
         /// <inheritdoc />
@@ -228,20 +250,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetPosFromOffset(long offset)
+        public float GetPosFromOffset(long offset = 0)
         {
-            var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
-
             // If the object is not being held, use proper position
             if (!CurrentlyBeingHeld)
             {
                 var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
                 // (OLD) return (float) (manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
-                return (float)(manager.HitPositionOffset + (TrackOffset - offset) * speed) - HitObjectSprite.Height;
+                return (float)(HitPositionOffset + (TrackOffset - offset) * speed) - HitObjectSprite.Height;
             }
 
             // If the object is being held, use receptor position
-            return manager.HitPositionOffset - HitObjectSprite.Height;
+            return HitPositionOffset - HitObjectSprite.Height;
         }
 
         /// <summary>
@@ -249,12 +269,29 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void UpdateSpritePositions(long offset)
         {
-            // Update PositionY
-            PositionY = GetPosFromOffset(offset);
+            if (CurrentlyBeingHeld)
+            {
+                if (offset > TrackOffset)
+                {
+                    // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
+                    CurrentLongNoteSize = (long)((LongNoteTrackOffset - Ruleset.Screen.Positioning.Position) * HitObjectManagerKeys.ScrollSpeed);
+                    //CurrentlyBeingHeld = true;
+                    PositionY = GetPosFromOffset();
+                }
+                else
+                {
+                    CurrentLongNoteSize = InitialLongNoteSize;
+                    PositionY = GetPosFromOffset();
+                }
+            }
+            else
+            {
+                PositionY = GetPosFromOffset(offset);
+            }
 
             // Only update note if it's inside the window
-            if ((!GameplayRulesetKeys.IsDownscroll || PositionY + HitObjectSprite.Height <= 0) && (GameplayRulesetKeys.IsDownscroll || !(PositionY < WindowManager.Height)))
-                return;
+            //if ((!GameplayRulesetKeys.IsDownscroll || PositionY + HitObjectSprite.Height <= 0) && (GameplayRulesetKeys.IsDownscroll || !(PositionY < WindowManager.Height)))
+            //    return;
 
             // Update HitBody
             HitObjectSprite.Y = PositionY;

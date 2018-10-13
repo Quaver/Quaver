@@ -35,12 +35,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The object pool size.
         /// </summary>
-        public int InitialPoolSizePerLane { get; } = 8;
+        public int InitialPoolSizePerLane { get; } = 2;
 
         /// <summary>
         ///     The position at which the next TimingLine must be at in order to add a new Hit Object to the pool.
         /// </summary>
-        private float CreateObjectPosition { get; set; } = -1500;
+        private float CreateObjectPosition { get; set; } = 1500;
 
         /// <summary>
         ///     The position at which the earliest TimingLine object must be at before its recycled.
@@ -104,16 +104,22 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="size"></param>
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
-            var keyCount = ruleset.Map.GetKeyCount();
             Ruleset = ruleset;
+            GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
 
+            Initialize(map);
+        }
+
+        private void Initialize(Qua map)
+        {
             // Initialize collections
+            var keyCount = Ruleset.Map.GetKeyCount();
             Info = new List<Queue<HitObjectInfo>>(keyCount);
             ObjectPool = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             DeadNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             HeldLongNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
 
-            for (var i = 0; i < ruleset.Map.GetKeyCount(); i++)
+            for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
             {
                 Info.Add(new Queue<HitObjectInfo>());
                 ObjectPool.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
@@ -128,11 +134,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
 
             // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
-            foreach(var info in Info)
+            foreach (var lane in Info)
             {
-                for (var i = 0; i < info.Count && (i < InitialPoolSizePerLane || Ruleset.Screen.Positioning.GetPositionFromTime(info.Peek().StartTime) - Ruleset.Screen.Positioning.Position < CreateObjectPosition); i++)
+                for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
                 {
-                    var hitObjectInfo = info.Dequeue();
+                    var hitObjectInfo = lane.Dequeue();
+                    Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
                     CreatePoolObject(hitObjectInfo);
                 }
             }
@@ -144,8 +151,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         private void CreatePoolObject(HitObjectInfo info)
         {
-            var hitObject = new GameplayHitObjectKeys(Ruleset, info);
-            hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
+            Console.Out.WriteLine("New hit object added to pool @ lane: " + info.Lane);
+            var hitObject = new GameplayHitObjectKeys(info, Ruleset);
+            hitObject.Initialize(info);
             ObjectPool[info.Lane - 1].Enqueue(hitObject);
         }
 
@@ -224,10 +232,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdateAndScoreActiveObjects()
         {
+            // Add more hit objects to the pool if necessary
+            foreach (var lane in Info)
+            {
+                while (lane.Count > 0 && Ruleset.Screen.Positioning.GetPositionFromTime(lane.Peek().StartTime) - Ruleset.Screen.Positioning.Position < CreateObjectPosition)
+                {
+                    CreatePoolObject(lane.Dequeue());
+                }
+            }
+
             // Check to see if the player missed any active notes
             foreach (var lane in ObjectPool)
             {
-                if (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
+                while (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
                     var hitObject = lane.Dequeue();
 
@@ -289,7 +306,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
             foreach (var lane in ObjectPool)
             {
-                if ((int)Ruleset.Screen.Timing.Time > lane.Peek().Info.EndTime + window)
+                while (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.EndTime + window)
                 {
                     var hitObject = lane.Dequeue();
 
@@ -317,7 +334,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Stop the hitlighting animation.
                     playfield.Stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
 
-                    RecyclePoolObject(hitObject);
+                    KillPoolObject(hitObject);
+                    //RecyclePoolObject(hitObject);
                     // Remove from the queue of long notes.
                     /*
                     hitObject.Destroy();
@@ -341,6 +359,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                     // todo: apply this logic in HitObject class itself
                     // Set the long note size and position.
+                    /*
                     if (Ruleset.Screen.Timing.Time > hitObject.Info.StartTime)
                     {
                         // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
@@ -352,7 +371,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     {
                         hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
                         hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.TrackOffset);
-                    }
+                    }*/
 
                     // Update the sprite positions of the object.
                     hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
@@ -409,6 +428,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="index"></param>
         public void RecyclePoolObject(GameplayHitObjectKeys hitObject)
         {
+            Console.Out.WriteLine("Hit object recycled @ lane: " + hitObject.Info.Lane);
             // Destroy and remove the old object sprites
             //hitObject.Destroy();
 
