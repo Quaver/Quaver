@@ -91,12 +91,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
             var hitObject = new GameplayHitObjectKeys(this, info)
             {
                 Width = playfield.LaneSize,
-                OffsetYFromReceptor = Screen.Positioning.GetPositionFromTime(info.StartTime)
+                TrackOffset = Screen.Positioning.GetPositionFromTime(info.StartTime)
             };
 
             // Calculate position & offset from the receptor.
             // TODO: Handle SV's.
-            hitObject.PositionY = hitObject.OffsetYFromReceptor + objectManager.HitPositionOffset;
+            hitObject.PositionY = hitObject.TrackOffset + objectManager.HitPositionOffset;
 
             // Get Note Snapping
             if (SkinManager.Skin.Keys[Map.Mode].ColorObjectsBySnapDistance)
@@ -113,9 +113,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
 
             // TODO: Handle SV's.
             // (OLD) hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
-            hitObject.LongNoteOffsetYFromReceptor = Screen.Positioning.GetPositionFromTime(info.EndTime);
+            hitObject.LongNoteTrackOffset = Screen.Positioning.GetPositionFromTime(info.EndTime);
 
-            hitObject.InitialLongNoteSize = (long)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * HitObjectManagerKeys.ScrollSpeed);
+            hitObject.InitialLongNoteSize = (long)((hitObject.LongNoteTrackOffset - hitObject.TrackOffset) * HitObjectManagerKeys.ScrollSpeed);
             hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
 
             // todo: remove. debugging

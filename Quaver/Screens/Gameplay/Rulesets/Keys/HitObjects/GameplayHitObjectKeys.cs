@@ -54,12 +54,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The Y-Offset from the receptor.
         /// </summary>
-        public float OffsetYFromReceptor { get; set; }
+        public long TrackOffset { get; set; }
 
         /// <summary>
         ///     The long note Y offset from the receptor.
         /// </summary>
-        public float LongNoteOffsetYFromReceptor { get; set; }
+        public long LongNoteTrackOffset { get; set; }
 
         /// <summary>
         ///     The initial size of this object's long note.
@@ -217,13 +217,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetPosFromOffset(float offset)
+        public float GetPosFromOffset(long offset)
         {
             var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
 
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
             // (OLD) return (float) (manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
-            return (float)(manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Positioning.Position)) * speed) - HitObjectSprite.Height;
+            return (float)(manager.HitPositionOffset + (offset - Ruleset.Screen.Positioning.Position) * speed) - HitObjectSprite.Height;
         }
 
         /// <summary>

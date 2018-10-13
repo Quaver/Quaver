@@ -180,7 +180,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 else
                 {
                     // Set new HitObject positions.
-                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.TrackOffset);
                     hitObject.UpdateSpritePositions();
                 }
             }
@@ -246,13 +246,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (Ruleset.Screen.Timing.Time > hitObject.TrueStartTime)
                     {
                         // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                        hitObject.CurrentLongNoteSize = (long)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Positioning.Position) * ScrollSpeed);
+                        hitObject.CurrentLongNoteSize = (long)((hitObject.LongNoteTrackOffset - Ruleset.Screen.Positioning.Position) * ScrollSpeed);
                         hitObject.PositionY = hitObject.GetPosFromOffset();
                     }
                     else
                     {
                         hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
-                        hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                        hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.TrackOffset);
                     }
 
                     // Update the sprite positions of the object.
@@ -287,7 +287,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // Otherwise keep updating it accordingly.
                 else
                 {
-                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.TrackOffset);
                     hitObject.UpdateSpritePositions();
                 }
             }
@@ -367,7 +367,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             hitObject.TrueStartTime = (float)Ruleset.Screen.Timing.Time;
 
             // (OLD) hitObject.OffsetYFromReceptor = hitObject.TrueStartTime;
-            hitObject.OffsetYFromReceptor = (float)Ruleset.Screen.Positioning.GetPositionFromTime(hitObject.TrueStartTime);
+            hitObject.TrackOffset = Ruleset.Screen.Positioning.GetPositionFromTime(hitObject.TrueStartTime);
 
             if (destroy)
             {
