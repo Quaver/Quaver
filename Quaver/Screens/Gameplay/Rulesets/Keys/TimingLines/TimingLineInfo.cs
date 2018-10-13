@@ -17,7 +17,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
         public long OffsetYFromReceptor { get; set; }
 
         /// <summary>
-        ///     Create Timing Line information used for the lines representing every 4 beats on the playfield
+        ///     information used for the lines representing every 4 beats on the playfield
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="offset"></param>

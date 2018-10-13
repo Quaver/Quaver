@@ -35,11 +35,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<GameplayHitObject> HeldLongNotes { get; }
 
         /// <summary>
-        ///     Lines used to represent 4 beat snaps in the playfield
-        /// </summary>
-        public List<GameplayTimingLine> TimingLines { get; }
-
-        /// <summary>
         ///     The speed at which objects fall down from the screen.
         /// </summary>
         public static float ScrollSpeed
