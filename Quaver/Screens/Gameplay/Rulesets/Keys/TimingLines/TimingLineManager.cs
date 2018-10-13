@@ -55,6 +55,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             Ruleset = (GameplayRulesetKeys)ruleset;
 
             // Set Time Line Y offset from skin
+            // todo: offset the timing lines so that they are snapped to the center of the hit body of any skin
             /*
             var reference = SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldHitObjects[0][0];
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
@@ -134,9 +135,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             {
                 line.UpdateSpritePosition(Ruleset.Screen.Positioning.Position);
             }
-
-            if (Pool.Count > 0)
-                Console.Out.WriteLine(Pool.Peek().TrackOffset);
 
             // Recycle necessary pool objects
             while (Pool.Count > 0 && Pool.Peek().TrackOffset <= RecycleObjectPosition)
