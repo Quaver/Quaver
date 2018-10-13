@@ -7,7 +7,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
 {
-    public class GameplayTimingLine
+    public class TimingLineObject
     {
         /// <summary>
         ///     Reference to the actual playfield.
@@ -20,7 +20,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
 
         private Sprite TimingLineSprite { get; set; }
 
-        public GameplayTimingLine(GameplayRulesetKeys ruleset) => Ruleset = ruleset;
+        public TimingLineObject(GameplayRulesetKeys ruleset) => Ruleset = ruleset;
 
         public void InitializeSprite(IGameplayPlayfield playfield, TimingLineInfo info)
         {
