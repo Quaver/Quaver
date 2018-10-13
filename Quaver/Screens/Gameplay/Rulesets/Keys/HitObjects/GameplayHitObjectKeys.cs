@@ -124,7 +124,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public override void InitializeSprite(IGameplayPlayfield playfield)
         {
             // Get the GameplayPlayfieldKeys instance rather than just the interface type.
-            Playfield = (GameplayPlayfieldKeys) playfield;
+            Playfield = (GameplayPlayfieldKeys)playfield;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
