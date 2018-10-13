@@ -54,11 +54,15 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             InitializeObjectPool();
         }
 
+        /// <summary>
+        ///     Generate Timing Line Information for the map
+        /// </summary>
+        /// <param name="map"></param>
         private void GenerateTimingLineInfo(Qua map)
         {
             Info = new Queue<TimingLineInfo>();
             float songPos = 0;
-            int index = 0;
+            var index = 0;
 
             // set initial increment that will update songPos by 4 beat lengths
             // todo: use constant variables
@@ -84,6 +88,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             }
         }
 
+        /// <summary>
+        ///     Initialize the Timing Line Object Pool
+        /// </summary>
         private void InitializeObjectPool()
         {
             // Initialize pool
@@ -97,6 +104,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             }
         }
 
+        /// <summary>
+        ///     Update every object in the Timing Line Object Pool and create new objects if necessary
+        /// </summary>
         public void UpdateObjectPool()
         {
             // Update line positions
@@ -125,6 +135,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             }
         }
 
+        /// <summary>
+        ///     Create and add new Timing Line Object to the Object Pool
+        /// </summary>
+        /// <param name="info"></param>
         private void CreatePoolObject(TimingLineInfo info)
         {
             var line = new TimingLineObject(Ruleset, info);

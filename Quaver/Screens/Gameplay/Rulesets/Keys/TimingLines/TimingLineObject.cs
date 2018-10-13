@@ -11,14 +11,31 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
 {
     public class TimingLineObject
     {
+        /// <summary>
+        ///     Reference to the Keys ruleset.
+        /// </summary>
         private GameplayRulesetKeys Ruleset { get; set; }
 
+        /// <summary>
+        ///     Timing Line position and time information
+        /// </summary>
         public TimingLineInfo Info { get; set; }
 
+        /// <summary>
+        ///     The Timing Line Sprite
+        /// </summary>
         private Sprite TimingLineSprite { get; set; }
 
+        /// <summary>
+        ///     Position of the current Timing Line
+        /// </summary>
         public float PositionY { get; private set; }
 
+        /// <summary>
+        ///     Creates and initializes a new Timing Line Object
+        /// </summary>
+        /// <param name="ruleset"></param>
+        /// <param name="info"></param>
         public TimingLineObject(GameplayRulesetKeys ruleset, TimingLineInfo info)
         {
             Ruleset = ruleset;
@@ -32,6 +49,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             };
         }
 
+        /// <summary>
+        ///     Update the current Timing Line Sprite position
+        /// </summary>
+        /// <param name="trackPosition"></param>
         public void UpdateSpritePosition(long trackPosition)
         {
             // Calculate Sprite Position
@@ -43,9 +64,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
             TimingLineSprite.Y = PositionY;
         }
 
-        public void Destroy()
-        {
-            TimingLineSprite.Destroy();
-        }
+        /// <summary>
+        ///     Destroy this object
+        /// </summary>
+        public void Destroy() => TimingLineSprite.Destroy();
     }
 }
