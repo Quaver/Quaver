@@ -12,17 +12,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     The info of this particular HitObject from the map file.
         /// </summary>
-        public HitObjectInfo Info { get; }
-
-        /// <summary>
-        ///     The true start time of the object.
-        /// </summary>
-        public float TrueStartTime { get; set; }
-
-        /// <summary>
-        ///     The true end time of the object.
-        /// </summary>
-        public float TrueEndTime { get; set; }
+        public HitObjectInfo Info { get; set; }
 
         /// <summary>
         ///     The list of possible beat snaps.
@@ -36,22 +26,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public int SnapIndex { get; set; }
 
         /// <summary>
-        ///     Initializes the HitObject's sprite.
+        ///     Initializes the HitObject for pooling
         /// </summary>
         /// <param name="playfield"></param>
-        public abstract void InitializeSprite(IGameplayPlayfield playfield);
+        public abstract void Initialize(HitObjectInfo info);
 
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="info"></param>
-        protected GameplayHitObject(HitObjectInfo info)
-        {
-            Info = info;
-
-            TrueStartTime = Info.StartTime;
-            TrueEndTime = Info.EndTime;
-        }
+        protected GameplayHitObject(HitObjectInfo info) => Info = info;
 
         /// <summary>
         ///     Gets the timing point this object is in range of.
@@ -83,10 +67,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="hitObject"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        public static int GetBeatSnap(HitObjectInfo hitObject, TimingPointInfo timingPoint)
+        public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = hitObject.StartTime - timingPoint.StartTime + 2;
+            var pos = info.StartTime - timingPoint.StartTime + 2;
             var beatlength = 60000 / timingPoint.Bpm;
 
             // subtract pos until it's less than beat length. multiple loops for efficiency

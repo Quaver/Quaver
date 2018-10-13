@@ -80,55 +80,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="info"></param>
         /// <returns></returns>
-        protected override GameplayHitObject CreateHitObject(HitObjectInfo info)
-        {
-            var playfield = (GameplayPlayfieldKeys)Playfield;
-            var objectManager = (HitObjectManagerKeys)HitObjectManager;
-
-            // Create the new HitObject.
-            var hitObject = new GameplayHitObjectKeys(this, info)
-            {
-                Width = playfield.LaneSize,
-                TrackOffset = Screen.Positioning.GetPositionFromTime(info.StartTime)
-            };
-
-            // Calculate position & offset from the receptor.
-            // TODO: Handle SV's.
-            hitObject.PositionY = hitObject.TrackOffset + objectManager.HitPositionOffset;
-
-            // Get Note Snapping
-            if (SkinManager.Skin.Keys[Map.Mode].ColorObjectsBySnapDistance)
-                hitObject.SnapIndex = GameplayHitObject.GetBeatSnap(info, hitObject.GetTimingPoint(Map.TimingPoints));
-
-            // Disregard non-long note objects after this point, so we can initailize them separately.
-
-            // todo: remove. debugging
-            //Console.Out.WriteLine("------------------------------------");
-            //Console.Out.WriteLine("START: " + hitObject.OffsetYFromReceptor);
-
-            if (!hitObject.IsLongNote)
-                return hitObject;
-
-            // TODO: Handle SV's.
-            // (OLD) hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
-            hitObject.LongNoteTrackOffset = Screen.Positioning.GetPositionFromTime(info.EndTime);
-
-            hitObject.InitialLongNoteSize = (long)((hitObject.LongNoteTrackOffset - hitObject.TrackOffset) * HitObjectManagerKeys.ScrollSpeed);
-            hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
-
-            // todo: remove. debugging
-            //Console.Out.WriteLine("END: " + hitObject.LongNoteOffsetYFromReceptor);
-
-            return hitObject;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        protected override HitObjectManager CreateHitObjectManager() => new HitObjectManagerKeys(this, 255);
+        protected override HitObjectManager CreateHitObjectManager() => new HitObjectManagerKeys(this, Map);
 
         /// <inheritdoc />
         /// <summary>

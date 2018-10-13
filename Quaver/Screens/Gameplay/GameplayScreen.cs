@@ -166,11 +166,15 @@ namespace Quaver.Screens.Gameplay
         {
             get
             {
+                // todo: implement later
+                return false;
+
                 // By default if there aren't any objects left we aren't on a break.
-                if (Ruleset.HitObjectManager.ObjectPool.Count <= 0)
-                    return false;
+                //if (Ruleset.HitObjectManager.ObjectPool.Count <= 0)
+                //    return false;
 
                 // Grab the next object in the object pool.
+                /*
                 var nextObject = Ruleset.HitObjectManager.ObjectPool.First();
 
                 // If the player is currently not on a break, then we want to detect if it's on a break
@@ -182,6 +186,7 @@ namespace Quaver.Screens.Gameplay
                     _onBreak = false;
 
                 return _onBreak;
+                */
             }
         }
 
@@ -661,7 +666,9 @@ namespace Quaver.Screens.Gameplay
                 return;
 
             // Get the skip time of the next object.
-            var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - GameplayAudioTiming.StartDelay;
+            // todo: implement skip time
+            var skipTime = 0;
+            //var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - GameplayAudioTiming.StartDelay;
 
             try
             {

@@ -51,24 +51,15 @@ namespace Quaver.Screens.Gameplay.Rulesets
         /// <param name="map"></param>
         protected GameplayRuleset(GameplayScreen screen, Qua map)
         {
+            // Set References
             Screen = screen;
             Map = map;
 
-            Initialize();
-        }
-
-        /// <summary>
-        ///     Initializes the ruleset.
-        /// </summary>
-        private void Initialize()
-        {
+            // Initialize Everything
             ScoreProcessor = CreateScoreProcessor(Map);
             CreatePlayfield();
-
             InputManager = CreateInputManager();
-
             HitObjectManager = CreateHitObjectManager();
-            InitializeHitObjects();
         }
 
         /// <inheritdoc />
@@ -102,24 +93,6 @@ namespace Quaver.Screens.Gameplay.Rulesets
         public void Destroy() => Playfield.Destroy();
 
         /// <summary>
-        ///     Initializes all the HitObjects
-        /// </summary>
-        private void InitializeHitObjects()
-        {
-            for (var i = 0; i < Map.HitObjects.Count; i++)
-            {
-                var hitObject = CreateHitObject(Map.HitObjects[i]);
-
-                // Only actually initialize 
-                if (i < HitObjectManager.PoolSize)
-                    hitObject.InitializeSprite(Playfield);
-
-                // Add this object to the pool.
-                HitObjectManager.ObjectPool.Add(hitObject);
-            }
-        }
-
-        /// <summary>
         ///     Creates the score processor for this ruleset.
         /// </summary>
         /// <returns></returns>
@@ -129,11 +102,6 @@ namespace Quaver.Screens.Gameplay.Rulesets
         ///     Creates the playfield for the ruleset.
         /// </summary>
         protected abstract void CreatePlayfield();
-
-        /// <summary>
-        ///     Initializes a single HitObject.
-        /// </summary>
-        protected abstract GameplayHitObject CreateHitObject(HitObjectInfo info);
 
         /// <summary>
         ///     Creates a custom HitObjectManager for this ruleset.
