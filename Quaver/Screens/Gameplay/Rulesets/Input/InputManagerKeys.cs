@@ -137,21 +137,24 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
                 // Get the object manager itself.
                 var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
-                var hitObject = manager.GetClosestTap(laneIndex);
-
-                // Check if closest hit object in lane exists
-                if (hitObject != null)
-                    continue;
 
                 // If the key was pressed during this frame.
                 if (BindingStore[laneIndex].Pressed)
                 {
-                    HandleKeyPress(manager, manager.ObjectPool[laneIndex].Peek());
+                    var hitObject = manager.GetClosestTap(laneIndex);
+                    if (hitObject != null)
+                    {
+                        HandleKeyPress(manager, hitObject);
+                    }
                 }
                 // If the key was released during this frame.
-                else if (manager.HeldLongNotes[hitObject.Info.Lane - 1].Count > 0)
+                else
                 {
-                    HandleKeyRelease(manager, hitObject);
+                    var hitObject = manager.GetClosestRelease(laneIndex);
+                    if (hitObject != null)
+                    {
+                        //HandleKeyRelease(manager, hitObject);
+                    }
                 }
             }
 
@@ -170,9 +173,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Play the HitSounds for this object.
             HitObjectManager.PlayObjectHitSounds(hitObject.Info);
 
-            // Remove hit object from the current pool so that it can be moved elsewhere
-            hitObject = manager.ObjectPool[hitObject.Info.Lane - 1].Dequeue();
-
             //NEW
             var time = (int) Ruleset.Screen.Timing.Time;
             var hitDifference = (int) (hitObject.Info.StartTime - time);
@@ -182,6 +182,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
                 return;
+
+            // Remove hit object from the current pool so that it can be moved elsewhere
+            hitObject = manager.ObjectPool[hitObject.Info.Lane - 1].Dequeue();
 
             var stat = new HitStat(HitStatType.Hit, KeyPressType.Press, hitObject.Info, time, judgement, hitDifference,
                                         Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);

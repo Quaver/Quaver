@@ -180,11 +180,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public GameplayHitObjectKeys GetClosestTap(int laneIndex)
         {
-            if (ObjectPool[laneIndex].Count < 0)
-                return null;
+            if (ObjectPool[laneIndex].Count > 0)
+                return ObjectPool[laneIndex].Peek();
 
-            return
-                ObjectPool[laneIndex].Peek();
+            return null;
         }
 
         /// <summary>
@@ -194,11 +193,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         public GameplayHitObjectKeys GetClosestRelease(int laneIndex)
         {
-            if (HeldLongNotes[laneIndex].Count < 0)
-                return null;
+            if (HeldLongNotes[laneIndex].Count > 0)
+                return HeldLongNotes[laneIndex].Peek();
 
-            return
-                HeldLongNotes[laneIndex].Peek();
+            return null;
         }
 
         /*
