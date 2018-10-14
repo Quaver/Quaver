@@ -166,27 +166,22 @@ namespace Quaver.Screens.Gameplay
         {
             get
             {
-                // todo: implement later
-                return false;
-
                 // By default if there aren't any objects left we aren't on a break.
                 //if (Ruleset.HitObjectManager.ObjectPool.Count <= 0)
                 //    return false;
 
                 // Grab the next object in the object pool.
-                /*
-                var nextObject = Ruleset.HitObjectManager.ObjectPool.First();
+                var nextObject = Ruleset.HitObjectManager.EarliestHitObject;
 
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.
-                if (nextObject.TrueStartTime - Timing.Time >= GameplayAudioTiming.StartDelay + 5000)
+                if (nextObject.Info.StartTime - Timing.Time >= GameplayAudioTiming.StartDelay + 5000)
                     _onBreak = true;
                 // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
-                else if (_onBreak && nextObject.TrueStartTime - Timing.Time <= GameplayAudioTiming.StartDelay)
+                else if (_onBreak && nextObject.Info.StartTime - Timing.Time <= GameplayAudioTiming.StartDelay)
                     _onBreak = false;
 
                 return _onBreak;
-                */
             }
         }
 

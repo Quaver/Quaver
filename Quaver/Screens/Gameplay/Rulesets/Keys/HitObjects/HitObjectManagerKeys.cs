@@ -77,7 +77,38 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int ObjectsLeft => ObjectPool.Count + HeldLongNotes.Count + DeadNotes.Count;
+        public override int ObjectsLeft
+        {
+            get
+            {
+                var total = 0;
+                foreach (var lane in ObjectPool) total += lane.Count;
+                foreach (var lane in HeldLongNotes) total += lane.Count;
+                foreach (var lane in DeadNotes) total += lane.Count;
+                return total;
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override GameplayHitObject EarliestHitObject
+        {
+            get
+            {
+                var earliest = int.MaxValue;
+                GameplayHitObject hitOb = null;
+                foreach (var lane in ObjectPool)
+                {
+                    if (lane.Count > 0 && lane.Peek().Info.StartTime < earliest)
+                    {
+                        hitOb = lane.Peek();
+                        earliest = hitOb.Info.StartTime;
+                    }
+                }
+                return hitOb;
+            }
+        }
 
         /// <summary>
         ///     The offset of the hit position.
@@ -108,10 +139,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
 
             Initialize(map);
-        }
 
-        private void Initialize(Qua map)
-        {
             // Initialize collections
             var keyCount = Ruleset.Map.GetKeyCount();
             Info = new List<Queue<HitObjectInfo>>(keyCount);
@@ -143,6 +171,42 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     CreatePoolObject(hitObjectInfo);
                 }
             }
+        }
+
+        private void Initialize(Qua map)
+        {
+            /*
+            // Initialize collections
+            var keyCount = Ruleset.Map.GetKeyCount();
+            Info = new List<Queue<HitObjectInfo>>(keyCount);
+            ObjectPool = new List<Queue<GameplayHitObjectKeys>>(keyCount);
+            DeadNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
+            HeldLongNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
+
+            for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
+            {
+                Info.Add(new Queue<HitObjectInfo>());
+                ObjectPool.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
+                DeadNotes.Add(new Queue<GameplayHitObjectKeys>());
+                HeldLongNotes.Add(new Queue<GameplayHitObjectKeys>());
+            }
+
+            // Sort Hit Object Info into their respective lanes
+            foreach (var info in map.HitObjects)
+            {
+                Info[info.Lane - 1].Enqueue(info);
+            }
+
+            // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
+            foreach (var lane in Info)
+            {
+                for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
+                {
+                    var hitObjectInfo = lane.Dequeue();
+                    //Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
+                    CreatePoolObject(hitObjectInfo);
+                }
+            }*/
         }
 
         /// <summary>
@@ -198,32 +262,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             return null;
         }
-
-        /*
-        /// <summary>
-        ///     Gets the index of the nearest object in a given lane.
-        /// </summary>
-        /// <param name="lane"></param>
-        /// <param name="songTime"></param>
-        /// <returns></returns>
-        public int GetIndexOfNearestLaneObject(int lane, double songTime)
-        {
-            // Search for closest ManiaHitObject that is inside the HitTiming Window
-            for (var i = 0; i < PoolSize && i < ObjectPool.Count; i++)
-            {
-                if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
-                    return i;
-            }
-
-            // Search held long notes as well for the time being.
-            for (var i = 0; i < HeldLongNotes.Count; i++)
-            {
-                if (HeldLongNotes[i].Info.Lane == lane && HeldLongNotes[i].Info.EndTime - songTime > -Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay])
-                    return i;
-            }
-
-            return -1;
-        }*/
 
         /// <summary>
         ///     Updates the active objects in the pool + adds to score when applicable.

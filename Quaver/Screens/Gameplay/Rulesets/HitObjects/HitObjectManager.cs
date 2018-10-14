@@ -22,6 +22,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public abstract int ObjectsLeft { get; }
 
         /// <summary>
+        ///     The start time of the current earliest Hit Object in the Object Pool
+        /// </summary>
+        public abstract GameplayHitObject EarliestHitObject { get; }
+
+        /// <summary>
         ///     If there are no more objects and the map is complete.
         /// </summary>
         public bool IsComplete => ObjectsLeft == 0;
