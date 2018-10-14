@@ -16,7 +16,7 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <summary>
         ///     The X position where
         /// </summary>
-        public static int StartingX => 65;
+        public static int StartingX => 64;
 
         /// <summary>
         ///

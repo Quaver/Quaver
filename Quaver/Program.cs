@@ -26,6 +26,7 @@ namespace Quaver
         {
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
+            Environment.CurrentDirectory = WorkingDirectory;
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

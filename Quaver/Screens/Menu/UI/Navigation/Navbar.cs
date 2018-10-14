@@ -58,7 +58,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
             Line = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = this,
-                Position = new ScalableVector2(65, 65),
+                Position = new ScalableVector2(64, 64),
                 Alpha = 0.65f
             };
 
