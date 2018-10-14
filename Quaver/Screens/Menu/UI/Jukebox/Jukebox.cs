@@ -281,7 +281,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteTextBitmap(BitmapFonts.Exo2Medium, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            SongTitleText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft
@@ -332,7 +332,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Alignment = Alignment.MidLeft,
                 ActiveBar =
                 {
-                    Alpha = 0.1f
+                    Alpha = 0.45f
                 }
             };
 

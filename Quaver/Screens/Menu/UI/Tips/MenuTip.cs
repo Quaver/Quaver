@@ -101,7 +101,7 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteTextBitmap(BitmapFonts.Exo2Light, " ", 24, Color.White,
+            TextTipContent = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White,
                 Alignment.TopLeft, int.MaxValue)
             {
                 Alignment = Alignment.MidLeft,
