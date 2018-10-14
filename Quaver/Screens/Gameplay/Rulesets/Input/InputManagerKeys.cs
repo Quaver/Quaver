@@ -175,16 +175,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
             //NEW
             var time = (int) Ruleset.Screen.Timing.Time;
-            var hitDifference = (int) (hitObject.Info.StartTime - time);
+            var hitDifference = hitObject.Info.StartTime - time;
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
             var judgement = processor.CalculateScore(hitDifference, KeyPressType.Press);
+            var laneIndex = hitObject.Info.Lane - 1;
 
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
                 return;
 
             // Remove hit object from the current pool so that it can be moved elsewhere
-            hitObject = manager.ObjectPool[hitObject.Info.Lane - 1].Dequeue();
+            hitObject = manager.ObjectPool[laneIndex].Dequeue();
 
             var stat = new HitStat(HitStatType.Hit, KeyPressType.Press, hitObject.Info, time, judgement, hitDifference,
                                         Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
@@ -226,9 +227,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // are things pertaining to animations when the user actually hits the note.
             if (judgement == Judgement.Miss)
                 return;
-
-            // Perform hit lighting animation
-            var laneIndex = hitObject.Info.Lane - 1;
 
             // If the object is a long note, let the hitlighting actually know about it.
             if (hitObject.IsLongNote)

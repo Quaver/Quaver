@@ -118,16 +118,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
         {
+            // Set References to other classes
+            Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Ruleset = ruleset;
             Info = info;
-            var laneIndex = info.Lane - 1;
 
-            // Get the GameplayPlayfieldKeys instance rather than just the interface type.
-            Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
-
-            // Set Hit Object Variables
+            // Reference variables
             var posX = Playfield.Stage.Receptors[info.Lane - 1].X;
-            //PositionX = Playfield.Stage.Receptors[info.Lane - 1].X;
+            var laneIndex = info.Lane - 1;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -147,7 +145,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(Playfield.LaneSize, InitialLongNoteSize),
+                Size = new ScalableVector2(Playfield.LaneSize, 0),
                 Position = new ScalableVector2(posX, 0),
                 Parent = Playfield.Stage.HitObjectContainer
             };
@@ -202,10 +200,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
                 LongNoteTrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
+                //todo: make this a float instead?
+                InitialLongNoteSize = (long)((LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed);
+                CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            //PositionY = GetPosFromOffset(Ruleset.Screen.Positioning.Position);
             UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
         }
 
