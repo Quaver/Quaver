@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Graphics.Online;
 using Quaver.Screens.Menu.UI.Navigation;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -42,7 +43,10 @@ namespace Quaver.Screens.Menu.UI.User
         /// </summary>
         private NavbarItemUser NavbarButton { get; }
 
-        private ImageButton Lol { get; set; }
+        /// <summary>
+        ///     The logged in user's playercard.
+        /// </summary>
+        private Playercard Playercard { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -100,7 +104,18 @@ namespace Quaver.Screens.Menu.UI.User
                 Alpha = 0
             };
 
+            CreatePlayercard();
             AddContainedDrawable(Container);
+        }
+
+        private void CreatePlayercard()
+        {
+            Playercard = new Playercard()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = 15
+            };
         }
     }
 }
