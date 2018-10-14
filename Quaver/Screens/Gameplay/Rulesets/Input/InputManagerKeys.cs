@@ -239,8 +239,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>
         private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeys hitObject)
         {
-            Console.Out.WriteLine("RELEASE " + hitObject.Info.Lane);
-            Console.Out.WriteLine("POOL COUNT " + manager.HeldLongNotes[hitObject.Info.Lane - 1].Count);
             var laneIndex = hitObject.Info.Lane - 1;
 
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
