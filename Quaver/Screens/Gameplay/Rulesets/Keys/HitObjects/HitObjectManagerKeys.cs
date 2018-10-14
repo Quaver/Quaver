@@ -193,11 +193,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             UpdateDeadObjects();
         }
 
-       /* public int GetHitObjectIndexFromPool(GameplayHitObjectKeys hitObject)
-        {
-            return  .IndexOf(hitObject.Info);
-        }*/
-
         /// <summary>
         ///     Returns the earliest un-tapped Hit Object
         /// </summary>
@@ -334,13 +329,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Stop the hitlighting animation.
                     playfield.Stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
 
+                    // Update Pooling
                     KillPoolObject(hitObject);
-                    //RecyclePoolObject(hitObject);
-                    // Remove from the queue of long notes.
-                    /*
-                    hitObject.Destroy();
-                    HeldLongNotes.RemoveAt(hitObject);
-                    */
                 }
             }
 
@@ -349,31 +339,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    // Start looping the long note body.
-                    if (!hitObject.LongNoteBodySprite.IsLooping && !Ruleset.Screen.IsPaused)
-                        hitObject.LongNoteBodySprite.StartLoop(Direction.Forward, 30);
-
-                    // If it is looping however and the game is paused, we'll want to stop the loop.
-                    else if (hitObject.LongNoteBodySprite.IsLooping && Ruleset.Screen.IsPaused)
-                        hitObject.LongNoteBodySprite.StopLoop();
-
-                    // todo: apply this logic in HitObject class itself
-                    // Set the long note size and position.
-                    /*
-                    if (Ruleset.Screen.Timing.Time > hitObject.Info.StartTime)
-                    {
-                        // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                        hitObject.CurrentLongNoteSize = (long)((hitObject.LongNoteTrackOffset - Ruleset.Screen.Positioning.Position) * ScrollSpeed);
-                        hitObject.CurrentlyBeingHeld = true;
-                        //hitObject.PositionY = hitObject.GetPosFromOffset();
-                    }
-                    else
-                    {
-                        hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
-                        hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.TrackOffset);
-                    }*/
-
-                    // Update the sprite positions of the object.
+                    hitObject.HandleLongNoteAnimation();
                     hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
                 }
             }
@@ -399,11 +365,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    // Stop looping the animation.
-                    if (hitObject.IsLongNote && hitObject.LongNoteBodySprite.IsLooping)
-                        hitObject.LongNoteBodySprite.StopLoop();
-
                     // Update position
+                    hitObject.CurrentlyBeingHeld = false;
                     hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
                 }
             }
@@ -433,7 +396,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var info = lane.Dequeue();
                 hitObject.Initialize(info);
-                //hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
                 ObjectPool[info.Lane - 1].Enqueue(hitObject);
             }
         }
@@ -446,6 +408,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Add to the held long notes.
             HeldLongNotes[hitObject.Info.Lane - 1].Enqueue(hitObject);
+            hitObject.CurrentlyBeingHeld = true;
         }
 
         /// <summary>
