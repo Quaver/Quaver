@@ -153,7 +153,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                     var hitObject = manager.GetClosestRelease(laneIndex);
                     if (hitObject != null)
                     {
-                        //HandleKeyRelease(manager, hitObject);
+                        HandleKeyRelease(manager, hitObject);
                     }
                 }
             }
@@ -194,6 +194,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             var screenView = (GameplayScreenView)Ruleset.Screen.View;
             screenView.UpdateScoreboardUsers();
 
+            // Update playgfield
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
+            playfield.Stage.HitError.AddJudgement(judgement, hitObject.Info.StartTime - Ruleset.Screen.Timing.Time);
+
+            // Update Object Pooling
             switch (judgement)
             {
                 // Handle early miss cases here.
@@ -212,13 +218,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                         manager.RecyclePoolObject(hitObject);
                     break;
             }
-
-            // Make the combo display visible since it is now changing.
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-
-            // Also add a judgement to the hit error.
-            playfield.Stage.HitError.AddJudgement(judgement, hitObject.Info.StartTime - Ruleset.Screen.Timing.Time);
 
             // Perform hit burst animation
             playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
@@ -313,8 +312,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>
         private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeys hitObject)
         {
+            Console.Out.WriteLine("RELEASE " + hitObject.Info.Lane);
+            Console.Out.WriteLine("POOL COUNT " + manager.HeldLongNotes[hitObject.Info.Lane - 1].Count);
             var laneIndex = hitObject.Info.Lane - 1;
-            hitObject = manager.HeldLongNotes[laneIndex].Dequeue();
 
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             playfield.Stage.ComboDisplay.MakeVisible();
@@ -330,9 +330,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
-
+                hitObject = manager.HeldLongNotes[laneIndex].Dequeue();
                 // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, manager.HeldLongNotes[laneIndex].Peek().Info, (int) Ruleset.Screen.Timing.Time,
+                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, hitObject.Info, (int) Ruleset.Screen.Timing.Time,
                                             judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
 
@@ -345,8 +345,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
 
-                // Lastly kill the object.
-                manager.KillHoldPoolObject(hitObject);
+                // Recycle object in the pool
+                manager.RecyclePoolObject(hitObject);
             }
             // If LN has been released early
             else
@@ -368,6 +368,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
+                // Kill hit object in the pool
                 manager.KillHoldPoolObject(hitObject);
             }
 
