@@ -390,8 +390,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if dead object is ready for recycle
             foreach (var lane in DeadNotes)
             {
-                while (lane.Count > 0 && Ruleset.Screen.Positioning.Position > lane.Peek().TrackOffset + RecycleObjectPosition
-                    && Ruleset.Screen.Positioning.Position > lane.Peek().LongNoteTrackOffset + RecycleObjectPosition)
+                while (lane.Count > 0 && Ruleset.Screen.Positioning.Position > lane.Peek().TrackPosition + RecycleObjectPosition
+                    && Ruleset.Screen.Positioning.Position > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition)
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -464,7 +464,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Change start time and y offset.
             hitObject.Info.StartTime = (int)Ruleset.Screen.Timing.Time;
-            hitObject.TrackOffset = Ruleset.Screen.Positioning.GetPositionFromTime(Ruleset.Screen.Timing.Time);
+            hitObject.TrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(Ruleset.Screen.Timing.Time);
             hitObject.ChangeSpriteColorToDead();
 
             // Add to dead notes pool
