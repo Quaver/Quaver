@@ -135,11 +135,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="size"></param>
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
+            // Set references
             Ruleset = ruleset;
             GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
 
-            Initialize(map);
-
             // Initialize collections
             var keyCount = Ruleset.Map.GetKeyCount();
             Info = new List<Queue<HitObjectInfo>>(keyCount);
@@ -167,46 +166,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
                 {
                     var hitObjectInfo = lane.Dequeue();
-                    //Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
                     CreatePoolObject(hitObjectInfo);
                 }
             }
-        }
-
-        private void Initialize(Qua map)
-        {
-            /*
-            // Initialize collections
-            var keyCount = Ruleset.Map.GetKeyCount();
-            Info = new List<Queue<HitObjectInfo>>(keyCount);
-            ObjectPool = new List<Queue<GameplayHitObjectKeys>>(keyCount);
-            DeadNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
-            HeldLongNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
-
-            for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
-            {
-                Info.Add(new Queue<HitObjectInfo>());
-                ObjectPool.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
-                DeadNotes.Add(new Queue<GameplayHitObjectKeys>());
-                HeldLongNotes.Add(new Queue<GameplayHitObjectKeys>());
-            }
-
-            // Sort Hit Object Info into their respective lanes
-            foreach (var info in map.HitObjects)
-            {
-                Info[info.Lane - 1].Enqueue(info);
-            }
-
-            // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
-            foreach (var lane in Info)
-            {
-                for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
-                {
-                    var hitObjectInfo = lane.Dequeue();
-                    //Console.Out.WriteLine(hitObjectInfo.Lane + ", " + hitObjectInfo.StartTime);
-                    CreatePoolObject(hitObjectInfo);
-                }
-            }*/
         }
 
         /// <summary>
@@ -215,7 +177,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         private void CreatePoolObject(HitObjectInfo info)
         {
-            Console.Out.WriteLine("New hit object added to pool @ lane: " + info.Lane);
             var hitObject = new GameplayHitObjectKeys(info, Ruleset);
             hitObject.Initialize(info);
             ObjectPool[info.Lane - 1].Enqueue(hitObject);
@@ -467,10 +428,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="index"></param>
         public void RecyclePoolObject(GameplayHitObjectKeys hitObject)
         {
-            Console.Out.WriteLine("Hit object recycled @ lane: " + hitObject.Info.Lane);
-            // Destroy and remove the old object sprites
-            //hitObject.Destroy();
-
             var lane = Info[hitObject.Info.Lane - 1];
             if (lane.Count > 0)
             {
