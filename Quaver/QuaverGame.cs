@@ -34,6 +34,7 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
@@ -108,6 +109,8 @@ namespace Quaver
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
             // Load all game assets.
             FontAwesome.Load();
