@@ -9,6 +9,7 @@ using Quaver.Graphics.Online;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Screens.Menu.UI.Navigation;
 using Wobble.Graphics;
+using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -62,7 +63,7 @@ namespace Quaver.Screens.Menu.UI.User
             View = view;
 
             Tint = Color.Black;
-            Alpha = 0.75f;
+            Alpha = 0.85f;
             Scrollbar.Visible = false;
 
             NavbarButton = View.Navbar.RightAlignedItems.First() as NavbarItemUser;

@@ -337,7 +337,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreatePlayercard()
         {
-            Playercard = new UserPlayercard(ConfigManager.Username.Value)
+            Playercard = new UserPlayercard(ConfigManager.Username.Value, true)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
