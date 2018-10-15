@@ -4,9 +4,11 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Online.Playercard;
 using Quaver.Helpers;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
@@ -96,6 +98,11 @@ namespace Quaver.Screens.Menu
         /// </summary>
         public UserProfileContainer UserProfile { get; set; }
 
+        /// <summary>
+        ///     The currently logged in user's playercard.
+        /// </summary>
+        public UserPlayercard Playercard { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -112,6 +119,7 @@ namespace Quaver.Screens.Menu
             CreatePanelContainer();
             CreateJukebox();
             CreateUserProfile();
+            CreatePlayercard();
         }
 
         /// <inheritdoc />
@@ -321,6 +329,24 @@ namespace Quaver.Screens.Menu
                 Alignment = Alignment.TopRight,
                 Y = Navbar.Line.Y + Navbar.Line.Thickness,
                 X = -64
+            };
+        }
+
+        /// <summary>
+        ///     Creates the playercard container
+        /// </summary>
+        private void CreatePlayercard()
+        {
+            Playercard = new UserPlayercard(ConfigManager.Username.Value)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = 64,
+                Y = Jukebox.Y,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                }
             };
         }
 

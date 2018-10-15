@@ -80,7 +80,7 @@ namespace Quaver.Screens.Menu.UI.Panels
                 Width = MathHelper.Lerp(Width, OriginalSize.X.Value * 1.08f + 2, (float) Math.Min(dt / 30, 1));
                 Height = MathHelper.Lerp(Height, OriginalSize.Y.Value * 1.08f + 2, (float) Math.Min(dt / 30, 1));
 
-                Border.Thickness = MathHelper.Lerp(Border.Thickness, 5, (float) Math.Min(dt / 30, 1));
+                Border.Thickness = MathHelper.Lerp(Border.Thickness, 4, (float) Math.Min(dt / 30, 1));
                 Border.FadeToColor(Color.Yellow, dt, 30);
 
                 // Resetting the parent allows the panel to go on top of the other ones (changes draw order)

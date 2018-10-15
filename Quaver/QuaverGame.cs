@@ -13,6 +13,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Scheduling;

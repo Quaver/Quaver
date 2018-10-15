@@ -3,9 +3,13 @@ using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Config;
+using Quaver.Graphics;
 using Quaver.Graphics.Online;
+using Quaver.Graphics.Online.Playercard;
 using Quaver.Screens.Menu.UI.Navigation;
 using Wobble.Graphics;
+using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
@@ -44,9 +48,9 @@ namespace Quaver.Screens.Menu.UI.User
         private NavbarItemUser NavbarButton { get; }
 
         /// <summary>
-        ///     The logged in user's playercard.
+        ///     The line at the bottom of the container.
         /// </summary>
-        private Playercard Playercard { get; set; }
+        private Sprite BottomLine { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -76,6 +80,7 @@ namespace Quaver.Screens.Menu.UI.User
         public override void Update(GameTime gameTime)
         {
             Container.IsClickable = NavbarButton.Selected;
+            BottomLine.Visible = NavbarButton.Selected;
             base.Update(gameTime);
         }
 
@@ -104,18 +109,26 @@ namespace Quaver.Screens.Menu.UI.User
                 Alpha = 0
             };
 
-            CreatePlayercard();
-            AddContainedDrawable(Container);
-        }
-
-        private void CreatePlayercard()
-        {
-            Playercard = new Playercard()
+            Container.ClickedOutside += (sender, args) =>
             {
-                Parent = Container,
-                Alignment = Alignment.TopCenter,
-                Y = 15
+                // User clicked the navbar button, that handles closing automatically.
+                if (NavbarButton.IsHovered)
+                    return;
+
+                NavbarButton.Selected = false;
+                PerformClickAnimation(false);
             };
+
+            BottomLine = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(OriginalWidth, 3),
+                Tint = Color.White,
+                Visible = false
+            };
+
+            AddContainedDrawable(Container);
         }
     }
 }
