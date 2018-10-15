@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -181,20 +182,29 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private IconedText TextCompetitiveMatchesWon { get; set; }
 
+        /// <summary>
+        ///     Dictates if this playercard is the full thing.
+        /// </summary>
+        private bool FullCard { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public UserPlayercard(string username)
+        public UserPlayercard(string username, bool fullCard)
         {
-            Tint = Colors.MainAccentInactive;
-            Size = new ScalableVector2(426, 154);
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\admin\desktop\playercardbg.png");
+            FullCard = fullCard;
+            Tint = Colors.DarkGray;
+
+            Size = new ScalableVector2(426, FullCard ? 154 : 96);
+            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Textures/UI/Playercard/a.png"));
 
             CreateTitle();
             CreateAvatar();
             CreateUsername(username);
             CreateCompetitiveRankBadge();
-            CreateStats();
+
+            if (FullCard)
+                CreateStats();
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
             AddBorder(Color.White, 2);
@@ -383,7 +393,7 @@ namespace Quaver.Graphics.Online.Playercard
             GlobalRank = 0;
             PlayCount = 0;
             CompetitiveMatchesWon = 0;
-            GameMode = GameMode.Keys4;
+            GameMode = ConfigManager.SelectedGameMode.Value;
         }
 
         /// <summary>
@@ -392,7 +402,7 @@ namespace Quaver.Graphics.Online.Playercard
         private void HandleHoverAnimation(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-            var targetColor = IsHovered ? Color.Yellow : Color.White;
+            var targetColor = IsHovered ? Colors.MainAccent : Color.White;
 
             Border.FadeToColor(targetColor, dt, 60);
         }
@@ -405,7 +415,7 @@ namespace Quaver.Graphics.Online.Playercard
         private void OnSelectedGameModeChange(object sender, BindableValueChangedEventArgs<GameMode> e)
         {
             // Only update when it's self.
-            if (TextUsername.Text != ConfigManager.Username.Value)
+            if (TextUsername.Text != ConfigManager.Username.Value || !FullCard)
                 return;
 
             GameMode = e.Value;
