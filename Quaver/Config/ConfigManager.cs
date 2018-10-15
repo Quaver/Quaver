@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
@@ -234,10 +235,14 @@ namespace Quaver.Config
         internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     The currently selected game mode.
+        /// </summary>
+        internal static Bindable<GameMode> SelectedGameMode { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
-
         internal static Bindable<Keys> KeyMania4K2 { get; private set; }
         internal static Bindable<Keys> KeyMania4K3 { get; private set; }
         internal static Bindable<Keys> KeyMania4K4 { get; private set; }
@@ -430,6 +435,7 @@ namespace Quaver.Config
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
+            SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
@@ -497,6 +503,7 @@ namespace Quaver.Config
                     SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
+                    SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
