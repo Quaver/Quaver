@@ -49,6 +49,7 @@ namespace Quaver.Screens.Menu.UI.Panels
 
                 panel.Parent = this;
                 panel.Alignment = Alignment.MidLeft;
+                panel.Y = 30;
 
                 panel.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 0,
                     StartingX + i * panel.Width + i * 10, 600 + 100 * i));
