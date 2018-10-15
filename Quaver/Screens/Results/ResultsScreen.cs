@@ -565,6 +565,6 @@ namespace Quaver.Screens.Results
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "",
-            (byte) GameplayScreen.Map.Mode, "", (long) ModManager.Mods);
+            (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
     }
 }
