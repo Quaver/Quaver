@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
+using Quaver.Scheduling;
 using Steamworks;
 using Wobble;
 using Wobble.Logging;
@@ -40,9 +43,14 @@ namespace Quaver.Online
         public static bool AuthSessionTicketValidated { get; private set; }
 
         /// <summary>
-        ///     The user's steam avatar.
+        ///     The avatars for steam users.
         /// </summary>
-        public static Texture2D UserAvatar { get; set; }
+        public static Dictionary<ulong, Texture2D> UserAvatars { get; set; }
+
+        /// <summary>
+        ///     A user's steam avatar has loaded.
+        /// </summary>
+        public static EventHandler<SteamAvatarLoadedEventArgs> SteamUserAvatarLoaded;
 
         #region Callbacks
 
@@ -50,7 +58,13 @@ namespace Quaver.Online
         ///     The callback that will be ran when the client requests for an auth session ticket
         /// </summary>
         private static Callback<GetAuthSessionTicketResponse_t> GetAuthSessionTickResponse { get; set; }
-#endregion
+
+        /// <summary>
+        ///     Called when receiving a persona state change from steam (for user avatars)
+        /// </summary>
+        private static Callback<PersonaStateChange_t> PersonaStateChanged { get; set; }
+
+        #endregion
 
         /// <summary>
         ///     Initializes the Steam API.
@@ -69,6 +83,8 @@ namespace Quaver.Online
             }
 
             IsInitialized = SteamAPI.Init();
+
+            UserAvatars = new Dictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
             {
@@ -101,6 +117,7 @@ namespace Quaver.Online
         private static void InitializeCallbacks()
         {
             GetAuthSessionTickResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnValidateAuthSessionTicketResponse);
+            PersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
         }
 
         /// <summary>
@@ -138,32 +155,72 @@ namespace Quaver.Online
         }
 
         /// <summary>
-        ///     Gets a small steam avatar.
+        ///     Requests to steam to retrieve a user's avatar.
+        /// </summary>
+        public static void SendAvatarRetrievalRequest(ulong steamId)
+        {
+            var info = SteamFriends.RequestUserInformation(new CSteamID(steamId), false);
+            Logger.Debug($"Requested Steam user information for user: {steamId} - {info}", LogType.Network);
+
+            if (!info)
+                LoadAvatarIfNotExists(steamId);
+        }
+
+        /// <summary>
+        ///     Called when a requested user's persona state has changed.
+        /// </summary>
+        /// <param name="callback"></param>
+        private static void OnPersonaStateChanged(PersonaStateChange_t callback)
+        {
+            if (callback.m_nChangeFlags == EPersonaChange.k_EPersonaChangeAvatar)
+                LoadAvatarIfNotExists(callback.m_ulSteamID);
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="steamId"></param>
-        /// <returns></returns>
-        public static Texture2D GetAvatar(ulong steamId)
+        private static void LoadAvatarIfNotExists(ulong steamId)
         {
-            var avatar = SteamFriends.GetLargeFriendAvatar(new CSteamID(steamId));
+            Logger.Debug($"Requesting Steam Avatar for user: {steamId}...", LogType.Network);
 
-            Texture2D ret = null;
+            var tex = LoadAvatar(steamId);
+            UserAvatars[steamId] = tex;
+            SteamUserAvatarLoaded?.Invoke(typeof(SteamManager), new SteamAvatarLoadedEventArgs(steamId, tex));
 
-            var bIsValid = SteamUtils.GetImageSize(avatar, out var imageWidth, out var imageHeight);
+            Logger.Debug($"Loaded Steam Avatar for user: {steamId}", LogType.Network);
+        }
 
-            if (!bIsValid)
-                return null;
+        /// <summary>
+        ///     Loads a user's avatar from steam
+        /// </summary>
+        /// <returns></returns>
+        private static Texture2D LoadAvatar(ulong steamId)
+        {
+            // Get the icon type as a integer.
+            var icon = SteamFriends.GetMediumFriendAvatar(new CSteamID(steamId));
 
-            var image = new byte[imageWidth * imageHeight * 4];
+            // Check if we got an icon type.
+            if (icon != 0)
+            {
+                uint width;
+                uint height;
+                var ret = SteamUtils.GetImageSize(icon, out width, out height);
 
-            bIsValid = SteamUtils.GetImageRGBA(avatar, image, (int)(imageWidth * imageHeight * 4));
+                if (ret && width > 0 && height > 0)
+                {
+                    var rgba = new byte[width * height * 4];
+                    ret = SteamUtils.GetImageRGBA(icon, rgba, rgba.Length);
+                    if (ret)
+                    {
+                        var texture = new Texture2D(GameBase.Game.GraphicsDevice, (int)width, (int)height, false, SurfaceFormat.Color);
+                        texture.SetData(rgba, 0, rgba.Length);
+                        return texture;
+                    }
+                }
+            }
 
-            if (!bIsValid)
-                return null;
-
-            ret = new Texture2D(GameBase.Game.GraphicsDevice, (int)imageWidth, (int)imageHeight);
-
-            ret.SetData(image);
-            return ret;
+            return null;
         }
     }
 }

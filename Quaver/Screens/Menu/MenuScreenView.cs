@@ -10,6 +10,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Jukebox;
@@ -337,7 +338,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreatePlayercard()
         {
-            Playercard = new UserPlayercard(ConfigManager.Username.Value, true)
+            /*Playercard = new UserPlayercard(OnlineManager.Self, true)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
@@ -347,7 +348,7 @@ namespace Quaver.Screens.Menu
                 {
                     BlendState = BlendState.NonPremultiplied
                 }
-            };
+            };*/
         }
 
         /// <summary>

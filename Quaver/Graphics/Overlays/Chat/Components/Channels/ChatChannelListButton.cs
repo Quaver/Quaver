@@ -36,7 +36,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// <param name="channelList"></param>
         /// <param name="channel"></param>
         public ChatChannelListButton(ChatChannelList channelList, ChatChannel channel)
-            : base(UserInterface.BlankBox, Fonts.Exo2Regular24, channel.Name, 0.55f)
+            : base(UserInterface.BlankBox, Fonts.Exo2Bold24, channel.Name, 0.55f)
         {
             ChannelList = channelList;
             Channel = channel;
@@ -62,13 +62,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             if (IsSelected)
             {
                 Text.TextColor = Color.White;
-                Alpha = 0.25f;
+                Alpha = 0.45f;
                 Tint = Color.White;
             }
             else if (IsHovered)
             {
                 Text.TextColor = Color.White;
-                Alpha = 0.05f;
+                Alpha = 0.25f;
                 Tint = Color.White;
             }
             else if (IsUnread)

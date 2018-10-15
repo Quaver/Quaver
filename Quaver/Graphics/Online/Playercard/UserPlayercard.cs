@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
+using Quaver.Server.Client.Structures;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -22,6 +23,11 @@ namespace Quaver.Graphics.Online.Playercard
 {
     public class UserPlayercard : Button
     {
+        /// <summary>
+        ///     The user this playercard is for.
+        /// </summary>
+        public User User { get; }
+
         /// <summary>
         ///     The user's selected title.
         /// </summary>
@@ -160,7 +166,6 @@ namespace Quaver.Graphics.Online.Playercard
             {
                 _gameMode = value;
 
-                // TODO: Add game mode icons.
                 switch (GameMode)
                 {
                     case GameMode.Keys4:
@@ -215,11 +220,15 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private bool FullCard { get; }
 
-        /// <inheritdoc />
         /// <summary>
+        ///     Create a playercard from a user.
         /// </summary>
-        public UserPlayercard(string username, bool fullCard)
+        /// <param name="user"></param>
+        /// <param name="fullCard"></param>
+        public UserPlayercard(User user, bool fullCard)
         {
+            User = user;
+
             FullCard = fullCard;
             Tint = Colors.DarkGray;
 
@@ -228,17 +237,14 @@ namespace Quaver.Graphics.Online.Playercard
 
             CreateTitle();
             CreateAvatar();
-            CreateUsername(username);
+            CreateUsername(user.OnlineUser.Username);
             CreateCompetitiveRankBadge();
 
             SelectedTitle = Title.OfflinePlayer;
             SelectedCompetitveBadge = CompetitveBadge.Unranked;
 
             if (FullCard)
-            {
                 CreateStats();
-                UpdateFlag("United States");
-            }
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
             AddBorder(Color.White, 2);
@@ -379,7 +385,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Y = Avatar.Y + Avatar.Height + 10
             };
 
-            TextCountryRank = new IconedText(AssetLoader.LoadTexture2DFromFile(@"c:\users\admin\desktop\br.png"), "#9,999,999")
+            TextCountryRank = new IconedText(Flags.Get(User.CountryName), "#9,999,999")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -468,8 +474,6 @@ namespace Quaver.Graphics.Online.Playercard
                 return;
 
             GameMode = e.Value;
-
-            // TODO: Change the rest of the user's stats.
         }
     }
 }

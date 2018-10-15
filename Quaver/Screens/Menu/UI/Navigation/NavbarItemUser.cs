@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Config;
+using Quaver.Online;
+using Steamworks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
@@ -82,6 +84,10 @@ namespace Quaver.Screens.Menu.UI.Navigation
             Alignment = Alignment.MidLeft,
             Image = UserInterface.UnknownAvatar,
             X = 25,
+            SpriteBatchOptions = new SpriteBatchOptions()
+            {
+                BlendState = BlendState.NonPremultiplied
+            }
         };
 
         /// <summary>

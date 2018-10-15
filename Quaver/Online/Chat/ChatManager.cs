@@ -13,6 +13,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -286,7 +287,7 @@ namespace Quaver.Online.Chat
             if (channel.IsPrivate)
             {
                 var avatar = e.Message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
-                    ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
+                    ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID] : UserInterface.UnknownAvatar;
 
                 // Only show notification if the chat window isn't open.
                 if (!IsActive)

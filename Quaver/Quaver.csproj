@@ -41,7 +41,6 @@
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
-  
   <ItemGroup>
     <None Update="steam_api64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

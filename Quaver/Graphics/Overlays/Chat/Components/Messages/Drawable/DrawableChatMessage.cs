@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Server.Client.Structures;
+using Steamworks;
+using WebSocketSharp;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Logging;
 using Wobble.Window;
 using Color = Microsoft.Xna.Framework.Color;
+using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
 {
@@ -61,18 +66,28 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Container = container;
             Message = message;
 
-            // The avatar used for the chat message
-            var userAvatar = message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
-                ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
+            Texture2D userAvatar;
 
             Avatar = new Sprite
             {
                 Parent = this,
                 X = 10,
                 Size = new ScalableVector2(45, 45),
-                Image = userAvatar,
                 Y = Padding,
             };
+
+            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+
+            // We've got the user's avatar, so use it.
+            if (SteamManager.UserAvatars.ContainsKey((ulong) message.Sender.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong) message.Sender.OnlineUser.SteamId];
+            // Need to retrieve user's avatar.
+            else
+            {
+                // Go with an unknown avatar for now until it's loaded.
+                Avatar.Image = UserInterface.UnknownAvatar;
+                SteamManager.SendAvatarRetrievalRequest((ulong) message.Sender.OnlineUser.SteamId);
+            }
 
             X = -Container.Width;
             Width = Container.Width - 5;
@@ -82,6 +97,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             CreateChatBadge();
             CreateMessageContentText();
             RecalculateHeight();
+        }
+
+        /// <inheritdoc />
+        ///  <summary>
+        ///  </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -143,6 +169,29 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 Height = TextUsername.Height + maxHeight;
 
             Height += Padding * 2;
+        }
+
+        /// <summary>
+        ///     Called when a new steam avatar is loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            // If it doesn't apply to this message.
+            if (e.SteamId != (ulong) Message.Sender.OnlineUser.SteamId)
+                return;
+
+            try
+            {
+                Avatar.Transformations.Clear();
+                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Image = e.Texture;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, LogType.Runtime);
+            }
         }
     }
 }

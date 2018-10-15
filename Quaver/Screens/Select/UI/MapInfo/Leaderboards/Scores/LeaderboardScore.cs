@@ -9,6 +9,7 @@ using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -110,7 +111,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Parent = this,
             Alignment = Alignment.TopLeft,
             Size = new ScalableVector2(Height, Height),
-            Image = ConfigManager.Username.Value == Score.Name ? SteamManager.UserAvatar : UserInterface.UnknownAvatar,
+            Image = ConfigManager.Username.Value == Score.Name ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID] : UserInterface.UnknownAvatar,
             X = 50
         };
 

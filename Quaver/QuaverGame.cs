@@ -115,14 +115,13 @@ namespace Quaver
 
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
+            SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+
             // Load all game assets.
             FontAwesome.Load();
             BitmapFonts.Load();
             Fonts.Load();
             UserInterface.Load();
-
-            // Load steam avatar
-            SteamManager.UserAvatar = SteamManager.GetAvatar(SteamUser.GetSteamID().m_SteamID);
 
             // Load the user's skin
             SkinManager.Load();
@@ -208,7 +207,7 @@ namespace Quaver
 
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
-            
+
             LogManager.Draw(gameTime);
         }
 
