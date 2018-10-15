@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;
 using Steamworks;
 using WebSocketSharp;
@@ -66,8 +67,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Container = container;
             Message = message;
 
-            Texture2D userAvatar;
-
             Avatar = new Sprite
             {
                 Parent = this,
@@ -78,6 +77,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
+            // QuaverBot. No need to load.
+            if (message.Sender.OnlineUser.SteamId == 0)
+                Avatar.Image = UserInterface.UnknownAvatar;
             // We've got the user's avatar, so use it.
             if (SteamManager.UserAvatars.ContainsKey((ulong) message.Sender.OnlineUser.SteamId))
                 Avatar.Image = SteamManager.UserAvatars[(ulong) message.Sender.OnlineUser.SteamId];
