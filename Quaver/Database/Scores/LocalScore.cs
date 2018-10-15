@@ -121,6 +121,12 @@ namespace Quaver.Database.Scores
         public bool IsOnline { get; set; }
 
         /// <summary>
+        ///     The user's steam id that submitted the score.
+        /// </summary>
+        [Ignore]
+        public long SteamId { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -170,6 +176,7 @@ namespace Quaver.Database.Scores
             {
                 IsOnline = true,
                 Id = score.Id,
+                SteamId = score.SteamId,
                 MapMd5 = score.MapMd5,
                 Name = score.Username,
                 DateTime = dtDateTime.ToString(CultureInfo.InvariantCulture),
