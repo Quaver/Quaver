@@ -9,7 +9,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Graphics.Online
 {
-    public class Playercard : Sprite
+    public class UserPlayercard : Sprite
     {
         /// <summary>
         ///     The user's currently selected title
@@ -44,16 +44,16 @@ namespace Quaver.Graphics.Online
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public Playercard()
+        public UserPlayercard()
         {
             Tint = Colors.DarkGray;
-            Size = new ScalableVector2(384, 140);
+            Size = new ScalableVector2(384, 120);
 
             CreateTitle();
             CreateAvatar();
             CreateUsername();
-            CreateStatusContainer();
-            CreateStatus();
+            // CreateStatusContainer();
+            // CreateStatus();
             CreateCompetitiveRankBadge();
 
             AddBorder(Color.White, 2);
