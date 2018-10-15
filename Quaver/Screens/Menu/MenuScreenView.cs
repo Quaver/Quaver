@@ -163,7 +163,7 @@ namespace Quaver.Screens.Menu
             new NavbarItem("Challenges"),
         }, new List<NavbarItem>
         {
-            new NavbarItemUser(this)
+            new NavbarItemUser(this),
         }) { Parent = Container };
 
         /// <summary>

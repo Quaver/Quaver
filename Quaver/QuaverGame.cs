@@ -116,7 +116,6 @@ namespace Quaver
             FontAwesome.Load();
             BitmapFonts.Load();
             Fonts.Load();
-            Titles.Load();
             UserInterface.Load();
 
             // Load the user's skin

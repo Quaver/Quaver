@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using osu_database_reader;
@@ -23,9 +23,37 @@ namespace Quaver.Graphics.Online.Playercard
     public class UserPlayercard : Button
     {
         /// <summary>
+        ///     The user's selected title.
+        /// </summary>
+        private Title _selectedTitle = Title.OfflinePlayer;
+        public Title SelectedTitle
+        {
+            get => _selectedTitle;
+            set
+            {
+                _selectedTitle = value;
+                UpdateTitle(_selectedTitle);
+            }
+        }
+
+        /// <summary>
+        ///     The user's selected competitive badge.
+        /// </summary>
+        public CompetitveBadge _selectedCompetitiveBadge = CompetitveBadge.Unranked;
+        public CompetitveBadge SelectedCompetitveBadge
+        {
+            get => _selectedCompetitiveBadge;
+            set
+            {
+                _selectedCompetitiveBadge = value;
+                UpdateCompetitiveBadge(_selectedCompetitiveBadge);
+            }
+        }
+
+        /// <summary>
         ///     The user's currently selected title
         /// </summary>
-        private Sprite Title { get; set; }
+        private Sprite TitleSprite { get; set; }
 
         /// <summary>
         ///     The user's avatar
@@ -196,15 +224,21 @@ namespace Quaver.Graphics.Online.Playercard
             Tint = Colors.DarkGray;
 
             Size = new ScalableVector2(426, FullCard ? 154 : 96);
-            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Textures/UI/Playercard/a.png"));
+            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Textures/UI/Playercard/playercard-bg.png"));
 
             CreateTitle();
             CreateAvatar();
             CreateUsername(username);
             CreateCompetitiveRankBadge();
 
+            SelectedTitle = Title.OfflinePlayer;
+            SelectedCompetitveBadge = CompetitveBadge.Unranked;
+
             if (FullCard)
+            {
                 CreateStats();
+                UpdateFlag("United States");
+            }
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
             AddBorder(Color.White, 2);
@@ -233,13 +267,12 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     Creates the sprite with the user's currently selected title.
         /// </summary>
-        private void CreateTitle() => Title = new Sprite
+        private void CreateTitle() => TitleSprite = new Sprite
         {
             Parent = this,
             Size = new ScalableVector2(300, 40),
             X = 10,
             Y = 10,
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\admin\desktop\offline.png"),
             Tint = Color.White,
             UsePreviousSpriteBatchOptions = true
         };
@@ -247,12 +280,12 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     Updates the title on the playercard with a new texture.
         /// </summary>
-        /// <param name="tex"></param>
-        public void UpdateTitle(Texture2D tex)
+        /// <param name="title"></param>
+        public void UpdateTitle(Title title)
         {
-            Title.Transformations.Clear();
-            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            Title.Image = tex;
+            TitleSprite.Transformations.Clear();
+            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TitleSprite.Image = TitleHelper.Get(title);
         }
 
         /// <summary>
@@ -264,8 +297,8 @@ namespace Quaver.Graphics.Online.Playercard
             {
                 Parent = this,
                 Size = new ScalableVector2(26, 26),
-                Y = Title.Y + Title.Height + 8,
-                X = Title.X,
+                Y = TitleSprite.Y + TitleSprite.Height + 8,
+                X = TitleSprite.X,
                 Image = UserInterface.UnknownAvatar,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -314,17 +347,23 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     Creates the sprite to show the user's rank badge.
         /// </summary>
-        private void CreateCompetitiveRankBadge()
+        private void CreateCompetitiveRankBadge() => CompetitiveRankBadge = new Sprite()
         {
-            CompetitiveRankBadge = new Sprite()
-            {
-                Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                X = Title.X + Title.Width + 24,
-                Y = Title.Y,
-                Size = new ScalableVector2(70, 70),
-                Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\admin\desktop\gll.png")
-            };
+            Parent = this,
+            UsePreviousSpriteBatchOptions = true,
+            X = TitleSprite.X + TitleSprite.Width + 24,
+            Y = TitleSprite.Y,
+            Size = new ScalableVector2(70, 70),
+        };
+
+        /// <summary>
+        ///     Updates the competitive badge for the user.
+        /// </summary>
+        private void UpdateCompetitiveBadge(CompetitveBadge badge)
+        {
+            CompetitiveRankBadge.Transformations.Clear();
+            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
         }
 
         /// <summary>
@@ -394,6 +433,16 @@ namespace Quaver.Graphics.Online.Playercard
             PlayCount = 0;
             CompetitiveMatchesWon = 0;
             GameMode = ConfigManager.SelectedGameMode.Value;
+        }
+
+        /// <summary>
+        ///     Updates the country flag for the user.
+        /// </summary>
+        public void UpdateFlag(string countryName)
+        {
+            TextCountryRank.Icon.Transformations.Clear();
+            TextCountryRank.Icon.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TextCountryRank.Icon.Image = Flags.Get(countryName);
         }
 
         /// <summary>
