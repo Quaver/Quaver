@@ -133,7 +133,7 @@ namespace Quaver.Screens.Edit
                 }
                 catch (Exception)
                 {
-                    QuaverScreenManager.ChangeScreen(new MainMenuScreen());
+                    QuaverScreenManager.ChangeScreen(new MenuScreen());
                     NotificationManager.Show(NotificationLevel.Error, "A track needs to be loaded in order to use the editor!");
                 }
             }

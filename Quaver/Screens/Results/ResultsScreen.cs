@@ -304,7 +304,7 @@ namespace Quaver.Screens.Results
             if (mapset == null)
             {
                 Logger.Error($"You do not have the map that this replay is for", LogType.Runtime);
-                QuaverScreenManager.ChangeScreen(new MainMenuScreen());
+                QuaverScreenManager.ChangeScreen(new MenuScreen());
                 return;
             }
 
@@ -545,7 +545,7 @@ namespace Quaver.Screens.Results
             if (ResultsScreenType == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
             {
                 DiscordManager.Client.CurrentPresence.Details = "Idle";
-                DiscordManager.Client.CurrentPresence.State = "In the menus";
+                DiscordManager.Client.CurrentPresence.State = "In the Menus";
                 DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
                 return;
             }

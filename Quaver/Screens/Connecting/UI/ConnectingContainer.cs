@@ -133,7 +133,7 @@ namespace Quaver.Screens.Connecting.UI
                 SkinManager.Skin.SoundClick.CreateChannel()?.Play();
 
 
-                View.ExitToScreen(new MainMenuScreen());
+                View.ExitToScreen(new MenuScreen());
             })
             {
                 Parent = this,

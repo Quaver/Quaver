@@ -286,7 +286,7 @@ namespace Quaver.Screens.Connecting
         {
             OnConnected();
 
-            ExitToScreen(new MainMenuScreen());
+            ExitToScreen(new MenuScreen());
         }
 
         /// <summary>

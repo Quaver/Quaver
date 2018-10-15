@@ -13,6 +13,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Online;
@@ -36,6 +37,7 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
@@ -111,11 +113,12 @@ namespace Quaver
         {
             base.LoadContent();
 
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+
             // Load all game assets.
             FontAwesome.Load();
-            Fonts.Load();
             BitmapFonts.Load();
-            Titles.Load();
+            Fonts.Load();
             UserInterface.Load();
 
             // Load steam avatar

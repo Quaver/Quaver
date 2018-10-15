@@ -21,7 +21,7 @@ namespace Quaver.Screens.Edit.Input
         private EditorScreen Screen { get; }
 
         /// <summary>
-        ///     Ctor 
+        ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
         internal EditorInputManager(EditorScreen screen) => Screen = screen;
@@ -90,7 +90,7 @@ namespace Quaver.Screens.Edit.Input
         private void HandleExit()
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                QuaverScreenManager.ChangeScreen(new MainMenuScreen());
+                QuaverScreenManager.ChangeScreen(new MenuScreen());
         }
     }
 }

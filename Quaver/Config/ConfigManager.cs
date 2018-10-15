@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
@@ -234,10 +235,14 @@ namespace Quaver.Config
         internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     The currently selected game mode.
+        /// </summary>
+        internal static Bindable<GameMode> SelectedGameMode { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
-
         internal static Bindable<Keys> KeyMania4K2 { get; private set; }
         internal static Bindable<Keys> KeyMania4K3 { get; private set; }
         internal static Bindable<Keys> KeyMania4K4 { get; private set; }
@@ -375,11 +380,8 @@ namespace Quaver.Config
             LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
             DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
             SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
-            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
-            AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
-            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
-            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
-            Username = ReadValue(@"Username", "", data);
+            SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
+            Username = ReadValue(@"Username", "Player", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
@@ -409,6 +411,10 @@ namespace Quaver.Config
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
+            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
+            AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
+            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -497,6 +503,7 @@ namespace Quaver.Config
                     SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
+                    SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

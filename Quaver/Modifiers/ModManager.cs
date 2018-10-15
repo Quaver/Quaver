@@ -9,6 +9,7 @@ using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Modifiers.Mods;
 using Quaver.Modifiers.Mods.Mania;
+using Wobble.Audio.Tracks;
 using Wobble.Logging;
 
 namespace Quaver.Modifiers
@@ -178,7 +179,10 @@ namespace Quaver.Modifiers
             try
             {
                 CurrentModifiersList.RemoveAll(x => x.Type == ModType.Speed);
-                AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
+
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
+
                 CheckModInconsistencies();
 
                 ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
@@ -196,7 +200,7 @@ namespace Quaver.Modifiers
         {
             try
             {
-                if (!AudioEngine.Track.IsDisposed)
+                if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
             }
             catch (Exception e)
