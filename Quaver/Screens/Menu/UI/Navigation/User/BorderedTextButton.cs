@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Screens.Menu.UI.User
+namespace Quaver.Screens.Menu.UI.Navigation.User
 {
     public class BorderedTextButton : BitmapTextButton
     {

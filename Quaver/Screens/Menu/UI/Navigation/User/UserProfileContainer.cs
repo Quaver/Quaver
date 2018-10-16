@@ -4,12 +4,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
-using Quaver.Graphics.Online.Playercard;
 using Quaver.Online;
-using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Server.Client;
-using Wobble;
-using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
@@ -17,7 +13,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Screens.Menu.UI.User
+namespace Quaver.Screens.Menu.UI.Navigation.User
 {
     public class UserProfileContainer : ScrollContainer
     {
@@ -78,7 +74,7 @@ namespace Quaver.Screens.Menu.UI.User
             View = view;
 
             Tint = Color.Black;
-            Alpha = 0.95f;
+            Alpha = 0.80f;
             Scrollbar.Visible = false;
 
             NavbarButton = View.Navbar.RightAlignedItems.First() as NavbarItemUser;
@@ -97,6 +93,8 @@ namespace Quaver.Screens.Menu.UI.User
         public override void Update(GameTime gameTime)
         {
             Container.IsClickable = NavbarButton.Selected;
+            ViewProfileButton.IsClickable = NavbarButton.Selected;
+            LoginButton.IsClickable = NavbarButton.Selected;
             BottomLine.Visible = NavbarButton.Selected;
             base.Update(gameTime);
         }
