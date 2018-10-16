@@ -11,6 +11,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Server.Client;
+using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Events.Scores;
@@ -21,6 +22,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Packets.Server;
 using Steamworks;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Logging;
 
@@ -40,15 +42,22 @@ namespace Quaver.Online
                 Self = null;
                 OnlineUsers = new Dictionary<int, User>();
 
-                _client?.Disconnect();
+                if (_client != null)
+                    return;
+
                 _client = value;
             }
         }
 
         /// <summary>
+        ///     The current online connection status.
+        /// </summary>
+        public static Bindable<ConnectionStatus> Status { get; } = new Bindable<ConnectionStatus>(ConnectionStatus.Disconnected);
+
+        /// <summary>
         ///     If we're currently connected to the server.
         /// </summary>
-        public static bool Connected => Client?.Socket != null;
+        public static bool Connected => Client?.Socket != null && Status.Value == ConnectionStatus.Connected;
 
         /// <summary>
         ///     The user client for self (the current client.)
@@ -63,13 +72,21 @@ namespace Quaver.Online
         /// <summary>
         ///     The thread that online actions will take place on.
         /// </summary>
-        private static SmartThreadPool Thread { get; } = new SmartThreadPool();
+        private static SmartThreadPool Thread { get; set; } = new SmartThreadPool();
+
+        /// <summary>
+        ///     The thread worker for the online connection.
+        /// </summary>
+        private static IWorkItemResult Worker { get; set; }
 
         /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
         {
+            if (Status.Value != ConnectionStatus.Disconnected)
+                return;
+
             Logger.Important($"Attempting to log into the Quaver server...", LogType.Network);
 
             if (!SteamManager.AuthSessionTicketValidated)
@@ -79,11 +96,15 @@ namespace Quaver.Online
             }
 
             // Create the new online client and subscribe to all of its online events.
-            Client = new OnlineClient();
-            SubscribeToEvents();
+            if (Client == null)
+            {
+                Client = new OnlineClient();
+                SubscribeToEvents();
+            }
 
             // Initiate the connection to the game server.
-            Thread.QueueWorkItem(() => Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket));
+            Worker = Thread.QueueWorkItem(() => Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
+                SteamManager.PTicket, SteamManager.PcbTicket, false));
         }
 
         /// <summary>
@@ -95,6 +116,7 @@ namespace Quaver.Online
             if (Client == null)
                 throw new InvalidOperationException("Cannot subscribe to events if there is no OnlineClient.");
 
+            Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
             Client.OnLoginFailed += OnLoginFailed;
             Client.OnChooseUsernameResponse += OnChooseAUsernameResponse;
             Client.OnDisconnection += OnDisconnection;
@@ -111,6 +133,13 @@ namespace Quaver.Online
             Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
             Client.OnScoreSubmitted += OnScoreSubmitted;
         }
+
+        /// <summary>
+        ///     Called when the connection status of the user has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e) => Status.Value = e.Status;
 
         /// <summary>
         ///     When login to the server fails, this event handler will be called.
@@ -176,8 +205,6 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnDisconnection(object sender, DisconnectedEventArgs e)
         {
-            Client = null;
-
             Logger.Important($"Disconnected from the server for reason: {e.CloseEventArgs.Reason} with code: {e.CloseEventArgs.Code}", LogType.Network);
 
             // If the user can't initially connect to the server (server is down.)
@@ -192,8 +219,6 @@ namespace Quaver.Online
                     NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate user to the server.");
                     return;
             }
-
-            NotificationManager.Show(NotificationLevel.Info, "Disconnected from the server.");
         }
 
         /// <summary>
@@ -206,8 +231,7 @@ namespace Quaver.Online
             Self = e.Self;
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
 
-            OnlineUsers.Add(e.Self.OnlineUser.Id, e.Self);
-            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.OnlineUser.Username}");
+            OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
 
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
@@ -233,7 +257,7 @@ namespace Quaver.Online
             if (OnlineUsers.ContainsKey(e.User.OnlineUser.Id))
                 return;
 
-            OnlineUsers.Add(e.User.OnlineUser.Id, e.User);
+            OnlineUsers[e.User.OnlineUser.Id] = e.User;
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");

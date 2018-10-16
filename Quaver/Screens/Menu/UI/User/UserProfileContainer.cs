@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
-using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Graphics.Online;
+using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
+using Quaver.Online;
 using Quaver.Screens.Menu.UI.Navigation;
+using Quaver.Server.Client;
+using Wobble;
+using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
-using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
-using Wobble.Logging;
-using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Screens.Menu.UI.User
 {
@@ -29,12 +29,12 @@ namespace Quaver.Screens.Menu.UI.User
         /// <summary>
         ///     The original width of the profile container.
         /// </summary>
-        private const int OriginalWidth = 500;
+        private const int OriginalWidth = 450;
 
         /// <summary>
         ///     The original height of the profile container.
         /// </summary>
-        private const int OriginalHeight = 250;
+        private const int OriginalHeight = 135;
 
         /// <summary>
         ///     The container for the user profile.
@@ -53,6 +53,21 @@ namespace Quaver.Screens.Menu.UI.User
         /// </summary>
         private Sprite BottomLine { get; set; }
 
+        /// <summary>
+        ///     Displays the current connection status.
+        /// </summary>
+        private SpriteTextBitmap TextConnectionStatus { get; set; }
+
+        /// <summary>
+        ///     The button to log in and out of the server.
+        /// </summary>
+        private BorderedTextButton LoginButton { get; set; }
+
+        /// <summary>
+        ///     The button to view the user's profile.
+        /// </summary>
+        private BorderedTextButton ViewProfileButton { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,7 +78,7 @@ namespace Quaver.Screens.Menu.UI.User
             View = view;
 
             Tint = Color.Black;
-            Alpha = 0.85f;
+            Alpha = 0.95f;
             Scrollbar.Visible = false;
 
             NavbarButton = View.Navbar.RightAlignedItems.First() as NavbarItemUser;
@@ -72,6 +87,7 @@ namespace Quaver.Screens.Menu.UI.User
                 throw new InvalidOperationException("Tried to get NavbarItemUser, but it's null!");
 
             CreateContainer();
+            OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
         }
 
         /// <inheritdoc />
@@ -83,6 +99,17 @@ namespace Quaver.Screens.Menu.UI.User
             Container.IsClickable = NavbarButton.Selected;
             BottomLine.Visible = NavbarButton.Selected;
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -120,16 +147,159 @@ namespace Quaver.Screens.Menu.UI.User
                 PerformClickAnimation(false);
             };
 
-            BottomLine = new Sprite()
+            BottomLine = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(OriginalWidth, 3),
+                Size = new ScalableVector2(OriginalWidth, 2),
                 Tint = Color.White,
                 Visible = false
             };
 
+            TextConnectionStatus = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = 20,
+            };
+
+            UpdateConnectionStatus();
+
+            LoginButton = new BorderedTextButton(" ", Color.Crimson, OnLoginButtonClicked)
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
+                X = 100,
+            };
+
+            ViewProfileButton = new BorderedTextButton("View Profile", Colors.MainAccent, OnViewProfileButtonClicked)
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
+                X = -100,
+                SetChildrenVisibility = true
+            };
+
+            UpdateButtons();
+
             AddContainedDrawable(Container);
+            AddContainedDrawable(TextConnectionStatus);
+            AddContainedDrawable(LoginButton);
+            AddContainedDrawable(ViewProfileButton);
+        }
+
+        /// <summary>
+        ///     Updates the connection status text to the current status.
+        /// </summary>
+        private void UpdateConnectionStatus()
+        {
+            string status;
+
+            switch (OnlineManager.Status.Value)
+            {
+                case ConnectionStatus.Disconnected:
+                    status = "Disconnected";
+                    break;
+                case ConnectionStatus.Connecting:
+                    status = "Connecting to the server...";
+                    break;
+                case ConnectionStatus.Connected:
+                    status = $"Logged in as: {OnlineManager.Self.OnlineUser.Username}";
+                    break;
+                case ConnectionStatus.Reconnecting:
+                    status = $"Reconnecting. Please wait";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            TextConnectionStatus.Text = status;
+            TextConnectionStatus.Size = new ScalableVector2(TextConnectionStatus.Width * 0.60f, TextConnectionStatus.Height * 0.60f);
+        }
+
+        /// <summary>
+        ///     Called when the connection status has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+            UpdateConnectionStatus();
+            UpdateButtons();
+        }
+
+        /// <summary>
+        ///    Updates the login button text with the current online status
+        /// </summary>
+        private void UpdateButtons()
+        {
+            switch (OnlineManager.Status.Value)
+            {
+                case ConnectionStatus.Disconnected:
+                    LoginButton.OriginalColor = Color.LimeGreen;
+                    LoginButton.UpdateText("Log In", 0.55f);
+
+                    LoginButton.Transformations.Clear();
+                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 0, 450));
+
+                    ViewProfileButton.Visible = false;
+                    break;
+                case ConnectionStatus.Connecting:
+                    LoginButton.OriginalColor = Color.Lavender;
+                    LoginButton.UpdateText("Please Wait...", 0.55f);
+                    break;
+                case ConnectionStatus.Connected:
+                    LoginButton.OriginalColor = Color.Crimson;
+                    LoginButton.UpdateText("Log Out", 0.55f);
+
+                    LoginButton.Transformations.Clear();
+                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 100, 450));
+
+                    ViewProfileButton.Visible = true;
+                    break;
+                case ConnectionStatus.Reconnecting:
+                    LoginButton.OriginalColor = Color.Lavender;
+                    LoginButton.UpdateText("Please Wait...", 0.55f);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Called when the login button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnLoginButtonClicked(object sender, EventArgs e)
+        {
+            switch (OnlineManager.Status.Value)
+            {
+                case ConnectionStatus.Disconnected:
+                    OnlineManager.Login();
+                    break;
+                case ConnectionStatus.Connecting:
+                    break;
+                case ConnectionStatus.Connected:
+                    OnlineManager.Client?.Disconnect();
+                    break;
+                case ConnectionStatus.Reconnecting:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Called when the view profile button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnViewProfileButtonClicked(object sender, EventArgs e)
+        {
+            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back soon!");
         }
     }
 }

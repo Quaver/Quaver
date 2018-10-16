@@ -285,6 +285,7 @@ namespace Quaver.Screens.Connecting
         private void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             OnConnected();
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {e.Self.OnlineUser.Username}!");
 
             ExitToScreen(new MenuScreen());
         }
