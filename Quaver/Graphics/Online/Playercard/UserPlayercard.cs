@@ -6,7 +6,10 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
+using Quaver.Online;
+using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -220,6 +223,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private bool FullCard { get; }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Create a playercard from a user.
         /// </summary>
@@ -237,7 +241,7 @@ namespace Quaver.Graphics.Online.Playercard
 
             CreateTitle();
             CreateAvatar();
-            CreateUsername(user.OnlineUser.Username);
+            CreateUsername(User != null ? User.OnlineUser?.Username : ConfigManager.Username.Value);
             CreateCompetitiveRankBadge();
 
             SelectedTitle = Title.OfflinePlayer;
@@ -247,6 +251,8 @@ namespace Quaver.Graphics.Online.Playercard
                 CreateStats();
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
+            OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
+
             AddBorder(Color.White, 2);
         }
 
@@ -267,6 +273,10 @@ namespace Quaver.Graphics.Online.Playercard
         {
             // ReSharper disable once DelegateSubtraction
             ConfigManager.SelectedGameMode.ValueChanged -= OnSelectedGameModeChange;
+
+            // ReSharper disable once DelegateSubtraction
+            OnlineManager.Status.ValueChanged -= OnOnlineStatusChanged;
+
             base.Destroy();
         }
 
@@ -282,17 +292,6 @@ namespace Quaver.Graphics.Online.Playercard
             Tint = Color.White,
             UsePreviousSpriteBatchOptions = true
         };
-
-        /// <summary>
-        ///     Updates the title on the playercard with a new texture.
-        /// </summary>
-        /// <param name="title"></param>
-        public void UpdateTitle(Title title)
-        {
-            TitleSprite.Transformations.Clear();
-            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            TitleSprite.Image = TitleHelper.Get(title);
-        }
 
         /// <summary>
         ///     Creates the sprite for the user's avatar.
@@ -313,13 +312,14 @@ namespace Quaver.Graphics.Online.Playercard
         }
 
         /// <summary>
-        ///     Updates the avatar and performs an animation
+        ///     Updates the title on the playercard with a new texture.
         /// </summary>
-        public void UpdateAvatar(Texture2D tex)
+        /// <param name="title"></param>
+        public void UpdateTitle(Title title)
         {
-            Avatar.Transformations.Clear();
-            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            Avatar.Image = tex;
+            TitleSprite.Transformations.Clear();
+            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TitleSprite.Image = TitleHelper.Get(title);
         }
 
         /// <summary>
@@ -341,16 +341,6 @@ namespace Quaver.Graphics.Online.Playercard
         }
 
         /// <summary>
-        ///     Updates the username text.
-        /// </summary>
-        /// <param name="username"></param>
-        public void UpdateUsername(string username)
-        {
-            TextUsername.Text = username;
-            TextUsername.Size = new ScalableVector2(TextUsername.Width * 0.60f, TextUsername.Height * 0.60f);
-        }
-
-        /// <summary>
         ///     Creates the sprite to show the user's rank badge.
         /// </summary>
         private void CreateCompetitiveRankBadge() => CompetitiveRankBadge = new Sprite()
@@ -362,17 +352,7 @@ namespace Quaver.Graphics.Online.Playercard
             Size = new ScalableVector2(70, 70),
         };
 
-        /// <summary>
-        ///     Updates the competitive badge for the user.
-        /// </summary>
-        private void UpdateCompetitiveBadge(CompetitveBadge badge)
-        {
-            CompetitiveRankBadge.Transformations.Clear();
-            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
-        }
-
-        /// <summary>
+         /// <summary>
         ///     Creates the user stats w/ icons.
         /// </summary>
         private void CreateStats()
@@ -430,15 +410,37 @@ namespace Quaver.Graphics.Online.Playercard
             };
 
             TextCompetitiveMatchesWon.Icon.Tint = Color.Gold;
+            SetStats();
+        }
 
-            // Initially set to 0.
-            OverallRating = 0;
-            OverallAccuracy = 0;
-            CountryRank = 0;
-            GlobalRank = 0;
-            PlayCount = 0;
-            CompetitiveMatchesWon = 0;
-            GameMode = ConfigManager.SelectedGameMode.Value;
+        /// <summary>
+        ///     Updates the avatar and performs an animation
+        /// </summary>
+        public void UpdateAvatar(Texture2D tex)
+        {
+            Avatar.Transformations.Clear();
+            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            Avatar.Image = tex;
+        }
+
+        /// <summary>
+        ///     Updates the username text.
+        /// </summary>
+        /// <param name="username"></param>
+        public void UpdateUsername(string username)
+        {
+            TextUsername.Text = username;
+            TextUsername.Size = new ScalableVector2(TextUsername.Width * 0.60f, TextUsername.Height * 0.60f);
+        }
+
+        /// <summary>
+        ///     Updates the competitive badge for the user.
+        /// </summary>
+        private void UpdateCompetitiveBadge(CompetitveBadge badge)
+        {
+            CompetitiveRankBadge.Transformations.Clear();
+            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
         }
 
         /// <summary>
@@ -473,7 +475,31 @@ namespace Quaver.Graphics.Online.Playercard
             if (TextUsername.Text != ConfigManager.Username.Value || !FullCard)
                 return;
 
-            GameMode = e.Value;
+            SetStats();
+        }
+
+        /// <summary>
+        ///     Sets the users stats on the playercard.
+        /// </summary>
+        private void SetStats()
+        {
+            GameMode = ConfigManager.SelectedGameMode.Value;
+            OverallRating = (float) User.Stats[GameMode].OverallPerformanceRating;
+            OverallAccuracy = (float) User.Stats[GameMode].OverallAccuracy;
+            CountryRank = User.Stats[GameMode].CountryRank;
+            GlobalRank = User.Stats[GameMode].Rank;
+            PlayCount = User.Stats[GameMode].PlayCount;
+            CompetitiveMatchesWon = 0;
+        }
+
+        /// <summary>
+        ///     Called when the user's online status has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOnlineStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+
         }
     }
 }
