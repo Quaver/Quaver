@@ -75,13 +75,16 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// </summary>
         public void InitializeChannel(ChatChannel channel, bool autoSelectChannel = true)
         {
+            if (Overlay.ChannelMessageContainers.ContainsKey(channel))
+                return;
+
             var button = new ChatChannelListButton(this, channel);
 
             // Calculate the y position of the channel
             button.Y = (ChatManager.JoinedChatChannels.Count - 1) * button.Height;
 
-            // Automatically select the first channel that comes in.
-            Overlay.ChannelMessageContainers.Add(channel, new ChatMessageContainer(Overlay, channel));
+             // Automatically select the first channel that comes in.
+             Overlay.ChannelMessageContainers.Add(channel, new ChatMessageContainer(Overlay, channel));
 
             if (autoSelectChannel)
                 button.SelectChatChannel();
