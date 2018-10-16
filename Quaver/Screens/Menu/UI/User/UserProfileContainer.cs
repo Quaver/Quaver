@@ -242,7 +242,7 @@ namespace Quaver.Screens.Menu.UI.User
                     LoginButton.UpdateText("Log In", 0.55f);
 
                     LoginButton.Transformations.Clear();
-                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 0, 450));
+                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 0, 225));
 
                     ViewProfileButton.Visible = false;
                     break;
@@ -255,7 +255,7 @@ namespace Quaver.Screens.Menu.UI.User
                     LoginButton.UpdateText("Log Out", 0.55f);
 
                     LoginButton.Transformations.Clear();
-                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 100, 450));
+                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 100, 225));
 
                     ViewProfileButton.Visible = true;
                     break;
