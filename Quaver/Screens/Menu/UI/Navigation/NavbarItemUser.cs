@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -10,6 +11,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Logging;
 
 namespace Quaver.Screens.Menu.UI.Navigation
 {
@@ -148,6 +150,19 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             UsernameText.Text = e.Value;
             UpdateUsernameSize();
+
+            var parent = Parent;
+
+            while (parent != null && parent.GetType() != typeof(Navbar))
+            {
+                parent = parent.Parent;
+
+                if (parent.GetType() != typeof(Navbar))
+                    continue;
+
+                var navbar = parent as Navbar;
+                navbar?.AlignRightItems();
+            }
         }
 
         /// <summary>

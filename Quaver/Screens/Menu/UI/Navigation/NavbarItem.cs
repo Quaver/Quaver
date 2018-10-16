@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Server.Client;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
@@ -90,6 +92,21 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 Size = new ScalableVector2(Selected ? Width : 0, 3),
                 Y = 3,
             };
+        }
+
+        /// <summary>
+        ///     Called whenever the connection status is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+            if (e.Value != ConnectionStatus.Connected)
+                return;
+
+            // Realign the objects because the username may be different in size.
+            var parent = Parent as Navbar;
+            parent?.AlignRightItems();
         }
     }
 }

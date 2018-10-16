@@ -102,7 +102,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     Aligns the items from the right
         /// </summary>
-        private void AlignRightItems()
+        public void AlignRightItems()
         {
             var startingX = Width - Line.X * 2;
 
@@ -111,7 +111,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 var item = RightAlignedItems[i];
 
                 item.Parent = Line;
-                item.Y -= item.Height;
+                item.Y = -item.Height;
                 item.X = startingX - item.Width * (i + 1);
             }
         }
