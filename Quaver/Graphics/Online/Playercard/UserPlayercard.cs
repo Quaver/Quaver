@@ -254,8 +254,18 @@ namespace Quaver.Graphics.Online.Playercard
             SelectedTitle = Title.OfflinePlayer;
             SelectedCompetitveBadge = CompetitveBadge.Unranked;
 
-            if (FullCard)
-                CreateStats();
+            switch (Type)
+            {
+                case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Connected:
+                    CreateStats(true);
+                    break;
+                case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Disconnected:
+                    CreateStats(false);
+                    break;
+                default:
+                    CreateStats(true);
+                    break;
+            }
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
             OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
@@ -362,14 +372,15 @@ namespace Quaver.Graphics.Online.Playercard
          /// <summary>
         ///     Creates the user stats w/ icons.
         /// </summary>
-        private void CreateStats()
+        private void CreateStats(bool isVisible)
         {
             TextOverallRating = new IconedText(FontAwesome.BarGraph, "00.00")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X,
-                Y = Avatar.Y + Avatar.Height + 10
+                Y = Avatar.Y + Avatar.Height + 10,
+                Visible = isVisible
             };
 
             TextCountryRank = new IconedText(Flags.Get(User.CountryName), "#9,999,999")
@@ -379,6 +390,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Alignment = Alignment.TopCenter,
                 X = -10,
                 Y = TextOverallRating.Y,
+                Visible = isVisible
             };
 
             TextGlobalRank = new IconedText(FontAwesome.Desktop, "#9,999,999")
@@ -387,7 +399,8 @@ namespace Quaver.Graphics.Online.Playercard
                 Alignment = Alignment.TopRight,
                 UsePreviousSpriteBatchOptions = true,
                 X = -Avatar.X,
-                Y = TextOverallRating.Y
+                Y = TextOverallRating.Y,
+                Visible = isVisible
             };
 
             TextOverallAccuracy = new IconedText(FontAwesome.Clock, "100.00%")
@@ -395,7 +408,8 @@ namespace Quaver.Graphics.Online.Playercard
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X,
-                Y = TextOverallRating.Y + TextOverallRating.Height + 10
+                Y = TextOverallRating.Y + TextOverallRating.Height + 10,
+                Visible = isVisible
             };
 
             TextPlayCount = new IconedText(FontAwesome.GamePad, "1,000,000")
@@ -404,7 +418,8 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.TopCenter,
                 X = -10,
-                Y = TextOverallAccuracy.Y
+                Y = TextOverallAccuracy.Y,
+                Visible = isVisible
             };
 
             TextCompetitiveMatchesWon = new IconedText(FontAwesome.Trophy, "1,000,000")
@@ -413,7 +428,8 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.TopRight,
                 X = -Avatar.X,
-                Y = TextOverallAccuracy.Y
+                Y = TextOverallAccuracy.Y,
+                Visible = isVisible
             };
 
             TextCompetitiveMatchesWon.Icon.Tint = Color.Gold;
@@ -517,7 +533,7 @@ namespace Quaver.Graphics.Online.Playercard
                     FullCard = true;
 
                     if (TextOverallRating == null)
-                        CreateStats();
+                        CreateStats(false);
 
                     SetStats();
                     ShowStats();
