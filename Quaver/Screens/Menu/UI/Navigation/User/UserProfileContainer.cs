@@ -5,6 +5,7 @@ using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
+using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -281,7 +282,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 case ConnectionStatus.Connecting:
                     break;
                 case ConnectionStatus.Connected:
-                    OnlineManager.Client?.Disconnect();
+                    Scheduler.RunThread(() => OnlineManager.Client?.Disconnect());
                     break;
                 case ConnectionStatus.Reconnecting:
                     break;

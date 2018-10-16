@@ -27,9 +27,14 @@ namespace Quaver.Graphics.Online.Playercard
     public class UserPlayercard : Button
     {
         /// <summary>
+        ///     The type of playercard this is.
+        /// </summary>
+        public PlayercardType Type { get; }
+
+        /// <summary>
         ///     The user this playercard is for.
         /// </summary>
-        public User User { get; }
+        public User User { get; set; }
 
         /// <summary>
         ///     The user's selected title.
@@ -221,16 +226,18 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     Dictates if this playercard is the full thing.
         /// </summary>
-        private bool FullCard { get; }
+        private bool FullCard { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         ///     Create a playercard from a user.
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="user"></param>
         /// <param name="fullCard"></param>
-        public UserPlayercard(User user, bool fullCard)
+        public UserPlayercard(PlayercardType type, User user, bool fullCard)
         {
+            Type = type;
             User = user;
 
             FullCard = fullCard;
@@ -499,7 +506,69 @@ namespace Quaver.Graphics.Online.Playercard
         /// <param name="e"></param>
         private void OnOnlineStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
         {
+            if (Type != PlayercardType.Self)
+                return;
 
+            switch (e.Value)
+            {
+                case ConnectionStatus.Connected:
+                    User = OnlineManager.Self;
+
+                    FullCard = true;
+
+                    if (TextOverallRating == null)
+                        CreateStats();
+
+                    SetStats();
+                    ShowStats();
+
+                    Transformations.Clear();
+                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 154, 150));
+                    break;
+                case ConnectionStatus.Disconnected:
+                    FullCard = false;
+
+                    if (TextOverallRating == null)
+                        return;
+
+                    HideStats();
+
+                    Transformations.Clear();
+                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 96, 150));
+                    break;
+            }
         }
+
+        /// <summary>
+        ///     Hides the stats portion of the playercard.
+        /// </summary>
+        private void HideStats()
+        {
+            TextOverallRating.Visible = false;
+            TextOverallAccuracy.Visible = false;
+            TextCountryRank.Visible = false;
+            TextGlobalRank.Visible = false;
+            TextPlayCount.Visible = false;
+            TextCompetitiveMatchesWon.Visible = false;
+        }
+
+        /// <summary>
+        ///     Shows the stats portion of the playercard.
+        /// </summary>
+        private void ShowStats()
+        {
+            TextOverallRating.Visible = true;
+            TextOverallAccuracy.Visible = true;
+            TextCountryRank.Visible = true;
+            TextGlobalRank.Visible = true;
+            TextPlayCount.Visible = true;
+            TextCompetitiveMatchesWon.Visible = true;
+        }
+    }
+
+    public enum PlayercardType
+    {
+        Self,
+        Other
     }
 }
