@@ -193,9 +193,12 @@ namespace Quaver.Online.Chat
                 return;
             }
 
-            JoinedChatChannels.Add(channel);
-            Dialog.ChatChannelList.InitializeChannel(channel);
-            Logger.Important($"Joined chat channel: {e.Channel}", LogType.Network);
+            if (JoinedChatChannels.All(x => x.Name != channel.Name))
+            {
+                JoinedChatChannels.Add(channel);
+                Dialog.ChatChannelList.InitializeChannel(channel);
+                Logger.Important($"Joined chat channel: {e.Channel}", LogType.Network);
+            }
         }
 
         /// <summary>
