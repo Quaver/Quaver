@@ -83,30 +83,12 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     Creates the bottom line for the item.
         /// </summary>
-        protected void CreateBottomLine()
+        protected void CreateBottomLine() => BottomLine = new Sprite()
         {
-            BottomLine = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.BotCenter,
-                Size = new ScalableVector2(Selected ? Width : 0, 3),
-                Y = 3,
-            };
-        }
-
-        /// <summary>
-        ///     Called whenever the connection status is changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
-        {
-            if (e.Value != ConnectionStatus.Connected)
-                return;
-
-            // Realign the objects because the username may be different in size.
-            var parent = Parent as Navbar;
-            parent?.AlignRightItems();
-        }
+            Parent = this,
+            Alignment = Alignment.BotCenter,
+            Size = new ScalableVector2(Selected ? Width : 0, 3),
+            Y = 3,
+        };
     }
 }
