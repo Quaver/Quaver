@@ -47,7 +47,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 X = 10
             };
 
-            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, GetUserGroupName(UserGroups), 24,
+            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 24,
                 Color.White, Alignment.TopLeft, (int) WindowManager.Width)
             {
                 Parent = this,
@@ -62,7 +62,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             TextUserGroup.X = Icon.X + Icon.Width + 5;
 
-            Size = new ScalableVector2(Icon.X + Icon.Width + TextUserGroup.Width + 10 + 5, TextUserGroup.Height + 1);
+            Size = new ScalableVector2(Icon.X + Icon.Width + TextUserGroup.Width + 10 + 5, TextUserGroup.Height + 4);
+            AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 2);
+            Border.Alpha = 0.85f;
         }
 
         /// <summary>
