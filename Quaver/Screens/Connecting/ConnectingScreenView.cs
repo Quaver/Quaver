@@ -136,8 +136,6 @@ namespace Quaver.Screens.Connecting
             {
                 OnlineManager.Client.OnLoginSuccess -= OnLoginSuccess;
                 OnlineManager.Client.OnLoginFailed -= OnLoginFailed;
-                OnlineManager.Client.OnChooseUsername -= OnChooseUsername;
-                OnlineManager.Client.OnChooseUsernameResponse -= OnChooseUsernameResponse;
                 OnlineManager.Client.OnDisconnection -= OnDisconnection;
             }
         }
@@ -243,8 +241,6 @@ namespace Quaver.Screens.Connecting
         {
             OnlineManager.Client.OnLoginSuccess += OnLoginSuccess;
             OnlineManager.Client.OnLoginFailed += OnLoginFailed;
-            OnlineManager.Client.OnChooseUsername += OnChooseUsername;
-            OnlineManager.Client.OnChooseUsernameResponse += OnChooseUsernameResponse;
             OnlineManager.Client.OnDisconnection += OnDisconnection;
         }
 
@@ -296,27 +292,6 @@ namespace Quaver.Screens.Connecting
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnLoginFailed(object sender, FailureToLoginEventArgs e) => OnFailure();
-
-        /// <summary>
-        ///     When receiving that we have to choose a username again.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnChooseUsername(object sender, ChooseAUsernameEventArgs e) => DialogManager.Show(new UsernameSelectionDialog(this, 0.75f));
-
-        /// <summary>
-        ///     Called when receiving a response from the server about the client's username choice.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnChooseUsernameResponse(object sender, ChooseAUsernameResponseEventArgs e)
-        {
-            if (e.Status == 200)
-                return;
-
-            // If it wasn't successful, have them pick another username.
-            DialogManager.Show(new UsernameSelectionDialog(this, 0.75f));
-        }
 
         /// <summary>
         ///     Called when disconnected from the server/failed to connect to the server.

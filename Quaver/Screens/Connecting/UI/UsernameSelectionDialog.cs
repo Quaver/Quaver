@@ -47,7 +47,7 @@ namespace Quaver.Screens.Connecting.UI
         public UsernameSelectionDialog(ConnectingScreenView view, float backgroundAlpha) : base(backgroundAlpha)
         {
             View = view;
-            CreateContent();;
+            CreateContent();
         }
 
         /// <inheritdoc />

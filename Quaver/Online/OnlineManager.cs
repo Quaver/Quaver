@@ -10,6 +10,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
+using Quaver.Screens.Connecting.UI;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -24,6 +25,7 @@ using Steamworks;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Discord;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 
 namespace Quaver.Online
@@ -118,6 +120,7 @@ namespace Quaver.Online
 
             Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
             Client.OnLoginFailed += OnLoginFailed;
+            Client.OnChooseUsername += OnChooseUsername;
             Client.OnChooseUsernameResponse += OnChooseAUsernameResponse;
             Client.OnDisconnection += OnDisconnection;
             Client.OnLoginSuccess += OnLoginSuccess;
@@ -165,6 +168,17 @@ namespace Quaver.Online
         }
 
         /// <summary>
+        ///     Called when the user needs to choose a username.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnChooseUsername(object sender, ChooseAUsernameEventArgs e)
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            DialogManager.Show(new UsernameSelectionDialog(null, 0.75f));
+        }
+
+        /// <summary>
         ///     Called when the client receives a response after selecting a username.
         /// </summary>
         /// <param name="sender"></param>
@@ -173,11 +187,16 @@ namespace Quaver.Online
         {
             Logger.Important(e.Message, LogType.Network);
 
+            if (e.Status != 200)
+            {
+                // If it wasn't successful, have them pick another username.
+                DialogManager.Show(new UsernameSelectionDialog(null, 0.75f));
+            }
+
             switch (e.Status)
             {
                 // Success
                 case 200:
-                    NotificationManager.Show(NotificationLevel.Success, "Account has successfully been created!");
                     break;
                 // Unauthorized
                 case 401:
