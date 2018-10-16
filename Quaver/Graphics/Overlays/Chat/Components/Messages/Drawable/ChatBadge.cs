@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Server.Common.Enums;
@@ -62,7 +63,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             TextUserGroup.X = Icon.X + Icon.Width + 5;
 
-            Size = new ScalableVector2(Icon.X + Icon.Width + TextUserGroup.Width + 10 + 5, TextUserGroup.Height + 4);
+            var width = Icon.X + Icon.Width + TextUserGroup.Width + 10 + 4;
+
+            if ((int) width % 2 != 0)
+                width += 1;
+
+            Size = new ScalableVector2(width, TextUserGroup.Height + 4);
             AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 2);
             Border.Alpha = 0.85f;
         }
