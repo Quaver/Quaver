@@ -72,6 +72,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <returns></returns>
         public static Texture2D GetIcon(UserGroups groups)
         {
+            if (groups.HasFlag(UserGroups.Developer))
+                return FontAwesome.Code;
+
             // Bot
             if (groups.HasFlag(UserGroups.Bot))
                 return FontAwesome.Wrench;
@@ -90,6 +93,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <returns></returns>
         public static string GetUserGroupName(UserGroups groups)
         {
+            if (groups.HasFlag(UserGroups.Developer))
+                return "Developer";
+
             // Bot
             if (groups.HasFlag(UserGroups.Bot))
                 return "Bot";

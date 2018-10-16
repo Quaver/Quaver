@@ -63,6 +63,8 @@ namespace Quaver.Graphics
         /// <returns></returns>
         public static Color GetUserChatColor(UserGroups userGroups)
         {
+            if (userGroups.HasFlag(UserGroups.Developer))
+                return Swan;
             if (userGroups.HasFlag(UserGroups.Bot))
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
