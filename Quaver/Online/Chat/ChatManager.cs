@@ -76,7 +76,9 @@ namespace Quaver.Online.Chat
         /// </summary>
         public static void ToggleChatOverlay(bool forceOpen = false)
         {
-            if (OnlineManager.Connected && (KeyboardManager.IsUniqueKeyPress(Keys.F8) || forceOpen) && TimeSinceLastActivated >= 450)
+            if (OnlineManager.Connected && (KeyboardManager.IsUniqueKeyPress(Keys.F8) || forceOpen ||
+                                            KeyboardManager.IsUniqueKeyPress(Keys.Escape) && IsActive) || (!OnlineManager.Connected && IsActive)
+                && TimeSinceLastActivated >= 450)
             {
                 TimeSinceLastActivated = 0;
                 IsActive = !IsActive;
