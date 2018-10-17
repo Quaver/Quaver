@@ -61,6 +61,31 @@ namespace Quaver.Screens.Menu.UI.Navigation
             CreateBottomLine();
         }
 
+        /// <summary>
+        ///     Only icon
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <param name="selected"></param>
+        /// <param name="clickAction"></param>
+        public NavbarItem(Texture2D icon, bool selected = false, EventHandler clickAction = null) : base(clickAction)
+        {
+            Selected = selected;
+            UsePreviousSpriteBatchOptions = true;
+            Tint = Color.Black;
+            Alpha = Selected ? 0.25f: 0;
+            Size = new ScalableVector2(45, 45);
+
+            var centerIcon = new Sprite()
+            {
+                Parent = this,
+                Image = icon,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width * 0.65f, Height * 0.65f),
+            };
+
+            CreateBottomLine();
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

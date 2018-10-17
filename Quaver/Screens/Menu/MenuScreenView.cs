@@ -11,6 +11,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Helpers;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Jukebox;
@@ -160,8 +161,7 @@ namespace Quaver.Screens.Menu
         {
             new NavbarItem("Home", true),
             new NavbarItem("Download Maps"),
-            new NavbarItem("Leaderboard"),
-            new NavbarItem("Challenges"),
+            new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
