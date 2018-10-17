@@ -114,6 +114,9 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// </summary>
         private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
         {
+            if (e.SteamId != SteamUser.GetSteamID().m_SteamID)
+                return;
+            
             Avatar.Transformations.Clear();
             Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
             Avatar.Image = e.Texture;
