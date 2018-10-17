@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
+using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -26,7 +28,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     The button used to alternatively send the message.
         /// </summary>
-        public ImageButton SendButton { get; private set; }
+        public BorderedTextButton SendButton { get; private set; }
 
         /// <summary>
         ///     Determines if the mute has been initated in the textbox.
@@ -101,13 +103,16 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 10,
-                Image = UserInterface.UsernameSelectionTextbox,
+                Image = UserInterface.BlankBox,
+                Tint = Color.Black,
+                Alpha = 0.35f,
                 AlwaysFocused = true,
                 MaxCharacters = 2000
             };
 
             Textbox.InputText.Y = 8;
             Textbox.Cursor.Y += Textbox.InputText.Y;
+            Textbox.AddBorder(Color.White, 2);
         }
 
         /// <summary>
@@ -128,10 +133,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         }
 
         /// <summary>
-        ///     Creates the button to send messages.
+        ///     Creates the button to send chage messages.
         /// </summary>
-        private void CreateSendButton() => SendButton = new ImageButton(UserInterface.SendMessageButton,
-            (o, e) =>
+        private void CreateSendButton()
+        {
+            SendButton = new BorderedTextButton("Send Message", Colors.MainAccent, (sender, args) =>
             {
                 if (string.IsNullOrEmpty(Textbox.RawText))
                     return;
@@ -140,11 +146,20 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Textbox.RawText = string.Empty;
                 Textbox.ReadjustTextbox();
             })
-        {
-            Parent = this,
-            Alignment = Alignment.MidLeft,
-            Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
-            X = Textbox.Width + 20,
-        };
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
+                X = Textbox.Width + 20,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+                Text =
+                {
+                    UsePreviousSpriteBatchOptions = true
+                }
+            };
+        }
     }
 }
