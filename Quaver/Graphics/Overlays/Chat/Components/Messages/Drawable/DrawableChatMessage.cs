@@ -137,13 +137,18 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Regular, Message.Message, 14,
-            Color.White, Alignment.MidLeft, (int)(Container.Width - Avatar.Width - Avatar.X - 5))
+        private void CreateMessageContentText()
         {
-            Parent = this,
-            X = TextUsername.X,
-            Y = TextUsername.Y + TextUsername.Height - 1,
-        };
+            TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 48,
+                Color.White, Alignment.MidLeft, (int)((Container.Width - Avatar.Width - Avatar.X - 5) / 0.3f))
+            {
+                Parent = this,
+                X = TextUsername.X,
+                Y = TextUsername.Y + TextUsername.Height - 1,
+            };
+
+            TextMessageContent.Size = new ScalableVector2(TextMessageContent.Width * 0.3f, TextMessageContent.Height * 0.3f);
+        }
 
         /// <summary>
         ///     Create the chat badge for the user if they are eligible to have one.
@@ -157,7 +162,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             {
                 Parent = this,
                 X = TextUsername.X + TextUsername.Width + 5,
-                Y = TextUsername.Y
+                Y = TextUsername.Y - 2
             };
         }
 
