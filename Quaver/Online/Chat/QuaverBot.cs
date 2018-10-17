@@ -140,7 +140,6 @@ namespace Quaver.Online.Chat
                 return;
             }
 
-            NotificationManager.Show(NotificationLevel.Info, $"Joining: {channel}...");
             OnlineManager.Client.JoinChatChannel(channel);
         }
 

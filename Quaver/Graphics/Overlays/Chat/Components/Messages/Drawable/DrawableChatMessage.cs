@@ -139,15 +139,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// </summary>
         private void CreateMessageContentText()
         {
-            TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 48,
-                Color.White, Alignment.MidLeft, (int)((Container.Width - Avatar.Width - Avatar.X - 5) / 0.3f))
+            const float scale = 0.4375f;
+
+            TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 32,
+                Color.White, Alignment.MidLeft, (int)((Container.Width - Avatar.Width - Avatar.X - 5) / scale))
             {
                 Parent = this,
                 X = TextUsername.X,
                 Y = TextUsername.Y + TextUsername.Height - 1,
             };
 
-            TextMessageContent.Size = new ScalableVector2(TextMessageContent.Width * 0.3f, TextMessageContent.Height * 0.3f);
+            TextMessageContent.Size = new ScalableVector2(TextMessageContent.Width * scale, TextMessageContent.Height * scale);
         }
 
         /// <summary>
