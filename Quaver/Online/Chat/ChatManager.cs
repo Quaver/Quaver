@@ -74,7 +74,7 @@ namespace Quaver.Online.Chat
         /// <summary>
         ///     Toggles the chat overlay on/off.
         /// </summary>
-        private static void ToggleChatOverlay(bool forceOpen = false)
+        public static void ToggleChatOverlay(bool forceOpen = false)
         {
             if (OnlineManager.Connected && (KeyboardManager.IsUniqueKeyPress(Keys.F8) || forceOpen) && TimeSinceLastActivated >= 450)
             {

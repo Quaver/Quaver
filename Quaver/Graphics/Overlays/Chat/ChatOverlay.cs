@@ -198,7 +198,7 @@ namespace Quaver.Graphics.Overlays.Chat
             {
                 Parent = DialogContainer,
                 Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height - CurrentTopicContainer.Height),
-                Tint = Colors.DarkGray,
+                Tint = Color.Black,
                 X = ChannelContainer.Width,
                 Alpha = 0.85f,
                 Y = CurrentTopicContainer.Height,

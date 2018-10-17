@@ -46,7 +46,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             Parent = Overlay.ChannelContainer;
             Y = Overlay.ChannelHeaderContainner.Height;
 
-            Tint = Colors.DarkGray;
+            Tint = Color.Black;
             Alpha = 0.85f;
 
             // Scrolling Options.

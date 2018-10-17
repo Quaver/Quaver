@@ -43,7 +43,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             Parent = Overlay.TextboxContainer;
             Size = Overlay.TextboxContainer.Size;
-            Tint = Colors.DarkGray;
+            Tint = Color.Black;
             Alpha = 0.85f;
 
             CreateTextbox();

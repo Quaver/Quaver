@@ -152,7 +152,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             {
                 Parent = this,
                 X = TextUsername.X + TextUsername.Width + 5,
-                Y = TextUsername.Y + 3
+                Y = TextUsername.Y
             };
         }
 

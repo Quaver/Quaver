@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
+using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -46,7 +48,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             Parent = overlay.CurrentTopicContainer;
             Size = overlay.CurrentTopicContainer.Size;
 
-            Tint = Colors.DarkGray;
+            Tint = Color.Black;
             Alpha = 0.85f;
 
             ChannelName = new SpriteText(Fonts.Exo2BoldItalic24, "", 0.60f)
@@ -63,13 +65,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
                 Y = 10
             };
 
-            CloseChannelButton = new ImageButton(UserInterface.CloseChannelButton, (sender, args) => CloseActiveChatChannel())
+            CloseChannelButton = new BorderedTextButton("Close Channel", Color.Crimson, (sender, args) => CloseActiveChatChannel())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(150, 40),
                 X = -15,
-                Alpha = 0.75f
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+                Text = { UsePreviousSpriteBatchOptions = true}
             };
         }
 
