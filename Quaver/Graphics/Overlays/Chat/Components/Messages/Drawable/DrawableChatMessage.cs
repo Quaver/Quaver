@@ -91,6 +91,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 SteamManager.SendAvatarRetrievalRequest((ulong) message.Sender.OnlineUser.SteamId);
             }
 
+            var userColor = Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups);
+
+            Avatar.AddBorder(new Color(userColor.R  / 2, userColor.G / 2, userColor.B / 2), 2);
+            Avatar.Border.Alpha = 0.95f;
+
             X = -Container.Width;
             Width = Container.Width - 5;
             Alpha = 0;
