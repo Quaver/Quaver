@@ -5,6 +5,7 @@ using Quaver.Graphics.Overlays.Chat.Components;
 using Quaver.Graphics.Overlays.Chat.Components.Channels;
 using Quaver.Graphics.Overlays.Chat.Components.Messages;
 using Quaver.Graphics.Overlays.Chat.Components.Topic;
+using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -103,6 +104,36 @@ namespace Quaver.Graphics.Overlays.Chat
         /// </summary>
         private Sprite LeftDividerLine { get; set; }
 
+        /// <summary>
+        ///     The right side divider line for the dialog.
+        /// </summary>
+        private Sprite RightDividerLine { get; set; }
+
+        /// <summary>
+        ///     The container for the online users header.
+        /// </summary>
+        public Sprite OnlineUsersHeaderContainer { get; private set; }
+
+        /// <summary>
+        ///     The container that holds the online users.
+        /// </summary>
+        public Sprite OnlineUsersContainer { get; private set; }
+
+        /// <summary>
+        ///     The actual header for the online users.
+        /// </summary>
+        public OnlineUsersHeader OnlineUsersHeader { get; private set; }
+
+        /// <summary>
+        ///     The interface for filtering the online users.
+        /// </summary>
+        public OnlineUserFilters OnlineUserFilters { get; private set; }
+
+        /// <summary>
+        ///     The list of online users.
+        /// </summary>
+        public OnlineUserList OnlineUserList { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -124,11 +155,16 @@ namespace Quaver.Graphics.Overlays.Chat
             CreateChannelHeaderContainer();
             CreateCurrentTopicContainer();
             CreateNoChannelMessageContainer();
+            CreateOnlineUsersHeaderContainer();
+            CreateOnlineUsersContainer();
 
             ChannelHeader = new ChannelHeader(this);
             ChatTextbox = new ChatTextbox(this);
             ChatChannelList = new ChatChannelList(this);
             CurrentTopic = new CurrentTopic(this);
+            OnlineUsersHeader = new OnlineUsersHeader(this);
+            OnlineUserFilters = new OnlineUserFilters(this);
+            OnlineUserList = new OnlineUserList(this);
 
             CreateDividerLines();
 
@@ -171,7 +207,7 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateChannelContainer() => ChannelContainer = new Sprite()
         {
             Parent = DialogContainer,
-            Size = new ScalableVector2(230, DialogContainer.Height - 60),
+            Size = new ScalableVector2(250, DialogContainer.Height - 60),
             Tint = Color.Red,
             Alpha = 0
         };
@@ -182,10 +218,10 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateMessageContainer() => MessageContainer = new Sprite()
         {
             Parent = DialogContainer,
-            Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height),
-            Tint = Colors.DarkGray,
+            Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - ChannelContainer.Width, ChannelContainer.Height),
+            Tint = Color.Red,
             X = ChannelContainer.Width,
-            Alpha = 0f,
+            Alpha = 0,
             Visible = true
         };
 
@@ -251,6 +287,31 @@ namespace Quaver.Graphics.Overlays.Chat
         };
 
         /// <summary>
+        ///     Creates the container for where the online users (header) will be.
+        /// </summary>
+        private void CreateOnlineUsersHeaderContainer() => OnlineUsersHeaderContainer = new Sprite()
+        {
+            Parent = DialogContainer,
+            Size = new ScalableVector2(ChannelHeaderContainner.Width, ChannelHeaderContainner.Height),
+            X = MessageContainer.X + MessageContainer.Width,
+            Alpha = 0f,
+        };
+
+        /// <summary>
+        ///     Creates the container that holds the actual online users.
+        /// </summary>
+        private void CreateOnlineUsersContainer()
+        {
+            OnlineUsersContainer = new Sprite()
+            {
+                Parent = DialogContainer,
+                Size = new ScalableVector2(ChannelContainer.Width, ChannelContainer.Height),
+                Alpha = 0f,
+                X = OnlineUsersHeaderContainer.X
+            };
+        }
+
+        /// <summary>
         ///     Creates all of the divider lines for the interface.
         /// </summary>
         private void CreateDividerLines()
@@ -259,7 +320,7 @@ namespace Quaver.Graphics.Overlays.Chat
             {
                 Parent = ChannelHeader,
                 Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(ChannelHeader.Width - 2, 2),
+                Size = new ScalableVector2(DialogContainer.Width, 2),
                 Alpha = 0.35f
             };
 
@@ -278,6 +339,14 @@ namespace Quaver.Graphics.Overlays.Chat
                 Size = new ScalableVector2(2, ChatChannelList.Height + ChannelHeader.Height),
                 Alpha = 0.35f
             };
+
+            RightDividerLine = new Sprite()
+            {
+                Parent = MessageContainer,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(2, ChatChannelList.Height + ChannelHeader.Height),
+                Alpha = 0.35f,
+            };
         }
 
         /// <summary>
@@ -287,6 +356,7 @@ namespace Quaver.Graphics.Overlays.Chat
         {
             ChannelHeader.Parent = ChannelContainer;
             CurrentTopic.Parent = CurrentTopicContainer;
+            OnlineUsersHeader.Parent = OnlineUsersHeaderContainer;
         }
     }
 }

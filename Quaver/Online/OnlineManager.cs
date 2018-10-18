@@ -135,6 +135,10 @@ namespace Quaver.Online
             Client.OnNotificationReceived += OnNotificationReceived;
             Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
             Client.OnScoreSubmitted += OnScoreSubmitted;
+            Client.OnUserConnected += ChatManager.Dialog.OnlineUsersHeader.OnUserConnected;
+            Client.OnUserDisconnected += ChatManager.Dialog.OnlineUsersHeader.OnUserDisconnected;
+            Client.OnUserConnected += ChatManager.Dialog.OnlineUserList.OnUserConnected;
+            Client.OnUserDisconnected += ChatManager.Dialog.OnlineUserList.OnUserDisconnected;
         }
 
         /// <summary>

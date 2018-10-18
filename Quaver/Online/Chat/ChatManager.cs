@@ -54,12 +54,18 @@ namespace Quaver.Online.Chat
         public static long MuteTimeLeft { get; set; }
 
         /// <summary>
+        ///     The amount of time that has passed since the last sort of the online user list.
+        /// </summary>
+        public static double TimeSinceLastSort { get; private set; }
+
+        /// <summary>
         ///     Handles global input for the chat overlay
         /// </summary>
         /// <param name="gameTime"></param>
         public static void Update(GameTime gameTime)
         {
             TimeSinceLastActivated += gameTime.ElapsedGameTime.TotalMilliseconds;
+            TimeSinceLastSort += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (MuteTimeLeft > 0)
                 MuteTimeLeft -= (long) gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -69,6 +75,13 @@ namespace Quaver.Online.Chat
             Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive && MuteTimeLeft <= 0;
 
             ToggleChatOverlay();
+
+            if ((TimeSinceLastSort > 5000 && IsActive) || (TimeSinceLastSort > 10000 && IsActive))
+            {
+
+                Dialog.OnlineUserList.ReorganizeList();
+                TimeSinceLastSort = 0;
+            }
         }
 
         /// <summary>
