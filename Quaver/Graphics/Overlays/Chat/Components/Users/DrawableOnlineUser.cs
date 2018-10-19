@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Online;
+using Quaver.Online.Chat;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -68,6 +72,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             CreateAvatar();
             CreateUsername();
             CreateStatus();
+
+            OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
+
+            // Request user info if we don't have it.
+            if (!User.HasUserInfo)
+                OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            OnlineManager.Client.OnUserInfoReceived -= OnUserInfoReceived;
+            base.Destroy();
         }
 
         /// <summary>
@@ -168,6 +187,27 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
 
             Status.Text = statusText;
             Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
+        }
+
+        /// <summary>
+        ///     Called when we've received new online users.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUserInfoReceived(object sender, UserInfoEventArgs e)
+        {
+            var user = e.Users.Find(x => x.Id == User.OnlineUser.Id);
+
+            if (user == null)
+                return;
+
+            Username.Text = user.Username;
+            Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
+
+            var userColor = Colors.GetUserChatColor(user.UserGroups);
+            Avatar.Border.Tint = new Color(userColor.R / 2, userColor.G / 2, userColor.B / 2);
+
+            Username.Tint = userColor;
         }
     }
 }
