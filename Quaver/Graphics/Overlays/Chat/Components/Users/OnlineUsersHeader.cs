@@ -57,6 +57,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             {
                 OnlineManager.Client.OnUserConnected -= OnUserConnected;
                 OnlineManager.Client.OnUserDisconnected -= OnUserDisconnected;
+                OnlineManager.Client.OnUsersOnline -= OnUsersOnline;
             }
 
             base.Destroy();
@@ -124,6 +125,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             };
         }
 
+        public void OnUsersOnline(object sender, UsersOnlineEventArgs e) => UpdateOnlineUserCount();
         public void OnUserConnected(object sender, UserConnectedEventArgs e) => UpdateOnlineUserCount();
         public void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) => UpdateOnlineUserCount();
     }

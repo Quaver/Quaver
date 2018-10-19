@@ -79,7 +79,7 @@ namespace Quaver.Online.Chat
             if ((TimeSinceLastSort > 5000 && IsActive) || (TimeSinceLastSort > 10000 && IsActive))
             {
 
-                Dialog.OnlineUserList.ReorganizeList();
+                // Dialog.OnlineUserList.ReorganizeList();
                 TimeSinceLastSort = 0;
             }
         }
@@ -254,6 +254,9 @@ namespace Quaver.Online.Chat
         /// <param name="e"></param>
         public static void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
+            // Add the message to the appropriate channel.
+            Console.WriteLine(e.Message.SenderName);
+
             // Don't handle messages from non-online users. We should never get this since the packets are in order.
             if (!OnlineManager.OnlineUsers.ContainsKey(e.Message.SenderId))
                 return;
@@ -265,7 +268,7 @@ namespace Quaver.Online.Chat
 
             // If the channel is private, then we want to use the sender's username,
             // otherwise we should use the channel's name.
-            var channel = isPrivate ? JoinedChatChannels.Find(x => x.Name == e.Message.Sender.OnlineUser.Username)
+            var channel = isPrivate ? JoinedChatChannels.Find(x => x.Name == e.Message.SenderName)
                                         : JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
 
             // In the event that the chat channel doesn't already exist, we'll want to add a new one in.
@@ -274,7 +277,7 @@ namespace Quaver.Online.Chat
             {
                 channel = new ChatChannel
                 {
-                    Name = e.Message.Sender.OnlineUser.Username,
+                    Name = e.Message.SenderName,
                     Description = "Private Message"
                 };
 
@@ -304,7 +307,7 @@ namespace Quaver.Online.Chat
             // Private message notification.
             if (channel.IsPrivate)
             {
-                var avatar = e.Message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
+                var avatar = e.Message.SenderName == OnlineManager.Self.OnlineUser.Username
                     ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID] : UserInterface.UnknownAvatar;
 
                 // Only show notification if the chat window isn't open.
@@ -314,7 +317,7 @@ namespace Quaver.Online.Chat
                     // TODO: Add better sound for this.
                     SkinManager.Skin.SoundClick.CreateChannel()?.Play();
 
-                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.Sender.OnlineUser.Username} has sent you a message. Click here to read it.",
+                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.SenderName} has sent you a message. Click here to read it.",
                         (o, args) =>
                         {
                             while (!IsActive)

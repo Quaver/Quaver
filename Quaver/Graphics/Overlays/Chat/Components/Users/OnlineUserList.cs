@@ -34,15 +34,22 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Dictionary containing all of our drawable users.
         /// </summary>
-        public Dictionary<User, DrawableOnlineUser> DrawableUsers { get; } = new Dictionary<User, DrawableOnlineUser>();
+        public Dictionary<int, DrawableOnlineUser> DrawableUsers { get; } = new Dictionary<int, DrawableOnlineUser>();
 
         /// <summary>
         ///     The list of currently shown drawable users.
         /// </summary>
         public List<DrawableOnlineUser> ShownUsers { get; private set; } = new List<DrawableOnlineUser>();
 
+        /// <summary>
+        ///     The pool index at which the shown users are actually drawn.
+        /// </summary>
+        private int PoolStartingIndex { get; set; }
 
-        private List<User> FakeUsers = new List<User>();
+        /// <summary>
+        ///     The amount of users that are able to be shown.
+        /// </summary>
+        private const int POOL_SIZE = 20;
 
         /// <inheritdoc />
         ///  <summary>
@@ -80,30 +87,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             // Only allow the container to be scrollable if the mouse is actually on top of the area.
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.A))
+            lock (ShownUsers)
             {
-                lock (FakeUsers)
+                foreach (var u in ShownUsers)
                 {
-                    for (var i = 0; i < 100; i++)
-                    {
-                        var fakeUser = new User(new OnlineUser(1, 281, i.ToString(), UserGroups.Normal, 0, "CA"));
-                        FakeUsers.Add(fakeUser);
-                        OnUserConnected(this, new UserConnectedEventArgs(fakeUser));
-                    }
-                }
-
-            }
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.B))
-            {
-                lock (FakeUsers)
-                {
-                    for (var i = FakeUsers.Count - 1; i >= 0; i--)
-                    {
-                        var x = FakeUsers[i];
-                        FakeUsers.Remove(x);
-                        OnUserDisconnected(this, new UserDisconnectedEventArgs(x.OnlineUser.Id));
-                    }
+                    u.Visible = ScreenRectangle.ToRectangle().Intersects(u.ScreenRectangle.ToRectangle());
                 }
             }
 
@@ -126,15 +114,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public void ReorganizeList()
         {
+            return;
+
             lock (ShownUsers)
             {
                 var shownUsers = new List<DrawableOnlineUser>();
 
-                var users = DrawableUsers.Keys.ToList().OrderBy(x => x.OnlineUser.Username).ToList();
+                var users = DrawableUsers.Values.ToList().OrderByDescending(x => x.User.HasUserInfo).ThenBy(x => x.Username.Text).ToList();
 
-                for (var i = 0; i < users.Count; i++)
+                foreach (var u in users)
                 {
-                    var user = DrawableUsers[users[i]];
+                    var user = DrawableUsers[u.User.OnlineUser.Id];
 
                     var shouldDraw = CheckIfUserShouldBeDrawn(user);
 
@@ -147,7 +137,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                         // Get the y position of the user.
                         user.Y = user.Height * shownUsers.Count;
 
-                        if (shownUsers.All(x => x.User.OnlineUser.Username != user.User.OnlineUser.Username))
+                        if (shownUsers.All(x => x.User.OnlineUser.Id != user.User.OnlineUser.Id))
                         {
                             shownUsers.Add(user);
                             user.Avatar.UsePreviousSpriteBatchOptions = true;
@@ -167,17 +157,31 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         }
 
         /// <summary>
+        ///     Called when we've received the list of users that are currently online.
+        /// </summary>
+        public void InitializeOnlineUsers()
+        {
+            /*foreach (var user in OnlineManager.OnlineUsers)
+            {
+                if (DrawableUsers.ContainsKey(user.Value.OnlineUser.Id))
+                    continue;
+
+                DrawableUsers[user.Value.OnlineUser.Id] = new DrawableOnlineUser(Overlay, this, user.Value);
+            }*/
+        }
+
+        /// <summary>
         ///     Called when a user connects to the server.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void OnUserConnected(object sender, UserConnectedEventArgs e)
         {
-            if (DrawableUsers.ContainsKey(e.User))
+            if (DrawableUsers.ContainsKey(e.User.OnlineUser.Id))
                 return;
 
             // Create a new drawable user for them.
-            DrawableUsers[e.User] = new DrawableOnlineUser(Overlay, this, e.User);
+            DrawableUsers[e.User.OnlineUser.Id] = new DrawableOnlineUser(Overlay, this, e.User);
         }
 
         /// <summary>
@@ -191,11 +195,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             {
                 lock (DrawableUsers)
                 {
-                    var user = DrawableUsers.ToList().Find(x => x.Key.OnlineUser.Id == e.UserId);
+                    var user = DrawableUsers.ToList().Find(x => x.Value.User.OnlineUser.Id == e.UserId);
 
-                    if (user.Key != null)
+                    if (user.Value != null)
                     {
                         user.Value.SetChildrenVisibility = true;
+                        user.Value.Visible = false;
                         DrawableUsers.Remove(user.Key);
                     }
                 }

@@ -155,7 +155,8 @@ namespace Quaver.Online.Chat
             {
                 // QuaverBot is ID = 0;
                 SenderId = 0,
-                Sender = OnlineManager.OnlineUsers[0]
+                Sender = OnlineManager.OnlineUsers[0],
+                SenderName = "QuaverBot"
             };
 
             // Add the message to the appropriate channel.

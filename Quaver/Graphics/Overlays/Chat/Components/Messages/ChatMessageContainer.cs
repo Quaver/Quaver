@@ -5,11 +5,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
+using Quaver.Online;
 using Quaver.Server.Client.Structures;
+using WebSocketSharp;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Input;
+using Wobble.Logging;
+using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Messages
 {
@@ -100,6 +104,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             // In the event that we need to add a new drawable, add one.
             var msg = new DrawableChatMessage(Overlay.ChannelMessageContainers[channel], message);
 
+            // We might not have user information ready, so request it.
+            if (!msg.Message.Sender.HasUserInfo)
+                OnlineManager.Client.RequestUserInfo(new List<int> { msg.Message.SenderId });
+
             // Calculate the message Y
             if (DrawableChatMessages.Count > 0)
             {
@@ -115,8 +123,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             if (TotalMessageHeight > Overlay.MessageContainer.Height - Overlay.CurrentTopicContainer.Height)
                 ContentContainer.Height = TotalMessageHeight;
 
-            AddContainedDrawable(msg);
-
             // Get how far we're scrolled down.
             var scrollDiff = ContentContainer.Height - Height - Math.Abs(ContentContainer.Y);
 
@@ -124,6 +130,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             if (scrollDiff < 220)
                 ScrollTo(-ContentContainer.Height, 800);
 
+            AddContainedDrawable(msg);
             msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 200));
         }
     }

@@ -101,7 +101,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextBitmap(BitmapFonts.Exo2Bold, User.OnlineUser.Username, 24, Color.White, Alignment.TopLeft, int.MaxValue)
+            var un = User.HasUserInfo ? User.OnlineUser.Username : "Loading...";
+
+            Username = new SpriteTextBitmap(BitmapFonts.Exo2Bold, un, 24, Color.White, Alignment.TopLeft, int.MaxValue)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

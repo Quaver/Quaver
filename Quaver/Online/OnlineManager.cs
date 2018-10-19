@@ -20,6 +20,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
+using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Packets.Server;
 using Steamworks;
 using Wobble;
@@ -139,6 +140,9 @@ namespace Quaver.Online
             Client.OnUserDisconnected += ChatManager.Dialog.OnlineUsersHeader.OnUserDisconnected;
             Client.OnUserConnected += ChatManager.Dialog.OnlineUserList.OnUserConnected;
             Client.OnUserDisconnected += ChatManager.Dialog.OnlineUserList.OnUserDisconnected;
+            Client.OnUsersOnline += OnUsersOnline;
+            Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
+            Client.OnUserInfoReceived += OnUserInfoReceived;
         }
 
         /// <summary>
@@ -409,6 +413,45 @@ namespace Quaver.Online
             }
 
             return presence.Assets.LargeImageText;
+        }
+
+        /// <summary>
+        ///     Called when we've retrieved info about a bundle of new online users.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnUsersOnline(object sender, UsersOnlineEventArgs e)
+        {
+            foreach (var id in e.UserIds)
+            {
+                if (OnlineUsers.ContainsKey(id))
+                    continue;
+
+                // Convert them to users.
+                var user = new User()
+                {
+                    OnlineUser = new OnlineUser
+                    {
+                        Id = id
+                    }
+                };
+
+                OnlineUsers[user.OnlineUser.Id] = user;
+            }
+
+            ChatManager.Dialog.OnlineUserList.InitializeOnlineUsers();
+        }
+
+        /// <summary>
+        ///     Called when receiving user info from the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
+        {
+            foreach (var user in e.Users)
+                OnlineUsers[user.Id] = new User(user);
         }
     }
 }

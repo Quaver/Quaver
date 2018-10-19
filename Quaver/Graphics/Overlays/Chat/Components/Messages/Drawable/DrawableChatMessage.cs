@@ -66,6 +66,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         {
             Container = container;
             Message = message;
+            DestroyIfParentIsNull = false;
 
             Avatar = new Sprite
             {
@@ -75,7 +76,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 Y = Padding,
             };
 
-            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+            // SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
             // QuaverBot. No need to load.
             if (message.Sender.OnlineUser.SteamId == 0)
@@ -112,7 +113,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+            // SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
 
             base.Destroy();
         }
@@ -125,7 +126,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             var timespan = TimeSpan.FromMilliseconds(Message.Time);
             var date = (new DateTime(1970, 1, 1) + timespan).ToLocalTime();
 
-            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {Message.Sender.OnlineUser.Username}",
+            var un = Message.Sender.OnlineUser.Username == OnlineManager.Self.OnlineUser.Username
+                ? OnlineManager.Self.OnlineUser.Username
+                : Message.SenderName;
+
+            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}",
                 14, Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups), Alignment.MidLeft, (int) WindowManager.Width)
             {
                 Parent = this,
