@@ -289,6 +289,7 @@ namespace Quaver.Online
 
             OnlineUsers[e.User.OnlineUser.Id] = e.User;
             ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
+            ChatManager.Dialog.OnlineUserList.InitializeUsers();
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -446,6 +447,7 @@ namespace Quaver.Online
             }
 
             ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
+            ChatManager.Dialog.OnlineUserList.InitializeUsers();
         }
 
         /// <summary>
