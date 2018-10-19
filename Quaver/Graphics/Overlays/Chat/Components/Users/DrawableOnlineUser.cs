@@ -43,6 +43,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public SpriteTextBitmap Status { get; private set; }
 
+        /// <summary>
+        ///     The height of the drawable user.
+        /// </summary>
+        public static int HEIGHT { get; } = 50;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -55,7 +60,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             OnlineUserList = list;
             User = user;
 
-            Size = new ScalableVector2(OnlineUserList.Width, 50);
+            Size = new ScalableVector2(OnlineUserList.Width, HEIGHT);
             Tint = Color.White;
             Alpha = 0;
             DestroyIfParentIsNull = false;

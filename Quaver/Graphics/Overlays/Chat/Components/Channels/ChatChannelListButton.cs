@@ -40,6 +40,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         {
             ChannelList = channelList;
             Channel = channel;
+            DestroyIfParentIsNull = false;
 
             Size = new ScalableVector2(channelList.ContentContainer.Width - 2, 50);
 

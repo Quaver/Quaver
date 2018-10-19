@@ -256,7 +256,11 @@ namespace Quaver.Online
             Self = e.Self;
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
 
-            OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
+            lock (OnlineUsers)
+            {
+                OnlineUsers.Clear();
+                OnlineUsers[e.Self.OnlineUser.Id] = e.Self;
+            }
 
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
@@ -269,6 +273,7 @@ namespace Quaver.Online
             var game = (QuaverGame) GameBase.Game;
             Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
 
+            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
@@ -283,6 +288,7 @@ namespace Quaver.Online
                 return;
 
             OnlineUsers[e.User.OnlineUser.Id] = e.User;
+            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -297,6 +303,8 @@ namespace Quaver.Online
         {
             if (OnlineUsers.ContainsKey(e.UserId))
                 OnlineUsers.Remove(e.UserId);
+
+            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
 
             Trace.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -436,6 +444,8 @@ namespace Quaver.Online
 
                 OnlineUsers[user.OnlineUser.Id] = user;
             }
+
+            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
         }
 
         /// <summary>

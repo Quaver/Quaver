@@ -31,6 +31,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public ChatOverlay Overlay { get; }
 
+        /// <summary>
+        ///     The buffer of drawable online users that are to be shown.
+        /// </summary>
+        public List<DrawableOnlineUser> ShownUsers { get; set; } = new List<DrawableOnlineUser>();
+
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
@@ -39,7 +44,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             new ScalableVector2(overlay.OnlineUsersContainer.Width, overlay.OnlineUsersContainer.Height - overlay.OnlineUsersHeader.Height
                                                                                                         - overlay.OnlineUserFilters.Height),
             new ScalableVector2(overlay.OnlineUsersContainer.Width, overlay.OnlineUsersContainer.Height - overlay.OnlineUsersHeader.Height
-                                                                                                        - overlay.OnlineUserFilters.Height + 1))
+                                                                                                        - overlay.OnlineUserFilters.Height))
         {
             Overlay = overlay;
             Parent = Overlay.OnlineUsersContainer;
@@ -66,15 +71,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         {
             // Only allow the container to be scrollable if the mouse is actually on top of the area.
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position);
-            base.Update(gameTime);
-        }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            base.Destroy();
+
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -89,17 +88,24 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             {
                 case OnlineUserFilterType.All:
                     return true;
-                    break;
                 case OnlineUserFilterType.Friends:
                     return false;
-                    break;
                 case OnlineUserFilterType.Country:
-                    return u.User.OnlineUser.CountryFlag ==
-                                 OnlineManager.Self.OnlineUser.CountryFlag;
-                    break;
+                    return u.User.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        ///     Calculates the height of the container based on the amount of users.
+        /// </summary>
+        public void RecalculateContainerHeight()
+        {
+            var totalUserHeight = DrawableOnlineUser.HEIGHT * OnlineManager.OnlineUsers.Count;
+
+            if (totalUserHeight > Height)
+                ContentContainer.Height = totalUserHeight - Height;
         }
     }
 }

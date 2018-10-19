@@ -76,7 +76,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 Y = Padding,
             };
 
-            // SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
             // QuaverBot. No need to load.
             if (message.Sender.OnlineUser.SteamId == 0)
@@ -113,7 +113,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            // SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
 
             base.Destroy();
         }
