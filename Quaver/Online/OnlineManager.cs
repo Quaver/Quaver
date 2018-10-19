@@ -138,8 +138,6 @@ namespace Quaver.Online
             Client.OnScoreSubmitted += OnScoreSubmitted;
             Client.OnUserConnected += ChatManager.Dialog.OnlineUsersHeader.OnUserConnected;
             Client.OnUserDisconnected += ChatManager.Dialog.OnlineUsersHeader.OnUserDisconnected;
-            Client.OnUserConnected += ChatManager.Dialog.OnlineUserList.OnUserConnected;
-            Client.OnUserDisconnected += ChatManager.Dialog.OnlineUserList.OnUserDisconnected;
             Client.OnUsersOnline += OnUsersOnline;
             Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
@@ -438,8 +436,6 @@ namespace Quaver.Online
 
                 OnlineUsers[user.OnlineUser.Id] = user;
             }
-
-            ChatManager.Dialog.OnlineUserList.InitializeOnlineUsers();
         }
 
         /// <summary>
