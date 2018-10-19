@@ -44,6 +44,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// </summary>
         private Sprite DividerLine { get; set; }
 
+        /// <summary>
+        ///     The y position of the content container in the previous frame.
+        /// </summary>
+        public float PreviousContentContainerY { get; set; }
+
+        /// <summary>
+        ///     The maximum amount of messages to be shown at a given time.
+        /// </summary>
+        public const int MAX_MESSAGES_SHOWN = 15;
+
+        /// <summary>
+        ///     The index at which the messages are starting to be shown.
+        /// </summary>
+        public int PoolStartingIndex { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -91,6 +106,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             // Only allow the container to be scrollable if the mouse is actually on top of the area.
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && Overlay.ActiveChannel == Channel;
 
+            // Handle pool shifting when scrolling up or down.
+            if (ContentContainer.Y < PreviousContentContainerY)
+                HandlePoolShifting(Direction.Forward);
+            else if (ContentContainer.Y > PreviousContentContainerY)
+                HandlePoolShifting(Direction.Backward);
+
+            // Update the previous y, AFTER checking and handling the pool shifting.
+            PreviousContentContainerY = ContentContainer.Y;
+
             base.Update(gameTime);
         }
 
@@ -132,6 +156,63 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
 
             AddContainedDrawable(msg);
             msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 200));
+        }
+
+        /// <summary>
+        ///     Handles shifting of the pool based on the way the user has scrolled.
+        /// </summary>
+        private void HandlePoolShifting(Direction direction)
+        {
+            DrawableChatMessage message;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    // First run a check to see if we even have a message in this position.
+                    if (DrawableChatMessages.ElementAtOrDefault(PoolStartingIndex) == null
+                        || DrawableChatMessages.ElementAtOrDefault(PoolStartingIndex + MAX_MESSAGES_SHOWN) == null)
+                        return;
+
+                    // Check the top message at the pool starting index to see if it is still in range
+                    message = DrawableChatMessages[PoolStartingIndex];
+
+                    var newRect = Rectangle.Intersect(message.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle());
+
+                    if (!newRect.IsEmpty)
+                        return;
+
+                    // Since we're shifting forward, we can safely remove the button that has gone off-screen.
+                    RemoveContainedDrawable(DrawableChatMessages[PoolStartingIndex]);
+
+                    // Now add the button that is forward.
+                    AddContainedDrawable(DrawableChatMessages[PoolStartingIndex + MAX_MESSAGES_SHOWN]);
+
+                    // Increment the starting index to shift it.
+                    PoolStartingIndex++;
+                    break;
+                case Direction.Backward:
+                    // First run a check to see if we even have a message in this position.
+                    if (DrawableChatMessages.ElementAtOrDefault(PoolStartingIndex - 1) == null
+                        || DrawableChatMessages.ElementAtOrDefault(PoolStartingIndex + MAX_MESSAGES_SHOWN - 1) == null)
+                        return;
+
+                    message = DrawableChatMessages[PoolStartingIndex + MAX_MESSAGES_SHOWN - 1];
+
+                    var rect = Rectangle.Intersect(message.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle());
+
+                    if (!rect.IsEmpty)
+                        return;
+
+                    // Since we're scrolling up, we need to shift backwards.
+                    // Remove the drawable from the bottom one.
+                    RemoveContainedDrawable(DrawableChatMessages[PoolStartingIndex + MAX_MESSAGES_SHOWN - 1]);
+                    AddContainedDrawable(DrawableChatMessages[PoolStartingIndex - 1]);
+
+                    PoolStartingIndex--;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
         }
     }
 }
