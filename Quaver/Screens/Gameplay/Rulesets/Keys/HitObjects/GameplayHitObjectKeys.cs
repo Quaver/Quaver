@@ -66,7 +66,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The initial size of this object's long note.
         /// </summary>
-        private float InitialLongNoteSize { get; set; }
+        public float InitialLongNoteSize { get; set; }
 
         /// <summary>
         ///     The current size of this object's long note.
@@ -193,7 +193,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
-                LongNoteTrackPosition = 0;
+                LongNoteTrackPosition = TrackPosition;
             }
             else
             {
@@ -245,10 +245,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetPosFromOffset(long offset = 0)
+        public float GetPosFromOffset(long offset)
         {
             // If the object is not being held, use proper position
-            if (!CurrentlyBeingHeld)
+            if (offset != 0)
             {
                 var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
                 // (OLD) return (float) (manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
@@ -259,24 +259,28 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             return HitPositionOffset - HitObjectSprite.Height;
         }
 
+        public void UpdateLongNoteSize(long offset)
+        {
+            CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
+        }
+
         /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
         public void UpdateSpritePositions(long offset)
         {
+            var beingHeld = false;
             if (CurrentlyBeingHeld)
             {
                 if (offset > TrackPosition)
                 {
-                    // (OLD) hitObject.CurrentLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.Timing.Time) * ScrollSpeed);
-                    CurrentLongNoteSize = (LongNoteTrackPosition - Ruleset.Screen.Positioning.Position) * HitObjectManagerKeys.ScrollSpeed;
-                    //CurrentlyBeingHeld = true;
-                    SpritePosition = GetPosFromOffset();
+                    UpdateLongNoteSize(offset);
+                    SpritePosition = GetPosFromOffset(0);
                 }
                 else
                 {
                     CurrentLongNoteSize = InitialLongNoteSize;
-                    SpritePosition = GetPosFromOffset();
+                    SpritePosition = GetPosFromOffset(offset);
                 }
             }
             else
@@ -306,7 +310,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             if (GameplayRulesetKeys.IsDownscroll)
             {
-                LongNoteBodySprite.Y = -(float) CurrentLongNoteSize + LongNoteBodyOffset + SpritePosition;
+                LongNoteBodySprite.Y = + LongNoteBodyOffset + SpritePosition - CurrentLongNoteSize;
                 LongNoteEndSprite.Y = SpritePosition - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
             }
             else
@@ -333,15 +337,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     When the object iself dies, we want to change it to a dead color.
         /// </summary>
-        public void ChangeSpriteColorToDead()
+        public void Kill()
         {
+            HitObjectSprite.Tint = Colors.DeadLongNote;
             if (IsLongNote)
             {
                 LongNoteBodySprite.Tint = Colors.DeadLongNote;
                 LongNoteEndSprite.Tint = Colors.DeadLongNote;
             }
-
-            HitObjectSprite.Tint = Colors.DeadLongNote;
         }
 
         /// <summary>
