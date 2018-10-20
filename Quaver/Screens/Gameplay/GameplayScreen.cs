@@ -120,7 +120,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed => false;//Ruleset.ScoreProcessor.Health <= 0 || ForceFail;
+        public bool Failed => Ruleset.ScoreProcessor.Health <= 0 || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
@@ -166,6 +166,7 @@ namespace Quaver.Screens.Gameplay
         {
             get
             {
+                // todo: don't think the _onBreak variable is necessary
                 // By default if there aren't any objects left we aren't on a break.
                 if (Ruleset.HitObjectManager.ObjectsLeft <= 0)
                     return false;
