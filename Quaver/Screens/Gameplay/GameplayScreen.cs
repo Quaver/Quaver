@@ -161,7 +161,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     If the user is currently on a break in the song.
         /// </summary>
-        private bool _onBreak;
+        private bool _onBreak = false;
         public bool OnBreak
         {
             get
