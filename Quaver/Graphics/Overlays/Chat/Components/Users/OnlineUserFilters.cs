@@ -140,7 +140,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             AllFilterButton.Clicked += (sender, args) =>
             {
                 ConfigManager.SelectedOnlineUserFilterType.Value = OnlineUserFilterType.All;
-                // Overlay.OnlineUserList?.ReorganizeList();
+                Overlay.OnlineUserList?.FilterUsers();
             };
         }
 
@@ -173,7 +173,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             FriendsFilterButton.Clicked += (sender, args) =>
             {
                 ConfigManager.SelectedOnlineUserFilterType.Value = OnlineUserFilterType.Friends;
-                // Overlay.OnlineUserList?.ReorganizeList();
+                Overlay.OnlineUserList?.FilterUsers();
             };
         }
 
@@ -206,7 +206,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             CountryFilterButton.Clicked += (sender, args) =>
             {
                 ConfigManager.SelectedOnlineUserFilterType.Value = OnlineUserFilterType.Country;
-                // Overlay.OnlineUserList?.ReorganizeList();
+                Overlay.OnlineUserList?.FilterUsers();
             };
         }
 
