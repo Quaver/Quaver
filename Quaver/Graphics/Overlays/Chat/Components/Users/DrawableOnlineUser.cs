@@ -28,9 +28,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         public OnlineUserList OnlineUserList { get; }
 
         /// <summary>
-        ///     The user that this user is for.
+        ///     The user that this is referencing.
         /// </summary>
-        public User User { get; }
+        public User User { get; private set; }
 
         /// <summary>
         ///     The user's avatar.
@@ -58,12 +58,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <param name="overlay"></param>
         /// <param name="list"></param>
         /// <param name="user"></param>
-        public DrawableOnlineUser(ChatOverlay overlay, OnlineUserList list, User user) : base(UserInterface.BlankBox)
+        public DrawableOnlineUser(ChatOverlay overlay, OnlineUserList list) : base(UserInterface.BlankBox)
         {
             Overlay = overlay;
             OnlineUserList = list;
-            User = user;
-
             Size = new ScalableVector2(OnlineUserList.Width, HEIGHT);
             Tint = Color.White;
             Alpha = 0;
@@ -72,23 +70,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             CreateAvatar();
             CreateUsername();
             CreateStatus();
-
-            OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
-
-            // Request user info if we don't have it.
-            if (!User.HasUserInfo)
-                OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            OnlineManager.Client.OnUserInfoReceived -= OnUserInfoReceived;
-            base.Destroy();
-        }
-
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
@@ -117,23 +101,20 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Image = UserInterface.UnknownAvatar,
             };
 
-            var userColor = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
-            Avatar.AddBorder(new Color(userColor.R / 2, userColor.G / 2, userColor.B / 2), 2);
+            Avatar.AddBorder(Color.White, 2);
         }
         /// <summary>
-        ///     Creates the username text for the user
+        ///     Creates the username text
         /// </summary>
         private void CreateUsername()
         {
-            var un = User.HasUserInfo ? User.OnlineUser.Username : "Loading...";
-
-            Username = new SpriteTextBitmap(BitmapFonts.Exo2Bold, un, 24, Color.White, Alignment.TopLeft, int.MaxValue)
+            Username = new SpriteTextBitmap(BitmapFonts.Exo2Bold, "Loading...", 24, Color.White, Alignment.TopLeft, int.MaxValue)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X + Avatar.Width + 5,
                 Y = 6,
-                Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups)
+                Tint = Color.White
             };
 
             Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
@@ -153,6 +134,32 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             };
 
             Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
+        }
+
+        /// <summary>
+        ///     Updates the drawable with new user information.
+        /// </summary>
+        /// <param name="user"></param>
+        public void UpdateUser(User user)
+        {
+            User = user;
+
+            if (User.HasUserInfo)
+            {
+                Username.Text = User.OnlineUser.Username;
+                Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
+
+                Username.Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
+                Avatar.Border.Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
+            }
+            else
+            {
+                Username.Text = $"User#{User.OnlineUser.Id}";
+                Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
+
+                Avatar.Border.Tint = Color.White;
+                Username.Tint = Color.White;
+            }
         }
 
         /// <summary>
@@ -187,27 +194,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
 
             Status.Text = statusText;
             Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
-        }
-
-        /// <summary>
-        ///     Called when we've received new online users.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnUserInfoReceived(object sender, UserInfoEventArgs e)
-        {
-            var user = e.Users.Find(x => x.Id == User.OnlineUser.Id);
-
-            if (user == null)
-                return;
-
-            Username.Text = user.Username;
-            Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
-
-            var userColor = Colors.GetUserChatColor(user.UserGroups);
-            Avatar.Border.Tint = new Color(userColor.R / 2, userColor.G / 2, userColor.B / 2);
-
-            Username.Tint = userColor;
         }
     }
 }
