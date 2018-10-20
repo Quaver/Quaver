@@ -8,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens.Connecting.UI;
@@ -273,7 +274,8 @@ namespace Quaver.Online
             var game = (QuaverGame) GameBase.Game;
             Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
 
-            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
+            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() {Self});
+
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
@@ -288,8 +290,7 @@ namespace Quaver.Online
                 return;
 
             OnlineUsers[e.User.OnlineUser.Id] = e.User;
-            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
-            ChatManager.Dialog.OnlineUserList.InitializeUsers();
+            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() { e.User });
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -305,7 +306,7 @@ namespace Quaver.Online
             if (OnlineUsers.ContainsKey(e.UserId))
                 OnlineUsers.Remove(e.UserId);
 
-            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
+            ChatManager.Dialog.OnlineUserList.HandleDisconnectingUser(e.UserId);
 
             Trace.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -429,6 +430,8 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnUsersOnline(object sender, UsersOnlineEventArgs e)
         {
+            var newOnlineUsers = new List<User>();
+
             foreach (var id in e.UserIds)
             {
                 if (OnlineUsers.ContainsKey(id))
@@ -444,10 +447,10 @@ namespace Quaver.Online
                 };
 
                 OnlineUsers[user.OnlineUser.Id] = user;
+                newOnlineUsers.Add(user);
             }
 
-            ChatManager.Dialog.OnlineUserList.RecalculateContainerHeight();
-            ChatManager.Dialog.OnlineUserList.InitializeUsers();
+            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(newOnlineUsers);
         }
 
         /// <summary>
