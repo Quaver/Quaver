@@ -270,8 +270,15 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
 
-                // Recycle object in the pool
-                manager.RecyclePoolObject(hitObject);
+                // Recycle object in the pool if it has been hit on time, or else just kill it
+                if (judgement == Judgement.Marv || judgement == Judgement.Perf)
+                {
+                    manager.RecyclePoolObject(hitObject);
+                }
+                else
+                {
+                    manager.KillHoldPoolObject(hitObject);
+                }
             }
             // If LN has been released early
             else
