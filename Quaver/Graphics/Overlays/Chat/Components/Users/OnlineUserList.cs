@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
-using osu_database_reader;
 using Quaver.Config;
 using Quaver.Online;
-using Quaver.Online.Chat;
-using Quaver.Scheduling;
-using Quaver.Server.Client.Handlers;
-using Quaver.Server.Client.Helpers;
 using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Enums;
-using Quaver.Server.Common.Helpers;
-using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Input;
+using Wobble.Logging;
 using Color = Microsoft.Xna.Framework.Color;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Users
 {
@@ -33,22 +23,36 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         public ChatOverlay Overlay { get; }
 
         /// <summary>
-        ///     The buffer of drawable online users that are to be shown.
-        /// </summary>
-        public List<DrawableOnlineUser> ShownUsers { get; set; } = new List<DrawableOnlineUser>();
-
-        /// <summary>
         ///     The y position of the content container in the previous frame.
         /// </summary>
         public float PreviousContentContainerY { get; set; }
 
         /// <summary>
-        ///     The maximum amount of users to be shown at once.
+        ///     The list of available filtered users to display
+        /// </summary>
+        public List<User> AvailableUsers { get; private set; } = new List<User>();
+
+        /// <summary>
+        ///     The buffer of users that are used for the scroll container.
+        /// </summary>
+        public LinkedList<DrawableOnlineUser> UserBuffer { get; }
+
+        /// <summary>
+        ///     The amount of <see cref="UserBuffer"/> objects that are currently in use.
+        ///
+        ///     This is to keep count of if we have anymore drawables in the buffer that are available
+        ///     to be contained or if we should reuse them.
+        /// </summary>
+        private int UserBufferObjectsUsed { get; set; }
+
+        /// <summary>
+        ///     The total amount of users that are shown.
         /// </summary>
         public const int MAX_USERS_SHOWN = 15;
 
         /// <summary>
-        ///     The index at which the messages are starting to be shown.
+        ///     The position of <see cref="AvailableUsers"/> in which
+        ///     the users will be shown.
         /// </summary>
         public int PoolStartingIndex { get; set; }
 
@@ -77,6 +81,18 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             ScrollSpeed = 150;
             EasingType = Easing.EaseOutQuint;
             TimeToCompleteScroll = 1500;
+
+            UserBuffer = new LinkedList<DrawableOnlineUser>();
+
+            // Create MAX_USERS_SHOWN amount of DrawableOnlineUsers
+            for (var i = 0; i < MAX_USERS_SHOWN; i++)
+            {
+                var user = new DrawableOnlineUser(Overlay, this) {Y = i * DrawableOnlineUser.HEIGHT};
+                UserBuffer.AddLast(user);
+
+                if (i < AvailableUsers.Count)
+                    AddContainedDrawable(user);
+            }
         }
 
         /// <inheritdoc />
@@ -106,7 +122,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <param name="u"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private static bool CheckIfUserShouldBeDrawn(DrawableOnlineUser u)
+        private static bool CheckIfUserShouldBeDrawn(User u)
         {
             switch (ConfigManager.SelectedOnlineUserFilterType.Value)
             {
@@ -115,43 +131,23 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 case OnlineUserFilterType.Friends:
                     return false;
                 case OnlineUserFilterType.Country:
-                    return u.User.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag;
+                    return u.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
         /// <summary>
-        ///     Initializes more users at the bottom of the buffer.
-        /// </summary>
-        public void InitializeUsers()
-        {
-            for (var i = PoolStartingIndex; i < PoolStartingIndex + MAX_USERS_SHOWN; i++)
-            {
-                var user = OnlineManager.OnlineUsers.ToList()[i];
-
-                if (ShownUsers.Any(x => x.User.OnlineUser.Id == user.Value.OnlineUser.Id))
-                    continue;
-
-                var drawableUser = new DrawableOnlineUser(Overlay, this, user.Value)
-                {
-                    Y = (PoolStartingIndex + i) * DrawableOnlineUser.HEIGHT
-                };
-
-                AddContainedDrawable(drawableUser);
-                ShownUsers.Add(drawableUser);
-            }
-        }
-        
-        /// <summary>
         ///     Calculates the height of the container based on the amount of users.
         /// </summary>
-        public void RecalculateContainerHeight()
+        private void RecalculateContainerHeight()
         {
-            var totalUserHeight = DrawableOnlineUser.HEIGHT * OnlineManager.OnlineUsers.Count;
+            var totalUserHeight = DrawableOnlineUser.HEIGHT * AvailableUsers.Count;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
+            else
+                ContentContainer.Height = Height;
         }
 
         /// <summary>
@@ -161,76 +157,179 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <param name="direction"></param>
         private void HandlePoolShifting(Direction direction)
         {
-            DrawableOnlineUser user;
-
             switch (direction)
             {
                 case Direction.Forward:
-                    // First run a check to see if we even have a message in this position.
-                    if (ShownUsers.ElementAtOrDefault(PoolStartingIndex) == null)
+                    // If there are no available users then there's no need to do anything.
+                    if (AvailableUsers.ElementAtOrDefault(PoolStartingIndex) == null
+                        || AvailableUsers.ElementAtOrDefault(PoolStartingIndex + MAX_USERS_SHOWN) == null)
                         return;
 
-                    // Check the top message at the pool starting index to see if it is still in range
-                    user = ShownUsers[PoolStartingIndex];
+                    var firstUser = UserBuffer.First();
 
-                    var newRect = Rectangle.Intersect(user.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle());
-
-                    if (!newRect.IsEmpty)
+                    // Check if the object is in the rect of the ScrollContainer.
+                    // If it is, then there's no updating that needs to happen.
+                    if (!Rectangle.Intersect(firstUser.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
                         return;
 
-                    // Since we're shifting forward, we can safely remove the button that has gone off-screen.
-                    RemoveContainedDrawable(ShownUsers[PoolStartingIndex]);
+                    // Update the user's information and y position.
+                    firstUser.Y = (PoolStartingIndex + MAX_USERS_SHOWN) * DrawableOnlineUser.HEIGHT;
 
-                    // Now add the button that is forward.
-                    if (ShownUsers.ElementAtOrDefault(PoolStartingIndex + MAX_USERS_SHOWN) != null)
-                        AddContainedDrawable(ShownUsers[PoolStartingIndex + MAX_USERS_SHOWN]);
-                    // Initialize the new user because it's null.
-                    else
-                    {
-                        var users = OnlineManager.OnlineUsers.Values.ToList();
+                    lock (AvailableUsers)
+                        firstUser.UpdateUser(AvailableUsers[PoolStartingIndex + MAX_USERS_SHOWN]);
 
-                        if (users.ElementAtOrDefault(PoolStartingIndex + MAX_USERS_SHOWN) == null)
-                            return;
+                    // Circuluarly Shift the list forward one.
+                    UserBuffer.RemoveFirst();
+                    UserBuffer.AddLast(firstUser);
 
-                        var newUser = OnlineManager.OnlineUsers.ToList()[PoolStartingIndex + MAX_USERS_SHOWN];
-
-                        if (ShownUsers.Any(x => x.User.OnlineUser.Id == newUser.Value.OnlineUser.Id))
-                            return;
-
-                        var drawableUser = new DrawableOnlineUser(Overlay, this, newUser.Value)
-                        {
-                            Y = (PoolStartingIndex + MAX_USERS_SHOWN) * DrawableOnlineUser.HEIGHT
-                        };
-
-                        AddContainedDrawable(drawableUser);
-                        ShownUsers.Add(drawableUser);
-                    }
-
-                    // Increment the starting index to shift it.
+                    // Take this user, and place them at the bottom.
                     PoolStartingIndex++;
                     break;
                 case Direction.Backward:
-                    // First run a check to see if we even have a message in this position.
-                    if (ShownUsers.ElementAtOrDefault(PoolStartingIndex - 1) == null
-                        || ShownUsers.ElementAtOrDefault(PoolStartingIndex + MAX_USERS_SHOWN - 1) == null)
+                    // If there are no previous available user then there's no need to shift.
+                    if (AvailableUsers.ElementAtOrDefault(PoolStartingIndex - 1) == null)
                         return;
 
-                    user = ShownUsers[PoolStartingIndex + MAX_USERS_SHOWN - 1];
+                    var lastUser = UserBuffer.Last();
 
-                    var rect = Rectangle.Intersect(user.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle());
-
-                    if (!rect.IsEmpty)
+                    // Check if the object is in the rect of the ScrollContainer.
+                    // If it is, then there's no updating that needs to happen.
+                    if (!Rectangle.Intersect(lastUser.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
                         return;
 
-                    // Since we're scrolling up, we need to shift backwards.
-                    // Remove the drawable from the bottom one.
-                    RemoveContainedDrawable(ShownUsers[PoolStartingIndex + MAX_USERS_SHOWN - 1]);
-                    AddContainedDrawable(ShownUsers[PoolStartingIndex - 1]);
+                    lastUser.Y = (PoolStartingIndex - 1) * DrawableOnlineUser.HEIGHT;
+
+                    lock (AvailableUsers)
+                        lastUser.UpdateUser(AvailableUsers[PoolStartingIndex - 1]);
+
+                    UserBuffer.RemoveLast();
+                    UserBuffer.AddFirst(lastUser);
 
                     PoolStartingIndex--;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+         /// <summary>
+        ///     Handles new incoming online users and dictates if they are available to display
+        ///     <see cref="AvailableUsers"/>
+        /// </summary>
+        /// <param name="users"></param>
+        public void HandleNewOnlineUsers(IEnumerable<User> users)
+        {
+            lock (AvailableUsers)
+            {
+                var incomingAvailableUsers = users.Where(CheckIfUserShouldBeDrawn).ToList();
+                var allAvailableUsers = new List<User>(AvailableUsers);
+
+                // Concatenate the old list of available users with the new one, and order it properly.
+                AvailableUsers = allAvailableUsers
+                    .Concat(incomingAvailableUsers)
+                    .ToList();
+
+                SortUsers();
+                RecalculateContainerHeight();
+
+                Logger.Debug($"There are now {AvailableUsers.Count} total available users.", LogType.Runtime);
+
+                // If we already have enough buffered objects, then just update all of the current buffered users.
+                if (UserBufferObjectsUsed == MAX_USERS_SHOWN)
+                {
+                    UpdateBufferUsers();
+                    return;
+                }
+
+                // Based on how many new available users we have, we can add that many new contained drawables.
+                for (var i = 0; i < incomingAvailableUsers.Count && UserBufferObjectsUsed != MAX_USERS_SHOWN; i++)
+                    UserBufferObjectsUsed++;
+
+                UpdateBufferUsers();
+            }
+        }
+
+        /// <summary>
+        ///     Handles when a user disconnects from the server.
+        /// </summary>
+        public void HandleDisconnectingUser(int userId)
+        {
+            lock (AvailableUsers)
+            {
+                AvailableUsers.RemoveAll(x => x.OnlineUser.Id == userId);
+                SortUsers();
+
+                UpdateBufferUsers();
+            }
+        }
+
+        /// <summary>
+        ///     Updates all of the current buffer users.
+        /// </summary>
+        public void UpdateBufferUsers()
+        {
+            for (var i = 0; i < UserBuffer.Count; i++)
+            {
+                var bufferObject = UserBuffer.ElementAt(i);
+
+                // In the event that there aren't any available users left, we want to remove these unused
+                // contained drawable objects.
+                if (AvailableUsers.ElementAtOrDefault(PoolStartingIndex + i) == null)
+                {
+                    RemoveContainedDrawable(bufferObject);
+                    UserBufferObjectsUsed--;
+                    continue;
+                }
+
+                bufferObject.Y = (PoolStartingIndex + i) * DrawableOnlineUser.HEIGHT;
+                bufferObject.UpdateUser(AvailableUsers[PoolStartingIndex + i]);
+
+                // Make sure the object is contained if it isn't already.
+                if (bufferObject.Parent != ContentContainer)
+                    AddContainedDrawable(bufferObject);
+            }
+        }
+
+        /// <summary>
+        ///     Orders the available users in the list.
+        /// </summary>
+        private void SortUsers()
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            AvailableUsers = AvailableUsers
+                .OrderBy(x => !x.HasUserInfo)
+                .ThenBy(x => x.OnlineUser.Username)
+                .ToList();
+        }
+
+        /// <summary>
+        ///     Filters the online users by whichever filter the user has selected.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void FilterUsers()
+        {
+            lock (AvailableUsers) lock (OnlineManager.OnlineUsers)
+            {
+                switch (ConfigManager.SelectedOnlineUserFilterType.Value)
+                {
+                    case OnlineUserFilterType.All:
+                        AvailableUsers = OnlineManager.OnlineUsers.Values.ToList();
+                        break;
+                    case OnlineUserFilterType.Friends:
+                        AvailableUsers = new List<User>();
+                        break;
+                    case OnlineUserFilterType.Country:
+                        AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
+                            .Where(x => x.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag)
+                            .ToList();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                SortUsers();
+                RecalculateContainerHeight();
+                UpdateBufferUsers();
             }
         }
     }
