@@ -154,6 +154,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             }
             else
             {
+                // If we don't have user information, request it to the server to obtain it.
+                OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
+
                 Username.Text = $"User#{User.OnlineUser.Id}";
                 Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
 

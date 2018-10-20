@@ -307,6 +307,30 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         }
 
         /// <summary>
+        ///     Updates all the user info for the current buffer.
+        /// </summary>
+        public void UpdateUserInfo(User user)
+        {
+            lock (UserBuffer)
+            {
+                for (var i = 0; i < UserBuffer.Count; i++)
+                {
+                    var item = UserBuffer.ElementAt(i);
+
+                    if (item.User == null || item.User.OnlineUser.Id != user.OnlineUser.Id)
+                        continue;
+
+                    item.UpdateUser(OnlineManager.OnlineUsers[user.OnlineUser.Id]);
+                    AvailableUsers[AvailableUsers.FindIndex(x => x.OnlineUser.Id == item.User.OnlineUser.Id)] = item.User;
+
+                    SortUsers();
+                    RecalculateContainerHeight();
+                    UpdateBufferUsers();
+                }
+            }
+        }
+
+        /// <summary>
         ///     Orders the available users in the list.
         /// </summary>
         private void SortUsers()

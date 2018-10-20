@@ -464,7 +464,10 @@ namespace Quaver.Online
         private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
         {
             foreach (var user in e.Users)
+            {
                 OnlineUsers[user.Id] = new User(user);
+                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
+            }
         }
     }
 }
