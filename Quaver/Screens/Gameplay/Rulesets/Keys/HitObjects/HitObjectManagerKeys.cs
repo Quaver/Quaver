@@ -178,7 +178,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void CreatePoolObject(HitObjectInfo info)
         {
             var hitObject = new GameplayHitObjectKeys(info, Ruleset);
-            hitObject.Initialize(info);
+            hitObject.Initialize(info, Ruleset);
             ObjectPool[info.Lane - 1].Enqueue(hitObject);
         }
 
@@ -394,7 +394,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (lane.Count > 0)
             {
                 var info = lane.Dequeue();
-                hitObject.Initialize(info);
+                hitObject.Initialize(info, Ruleset);
                 ObjectPool[info.Lane - 1].Enqueue(hitObject);
             }
             else
@@ -421,14 +421,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="destroy"></param>
         public void KillHoldPoolObject(GameplayHitObjectKeys hitObject)
         {
-            // Change start time and y offset.
+            // Change start time and LN size.
             var time = Ruleset.Screen.Timing.Time;
-            var pos = Ruleset.Screen.Positioning.GetPositionFromTime(time);
-            hitObject.TrackPosition = pos;
-            //hitObject.InitialLongNoteSize = hitObject.LongNoteTrackPosition - hitObject.TrackPosition;
+            hitObject.TrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(time);
             hitObject.Info.StartTime = (int)time;
             hitObject.CurrentlyBeingHeld = false;
-            hitObject.UpdateLongNoteSize(pos);
+            hitObject.UpdateLongNoteSize(hitObject.TrackPosition);
             hitObject.Kill();
 
             // Add to dead notes pool

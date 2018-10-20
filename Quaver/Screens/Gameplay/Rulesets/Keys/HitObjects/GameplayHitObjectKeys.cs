@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -21,11 +22,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
     public class GameplayHitObjectKeys : GameplayHitObject
     {
-        /// <summary>
-        ///     Reference to the Keys ruleset.
-        /// </summary>
-        private GameplayRulesetKeys Ruleset { get; set; }
-
         /// <summary>
         ///     Reference to the actual playfield.
         /// </summary>
@@ -121,7 +117,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Set References to other classes
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
-            Ruleset = ruleset;
             Info = info;
 
             // Reference variables
@@ -134,7 +129,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
                 SpriteEffect = Effects,
-                Image = GetHitObjectTexture(laneIndex)
+                Image = GetHitObjectTexture(laneIndex, ruleset.Mode)
             };
 
             // Update hit body's size to match image ratio
@@ -142,7 +137,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
             // Create Hold Body
-            var bodies = SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldBodies[laneIndex];
+            var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[laneIndex];
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
@@ -162,7 +157,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Set long note end properties.
-            LongNoteEndSprite.Image = SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldEnds[laneIndex];
+            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[laneIndex];
             LongNoteEndSprite.Height = Playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
@@ -178,13 +173,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         /// </summary>
         /// <param name="playfield"></param>
-        public override void Initialize(HitObjectInfo info)
+        public void Initialize(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        //public override void Initialize(HitObjectInfo info)
         {
             // Update Hit Object State
             Info = info;
             HitObjectSprite.Tint = Color.White; // todo: reference this in Colors class
             IsLongNote = Info.EndTime > 0;
-            TrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(info.StartTime);
+            TrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
             LongNoteBodySprite.StopLoop();
 
@@ -201,14 +197,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White; // todo: reference this in Colors class
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-                LongNoteTrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
+                LongNoteTrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
                 //todo: make this a float instead?
                 InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
+            UpdateSpritePositions(ruleset.Screen.Positioning.Position);
         }
 
         /// <inheritdoc />
@@ -231,9 +227,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     If not, we default it to the first beat snap in the list.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int laneIndex)
+        private Texture2D GetHitObjectTexture(int laneIndex, GameMode mode)
         {
-            var skin = SkinManager.Skin.Keys[Ruleset.Mode];
+            var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
                 return IsLongNote ? skin.NoteHoldHitObjects[laneIndex][SnapIndex] : skin.NoteHitObjects[laneIndex][SnapIndex];
@@ -259,6 +255,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             return HitPositionOffset - HitObjectSprite.Height;
         }
 
+        /// <summary>
+        ///     Updates LN size
+        /// </summary>
+        /// <param name="offset"></param>
         public void UpdateLongNoteSize(long offset)
         {
             CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
@@ -326,12 +326,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void HandleLongNoteAnimation()
         {
             // Start animation loop if it has not started yet
+            /*
             if (CurrentlyBeingHeld && !LongNoteBodySprite.IsLooping && !Ruleset.Screen.IsPaused)
                 LongNoteBodySprite.StartLoop(Direction.Forward, 30);
 
             // If it is looping however and the game is paused, we'll want to stop the loop.
             else if (!CurrentlyBeingHeld && LongNoteBodySprite.IsLooping && Ruleset.Screen.IsPaused)
                 LongNoteBodySprite.StopLoop();
+                */
         }
 
         /// <summary>
@@ -360,6 +362,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // LongNoteBodySprite.FadeOut(dt, 240);
             // LongNoteEndSprite.FadeOut(dt, 240);
+        }
+
+        public override void Initialize(HitObjectInfo info)
+        {
+            throw new NotImplementedException();
         }
     }
 }
