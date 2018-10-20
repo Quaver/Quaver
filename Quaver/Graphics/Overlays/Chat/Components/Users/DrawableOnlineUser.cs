@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -11,6 +12,7 @@ using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Users
@@ -67,6 +69,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             Alpha = 0;
             DestroyIfParentIsNull = false;
 
+            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+
             CreateAvatar();
             CreateUsername();
             CreateStatus();
@@ -86,6 +90,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the avatar for the user.
         /// </summary>
@@ -98,7 +113,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 UsePreviousSpriteBatchOptions = true,
                 X = 10,
                 Alignment = Alignment.MidLeft,
-                Image = UserInterface.UnknownAvatar,
+                Image = GetAvatarOrRequest()
             };
 
             Avatar.AddBorder(Color.White, 2);
@@ -150,6 +165,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
 
                 Username.Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
+
+                SetAvatar(GetAvatarOrRequest());
                 Avatar.Border.Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
             }
             else
@@ -197,6 +214,62 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
 
             Status.Text = statusText;
             Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
+        }
+
+        /// <summary>
+        ///     Called when a user's steam avatar is loaded. Updates the user's avatar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (User == null || !User.HasUserInfo || e.SteamId != (ulong) User.OnlineUser.SteamId)
+                return;
+
+            SetAvatar(e.Texture);
+        }
+
+        /// <summary>
+        ///     Retrieves the avatar to use for the user.
+        ///
+        ///     If no avatar is available then it'll request to Steam to retrieve it.
+        /// </summary>
+        /// <returns></returns>
+        private Texture2D GetAvatarOrRequest()
+        {
+            var avatar = UserInterface.UnknownAvatar;
+
+            // If we've got a Steam avatar cached, then use it, if not, request it.
+            if (User != null)
+            {
+                if (User.HasUserInfo)
+                {
+                    var steamId = (ulong) User.OnlineUser.SteamId;
+                    Console.WriteLine(steamId);
+
+                    if (SteamManager.UserAvatars.ContainsKey(steamId))
+                        avatar = SteamManager.UserAvatars[steamId];
+                    else
+                        SteamManager.SendAvatarRetrievalRequest(steamId);
+                }
+            }
+
+            return avatar;
+        }
+
+        /// <summary>
+        ///     Sets the user's avatar and does an animation.
+        /// </summary>
+        /// <param name="tex"></param>
+        private void SetAvatar(Texture2D tex)
+        {
+            lock (Avatar.Transformations)
+            {
+                Avatar.Transformations.Clear();
+                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Image = tex;
+            }
         }
     }
 }
