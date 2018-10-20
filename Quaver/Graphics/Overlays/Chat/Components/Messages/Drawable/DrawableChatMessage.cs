@@ -72,7 +72,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             {
                 Parent = this,
                 X = 10,
-                Size = new ScalableVector2(45, 45),
+                Size = new ScalableVector2(44, 44),
                 Y = Padding,
             };
 
