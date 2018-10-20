@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Online;
 using Quaver.Server.Client.Structures;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -55,6 +56,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         ///     the users will be shown.
         /// </summary>
         public int PoolStartingIndex { get; set; }
+
+        /// <summary>
+        ///     The time the last status request update occurred.
+        /// </summary>
+        public long LastStatusRequestTime { get; set; }
 
         /// <inheritdoc />
         ///  <summary>
@@ -112,6 +118,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
+
+            PeriodicallyRequestClientStatuses();
 
             base.Update(gameTime);
         }
@@ -398,6 +406,29 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 RecalculateContainerHeight();
                 UpdateBufferUsers();
             }
+        }
+
+        /// <summary>
+        ///     Periodically requests the client statuses for all shown users in the buffer.
+        /// </summary>
+        private void PeriodicallyRequestClientStatuses()
+        {
+            if (GameBase.Game.TimeRunning - LastStatusRequestTime < 5000)
+                return;
+
+            // Get all the users in the buffer.
+            var userIds = new List<int>();
+
+            for (var i = 0; i < UserBuffer.Count; i++)
+            {
+                var user = UserBuffer.ElementAt(i);
+
+                if (user.User != null)
+                    userIds.Add(user.User.OnlineUser.Id);
+            }
+
+            OnlineManager.Client?.RequestUserStatuses(userIds);
+            LastStatusRequestTime = GameBase.Game.TimeRunning;
         }
     }
 }

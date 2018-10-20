@@ -140,7 +140,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Idle", 24, Color.White, Alignment.TopLeft, int.MaxValue)
+            Status = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "In the menus", 24, Color.White, Alignment.TopLeft, int.MaxValue)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -180,17 +180,18 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Avatar.Border.Tint = Color.White;
                 Username.Tint = Color.White;
             }
+
+            UpdateStatus();
         }
 
         /// <summary>
         ///     Updates the user client status text
         /// </summary>
-        /// <param name="status"></param>
-        public void UpdateStatus(UserClientStatus status)
+        public void UpdateStatus()
         {
             var statusText = "Idle";
 
-            switch (status.Status)
+            switch (User.CurrentStatus.Status)
             {
                 case ClientStatus.InMenus:
                     statusText = "In the menus";
@@ -199,16 +200,16 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                     statusText = "Selecting a song";
                     break;
                 case ClientStatus.Playing:
-                    statusText = $"Playing {status.Content}";
+                    statusText = $"Playing {User.CurrentStatus.Content}";
                     break;
                 case ClientStatus.Paused:
                     statusText = $"Paused";
                     break;
                 case ClientStatus.Watching:
-                    statusText = $"Watching {status.Content}";
+                    statusText = $"Watching {User.CurrentStatus.Content}";
                     break;
                 case ClientStatus.Editing:
-                    statusText = $"Editing: {status.Content}";
+                    statusText = $"Editing: {User.CurrentStatus.Content}";
                     break;
             }
 
