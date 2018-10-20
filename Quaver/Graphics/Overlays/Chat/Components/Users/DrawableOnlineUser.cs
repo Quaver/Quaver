@@ -246,7 +246,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 if (User.HasUserInfo)
                 {
                     var steamId = (ulong) User.OnlineUser.SteamId;
-                    Console.WriteLine(steamId);
 
                     if (SteamManager.UserAvatars.ContainsKey(steamId))
                         avatar = SteamManager.UserAvatars[steamId];
@@ -262,14 +261,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         ///     Sets the user's avatar and does an animation.
         /// </summary>
         /// <param name="tex"></param>
-        private void SetAvatar(Texture2D tex)
-        {
-            lock (Avatar.Transformations)
-            {
-                Avatar.Transformations.Clear();
-                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
-                Avatar.Image = tex;
-            }
-        }
+        private void SetAvatar(Texture2D tex) => Avatar.Image = tex;
     }
 }
