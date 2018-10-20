@@ -250,6 +250,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         }
 
         /// <summary>
+        ///     Clears every single user in the list - used when successfully logging into the server.
+        /// </summary>
+        public void ClearAllUsers()
+        {
+            lock (AvailableUsers)
+            {
+                AvailableUsers.Clear();
+
+                SortUsers();
+                RecalculateContainerHeight();
+                UpdateBufferUsers();
+            }
+        }
+
+        /// <summary>
         ///     Handles when a user disconnects from the server.
         /// </summary>
         public void HandleDisconnectingUser(int userId)

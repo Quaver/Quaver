@@ -255,7 +255,9 @@ namespace Quaver.Online
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             Self = e.Self;
+
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
+            ChatManager.Dialog.OnlineUserList.ClearAllUsers();
 
             lock (OnlineUsers)
             {
