@@ -257,8 +257,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             lock (AvailableUsers)
             {
                 AvailableUsers.RemoveAll(x => x.OnlineUser.Id == userId);
-                SortUsers();
 
+                SortUsers();
+                RecalculateContainerHeight();
                 UpdateBufferUsers();
             }
         }
