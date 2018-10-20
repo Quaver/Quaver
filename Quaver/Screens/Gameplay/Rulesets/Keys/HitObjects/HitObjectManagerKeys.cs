@@ -398,6 +398,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 hitObject.Initialize(info);
                 ObjectPool[info.Lane - 1].Enqueue(hitObject);
             }
+            else
+            {
+                hitObject.Destroy();
+            }
         }
 
         /// <summary>
