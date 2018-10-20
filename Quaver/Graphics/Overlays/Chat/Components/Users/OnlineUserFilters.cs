@@ -259,6 +259,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             };
 
             SearchTextbox.AddBorder(Color.White, 2);
+
+            SearchTextbox.StoppedTypingActionCalltime = 100;
+            SearchTextbox.OnStoppedTyping += text => Overlay.OnlineUserList?.FilterUsers(text);
         }
 
         private void CreateDividerLine()

@@ -308,7 +308,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void FilterUsers()
         {
-            lock (AvailableUsers) lock (OnlineManager.OnlineUsers)
+            lock (AvailableUsers)
+            lock (OnlineManager.OnlineUsers)
             {
                 switch (ConfigManager.SelectedOnlineUserFilterType.Value)
                 {
@@ -326,6 +327,32 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                SortUsers();
+                RecalculateContainerHeight();
+                UpdateBufferUsers();
+            }
+        }
+
+        /// <summary>
+        ///     Filters users by name.
+        /// </summary>
+        /// <param name="text"></param>
+        public void FilterUsers(string text)
+        {
+            lock (AvailableUsers)
+            lock (OnlineManager.OnlineUsers)
+            {
+                // If the user searches for nothing, re-filter the user's by what's in config.
+                if (string.IsNullOrEmpty(text))
+                {
+                    FilterUsers();
+                    return;
+                }
+
+                AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
+                    .Where(x => x.HasUserInfo && x.OnlineUser.Username.ToLower().Contains(text.ToLower()))
+                    .ToList();
 
                 SortUsers();
                 RecalculateContainerHeight();
