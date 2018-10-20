@@ -366,7 +366,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         public override void Initialize(HitObjectInfo info)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
