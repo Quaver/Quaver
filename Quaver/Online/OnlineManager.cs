@@ -142,6 +142,7 @@ namespace Quaver.Online
             Client.OnUsersOnline += OnUsersOnline;
             Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
+            Client.OnUserStatusReceived += OnUserStatusReceived;
         }
 
         /// <summary>
@@ -467,6 +468,25 @@ namespace Quaver.Online
             {
                 OnlineUsers[user.Id] = new User(user);
                 ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
+            }
+        }
+
+        /// <summary>
+        ///     Called when receiving user statuses from the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnUserStatusReceived(object sender, UserStatusEventArgs e)
+        {
+            foreach (var user in e.Statuses)
+            {
+                if (!OnlineUsers.ContainsKey(user.Key))
+                    continue;
+
+                var onlineUser = OnlineUsers[user.Key];
+                onlineUser.CurrentStatus = user.Value;
+
+                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
             }
         }
     }
