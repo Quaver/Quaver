@@ -140,7 +140,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "In the menus", 24, Color.White, Alignment.TopLeft, int.MaxValue)
+            Status = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Idle", 24, Color.White, Alignment.TopLeft, int.MaxValue)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -194,7 +194,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             switch (User.CurrentStatus.Status)
             {
                 case ClientStatus.InMenus:
-                    statusText = "In the menus";
+                    statusText = "Idle";
                     break;
                 case ClientStatus.Selecting:
                     statusText = "Selecting a song";

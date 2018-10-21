@@ -724,16 +724,30 @@ namespace Quaver.Screens.Gameplay
         {
             ClientStatus status;
 
-            if (InReplayMode)
-                status = ClientStatus.Watching;
-            else if (IsResumeInProgress)
-                status = ClientStatus.Playing;
-            else if (IsPaused)
-                status = ClientStatus.Paused;
-            else
-                status = ClientStatus.Playing;
+            string content;
 
-            return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, Map.ToString(), (long) ModManager.Mods);
+            if (InReplayMode)
+            {
+                status = ClientStatus.Watching;
+                content = LoadedReplay.PlayerName;
+            }
+            else if (IsResumeInProgress)
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+            else if (IsPaused)
+            {
+                status = ClientStatus.Paused;
+                content = "";
+            }
+            else
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+
+            return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, content, (long) ModManager.Mods);
         }
     }
 }
