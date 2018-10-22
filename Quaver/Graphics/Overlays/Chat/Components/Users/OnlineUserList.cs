@@ -329,7 +329,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                         continue;
 
                     item.UpdateUser(OnlineManager.OnlineUsers[user.OnlineUser.Id]);
-                    AvailableUsers[AvailableUsers.FindIndex(x => x.OnlineUser.Id == item.User.OnlineUser.Id)] = item.User;
+
+                    var index = AvailableUsers.FindIndex(x => x.OnlineUser.Id == item.User.OnlineUser.Id);
+
+                    if (index == -1)
+                        continue;
+
+                    AvailableUsers[index] = item.User;
 
                     SortUsers();
                     RecalculateContainerHeight();
