@@ -429,12 +429,16 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             {
                 var user = UserBuffer.ElementAt(i);
 
-                if (user.User != null)
+                if (user.User != null && AvailableUsers.Contains(user.User) && !userIds.Contains(user.User.OnlineUser.Id))
                     userIds.Add(user.User.OnlineUser.Id);
             }
 
-            OnlineManager.Client?.RequestUserStatuses(userIds);
             LastStatusRequestTime = GameBase.Game.TimeRunning;
+
+            if (userIds.Count == 0)
+                return;
+
+            OnlineManager.Client?.RequestUserStatuses(userIds);
         }
     }
 }
