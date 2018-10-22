@@ -126,6 +126,7 @@ namespace Quaver.Online.Chat
 
             // Make sure the sender is actual valid.
             message.Sender = OnlineManager.Self;
+            message.Time = TimeHelper.GetUnixTimestampMilliseconds();
 
             // Handle forward slash commands (client sided) and not send to the server.
             if (message.Message.StartsWith("/"))

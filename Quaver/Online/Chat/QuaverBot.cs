@@ -4,6 +4,7 @@ using System.Linq;
 using Quaver.Graphics.Notifications;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 
 namespace Quaver.Online.Chat
 {
@@ -156,7 +157,8 @@ namespace Quaver.Online.Chat
                 // QuaverBot is ID = 0;
                 SenderId = 0,
                 Sender = OnlineManager.OnlineUsers[0],
-                SenderName = "QuaverBot"
+                SenderName = "QuaverBot",
+                Time = TimeHelper.GetUnixTimestampMilliseconds()
             };
 
             // Add the message to the appropriate channel.
