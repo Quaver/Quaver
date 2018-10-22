@@ -225,6 +225,9 @@ namespace Quaver.Screens.Gameplay
             Timing = new GameplayAudioTiming(this);
             Positioning = new GameplayAudioPosition(map);
 
+            // Set base position
+            Positioning.UpdateCurrentPosition(Timing.Time);
+
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);

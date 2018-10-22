@@ -269,7 +269,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void UpdateSpritePositions(long offset)
         {
-            var beingHeld = false;
             if (CurrentlyBeingHeld)
             {
                 if (offset > TrackPosition)
@@ -287,8 +286,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 SpritePosition = GetPosFromOffset(offset);
             }
-
-            // Only update note if it's inside the window
 
             // Update HitBody
             HitObjectSprite.Y = SpritePosition;
