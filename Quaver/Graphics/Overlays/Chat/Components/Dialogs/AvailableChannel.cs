@@ -164,6 +164,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
         /// <param name="e"></param>
         private void OnLeftChatChannel(object sender, LeftChatChannelEventArgs e)
         {
+            if (e.ChannelName != Channel.Name)
+                return;
+
             JoinLeaveButton.OriginalColor = Colors.MainAccent;
             JoinLeaveButton.UpdateText("Join", 0.55f);
             JoinLeaveButton.IsClickable = true;
