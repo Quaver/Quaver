@@ -413,7 +413,7 @@ namespace Quaver.Graphics.Overlays.Chat
             {
                 DialogManager.Dismiss(JoinChannelDialog);
                 JoinChannelDialog = null;
-            }, 450);
+            }, 300);
         }
     }
 }
