@@ -244,6 +244,14 @@ namespace Quaver.Screens.Select.UI.Mods
                     Parent = SceneBackground,
                     Alignment = Alignment.TopLeft,
                     Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
+                },
+
+                // NSV
+                new ModsDialogModifierBool(this, new ManiaModNoSliderVelocities())
+                {
+                    Parent = SceneBackground,
+                    Alignment = Alignment.TopLeft,
+                    Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
                 }
             };
 
