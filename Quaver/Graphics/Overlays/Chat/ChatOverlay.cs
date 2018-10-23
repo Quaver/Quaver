@@ -233,7 +233,7 @@ namespace Quaver.Graphics.Overlays.Chat
             NoChannelMessageContainer = new Sprite()
             {
                 Parent = DialogContainer,
-                Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height - CurrentTopicContainer.Height),
+                Size = new ScalableVector2(MessageContainer.Width, MessageContainer.Height - TextboxContainer.Height + 2),
                 Tint = Color.Black,
                 X = ChannelContainer.Width,
                 Alpha = 0.85f,
