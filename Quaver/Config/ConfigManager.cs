@@ -444,6 +444,10 @@ namespace Quaver.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
 
+            // Have to do this manually.
+            if (string.IsNullOrEmpty(Username.Value))
+                Username.Value = "Player";
+
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
                 .ContinueWith(t =>
