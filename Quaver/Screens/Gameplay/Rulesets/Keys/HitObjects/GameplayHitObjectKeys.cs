@@ -174,7 +174,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="playfield"></param>
         public void Initialize(HitObjectInfo info, GameplayRulesetKeys ruleset)
-        //public override void Initialize(HitObjectInfo info)
         {
             // Update Hit Object State
             Info = info;
@@ -198,7 +197,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
                 LongNoteTrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
-                //todo: make this a float instead?
                 InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
@@ -320,17 +318,15 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Handles animation regarding long notes
         /// </summary>
-        public void HandleLongNoteAnimation()
+        public void HandleAnimations()
         {
             // Start animation loop if it has not started yet
-            /*
-            if (CurrentlyBeingHeld && !LongNoteBodySprite.IsLooping && !Ruleset.Screen.IsPaused)
+            if (CurrentlyBeingHeld && !LongNoteBodySprite.IsLooping)
                 LongNoteBodySprite.StartLoop(Direction.Forward, 30);
 
             // If it is looping however and the game is paused, we'll want to stop the loop.
-            else if (!CurrentlyBeingHeld && LongNoteBodySprite.IsLooping && Ruleset.Screen.IsPaused)
+            else if (!CurrentlyBeingHeld && LongNoteBodySprite.IsLooping)
                 LongNoteBodySprite.StopLoop();
-                */
         }
 
         /// <summary>

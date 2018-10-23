@@ -286,6 +286,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
+                    hitObject.HandleAnimations();
                     hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
                 }
             }
@@ -341,7 +342,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    hitObject.HandleLongNoteAnimation();
+                    hitObject.HandleAnimations();
                     hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
                 }
             }

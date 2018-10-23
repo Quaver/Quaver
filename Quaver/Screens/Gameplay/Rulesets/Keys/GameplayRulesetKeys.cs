@@ -67,7 +67,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            TimingLineManager.UpdateObjectPool();
+
+            if (!Screen.Failed && !Screen.IsPaused)
+                TimingLineManager.UpdateObjectPool();
         }
 
         /// <inheritdoc />
