@@ -90,6 +90,9 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Paused:
                     gameplayModifier = new ManiaModPaused();
                     break;
+                case ModIdentifier.NoFail:
+                    gameplayModifier = new ModNoFail();
+                    break;
                 default:
                     return;
             }

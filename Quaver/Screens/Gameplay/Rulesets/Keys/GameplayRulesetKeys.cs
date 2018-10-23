@@ -15,7 +15,7 @@ using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
 using Quaver.Skinning;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys
@@ -23,9 +23,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
     public class GameplayRulesetKeys : GameplayRuleset
     {
         /// <summary>
-        ///     The Timing Line Object Manager
+        ///     Reference to the timing line manager.
+        ///
+        ///     It gets initialized in GameplayRulesetKeys because it relies on both
+        ///     the playfield and the HitObjectManager.
+        ///
+        ///     We can't intiialize it in Playfield as that gets created first.
         /// </summary>
-        public TimingLineManager TimingLineManager { get; private set; }
+        public TimingLineManager TimingLineManager { get; }
 
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
@@ -56,7 +61,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
 
         /// <inheritdoc />
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)

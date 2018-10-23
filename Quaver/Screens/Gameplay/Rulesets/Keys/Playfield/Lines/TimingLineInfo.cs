@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
+namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 {
     public class TimingLineInfo
     {
