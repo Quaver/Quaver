@@ -65,7 +65,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         public override void Update(GameTime gameTime)
         {
             // Only allow the container to be scrollable if the mouse is actually on top of the area.
-            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position);
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && Overlay.IsOnTop;
 
             base.Update(gameTime);
         }
