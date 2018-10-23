@@ -60,8 +60,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Textbox.AlwaysFocused = !Overlay.OnlineUserFilters.SearchTextbox.Focused && ChatManager.MuteTimeLeft <= 0;
-            Textbox.Focused = !Overlay.OnlineUserFilters.SearchTextbox.Focused && ChatManager.MuteTimeLeft <= 0;
+            Textbox.AlwaysFocused = !Overlay.OnlineUserFilters.SearchTextbox.Focused && ChatManager.MuteTimeLeft <= 0 && Overlay.IsOnTop;
+            Textbox.Focused = !Overlay.OnlineUserFilters.SearchTextbox.Focused && ChatManager.MuteTimeLeft <= 0 && Overlay.IsOnTop;
 
             float targetSendButtonAlpha;
 
