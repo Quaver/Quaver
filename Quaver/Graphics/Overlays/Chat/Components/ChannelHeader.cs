@@ -1,7 +1,12 @@
 ﻿using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Graphics.Overlays.Chat.Components.Dialogs;
+using Quaver.Screens.Menu.UI.Navigation.User;
 using Wobble.Graphics;
+using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Graphics.Overlays.Chat.Components
@@ -16,7 +21,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     The text that displays "Channels"
         /// </summary>
-        private SpriteText TextChannels { get; set; }
+        private SpriteTextBitmap TextChannels { get; set; }
+
+        /// <summary>
+        ///     The button to join chat channels.
+        /// </summary>
+        private BorderedTextButton JoinButton { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -32,15 +42,44 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             Alpha = 0.85f;
 
             CreateChannelsText();
+            CreateJoinButton();
         }
 
         /// <summary>
         ///     Creates the text that says channels.
         /// </summary>
-        private void CreateChannelsText() => TextChannels = new SpriteText(Fonts.Exo2Regular24, "Chat Channels", 0.60f)
+        private void CreateChannelsText()
+        {
+            TextChannels = new SpriteTextBitmap(BitmapFonts.Exo2Medium, "Chat Channels", 24, Color.White, Alignment.MidLeft, int.MaxValue)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                },
+                X = 15
+            };
+
+            TextChannels.Size = new ScalableVector2(TextChannels.Width * 0.60f, TextChannels.Height * 0.60f);
+        }
+
+        /// <summary>
+        ///     Creates the button to join chat channels.
+        /// </summary>
+        private void CreateJoinButton() => JoinButton = new BorderedTextButton("Join", Colors.MainAccent,
+            (o, e) => Overlay.OpenJoinChannelDialog())
         {
             Parent = this,
-            Alignment = Alignment.MidCenter
+            Alignment = Alignment.MidRight,
+            X = -TextChannels.X,
+            Y = -2,
+            Size = new ScalableVector2(75, 30),
+            UsePreviousSpriteBatchOptions = true,
+            Text =
+            {
+                UsePreviousSpriteBatchOptions = true
+            }
         };
     }
 }

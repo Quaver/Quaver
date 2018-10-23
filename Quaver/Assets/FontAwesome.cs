@@ -54,13 +54,14 @@ namespace Quaver.Assets
         public static Texture2D Times { get; set; }
         public static Texture2D Keyboard { get; set; }
         public static Texture2D Search { get; set; }
-        public static Texture2D ArrowCircle { get; set; }        
+        public static Texture2D ArrowCircle { get; set; }
         public static Texture2D Gavel { get; set; }
         public static Texture2D Wrench { get; set; }
         public static Texture2D StepBackward { get; set; }
         public static Texture2D StepForward { get; set; }
         public static Texture2D Undo { get; set; }
         public static Texture2D BarGraph { get; set; }
+        public static Texture2D Group { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -122,6 +123,7 @@ namespace Quaver.Assets
             StepForward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_forward);
             Undo = AssetLoader.LoadTexture2D(QuaverResources.fa_undo_arrow);
             BarGraph = AssetLoader.LoadTexture2D(QuaverResources.fa_bar_graph_on_a_rectangle);
+            Group = AssetLoader.LoadTexture2D(QuaverResources.fa_group_profile_users);
         }
     }
 }

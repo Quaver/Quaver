@@ -89,6 +89,9 @@ namespace Quaver.Online.Chat
         /// </summary>
         public static void ToggleChatOverlay(bool forceOpen = false)
         {
+            if (Dialog.JoinChannelDialog != null && Dialog.JoinChannelDialog.IsOnTop)
+                return;
+
             if (OnlineManager.Connected && (KeyboardManager.IsUniqueKeyPress(Keys.F8) || forceOpen ||
                                             KeyboardManager.IsUniqueKeyPress(Keys.Escape) && IsActive) || (!OnlineManager.Connected && IsActive)
                 && TimeSinceLastActivated >= 450)

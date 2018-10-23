@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Overlays.Chat.Components;
 using Quaver.Graphics.Overlays.Chat.Components.Channels;
+using Quaver.Graphics.Overlays.Chat.Components.Dialogs;
 using Quaver.Graphics.Overlays.Chat.Components.Messages;
 using Quaver.Graphics.Overlays.Chat.Components.Topic;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Online.Chat;
+using Quaver.Scheduling;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Window;
 
@@ -134,6 +137,16 @@ namespace Quaver.Graphics.Overlays.Chat
         /// </summary>
         public OnlineUserList OnlineUserList { get; private set; }
 
+        /// <summary>
+        ///     The dialog to join chat channels.
+        /// </summary>
+        public JoinChannelDialog JoinChannelDialog { get; private set; }
+
+        /// <summary>
+        ///     The amount of time that has passed since the join channel dialog was last opened.
+        /// </summary>
+        public double TimeSinceLastChannelDialogOpened { get; private set; } = 1000;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -169,6 +182,16 @@ namespace Quaver.Graphics.Overlays.Chat
             CreateDividerLines();
 
             DialogContainer.X = -DialogContainer.Width;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            TimeSinceLastChannelDialogOpened += gameTime.ElapsedGameTime.TotalMilliseconds;
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -357,6 +380,40 @@ namespace Quaver.Graphics.Overlays.Chat
             ChannelHeader.Parent = ChannelContainer;
             CurrentTopic.Parent = CurrentTopicContainer;
             OnlineUsersHeader.Parent = OnlineUsersHeaderContainer;
+        }
+
+        /// <summary>
+        ///     Properly opens and sets the join channel dialog.
+        /// </summary>
+        public void OpenJoinChannelDialog()
+        {
+            if (TimeSinceLastChannelDialogOpened < 500)
+                return;
+
+            JoinChannelDialog = new JoinChannelDialog(this);
+            DialogManager.Show(JoinChannelDialog);
+            TimeSinceLastChannelDialogOpened = 0;
+        }
+
+        /// <summary>
+        ///     Closes the JoinChannelDialog if it is already open.
+        /// </summary>
+        public void CloseJoinChannelDialog()
+        {
+            if (JoinChannelDialog == null)
+                return;
+
+            TimeSinceLastChannelDialogOpened = 0;
+
+            JoinChannelDialog.Transformations.Clear();
+            JoinChannelDialog.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint,
+                JoinChannelDialog.Y, JoinChannelDialog.Height, 850));
+
+            Scheduler.RunAfter(() =>
+            {
+                DialogManager.Dismiss(JoinChannelDialog);
+                JoinChannelDialog = null;
+            }, 450);
         }
     }
 }
