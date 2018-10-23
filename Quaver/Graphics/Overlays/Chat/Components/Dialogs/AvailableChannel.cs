@@ -74,6 +74,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             CreateJoinLeaveButton();
 
             OnlineManager.Client.OnJoinedChatChannel += OnJoinedChatChannel;
+            OnlineManager.Client.OnLeftChatChannel += OnLeftChatChannel;
         }
 
         /// <inheritdoc />
@@ -95,6 +96,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
         public override void Destroy()
         {
             OnlineManager.Client.OnJoinedChatChannel -= OnJoinedChatChannel;
+            OnlineManager.Client.OnLeftChatChannel -= OnLeftChatChannel;
             base.Destroy();
         }
 
@@ -123,20 +125,14 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 {
                     // User needs to leave.
                     if (ChatManager.JoinedChatChannels.Any(x => x.Name == Channel.Name))
-                    {
                         OnlineManager.Client?.LeaveChatChannel(Channel);
-                        JoinLeaveButton.OriginalColor = Colors.MainAccent;
-                        JoinLeaveButton.UpdateText("Join", 0.55f);
-                    }
                     // User wants to join
                     else
-                    {
                         OnlineManager.Client?.JoinChatChannel(Channel.Name);
 
-                        JoinLeaveButton.OriginalColor = Color.White;
-                        JoinLeaveButton.UpdateText("Please wait...", 0.55f);
-                        JoinLeaveButton.IsClickable = false;
-                    }
+                    JoinLeaveButton.OriginalColor = Color.White;
+                    JoinLeaveButton.UpdateText("Please wait...", 0.55f);
+                    JoinLeaveButton.IsClickable = false;
                 }
             })
             {
@@ -158,6 +154,18 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             JoinLeaveButton.OriginalColor = Color.Crimson;
             JoinLeaveButton.UpdateText("Leave", 0.55f);
+            JoinLeaveButton.IsClickable = true;
+        }
+
+        /// <summary>
+        ///     Called when we've left a chat channel successfully.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLeftChatChannel(object sender, LeftChatChannelEventArgs e)
+        {
+            JoinLeaveButton.OriginalColor = Colors.MainAccent;
+            JoinLeaveButton.UpdateText("Join", 0.55f);
             JoinLeaveButton.IsClickable = true;
         }
     }
