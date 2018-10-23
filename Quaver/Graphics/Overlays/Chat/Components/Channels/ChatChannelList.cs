@@ -75,8 +75,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// </summary>
         public void InitializeChannel(ChatChannel channel, bool autoSelectChannel = true)
         {
-            if (Overlay.ChannelMessageContainers.ContainsKey(channel))
+            // Try to find an existing channel, if there is one, then update the incoming channel.
+            var existingChannel = Overlay.ChannelMessageContainers.ToList().Find(x => x.Key.Name == channel.Name);
+            if (existingChannel.Key != null)
+            {
+                existingChannel.Value.Channel = channel;
                 return;
+            }
 
             var button = new ChatChannelListButton(this, channel);
 

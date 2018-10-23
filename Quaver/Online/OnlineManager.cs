@@ -259,8 +259,10 @@ namespace Quaver.Online
 
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
             ChatManager.Dialog.OnlineUserList.ClearAllUsers();
-            ChatManager.JoinedChatChannels.Clear();
-            ChatManager.AvailableChatChannels.Clear();
+
+            // Request to join chats if we are already in them upon logging in (for reconnections)
+            foreach (var chan in ChatManager.JoinedChatChannels)
+                Client?.JoinChatChannel(chan.Name);
 
             lock (OnlineUsers)
             {

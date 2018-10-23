@@ -175,7 +175,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
         }
 
         /// <summary>
-        ///
+        ///    Adds all the available channels to the dialog container.
         /// </summary>
         private void AddChannels()
         {

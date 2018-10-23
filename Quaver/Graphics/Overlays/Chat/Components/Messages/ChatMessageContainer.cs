@@ -27,7 +27,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// <summary>
         ///     The channel this container is for.
         /// </summary>
-        public ChatChannel Channel { get; }
+        public ChatChannel Channel { get; set; }
 
         /// <summary>
         ///     The list of drawable chat messages in this container.

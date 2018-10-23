@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Screens.Menu.UI.Navigation.User;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
@@ -69,6 +71,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             description.Size = new ScalableVector2(description.Width * 0.50f, description.Height * 0.50f);
             CreateJoinLeaveButton();
+
+            OnlineManager.Client.OnJoinedChatChannel += OnJoinedChatChannel;
         }
 
         /// <inheritdoc />
@@ -84,6 +88,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            OnlineManager.Client.OnJoinedChatChannel -= OnJoinedChatChannel;
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the button to join/leave the chat channel.
         /// </summary>
@@ -92,7 +105,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             string text;
             Color color;
 
-            if (ChatManager.JoinedChatChannels.Contains(Channel))
+            if (ChatManager.JoinedChatChannels.Any(x => x.Name == Channel.Name))
             {
                 text = "Leave";
                 color = Color.Crimson;
@@ -105,12 +118,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             JoinLeaveButton = new BorderedTextButton(text, color, (o, e) =>
             {
-                lock (ChatManager.JoinedChatChannels)
+                lock (ChatManager.Dialog.ChatChannelList.Buttons)
                 {
                     // User needs to leave.
-                    if (ChatManager.JoinedChatChannels.Contains(Channel))
+                    if (ChatManager.JoinedChatChannels.Any(x => x.Name == Channel.Name))
                     {
-                        OnlineManager.Client?.LeaveChatChannel(Channel);
+                        OnlineManager.Client?.LeaveChatChannel(ChatManager.JoinedChatChannels.Find(x => x.Name == Channel.Name));
 
                         JoinLeaveButton.OriginalColor = Colors.MainAccent;
                         JoinLeaveButton.UpdateText("Join", 0.55f);
@@ -120,8 +133,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                     {
                         OnlineManager.Client?.JoinChatChannel(Channel.Name);
 
-                        JoinLeaveButton.OriginalColor = Color.Crimson;
-                        JoinLeaveButton.UpdateText("Leave", 0.55f);
+                        JoinLeaveButton.OriginalColor = Color.White;
+                        JoinLeaveButton.UpdateText("Please wait...", 0.55f);
+                        JoinLeaveButton.IsClickable = false;
                     }
                 }
             })
@@ -130,6 +144,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Alignment = Alignment.MidRight,
                 X = -205
             };
+        }
+
+        /// <summary>
+        ///     Called when joining a chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnJoinedChatChannel(object sender, JoinedChatChannelEventArgs e)
+        {
+            if (e.Channel != Channel.Name)
+                return;
+
+            JoinLeaveButton.OriginalColor = Color.Crimson;
+            JoinLeaveButton.UpdateText("Leave", 0.55f);
+            JoinLeaveButton.IsClickable = true;
         }
     }
 }

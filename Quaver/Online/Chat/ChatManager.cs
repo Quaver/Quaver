@@ -179,9 +179,13 @@ namespace Quaver.Online.Chat
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public static void OnAvailableChatChannel(object sender, AvailableChatChannelEventArgs e)
-        {
+         {
+             Logger.Important($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
+
+             if (AvailableChatChannels.Any(x => x.Name == e.Channel.Name))
+                 return;
+
             AvailableChatChannels.Add(e.Channel);
-            Logger.Important($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
         }
 
         /// <summary>
