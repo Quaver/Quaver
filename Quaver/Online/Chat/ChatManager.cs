@@ -247,9 +247,6 @@ namespace Quaver.Online.Chat
             if (channelButton != oldSelected)
                 channelButton.SelectChatChannel();
 
-            // Leave the channel
-            Dialog.CurrentTopic.CloseActiveChatChannel();
-
             // Select the old channel that was originally there.
             if (channelButton != oldSelected)
                 oldSelected.SelectChatChannel();

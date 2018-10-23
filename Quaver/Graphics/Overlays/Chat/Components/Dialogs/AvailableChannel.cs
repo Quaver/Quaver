@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
@@ -118,13 +119,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             JoinLeaveButton = new BorderedTextButton(text, color, (o, e) =>
             {
-                lock (ChatManager.Dialog.ChatChannelList.Buttons)
+                lock (ChatManager.JoinedChatChannels)
                 {
                     // User needs to leave.
                     if (ChatManager.JoinedChatChannels.Any(x => x.Name == Channel.Name))
                     {
-                        OnlineManager.Client?.LeaveChatChannel(ChatManager.JoinedChatChannels.Find(x => x.Name == Channel.Name));
-
+                        OnlineManager.Client?.LeaveChatChannel(Channel);
                         JoinLeaveButton.OriginalColor = Colors.MainAccent;
                         JoinLeaveButton.UpdateText("Join", 0.55f);
                     }

@@ -135,7 +135,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
 
             // For public channels, request to leave the chat channel.
             if (!Overlay.ActiveChannel.IsPrivate)
-                OnlineManager.Client.LeaveChatChannel(Overlay.ActiveChannel);
+            {
+                if (ChatManager.JoinedChatChannels.Any(x => x.Name == Overlay.ActiveChannel.Name))
+                    OnlineManager.Client.LeaveChatChannel(Overlay.ActiveChannel);
+            }
 
             var tfX = new Transformation(TransformationProperty.X, Easing.Linear, channelButton.X, -(channelButton.Width + 5), 100);
             channelButton.Transformations.Add(tfX);
