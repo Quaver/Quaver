@@ -10,7 +10,6 @@ using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
-using Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Health;
 using Quaver.Skinning;

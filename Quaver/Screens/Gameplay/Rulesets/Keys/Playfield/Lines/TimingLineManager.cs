@@ -1,11 +1,7 @@
-using Quaver.API.Maps;
-using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Quaver.Skinning;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using Quaver.API.Maps;
 
-namespace Quaver.Screens.Gameplay.Rulesets.Keys.TimingLines
+namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 {
     public class TimingLineManager
     {
