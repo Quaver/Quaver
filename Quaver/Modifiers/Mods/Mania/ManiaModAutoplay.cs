@@ -18,7 +18,8 @@ namespace Quaver.Modifiers.Mods.Mania
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
-            ModIdentifier.NoPause
+            ModIdentifier.NoPause,
+            ModIdentifier.NoFail
         };
 
         public void InitializeMod()
