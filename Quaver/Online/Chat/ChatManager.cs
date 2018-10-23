@@ -237,6 +237,8 @@ namespace Quaver.Online.Chat
             if (channel == null)
                 return;
 
+            JoinedChatChannels.Remove(channel);
+
             // The previous selected button.
             var oldSelected = Dialog.ChatChannelList.SelectedButton;
 
@@ -246,6 +248,9 @@ namespace Quaver.Online.Chat
             // Make sure the channel is selected temporarily.
             if (channelButton != oldSelected)
                 channelButton.SelectChatChannel();
+
+            // Leave the channel
+            Dialog.CurrentTopic.CloseActiveChatChannel();
 
             // Select the old channel that was originally there.
             if (channelButton != oldSelected)
