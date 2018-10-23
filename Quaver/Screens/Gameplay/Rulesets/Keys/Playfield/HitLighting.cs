@@ -19,7 +19,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     If we're curerntly holding a long note.
         ///     It'll loop through the animation until we aren't anymore.
         /// </summary>
-        public bool IsHoldingLongNote { get; set; }
+        private bool IsHoldingLongNote { get; set; }
 
         /// <summary>
         ///     If we're currently performing a one frame animation.
@@ -53,9 +53,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     When hitting an object, it'll loop through once.
         /// </summary>
-        public void PerformHitAnimation()
+        public void PerformHitAnimation(bool longNote)
         {
             var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
+            IsHoldingLongNote = longNote;
 
             // First begin by replacing the frames
             ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
@@ -65,7 +66,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
             Visible = true;
             Alpha = 1;
 
-            // If we are performing a hone frame animation however, we don't want to handle it
+            // If we are performing a one frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
             PerformingOneFrameAnimation = Frames.Count == 1;
             if (PerformingOneFrameAnimation)

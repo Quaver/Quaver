@@ -179,7 +179,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Update Hit Object State
             Info = info;
             HitObjectSprite.Tint = Color.White; // todo: reference this in Colors class
-            IsLongNote = Info.EndTime > 0;
+            IsLongNote = info.EndTime > 0;
+            if (IsLongNote)
+            {
+                Console.Out.WriteLine("lane: " + info.Lane + ", start: " + info.StartTime + ", end: " + info.EndTime);
+            }
             TrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
             LongNoteBodySprite.StopLoop();

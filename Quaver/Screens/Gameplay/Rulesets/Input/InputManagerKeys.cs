@@ -173,7 +173,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Play the HitSounds for this object.
             HitObjectManager.PlayObjectHitSounds(hitObject.Info);
 
-            //NEW
+            // Get Judgement and references
             var time = (int) Ruleset.Screen.Timing.Time;
             var hitDifference = hitObject.Info.StartTime - time;
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
@@ -199,6 +199,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             playfield.Stage.ComboDisplay.MakeVisible();
             playfield.Stage.HitError.AddJudgement(judgement, hitObject.Info.StartTime - Ruleset.Screen.Timing.Time);
 
+            // Perform hit burst animation
+            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
             // Update Object Pooling
             switch (judgement)
             {
@@ -211,27 +214,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                     manager.RecyclePoolObject(hitObject);
                     break;
                 default:
+                    // Perform Hit Lighting Animation and Handle Object pooling
+                    playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation(hitObject.IsLongNote);
                     if (hitObject.IsLongNote)
                         manager.ChangePoolObjectStatusToHeld(hitObject);
-                    // If the object is not an LN, recycle it.
                     else
                         manager.RecyclePoolObject(hitObject);
                     break;
             }
-
-            // Perform hit burst animation
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-
-            // Don't execute any further if the user early missed, as these
-            // are things pertaining to animations when the user actually hits the note.
-            if (judgement == Judgement.Miss)
-                return;
-
-            // If the object is a long note, let the hitlighting actually know about it.
-            if (hitObject.IsLongNote)
-                playfield.Stage.HitLightingObjects[laneIndex].IsHoldingLongNote = true;
-
-            playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation();
         }
 
         /// <summary>
@@ -239,23 +229,21 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>
         private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeys hitObject)
         {
+            // Get judgement and references
             var laneIndex = hitObject.Info.Lane - 1;
-
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-
-            // Stop looping hit lighting.
-            playfield.Stage.HitLightingObjects[laneIndex].StopHolding();
-
-            // Calculate Score + Get Judgement.
-            var hitDifference = (int) (manager.HeldLongNotes[laneIndex].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time);
+            var hitDifference = manager.HeldLongNotes[laneIndex].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
             var judgement = processor.CalculateScore(hitDifference, KeyPressType.Release);
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
+                playfield.Stage.ComboDisplay.MakeVisible();
+
+                // Dequeue from pool
                 hitObject = manager.HeldLongNotes[laneIndex].Dequeue();
+
                 // Add new hit stat data.
                 var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, hitObject.Info, (int) Ruleset.Screen.Timing.Time,
                                             judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
@@ -269,6 +257,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+                // Stop looping hit lighting.
+                playfield.Stage.HitLightingObjects[laneIndex].StopHolding();
 
                 // Recycle object in the pool if it has been hit on time, or else just kill it
                 if (judgement == Judgement.Marv || judgement == Judgement.Perf)
