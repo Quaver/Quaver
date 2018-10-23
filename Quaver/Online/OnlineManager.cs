@@ -259,6 +259,8 @@ namespace Quaver.Online
 
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
             ChatManager.Dialog.OnlineUserList.ClearAllUsers();
+            ChatManager.JoinedChatChannels.Clear();
+            ChatManager.AvailableChatChannels.Clear();
 
             lock (OnlineUsers)
             {
