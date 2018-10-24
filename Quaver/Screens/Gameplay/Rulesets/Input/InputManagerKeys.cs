@@ -268,11 +268,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
                 playfield.Stage.HitLightingObjects[lane].StopHolding();
 
-                // Recycle object in the pool if it has been hit on time, or else just kill it
-                if (judgement == Judgement.Marv || judgement == Judgement.Perf)
-                    manager.RecyclePoolObject(hitObject);
-                else
+                // If the player recieved an early miss or "okay",
+                // show the player that they were inaccurate by killing the object instead of recycling it
+                if (judgement == Judgement.Miss || judgement == Judgement.Okay)
                     manager.KillHoldPoolObject(hitObject);
+                else
+                    manager.RecyclePoolObject(hitObject);
 
                 return;
             }
