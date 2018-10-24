@@ -2,14 +2,23 @@
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
+using Quaver.Online;
+using Quaver.Scheduling;
+using Steamworks;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 
 namespace Quaver.Screens.Connecting.UI
 {
     public class UsernameSelectionTextbox : Textbox
     {
+        /// <summary>
+        ///     The connecting screen view.
+        /// </summary>
+        private ConnectingScreenView View { get; }
+
         /// <summary>
         ///     The overlay for the textbox.
         /// </summary>
@@ -18,9 +27,11 @@ namespace Quaver.Screens.Connecting.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public UsernameSelectionTextbox()
+        public UsernameSelectionTextbox(ConnectingScreenView view)
             : base(TextboxStyle.SingleLine, new ScalableVector2(360, 40), Fonts.Exo2Regular24, "", "Enter Username", 0.60f)
         {
+            View = view;
+
             Image = UserInterface.UsernameSelectionTextbox;
             InputText.Y = 5;
             Cursor.Y = 6;
@@ -49,7 +60,13 @@ namespace Quaver.Screens.Connecting.UI
         /// <param name="text"></param>
         private void OnBoxSubmitted(string text)
         {
-            Console.WriteLine("Text submitted with: " + text);
+            DialogManager.Dismiss();
+
+            Scheduler.RunThread(() =>
+            {
+                OnlineManager.Client.ChooseUsername(text, SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
+                    SteamManager.PTicket, SteamManager.PcbTicket);
+            });
         }
 
         /// <summary>
@@ -58,7 +75,6 @@ namespace Quaver.Screens.Connecting.UI
         /// <param name="text"></param>
         private void OnUserStoppedTyping(string text)
         {
-            Console.WriteLine("Stopped typing with: " + text);
         }
     }
 }

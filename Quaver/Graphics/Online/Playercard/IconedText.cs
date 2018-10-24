@@ -28,6 +28,7 @@ namespace Quaver.Graphics.Online.Playercard
         public IconedText(Texture2D icon, string text)
         {
             Alpha = 0;
+            SetChildrenVisibility = true;
 
             Icon = new Sprite
             {

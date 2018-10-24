@@ -10,13 +10,15 @@ using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Helpers;
+using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Jukebox;
 using Quaver.Screens.Menu.UI.Navigation;
+using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
-using Quaver.Screens.Menu.UI.User;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
@@ -159,8 +161,7 @@ namespace Quaver.Screens.Menu
         {
             new NavbarItem("Home", true),
             new NavbarItem("Download Maps"),
-            new NavbarItem("Leaderboard"),
-            new NavbarItem("Challenges"),
+            new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
@@ -337,7 +338,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         private void CreatePlayercard()
         {
-            Playercard = new UserPlayercard(ConfigManager.Username.Value, true)
+            Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,

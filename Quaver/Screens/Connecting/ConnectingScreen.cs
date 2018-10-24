@@ -1,3 +1,8 @@
+using Quaver.API.Enums;
+using Quaver.Modifiers;
+using Quaver.Online;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Connecting
@@ -16,6 +21,16 @@ namespace Quaver.Screens.Connecting
 
         /// <summary>
         /// </summary>
-        public ConnectingScreen() => View = new ConnectingScreenView(this);
+        public ConnectingScreen()
+        {
+            OnlineManager.Login();
+            View = new ConnectingScreenView(this);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => null;
     }
 }

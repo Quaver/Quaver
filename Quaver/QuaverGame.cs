@@ -16,6 +16,8 @@ using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
+using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens;
 using Quaver.Screens.Connecting;
@@ -23,6 +25,7 @@ using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
 using Quaver.Shaders;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -112,6 +115,8 @@ namespace Quaver
 
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
 
+            SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+
             // Load all game assets.
             FontAwesome.Load();
             BitmapFonts.Load();
@@ -141,6 +146,7 @@ namespace Quaver
         /// </summary>
         protected override void UnloadContent()
         {
+            OnlineManager.Client?.Disconnect();
             base.UnloadContent();
         }
 
@@ -156,10 +162,14 @@ namespace Quaver
 
             base.Update(gameTime);
 
+            if (SteamManager.IsInitialized)
+                SteamAPI.RunCallbacks();
+
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
+            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
             // Global Input
@@ -190,13 +200,14 @@ namespace Quaver
             GameBase.DefaultSpriteBatchOptions.Begin();
             SpriteBatch.End();
 
-            NotificationManager.Draw(gameTime);
-
             // Draw dialogs
             DialogManager.Draw(gameTime);
 
+            NotificationManager.Draw(gameTime);
+
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
+
             LogManager.Draw(gameTime);
         }
 

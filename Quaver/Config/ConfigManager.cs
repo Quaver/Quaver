@@ -9,6 +9,7 @@ using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
@@ -240,6 +241,11 @@ namespace Quaver.Config
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
 
         /// <summary>
+        ///     How the user is currently filtering their online users.
+        /// </summary>
+        internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -411,6 +417,7 @@ namespace Quaver.Config
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
+            SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
@@ -436,6 +443,10 @@ namespace Quaver.Config
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
+
+            // Have to do this manually.
+            if (string.IsNullOrEmpty(Username.Value))
+                Username.Value = "Player";
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
@@ -504,6 +515,7 @@ namespace Quaver.Config
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
+                    SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

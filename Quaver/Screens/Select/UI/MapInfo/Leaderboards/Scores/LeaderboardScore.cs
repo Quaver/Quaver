@@ -1,18 +1,23 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
@@ -101,17 +106,49 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (Score.IsOnline)
+            {
+                // ReSharper disable once DelegateSubtraction
+                SteamManager.SteamUserAvatarLoaded -= OnAvatarLoaded;
+            }
+
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the user's avatar.
         /// </summary>
-        private void CreateAvatar() => Avatar = new Sprite()
+        private void CreateAvatar()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            Size = new ScalableVector2(Height, Height),
-            Image = ConfigManager.Username.Value == Score.Name ? UserInterface.YouAvatar : UserInterface.UnknownAvatar,
-            X = 50
-        };
+            Avatar = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Height, Height),
+                X = 50
+            };
+
+            if (Score.IsOnline)
+                SteamManager.SteamUserAvatarLoaded += OnAvatarLoaded;
+
+            if (ConfigManager.Username.Value == Score.Name)
+                Avatar.Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
+            else if (Score.IsOnline && SteamManager.UserAvatars.ContainsKey((ulong) Score.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong) Score.SteamId];
+            else
+            {
+                // Request steam avatar.
+                Avatar.Image = UserInterface.UnknownAvatar;
+
+                if (Score.IsOnline)
+                    SteamManager.SendAvatarRetrievalRequest((ulong) Score.SteamId);
+            }
+        }
 
         /// <summary>
         ///     Creates the grade achieved sprite.
@@ -237,6 +274,32 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Section.ScrollContainer.ScreenRectangle.ToRectangle());
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+        }
+
+        /// <summary>
+        ///     Called when a steam avatar has loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (!Score.IsOnline)
+                return;
+
+            // If it doesn't apply to this message.
+            if (e.SteamId != (ulong) Score.SteamId)
+                return;
+
+            try
+            {
+                Avatar.Transformations.Clear();
+                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Image = e.Texture;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, LogType.Runtime);
+            }
         }
     }
 }

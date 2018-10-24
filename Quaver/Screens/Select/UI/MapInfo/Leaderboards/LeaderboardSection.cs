@@ -76,7 +76,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 
             // If the mouse is in the bounds of the scroll container, then
             // allow that to scroll, and turn off mapset scrolling.
-            if (GraphicsHelper.RectangleContains(ScrollContainer.ScreenRectangle, MouseManager.CurrentState.Position))
+            if (GraphicsHelper.RectangleContains(ScrollContainer.ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0)
             {
                 ScrollContainer.InputEnabled = true;
                 selectScreenView.MapsetContainer.InputEnabled = false;

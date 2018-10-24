@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Helpers;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 
 namespace Quaver.Graphics
 {
@@ -47,6 +49,30 @@ namespace Quaver.Graphics
         /// </summary>
         public static readonly Color Swan = ColorHelper.HexToColor("#db88c2");
 
+        /// <summary>
+        ///     Converts an XNA color to System.Drawing
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static System.Drawing.Color XnaToSystemDrawing(Color color) => System.Drawing.Color.FromArgb(color.R, color.G, color.B);
+
+        /// <summary>
+        ///     Gets the chat color of a given user
+        /// </summary>
+        /// <param name="userGroups"></param>
+        /// <returns></returns>
+        public static Color GetUserChatColor(UserGroups userGroups)
+        {
+            if (userGroups.HasFlag(UserGroups.Developer))
+                return Swan;
+            if (userGroups.HasFlag(UserGroups.Bot))
+                return ColorHelper.HexToColor($"#f8ff97");
+            if (userGroups.HasFlag(UserGroups.Admin))
+                return MainAccent;
+            if (userGroups.HasFlag(UserGroups.Normal))
+                return Color.White;
+
+            return Color.White;
+        }
     }
 }

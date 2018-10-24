@@ -20,6 +20,8 @@ using Quaver.Screens.Edit.Rulesets;
 using Quaver.Screens.Edit.Rulesets.Keys;
 using Quaver.Screens.Edit.UI;
 using Quaver.Screens.Menu;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Bindables;
@@ -197,5 +199,12 @@ namespace Quaver.Screens.Edit
             else
                 NotificationManager.Show(NotificationLevel.Error, "An error ocurred when trying to edit this map.");
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
+            (byte) Map.Mode, Map.ToString(), (long) ModManager.Mods);
     }
 }

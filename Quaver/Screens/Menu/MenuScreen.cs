@@ -1,8 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using osu_database_reader;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Modifiers;
 using Quaver.Screens.Menu.UI.Dialogs;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Wobble.Discord;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -62,5 +66,12 @@ namespace Quaver.Screens.Menu
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 DialogManager.Show(new QuitDialog());
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "",
+            (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
     }
 }

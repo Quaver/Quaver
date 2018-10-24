@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Config;
+using Quaver.Online;
+using Wobble.Logging;
 
 namespace Quaver
 {
@@ -24,6 +27,14 @@ namespace Quaver
         [STAThread]
         public static void Main()
         {
+            // Log all unhandled exceptions.
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            {
+                var exception = args.ExceptionObject as Exception;
+                Logger.Error(exception, LogType.Runtime);
+                Environment.Exit(1);
+            };
+
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
@@ -32,10 +43,11 @@ namespace Quaver
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            ConfigManager.Initialize();
+            SteamManager.Initialize();
+
             using (var game = new QuaverGame())
-            {
                 game.Run();
-            }
         }
     }
 }

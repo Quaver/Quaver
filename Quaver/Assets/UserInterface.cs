@@ -55,6 +55,8 @@ namespace Quaver.Assets
         public static Texture2D UsernameSelectionBackground { get; set; }
         public static Texture2D UsernameSelectionTextbox { get; set; }
         public static Texture2D UsernameSelectionTextboxOverlay { get; set; }
+        public static Texture2D CloseChannelButton { get; set; }
+        public static Texture2D SendMessageButton { get; set; }
         public static Texture2D ThumbnailSinglePlayer { get; set; }
         public static Texture2D ThumbnailCompetitive { get; set; }
         public static Texture2D ThumbnailCustomGames { get; set; }
@@ -107,6 +109,8 @@ namespace Quaver.Assets
             UsernameSelectionBackground = AssetLoader.LoadTexture2D(QuaverResources.username_selection_background);
             UsernameSelectionTextbox = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox);
             UsernameSelectionTextboxOverlay = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox_overlay);
+            CloseChannelButton = AssetLoader.LoadTexture2D(QuaverResources.close_channel_button);
+            SendMessageButton = AssetLoader.LoadTexture2D(QuaverResources.send_message_button);
             ThumbnailSinglePlayer = AssetLoader.LoadTexture2D(QuaverResources.thumbnail_single_player);
             ThumbnailCompetitive = AssetLoader.LoadTexture2D(QuaverResources.thumbnail_competitive);
             ThumbnailCustomGames = AssetLoader.LoadTexture2D(QuaverResources.thumbnail_custom_games);

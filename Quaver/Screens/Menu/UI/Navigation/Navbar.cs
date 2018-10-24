@@ -102,17 +102,23 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     Aligns the items from the right
         /// </summary>
-        private void AlignRightItems()
+        public void AlignRightItems()
         {
             var startingX = Width - Line.X * 2;
 
             for (var i = 0; i < RightAlignedItems.Count; i++)
             {
                 var item = RightAlignedItems[i];
-
                 item.Parent = Line;
-                item.Y -= item.Height;
-                item.X = startingX - item.Width * (i + 1);
+                item.Y = -item.Height;
+
+                if (i == 0)
+                    item.X = startingX - item.Width * (i + 1);
+                else
+                {
+                    var previous = RightAlignedItems[i - 1];
+                    item.X = previous.X - item.Width + 1;
+                }
             }
         }
     }

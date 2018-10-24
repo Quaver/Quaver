@@ -132,15 +132,6 @@ namespace Quaver.Screens.Connecting.UI
             {
                 SkinManager.Skin.SoundClick.CreateChannel()?.Play();
 
-                // Retry button animation
-                RetryButton.Transformations.Clear();
-                RetryButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, RetryButton.X,
-                    -WindowManager.Width - RetryButton.Width - 5, 750));
-
-                // Play offline button animation.
-                PlayOfflineButton.Transformations.Clear();
-                PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
-                    WindowManager.Width + RetryButton.Width + 5, 750));
 
                 View.ExitToScreen(new MenuScreen());
             })
@@ -165,7 +156,13 @@ namespace Quaver.Screens.Connecting.UI
             RetryButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "RETRY", 0.50f, (o, e) =>
             {
                 SkinManager.Skin.SoundClick.CreateChannel()?.Play();
+
+                ExitRetryAndPlayOfflineButtons();
                 View.Connect();
+
+                TextConnectingToServer.Text = "Connecting to the server. Please wait...";
+                LoadingWheel.Transformations.Clear();
+                LoadingWheel.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.EaseInQuint, LoadingWheel.Alpha, 1, 500));
             })
             {
                 Parent = this,
@@ -177,6 +174,22 @@ namespace Quaver.Screens.Connecting.UI
             };
 
             RetryButton.X = -RetryButton.Width - 5;
+        }
+
+        /// <summary>
+        ///     Moves the exit & play offline buttons off-screen.
+        /// </summary>
+        private void ExitRetryAndPlayOfflineButtons()
+        {
+            // Retry button animation
+            RetryButton.Transformations.Clear();
+            RetryButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, RetryButton.X,
+                -WindowManager.Width - RetryButton.Width - 5, 750));
+
+            // Play offline button animation.
+            PlayOfflineButton.Transformations.Clear();
+            PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
+                WindowManager.Width + RetryButton.Width + 5, 750));
         }
 
         /// <summary>

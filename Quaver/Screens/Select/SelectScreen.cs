@@ -11,9 +11,13 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Select.UI.Mods;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -119,5 +123,12 @@ namespace Quaver.Screens.Select
             if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
                 AudioEngine.PlaySelectedTrackAtPreview();
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Selecting, -1, "",
+            (byte) MapManager.Selected.Value.Mode, "", (long) ModManager.Mods);
     }
 }

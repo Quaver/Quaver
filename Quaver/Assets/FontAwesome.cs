@@ -55,10 +55,13 @@ namespace Quaver.Assets
         public static Texture2D Keyboard { get; set; }
         public static Texture2D Search { get; set; }
         public static Texture2D ArrowCircle { get; set; }
+        public static Texture2D Gavel { get; set; }
+        public static Texture2D Wrench { get; set; }
         public static Texture2D StepBackward { get; set; }
         public static Texture2D StepForward { get; set; }
         public static Texture2D Undo { get; set; }
         public static Texture2D BarGraph { get; set; }
+        public static Texture2D Group { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -114,10 +117,13 @@ namespace Quaver.Assets
             Keyboard = AssetLoader.LoadTexture2D(QuaverResources.fa_keyboard);
             Search = AssetLoader.LoadTexture2D(QuaverResources.fa_magnifying_glass);
             ArrowCircle = AssetLoader.LoadTexture2D(QuaverResources.fa_right_arrow_in_a_circle);
+            Gavel = AssetLoader.LoadTexture2D(QuaverResources.fa_legal_hammer);
+            Wrench = AssetLoader.LoadTexture2D(QuaverResources.fa_open_wrench_tool_silhouette);
             StepBackward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_backward);
             StepForward = AssetLoader.LoadTexture2D(QuaverResources.fa_step_forward);
             Undo = AssetLoader.LoadTexture2D(QuaverResources.fa_undo_arrow);
             BarGraph = AssetLoader.LoadTexture2D(QuaverResources.fa_bar_graph_on_a_rectangle);
+            Group = AssetLoader.LoadTexture2D(QuaverResources.fa_group_profile_users);
         }
     }
 }

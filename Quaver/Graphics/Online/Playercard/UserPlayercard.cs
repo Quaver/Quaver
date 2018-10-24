@@ -6,6 +6,11 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
+using Quaver.Online;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Objects;
+using Steamworks;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -22,6 +27,16 @@ namespace Quaver.Graphics.Online.Playercard
 {
     public class UserPlayercard : Button
     {
+        /// <summary>
+        ///     The type of playercard this is.
+        /// </summary>
+        public PlayercardType Type { get; }
+
+        /// <summary>
+        ///     The user this playercard is for.
+        /// </summary>
+        public User User { get; set; }
+
         /// <summary>
         ///     The user's selected title.
         /// </summary>
@@ -160,7 +175,6 @@ namespace Quaver.Graphics.Online.Playercard
             {
                 _gameMode = value;
 
-                // TODO: Add game mode icons.
                 switch (GameMode)
                 {
                     case GameMode.Keys4:
@@ -213,13 +227,20 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     Dictates if this playercard is the full thing.
         /// </summary>
-        private bool FullCard { get; }
+        private bool FullCard { get; set; }
 
         /// <inheritdoc />
         /// <summary>
+        ///     Create a playercard from a user.
         /// </summary>
-        public UserPlayercard(string username, bool fullCard)
+        /// <param name="type"></param>
+        /// <param name="user"></param>
+        /// <param name="fullCard"></param>
+        public UserPlayercard(PlayercardType type, User user, bool fullCard)
         {
+            Type = type;
+            User = user;
+
             FullCard = fullCard;
             Tint = Colors.DarkGray;
 
@@ -228,19 +249,26 @@ namespace Quaver.Graphics.Online.Playercard
 
             CreateTitle();
             CreateAvatar();
-            CreateUsername(username);
+            CreateUsername(User != null ? User.OnlineUser?.Username : ConfigManager.Username.Value);
             CreateCompetitiveRankBadge();
 
             SelectedTitle = Title.OfflinePlayer;
             SelectedCompetitveBadge = CompetitveBadge.Unranked;
 
-            if (FullCard)
+            switch (Type)
             {
-                CreateStats();
-                UpdateFlag("United States");
+                case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Connected:
+                    CreateStats(true);
+                    break;
+                case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Disconnected:
+                    break;
+                default:
+                    CreateStats(true);
+                    break;
             }
 
             ConfigManager.SelectedGameMode.ValueChanged += OnSelectedGameModeChange;
+            OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
             AddBorder(Color.White, 2);
         }
 
@@ -261,6 +289,13 @@ namespace Quaver.Graphics.Online.Playercard
         {
             // ReSharper disable once DelegateSubtraction
             ConfigManager.SelectedGameMode.ValueChanged -= OnSelectedGameModeChange;
+
+            // ReSharper disable once DelegateSubtraction
+            OnlineManager.Status.ValueChanged -= OnOnlineStatusChanged;
+
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+
             base.Destroy();
         }
 
@@ -278,17 +313,6 @@ namespace Quaver.Graphics.Online.Playercard
         };
 
         /// <summary>
-        ///     Updates the title on the playercard with a new texture.
-        /// </summary>
-        /// <param name="title"></param>
-        public void UpdateTitle(Title title)
-        {
-            TitleSprite.Transformations.Clear();
-            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            TitleSprite.Image = TitleHelper.Get(title);
-        }
-
-        /// <summary>
         ///     Creates the sprite for the user's avatar.
         /// </summary>
         private void CreateAvatar()
@@ -303,17 +327,35 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true
             };
 
+            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+
+            if (Type == PlayercardType.Self && SteamManager.UserAvatars.ContainsKey(SteamUser.GetSteamID().m_SteamID))
+                Avatar.Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
+            // We've got the user's avatar, so use it.
+            else if (User != null && SteamManager.UserAvatars.ContainsKey((ulong) User.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong) User.OnlineUser.SteamId];
+            // Need to retrieve user's avatar.
+            else
+            {
+                // Go with an unknown avatar for now until it's loaded.
+                Avatar.Image = UserInterface.UnknownAvatar;
+
+                if (User != null)
+                    SteamManager.SendAvatarRetrievalRequest((ulong) User.OnlineUser.SteamId);
+            }
+
             Avatar.AddBorder(Color.LightGray, 2);
         }
 
         /// <summary>
-        ///     Updates the avatar and performs an animation
+        ///     Updates the title on the playercard with a new texture.
         /// </summary>
-        public void UpdateAvatar(Texture2D tex)
+        /// <param name="title"></param>
+        public void UpdateTitle(Title title)
         {
-            Avatar.Transformations.Clear();
-            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            Avatar.Image = tex;
+            TitleSprite.Transformations.Clear();
+            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TitleSprite.Image = TitleHelper.Get(title);
         }
 
         /// <summary>
@@ -335,16 +377,6 @@ namespace Quaver.Graphics.Online.Playercard
         }
 
         /// <summary>
-        ///     Updates the username text.
-        /// </summary>
-        /// <param name="username"></param>
-        public void UpdateUsername(string username)
-        {
-            TextUsername.Text = username;
-            TextUsername.Size = new ScalableVector2(TextUsername.Width * 0.60f, TextUsername.Height * 0.60f);
-        }
-
-        /// <summary>
         ///     Creates the sprite to show the user's rank badge.
         /// </summary>
         private void CreateCompetitiveRankBadge() => CompetitiveRankBadge = new Sprite()
@@ -356,36 +388,28 @@ namespace Quaver.Graphics.Online.Playercard
             Size = new ScalableVector2(70, 70),
         };
 
-        /// <summary>
-        ///     Updates the competitive badge for the user.
-        /// </summary>
-        private void UpdateCompetitiveBadge(CompetitveBadge badge)
-        {
-            CompetitiveRankBadge.Transformations.Clear();
-            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
-            CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
-        }
-
-        /// <summary>
+         /// <summary>
         ///     Creates the user stats w/ icons.
         /// </summary>
-        private void CreateStats()
+        private void CreateStats(bool isVisible)
         {
             TextOverallRating = new IconedText(FontAwesome.BarGraph, "00.00")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X,
-                Y = Avatar.Y + Avatar.Height + 10
+                Y = Avatar.Y + Avatar.Height + 10,
+                Visible = isVisible
             };
 
-            TextCountryRank = new IconedText(AssetLoader.LoadTexture2DFromFile(@"c:\users\admin\desktop\br.png"), "#9,999,999")
+            TextCountryRank = new IconedText(Flags.Get(User.CountryName), "#9,999,999")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.TopCenter,
                 X = -10,
                 Y = TextOverallRating.Y,
+                Visible = isVisible
             };
 
             TextGlobalRank = new IconedText(FontAwesome.Desktop, "#9,999,999")
@@ -394,7 +418,8 @@ namespace Quaver.Graphics.Online.Playercard
                 Alignment = Alignment.TopRight,
                 UsePreviousSpriteBatchOptions = true,
                 X = -Avatar.X,
-                Y = TextOverallRating.Y
+                Y = TextOverallRating.Y,
+                Visible = isVisible
             };
 
             TextOverallAccuracy = new IconedText(FontAwesome.Clock, "100.00%")
@@ -402,7 +427,8 @@ namespace Quaver.Graphics.Online.Playercard
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X,
-                Y = TextOverallRating.Y + TextOverallRating.Height + 10
+                Y = TextOverallRating.Y + TextOverallRating.Height + 10,
+                Visible = isVisible
             };
 
             TextPlayCount = new IconedText(FontAwesome.GamePad, "1,000,000")
@@ -411,7 +437,8 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.TopCenter,
                 X = -10,
-                Y = TextOverallAccuracy.Y
+                Y = TextOverallAccuracy.Y,
+                Visible = isVisible
             };
 
             TextCompetitiveMatchesWon = new IconedText(FontAwesome.Trophy, "1,000,000")
@@ -420,19 +447,42 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.TopRight,
                 X = -Avatar.X,
-                Y = TextOverallAccuracy.Y
+                Y = TextOverallAccuracy.Y,
+                Visible = isVisible
             };
 
             TextCompetitiveMatchesWon.Icon.Tint = Color.Gold;
+            SetStats();
+        }
 
-            // Initially set to 0.
-            OverallRating = 0;
-            OverallAccuracy = 0;
-            CountryRank = 0;
-            GlobalRank = 0;
-            PlayCount = 0;
-            CompetitiveMatchesWon = 0;
-            GameMode = ConfigManager.SelectedGameMode.Value;
+        /// <summary>
+        ///     Updates the avatar and performs an animation
+        /// </summary>
+        public void UpdateAvatar(Texture2D tex)
+        {
+            Avatar.Transformations.Clear();
+            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            Avatar.Image = tex;
+        }
+
+        /// <summary>
+        ///     Updates the username text.
+        /// </summary>
+        /// <param name="username"></param>
+        public void UpdateUsername(string username)
+        {
+            TextUsername.Text = username;
+            TextUsername.Size = new ScalableVector2(TextUsername.Width * 0.60f, TextUsername.Height * 0.60f);
+        }
+
+        /// <summary>
+        ///     Updates the competitive badge for the user.
+        /// </summary>
+        private void UpdateCompetitiveBadge(CompetitveBadge badge)
+        {
+            CompetitiveRankBadge.Transformations.Clear();
+            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
         }
 
         /// <summary>
@@ -467,9 +517,118 @@ namespace Quaver.Graphics.Online.Playercard
             if (TextUsername.Text != ConfigManager.Username.Value || !FullCard)
                 return;
 
-            GameMode = e.Value;
-
-            // TODO: Change the rest of the user's stats.
+            SetStats();
         }
+
+        /// <summary>
+        ///     Sets the users stats on the playercard.
+        /// </summary>
+        private void SetStats()
+        {
+            GameMode = ConfigManager.SelectedGameMode.Value;
+            OverallRating = (float) User.Stats[GameMode].OverallPerformanceRating;
+            OverallAccuracy = (float) User.Stats[GameMode].OverallAccuracy;
+            CountryRank = User.Stats[GameMode].CountryRank;
+            GlobalRank = User.Stats[GameMode].Rank;
+            PlayCount = User.Stats[GameMode].PlayCount;
+            CompetitiveMatchesWon = 0;
+        }
+
+        /// <summary>
+        ///     Called when the user's online status has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOnlineStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+            if (Type != PlayercardType.Self)
+                return;
+
+            switch (e.Value)
+            {
+                case ConnectionStatus.Connected:
+                    User = OnlineManager.Self;
+                    UpdateUsername(User.OnlineUser.Username);
+
+                    FullCard = true;
+
+                    if (TextOverallRating == null)
+                        CreateStats(false);
+
+                    SetStats();
+                    ShowStats();
+
+                    Transformations.Clear();
+                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 154, 150));
+                    break;
+                case ConnectionStatus.Disconnected:
+                    FullCard = false;
+
+                    if (TextOverallRating == null)
+                        return;
+
+                    HideStats();
+
+                    Transformations.Clear();
+                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 96, 150));
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Hides the stats portion of the playercard.
+        /// </summary>
+        private void HideStats()
+        {
+            TextOverallRating.Visible = false;
+            TextOverallAccuracy.Visible = false;
+            TextCountryRank.Visible = false;
+            TextGlobalRank.Visible = false;
+            TextPlayCount.Visible = false;
+            TextCompetitiveMatchesWon.Visible = false;
+        }
+
+        /// <summary>
+        ///     Shows the stats portion of the playercard.
+        /// </summary>
+        private void ShowStats()
+        {
+            TextOverallRating.Visible = true;
+            TextOverallAccuracy.Visible = true;
+            TextCountryRank.Visible = true;
+            TextGlobalRank.Visible = true;
+            TextPlayCount.Visible = true;
+            TextCompetitiveMatchesWon.Visible = true;
+        }
+
+        /// <summary>
+        ///    Called when a steam avatar is retrieved.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (User == null)
+                return;
+
+            // If it doesn't apply to this message.
+            if (e.SteamId != (ulong) User.OnlineUser.SteamId)
+                return;
+
+            try
+            {
+                UpdateAvatar(e.Texture);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, LogType.Runtime);
+            }
+        }
+    }
+
+    public enum PlayercardType
+    {
+        Self,
+        Other
     }
 }

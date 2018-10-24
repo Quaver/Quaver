@@ -17,6 +17,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Modifiers;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;

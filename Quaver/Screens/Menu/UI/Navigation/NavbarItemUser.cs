@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Config;
+using Quaver.Online;
+using Steamworks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
+using Wobble.Logging;
 
 namespace Quaver.Screens.Menu.UI.Navigation
 {
@@ -41,6 +46,8 @@ namespace Quaver.Screens.Menu.UI.Navigation
             Alpha = 0f;
 
             CreateAvatar();
+            SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+
             CreateUsername();
             CreateBottomLine();
 
@@ -70,19 +77,50 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             // ReSharper disable once DelegateSubtraction
             ConfigManager.Username.ValueChanged -= OnConfigUsernameChanged;
+
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+
             base.Destroy();
         }
 
         /// <summary>
         /// </summary>
-        private void CreateAvatar() => Avatar = new Sprite
+        private void CreateAvatar()
         {
-            Parent = this,
-            Size = new ScalableVector2(25, 25),
-            Alignment = Alignment.MidLeft,
-            Image = UserInterface.UnknownAvatar,
-            X = 25,
-        };
+            var userAvatar = UserInterface.UnknownAvatar;
+
+            if (SteamManager.UserAvatars.ContainsKey(SteamUser.GetSteamID().m_SteamID))
+                userAvatar = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
+            else
+                SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+
+            Avatar = new Sprite
+            {
+                Parent = this,
+                Size = new ScalableVector2(25, 25),
+                Alignment = Alignment.MidLeft,
+                Image = userAvatar,
+                X = 25,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                }
+            };
+        }
+
+        /// <summary>
+        ///     Updates the user's avatar.
+        /// </summary>
+        private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (e.SteamId != SteamUser.GetSteamID().m_SteamID)
+                return;
+
+            Avatar.Transformations.Clear();
+            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+            Avatar.Image = e.Texture;
+        }
 
         /// <summary>
         ///     Creates the text for the username.
@@ -115,6 +153,19 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             UsernameText.Text = e.Value;
             UpdateUsernameSize();
+
+            var parent = Parent;
+
+            while (parent != null && parent.GetType() != typeof(Navbar))
+            {
+                parent = parent.Parent;
+
+                if (parent.GetType() != typeof(Navbar))
+                    continue;
+
+                var navbar = parent as Navbar;
+                navbar?.AlignRightItems();
+            }
         }
 
         /// <summary>
