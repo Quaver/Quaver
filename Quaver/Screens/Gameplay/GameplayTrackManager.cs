@@ -44,9 +44,18 @@ namespace Quaver.Screens.Gameplay
         /// <param name="qua"></param>
         public GameplayTrackManager(Qua qua)
         {
+            InitializeScrollVelocities(qua);
+            InitializePositionMarkers();
+        }
+
+        /// <summary>
+        ///     Generate Scroll Velocity points.
+        /// </summary>
+        /// <param name="qua"></param>
+        private void InitializeScrollVelocities(Qua qua)
+        {
             // Find average bpm
             var commonBpm = qua.GetCommonBpm();
-            //Console.Out.WriteLine("common BPM: " + commonBpm);
 
             // Create SV multiplier timing points
             var index = 0;
@@ -129,9 +138,15 @@ namespace Quaver.Screens.Gameplay
                 }
             }
 
-            // Sort list
+            // Sort SV points by start time
             ScrollVelocities = ScrollVelocities.OrderBy(o => o.StartTime).ToList();
+        }
 
+        /// <summary>
+        ///     Create SV-position points for computation optimization
+        /// </summary>
+        private void InitializePositionMarkers()
+        {
             // Compute for Change Points
             var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
             VelocityPositionMarkers.Add(position);
@@ -194,9 +209,7 @@ namespace Quaver.Screens.Gameplay
 
             // Time starts before the first SV point
             if (index == 0)
-            {
                 curPos = (long)(time * ScrollVelocities[0].Multiplier);
-            }
 
             // Time starts after the first SV point and before the last SV point
             else if (index < VelocityPositionMarkers.Count)
