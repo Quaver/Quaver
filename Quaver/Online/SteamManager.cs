@@ -77,10 +77,7 @@ namespace Quaver.Online
 #endif
             // Make sure the game is started with Steam.
             if (SteamAPI.RestartAppIfNecessary((AppId_t) ApplicationId))
-            {
                 Environment.Exit(0);
-                return;
-            }
 
             IsInitialized = SteamAPI.Init();
 
@@ -88,20 +85,23 @@ namespace Quaver.Online
 
             if (!IsInitialized)
             {
-                Logger.Error($"SteamAPI.Init() call has failed! Steam is not initialized", LogType.Network);
-                throw new Exception();
+                var log = $"SteamAPI.Init() call has failed! Steam is not initialized";
+                Logger.Error(log, LogType.Network);
+                throw new InvalidOperationException(log);
             }
 
             if (!Packsize.Test())
             {
-                Logger.Error($"The incorrect Steamworks.NET assembly was loaded for this platform!", LogType.Runtime);
-                throw new Exception();
+                var log = $"The incorrect Steamworks.NET assembly was loaded for this platform!";
+                Logger.Error(log, LogType.Runtime);
+                throw new InvalidOperationException(log);
             }
 
             if (!DllCheck.Test())
             {
-                Logger.Error($"The wrong dlls were loaded for this platform!", LogType.Runtime);
-                throw new Exception();
+                var log = "The wrong dlls were loaded for this platform!";
+                Logger.Error(log, LogType.Runtime);
+                throw new InvalidOperationException(log);
             }
 
             Logger.Important($"Successfully initialized and logged into Steam as : {SteamFriends.GetPersonaName()} " +
