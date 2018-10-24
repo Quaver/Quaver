@@ -51,11 +51,8 @@ namespace Quaver.Screens.Gameplay.Rulesets
         /// <param name="map"></param>
         protected GameplayRuleset(GameplayScreen screen, Qua map)
         {
-            // Set References
             Screen = screen;
             Map = map;
-
-            // Initialize Everything
             ScoreProcessor = CreateScoreProcessor(Map);
             CreatePlayfield();
             InputManager = CreateInputManager();
