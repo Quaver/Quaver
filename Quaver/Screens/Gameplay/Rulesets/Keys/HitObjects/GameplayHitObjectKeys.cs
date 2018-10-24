@@ -261,6 +261,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void UpdateSpritePositions(long offset)
         {
+            // Update Sprite position with regards to LN's state
             if (CurrentlyBeingHeld)
             {
                 if (offset > TrackPosition)

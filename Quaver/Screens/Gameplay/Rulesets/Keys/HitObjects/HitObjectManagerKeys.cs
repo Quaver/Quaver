@@ -236,46 +236,38 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 while (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
+                    // Current hit object
                     var hitObject = lane.Dequeue();
-
-                    // Add a miss to their score.
-                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
 
-                    // Add new hit stat data.
+                    // Add new hit stat data and update score
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int)Ruleset.Screen.Timing.Time, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
+                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
-                    // Make the combo display visible since it is now changing.
+                    // Perform Playfield animations
                     var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
-
-                    // Perform hit burst animation
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
+                    // - missing an LN counts as two misses
                     if (hitObject.IsLongNote)
                     {
                         KillPoolObject(hitObject);
-                        //RecyclePoolObject(hitObject);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
-
-                        // Add a duplicate stat since it's an LN, and it counts as two misses.
                         Ruleset.ScoreProcessor.Stats.Add(stat);
-
                         screenView.UpdateScoreboardUsers();
                     }
                     // Otherwise recycle the object.
                     else
                     {
-                        //RecyclePoolObject(hitObject);
                         KillPoolObject(hitObject);
                     }
-                    //RecyclePoolObject(hitObject);
                 }
             }
 
@@ -303,31 +295,26 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 while (lane.Count > 0 && (int)Ruleset.Screen.Timing.Time > lane.Peek().Info.EndTime + window)
                 {
+                    // Current hit object
                     var hitObject = lane.Dequeue();
 
                     // The judgement that is given when a user completely fails to release.
                     const Judgement missedJudgement = Judgement.Okay;
 
-                    // Calc new score.
-                    Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
-
-                    // Add new hit stat data.
+                    // Add new hit stat data and update score
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int)Ruleset.Screen.Timing.Time, Judgement.Okay,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
+                    Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
 
-                    // Make the combo display visible since it is now changing.
+                    // Perform Playfield animations
                     var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
-
-                    // Perform hit burst animation
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(missedJudgement);
-
-                    // Stop the hitlighting animation.
                     playfield.Stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
 
                     // Update Pooling
