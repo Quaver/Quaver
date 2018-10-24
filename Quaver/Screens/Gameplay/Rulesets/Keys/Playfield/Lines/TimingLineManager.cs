@@ -79,7 +79,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
 
             // Create first Timing Line Info
-            var offset = Ruleset.Screen.Positioning.GetPositionFromTime(songPos);
+            var offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
             var info = new TimingLineInfo(songPos, offset);
             Info.Enqueue(info);
 
@@ -99,7 +99,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 }
 
                 // Create Timing Line Info
-                offset = Ruleset.Screen.Positioning.GetPositionFromTime(songPos);
+                offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
                 info = new TimingLineInfo(songPos, offset);
                 Info.Enqueue(info);
             }
@@ -114,7 +114,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Pool = new Queue<TimingLine>();
 
             // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
-            for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.Positioning.Position < CreateObjectPosition); i++)
+            for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition); i++)
             {
                 var info = Info.Dequeue();
                 CreatePoolObject(info);
@@ -129,7 +129,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             // Update line positions
             foreach (var line in Pool)
             {
-                line.UpdateSpritePosition(Ruleset.Screen.Positioning.Position);
+                line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
             }
 
             // Recycle necessary pool objects
@@ -139,13 +139,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 if (Info.Count > 0)
                 {
                     line.Info = Info.Dequeue();
-                    line.UpdateSpritePosition(Ruleset.Screen.Positioning.Position);
+                    line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
                     Pool.Enqueue(line);
                 }
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.Positioning.Position < CreateObjectPosition)
+            while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
             {
                 var info = Info.Dequeue();
                 CreatePoolObject(info);
@@ -159,7 +159,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private void CreatePoolObject(TimingLineInfo info)
         {
             var line = new TimingLine(Ruleset, info);
-            line.UpdateSpritePosition(Ruleset.Screen.Positioning.Position);
+            line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
             Pool.Enqueue(line);
         }
     }

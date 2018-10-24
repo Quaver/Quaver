@@ -13,9 +13,9 @@ using Quaver.Modifiers;
 namespace Quaver.Screens.Gameplay
 {
     /// <summary>
-    ///     Used to position Hit Objects with Scroll Velocity relative to Audio Time.
+    ///     Used to position Hit Objects to Scroll Velocity (SV) relative to Audio Time.
     /// </summary>
-    public class GameplayAudioPosition
+    public class GameplayTrackManager
     {
         /// <summary>
         ///     List of slider velocities used for the current map
@@ -42,7 +42,7 @@ namespace Quaver.Screens.Gameplay
         ///     Generate Hit Object Position from .Qua Scroll Velocities
         /// </summary>
         /// <param name="qua"></param>
-        public GameplayAudioPosition(Qua qua)
+        public GameplayTrackManager(Qua qua)
         {
             // Find average bpm
             var commonBpm = qua.GetCommonBpm();

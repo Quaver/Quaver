@@ -183,7 +183,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             Info = info;
             HitObjectSprite.Tint = Color.White; // todo: reference this in Colors class
             IsLongNote = info.EndTime > 0;
-            TrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.StartTime);
+            TrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
             LongNoteBodySprite.StopLoop();
 
@@ -200,13 +200,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White; // todo: reference this in Colors class
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-                LongNoteTrackPosition = ruleset.Screen.Positioning.GetPositionFromTime(info.EndTime);
+                LongNoteTrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.EndTime);
                 InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            UpdateSpritePositions(ruleset.Screen.Positioning.Position);
+            UpdateSpritePositions(ruleset.Screen.TrackManager.Position);
         }
 
         /// <inheritdoc />

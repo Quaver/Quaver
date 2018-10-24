@@ -225,7 +225,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in Info)
             {
-                while (lane.Count > 0 && Ruleset.Screen.Positioning.GetPositionFromTime(lane.Peek().StartTime) - Ruleset.Screen.Positioning.Position < CreateObjectPosition)
+                while (lane.Count > 0 && Ruleset.Screen.TrackManager.GetPositionFromTime(lane.Peek().StartTime) - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -277,7 +277,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in lane)
                 {
                     hitObject.HandleAnimations();
-                    hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
+                    hitObject.UpdateSpritePositions(Ruleset.Screen.TrackManager.Position);
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in lane)
                 {
                     hitObject.HandleAnimations();
-                    hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
+                    hitObject.UpdateSpritePositions(Ruleset.Screen.TrackManager.Position);
                 }
             }
         }
@@ -342,7 +342,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNotes)
             {
                 while (lane.Count > 0 &&
-                    (Ruleset.Screen.Positioning.Position > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition))
+                    (Ruleset.Screen.TrackManager.Position > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -354,7 +354,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in lane)
                 {
                     // Update position
-                    hitObject.UpdateSpritePositions(Ruleset.Screen.Positioning.Position);
+                    hitObject.UpdateSpritePositions(Ruleset.Screen.TrackManager.Position);
                 }
             }
         }
@@ -411,7 +411,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Change start time and LN size.
             var time = Ruleset.Screen.Timing.Time;
-            hitObject.TrackPosition = Ruleset.Screen.Positioning.GetPositionFromTime(time);
+            hitObject.TrackPosition = Ruleset.Screen.TrackManager.GetPositionFromTime(time);
             hitObject.Info.StartTime = (int)time;
             hitObject.CurrentlyBeingHeld = false;
             hitObject.UpdateLongNoteSize(hitObject.TrackPosition);
