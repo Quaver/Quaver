@@ -74,7 +74,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var index = 0;
 
             // set initial increment that will update songPos by 4 beat lengths
-            // todo: use constant variables
             var songPos = map.TimingPoints[index].StartTime;
             var increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
 
@@ -83,6 +82,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var info = new TimingLineInfo(songPos, offset);
             Info.Enqueue(info);
 
+            // Generate Timing Lines
             while (songPos < map.Length)
             {
                 // Update songpos with increment
@@ -116,8 +116,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
             for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition); i++)
             {
-                var info = Info.Dequeue();
-                CreatePoolObject(info);
+                CreatePoolObject(Info.Dequeue());
             }
         }
 
@@ -147,8 +146,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             // Create new pool objects if they are in range
             while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
             {
-                var info = Info.Dequeue();
-                CreatePoolObject(info);
+                CreatePoolObject(Info.Dequeue());
             }
         }
 
