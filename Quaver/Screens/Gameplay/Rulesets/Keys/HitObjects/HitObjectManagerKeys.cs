@@ -165,8 +165,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
                 {
-                    var hitObjectInfo = lane.Dequeue();
-                    CreatePoolObject(hitObjectInfo);
+                    CreatePoolObject(lane.Dequeue());
                 }
             }
         }
@@ -178,7 +177,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void CreatePoolObject(HitObjectInfo info)
         {
             var hitObject = new GameplayHitObjectKeys(info, Ruleset);
-            hitObject.Initialize(info, Ruleset);
             ObjectPool[info.Lane - 1].Enqueue(hitObject);
         }
 

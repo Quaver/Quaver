@@ -58,7 +58,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private float Width { get; set; }
 
-
         /// <summary>
         ///     The initial size of this object's long note.
         /// </summary>
@@ -103,9 +102,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             : SpriteEffects.None;
 
         /// <summary>
-        ///     Y offset from the receptor. Calculated from hit body size and global offset
+        ///     General Distance from the receptor. Calculated from hit body size and global offset
         /// </summary>
         public static float HitPositionOffset { get; set; } = 0;
+
+        /// <summary>
+        ///     Distance from the receptor for the current HitObjectSprite's image
+        /// </summary>
+        public float SpritePositionOffset => HitPositionOffset - HitObjectSprite.Height;
 
         /// <inheritdoc />
         /// <summary>
@@ -166,7 +170,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Parent = Playfield.Stage.HitObjectContainer;
 
             // Initialize
-            Initialize(info);
+            Initialize(info, ruleset);
         }
 
         /// <inheritdoc />
@@ -239,28 +243,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetPosFromOffset(long offset)
+        public float GetSpritePosition(long offset)
         {
-            // If the object is not being held, use proper position
-            if (offset != 0)
-            {
-                var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-                // (OLD) return (float) (manager.HitPositionOffset + (offset - ((int)Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
-                return (float)(HitPositionOffset + (TrackPosition - offset) * speed) - HitObjectSprite.Height;
-            }
-
-            // If the object is being held, use receptor position
-            return HitPositionOffset - HitObjectSprite.Height;
+            var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
+            var distance = (TrackPosition - offset) * speed;
+            return distance + SpritePositionOffset;
         }
 
         /// <summary>
         ///     Updates LN size
         /// </summary>
         /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset)
-        {
-            CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
-        }
+        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
 
         /// <summary>
         ///     Updates the HitObject sprite positions
@@ -272,17 +266,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (offset > TrackPosition)
                 {
                     UpdateLongNoteSize(offset);
-                    SpritePosition = GetPosFromOffset(0);
+                    SpritePosition = SpritePositionOffset;
                 }
                 else
                 {
                     CurrentLongNoteSize = InitialLongNoteSize;
-                    SpritePosition = GetPosFromOffset(offset);
+                    SpritePosition = GetSpritePosition(offset);
                 }
             }
             else
             {
-                SpritePosition = GetPosFromOffset(offset);
+                SpritePosition = GetSpritePosition(offset);
             }
 
             // Update HitBody
