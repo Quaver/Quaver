@@ -183,9 +183,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             hitObject = manager.ObjectPool[lane].Dequeue();
 
             // Update stats
-            var stat = new HitStat(HitStatType.Hit, KeyPressType.Press, hitObject.Info, time, judgement, hitDifference,
-                                        Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-            Ruleset.ScoreProcessor.Stats.Add(stat);
+            Ruleset.ScoreProcessor.Stats.Add(
+                new HitStat(
+                    HitStatType.Hit,
+                    KeyPressType.Press,
+                    hitObject.Info, time,
+                    judgement,
+                    hitDifference,
+                    Ruleset.ScoreProcessor.Accuracy,
+                    Ruleset.ScoreProcessor.Health
+            ));
 
             // Update Scoreboard
             var screenView = (GameplayScreenView)Ruleset.Screen.View;
@@ -230,7 +237,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             var hitDifference = manager.HeldLongNotes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
             var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
             var judgement = processor.CalculateScore(hitDifference, KeyPressType.Release);
-            HitStat stat;
             GameplayScreenView screenView;
 
             // If LN has been released during a window
@@ -240,9 +246,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 hitObject = manager.HeldLongNotes[lane].Dequeue();
 
                 // Update stats
-                stat = new HitStat(HitStatType.Hit, KeyPressType.Release, hitObject.Info, (int) Ruleset.Screen.Timing.Time,
-                                            judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
+                Ruleset.ScoreProcessor.Stats.Add(
+                    new HitStat(
+                        HitStatType.Hit,
+                        KeyPressType.Release,
+                        hitObject.Info,
+                        (int)Ruleset.Screen.Timing.Time,
+                        judgement,
+                        hitDifference,
+                        Ruleset.ScoreProcessor.Accuracy,
+                        Ruleset.ScoreProcessor.Health
+                ));
 
                 // Update scoreboard
                 screenView = (GameplayScreenView)Ruleset.Screen.View;
@@ -268,9 +282,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             const Judgement missedJudgement = Judgement.Miss;
 
             // Add new hit stat data and update score
-            stat = new HitStat(HitStatType.Hit, KeyPressType.Release, hitObject.Info, (int) Ruleset.Screen.Timing.Time,
-                                        Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-            Ruleset.ScoreProcessor.Stats.Add(stat);
+            Ruleset.ScoreProcessor.Stats.Add(
+                new HitStat(
+                    HitStatType.Hit,
+                    KeyPressType.Release,
+                    hitObject.Info,
+                    (int)Ruleset.Screen.Timing.Time,
+                    Judgement.Miss,
+                    hitDifference,
+                    Ruleset.ScoreProcessor.Accuracy,
+                    Ruleset.ScoreProcessor.Health
+            ));
             Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
