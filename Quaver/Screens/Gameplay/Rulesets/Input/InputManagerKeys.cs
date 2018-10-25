@@ -137,8 +137,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                     continue;
 
                 // Update Playfield
-                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-                playfield.Stage.SetReceptorAndLightingActivity(lane, BindingStore[lane].Pressed);
+                var stage = ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage;
+                stage.SetReceptorAndLightingActivity(lane, BindingStore[lane].Pressed);
 
                 // Handle Key Pressing/Releasing for this specific frame
                 var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;

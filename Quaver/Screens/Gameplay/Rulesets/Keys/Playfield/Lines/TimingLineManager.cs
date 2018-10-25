@@ -127,9 +127,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         {
             // Update line positions
             foreach (var line in Pool)
-            {
                 line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
-            }
 
             // Recycle necessary pool objects
             while (Pool.Count > 0 && Pool.Peek().TrackOffset <= RecycleObjectPosition)

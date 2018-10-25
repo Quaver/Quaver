@@ -66,10 +66,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             if (!Screen.Failed && !Screen.IsPaused)
                 TimingLineManager.UpdateObjectPool();
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
