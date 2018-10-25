@@ -84,11 +84,10 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteText(BitmapFonts.Exo2BoldItalic, "TIP:", 16)
+            TextTip = new SpriteText(BitmapFonts.Exo2BoldItalic, "TIP:", 13, false)
             {
                 Alignment = Alignment.MidLeft,
                 X = 5,
-                UsePreviousSpriteBatchOptions = true
             };
 
             AddContainedDrawable(TextTip);
@@ -99,10 +98,9 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 16)
+            TextTipContent = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12, false)
             {
-                Alignment = Alignment.MidLeft,
-                UsePreviousSpriteBatchOptions = true
+                Alignment = Alignment.MidLeft
             };
 
             AddContainedDrawable(TextTipContent);
@@ -116,7 +114,7 @@ namespace Quaver.Screens.Menu.UI.Tips
             TextTipContent.Text = tip;
             TextTipContent.X = TextTip.X + TextTip.Width + 1;
 
-            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 5, 45);
+            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 10, 45);
 
             Animations.Add(new Animation(AnimationProperty.Width, Easing.Linear,
                 Width, ContentContainer.Width, 400));

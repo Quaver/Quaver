@@ -139,10 +139,6 @@ namespace Quaver.Screens.Menu.UI.Panels
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
-            SpriteBatchOptions = new SpriteBatchOptions()
-            {
-                BlendState = BlendState.NonPremultiplied
-            },
             X = 10,
             Y = 6,
             Tint = ColorHelper.HexToColor("#383939")
@@ -157,10 +153,6 @@ namespace Quaver.Screens.Menu.UI.Panels
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
-            SpriteBatchOptions = new SpriteBatchOptions()
-            {
-                BlendState = BlendState.NonPremultiplied
-            },
             X = 15,
             Y = Title.Y + Title.Height + 0,
             Tint = ColorHelper.HexToColor("#383939")
