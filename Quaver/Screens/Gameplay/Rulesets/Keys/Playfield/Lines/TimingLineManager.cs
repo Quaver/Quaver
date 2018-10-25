@@ -47,18 +47,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="ruleset"></param>
         public TimingLineManager(GameplayRuleset ruleset)
         {
-            // Set Reference variables
             Ruleset = (GameplayRulesetKeys)ruleset;
-
-            // Set Time Line Y offset from skin
-            // todo: offset the timing lines so that they are snapped to the center of the hit body of any skin
-            /*
-            var reference = SkinManager.Skin.Keys[Ruleset.Mode].NoteHoldHitObjects[0][0];
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            var offset = playfield.LaneSize * reference.Height / reference.Width / 2;
-            TimingLineObject.GlobalYOffset = GameplayRulesetKeys.IsDownscroll ? offset + 3 : offset + 1;
-            */
-
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
