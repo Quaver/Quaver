@@ -253,13 +253,13 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             SetUsernamePosition();
 
             // Score
-            Score.Text = Processor.Score.ToString("N0");
+            // Score.Text = Processor.Score.ToString("N0");
 
             Score.X = Avatar.Width + Score.Width + 12;
             Score.Y = Username.Y + Score.Height + 12;
 
             // Combo
-            Combo.Text = Processor.Combo.ToString("N0") + "x";
+            // Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             Combo.X = -8;
             Combo.Y = 0;

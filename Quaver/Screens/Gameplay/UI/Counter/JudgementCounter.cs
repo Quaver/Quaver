@@ -75,7 +75,7 @@ namespace Quaver.Screens.Gameplay.UI.Counter
             foreach (var item in JudgementDisplays)
             {
                 JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
-                UpdateTextAndSize(JudgementDisplays[item.Key], dt);
+                // UpdateTextAndSize(JudgementDisplays[item.Key], dt);
             }
 
             base.Update(gameTime);
