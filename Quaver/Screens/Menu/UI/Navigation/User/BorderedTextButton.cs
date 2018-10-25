@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Wobble.Graphics;
@@ -6,7 +6,7 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Screens.Menu.UI.Navigation.User
 {
-    public class BorderedTextButton : BitmapTextButton
+    public class BorderedTextButton : TextButton
     {
         /// <summary>
         ///     The original color of the button
@@ -20,7 +20,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// <param name="color"></param>
         /// <param name="clickAction"></param>
         public BorderedTextButton(string text, Color color, EventHandler clickAction = null)
-            : base(UserInterface.BlankBox, BitmapFonts.Exo2Medium, text, 0.55f, 24, color, clickAction)
+            : base(UserInterface.BlankBox, BitmapFonts.Exo2Medium, text, 24, clickAction)
         {
             OriginalColor = color;
             Size = new ScalableVector2(175, 35);

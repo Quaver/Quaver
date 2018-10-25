@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -52,8 +52,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             Size = new ScalableVector2(dialog.ChannelContainer.Width, HEIGHT);
 
-            var channelName = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, chan.Name, 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
+            var channelName = new SpriteText(BitmapFonts.Exo2BoldItalic, chan.Name, 24)
             {
                 Parent = this,
                 X = 200,
@@ -62,8 +61,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
 
             channelName.Size = new ScalableVector2(channelName.Width * 0.55f, channelName.Height * 0.55f);
 
-            var description = new SpriteTextBitmap(BitmapFonts.Exo2Medium, chan.Description, 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
+            var description = new SpriteText(BitmapFonts.Exo2Medium, chan.Description, 24)
             {
                 Parent = this,
                 X =  channelName.X,
@@ -131,7 +129,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                         OnlineManager.Client?.JoinChatChannel(Channel.Name);
 
                     JoinLeaveButton.OriginalColor = Color.White;
-                    JoinLeaveButton.UpdateText("Please wait...", 0.55f);
+                    JoinLeaveButton.Text.Text = "Please Wait...";
                     JoinLeaveButton.IsClickable = false;
                 }
             })
@@ -153,7 +151,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 return;
 
             JoinLeaveButton.OriginalColor = Color.Crimson;
-            JoinLeaveButton.UpdateText("Leave", 0.55f);
+            JoinLeaveButton.Text.Text = "Leave";
             JoinLeaveButton.IsClickable = true;
         }
 
@@ -168,7 +166,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 return;
 
             JoinLeaveButton.OriginalColor = Colors.MainAccent;
-            JoinLeaveButton.UpdateText("Join", 0.55f);
+            JoinLeaveButton.Text.Text = "Join";
             JoinLeaveButton.IsClickable = true;
         }
     }

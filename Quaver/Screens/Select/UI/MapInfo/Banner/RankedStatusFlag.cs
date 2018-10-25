@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
@@ -30,10 +30,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             ChangeColorAndText();
         }
 
-        private void CreateTextStatus() => TextStatus = new SpriteText(Fonts.Exo2Italic24, "")
+        private void CreateTextStatus() => TextStatus = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 14)
         {
             Parent = this,
-            TextScale = 0.40f,
             Alignment = Alignment.MidCenter,
             X = 10,
         };

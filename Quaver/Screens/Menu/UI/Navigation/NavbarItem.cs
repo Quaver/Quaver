@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -48,15 +48,13 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
             Alpha = Selected ? 0.25f: 0;
 
-            var text = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, name, 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            var text = new SpriteText(BitmapFonts.Exo2SemiBold, name, 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied },
                 Y = 2
             };
-
-            text.Size = new ScalableVector2(text.Width * 0.55f, text.Height * 0.55f);
 
             CreateBottomLine();
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,7 +12,7 @@ using Quaver.Graphics;
 using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Color = Microsoft.Xna.Framework.Color;
@@ -47,7 +47,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             LeaderboardScores = new List<LeaderboardScore>();
 
-            ScrollContainer.EasingType = Easing.EaseOutQuint;
+            ScrollContainer.EasingType = Easing.OutQuint;
             ScrollContainer.TimeToCompleteScroll = 1500;
             ScrollContainer.Scrollbar.Tint = Color.White;
             ScrollContainer.Scrollbar.Width = 3;
@@ -87,8 +87,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 
                     score.X = -score.Width;
 
-                    var t = new Transformation(TransformationProperty.X, Easing.EaseOutQuint, score.X, 0, 600 + 90 * i);
-                    score.Transformations.Add(t);
+                    var t = new Animation(AnimationProperty.X, Easing.OutQuint, score.X, 0, 600 + 90 * i);
+                    score.Animations.Add(t);
 
                     LeaderboardScores.Add(score);
                 }
@@ -177,9 +177,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                     break;
             }
 
-            NoScoresSubmittedText = new SpriteText(Fonts.Exo2Regular24, text, 0.50f)
+            NoScoresSubmittedText = new SpriteText(BitmapFonts.Exo2Regular, text, 16)
             {
-                TextColor = Color.White,
+                Tint = Color.White,
                 Alignment = Alignment.MidCenter,
                 Visible = false,
             };
@@ -200,22 +200,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             switch (NoScoresSubmittedAnimationDirection)
             {
                 case Direction.Forward:
-                    NoScoresSubmittedText.TextScale = MathHelper.Lerp(NoScoresSubmittedText.TextScale, 0.55f, (float) Math.Min(dt / 240, 1));
-
-                    if (Math.Abs(NoScoresSubmittedText.TextScale - 0.55f) < 0.01)
-                        NoScoresSubmittedAnimationDirection = Direction.Backward;
                     break;
                 case Direction.Backward:
-                    NoScoresSubmittedText.TextScale = MathHelper.Lerp(NoScoresSubmittedText.TextScale, 0.50f, (float) Math.Min(dt / 240, 1));
-
-                    if (Math.Abs(NoScoresSubmittedText.TextScale - 0.50f) < 0.01)
-                        NoScoresSubmittedAnimationDirection = Direction.Forward;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            NoScoresSubmittedText.Y = NoScoresSubmittedText.MeasureString().Y / 2f;
+            NoScoresSubmittedText.Y = NoScoresSubmittedText.Height;
         }
 
         /// <inheritdoc />

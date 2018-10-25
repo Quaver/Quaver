@@ -59,24 +59,22 @@ namespace Quaver.Screens.Options
         /// </summary>
         public sealed override void CreateContent()
         {
-            Header = new SpriteText(Fonts.Exo2Regular24, "Press any key to change the binding for it.")
+            Header = new SpriteText(BitmapFonts.Exo2Regular, "Press any key to change the binding for it.", 22)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
-                TextScale = 0.90f
             };
 
-            Header.Y = Header.MeasureString().Y / 2f + 100;
+            Header.Y = Header.Height + 100;
 
-            BindingName = new SpriteText(Fonts.Exo2Regular24, Keybinds[CurrentChangingKeybind].Name)
+            BindingName = new SpriteText(BitmapFonts.Exo2Regular, Keybinds[CurrentChangingKeybind].Name, 22)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
-                TextScale = 0.85f,
-                TextColor = Colors.MainAccent
+                Tint = Colors.MainAccent
             };
 
-            BindingName.Y = Header.Y + BindingName.MeasureString().Y / 2f + 60;
+            BindingName.Y = Header.Y + BindingName.Height + 60;
 
             // Create list of keybind sprites.
             KeybindSprites = new List<KeybindSprite>();

@@ -126,7 +126,7 @@ namespace Quaver.Screens.Edit
         {
             var snaps = new List<string> { "1/1", "1/2", "1/3", "1/4", "1/6", "1/8", "1/12", "1/16", "1/32", "1/48" };
 
-            BeatSnapSelector = new HorizontalSelector(snaps, new ScalableVector2(200, 30), Fonts.Exo2Regular24, 0.45f,
+            BeatSnapSelector = new HorizontalSelector(snaps, new ScalableVector2(200, 30), BitmapFonts.Exo2Regular, 18,
                                                     FontAwesome.ChevronSignLeft, FontAwesome.ChevronSignRight,
                                                     new ScalableVector2(30, 30), 10, (item, index) =>
                 {

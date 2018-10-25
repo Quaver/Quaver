@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -25,7 +25,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///     The spritetext that displays the usergroup's text.
         /// </summary>
-        private SpriteTextBitmap TextUserGroup { get; }
+        private SpriteText TextUserGroup { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -48,16 +48,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 X = 10
             };
 
-            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 24,
-                Color.White, Alignment.TopLeft, (int) WindowManager.Width)
+            TextUserGroup = new SpriteText(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 14)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft
             };
-
-            TextUserGroup.Width *= 0.45f;
-            TextUserGroup.Height *= 0.45f;
 
             Icon.Size = new ScalableVector2(TextUserGroup.Height * 0.75f, TextUserGroup.Height * 0.75f);
 

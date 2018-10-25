@@ -29,7 +29,7 @@ namespace Quaver.Screens.Results.UI
         /// <param name="processor"></param>
         public JudgementBreakdown(ScoreProcessor processor)
                             : base(new Vector2((WindowManager.Width - 120) / 2f, 310),
-                                "Judgement Breakdown", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
+                                "Judgement Breakdown", BitmapFonts.Exo2Regular, 18, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Processor = processor;
             X = -Width / 2f - 10;
@@ -60,15 +60,14 @@ namespace Quaver.Screens.Results.UI
                 if (j == Judgement.Ghost)
                     break;
 
-                var name = new SpriteText(Fonts.Exo2Regular24, j.ToString().ToUpper())
+                var name = new SpriteText(BitmapFonts.Exo2Regular, j.ToString().ToUpper(), 14)
                 {
                     Parent = content,
                     Y = i * 35 + 22,
-                    TextScale = 0.50f,
-                    TextColor = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[j]
+                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[j]
                 };
 
-                name.X = name.MeasureString().X / 2f + 25;
+                name.X = 25;
 
                 var color = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[j];
 
@@ -90,17 +89,12 @@ namespace Quaver.Screens.Results.UI
                 if (progressBar.Width < 1)
                     progressBar.Width = 1;
 
-                var judgementAmount = new SpriteText(Fonts.Exo2Regular24, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)")
+                var judgementAmount = new SpriteText(BitmapFonts.Exo2Regular, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)", 12)
                 {
                     Parent = content,
-                    TextColor = color,
+                    Tint = color,
                     Position = new ScalableVector2(progressBar.X + progressBar.Width + 10, progressBar.Y),
-                    TextScale = 0.50f
                 };
-
-                var judgementAmountSize = judgementAmount.MeasureString() / 2;
-                judgementAmount.X += judgementAmountSize.X;
-                judgementAmount.Y += judgementAmountSize.Y / 2f + 2;
 
                 i++;
             }
@@ -113,38 +107,35 @@ namespace Quaver.Screens.Results.UI
                 Y = -40
             };
 
-            var totalJudgements = new SpriteText(Fonts.Exo2Regular24, $"TOTAL JUDGEMENTS: {Processor.TotalJudgementCount:N0}")
+            var totalJudgements = new SpriteText(BitmapFonts.Exo2Regular, $"TOTAL JUDGEMENTS: {Processor.TotalJudgementCount:N0}", 14)
             {
                 Parent = content,
-                TextScale = 0.50f,
                 Alignment = Alignment.BotLeft
             };
 
-            totalJudgements.X = totalJudgements.MeasureString().X / 2f + 25;
-            totalJudgements.Y = dividerLine.Y + totalJudgements.MeasureString().Y / 2f + 10;
+            totalJudgements.X = totalJudgements.Width + 25;
+            totalJudgements.Y = dividerLine.Y + totalJudgements.Height + 10;
 
             var bestJudgement = GetBestJudgement();
 
-            var bestJudgeValue = new SpriteText(Fonts.Exo2Regular24, bestJudgement.ToString().ToUpper())
+            var bestJudgeValue = new SpriteText(BitmapFonts.Exo2Regular, bestJudgement.ToString().ToUpper(), 14)
             {
                 Parent = content,
-                TextScale = 0.50f,
                 Alignment = Alignment.BotRight,
-                TextColor = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[bestJudgement]
+                Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[bestJudgement]
             };
 
-            bestJudgeValue.Y = dividerLine.Y + bestJudgeValue.MeasureString().Y / 2f + 10;
-            bestJudgeValue.X = -bestJudgeValue.MeasureString().X / 2f - 25;
+            bestJudgeValue.Y = dividerLine.Y + bestJudgeValue.Height + 10;
+            bestJudgeValue.X = -bestJudgeValue.Width - 25;
 
-            var bestJudgementText = new SpriteText(Fonts.Exo2Regular24, "BEST JUDGEMENT:")
+            var bestJudgementText = new SpriteText(BitmapFonts.Exo2Regular, "BEST JUDGEMENT:", 14)
             {
                 Parent = content,
-                TextScale = 0.50f,
                 Alignment = Alignment.BotRight,
             };
 
-            bestJudgementText.Y = dividerLine.Y + bestJudgementText.MeasureString().Y / 2f + 10;
-            bestJudgementText.X = -bestJudgementText.MeasureString().X - bestJudgeValue.X - bestJudgementText.MeasureString().X / 2f + 15;
+            bestJudgementText.Y = dividerLine.Y + bestJudgementText.Height + 10;
+            bestJudgementText.X = -bestJudgeValue.X - bestJudgementText.Width + 15;
 
             return content;
         }

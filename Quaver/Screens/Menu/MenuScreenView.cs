@@ -29,7 +29,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -83,7 +83,7 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     The text that says "Main Menu"
         /// </summary>
-        public SpriteTextBitmap MainMenuText { get; set; }
+        public SpriteText MainMenuText { get; set; }
 
         /// <summary>
         ///     The jukebox to play music.
@@ -224,8 +224,8 @@ namespace Quaver.Screens.Menu
 
             PowerButton.Y = PowerButton.Height;
 
-            // Add transformation to move it up.
-            PowerButton.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint,
+            // Add Animation to move it up.
+            PowerButton.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
                 PowerButton.Y, targetY, animationTime));
 
             MiddleContainer.AddContainedDrawable(PowerButton);
@@ -237,9 +237,9 @@ namespace Quaver.Screens.Menu
                 Alignment = Alignment.BotRight,
                 Y = PowerButton.Y,
                 X = PowerButton.X - PowerButton.Width - 5,
-                Transformations =
+                Animations =
                 {
-                    new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, PowerButton.Y, targetY, animationTime)
+                    new Animation(AnimationProperty.Y, Easing.OutQuint, PowerButton.Y, targetY, animationTime)
                 }
             };
 
@@ -285,8 +285,7 @@ namespace Quaver.Screens.Menu
                 Alpha = 0.0f
             };
 
-            MainMenuText = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "Main Menu", 32, ColorHelper.HexToColor("#7ebfe0"),
-                Alignment.MidLeft, int.MaxValue)
+            MainMenuText = new SpriteText(BitmapFonts.Exo2BoldItalic, "Main Menu", 32)
             {
                 Parent = mainMenuBackground,
                 Alignment = Alignment.MidCenter,
@@ -295,8 +294,6 @@ namespace Quaver.Screens.Menu
                     BlendState = BlendState.NonPremultiplied
                 },
             };
-
-            mainMenuBackground.Size = new ScalableVector2(MainMenuText.Width + 10, MainMenuText.Height + 10);
         }
 
         /// <summary>

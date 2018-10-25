@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Modifiers;
@@ -75,14 +75,14 @@ namespace Quaver.Screens.Select.UI.Mods
         /// </summary>
         private void CreateModifierName()
         {
-            ModifierName = new SpriteText(Fonts.Exo2Bold24, Modifier.Name, 0.50f)
+            ModifierName = new SpriteText(BitmapFonts.Exo2BoldItalic, Modifier.Name, 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -10
             };
 
-            ModifierName.X += ModifierName.MeasureString().X / 2f + 65;
+            ModifierName.X += ModifierName.Width + 65;
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace Quaver.Screens.Select.UI.Mods
         /// </summary>
         private void CreateModifierDescription()
         {
-            ModifierDescription = new SpriteText(Fonts.Exo2Italic24, Modifier.Description, 0.45f)
+            ModifierDescription = new SpriteText(BitmapFonts.Exo2BoldItalic, Modifier.Description, 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Y = ModifierName.MeasureString().Y / 2f + 2
+                Y = ModifierName.Height + 2
             };
 
-            ModifierDescription.X += ModifierDescription.MeasureString().X / 2f + 65;
+            ModifierDescription.X += ModifierDescription.Width + 65;
         }
 
         /// <summary>

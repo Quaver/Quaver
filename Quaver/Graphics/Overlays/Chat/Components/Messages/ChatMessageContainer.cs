@@ -10,7 +10,7 @@ using Quaver.Server.Client.Structures;
 using WebSocketSharp;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
 using Logger = Wobble.Logging.Logger;
@@ -84,7 +84,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             SpriteBatchOptions.BlendState = BlendState.NonPremultiplied;
 
             ScrollSpeed = 150;
-            EasingType = Easing.EaseOutQuint;
+            EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
 
             DividerLine = new Sprite()
@@ -156,7 +156,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
                 ScrollTo(-ContentContainer.Height, 800);
 
             AddContainedDrawable(msg);
-            msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 200));
+            msg.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear, msg.X, 0, 200));
         }
 
         /// <summary>

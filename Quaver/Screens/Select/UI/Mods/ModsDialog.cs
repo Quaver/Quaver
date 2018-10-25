@@ -9,7 +9,7 @@ using Quaver.Modifiers.Mods.Mania;
 using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -116,9 +116,9 @@ namespace Quaver.Screens.Select.UI.Mods
             Y = WindowManager.Height,
             Tint = new Color(63, 68, 91),
             Alpha = 1,
-            Transformations =
+            Animations =
             {
-                new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, WindowManager.Height, 200, 600)
+                new Animation(AnimationProperty.Y, Easing.OutQuint, WindowManager.Height, 200, 600)
             }
         };
 
@@ -160,26 +160,26 @@ namespace Quaver.Screens.Select.UI.Mods
                 Alignment = Alignment.MidLeft
             };
 
-            SceneHeaderText = new SpriteText(Fonts.Exo2Regular24, "Game Modifiers", 0.65f)
+            SceneHeaderText = new SpriteText(BitmapFonts.Exo2Regular, "Game Modifiers", 12)
             {
                 Parent = SceneHeaderIcon,
                 X = SceneHeaderIcon.Width + 15,
                 Y = 3
             };
 
-            SceneHeaderText.X += SceneHeaderText.MeasureString().X / 2f;
-            SceneHeaderText.Y += SceneHeaderText.MeasureString().Y / 2f;
+            SceneHeaderText.X += SceneHeaderText.Width;
+            SceneHeaderText.Y += SceneHeaderText.Height;
 
-            SceneHeaderSubText = new SpriteText(Fonts.Exo2Italic24, "Game modifiers allow you to increase " +
-                                                                    "or decrease the difficulty of gameplay. \"Who Dares, Wins!\"", 0.45f)
+            SceneHeaderSubText = new SpriteText(BitmapFonts.Exo2BoldItalic, "Game modifiers allow you to increase " +
+                                                                    "or decrease the difficulty of gameplay. \"Who Dares, Wins!\"", 14)
             {
                 Parent = SceneHeaderIcon,
                 X = SceneHeaderIcon.Width + 15,
                 Y = SceneHeaderText.Y + 15
             };
 
-            SceneHeaderSubText.Y += SceneHeaderSubText.MeasureString().Y / 2f;
-            SceneHeaderSubText.X += SceneHeaderSubText.MeasureString().X / 2f;
+            SceneHeaderSubText.Y += SceneHeaderSubText.Height;
+            SceneHeaderSubText.X += SceneHeaderSubText.Width;
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Quaver.Screens.Select.UI.Mods
                 Tint = Colors.MainAccent
             };
 
-            CloseButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Close", 0.50f,
+            CloseButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Close", 12,
                 (o, e) => { Close(); })
             {
                 Parent = FooterBackground,
@@ -213,7 +213,8 @@ namespace Quaver.Screens.Select.UI.Mods
                 Tint = Color.Black
             };
 
-            RemoveAllModsButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Remove all mods", 0.50f, (sender, args) => ModManager.RemoveAllMods())
+            RemoveAllModsButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Remove all mods", 12,
+                (sender, args) => ModManager.RemoveAllMods())
             {
                 Parent = FooterBackground,
                 X = CloseButton.Width + CloseButton.X + 15,
@@ -262,8 +263,8 @@ namespace Quaver.Screens.Select.UI.Mods
             Alignment = Alignment.BotLeft;
 
 
-            Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, Y, WindowManager.Height, 900));
+            Animations.Clear();
+            Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint, Y, WindowManager.Height, 900));
             Scheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
         }
     }

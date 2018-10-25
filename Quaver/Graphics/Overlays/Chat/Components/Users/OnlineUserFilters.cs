@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -23,7 +23,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     The text that says "Filters"
         /// </summary>
-        private SpriteTextBitmap TextFilters { get; set; }
+        private SpriteText TextFilters { get; set; }
 
         /// <summary>
         ///     The button to select the "All" Filter.
@@ -43,7 +43,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///    Text that search "Search"
         /// </summary>
-        private SpriteTextBitmap TextSearch { get; set; }
+        private SpriteText TextSearch { get; set; }
 
         /// <summary>
         ///     The textbox to search for users.
@@ -97,7 +97,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextFilter()
         {
-            TextFilters = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Filter:", 24, Color.White, Alignment.MidLeft, int.MaxValue)
+            TextFilters = new SpriteText(BitmapFonts.Exo2SemiBold, "Filter:", 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -107,8 +107,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                     BlendState = BlendState.NonPremultiplied
                 }
             };
-
-            TextFilters.Size = new ScalableVector2(TextFilters.Width * 0.50f, TextFilters.Height * 0.50f);
         }
 
         /// <summary>
@@ -133,7 +131,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 }
             };
 
-            AllFilterButton.Text.Size = new ScalableVector2(AllFilterButton.Text.Width * 0.80f, AllFilterButton.Text.Height * 0.80f);
             AllFilterButton.Width = AllFilterButton.Text.Width + 8;
             AllFilterButton.Height = AllFilterButton.Text.Height + 6;
 
@@ -228,7 +225,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextSearch()
         {
-            TextSearch = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Search:", 24, Color.White, Alignment.MidLeft, int.MaxValue)
+            TextSearch = new SpriteText(BitmapFonts.Exo2SemiBold, "Search:", 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -238,8 +235,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                     BlendState = BlendState.NonPremultiplied
                 }
             };
-
-            TextSearch.Size = new ScalableVector2(TextSearch.Width * 0.50f, TextSearch.Height * 0.50f);
         }
 
         /// <summary>
@@ -247,8 +242,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateSearchTextbox()
         {
-            SearchTextbox = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(150, TextSearch.Height),
-                Fonts.Exo2Bold24, "", "", 0.35f)
+            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), BitmapFonts.Exo2Regular, 18)
             {
                 Parent = TextSearch,
                 X = TextSearch.Width + 5,
@@ -264,15 +258,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             SearchTextbox.OnStoppedTyping += text => Overlay.OnlineUserList?.FilterUsers(text);
         }
 
-        private void CreateDividerLine()
+        private void CreateDividerLine() => DividerLine = new Sprite()
         {
-            DividerLine = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(Width, 2),
-                Alpha = 0.35f
-            };
-        }
+            Parent = this,
+            Alignment = Alignment.BotLeft,
+            Size = new ScalableVector2(Width, 2),
+            Alpha = 0.35f
+        };
     }
 }

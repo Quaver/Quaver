@@ -80,16 +80,12 @@ namespace Quaver.Screens.Gameplay.UI
             Tint = Colors.MainAccentInactive;
             Alpha = 0;
 
-            // Replay
-            const float replayTextScale = 0.95f;
-
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(Fonts.AllerRegular16, "Watching")
+            Watching = new SpriteText(BitmapFonts.Exo2Regular, "Watching", 16)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 0,
-                TextScale = replayTextScale,
                 Alpha = 0
             };
 
@@ -97,18 +93,17 @@ namespace Quaver.Screens.Gameplay.UI
             // watching a replay.
             if (Screen.InReplayMode)
             {
-                PlayerName = new SpriteText(Fonts.AllerRegular16, Screen.LoadedReplay.PlayerName)
+                PlayerName = new SpriteText(BitmapFonts.Exo2Regular, Screen.LoadedReplay.PlayerName, 18)
                 {
                     Parent = this,
                     Alignment = Alignment.TopCenter,
                     Y = Watching.Y,
-                    TextScale = replayTextScale,
-                    TextColor = Colors.MainAccent,
+                    Tint = Colors.MainAccent,
                     Alpha = 0
                 };
 
-                var watchingLength = Watching.Font.MeasureString(Watching.Text).X;
-                var playerNameLength = PlayerName.Font.MeasureString(PlayerName.Text).X;
+                var watchingLength = Watching.Width;
+                var playerNameLength = PlayerName.Width;
                 var totalLength = watchingLength + playerNameLength;
                 var center = totalLength / 2f;
 
@@ -116,51 +111,47 @@ namespace Quaver.Screens.Gameplay.UI
                 PlayerName.X = Watching.X + watchingLength + playerNameLength / 2.0f - center / 2f + 2;
             }
 
-            Title = new SpriteText(Fonts.AllerRegular16, $"{Screen.Map.Artist} - {Screen.Map.Title}")
+            Title = new SpriteText(BitmapFonts.Exo2Regular, $"{Screen.Map.Artist} - {Screen.Map.Title}", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Watching.Y + TextYSpacing + TextYSpacing,
                 Alpha = 0,
-                TextScale = 0.85f
             };
 
-            Difficulty = new SpriteText(Fonts.AllerRegular16, $"[{Screen.Map.DifficultyName}]")
+            Difficulty = new SpriteText(BitmapFonts.Exo2Regular, $"[{Screen.Map.DifficultyName}]", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Title.Y + TextYSpacing + TextYSpacing * 0.85f,
-                TextScale = 0.80f,
                 Alpha = 0
             };
 
-            Creator = new SpriteText(Fonts.AllerRegular16, $"Mapped By: \"{Screen.Map.Creator}\"")
+            Creator = new SpriteText(BitmapFonts.Exo2Regular, $"Mapped By: \"{Screen.Map.Creator}\"", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Difficulty.Y + TextYSpacing + TextYSpacing * 0.80f,
-                TextScale = 0.75f,
                 Alpha = 0
             };
 
-            Rating = new SpriteText(Fonts.AllerRegular16, $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate)).Replace("%", "")}")
+            Rating = new SpriteText(BitmapFonts.Exo2Regular, $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate)).Replace("%", "")}",
+                16)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Creator.Y + TextYSpacing + TextYSpacing * 0.75f,
-                TextScale = 0.70f,
                 Alpha = 0,
-                TextColor = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate))
+                Tint = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate))
             };
 
             // Get a formatted string of the activated mods.
             var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" : "None");
-            Mods = new SpriteText(Fonts.AllerRegular16, modsString)
+            Mods = new SpriteText(BitmapFonts.Exo2Regular, modsString, 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Rating.Y + TextYSpacing + TextYSpacing * 0.7f,
-                TextScale = 0.7f,
                 Alpha = 0
             };
         }

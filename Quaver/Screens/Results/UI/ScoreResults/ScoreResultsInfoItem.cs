@@ -67,28 +67,26 @@ namespace Quaver.Screens.Results.UI.ScoreResults
             if (IsInitialized)
                 throw new InvalidOperationException($"ScoreResultsInfoItem has already been initialized.");
 
-            TitleText = new SpriteText(Fonts.Exo2Regular24, Title.ToUpper())
+            TitleText = new SpriteText(BitmapFonts.Exo2Regular, Title.ToUpper(), 16)
             {
                 Parent = parent,
                 TextAlignment = Alignment.MidCenter,
                 Text = Title.ToUpper(),
                 X = posX,
                 Y = 17,
-                TextScale = 0.50f,
-                TextColor = Colors.SecondaryAccent
+                Tint = Colors.SecondaryAccent
             };
 
             if (Value != null)
             {
-                ValueText = new SpriteText(Fonts.Exo2Regular24, Value)
+                ValueText = new SpriteText(BitmapFonts.Exo2Regular, Value, 16)
                 {
                     Parent = parent,
                     TextAlignment = Alignment.MidCenter,
                     Text = Value,
                     X = posX,
-                    Y = TitleText.Y + (TitleText.MeasureString() / 2f).Y + 25,
-                    TextScale = 0.52f,
-                    TextColor = Color.White
+                    Y = TitleText.Y + 25,
+                    Tint = Color.White
                 };
             }
             else
@@ -97,7 +95,7 @@ namespace Quaver.Screens.Results.UI.ScoreResults
                 {
                     Parent = parent,
                     Size = new ScalableVector2(20, 20),
-                    Position = new ScalableVector2(posX - TitleText.MeasureString().X / 4f + 13, TitleText.Y + (TitleText.MeasureString() / 2f).Y + 17),
+                    Position = new ScalableVector2(posX - 13, TitleText.Y + TitleText.Height + 17),
                     Image = FontAwesome.Spinner
                 };
             }

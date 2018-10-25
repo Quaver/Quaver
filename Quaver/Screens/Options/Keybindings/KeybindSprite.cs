@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Graphics;
@@ -36,7 +36,7 @@ namespace Quaver.Screens.Options.Keybindings
             Image = UserInterface.RoundedSquare;
             Size = new ScalableVector2(75, 75);
 
-            KeyText = new SpriteText(Fonts.AllerRegular16, XnaKeyHelper.GetStringFromKey(Key.Value))
+            KeyText = new SpriteText(BitmapFonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter

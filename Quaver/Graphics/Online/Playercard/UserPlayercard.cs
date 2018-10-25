@@ -17,7 +17,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
@@ -78,7 +78,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     The user's username.
         /// </summary>
-        private SpriteTextBitmap TextUsername { get; set; }
+        private SpriteText TextUsername { get; set; }
 
         /// <summary>
         ///     The value of the user's overall rating.
@@ -353,8 +353,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// <param name="title"></param>
         public void UpdateTitle(Title title)
         {
-            TitleSprite.Transformations.Clear();
-            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TitleSprite.Animations.Clear();
+            TitleSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             TitleSprite.Image = TitleHelper.Get(title);
         }
 
@@ -363,8 +363,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void CreateUsername(string username)
         {
-            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2Bold, " ", 24,
-                Color.White, Alignment.MidCenter, int.MaxValue)
+            TextUsername = new SpriteText(BitmapFonts.Exo2Bold, " ", 24)
             {
                 Parent = Avatar,
                 X = Avatar.Width + 5,
@@ -460,8 +459,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         public void UpdateAvatar(Texture2D tex)
         {
-            Avatar.Transformations.Clear();
-            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            Avatar.Animations.Clear();
+            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             Avatar.Image = tex;
         }
 
@@ -480,8 +479,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void UpdateCompetitiveBadge(CompetitveBadge badge)
         {
-            CompetitiveRankBadge.Transformations.Clear();
-            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            CompetitiveRankBadge.Animations.Clear();
+            CompetitiveRankBadge.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
         }
 
@@ -490,8 +489,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         public void UpdateFlag(string countryName)
         {
-            TextCountryRank.Icon.Transformations.Clear();
-            TextCountryRank.Icon.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TextCountryRank.Icon.Animations.Clear();
+            TextCountryRank.Icon.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             TextCountryRank.Icon.Image = Flags.Get(countryName);
         }
 
@@ -558,8 +557,8 @@ namespace Quaver.Graphics.Online.Playercard
                     SetStats();
                     ShowStats();
 
-                    Transformations.Clear();
-                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 154, 150));
+                    Animations.Clear();
+                    Animations.Add(new Animation(AnimationProperty.Height, Easing.OutQuint, Height, 154, 150));
                     break;
                 case ConnectionStatus.Disconnected:
                     FullCard = false;
@@ -569,8 +568,8 @@ namespace Quaver.Graphics.Online.Playercard
 
                     HideStats();
 
-                    Transformations.Clear();
-                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 96, 150));
+                    Animations.Clear();
+                    Animations.Add(new Animation(AnimationProperty.Height, Easing.OutQuint, Height, 96, 150));
                     break;
             }
         }

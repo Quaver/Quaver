@@ -14,7 +14,7 @@ using Quaver.Scheduling;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Window;
 
@@ -405,8 +405,8 @@ namespace Quaver.Graphics.Overlays.Chat
 
             TimeSinceLastChannelDialogOpened = 0;
 
-            JoinChannelDialog.Transformations.Clear();
-            JoinChannelDialog.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint,
+            JoinChannelDialog.Animations.Clear();
+            JoinChannelDialog.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
                 JoinChannelDialog.Y, JoinChannelDialog.Height, 850));
 
             Scheduler.RunAfter(() =>

@@ -14,7 +14,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Skinning;
 using Steamworks;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -101,9 +101,9 @@ namespace Quaver.Online.Chat
 
                 var targetX = IsActive ?  0 : -Dialog.DialogContainer.Width;
 
-                Dialog.DialogContainer.Transformations.Clear();
+                Dialog.DialogContainer.Animations.Clear();
 
-                Dialog.DialogContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint,
+                Dialog.DialogContainer.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint,
                     Dialog.DialogContainer.X, targetX, 600));
 
                 if (!IsActive)

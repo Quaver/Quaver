@@ -14,7 +14,7 @@ using Steamworks;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
@@ -165,95 +165,55 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         ///    Creates the rank text
         /// </summary>
-        private void CreateRank(int rank)
+        private void CreateRank(int rank) => Rank = new SpriteText(BitmapFonts.Exo2Italic, $"{rank}.", 18)
         {
-            Rank = new SpriteText(Fonts.Exo2Italic24, $"{rank}.")
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = 18,
-                TextScale = 0.60f
-            };
-
-            var rankSize = Rank.MeasureString() / 2f;
-            Rank.X += rankSize.X;
-        }
+            Parent = this,
+            Alignment = Alignment.MidLeft,
+            X = 18,
+        };
 
         /// <summary>
         ///     Creates the text for the username.
         /// </summary>
-        private void CreateUsername()
+        private void CreateUsername() => Username = new SpriteText(BitmapFonts.Exo2BoldItalic, Score.Name, 14)
         {
-            Username = new SpriteText(Fonts.Exo2BoldItalic24, Score.Name)
-            {
-                Parent = this,
-                TextScale = 0.50f,
-                X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = 5
-            };
-
-            var size = Username.MeasureString() / 2f;
-            Username.X += size.X;
-            Username.Y += size.Y;
-        }
+            Parent = this,
+            X = GradeAchieved.X + GradeAchieved.Width + 10,
+            Y = 5
+        };
 
         /// <summary>
         ///     Creates the text that displays
         /// </summary>
         /// <param name="value"></param>
-        private void CreateScoreText(string value)
+        private void CreateScoreText(string value) => ScoreText = new SpriteText(BitmapFonts.Exo2Regular, $"{value} / {Score.MaxCombo}x", 14)
         {
-            ScoreText = new SpriteText(Fonts.Exo2Regular24, $"{value} / {Score.MaxCombo}x")
-            {
-                Parent = this,
-                TextScale = 0.45f,
-                X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = Height - 5
-            };
-
-            var size = ScoreText.MeasureString() / 2f;
-
-            ScoreText.X += size.X;
-            ScoreText.Y -= size.Y;
-        }
+            Parent = this,
+            X = GradeAchieved.X + GradeAchieved.Width + 10,
+            Y = Height - 5
+        };
 
         /// <summary>
         ///    Creates the text that displays the accuracy.
         /// </summary>
-        private void CreateAccuracyText()
+        private void CreateAccuracyText() => Accuracy = new SpriteText(BitmapFonts.Exo2Regular, StringHelper.AccuracyToString((float)Score.Accuracy), 14)
         {
-            Accuracy = new SpriteText(Fonts.Exo2Regular24, StringHelper.AccuracyToString((float) Score.Accuracy))
-            {
-                Parent = this,
-                Alignment = Alignment.BotRight,
-                TextScale = 0.45f,
-                X = -10,
-                Y = -5
-            };
-
-            var size = Accuracy.MeasureString() / 2f;
-            Accuracy.X -= size.X;
-            Accuracy.Y -= size.Y;
-        }
+            Parent = this,
+            Alignment = Alignment.BotRight,
+            X = -10,
+            Y = -5
+        };
 
         /// <summary>
         ///     Creates the text that displays the mods.
         /// </summary>
-        private void CreateModsText()
+        private void CreateModsText() => Mods = new SpriteText(BitmapFonts.Exo2Regular, ModHelper.GetModsString(Score.Mods), 14)
         {
-            Mods = new SpriteText(Fonts.Exo2Regular24, ModHelper.GetModsString(Score.Mods))
-            {
-                Parent = this,
-                Alignment = Alignment.TopRight,
-                TextScale = 0.45f,
-                X = -10,
-                Y = 5
-            };
-
-            var size = Mods.MeasureString() / 2f;
-            Mods.X -= size.X;
-            Mods.Y += size.Y;
-        }
+            Parent = this,
+            Alignment = Alignment.TopRight,
+            X = -10,
+            Y = 5
+        };
 
         /// <summary>
         ///
@@ -292,8 +252,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 
             try
             {
-                Avatar.Transformations.Clear();
-                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Animations.Clear();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
                 Avatar.Image = e.Texture;
             }
             catch (Exception exception)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -26,12 +26,12 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <summary>
         ///     The title of the panel.
         /// </summary>
-        public SpriteTextBitmap Title { get; private set; }
+        public SpriteText Title { get; private set; }
 
         /// <summary>
         ///     The description of the panel.
         /// </summary>
-        public SpriteTextBitmap Description { get; private set; }
+        public SpriteText Description { get; private set; }
 
         /// <summary>
         ///     The original size of the panel.
@@ -135,45 +135,35 @@ namespace Quaver.Screens.Menu.UI.Panels
         ///     Creates the text that displays the title of the panel.
         /// </summary>
         /// <param name="title"></param>
-        private void CreateTitleText(string title)
+        private void CreateTitleText(string title) => Title = new SpriteText(BitmapFonts.Exo2BoldItalic, title.ToUpper(), 22, true, (int)Width)
         {
-            Title = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, title.ToUpper(), 24,
-                ColorHelper.HexToColor("#383939"), Alignment.MidCenter, (int) Width)
+            Parent = HeadingContainer,
+            Alignment = Alignment.TopLeft,
+            SpriteBatchOptions = new SpriteBatchOptions()
             {
-                Parent = HeadingContainer,
-                Alignment = Alignment.TopLeft,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                X = 10,
-                Y = 6
-            };
-
-            Title.Size = new ScalableVector2(Title.Width * 0.95f, Title.Height * 0.95f);
-        }
+                BlendState = BlendState.NonPremultiplied
+            },
+            X = 10,
+            Y = 6,
+            Tint = ColorHelper.HexToColor("#383939")
+        };
 
         /// <summary>
         ///     Creates the text that displays the description of the panel.
         /// </summary>
         /// <param name="description"></param>
-        private void CreateDescriptionText(string description)
+        private void CreateDescriptionText(string description) => Description = new SpriteText(BitmapFonts.Exo2BoldItalic,
+            description, 18, true, (int)(Width * 1.75f))
         {
-            Description = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, description, 20,
-                ColorHelper.HexToColor("#383939"),
-                Alignment.MidLeft, (int) (Width * 1.75f))
+            Parent = HeadingContainer,
+            Alignment = Alignment.TopLeft,
+            SpriteBatchOptions = new SpriteBatchOptions()
             {
-                Parent = HeadingContainer,
-                Alignment = Alignment.TopLeft,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                X = 15,
-                Y = Title.Y + Title.Height + 0
-            };
-
-            Description.Size = new ScalableVector2(Description.Width * 0.50f, Description.Height * 0.50f);
-        }
+                BlendState = BlendState.NonPremultiplied
+            },
+            X = 15,
+            Y = Title.Y + Title.Height + 0,
+            Tint = ColorHelper.HexToColor("#383939")
+        };
     }
 }

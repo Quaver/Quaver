@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.API", "Quaver.API\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Resources", "Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj", "{29C0CA47-31B7-4048-9FCF-C078E695DBB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{1C7E427C-6F18-4912-8994-16193CE2AF46}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Shaders", "Quaver.Shaders\Quaver.Shaders.csproj", "{063A0120-56DA-4A2C-91EA-26932CFBA171}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.DesktopGL.Core", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj", "{BDCB1605-28B6-4773-AE12-DA4285821EDA}"
@@ -18,6 +16,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Server.Common", "Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj", "{80FF1569-9CF5-45AB-998F-BCBBD6621E89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Server.Client", "Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj", "{AD9BE804-0CC1-4480-BB91-95D2C6881D34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{077E5D47-6B11-478A-B5E1-754BB23D0282}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Resources", "Wobble\Wobble.Resources\Wobble.Resources.csproj", "{3219608F-6722-4AAB-AA66-EACBDF1296F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,14 +53,6 @@ Global
 		{29C0CA47-31B7-4048-9FCF-C078E695DBB6}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
 		{29C0CA47-31B7-4048-9FCF-C078E695DBB6}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{29C0CA47-31B7-4048-9FCF-C078E695DBB6}.Test Server|Any CPU.Build.0 = Debug|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Test Server Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C7E427C-6F18-4912-8994-16193CE2AF46}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{063A0120-56DA-4A2C-91EA-26932CFBA171}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -91,6 +85,22 @@ Global
 		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
 		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server|Any CPU.ActiveCfg = Test Server|Any CPU
 		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server|Any CPU.Build.0 = Test Server|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Test Server Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Test Server Release|Any CPU.Build.0 = Debug|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Test Server|Any CPU.Build.0 = Debug|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Test Server Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{3219608F-6722-4AAB-AA66-EACBDF1296F9}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

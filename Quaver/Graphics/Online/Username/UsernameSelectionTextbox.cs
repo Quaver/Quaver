@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
@@ -15,11 +15,6 @@ namespace Quaver.Screens.Connecting.UI
     public class UsernameSelectionTextbox : Textbox
     {
         /// <summary>
-        ///     The connecting screen view.
-        /// </summary>
-        private ConnectingScreenView View { get; }
-
-        /// <summary>
         ///     The overlay for the textbox.
         /// </summary>
         private TextButton SubmitButton { get; }
@@ -27,18 +22,16 @@ namespace Quaver.Screens.Connecting.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public UsernameSelectionTextbox(ConnectingScreenView view)
-            : base(TextboxStyle.SingleLine, new ScalableVector2(360, 40), Fonts.Exo2Regular24, "", "Enter Username", 0.60f)
+        public UsernameSelectionTextbox()
+            : base(new ScalableVector2(360, 40), BitmapFonts.Exo2Regular, 14, "", "Enter Username")
         {
-            View = view;
-
             Image = UserInterface.UsernameSelectionTextbox;
             InputText.Y = 5;
             Cursor.Y = 6;
             AlwaysFocused = true;
             MaxCharacters = 15;
 
-            SubmitButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Submit", 0.55f, (o, e) => OnBoxSubmitted(RawText))
+            SubmitButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Submit", 14, (o, e) => OnBoxSubmitted(RawText))
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

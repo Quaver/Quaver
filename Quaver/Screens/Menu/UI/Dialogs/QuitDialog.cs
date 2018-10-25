@@ -32,7 +32,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// <summary>
         ///     Text that asks the user if they're sure they want to quit.
         /// </summary>
-        public SpriteTextBitmap AreYouSure { get; set; }
+        public SpriteText AreYouSure { get; set; }
 
         /// <summary>
         ///     The line that divides AreYouSure and the buttons.
@@ -42,12 +42,12 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// <summary>
         ///     The button to exit the game.
         /// </summary>
-        public BitmapTextButton QuitButton { get; set; }
+        public TextButton QuitButton { get; set; }
 
         /// <summary>
         ///     The button to cancel the dialog.
         /// </summary>
-        public BitmapTextButton CancelButton { get; set; }
+        public TextButton CancelButton { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -137,8 +137,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateAreYouSureText()
         {
-            AreYouSure = new SpriteTextBitmap(BitmapFonts.Exo2Medium, "Are you sure you want to quit the game?",
-                24, Color.White, Alignment.MidCenter, (int) WindowManager.Width)
+            AreYouSure = new SpriteText(BitmapFonts.Exo2Medium, "Are you sure you want to quit the game?", 24)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
@@ -173,8 +172,8 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateQuitButton()
         {
-            QuitButton = new BitmapTextButton(UserInterface.BlankBox, BitmapFonts.Exo2Medium,
-                "Quit", 0.60f, 24, Color.Crimson, (o, e) =>
+            QuitButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Medium,
+                "Quit", 24, (o, e) =>
                 {
                     Logger.Debug($"Exiting game via QuitDialog", LogType.Runtime);
 
@@ -186,7 +185,11 @@ namespace Quaver.Screens.Menu.UI.Dialogs
                 Y = DividerLine.Y + DividerLine.Height + 25,
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(200, 40),
-                Tint = Color.Transparent
+                Tint = Color.Transparent,
+                Text =
+                {
+                    Tint = Color.Crimson
+                }
             };
 
             QuitButton.AddBorder(Color.Crimson, 2);
@@ -197,15 +200,19 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateCancelButton()
         {
-            CancelButton = new BitmapTextButton(UserInterface.BlankBox,
-                BitmapFonts.Exo2Medium, "Cancel", 0.60f, 24, Colors.MainAccent, (o, e) => Dismiss("Cancel Button"))
+            CancelButton = new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Medium, "Cancel", 18, (o, e) => Dismiss("Cancel Button"))
             {
                 Parent = AreYouSure,
                 Y = DividerLine.Y + DividerLine.Height + 25,
                 UsePreviousSpriteBatchOptions = true,
                 X = QuitButton.X + QuitButton.Width + 25,
                 Size = new ScalableVector2(200, 40),
-                Tint = Color.Transparent
+                Tint = Color.Transparent,
+                Text =
+                {
+                    Tint = Colors.MainAccent
+                }
             };
 
             CancelButton.AddBorder(Colors.MainAccent, 2);

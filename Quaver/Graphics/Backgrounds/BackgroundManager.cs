@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amib.Threading;
@@ -10,7 +10,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Scheduling;
 using Wobble;
 using Wobble.Assets;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 
 namespace Quaver.Graphics.Backgrounds
@@ -50,8 +50,8 @@ namespace Quaver.Graphics.Backgrounds
         /// <param name="gameTime"></param>
         public static void Update(GameTime gameTime)
         {
-            if (!PermittedToFadeIn && Background.Transformations.Count > 0)
-                Background.BrightnessSprite.Transformations.Clear();
+            if (!PermittedToFadeIn && Background.Animations.Count > 0)
+                Background.BrightnessSprite.Animations.Clear();
 
             Background.Update(gameTime);
         }
@@ -109,10 +109,10 @@ namespace Quaver.Graphics.Backgrounds
         /// </summary>
         public static void FadeOut()
         {
-            Background.BrightnessSprite.Transformations.Clear();
+            Background.BrightnessSprite.Animations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.BrightnessSprite.Alpha, 1, 300);
-            Background.BrightnessSprite.Transformations.Add(t);
+            var t = new Animation(AnimationProperty.Alpha, Easing.OutQuad, Background.BrightnessSprite.Alpha, 1, 300);
+            Background.BrightnessSprite.Animations.Add(t);
         }
 
         /// <summary>
@@ -120,10 +120,10 @@ namespace Quaver.Graphics.Backgrounds
         /// </summary>
         public static void FadeIn(int dim)
         {
-            Background.BrightnessSprite.Transformations.Clear();
+            Background.BrightnessSprite.Animations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.BrightnessSprite.Alpha, dim / 100f, 300);
-            Background.BrightnessSprite.Transformations.Add(t);
+            var t = new Animation(AnimationProperty.Alpha, Easing.InQuad, Background.BrightnessSprite.Alpha, dim / 100f, 300);
+            Background.BrightnessSprite.Animations.Add(t);
         }
 
         /// <summary>

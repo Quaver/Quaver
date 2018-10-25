@@ -8,7 +8,7 @@ using Quaver.Server.Client.Structures;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
 using Color = Microsoft.Xna.Framework.Color;
@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 3;
             ScrollSpeed = 150;
-            EasingType = Easing.EaseOutQuint;
+            EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
 
             UserBuffer = new LinkedList<DrawableOnlineUser>();

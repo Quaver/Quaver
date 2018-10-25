@@ -16,7 +16,7 @@ using Quaver.Screens.Results.UI.Statistics;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 using Wobble.Window;
@@ -108,9 +108,9 @@ namespace Quaver.Screens.Results
         private void CreateMapInformation() => MapInformation = new MapInformation((ResultsScreen) Screen)
         {
             Parent = Container,
-            Transformations =
+            Animations =
             {
-                new Transformation(TransformationProperty.Y, Easing.EaseOutBounce, -125, 60, 500)
+                new Animation(AnimationProperty.Y, Easing.OutBounce, -125, 60, 500)
             }
         };
 
@@ -137,8 +137,8 @@ namespace Quaver.Screens.Results
                 X = -WindowManager.Width,
             };
 
-            var transformation = new Transformation(TransformationProperty.X, Easing.EaseInOutElastic, ScoreResults.X, -ScoreResults.Width / 2f - 10, 800);
-            ScoreResults.Transformations.Add(transformation);
+            var Animation = new Animation(AnimationProperty.X, Easing.InOutElastic, ScoreResults.X, -ScoreResults.Width / 2f - 10, 800);
+            ScoreResults.Animations.Add(Animation);
         }
 
         /// <summary>
@@ -163,8 +163,8 @@ namespace Quaver.Screens.Results
                 X = WindowManager.Width
             };
 
-            var transformation = new Transformation(TransformationProperty.X, Easing.EaseInOutElastic, OnlineResults.X, OnlineResults.Width / 2f + 10, 800);
-            OnlineResults.Transformations.Add(transformation);
+            var Animation = new Animation(AnimationProperty.X, Easing.InOutElastic, OnlineResults.X, OnlineResults.Width / 2f + 10, 800);
+            OnlineResults.Animations.Add(Animation);
         }
 
         /// <summary>
@@ -182,10 +182,10 @@ namespace Quaver.Screens.Results
                 X = -WindowManager.Width
             };
 
-            var transformation = new Transformation(TransformationProperty.X, Easing.EaseOutElastic, JudgementBreakdown.X,
+            var Animation = new Animation(AnimationProperty.X, Easing.OutElastic, JudgementBreakdown.X,
                                                                                     -JudgementBreakdown.Width / 2f - 10, 1200);
 
-            JudgementBreakdown.Transformations.Add(transformation);
+            JudgementBreakdown.Animations.Add(Animation);
         }
 
         /// <summary>
@@ -203,10 +203,10 @@ namespace Quaver.Screens.Results
                 X = 0
             };
 
-            var transformation = new Transformation(TransformationProperty.Y, Easing.EaseOutBounce, ButtonContainer.Y,
+            var Animation = new Animation(AnimationProperty.Y, Easing.OutBounce, ButtonContainer.Y,
                                                         JudgementBreakdown.Y + JudgementBreakdown.Height + 20, 1200);
 
-            ButtonContainer.Transformations.Add(transformation);
+            ButtonContainer.Animations.Add(Animation);
         }
 
         /// <summary>
@@ -234,10 +234,10 @@ namespace Quaver.Screens.Results
                 X = WindowManager.Width
             };
 
-            var transformation = new Transformation(TransformationProperty.X, Easing.EaseOutElastic, ScoreStatistics.X,
+            var Animation = new Animation(AnimationProperty.X, Easing.OutElastic, ScoreStatistics.X,
                                                     ScoreStatistics.Width / 2f + 10, 1200);
 
-            ScoreStatistics.Transformations.Add(transformation);
+            ScoreStatistics.Animations.Add(Animation);
         }
 
         /// <summary>
@@ -251,9 +251,9 @@ namespace Quaver.Screens.Results
             Height = WindowManager.Height,
             Tint = Color.Black,
             Alpha = 1,
-            Transformations =
+            Animations =
             {
-                new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 300)
+                new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 300)
             }
         };
 
@@ -262,30 +262,30 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void PerformExitAnimations()
         {
-            ScreenTransitioner.Transformations.Clear();
-            ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            ScreenTransitioner.Animations.Clear();
+            ScreenTransitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
 
-            MapInformation.Transformations.Clear();
-            MapInformation.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseInOutQuad, MapInformation.Y,
+            MapInformation.Animations.Clear();
+            MapInformation.Animations.Add(new Animation(AnimationProperty.Y, Easing.InOutQuad, MapInformation.Y,
                                                                         -WindowManager.Height, 300));
 
-            ScoreResults.Transformations.Clear();
-            ScoreResults.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad, ScoreResults.X,
+            ScoreResults.Animations.Clear();
+            ScoreResults.Animations.Add(new Animation(AnimationProperty.X, Easing.InOutQuad, ScoreResults.X,
                                                                         -WindowManager.Width, 300));
 
-            OnlineResults.Transformations.Clear();
-            OnlineResults.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad, OnlineResults.X, WindowManager.Width, 300));
+            OnlineResults.Animations.Clear();
+            OnlineResults.Animations.Add(new Animation(AnimationProperty.X, Easing.InOutQuad, OnlineResults.X, WindowManager.Width, 300));
 
-            JudgementBreakdown.Transformations.Clear();
-            JudgementBreakdown.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad,
+            JudgementBreakdown.Animations.Clear();
+            JudgementBreakdown.Animations.Add(new Animation(AnimationProperty.X, Easing.InOutQuad,
                                                                         JudgementBreakdown.X, -WindowManager.Width, 300));
 
-            ScoreStatistics.Transformations.Clear();
-            ScoreStatistics.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad,
+            ScoreStatistics.Animations.Clear();
+            ScoreStatistics.Animations.Add(new Animation(AnimationProperty.X, Easing.InOutQuad,
                                                                         ScoreStatistics.X, WindowManager.Width, 300));
 
-            ButtonContainer.Transformations.Clear();
-            ButtonContainer.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseInOutQuad, ButtonContainer.Y,
+            ButtonContainer.Animations.Clear();
+            ButtonContainer.Animations.Add(new Animation(AnimationProperty.Y, Easing.InOutQuad, ButtonContainer.Y,
                                                                         WindowManager.Height, 300));
         }
     }

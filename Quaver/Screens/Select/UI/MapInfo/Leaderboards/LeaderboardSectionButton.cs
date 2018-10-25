@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -28,13 +28,12 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <param name="section"></param>
         /// <param name="text"></param>
         public LeaderboardSectionButton(LeaderboardSection section, string text)
-            : base(UserInterface.BlankBox, Fonts.AllerRegular16, text, 0.70f)
+            : base(UserInterface.BlankBox, BitmapFonts.Exo2Regular, text, 16)
         {
             Section = section;
 
             Alpha = 0;
-            var textSize = Text.MeasureString();
-            Size = new ScalableVector2(textSize.X, textSize.Y);
+            Size = Text.Size;
             Y = 2;
 
             Height = Section.Leaderboard.DividerLine.Y - Section.Leaderboard.DividerLine.Height;

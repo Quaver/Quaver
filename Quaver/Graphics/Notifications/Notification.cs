@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Notifications
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="image"></param>
         /// <param name="text"></param>
@@ -81,13 +81,11 @@ namespace Quaver.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteText(Fonts.AllerRegular16, text, new ScalableVector2(Width - Avatar.Width, Container.Height))
+            Content = new SpriteText(BitmapFonts.Exo2Regular, text, 16, true, (int) Width - 5)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                Style = TextStyle.OverflowMultiLine,
-                TextScale = 0.70f,
                 X = Avatar.X + Avatar.Width + 10,
                 Y = 10
             };

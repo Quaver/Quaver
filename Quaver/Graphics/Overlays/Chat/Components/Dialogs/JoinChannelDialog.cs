@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,7 +8,7 @@ using Quaver.Online.Chat;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -88,10 +88,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             Tint = new Color(63, 68, 91),
             Y = 400,
             Alpha = 0,
-            Transformations =
+            Animations =
             {
-                new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 400),
-                new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, 400, 0, 800)
+                new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 400),
+                new Animation(AnimationProperty.Y, Easing.OutQuint, 400, 0, 800)
             },
             UsePreviousSpriteBatchOptions = true
         };
@@ -128,8 +128,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 UsePreviousSpriteBatchOptions = true
             };
 
-            var chatChannels = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
+            var chatChannels = new SpriteText(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 18)
             {
                 Parent = icon,
                 Y = -3,
@@ -137,18 +136,14 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 UsePreviousSpriteBatchOptions = true
             };
 
-            chatChannels.Size = new ScalableVector2(chatChannels.Width * 0.60f, chatChannels.Height * 0.60f);
-
-            var description = new SpriteTextBitmap(BitmapFonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
-                24, Color.White, Alignment.MidLeft, int.MaxValue)
+            var description = new SpriteText(BitmapFonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
+                18)
             {
                 Parent = icon,
                 Y = chatChannels.Y + chatChannels.Height - 2,
                 X = icon.Width + 15,
                 UsePreviousSpriteBatchOptions = true
             };
-
-            description.Size = new ScalableVector2(description.Width * 0.50f, description.Height * 0.50f);
         }
 
         /// <summary>
@@ -164,7 +159,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Alpha = 0,
                 InputEnabled = true,
                 ScrollSpeed = 150,
-                EasingType = Easing.EaseOutQuint,
+                EasingType = Easing.OutQuint,
                 TimeToCompleteScroll = 1500,
                 Scrollbar =
                 {

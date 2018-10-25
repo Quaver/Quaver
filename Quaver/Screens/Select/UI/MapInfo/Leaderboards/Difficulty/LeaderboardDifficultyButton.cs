@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
@@ -82,15 +82,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteText(Fonts.Exo2Regular24, Map.DifficultyName)
+            DifficultyName = new SpriteText(BitmapFonts.Exo2Regular, Map.DifficultyName, 14)
             {
                 Parent = this,
-                TextScale = 0.46f,
-                TextColor = Color.White,
+                Tint = Color.White,
                 Alignment = Alignment.MidLeft,
             };
 
-            DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
+            DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.Width + 8f;
         }
 
         /// <inheritdoc />

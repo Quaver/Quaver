@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics.Overlays.Chat.Components.Dialogs;
@@ -21,7 +21,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     The text that displays "Channels"
         /// </summary>
-        private SpriteTextBitmap TextChannels { get; set; }
+        private SpriteText TextChannels { get; set; }
 
         /// <summary>
         ///     The button to join chat channels.
@@ -50,7 +50,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateChannelsText()
         {
-            TextChannels = new SpriteTextBitmap(BitmapFonts.Exo2Medium, "Chat Channels", 24, Color.White, Alignment.MidLeft, int.MaxValue)
+            TextChannels = new SpriteText(BitmapFonts.Exo2Medium, "Chat Channels", 24)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

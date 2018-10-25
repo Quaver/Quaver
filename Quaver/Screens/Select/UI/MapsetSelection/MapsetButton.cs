@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
@@ -7,7 +7,7 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 
@@ -76,43 +76,34 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Size = new ScalableVector2(Container.Width, BUTTON_HEIGHT);
             Image = UserInterface.SelectBorder;
 
-            Title = new SpriteText(Fonts.Exo2Regular24, "")
+            Title = new SpriteText(BitmapFonts.Exo2Regular, "", 14)
             {
                 Parent = this,
-                TextScale = 0.60f,
                 Y = 17,
                 Text = Mapset.Title
             };
 
-            Title.X = 15 + Title.MeasureString().X / 2f;
+            Title.X = 15 + Title.Width;
 
-            Artist = new SpriteText(Fonts.Exo2Regular24, "")
+            Artist = new SpriteText(BitmapFonts.Exo2Regular, "", 14)
             {
                 Parent = this,
-                TextScale = 0.45f,
-                TextColor = Color.White,
+                Tint = Color.White,
                 Alpha = 1f,
-                Text = Mapset.Artist
+                Text = Mapset.Artist,
+                Y = Title.Y + 15f,
+                X = 15
             };
 
-            // Change artist/creator text properties.
-            var artistSize = Artist.MeasureString() / 2f;
-            Artist.Y = artistSize.Y + Title.Y + 15f;
-            Artist.X = 15 + artistSize.X;
-
-            Creator = new SpriteText(Fonts.Exo2Regular24, "")
+            Creator = new SpriteText(BitmapFonts.Exo2Regular, "", 12)
             {
                 Parent = this,
-                TextScale = 0.40f,
-                TextColor = Color.White,
+                Tint = Color.White,
                 Alpha = 1f,
-                Text = "By: " + Mapset.Creator
+                Text = "By: " + Mapset.Creator,
+                Y = Artist.Y + 15f,
+                X = 15
             };
-
-            // Change artist/creator text properties.
-            var creatorSize = Creator.MeasureString() / 2f;
-            Creator.Y = creatorSize.Y + Artist.Y + 15f;
-            Creator.X = 15 + creatorSize.X;
 
             Thumbnail = new Sprite()
             {
@@ -146,28 +137,28 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Alpha = 1;
 
             // Push set outwards to make it appear as selected.
-            Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 120, 0, 800));
+            Animations.Clear();
+            Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, 120, 0, 800));
 
             // Pushes text forward to make room for the background.
             #region TEXT_ANIMATIONS
 
-            Title.Transformations.Clear();
-            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Title.X, 125 + Title.MeasureString().X / 2f, 200));
-            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Title.Animations.Clear();
+            Title.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Title.X, 125 + Title.Width, 200));
+            Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Title.Alpha, 1, 100));
 
-            Artist.Transformations.Clear();
-            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Artist.X, 125 + Artist.MeasureString().X / 2f, 210));
-            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Artist.Animations.Clear();
+            Artist.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Artist.X, 125 + Artist.Width, 210));
+            Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Artist.Alpha, 1, 100));
 
-            Creator.Transformations.Clear();
-            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Creator.X, 125 + Creator.MeasureString().X / 2f, 220));
-            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Creator.Animations.Clear();
+            Creator.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Creator.X, 125 + Creator.Width, 220));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Creator.Alpha, 1, 100));
 
             #endregion
@@ -181,34 +172,34 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Alpha = 0.45f;
 
             // Push
-            Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, X, 120, 800));
+            Animations.Clear();
+            Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, X, 120, 800));
 
             // Pushes text backwards to its original position
             #region TEXT_ANIMATIONS
 
-            Title.Transformations.Clear();
-            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Title.X, 15 + Title.MeasureString().X / 2f, 300));
-            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Title.Animations.Clear();
+            Title.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Title.X, 15 + Title.Width, 300));
+            Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Title.Alpha, 0.85f, 300));
 
-            Artist.Transformations.Clear();
-            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Artist.X, 15 + Artist.MeasureString().X / 2f, 300));
-            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Artist.Animations.Clear();
+            Artist.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Artist.X, 15 + Artist.Width, 300));
+            Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Artist.Alpha, 0.85f, 300));
 
-            Creator.Transformations.Clear();
-            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                Creator.X, 15 + Creator.MeasureString().X / 2f, 300));
-            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Creator.Animations.Clear();
+            Creator.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
+                Creator.X, 15 + Creator.Width, 300));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Creator.Alpha, 0.85f, 300));
             #endregion
 
             // Thumbnail alpha change
-            Thumbnail.Transformations.Clear();
-            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Thumbnail.Animations.Clear();
+            Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Thumbnail.Alpha, 0, 250));
         }
 
@@ -243,8 +234,8 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
 
             Thumbnail.Image = e.Texture;
 
-            Thumbnail.Transformations.Clear();
-            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+            Thumbnail.Animations.Clear();
+            Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                 Thumbnail.Alpha, 1, 250));
         }
     }

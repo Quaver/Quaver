@@ -9,7 +9,7 @@ using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -54,7 +54,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             Scrollbar.Width = 3;
             Scrollbar.X -= 3;
             ScrollSpeed = 150;
-            EasingType = Easing.EaseOutQuint;
+            EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
         }
 

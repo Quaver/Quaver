@@ -20,9 +20,7 @@ using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens;
-using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
-using Quaver.Screens.Splash;
 using Quaver.Shaders;
 using Quaver.Skinning;
 using Steamworks;
@@ -120,7 +118,6 @@ namespace Quaver
             // Load all game assets.
             FontAwesome.Load();
             BitmapFonts.Load();
-            Fonts.Load();
             UserInterface.Load();
 
             // Load the user's skin
@@ -136,7 +133,7 @@ namespace Quaver
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            QuaverScreenManager.ChangeScreen(new SplashScreen());
+            QuaverScreenManager.ChangeScreen(new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -295,14 +292,14 @@ namespace Quaver
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(Fonts.AllerBold16, 0.80f)
+            var fpsCounter = new FpsCounter(BitmapFonts.Exo2SemiBold, 16)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
                 TextFps =
                 {
-                    TextColor = Color.LimeGreen
+                    Tint = Color.LimeGreen
                 },
                 X = -10,
                 Y = -10,

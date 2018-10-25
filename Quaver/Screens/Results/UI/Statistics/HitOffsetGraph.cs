@@ -57,34 +57,22 @@ namespace Quaver.Screens.Results.UI.Statistics
             //                                            3, judgementLineColors, judgementLineColors);
 
             // Create the text that displays the early miss indicator.
-            var earlyText = new SpriteText(Fonts.Exo2Regular24, $"Early (-{missValue}ms)")
+            var earlyText = new SpriteText(BitmapFonts.Exo2Regular, $"Early (-{missValue}ms)", 14)
             {
                 Parent = this,
-                TextScale = 0.42f,
                 Alignment = Alignment.TopLeft,
                 X = 10,
                 Y = 5
             };
 
-            // Position the early text correctly.
-            var earlyTextSize = earlyText.MeasureString() / 2f;
-            earlyText.X += earlyTextSize.X;
-            earlyText.Y += earlyTextSize.Y;
-
             // Create the text that displays the late miss indicator.
-            var lateText = new SpriteText(Fonts.Exo2Regular24, $"Late ({missValue}ms)")
+            var lateText = new SpriteText(BitmapFonts.Exo2Regular, $"Late ({missValue}ms)", 14)
             {
                 Parent = this,
-                TextScale = 0.42f,
                 Alignment = Alignment.BotLeft,
                 X = 10,
                 Y = -5
             };
-
-            // Position the late text correctly.
-            var lateTextSize = lateText.MeasureString() / 2f;
-            lateText.X += lateTextSize.X;
-            lateText.Y -= lateTextSize.Y;
         }
 
         /// <inheritdoc />
