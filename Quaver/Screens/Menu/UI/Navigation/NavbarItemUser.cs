@@ -102,10 +102,6 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 Alignment = Alignment.MidLeft,
                 Image = userAvatar,
                 X = 25,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
         }
 

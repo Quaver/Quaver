@@ -61,10 +61,6 @@ namespace Quaver.Screens.Gameplay.UI
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Alpha = 0,
                 Image = SkinManager.Skin.PauseBackground,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
 
             // Continue Button

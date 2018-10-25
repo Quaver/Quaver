@@ -426,7 +426,6 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(Height * 0.50f, Height * 0.50f),
                 X = PauseResumeButton.X - PauseResumeButton.Width - 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
             };
 
             RestartButton.Clicked += (o, e) =>

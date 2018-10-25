@@ -81,8 +81,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             Scrollbar.Width = 5;
             Scrollbar.X -= 1;
 
-            SpriteBatchOptions.BlendState = BlendState.NonPremultiplied;
-
             ScrollSpeed = 150;
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;

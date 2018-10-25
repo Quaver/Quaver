@@ -102,10 +102,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(10, 10),
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
         }
 
@@ -121,13 +117,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(0, TextFilters.Height),
                 X = TextFilters.Width + 5,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 Text =
                 {
-                    UsePreviousSpriteBatchOptions = true
+                    FontSize = 11,
+                    ForceDrawAtSize = false
                 }
             };
 
@@ -153,17 +146,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(0, AllFilterButton.Height),
                 X = AllFilterButton.X + AllFilterButton.Width + 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 Text =
                 {
-                    UsePreviousSpriteBatchOptions = true
+                    FontSize = 11,
+                    ForceDrawAtSize = false
                 }
             };
 
-            FriendsFilterButton.Text.Size = new ScalableVector2(FriendsFilterButton.Text.Width * 0.80f, FriendsFilterButton.Text.Height * 0.80f);
             FriendsFilterButton.Width = FriendsFilterButton.Text.Width + 8;
             FriendsFilterButton.Height = FriendsFilterButton.Text.Height + 6;
 
@@ -186,17 +175,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(0, AllFilterButton.Height),
                 X = FriendsFilterButton.X + FriendsFilterButton.Width + 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 Text =
                 {
-                    UsePreviousSpriteBatchOptions = true
+                    FontSize = 11,
+                    ForceDrawAtSize = false
                 }
             };
 
-            CountryFilterButton.Text.Size = new ScalableVector2(CountryFilterButton.Text.Width * 0.80f, CountryFilterButton.Text.Height * 0.80f);
             CountryFilterButton.Width = CountryFilterButton.Text.Width + 8;
             CountryFilterButton.Height = CountryFilterButton.Text.Height + 6;
 
@@ -230,10 +215,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(TextFilters.X, TextFilters.Y + TextFilters.Height + 15),
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
         }
 
@@ -242,7 +223,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateSearchTextbox()
         {
-            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), BitmapFonts.Exo2Regular, 18)
+            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), BitmapFonts.Exo2Regular, 8)
             {
                 Parent = TextSearch,
                 X = TextSearch.Width + 5,
@@ -250,6 +231,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 Tint = Color.Black,
                 Alpha = 0.25f,
                 Cursor = { Y = 5},
+                InputText =
+                {
+                    ForceDrawAtSize = false
+                }
             };
 
             SearchTextbox.AddBorder(Color.White, 2);

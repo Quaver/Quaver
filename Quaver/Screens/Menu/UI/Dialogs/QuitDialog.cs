@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -115,10 +115,6 @@ namespace Quaver.Screens.Menu.UI.Dialogs
             Alignment = Alignment.MidCenter,
             Tint = Color.Black,
             Alpha = 0.85f,
-            SpriteBatchOptions = new SpriteBatchOptions
-            {
-                BlendState = BlendState.NonPremultiplied
-            }
         };
 
         /// <summary>
@@ -173,7 +169,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         private void CreateQuitButton()
         {
             QuitButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Medium,
-                "Quit", 24, (o, e) =>
+                "Quit", 14, (o, e) =>
                 {
                     Logger.Debug($"Exiting game via QuitDialog", LogType.Runtime);
 
@@ -201,7 +197,7 @@ namespace Quaver.Screens.Menu.UI.Dialogs
         private void CreateCancelButton()
         {
             CancelButton = new TextButton(UserInterface.BlankBox,
-                BitmapFonts.Exo2Medium, "Cancel", 18, (o, e) => Dismiss("Cancel Button"))
+                BitmapFonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss("Cancel Button"))
             {
                 Parent = AreYouSure,
                 Y = DividerLine.Y + DividerLine.Height + 25,

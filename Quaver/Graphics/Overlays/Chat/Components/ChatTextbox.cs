@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
@@ -100,7 +100,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), BitmapFonts.Exo2Regular,
-                18, "", "Type to send a message", OnTextboxSubmit)
+                13, "", "Type to send a message", OnTextboxSubmit)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -153,12 +153,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
                 X = Textbox.Width + 20,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 Text =
                 {
+                    FontSize = 13,
                     UsePreviousSpriteBatchOptions = true
                 }
             };

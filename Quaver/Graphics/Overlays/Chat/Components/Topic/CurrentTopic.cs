@@ -51,14 +51,14 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             Tint = Color.Black;
             Alpha = 0.85f;
 
-            ChannelName = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 18)
+            ChannelName = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -10
             };
 
-            ChannelDescription = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 18)
+            ChannelDescription = new SpriteText(BitmapFonts.Exo2SemiBoldItalic, "", 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -71,11 +71,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(150, 40),
                 X = -15,
-                SpriteBatchOptions = new SpriteBatchOptions()
+                Text =
                 {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                Text = { UsePreviousSpriteBatchOptions = true}
+                    FontSize = 13
+                }
             };
         }
 

@@ -148,10 +148,9 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20, false)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20)
         {
             Parent = Container,
-            SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
         };
 
         /// <summary>
@@ -176,8 +175,7 @@ namespace Quaver.Screens.Menu
             {
                 Parent = Container,
                 Position = new ScalableVector2(64, WindowManager.Height - 64),
-                UsePreviousSpriteBatchOptions = true,
-                Alpha = 0.65f
+                Alpha = 0.90f
             };
 
             BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
@@ -193,7 +191,6 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Position = new ScalableVector2(Navbar.Line.X, Navbar.Line.Y),
             Alpha = 0,
-            SpriteBatchOptions = { BlendState = BlendState.NonPremultiplied },
         };
 
         /// <summary>
@@ -289,10 +286,6 @@ namespace Quaver.Screens.Menu
             {
                 Parent = mainMenuBackground,
                 Alignment = Alignment.MidCenter,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
             };
         }
 
@@ -319,34 +312,24 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the container for user profiles.
         /// </summary>
-        private void CreateUserProfile()
+        private void CreateUserProfile() => UserProfile = new UserProfileContainer(this)
         {
-            UserProfile = new UserProfileContainer(this)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-                Y = Navbar.Line.Y + Navbar.Line.Thickness,
-                X = -64
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            Y = Navbar.Line.Y + Navbar.Line.Thickness,
+            X = -64
+        };
 
         /// <summary>
         ///     Creates the playercard container
         /// </summary>
-        private void CreatePlayercard()
+        private void CreatePlayercard() => Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
         {
-            Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopLeft,
-                X = 64,
-                Y = Jukebox.Y,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            X = 64,
+            Y = Jukebox.Y,
+        };
 
         /// <summary>
         ///     Called when the single player panel is clicked.

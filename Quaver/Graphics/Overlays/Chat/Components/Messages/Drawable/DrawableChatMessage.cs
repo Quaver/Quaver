@@ -71,6 +71,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Avatar = new Sprite
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = 10,
                 Size = new ScalableVector2(44, 44),
                 Y = Padding,
@@ -133,6 +134,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             TextUsername = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}", 14)
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = Avatar.Width + Avatar.X + 5,
                 Y = Avatar.Y - 3,
                 Tint = Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups)
@@ -142,12 +144,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteText(BitmapFonts.Exo2Medium, Message.Message, 32, true,
+        private void CreateMessageContentText() => TextMessageContent = new SpriteText(BitmapFonts.Exo2Medium, Message.Message, 13, true,
                 (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
             Parent = this,
+            UsePreviousSpriteBatchOptions = true,
             X = TextUsername.X,
-            Y = TextUsername.Y + TextUsername.Height - 1,
+            Y = TextUsername.Y + TextUsername.Height + 1,
         };
 
         /// <summary>
@@ -161,8 +164,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             ChatBadge = new ChatBadge(Message.Sender.OnlineUser.UserGroups)
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = TextUsername.X + TextUsername.Width + 5,
-                Y = TextUsername.Y - 2
+                Y = TextUsername.Y,
+
             };
         }
 

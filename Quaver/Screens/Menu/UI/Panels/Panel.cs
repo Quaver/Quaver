@@ -114,10 +114,6 @@ namespace Quaver.Screens.Menu.UI.Panels
             Parent = this,
             Size = new ScalableVector2(Width, Height - 100),
             Image = image,
-            SpriteBatchOptions = new SpriteBatchOptions()
-            {
-                BlendState = BlendState.NonPremultiplied
-            }
         };
 
         /// <summary>

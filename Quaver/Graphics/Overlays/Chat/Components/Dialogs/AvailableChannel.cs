@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -136,7 +136,13 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -205
+                X = -205,
+                Text =
+                {
+                    FontSize = 13,
+                    UsePreviousSpriteBatchOptions = true
+                },
+                UsePreviousSpriteBatchOptions = true
             };
         }
 

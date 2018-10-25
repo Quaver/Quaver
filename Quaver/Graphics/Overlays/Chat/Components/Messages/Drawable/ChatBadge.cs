@@ -42,17 +42,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Icon = new Sprite()
             {
                 Parent = this,
-                UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft,
                 Image = GetIcon(UserGroups),
-                X = 10
+                X = 10,
+                UsePreviousSpriteBatchOptions = true
             };
 
-            TextUserGroup = new SpriteText(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 14)
+            TextUserGroup = new SpriteText(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 11, false)
             {
                 Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Icon.Size = new ScalableVector2(TextUserGroup.Height * 0.75f, TextUserGroup.Height * 0.75f);
@@ -64,7 +64,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             if ((int) width % 2 != 0)
                 width += 1;
 
-            Size = new ScalableVector2(width, TextUserGroup.Height + 4);
+            Size = new ScalableVector2(width, TextUserGroup.Height + 3);
             AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 2);
             Border.Alpha = 0.85f;
         }

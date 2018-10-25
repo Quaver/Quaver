@@ -50,18 +50,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateChannelsText()
         {
-            TextChannels = new SpriteText(BitmapFonts.Exo2Medium, "Chat Channels", 24)
+            TextChannels = new SpriteText(BitmapFonts.Exo2Medium, "Chat Channels", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 X = 15
             };
-
-            TextChannels.Size = new ScalableVector2(TextChannels.Width * 0.60f, TextChannels.Height * 0.60f);
         }
 
         /// <summary>
@@ -75,10 +69,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             X = -TextChannels.X,
             Y = -2,
             Size = new ScalableVector2(75, 30),
-            UsePreviousSpriteBatchOptions = true,
             Text =
             {
-                UsePreviousSpriteBatchOptions = true
+                FontSize = 13
             }
         };
     }

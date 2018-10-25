@@ -68,15 +68,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextHeader()
         {
-            TextHeader = new SpriteText(BitmapFonts.Exo2BoldItalic, "Online Users", 14)
+            TextHeader = new SpriteText(BitmapFonts.Exo2BoldItalic, "Online Users", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
         }
 
@@ -85,12 +81,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextOnlineUserCount()
         {
-            TextOnlineCount = new SpriteText(BitmapFonts.Exo2MediumItalic, " ", 14)
+            TextOnlineCount = new SpriteText(BitmapFonts.Exo2MediumItalic, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = TextHeader.Y + TextHeader.Height - 2,
-                UsePreviousSpriteBatchOptions = true,
+                ForceDrawAtSize = false
             };
 
             UpdateOnlineUserCount();
@@ -102,7 +98,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         private void UpdateOnlineUserCount()
         {
             var count = OnlineManager.Connected ? OnlineManager.OnlineUsers.Count : 0;
-
             TextOnlineCount.Text = $"Total Online: {count:n0}";
         }
 
