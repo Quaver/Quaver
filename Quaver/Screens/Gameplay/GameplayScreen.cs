@@ -257,7 +257,7 @@ namespace Quaver.Screens.Gameplay
         public override void Update(GameTime gameTime)
         {
             Timing.Update(gameTime);
-            TrackManager.UpdateCurrentPosition(Timing.Time);
+            TrackManager.UpdateCurrentPosition();
 
             if (!Failed && !IsPlayComplete)
             {
