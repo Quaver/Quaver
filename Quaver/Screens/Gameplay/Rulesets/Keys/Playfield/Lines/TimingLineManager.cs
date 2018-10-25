@@ -115,9 +115,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
             for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition); i++)
-            {
                 CreatePoolObject(Info.Dequeue());
-            }
         }
 
         /// <summary>

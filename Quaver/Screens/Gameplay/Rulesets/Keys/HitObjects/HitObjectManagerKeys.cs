@@ -382,7 +382,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (lane.Count > 0)
             {
                 var info = lane.Dequeue();
-                hitObject.Initialize(info, Ruleset);
+                hitObject.InitializeObject(info, Ruleset);
                 ObjectPool[info.Lane - 1].Enqueue(hitObject);
             }
             else

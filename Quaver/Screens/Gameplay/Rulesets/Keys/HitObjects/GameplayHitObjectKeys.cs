@@ -119,10 +119,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
         {
-            // Set References to other classes
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Info = info;
+            InitializeSprites(info, ruleset);
+            InitializeObject(info, ruleset);
+        }
 
+        public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        {
             // Reference variables
             var posX = Playfield.Stage.Receptors[info.Lane - 1].X;
             var lane = info.Lane - 1;
@@ -168,16 +172,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = Playfield.Stage.HitObjectContainer;
-
-            // Initialize
-            Initialize(info, ruleset);
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="playfield"></param>
-        public void Initialize(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        public void InitializeObject(HitObjectInfo info, GameplayRulesetKeys ruleset)
         {
             // Update Hit Object State
             Info = info;
