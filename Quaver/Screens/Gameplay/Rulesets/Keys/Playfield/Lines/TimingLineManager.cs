@@ -37,8 +37,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
         /// <summary>
         ///     Convert from BPM to measure length in milliseconds. (4 beats)
+        ///     Equals to 4 * 60 * 1000
         /// </summary>
-        public float BpmToMeasureLengthMs { get; } = 4 * 60 * 1000;
+        public float BpmToMeasureLengthMs { get; } = 240000;
 
         /// <summary>
         /// 
@@ -110,12 +111,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         private void InitializeObjectPool()
         {
-            // Initialize pool
             Pool = new Queue<TimingLine>();
-
-            // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
-            for (var i = 0; i < Info.Count && (i < InitialPoolSize || Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition); i++)
-                CreatePoolObject(Info.Dequeue());
+            while (Info.Count > 0)
+            {
+                if (Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
+                    CreatePoolObject(Info.Dequeue());
+                else
+                    break;
+            }
         }
 
         /// <summary>
