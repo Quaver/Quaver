@@ -67,8 +67,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             // Create first Timing Line Info
             var offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
-            var info = new TimingLineInfo(songPos, offset);
-            Info.Enqueue(info);
+            Info.Enqueue(new TimingLineInfo(songPos, offset));
 
             // Generate Timing Lines
             while (songPos < map.Length)
@@ -88,8 +87,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
                 // Create Timing Line Info
                 offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
-                info = new TimingLineInfo(songPos, offset);
-                Info.Enqueue(info);
+                Info.Enqueue(new TimingLineInfo(songPos, offset));
             }
         }
 
