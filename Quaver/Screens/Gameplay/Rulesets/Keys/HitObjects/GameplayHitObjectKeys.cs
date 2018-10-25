@@ -125,7 +125,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Reference variables
             var posX = Playfield.Stage.Receptors[info.Lane - 1].X;
-            var laneIndex = info.Lane - 1;
+            var lane = info.Lane - 1;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -133,7 +133,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
                 SpriteEffect = Effects,
-                Image = GetHitObjectTexture(laneIndex, ruleset.Mode)
+                Image = GetHitObjectTexture(lane, ruleset.Mode)
             };
 
             // Update hit body's size to match image ratio
@@ -141,7 +141,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
             // Create Hold Body
-            var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[laneIndex];
+            var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[lane];
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
@@ -161,7 +161,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Set long note end properties.
-            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[laneIndex];
+            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
             LongNoteEndSprite.Height = Playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
@@ -229,14 +229,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     If not, we default it to the first beat snap in the list.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int laneIndex, GameMode mode)
+        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
         {
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[laneIndex][SnapIndex] : skin.NoteHitObjects[laneIndex][SnapIndex];
+                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
 
-            return IsLongNote ? skin.NoteHoldHitObjects[laneIndex][0] : skin.NoteHitObjects[laneIndex][0];
+            return IsLongNote ? skin.NoteHoldHitObjects[lane][0] : skin.NoteHitObjects[lane][0];
         }
 
         /// <summary>
