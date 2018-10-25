@@ -56,14 +56,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="trackPosition"></param>
         public void UpdateSpritePosition(long trackPosition)
         {
-            // Calculate Sprite Position
             var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
-
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
             TrackOffset = Info.TrackOffset - trackPosition;
             PositionY = manager.HitPositionOffset + TrackOffset * speed + GlobalYOffset;
-
-            // Update Sprite Position
             Y = PositionY;
         }
     }

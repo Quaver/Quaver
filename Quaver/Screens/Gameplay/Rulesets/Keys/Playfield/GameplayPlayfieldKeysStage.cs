@@ -295,6 +295,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
             Parent = Playfield.ForegroundContainer
         };
 
+        /// <summary>
+        ///     Creates the TimingLineContainer
+        /// </summary>
         private void CreateTimingLineContainer() => TimingLineContainer = new Container
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),

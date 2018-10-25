@@ -30,11 +30,6 @@ namespace Quaver.Screens.Gameplay
         public double Time { get; set; }
 
         /// <summary>
-        ///     The previous audio time from the previous frame.
-        /// </summary>
-        private double PreviousTime { get; set; }
-
-        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -90,17 +85,11 @@ namespace Quaver.Screens.Gameplay
 
             // If the audio track is playing, use that time.
             if (AudioEngine.Track.IsPlaying)
-            {
-                // Average out between delta time and audio time for smooth playback.
-                Time = (AudioEngine.Track.Time + PreviousTime + gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate)/2;
-                PreviousTime = Time;
-            }
+                Time = AudioEngine.Track.Time;
 
             // Otherwise use deltatime to calculate the proposed time.
             else
-            {
                 Time += gameTime.ElapsedGameTime.TotalMilliseconds * AudioEngine.Track.Rate;
-            }
         }
     }
 }

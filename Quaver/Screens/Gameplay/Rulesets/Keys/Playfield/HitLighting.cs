@@ -53,10 +53,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     When hitting an object, it'll loop through once.
         /// </summary>
-        public void PerformHitAnimation(bool longNote)
+        public void PerformHitAnimation(bool isLongNote)
         {
             var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
-            IsHoldingLongNote = longNote;
+            IsHoldingLongNote = isLongNote;
 
             // First begin by replacing the frames
             ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
