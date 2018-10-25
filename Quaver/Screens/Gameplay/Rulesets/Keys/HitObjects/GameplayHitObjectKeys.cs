@@ -186,7 +186,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             IsLongNote = info.EndTime > 0;
             TrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
-            LongNoteBodySprite.StopLoop();
+            StopLongNoteAnimation();
 
             // Update Hit Object State depending if its an LN or not
             if (!IsLongNote)
@@ -307,18 +307,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Handles animation regarding long notes
+        ///     Starts looping the long note sprite.
+        ///     It will only be initiated when the player presses the note.
         /// </summary>
-        public void HandleAnimations()
-        {
-            // Start animation loop if it has not started yet
-            if (CurrentlyBeingHeld && !LongNoteBodySprite.IsLooping)
-                LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+        public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
 
-            // If it is looping however and the game is paused, we'll want to stop the loop.
-            else if (!CurrentlyBeingHeld && LongNoteBodySprite.IsLooping)
-                LongNoteBodySprite.StopLoop();
-        }
+        /// <summary>
+        ///     Stops looping the long note sprite.
+        ///     It will only be initiated when the player releases the note.
+        /// </summary>
+        public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
 
         /// <summary>
         ///     When the object iself dies, we want to change it to a dead color.

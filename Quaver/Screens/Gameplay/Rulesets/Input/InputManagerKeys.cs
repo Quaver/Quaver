@@ -219,7 +219,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 default:
                     playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(hitObject.IsLongNote);
                     if (hitObject.IsLongNote)
+                    {
                         manager.ChangePoolObjectStatusToHeld(hitObject);
+                        hitObject.StartLongNoteAnimation();
+                    }
                     else
                         manager.RecyclePoolObject(hitObject);
                     break;
