@@ -223,10 +223,7 @@ namespace Quaver.Screens.Gameplay
             LoadedReplay = replay;
 
             Timing = new GameplayAudioTiming(this);
-            TrackManager = new GameplayTrackManager(map);
-
-            // Set base position
-            TrackManager.UpdateCurrentPosition(Timing.Time);
+            TrackManager = new GameplayTrackManager(map, Timing);
 
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
