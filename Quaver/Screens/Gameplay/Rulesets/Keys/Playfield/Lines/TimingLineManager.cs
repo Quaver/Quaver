@@ -59,7 +59,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             TimingLineObject.GlobalYOffset = GameplayRulesetKeys.IsDownscroll ? offset + 3 : offset + 1;
             */
 
-            // Initialize Object Pool
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -141,9 +140,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 
             // Create new pool objects if they are in range
             while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
-            {
                 CreatePoolObject(Info.Dequeue());
-            }
         }
 
         /// <summary>

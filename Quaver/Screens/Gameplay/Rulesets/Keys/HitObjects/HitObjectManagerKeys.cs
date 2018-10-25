@@ -186,11 +186,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Create new Hit Object and add it into the pool with respect to its lane
         /// </summary>
         /// <param name="info"></param>
-        private void CreatePoolObject(HitObjectInfo info)
-        {
-            var hitObject = new GameplayHitObjectKeys(info, Ruleset);
-            ObjectPool[info.Lane - 1].Enqueue(hitObject);
-        }
+        private void CreatePoolObject(HitObjectInfo info) => ObjectPool[info.Lane - 1].Enqueue(new GameplayHitObjectKeys(info, Ruleset));
 
         /// <inheritdoc />
         /// <summary>
@@ -208,26 +204,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeys GetClosestTap(int laneIndex)
-        {
-            if (ObjectPool[laneIndex].Count > 0)
-                return ObjectPool[laneIndex].Peek();
-
-            return null;
-        }
+        public GameplayHitObjectKeys GetClosestTap(int lane) => ObjectPool[lane].Count > 0 ? ObjectPool[lane].Peek() : null;
 
         /// <summary>
         ///     Returns the earliest active Long Note
         /// </summary>
         /// <param name="laneIndex"></param>
         /// <returns></returns>
-        public GameplayHitObjectKeys GetClosestRelease(int laneIndex)
-        {
-            if (HeldLongNotes[laneIndex].Count > 0)
-                return HeldLongNotes[laneIndex].Peek();
-
-            return null;
-        }
+        public GameplayHitObjectKeys GetClosestRelease(int lane) => HeldLongNotes[lane].Count > 0 ? HeldLongNotes[lane].Peek() : null;
 
         /// <summary>
         ///     Updates the active objects in the pool + adds to score when applicable.
@@ -300,7 +284,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void UpdateAndScoreHeldObjects()
         {
             // The release window. (Window * Multiplier)
-            var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * 2;
+            var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
             // Check to see if any LN releases were missed (Counts as an okay instead of a miss.)
             foreach (var lane in HeldLongNotes)
@@ -324,10 +308,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                     screenView.UpdateScoreboardUsers();
 
                     // Perform Playfield animations
-                    var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-                    playfield.Stage.ComboDisplay.MakeVisible();
-                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(missedJudgement);
-                    playfield.Stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
+                    var stage = ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage;
+                    stage.ComboDisplay.MakeVisible();
+                    stage.JudgementHitBurst.PerformJudgementAnimation(missedJudgement);
+                    stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();
 
                     // Update Pooling
                     KillHoldPoolObject(hitObject);
