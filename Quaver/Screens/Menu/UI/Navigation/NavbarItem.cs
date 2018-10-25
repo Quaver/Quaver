@@ -48,11 +48,10 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
             Alpha = Selected ? 0.25f: 0;
 
-            var text = new SpriteText(BitmapFonts.Exo2SemiBold, name, 14)
+            var text = new SpriteText(BitmapFonts.Exo2SemiBold, name, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied },
                 Y = 2
             };
 

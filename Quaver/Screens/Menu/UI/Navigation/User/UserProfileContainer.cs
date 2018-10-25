@@ -155,7 +155,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Visible = false
             };
 
-            TextConnectionStatus = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 18)
+            TextConnectionStatus = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -170,6 +170,10 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Alignment = Alignment.TopCenter,
                 Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
                 X = 100,
+                Text =
+                {
+                    FontSize = 13
+                }
             };
 
             ViewProfileButton = new BorderedTextButton("View Profile", Colors.MainAccent, OnViewProfileButtonClicked)
@@ -178,7 +182,11 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Alignment = Alignment.TopCenter,
                 Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
                 X = -100,
-                SetChildrenVisibility = true
+                SetChildrenVisibility = true,
+                Text =
+                {
+                    FontSize = 13
+                }
             };
 
             UpdateButtons();
