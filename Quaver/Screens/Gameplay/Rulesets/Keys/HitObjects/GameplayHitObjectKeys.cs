@@ -182,7 +182,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Update Hit Object State
             Info = info;
-            HitObjectSprite.Tint = Color.White; // todo: reference this in Colors class
+            HitObjectSprite.Tint = Color.White;
             IsLongNote = info.EndTime > 0;
             TrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
@@ -197,8 +197,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
-                LongNoteBodySprite.Tint = Color.White; // todo: reference this in Colors class
-                LongNoteEndSprite.Tint = Color.White; // todo: reference this in Colors class
+                LongNoteBodySprite.Tint = Color.White;
+                LongNoteEndSprite.Tint = Color.White;
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
                 LongNoteTrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.EndTime);
@@ -237,19 +237,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (skin.ColorObjectsBySnapDistance)
                 return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
 
-            return IsLongNote ? skin.NoteHoldHitObjects[lane][0] : skin.NoteHitObjects[lane][0];
+            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset)
-        {
-            var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            var distance = (TrackPosition - offset) * speed;
-            return distance + SpritePositionOffset;
-        }
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((TrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed)); 
 
         /// <summary>
         ///     Updates LN size

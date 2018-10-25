@@ -38,12 +38,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public int InitialPoolSizePerLane { get; } = 2;
 
         /// <summary>
-        ///     The position at which the next TimingLine must be at in order to add a new Hit Object to the pool.
+        ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         /// </summary>
         private float CreateObjectPosition { get; set; } = 1500;
 
         /// <summary>
-        ///     The position at which the earliest TimingLine object must be at before its recycled.
+        ///     The position at which the earliest Hit Object must be at before its recycled.
         /// </summary>
         private float RecycleObjectPosition { get; set; } = 1500;
 
@@ -111,7 +111,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     The offset of the hit position.
+        ///     The offset from the edge of the screen of the hit position.
         /// </summary>
         public float HitPositionOffset
         {
@@ -135,10 +135,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="size"></param>
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
-            // Set references
             Ruleset = ruleset;
             GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
+            InitializeInfoPool(map);
+            InitializeObjectPool();
+        }
 
+        /// <summary>
+        ///     Initialize Info Pool. Info pool is used to pass info around to Hit Objects.
+        /// </summary>
+        /// <param name="map"></param>
+        private void InitializeInfoPool(Qua map)
+        {
             // Initialize collections
             var keyCount = Ruleset.Map.GetKeyCount();
             Info = new List<Queue<HitObjectInfo>>(keyCount);
@@ -146,6 +154,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             DeadNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             HeldLongNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
 
+            // Add HitObject Info to Info pool
             for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
             {
                 Info.Add(new Queue<HitObjectInfo>());
@@ -156,11 +165,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Sort Hit Object Info into their respective lanes
             foreach (var info in map.HitObjects)
-            {
                 Info[info.Lane - 1].Enqueue(info);
-            }
+        }
 
-            // Create pool objects equal to the initial pool size or total objects that will be displayed on screen initially
+        /// <summary>
+        ///     Create the initial objects in the object pool
+        /// </summary>
+        private void InitializeObjectPool()
+        {
             foreach (var lane in Info)
             {
                 for (var i = 0; i < InitialPoolSizePerLane && lane.Count > 0; i++)
