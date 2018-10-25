@@ -153,7 +153,7 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// </summary>
         /// <param name="description"></param>
         private void CreateDescriptionText(string description) => Description = new SpriteText(BitmapFonts.Exo2BoldItalic,
-            description, 18, true, (int)(Width * 1.75f))
+            description, 12, true, (int) Width - 15)
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
