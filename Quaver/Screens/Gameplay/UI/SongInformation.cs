@@ -81,11 +81,11 @@ namespace Quaver.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(BitmapFonts.Exo2Regular, "Watching", 16)
+            Watching = new SpriteText(BitmapFonts.Exo2Regular, "Watching", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Y = 0,
+                Y = 25,
                 Alpha = 0
             };
 
@@ -93,25 +93,18 @@ namespace Quaver.Screens.Gameplay.UI
             // watching a replay.
             if (Screen.InReplayMode)
             {
-                PlayerName = new SpriteText(BitmapFonts.Exo2Regular, Screen.LoadedReplay.PlayerName, 18)
+                PlayerName = new SpriteText(BitmapFonts.Exo2Regular, Screen.LoadedReplay.PlayerName, 13)
                 {
                     Parent = this,
                     Alignment = Alignment.TopCenter,
                     Y = Watching.Y,
                     Tint = Colors.MainAccent,
-                    Alpha = 0
+                    Alpha = 0,
+                    X = Watching.X + Watching.Width + 2
                 };
-
-                var watchingLength = Watching.Width;
-                var playerNameLength = PlayerName.Width;
-                var totalLength = watchingLength + playerNameLength;
-                var center = totalLength / 2f;
-
-                Watching.X = watchingLength / 2.0f - center;
-                PlayerName.X = Watching.X + watchingLength + playerNameLength / 2.0f - center / 2f + 2;
             }
 
-            Title = new SpriteText(BitmapFonts.Exo2Regular, $"{Screen.Map.Artist} - {Screen.Map.Title}", 18)
+            Title = new SpriteText(BitmapFonts.Exo2Regular, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -119,7 +112,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Alpha = 0,
             };
 
-            Difficulty = new SpriteText(BitmapFonts.Exo2Regular, $"[{Screen.Map.DifficultyName}]", 18)
+            Difficulty = new SpriteText(BitmapFonts.Exo2Regular, $"[{Screen.Map.DifficultyName}]", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -127,7 +120,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2Regular, $"Mapped By: \"{Screen.Map.Creator}\"", 18)
+            Creator = new SpriteText(BitmapFonts.Exo2Regular, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -136,7 +129,7 @@ namespace Quaver.Screens.Gameplay.UI
             };
 
             Rating = new SpriteText(BitmapFonts.Exo2Regular, $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate)).Replace("%", "")}",
-                16)
+                13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -147,7 +140,7 @@ namespace Quaver.Screens.Gameplay.UI
 
             // Get a formatted string of the activated mods.
             var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" : "None");
-            Mods = new SpriteText(BitmapFonts.Exo2Regular, modsString, 18)
+            Mods = new SpriteText(BitmapFonts.Exo2Regular, modsString, 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
