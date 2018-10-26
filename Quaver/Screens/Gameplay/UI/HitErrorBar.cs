@@ -44,7 +44,7 @@ namespace Quaver.Screens.Gameplay.UI
 
         /// <inheritdoc />
         /// <summary>
-        ///   Ctor -  
+        ///   Ctor -
         /// </summary>
         /// <param name="type"></param>
         /// <param name="size"></param>
@@ -115,7 +115,7 @@ namespace Quaver.Screens.Gameplay.UI
 
             LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime;
-            LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
+            LineObjectPool[CurrentLinePoolIndex].Alpha = 0.85f;
         }
     }
 }

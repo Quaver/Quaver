@@ -75,7 +75,7 @@ namespace Quaver.Screens.Gameplay.UI.Counter
             foreach (var item in JudgementDisplays)
             {
                 JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
-                // UpdateTextAndSize(JudgementDisplays[item.Key], dt);
+                UpdateTextAndSize(JudgementDisplays[item.Key], dt);
             }
 
             base.Update(gameTime);
@@ -92,8 +92,6 @@ namespace Quaver.Screens.Gameplay.UI.Counter
             counterItem.Width = MathHelper.Lerp(counterItem.Width, DisplayItemSize.Y, (float)Math.Min(dt / 180, 1));
             counterItem.Height = MathHelper.Lerp(counterItem.Height, DisplayItemSize.Y, (float)Math.Min(dt / 180, 1));
             counterItem.X = MathHelper.Lerp(counterItem.X, 0, (float) Math.Min(dt / 180, 1));
-
-            counterItem.SpriteText.Text = (counterItem.JudgementCount == 0) ? JudgementHelper.JudgementToShortName(counterItem.Judgement) : counterItem.JudgementCount.ToString();
         }
     }
 }

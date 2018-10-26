@@ -148,25 +148,26 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create username text.
-            Username = new SpriteText(BitmapFonts.Exo2Regular, GetUsernameFormatted(), 14)
+            Username = new SpriteText(BitmapFonts.Exo2Bold, GetUsernameFormatted(), 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
+                X = Avatar.Width + 10
             };
 
-            SetUsernamePosition();
-
             // Create score text.
-            Score = new SpriteText(BitmapFonts.Exo2Regular, Processor.Score.ToString("N0"), 14)
+            Score = new SpriteText(BitmapFonts.Exo2Medium, Processor.Score.ToString("N0"), 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Alpha = textAlpha
+                Alpha = textAlpha,
+                Y = Username.Y + Username.Height + 2,
+                X = Username.X
             };
 
             // Create score text.
-            Combo = new SpriteText(BitmapFonts.Exo2Regular, $"{Processor.Combo:N0}x", 14)
+            Combo = new SpriteText(BitmapFonts.Exo2Medium, $"{Processor.Combo:N0}x", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -180,18 +181,8 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
                 Alignment = Alignment.MidCenter,
                 Alpha = textAlpha
             };
-            HitBurst.X = HitBurst.Frames[0].Width / 2f - 20;
-        }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="dt"></param>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            UpdateScoreTextAndPosition();
-            base.Update(gameTime);
+            HitBurst.X = HitBurst.Frames[0].Width / 2f - 20;
         }
 
         /// <summary>
@@ -199,10 +190,11 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal void CalculateScoreForNextObject()
         {
-            // Don't bother calculating if the type is self, because we already have it calculated.
-            // but perform the judgement animation however.
             if (Type == ScoreboardUserType.Self)
             {
+                Score.Text = Processor.Score.ToString("N0");
+                Combo.Text = Processor.Combo.ToString("N0") + "x";
+
                 // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
                 HitBurst.PerformJudgementAnimation(Processor.Combo == 0 ? Judgement.Miss : Processor.Stats.Last().Judgement);
                 SetTintBasedOnHealth();
@@ -232,37 +224,10 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
 
             SetTintBasedOnHealth();
 
+            Score.Text = Processor.Score.ToString("N0");
+            Combo.Text = Processor.Combo.ToString("N0") + "x";
+
             CurrentHitStat++;
-        }
-
-        /// <summary>
-        ///     Sets the correct username position.
-        /// </summary>
-        private void SetUsernamePosition()
-        {
-            Username.X = Avatar.Width + 10;
-            Username.Y = 2;
-        }
-
-        /// <summary>
-        ///     Updates the text & position to stay aligned.
-        /// </summary>
-        private void UpdateScoreTextAndPosition()
-        {
-            // Username
-            SetUsernamePosition();
-
-            // Score
-            // Score.Text = Processor.Score.ToString("N0");
-
-            Score.X = Avatar.Width + Score.Width + 12;
-            Score.Y = Username.Y + Score.Height + 12;
-
-            // Combo
-            // Combo.Text = Processor.Combo.ToString("N0") + "x";
-
-            Combo.X = -8;
-            Combo.Y = 0;
         }
 
         /// <summary>
