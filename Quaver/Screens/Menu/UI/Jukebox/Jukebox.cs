@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -18,7 +18,7 @@ using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
@@ -36,7 +36,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that says "Now Playing"
         /// </summary>
-        public SpriteTextBitmap NowPlayingText { get; set; }
+        public SpriteText NowPlayingText { get; set; }
 
         /// <summary>
         ///     Button to select the previous track.
@@ -66,7 +66,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that displays the song title.
         /// </summary>
-        public SpriteTextBitmap SongTitleText { get; set; }
+        public SpriteText SongTitleText { get; set; }
 
         /// <summary>
         ///     The song time progress bar.
@@ -210,8 +210,8 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     UpdateSongTitleText();
 
                     // Clear current song title animations.
-                    lock (SongTitleText.Transformations)
-                        SongTitleText.Transformations.Clear();
+                    lock (SongTitleText.Animations)
+                        SongTitleText.Animations.Clear();
 
                     Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
                                  $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
@@ -251,22 +251,12 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Creates the text that says "Now Playing"
         /// </summary>
-        private void CreateNowPlayingText()
+        private void CreateNowPlayingText() => NowPlayingText = new SpriteText(BitmapFonts.Exo2SemiBold, "Now Playing", 13)
         {
-            NowPlayingText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Now Playing", 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
-            {
-                Parent = TitleBackground,
-                Alignment = Alignment.MidCenter,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                X = 2
-            };
-
-            NowPlayingText.Size = new ScalableVector2(NowPlayingText.Width * 0.60f, NowPlayingText.Height * 0.60f);
-        }
+            Parent = TitleBackground,
+            Alignment = Alignment.MidCenter,
+            X = 2
+        };
 
         /// <summary>
         ///     Creates the container that displays the song title.
@@ -281,7 +271,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            SongTitleText = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft
@@ -302,7 +292,6 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             else
                 SongTitleText.Text = $"No tracks available to play";
 
-            SongTitleText.Size = new ScalableVector2(SongTitleText.Width * 0.50f, SongTitleText.Height * 0.50f);
             SongTitleText.X = SongTitleText.Width + 200;
         }
 
@@ -311,13 +300,13 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void AnimateSongTitleText()
         {
-            // Only reset the animation if the song title doesn't have an active transformation animation.
-            if (SongTitleText.Transformations.Count != 0)
+            // Only reset the animation if the song title doesn't have an active Animation animation.
+            if (SongTitleText.Animations.Count != 0)
                 return;
 
             SongTitleText.X = SongTitleText.Width + 200;
 
-            SongTitleText.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+            SongTitleText.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
                 SongTitleText.X, -SongTitleText.Width, 6000));
         }
 
@@ -375,7 +364,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateNextSongButton()
         {
-            NextButton = new JukeboxButton(FontAwesome.StepForward)
+            NextButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -396,7 +385,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePauseResumeButton()
         {
-            PauseResumeButton = new JukeboxButton(FontAwesome.Pause)
+            PauseResumeButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -414,13 +403,13 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
                 {
                     AudioEngine.Track.Play();
-                    PauseResumeButton.Image = FontAwesome.Pause;
+                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
                     ChangeDiscordPresenceToSongTitle();
                 }
                 else
                 {
                     AudioEngine.Track.Pause();
-                    PauseResumeButton.Image = FontAwesome.Play;
+                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_play_button);
                     ChangeDiscordPresenceToIdle();
                 }
             };
@@ -431,13 +420,12 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateRestartButton()
         {
-            RestartButton = new JukeboxButton(FontAwesome.Undo)
+            RestartButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(Height * 0.50f, Height * 0.50f),
                 X = PauseResumeButton.X - PauseResumeButton.Width - 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
             };
 
             RestartButton.Clicked += (o, e) =>
@@ -461,7 +449,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePreviousSongButton()
         {
-            PreviousButton = new JukeboxButton(FontAwesome.StepBackward)
+            PreviousButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

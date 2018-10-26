@@ -6,7 +6,7 @@ using Quaver.Audio;
 using Quaver.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 
 namespace Quaver.Screens.Menu.UI.Visualizer
 {
@@ -83,11 +83,11 @@ namespace Quaver.Screens.Menu.UI.Visualizer
 
                 var targetHeight = spectrumData[i] * MaxBarHeight;
 
-                // Lock the transformations to prevent any current updates.
-                lock (bar.Transformations)
+                // Lock the Animations to prevent any current updates.
+                lock (bar.Animations)
                 {
-                    bar.Transformations.Clear();
-                    bar.Transformations.Add(new Transformation(TransformationProperty.Height, Easing.Linear,
+                    bar.Animations.Clear();
+                    bar.Animations.Add(new Animation(AnimationProperty.Height, Easing.Linear,
                         bar.Height, targetHeight, 50f));
                 }
             }

@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Resources;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Screens.Gameplay.UI.Health;
 
@@ -576,10 +575,19 @@ namespace Quaver.Skinning
         /// <returns></returns>
         private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
-            var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
-            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
+            string resource;
+            if (shared)
+            {
+                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}.png";
+            }
+            else
+            {
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                               $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
+            }
 
-            return SkinStore.LoadSingleTexture(QuaverResources.ResourceManager, $"{SkinStore.Dir}/{folderName}/{element}", resource);
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
+            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>
@@ -594,9 +602,18 @@ namespace Quaver.Skinning
         /// <returns></returns>
         private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
-            var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
-            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+            string resource;
+            if (shared)
+            {
+                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
+            }
+            else
+            {
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
+            }
 
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
 

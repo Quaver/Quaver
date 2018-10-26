@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Screens.Menu.UI.Navigation.User;
@@ -79,12 +79,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             {
                 var t = TimeSpan.FromMilliseconds(ChatManager.MuteTimeLeft);
                 Textbox.InputText.Text = $"You are currently muted for another {t.Days} days {t.Hours} hours {t.Minutes} minutes and {t.Seconds} seconds.";
-                Textbox.InputText.TextColor = Color.OrangeRed;
+                Textbox.InputText.Tint = Color.OrangeRed;
                 MuteInitiatedInTextbox = true;
             }
             else if (MuteInitiatedInTextbox)
             {
-                Textbox.InputText.TextColor = Color.White;
+                Textbox.InputText.Tint = Color.White;
                 Textbox.InputText.Text = "Type to send a message";
                 MuteInitiatedInTextbox = false;
             }
@@ -99,9 +99,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(1100, Height * 0.60f),
-                Fonts.Exo2Regular24,
-                "", "Type to send a message", 0.60f, OnTextboxSubmit)
+            Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), BitmapFonts.Exo2Regular,
+                13, "", "Type to send a message", OnTextboxSubmit)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -154,12 +153,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
                 X = Textbox.Width + 20,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
                 Text =
                 {
+                    FontSize = 13,
                     UsePreviousSpriteBatchOptions = true
                 }
             };

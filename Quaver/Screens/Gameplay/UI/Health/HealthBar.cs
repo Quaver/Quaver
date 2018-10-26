@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Helpers;
-using Quaver.Shaders;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -62,7 +61,7 @@ namespace Quaver.Screens.Gameplay.UI.Health
                     SamplerState = SamplerState.PointClamp,
                     DepthStencilState = DepthStencilState.Default,
                     RasterizerState = RasterizerState.CullNone,
-                    Shader = new Shader(ShaderStore.semi_transparent, new Dictionary<string, object>()
+                    Shader = new Shader(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/semi-transparent.mgfxo"), new Dictionary<string, object>()
                     {
                         {"p_position", new Vector2()},
                         {"p_rectangle", new Vector2()},

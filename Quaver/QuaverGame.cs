@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -20,10 +20,7 @@ using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens;
-using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
-using Quaver.Screens.Splash;
-using Quaver.Shaders;
 using Quaver.Skinning;
 using Steamworks;
 using Wobble;
@@ -114,13 +111,11 @@ namespace Quaver
             base.LoadContent();
 
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
-
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            FontAwesome.Load();
             BitmapFonts.Load();
-            Fonts.Load();
+            FontAwesome.Load();
             UserInterface.Load();
 
             // Load the user's skin
@@ -136,7 +131,7 @@ namespace Quaver
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            QuaverScreenManager.ChangeScreen(new SplashScreen());
+            QuaverScreenManager.ChangeScreen(new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -295,14 +290,14 @@ namespace Quaver
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(Fonts.AllerBold16, 0.80f)
+            var fpsCounter = new FpsCounter(BitmapFonts.Exo2SemiBold, 16)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
                 TextFps =
                 {
-                    TextColor = Color.LimeGreen
+                    Tint = Color.LimeGreen
                 },
                 X = -10,
                 Y = -10,

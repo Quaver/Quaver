@@ -26,7 +26,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         protected sealed override List<LocalScore> FetchScores()
         {
             if (!OnlineManager.Connected)
-                return null;
+                return new List<LocalScore>();
 
             var scores = OnlineManager.Client.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
 

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
@@ -10,7 +10,7 @@ using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 
@@ -51,14 +51,14 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             Tint = Color.Black;
             Alpha = 0.85f;
 
-            ChannelName = new SpriteText(Fonts.Exo2BoldItalic24, "", 0.60f)
+            ChannelName = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -10
             };
 
-            ChannelDescription = new SpriteText(Fonts.Exo2Italic24, "", 0.45f)
+            ChannelDescription = new SpriteText(BitmapFonts.Exo2SemiBoldItalic, "", 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -71,11 +71,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(150, 40),
                 X = -15,
-                SpriteBatchOptions = new SpriteBatchOptions()
+                Text =
                 {
-                    BlendState = BlendState.NonPremultiplied
-                },
-                Text = { UsePreviousSpriteBatchOptions = true}
+                    FontSize = 13
+                }
             };
         }
 
@@ -100,10 +99,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
         public void UpdateTopicText(ChatChannel channel)
         {
             ChannelName.Text = channel.Name;
-            ChannelName.X = ChannelName.MeasureString().X / 2f + 15;
+            ChannelName.X = 15;
 
             ChannelDescription.Text = channel.Description;
-            ChannelDescription.X = ChannelDescription.MeasureString().X / 2f + 15;
+            ChannelDescription.X = 15;
 
             // Make the close channel button both visible and clickable.
             CloseChannelButton.Visible = true;
@@ -116,10 +115,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
         private void UpdateTopicText()
         {
             ChannelName.Text = "No channels available";
-            ChannelName.X = ChannelName.MeasureString().X / 2f + 15;
+            ChannelName.X = 15;
 
             ChannelDescription.Text = "Join a channel to start chatting!";
-            ChannelDescription.X = ChannelDescription.MeasureString().X / 2f + 15;
+            ChannelDescription.X = 15;
 
             // Make the close channel button neither visible or clickable since there aren't any channels.
             CloseChannelButton.Visible = false;
@@ -140,8 +139,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
                     OnlineManager.Client.LeaveChatChannel(Overlay.ActiveChannel);
             }
 
-            var tfX = new Transformation(TransformationProperty.X, Easing.Linear, channelButton.X, -(channelButton.Width + 5), 100);
-            channelButton.Transformations.Add(tfX);
+            var tfX = new Animation(AnimationProperty.X, Easing.Linear, channelButton.X, -(channelButton.Width + 5), 100);
+            channelButton.Animations.Add(tfX);
 
             // Check to see if there is another button before this one.
             var buttonIndex = Overlay.ChatChannelList.Buttons.FindIndex(x => x == channelButton);
@@ -162,7 +161,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             // Make sure the buttons are realigned properly after closing this channel.
             Overlay.ChatChannelList.RealignButtons();
 
-            // Destroy the button after it finishes its transformation.
+            // Destroy the button after it finishes its Animation.
             Scheduler.RunAfter(() => channelButton.Destroy(), 150);
 
             // Automatically select the button behind it. if it exists.

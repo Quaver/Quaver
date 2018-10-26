@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -29,7 +29,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -83,7 +83,7 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     The text that says "Main Menu"
         /// </summary>
-        public SpriteTextBitmap MainMenuText { get; set; }
+        public SpriteText MainMenuText { get; set; }
 
         /// <summary>
         ///     The jukebox to play music.
@@ -148,10 +148,9 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20, false)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20)
         {
             Parent = Container,
-            SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
         };
 
         /// <summary>
@@ -176,8 +175,7 @@ namespace Quaver.Screens.Menu
             {
                 Parent = Container,
                 Position = new ScalableVector2(64, WindowManager.Height - 64),
-                UsePreviousSpriteBatchOptions = true,
-                Alpha = 0.65f
+                Alpha = 0.90f
             };
 
             BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
@@ -193,7 +191,6 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Position = new ScalableVector2(Navbar.Line.X, Navbar.Line.Y),
             Alpha = 0,
-            SpriteBatchOptions = { BlendState = BlendState.NonPremultiplied },
         };
 
         /// <summary>
@@ -217,29 +214,29 @@ namespace Quaver.Screens.Menu
             const int targetY = -5;
             const int animationTime = 1100;
 
-            PowerButton = new ToolButton(FontAwesome.PowerOff, (o, e) => DialogManager.Show(new QuitDialog()))
+            PowerButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), (o, e) => DialogManager.Show(new QuitDialog()))
             {
                 Alignment = Alignment.BotRight,
             };
 
             PowerButton.Y = PowerButton.Height;
 
-            // Add transformation to move it up.
-            PowerButton.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseOutQuint,
+            // Add Animation to move it up.
+            PowerButton.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
                 PowerButton.Y, targetY, animationTime));
 
             MiddleContainer.AddContainedDrawable(PowerButton);
 
             // Create settings button
-            SettingsButton = new ToolButton(FontAwesome.Cog, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
+            SettingsButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
             {
                 Parent = MiddleContainer,
                 Alignment = Alignment.BotRight,
                 Y = PowerButton.Y,
                 X = PowerButton.X - PowerButton.Width - 5,
-                Transformations =
+                Animations =
                 {
-                    new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, PowerButton.Y, targetY, animationTime)
+                    new Animation(AnimationProperty.Y, Easing.OutQuint, PowerButton.Y, targetY, animationTime)
                 }
             };
 
@@ -285,18 +282,11 @@ namespace Quaver.Screens.Menu
                 Alpha = 0.0f
             };
 
-            MainMenuText = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "Main Menu", 32, ColorHelper.HexToColor("#7ebfe0"),
-                Alignment.MidLeft, int.MaxValue)
+            MainMenuText = new SpriteText(BitmapFonts.Exo2BoldItalic, "Main Menu", 32)
             {
                 Parent = mainMenuBackground,
                 Alignment = Alignment.MidCenter,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                },
             };
-
-            mainMenuBackground.Size = new ScalableVector2(MainMenuText.Width + 10, MainMenuText.Height + 10);
         }
 
         /// <summary>
@@ -322,34 +312,24 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the container for user profiles.
         /// </summary>
-        private void CreateUserProfile()
+        private void CreateUserProfile() => UserProfile = new UserProfileContainer(this)
         {
-            UserProfile = new UserProfileContainer(this)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-                Y = Navbar.Line.Y + Navbar.Line.Thickness,
-                X = -64
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            Y = Navbar.Line.Y + Navbar.Line.Thickness,
+            X = -64
+        };
 
         /// <summary>
         ///     Creates the playercard container
         /// </summary>
-        private void CreatePlayercard()
+        private void CreatePlayercard() => Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
         {
-            Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopLeft,
-                X = 64,
-                Y = Jukebox.Y,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            X = 64,
+            Y = Jukebox.Y,
+        };
 
         /// <summary>
         ///     Called when the single player panel is clicked.

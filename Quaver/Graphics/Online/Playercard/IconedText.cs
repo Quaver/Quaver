@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
@@ -18,7 +18,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     The text for the icon.
         /// </summary>
-        public SpriteTextBitmap Value { get; }
+        public SpriteText Value { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -38,7 +38,7 @@ namespace Quaver.Graphics.Online.Playercard
                 UsePreviousSpriteBatchOptions = true,
             };
 
-            Value = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            Value = new SpriteText(BitmapFonts.Exo2BoldItalic, " ", 24)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

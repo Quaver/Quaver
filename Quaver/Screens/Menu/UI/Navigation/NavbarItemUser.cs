@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Online;
 using Steamworks;
@@ -10,7 +10,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
 namespace Quaver.Screens.Menu.UI.Navigation
@@ -30,7 +30,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     The text that shows the user's username
         /// </summary>
-        public SpriteTextBitmap UsernameText { get; private set; }
+        public SpriteText UsernameText { get; private set; }
 
         /// <inheritdoc />
         ///  <summary>
@@ -102,10 +102,6 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 Alignment = Alignment.MidLeft,
                 Image = userAvatar,
                 X = 25,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
         }
 
@@ -117,8 +113,8 @@ namespace Quaver.Screens.Menu.UI.Navigation
             if (e.SteamId != SteamUser.GetSteamID().m_SteamID)
                 return;
 
-            Avatar.Transformations.Clear();
-            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+            Avatar.Animations.Clear();
+            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
             Avatar.Image = e.Texture;
         }
 
@@ -129,18 +125,14 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             var username = !string.IsNullOrEmpty(ConfigManager.Username.Value) ? ConfigManager.Username.Value : "Player";
 
-            UsernameText = new SpriteTextBitmap(BitmapFonts.Exo2SemiBoldItalic, username, 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
+            UsernameText = new SpriteText(BitmapFonts.Exo2SemiBold, username, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = Avatar.X + Avatar.Width + 5,
-                Y = 2,
-                SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.NonPremultiplied }
             };
 
-            UpdateUsernameSize();
-
+            Resize();
             ConfigManager.Username.ValueChanged += OnConfigUsernameChanged;
         }
 
@@ -152,7 +144,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         private void OnConfigUsernameChanged(object sender, BindableValueChangedEventArgs<string> e)
         {
             UsernameText.Text = e.Value;
-            UpdateUsernameSize();
+            Resize();
 
             var parent = Parent;
 
@@ -166,15 +158,6 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 var navbar = parent as Navbar;
                 navbar?.AlignRightItems();
             }
-        }
-
-        /// <summary>
-        ///     Updates the username size properly.
-        /// </summary>
-        private void UpdateUsernameSize()
-        {
-            UsernameText.Size = new ScalableVector2(UsernameText.Width * 0.55f, UsernameText.Height * 0.55f);
-            Resize();
         }
 
         /// <summary>

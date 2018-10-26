@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
@@ -59,7 +59,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
             {
                 Parent = this,
                 Position = new ScalableVector2(64, 64),
-                Alpha = 0.65f
+                Alpha = 0.90f
             };
 
             Line.EndPosition = new Vector2(WindowManager.Width - Line.X, Line.AbsolutePosition.Y);

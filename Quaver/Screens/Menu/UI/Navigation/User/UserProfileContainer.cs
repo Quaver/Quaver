@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
@@ -11,7 +11,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Screens.Menu.UI.Navigation.User
@@ -53,7 +53,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// <summary>
         ///     Displays the current connection status.
         /// </summary>
-        private SpriteTextBitmap TextConnectionStatus { get; set; }
+        private SpriteText TextConnectionStatus { get; set; }
 
         /// <summary>
         ///     The button to log in and out of the server.
@@ -116,12 +116,12 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// </summary>
         public void PerformClickAnimation(bool selected)
         {
-            lock (Transformations)
+            lock (Animations)
             {
-                Transformations.Clear();
+                Animations.Clear();
 
                 var targetHeight = selected ? OriginalHeight : 0;
-                Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, targetHeight, 500));
+                Animations.Add(new Animation(AnimationProperty.Height, Easing.OutQuint, Height, targetHeight, 500));
             }
         }
 
@@ -155,7 +155,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Visible = false
             };
 
-            TextConnectionStatus = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White, Alignment.MidCenter, int.MaxValue)
+            TextConnectionStatus = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -170,6 +170,10 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Alignment = Alignment.TopCenter,
                 Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
                 X = 100,
+                Text =
+                {
+                    FontSize = 13
+                }
             };
 
             ViewProfileButton = new BorderedTextButton("View Profile", Colors.MainAccent, OnViewProfileButtonClicked)
@@ -178,7 +182,11 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 Alignment = Alignment.TopCenter,
                 Y = TextConnectionStatus.Y + TextConnectionStatus.Height + 20,
                 X = -100,
-                SetChildrenVisibility = true
+                SetChildrenVisibility = true,
+                Text =
+                {
+                    FontSize = 13
+                }
             };
 
             UpdateButtons();
@@ -215,7 +223,6 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
             }
 
             TextConnectionStatus.Text = status;
-            TextConnectionStatus.Size = new ScalableVector2(TextConnectionStatus.Width * 0.60f, TextConnectionStatus.Height * 0.60f);
         }
 
         /// <summary>
@@ -238,29 +245,29 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
             {
                 case ConnectionStatus.Disconnected:
                     LoginButton.OriginalColor = Color.LimeGreen;
-                    LoginButton.UpdateText("Log In", 0.55f);
+                    LoginButton.Text.Text = "Login";
 
-                    LoginButton.Transformations.Clear();
-                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 0, 225));
+                    LoginButton.Animations.Clear();
+                    LoginButton.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, LoginButton.X, 0, 225));
 
                     ViewProfileButton.Visible = false;
                     break;
                 case ConnectionStatus.Connecting:
                     LoginButton.OriginalColor = Color.Lavender;
-                    LoginButton.UpdateText("Please Wait...", 0.55f);
+                    LoginButton.Text.Text = "Please Wait...";
                     break;
                 case ConnectionStatus.Connected:
                     LoginButton.OriginalColor = Color.Crimson;
-                    LoginButton.UpdateText("Log Out", 0.55f);
+                    LoginButton.Text.Text = "Log Out";
 
-                    LoginButton.Transformations.Clear();
-                    LoginButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, LoginButton.X, 100, 225));
+                    LoginButton.Animations.Clear();
+                    LoginButton.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, LoginButton.X, 100, 225));
 
                     ViewProfileButton.Visible = true;
                     break;
                 case ConnectionStatus.Reconnecting:
                     LoginButton.OriginalColor = Color.Lavender;
-                    LoginButton.UpdateText("Please Wait...", 0.55f);
+                    LoginButton.Text.Text = "Please Wait...";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

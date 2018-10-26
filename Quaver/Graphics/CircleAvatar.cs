@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -19,7 +19,7 @@ namespace Quaver.Graphics
         /// <param name="image"></param>
         public CircleAvatar(ScalableVector2 size, Texture2D image)
         {
-            Image = FontAwesome.CircleClosed;
+            Image = FontAwesome.Get(FontAwesomeIcon.fa_circle);
             Size = size;
 
             AvatarSprite = new Sprite()

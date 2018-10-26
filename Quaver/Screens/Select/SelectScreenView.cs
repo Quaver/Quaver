@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -15,7 +15,7 @@ using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Form;
 using Wobble.Screens;
@@ -67,9 +67,9 @@ namespace Quaver.Screens.Select
             {
                 Parent = Container,
                 X = 200,
-                Transformations =
+                Animations =
                 {
-                    new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 200, 0, 1200)
+                    new Animation(AnimationProperty.X, Easing.OutBounce, 200, 0, 1200)
                 }
             };
 

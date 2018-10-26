@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
@@ -84,11 +84,10 @@ namespace Quaver.Screens.Select.UI.Search
         /// <summary>
         ///     Creates the box to search for mapsets.
         /// </summary>
-        private void CreateSearchBox()
-        {
+        private void CreateSearchBox() =>
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            SearchBox = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(550, 30), Fonts.Exo2Regular24,
-                SelectScreen.PreviousSearchTerm, "Start typing to search...", 0.60f, null, text =>
+            SearchBox = new Textbox(new ScalableVector2(550, 30), BitmapFonts.Exo2Regular, 16,
+                SelectScreen.PreviousSearchTerm, "Start typing to search...", null, text =>
                 {
                     // Update previous search term
                     SelectScreen.PreviousSearchTerm = text;
@@ -109,38 +108,34 @@ namespace Quaver.Screens.Select.UI.Search
                 AlwaysFocused = true,
                 StoppedTypingActionCalltime = 300
             };
-        }
 
         /// <summary>
         ///     Creates the search icon at the right of the search box.
         /// </summary>
-        private void CreateSearchIcon()
-        {
+        private void CreateSearchIcon() =>
             // ReSharper disable once ArrangeMethodOrOperatorBody
             SearchIcon = new Sprite()
             {
                 Parent = SearchBox,
                 Alignment = Alignment.MidRight,
-                Image = FontAwesome.Search,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
                 Size = new ScalableVector2(SearchBox.Height * 0.50f, SearchBox.Height * 0.50f),
                 Tint = Color.White,
                 X = -10
             };
-        }
 
         /// <summary>
         ///     Creates the sets available text.
         /// </summary>
         private void CreateSetsAvailableText()
         {
-            SetsAvailableText = new SpriteText(Fonts.Exo2Regular24, $"Found {Screen.AvailableMapsets.Count} mapsets.")
+            SetsAvailableText = new SpriteText(BitmapFonts.Exo2Regular, $"Found {Screen.AvailableMapsets.Count} mapsets.", 16)
             {
                 Parent = SearchBox,
-                TextColor = Color.White,
-                TextScale = 0.45f,
-                Transformations =
+                Tint = Color.White,
+                Animations =
                 {
-                    new Transformation(Easing.Linear, Color.White, Colors.MainAccent, 500)
+                    new Animation(Easing.Linear, Color.White, Colors.MainAccent, 500)
                 }
             };
 
@@ -153,7 +148,7 @@ namespace Quaver.Screens.Select.UI.Search
         private void ReadjustSetsAvailableText(IReadOnlyCollection<Mapset> sets)
         {
             // Initially change color to white.
-            SetsAvailableText.TextColor = Color.White;
+            SetsAvailableText.Tint = Color.White;
 
             Color newColor;
 
@@ -169,13 +164,11 @@ namespace Quaver.Screens.Select.UI.Search
             }
 
             // Readjust position.
-            var size = SetsAvailableText.MeasureString() / 2f;
-            SetsAvailableText.X = size.X;
-            SetsAvailableText.Y = SearchBox.Height + 5 + size.Y;
+            SetsAvailableText.Y = SearchBox.Height + 5;
 
             // Fade to the new color.
-            SetsAvailableText.Transformations.Clear();
-            SetsAvailableText.Transformations.Add(new Transformation(Easing.Linear, Color.White, newColor, 500));
+            SetsAvailableText.Animations.Clear();
+            SetsAvailableText.Animations.Add(new Animation(Easing.Linear, Color.White, newColor, 500));
         }
     }
 }

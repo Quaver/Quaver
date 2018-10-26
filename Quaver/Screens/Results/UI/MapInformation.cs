@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble;
@@ -96,46 +96,34 @@ namespace Quaver.Screens.Results.UI
                 Image = BackgroundManager.Background.Image
             };
 
-            Title = new SpriteText(Fonts.AllerRegular16, Screen.SongTitle)
+            Title = new SpriteText(BitmapFonts.Exo2Regular, Screen.SongTitle, 16)
             {
                 Parent = this,
                 X = BackgroundBorder.X + BackgroundBorder.Width,
-                TextScale = 0.95f,
                 Y = 25
             };
 
-            Title.X += Title.MeasureString().X / 2 + TextSpacing.X;
-
-            Creator = new SpriteText(Fonts.AllerRegular16, $"By: {Screen.Qua.Creator}")
+            Creator = new SpriteText(BitmapFonts.Exo2Regular, $"By: {Screen.Qua.Creator}", 16)
             {
                 Parent = this,
-                X = BackgroundBorder.X + BackgroundBorder.Width,
-                TextScale = 0.75f,
                 Y = Title.Y + TextSpacing.Y
             };
 
-            Creator.X += Creator.MeasureString().X / 2 + TextSpacing.X;
-
-            Player = new SpriteText(Fonts.AllerRegular16, $"Played by: {Screen.Replay.PlayerName}")
+            Player = new SpriteText(BitmapFonts.Exo2Regular, $"Played by: {Screen.Replay.PlayerName}", 16)
             {
                 Parent = this,
                 X = BackgroundBorder.X + BackgroundBorder.Width,
-                TextScale = 0.75f,
                 Y = Creator.Y + TextSpacing.Y
             };
 
-            Player.X += Player.MeasureString().X / 2 + TextSpacing.X;
-
             var date = Screen.GameplayScreen != null ? DateTime.Now : Screen.Replay.Date;
-            Date = new SpriteText(Fonts.AllerRegular16, $"Date: {date.ToShortDateString()} @ {date:hh:mm:sstt}")
+
+            Date = new SpriteText(BitmapFonts.Exo2Regular, $"Date: {date.ToShortDateString()} @ {date:hh:mm:sstt}", 16)
             {
                 Parent = this,
                 X = BackgroundBorder.X + BackgroundBorder.Width,
-                TextScale = 0.75f,
                 Y = Player.Y + TextSpacing.Y
             };
-
-            Date.X += Date.MeasureString().X / 2 + TextSpacing.X;
 
             Texture2D gradeTexture;
 

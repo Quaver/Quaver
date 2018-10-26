@@ -32,7 +32,6 @@ namespace Quaver
             {
                 var exception = args.ExceptionObject as Exception;
                 Logger.Error(exception, LogType.Runtime);
-                Environment.Exit(1);
             };
 
             // Change the working directory to where the executable is.

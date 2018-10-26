@@ -9,9 +9,9 @@ using IniParser.Model;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Helpers;
-using Quaver.Resources;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
@@ -219,7 +219,7 @@ namespace Quaver.Skinning
         private void LoadUniversalElements()
         {
             const string cursor = "main-cursor";
-            Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", QuaverResources.main_cursor);
+            Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", $"Quaver.Resources/Textures/Skins/Shared/Cursor/{cursor}.png");
 
             LoadGradeElements();
             LoadJudgements();
@@ -231,17 +231,7 @@ namespace Quaver.Skinning
             LoadSoundEffects();
         }
 
-        /// <summary>
-        ///     Loads a single texture element.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="resource"></param>
-        /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(string path, byte[] resource, string extension = ".png")
-        {
-            path += extension;
-            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : AssetLoader.LoadTexture2D(resource);
-        }
+
 
         /// <summary>
         ///     Loads a single texture element.
@@ -249,10 +239,21 @@ namespace Quaver.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         /// <param name="extension"></param>
-        internal static Texture2D LoadSingleTexture(ResourceManager rm, string path, string resource, string extension = ".png")
+        internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
         {
             path += extension;
-            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : AssetLoader.LoadTexture2D(rm, resource);
+
+            try
+            {
+                return File.Exists(path)
+                    ? AssetLoader.LoadTexture2DFromFile(path)
+                    : AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get(resource));
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Failed to load: {resource}. Using default!", LogType.Runtime);
+                return UserInterface.BlankBox;
+            }
         }
 
         /// <summary>
@@ -296,9 +297,10 @@ namespace Quaver.Skinning
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
-                return new List<Texture2D> { LoadSingleTexture(QuaverResources.ResourceManager, $"{dir}/{element}", resource)};
-
-            return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(QuaverResources.ResourceManager, $"{resource}_{rows}x{columns}"), rows, columns);
+                return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
+;
+            return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
+                GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
         }
 
         /// <summary>
@@ -307,7 +309,7 @@ namespace Quaver.Skinning
         /// <param name="path"></param>
         /// <param name="element"></param>
         /// <returns></returns>
-        private static AudioSample LoadSoundEffect(string path, string element)
+        private static AudioSample LoadSoundEffect(string path, string element, string resourceFolder)
         {
             path += ".wav";
 
@@ -323,7 +325,7 @@ namespace Quaver.Skinning
             }
 
             // Load the default if the path doesn't exist
-            return new AudioSample((UnmanagedMemoryStream)ResourceHelper.GetProperty(element));
+            return new AudioSample(GameBase.Game.Resources.Get($"Quaver.Resources/SFX/{resourceFolder}/{element}.wav"));
         }
 
         /// <summary>
@@ -339,38 +341,38 @@ namespace Quaver.Skinning
 
                 var element = $"grade-small-{grade.ToString().ToLower()}";
 
-                byte[] defaultGrade = null;
+                string defaultGrade = null;
 
                 switch (grade)
                 {
                     case Grade.None:
                         break;
                     case Grade.A:
-                        defaultGrade = QuaverResources.grade_small_a;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-a.png";
                         break;
                     case Grade.B:
-                        defaultGrade = QuaverResources.grade_small_b;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-b.png";
                         break;
                     case Grade.C:
-                        defaultGrade = QuaverResources.grade_small_c;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-c.png";
                         break;
                     case Grade.D:
-                        defaultGrade = QuaverResources.grade_small_d;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-d.png";
                         break;
                     case Grade.F:
-                        defaultGrade = QuaverResources.grade_small_f;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-f.png";
                         break;
                     case Grade.S:
-                        defaultGrade = QuaverResources.grade_small_s;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-s.png";
                         break;
                     case Grade.SS:
-                        defaultGrade = QuaverResources.grade_small_ss;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-ss.png";
                         break;
                     case Grade.X:
-                        defaultGrade = QuaverResources.grade_small_x;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-x.png";
                         break;
                     case Grade.XX:
-                        defaultGrade = QuaverResources.grade_small_xx;
+                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-xx.png";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -393,13 +395,17 @@ namespace Quaver.Skinning
                 if (j == Judgement.Ghost)
                     return;
 
-                var element = $"judge-{j.ToString().ToLower()}";           
-               Judgements[j] = new List<Texture2D>() { LoadSingleTexture(QuaverResources.ResourceManager, $"{Dir}/{folder}/{element}", element) };
+                var element = $"judge-{j.ToString().ToLower()}";
+               Judgements[j] = new List<Texture2D>()
+               {
+                   LoadSingleTexture( $"{Dir}/{folder}/{element}", $"Quaver.Resources/Textures/Skins/Shared/Judgements/{element}.png")
+               };
             }
-            
+
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
-            JudgementOverlay = LoadSingleTexture(QuaverResources.ResourceManager, $"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
+            JudgementOverlay = LoadSingleTexture( $"{Dir}/{folder}/{judgementOverlay}",
+                $"Quaver.Resources/Textures/Skins/Shared/Judgements/{judgementOverlay}.png");
         }
 
         /// <summary>
@@ -413,28 +419,31 @@ namespace Quaver.Skinning
             {
                 // Score
                 var scoreElement = $"score-{i}";
-                ScoreDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{scoreElement}", $"{scoreElement}");
+                ScoreDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{scoreElement}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Numbers/{scoreElement}.png");
 
                 // Combo
                 var comboElement = $"combo-{i}";
-                ComboDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{comboElement}", comboElement);
+                ComboDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{comboElement}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Numbers/{comboElement}.png");
 
                 // Song Time
                 var songTimeElement = $"song-time-{i}";
-                SongTimeDisplayNumbers[i] = LoadSingleTexture(QuaverResources.ResourceManager, $"{numberDisplayFolder}/{songTimeElement}", songTimeElement);
+                SongTimeDisplayNumbers[i] = LoadSingleTexture( $"{numberDisplayFolder}/{songTimeElement}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeElement}.png");
             }
 
             const string scoreDecimal = "score-decimal";
-            ScoreDisplayDecimal = LoadSingleTexture($"{numberDisplayFolder}/{scoreDecimal}", QuaverResources.score_decimal);
+            ScoreDisplayDecimal = LoadSingleTexture($"{numberDisplayFolder}/{scoreDecimal}", $"Quaver.Resources/Textures/Skins/Shared/Numbers/{scoreDecimal}.png");
 
             const string scorePercent = "score-percent";
-            ScoreDisplayPercent = LoadSingleTexture($"{numberDisplayFolder}/{scorePercent}", QuaverResources.score_percent);
+            ScoreDisplayPercent = LoadSingleTexture($"{numberDisplayFolder}/{scorePercent}", $"Quaver.Resources/Textures/Skins/Shared/Numbers/{scorePercent}.png");
 
             const string songTimeColon = "song-time-colon";
-            SongTimeDisplayColon = LoadSingleTexture($"{numberDisplayFolder}/{songTimeColon}", QuaverResources.song_time_colon);
+            SongTimeDisplayColon = LoadSingleTexture($"{numberDisplayFolder}/{songTimeColon}", $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeColon}.png");
 
             const string songTimeMinus = "song-time-minus";
-            SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", QuaverResources.song_time_minus);
+            SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", $"Quaver.Resources/Textures/Skins/Shared/Numbers/{songTimeMinus}.png");
         }
 
         /// <summary>
@@ -445,16 +454,16 @@ namespace Quaver.Skinning
             var pauseFolder = $"{Dir}/Pause/";
 
             const string pauseBackground = "pause-background";
-            PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", QuaverResources.pause_background);
+            PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", $"Quaver.Resources/Textures/Skins/Shared/Pause/{pauseBackground}.png");
 
             const string pauseContinue = "pause-continue";
-            PauseContinue = LoadSingleTexture($"{pauseFolder}/{pauseContinue}", QuaverResources.pause_continue);
+            PauseContinue = LoadSingleTexture($"{pauseFolder}/{pauseContinue}", $"Quaver.Resources/Textures/Skins/Shared/Pause/{pauseContinue}.png");
 
             const string pauseRetry = "pause-retry";
-            PauseRetry = LoadSingleTexture($"{pauseFolder}/{pauseRetry}", QuaverResources.pause_retry);
+            PauseRetry = LoadSingleTexture($"{pauseFolder}/{pauseRetry}", $"Quaver.Resources/Textures/Skins/Shared/Pause/{pauseRetry}.png");
 
             const string pauseBack = "pause-back";
-            PauseBack = LoadSingleTexture($"{pauseFolder}/{pauseBack}", QuaverResources.pause_back);
+            PauseBack = LoadSingleTexture($"{pauseFolder}/{pauseBack}", $"Quaver.Resources/Textures/Skins/Shared/Pause/{pauseBack}.png");
         }
 
         /// <summary>
@@ -465,10 +474,10 @@ namespace Quaver.Skinning
             var scoreboardFolder = $"{Dir}/Scoreboard/";
 
             const string scoreboard = "scoreboard";
-            Scoreboard = LoadSingleTexture($"{scoreboardFolder}/{scoreboard}", QuaverResources.scoreboard);
+            Scoreboard = LoadSingleTexture($"{scoreboardFolder}/{scoreboard}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboard}.png");
 
             const string scoreboardOther = "scoreboard-other";
-            ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", QuaverResources.scoreboard_other);
+            ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardOther}.png");
         }
 
         /// <summary>
@@ -479,10 +488,12 @@ namespace Quaver.Skinning
             var healthFolder = $"/Health/";
 
             const string healthBackground = "health-background";
-            HealthBarBackground = LoadSpritesheet(healthFolder, healthBackground, healthBackground, 0, 0);
+            HealthBarBackground = LoadSpritesheet(healthFolder, healthBackground,
+                $"Quaver.Resources/Textures/Skins/Shared/Health/health-background", 0, 0);
 
             const string healthForeground = "health-foreground";
-            HealthBarForeground = LoadSpritesheet(healthFolder, healthForeground, healthForeground, 0, 0);
+            HealthBarForeground = LoadSpritesheet(healthFolder, healthForeground,
+                $"Quaver.Resources/Textures/Skins/Shared/Health/health-foreground", 0, 0);
         }
 
         /// <summary>
@@ -493,7 +504,7 @@ namespace Quaver.Skinning
             var skipFolder = $"/Skip/";
             const string skip = "skip";
 
-            Skip = LoadSpritesheet(skipFolder, skip, skip, 1, 31);
+            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 31);
         }
 
         /// <summary>
@@ -504,40 +515,40 @@ namespace Quaver.Skinning
             var sfxFolder = $"{Dir}/SFX/";
 
             const string soundHit = "sound-hit";
-            SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit);
+            SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit, "Gameplay");
 
             const string soundHitClap = "sound-hitclap";
-            SoundHitClap = LoadSoundEffect($"{sfxFolder}/{soundHitClap}", soundHitClap);
+            SoundHitClap = LoadSoundEffect($"{sfxFolder}/{soundHitClap}", soundHitClap, "Gameplay");
 
             const string soundHitWhistle = "sound-hitwhistle";
-            SoundHitWhistle = LoadSoundEffect($"{sfxFolder}/{soundHitWhistle}", soundHitWhistle);
+            SoundHitWhistle = LoadSoundEffect($"{sfxFolder}/{soundHitWhistle}", soundHitWhistle, "Gameplay");
 
             const string soundHitFinish = "sound-hitfinish";
-            SoundHitFinish = LoadSoundEffect($"{sfxFolder}/{soundHitFinish}", soundHitFinish);
+            SoundHitFinish = LoadSoundEffect($"{sfxFolder}/{soundHitFinish}", soundHitFinish, "Gameplay");
 
             const string soundComboBreak = "sound-combobreak";
-            SoundComboBreak = LoadSoundEffect($"{sfxFolder}/{soundComboBreak}", soundComboBreak);
+            SoundComboBreak = LoadSoundEffect($"{sfxFolder}/{soundComboBreak}", soundComboBreak, "Gameplay");
 
             const string soundFailure = "sound-failure";
-            SoundFailure = LoadSoundEffect($"{sfxFolder}/{soundFailure}", soundFailure);
+            SoundFailure = LoadSoundEffect($"{sfxFolder}/{soundFailure}", soundFailure, "Gameplay");
 
             const string soundRetry = "sound-retry";
-            SoundRetry = LoadSoundEffect($"{sfxFolder}/{soundRetry}", soundRetry);
+            SoundRetry = LoadSoundEffect($"{sfxFolder}/{soundRetry}", soundRetry, "Gameplay");
 
             const string soundApplause = "sound-applause";
-            SoundApplause = LoadSoundEffect($"{sfxFolder}/{soundApplause}", soundApplause);
+            SoundApplause = LoadSoundEffect($"{sfxFolder}/{soundApplause}", soundApplause, "Menu");
 
             const string soundScreenshot = "sound-screenshot";
-            SoundScreenshot = LoadSoundEffect($"{sfxFolder}/{soundScreenshot}", soundScreenshot);
+            SoundScreenshot = LoadSoundEffect($"{sfxFolder}/{soundScreenshot}", soundScreenshot, "Menu");
 
             const string soundClick = "sound-click";
-            SoundClick = LoadSoundEffect($"{sfxFolder}/{soundClick}", soundClick);
+            SoundClick = LoadSoundEffect($"{sfxFolder}/{soundClick}", soundClick, "Menu");
 
             const string soundBack = "sound-back";
-            SoundBack = LoadSoundEffect($"{sfxFolder}/{soundBack}", soundBack);
+            SoundBack = LoadSoundEffect($"{sfxFolder}/{soundBack}", soundBack, "Menu");
 
             const string soundHover = "sound-hover";
-            SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover);
+            SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
         }
     }
 }

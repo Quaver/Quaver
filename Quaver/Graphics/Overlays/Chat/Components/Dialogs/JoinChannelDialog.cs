@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Helpers;
 using Quaver.Online.Chat;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -42,7 +42,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
         public JoinChannelDialog(ChatOverlay overlay) : base(0)
         {
             Overlay = overlay;
-            SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.NonPremultiplied};
             CreateContent();
 
             Clicked += (sender, args) =>
@@ -88,12 +87,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             Tint = new Color(63, 68, 91),
             Y = 400,
             Alpha = 0,
-            Transformations =
+            Animations =
             {
-                new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 400),
-                new Transformation(TransformationProperty.Y, Easing.EaseOutQuint, 400, 0, 800)
+                new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 400),
+                new Animation(AnimationProperty.Y, Easing.OutQuint, 400, 0, 800)
             },
-            UsePreviousSpriteBatchOptions = true
         };
 
         /// <summary>
@@ -106,7 +104,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Parent = InterfaceContainer,
                 Size = new ScalableVector2(Width, 75),
                 Tint = Colors.DarkGray,
-                UsePreviousSpriteBatchOptions = true
             };
 
             var line = new Sprite()
@@ -114,7 +111,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Parent = HeaderContainer,
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(HeaderContainer.Width, 2),
-                UsePreviousSpriteBatchOptions = true,
                 Tint = Colors.MainAccent
             };
 
@@ -124,31 +120,23 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Alignment = Alignment.MidLeft,
                 X = 25,
                 Size = new ScalableVector2(HeaderContainer.Height * 0.50f, HeaderContainer.Height * 0.50f),
-                Image = FontAwesome.Group,
-                UsePreviousSpriteBatchOptions = true
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users),
             };
 
-            var chatChannels = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 24, Color.White,
-                Alignment.MidLeft, int.MaxValue)
+            var chatChannels = new SpriteText(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 14)
             {
                 Parent = icon,
                 Y = -3,
                 X = icon.Width + 15,
-                UsePreviousSpriteBatchOptions = true
             };
 
-            chatChannels.Size = new ScalableVector2(chatChannels.Width * 0.60f, chatChannels.Height * 0.60f);
-
-            var description = new SpriteTextBitmap(BitmapFonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
-                24, Color.White, Alignment.MidLeft, int.MaxValue)
+            var description = new SpriteText(BitmapFonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
+                13)
             {
                 Parent = icon,
                 Y = chatChannels.Y + chatChannels.Height - 2,
                 X = icon.Width + 15,
-                UsePreviousSpriteBatchOptions = true
             };
-
-            description.Size = new ScalableVector2(description.Width * 0.50f, description.Height * 0.50f);
         }
 
         /// <summary>
@@ -161,10 +149,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             {
                 Parent = InterfaceContainer,
                 Y = HeaderContainer.Height,
-                Alpha = 0,
+                Alpha = 0.50f,
+                Tint = Color.Black,
                 InputEnabled = true,
                 ScrollSpeed = 150,
-                EasingType = Easing.EaseOutQuint,
+                EasingType = Easing.OutQuint,
                 TimeToCompleteScroll = 1500,
                 Scrollbar =
                 {

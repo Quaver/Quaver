@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Server.Client.Handlers;
@@ -12,7 +12,7 @@ using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Users
@@ -42,12 +42,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     The user's username
         /// </summary>
-        public SpriteTextBitmap Username { get; private set; }
+        public SpriteText Username { get; private set; }
 
         /// <summary>
         ///     The user's status
         /// </summary>
-        public SpriteTextBitmap Status { get; private set; }
+        public SpriteText Status { get; private set; }
 
         /// <summary>
         ///     The height of the drawable user.
@@ -59,7 +59,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         /// <param name="overlay"></param>
         /// <param name="list"></param>
-        /// <param name="user"></param>
         public DrawableOnlineUser(ChatOverlay overlay, OnlineUserList list) : base(UserInterface.BlankBox)
         {
             Overlay = overlay;
@@ -110,7 +109,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             {
                 Parent = this,
                 Size = new ScalableVector2(Height * 0.80f, Height * 0.80f),
-                UsePreviousSpriteBatchOptions = true,
                 X = 10,
                 Alignment = Alignment.MidLeft,
                 Image = GetAvatarOrRequest()
@@ -121,35 +119,23 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Creates the username text
         /// </summary>
-        private void CreateUsername()
+        private void CreateUsername() => Username = new SpriteText(BitmapFonts.Exo2Bold, "Loading...", 13)
         {
-            Username = new SpriteTextBitmap(BitmapFonts.Exo2Bold, "Loading...", 24, Color.White, Alignment.TopLeft, int.MaxValue)
-            {
-                Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                X = Avatar.X + Avatar.Width + 5,
-                Y = 6,
-                Tint = Color.White
-            };
-
-            Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
-        }
+            Parent = this,
+            X = Avatar.X + Avatar.Width + 5,
+            Y = 6,
+            Tint = Color.White
+        };
 
         /// <summary>
         ///     Creates the text for the user's status
         /// </summary>
-        private void CreateStatus()
+        private void CreateStatus() => Status = new SpriteText(BitmapFonts.Exo2SemiBold, "Idle", 12)
         {
-            Status = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, "Idle", 24, Color.White, Alignment.TopLeft, int.MaxValue)
-            {
-                Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                X = Username.X,
-                Y = Username.Y + Username.Height - 5
-            };
-
-            Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
-        }
+            Parent = this,
+            X = Username.X,
+            Y = Username.Y + Username.Height - 2
+        };
 
         /// <summary>
         ///     Updates the drawable with new user information.
@@ -162,8 +148,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             if (User.HasUserInfo)
             {
                 Username.Text = User.OnlineUser.Username;
-                Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
-
                 Username.Tint = Colors.GetUserChatColor(User.OnlineUser.UserGroups);
 
                 SetAvatar(GetAvatarOrRequest());
@@ -175,8 +159,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
                 OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
 
                 Username.Text = $"User#{User.OnlineUser.Id}";
-                Username.Size = new ScalableVector2(Username.Width * 0.55f, Username.Height * 0.55f);
-
                 Avatar.Border.Tint = Color.White;
                 Username.Tint = Color.White;
             }
@@ -214,7 +196,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
             }
 
             Status.Text = statusText;
-            Status.Size = new ScalableVector2(Status.Width * 0.50f, Status.Height * 0.50f);
         }
 
         /// <summary>

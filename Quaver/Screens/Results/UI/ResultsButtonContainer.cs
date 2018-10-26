@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
@@ -66,9 +66,9 @@ namespace Quaver.Screens.Results.UI
         /// <returns></returns>
         private static TextButton CreateButton(string text, EventHandler onClick)
         {
-            var btn = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, text.ToUpper(), 0.50f, onClick)
+            var btn = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, text.ToUpper(), 16, onClick)
             {
-                Text = {TextColor = Color.White}
+                Text = {Tint = Color.White}
             };
 
             return btn;

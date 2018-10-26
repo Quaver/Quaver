@@ -4,13 +4,12 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
-using Quaver.Assets;
-using Quaver.Shaders;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 
 namespace Quaver.Screens.Menu.UI.Tips
@@ -20,12 +19,12 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// <summary>
         ///     The bolded text that says "Tip:"
         /// </summary>
-        public SpriteTextBitmap TextTip { get; private set; }
+        public SpriteText TextTip { get; private set; }
 
         /// <summary>
         ///     The actual content of the tip.
         /// </summary>
-        public SpriteTextBitmap TextTipContent { get; private set; }
+        public SpriteText TextTipContent { get; private set; }
 
         /// <summary>
         ///     The amount of time this tip has been active.
@@ -33,7 +32,7 @@ namespace Quaver.Screens.Menu.UI.Tips
         private double TimeTipActive { get; set; }
 
         /// <summary>
-        ///     Dictates if the transformation is going forward or backward.
+        ///     Dictates if the Animation is going forward or backward.
         /// </summary>
         private bool IsGoingForward { get; set; }
 
@@ -59,7 +58,7 @@ namespace Quaver.Screens.Menu.UI.Tips
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             //
-            if (Transformations.Count == 0)
+            if (Animations.Count == 0)
             {
                 TimeTipActive += dt;
 
@@ -70,7 +69,7 @@ namespace Quaver.Screens.Menu.UI.Tips
 
                 if (TimeTipActive >= 10000 && IsGoingForward)
                 {
-                    Transformations.Add(new Transformation(TransformationProperty.Width, Easing.Linear, Width, 0, 400));
+                    Animations.Add(new Animation(AnimationProperty.Width, Easing.Linear, Width, 0, 400));
                     TimeTipActive = 0;
                     IsGoingForward = false;
                 }
@@ -84,14 +83,11 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "TIP:", 24, Color.White, Alignment.TopLeft, int.MaxValue)
+            TextTip = new SpriteText(BitmapFonts.Exo2BoldItalic, "TIP:", 13, false)
             {
                 Alignment = Alignment.MidLeft,
                 X = 5,
-                UsePreviousSpriteBatchOptions = true
             };
-
-            TextTip.Size = new ScalableVector2(TextTip.Width * 0.50f, TextTip.Height * 0.50f);
 
             AddContainedDrawable(TextTip);
         }
@@ -101,11 +97,9 @@ namespace Quaver.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, " ", 24, Color.White,
-                Alignment.TopLeft, int.MaxValue)
+            TextTipContent = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12, false)
             {
-                Alignment = Alignment.MidLeft,
-                UsePreviousSpriteBatchOptions = true
+                Alignment = Alignment.MidLeft
             };
 
             AddContainedDrawable(TextTipContent);
@@ -117,12 +111,11 @@ namespace Quaver.Screens.Menu.UI.Tips
         public void UpdateTip(string tip)
         {
             TextTipContent.Text = tip;
-            TextTipContent.Size = new ScalableVector2(TextTipContent.Width * 0.50f, TextTipContent.Height * 0.50f);
             TextTipContent.X = TextTip.X + TextTip.Width + 1;
 
-            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 5, 45);
+            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 10, 45);
 
-            Transformations.Add(new Transformation(TransformationProperty.Width, Easing.Linear,
+            Animations.Add(new Animation(AnimationProperty.Width, Easing.Linear,
                 Width, ContentContainer.Width, 400));
 
             IsGoingForward = true;

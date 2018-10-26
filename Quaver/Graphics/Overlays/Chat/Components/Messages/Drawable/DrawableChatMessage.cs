@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -12,7 +12,7 @@ using WebSocketSharp;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 using Wobble.Window;
 using Color = Microsoft.Xna.Framework.Color;
@@ -40,7 +40,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///     The username of the person that wrote the message.
         /// </summary>
-        public SpriteTextBitmap TextUsername { get; private set; }
+        public SpriteText TextUsername { get; private set; }
 
         /// <summary>
         ///     A chat badge (if the user has one)
@@ -50,7 +50,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///     The actual content of the message.
         /// </summary>
-        public SpriteTextBitmap TextMessageContent { get; private set; }
+        public SpriteText TextMessageContent { get; private set; }
 
         /// <summary>
         ///     The amount of y space between the content and time sent.
@@ -71,6 +71,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Avatar = new Sprite
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = 10,
                 Size = new ScalableVector2(44, 44),
                 Y = Padding,
@@ -130,32 +131,27 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 ? OnlineManager.Self.OnlineUser.Username
                 : Message.SenderName;
 
-            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}",
-                14, Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups), Alignment.MidLeft, (int) WindowManager.Width)
+            TextUsername = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}", 14)
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = Avatar.Width + Avatar.X + 5,
                 Y = Avatar.Y - 3,
+                Tint = Colors.GetUserChatColor(Message.Sender.OnlineUser.UserGroups)
             };
         }
 
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText()
+        private void CreateMessageContentText() => TextMessageContent = new SpriteText(BitmapFonts.Exo2Medium, Message.Message, 13, true,
+                (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
-            const float scale = 0.4375f;
-
-            TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 32,
-                Color.White, Alignment.MidLeft, (int)((Container.Width - Avatar.Width - Avatar.X - 5) / scale))
-            {
-                Parent = this,
-                X = TextUsername.X,
-                Y = TextUsername.Y + TextUsername.Height - 1,
-            };
-
-            TextMessageContent.Size = new ScalableVector2(TextMessageContent.Width * scale, TextMessageContent.Height * scale);
-        }
+            Parent = this,
+            UsePreviousSpriteBatchOptions = true,
+            X = TextUsername.X,
+            Y = TextUsername.Y + TextUsername.Height + 1,
+        };
 
         /// <summary>
         ///     Create the chat badge for the user if they are eligible to have one.
@@ -168,8 +164,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             ChatBadge = new ChatBadge(Message.Sender.OnlineUser.UserGroups)
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
                 X = TextUsername.X + TextUsername.Width + 5,
-                Y = TextUsername.Y - 2
+                Y = TextUsername.Y,
+
             };
         }
 
@@ -203,8 +201,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             try
             {
-                Avatar.Transformations.Clear();
-                Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Animations.Clear();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
                 Avatar.Image = e.Texture;
             }
             catch (Exception exception)

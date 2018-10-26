@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
@@ -45,12 +45,11 @@ namespace Quaver.Graphics.Overlays.Toolbar
             Initialize(onClick, selected);
 
             // Create the text in the middle of the button.
-            var text = new SpriteText(Fonts.Exo2Regular24, name)
+            var text = new SpriteText(BitmapFonts.Exo2Regular, name, 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
-                TextScale = 0.50f
             };
         }
 

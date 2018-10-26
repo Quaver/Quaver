@@ -1,51 +1,47 @@
-﻿using System;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
-using Quaver.Graphics;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Scheduling;
+using Quaver.Screens.Menu.UI.Navigation.User;
 using Steamworks;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 
-namespace Quaver.Screens.Connecting.UI
+namespace Quaver.Graphics.Online.Username
 {
     public class UsernameSelectionTextbox : Textbox
     {
         /// <summary>
-        ///     The connecting screen view.
-        /// </summary>
-        private ConnectingScreenView View { get; }
-
-        /// <summary>
         ///     The overlay for the textbox.
         /// </summary>
-        private TextButton SubmitButton { get; }
+        private BorderedTextButton SubmitButton { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public UsernameSelectionTextbox(ConnectingScreenView view)
-            : base(TextboxStyle.SingleLine, new ScalableVector2(360, 40), Fonts.Exo2Regular24, "", "Enter Username", 0.60f)
+        public UsernameSelectionTextbox()
+            : base(new ScalableVector2(360, 39), BitmapFonts.Exo2Regular, 14, "", "Enter Username")
         {
-            View = view;
-
-            Image = UserInterface.UsernameSelectionTextbox;
-            InputText.Y = 5;
-            Cursor.Y = 6;
+            Image = UserInterface.BlankBox;
+            Tint = Color.Transparent;
+            AddBorder(Color.White, 2);
+            InputText.Alignment = Alignment.MidLeft;
+            Cursor.Y = 10;
             AlwaysFocused = true;
             MaxCharacters = 15;
 
-            SubmitButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Submit", 0.55f, (o, e) => OnBoxSubmitted(RawText))
+            SubmitButton = new BorderedTextButton("Submit", Colors.MainAccent, (o, e) => OnBoxSubmitted(RawText))
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(100, Height),
-                X = 360,
-                Tint = Colors.MainAccent,
-                Alpha = 0.65f
+                X = 361,
+                Text =
+                {
+                    FontSize = 13
+                }
             };
 
             X -= SubmitButton.Width / 2f;

@@ -31,7 +31,7 @@ using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -477,8 +477,8 @@ namespace Quaver.Screens.Gameplay
                 OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
                 // Fade in the transitioner.
-                screenView.Transitioner.Transformations.Clear();
-                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
+                screenView.Transitioner.Animations.Clear();
+                screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
 
                 // Activate pause menu
                 screenView.PauseScreen.Activate();
@@ -496,9 +496,9 @@ namespace Quaver.Screens.Gameplay
             ResumeTime = GameBase.Game.TimeRunning;
 
             // Fade screen transitioner
-            screenView.Transitioner.Transformations.Clear();
-            var alphaTransformation = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.75f, 0, 400);
-            screenView.Transitioner.Transformations.Add(alphaTransformation);
+            screenView.Transitioner.Animations.Clear();
+            var alphaTransformation = new Animation(AnimationProperty.Alpha, Easing.Linear, 0.75f, 0, 400);
+            screenView.Transitioner.Animations.Add(alphaTransformation);
 
             // Deactivate pause screen.
             screenView.PauseScreen.Deactivate();
@@ -527,7 +527,7 @@ namespace Quaver.Screens.Gameplay
                     HasQuit = true;
 
                     var view = (GameplayScreenView) View;
-                    view.Transitioner.Transformations.Clear();
+                    view.Transitioner.Animations.Clear();
                     break;
             }
         }
@@ -622,8 +622,8 @@ namespace Quaver.Screens.Gameplay
                     screenView.FadingOnRestartKeyPress = true;
                     screenView.FadingOnRestartKeyRelease = false;
 
-                    screenView.Transitioner.Transformations.Clear();
-                    screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                    screenView.Transitioner.Animations.Clear();
+                    screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                         screenView.Transitioner.Alpha, 1, 100));
                 }
 
@@ -650,8 +650,8 @@ namespace Quaver.Screens.Gameplay
                 screenView.FadingOnRestartKeyPress = false;
                 screenView.FadingOnRestartKeyRelease = true;
 
-                screenView.Transitioner.Transformations.Clear();
-                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 200));
+                screenView.Transitioner.Animations.Clear();
+                screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 200));
             }
         }
 

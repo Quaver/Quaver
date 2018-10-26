@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Server.Common.Enums;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
@@ -25,7 +25,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///     The spritetext that displays the usergroup's text.
         /// </summary>
-        private SpriteTextBitmap TextUserGroup { get; }
+        private SpriteText TextUserGroup { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -42,22 +42,18 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Icon = new Sprite()
             {
                 Parent = this,
-                UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft,
                 Image = GetIcon(UserGroups),
-                X = 10
+                X = 10,
+                UsePreviousSpriteBatchOptions = true
             };
 
-            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 24,
-                Color.White, Alignment.TopLeft, (int) WindowManager.Width)
+            TextUserGroup = new SpriteText(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 11, false)
             {
                 Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                UsePreviousSpriteBatchOptions = true
             };
-
-            TextUserGroup.Width *= 0.45f;
-            TextUserGroup.Height *= 0.45f;
 
             Icon.Size = new ScalableVector2(TextUserGroup.Height * 0.75f, TextUserGroup.Height * 0.75f);
 
@@ -68,7 +64,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             if ((int) width % 2 != 0)
                 width += 1;
 
-            Size = new ScalableVector2(width, TextUserGroup.Height + 4);
+            Size = new ScalableVector2(width, TextUserGroup.Height + 3);
             AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 2);
             Border.Alpha = 0.85f;
         }
@@ -81,15 +77,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         public static Texture2D GetIcon(UserGroups groups)
         {
             if (groups.HasFlag(UserGroups.Developer))
-                return FontAwesome.Code;
+                return FontAwesome.Get(FontAwesomeIcon.fa_code);
 
             // Bot
             if (groups.HasFlag(UserGroups.Bot))
-                return FontAwesome.Wrench;
+                return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
 
             // Admin
             if (groups.HasFlag(UserGroups.Admin))
-                return FontAwesome.Gavel;
+                return FontAwesome.Get(FontAwesomeIcon.fa_legal_hammer);
 
             return null;
         }

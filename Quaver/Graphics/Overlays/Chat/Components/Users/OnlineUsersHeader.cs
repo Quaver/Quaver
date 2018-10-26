@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Server.Client.Handlers;
 using Wobble.Graphics;
@@ -19,12 +19,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Shows the text "Online users"
         /// </summary>
-        public SpriteTextBitmap TextHeader { get; private set; }
+        public SpriteText TextHeader { get; private set; }
 
         /// <summary>
         ///    Displays the amount of users currently online.
         /// </summary>
-        public SpriteTextBitmap TextOnlineCount { get; private set; }
+        public SpriteText TextOnlineCount { get; private set; }
 
         /// <summary>
         ///     The divider line at the bottom of the header
@@ -68,19 +68,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextHeader()
         {
-            TextHeader = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "Online Users", 24, Color.White, Alignment.MidCenter,
-                int.MaxValue)
+            TextHeader = new SpriteText(BitmapFonts.Exo2BoldItalic, "Online Users", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 10,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
-
-            TextHeader.Size = new ScalableVector2(TextHeader.Width * 0.55f, TextHeader.Height * 0.55f);
         }
 
         /// <summary>
@@ -88,13 +81,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextOnlineUserCount()
         {
-            TextOnlineCount = new SpriteTextBitmap(BitmapFonts.Exo2MediumItalic, " ", 24, Color.White,
-                Alignment.MidCenter, int.MaxValue)
+            TextOnlineCount = new SpriteText(BitmapFonts.Exo2MediumItalic, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = TextHeader.Y + TextHeader.Height - 2,
-                UsePreviousSpriteBatchOptions = true,
+                ForceDrawAtSize = false
             };
 
             UpdateOnlineUserCount();
@@ -106,24 +98,19 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Users
         private void UpdateOnlineUserCount()
         {
             var count = OnlineManager.Connected ? OnlineManager.OnlineUsers.Count : 0;
-
             TextOnlineCount.Text = $"Total Online: {count:n0}";
-            TextOnlineCount.Size = new ScalableVector2(TextOnlineCount.Width * 0.45f, TextOnlineCount.Height * 0.45f);
         }
 
         /// <summary>
         ///     Creates the divider line at the bottom.
         /// </summary>
-        private void CreateDividerLine()
+        private void CreateDividerLine() => DividerLine = new Sprite()
         {
-            DividerLine = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(Width, 2),
-                Alpha = 0.35f
-            };
-        }
+            Parent = this,
+            Alignment = Alignment.BotLeft,
+            Size = new ScalableVector2(Width, 2),
+            Alpha = 0.35f
+        };
 
         public void OnUsersOnline(object sender, UsersOnlineEventArgs e) => UpdateOnlineUserCount();
         public void OnUserConnected(object sender, UserConnectedEventArgs e) => UpdateOnlineUserCount();

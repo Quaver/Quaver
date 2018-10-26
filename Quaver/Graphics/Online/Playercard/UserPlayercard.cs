@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using osu_database_reader;
 using Quaver.API.Enums;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Online;
@@ -17,7 +17,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
@@ -78,7 +78,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// <summary>
         ///     The user's username.
         /// </summary>
-        private SpriteTextBitmap TextUsername { get; set; }
+        private SpriteText TextUsername { get; set; }
 
         /// <summary>
         ///     The value of the user's overall rating.
@@ -178,10 +178,10 @@ namespace Quaver.Graphics.Online.Playercard
                 switch (GameMode)
                 {
                     case GameMode.Keys4:
-                        TextGlobalRank.Icon.Image = FontAwesome.Comments;
+                        TextGlobalRank.Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_comments);
                         break;
                     case GameMode.Keys7:
-                        TextGlobalRank.Icon.Image = FontAwesome.ArrowLeft;
+                        TextGlobalRank.Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_left_arrow);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -245,7 +245,7 @@ namespace Quaver.Graphics.Online.Playercard
             Tint = Colors.DarkGray;
 
             Size = new ScalableVector2(426, FullCard ? 154 : 96);
-            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Textures/UI/Playercard/playercard-bg.png"));
+            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Quaver.Resources/Textures/UI/Playercard/playercard-bg.png"));
 
             CreateTitle();
             CreateAvatar();
@@ -353,8 +353,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// <param name="title"></param>
         public void UpdateTitle(Title title)
         {
-            TitleSprite.Transformations.Clear();
-            TitleSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TitleSprite.Animations.Clear();
+            TitleSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             TitleSprite.Image = TitleHelper.Get(title);
         }
 
@@ -363,8 +363,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void CreateUsername(string username)
         {
-            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2Bold, " ", 24,
-                Color.White, Alignment.MidCenter, int.MaxValue)
+            TextUsername = new SpriteText(BitmapFonts.Exo2Bold, " ", 24)
             {
                 Parent = Avatar,
                 X = Avatar.Width + 5,
@@ -393,7 +392,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void CreateStats(bool isVisible)
         {
-            TextOverallRating = new IconedText(FontAwesome.BarGraph, "00.00")
+            TextOverallRating = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_bar_graph_on_a_rectangle), "00.00")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -412,7 +411,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextGlobalRank = new IconedText(FontAwesome.Desktop, "#9,999,999")
+            TextGlobalRank = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), "#9,999,999")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -422,7 +421,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextOverallAccuracy = new IconedText(FontAwesome.Clock, "100.00%")
+            TextOverallAccuracy = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_time), "100.00%")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -431,7 +430,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextPlayCount = new IconedText(FontAwesome.GamePad, "1,000,000")
+            TextPlayCount = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "1,000,000")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -441,7 +440,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextCompetitiveMatchesWon = new IconedText(FontAwesome.Trophy, "1,000,000")
+            TextCompetitiveMatchesWon = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_trophy), "1,000,000")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -460,8 +459,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         public void UpdateAvatar(Texture2D tex)
         {
-            Avatar.Transformations.Clear();
-            Avatar.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            Avatar.Animations.Clear();
+            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             Avatar.Image = tex;
         }
 
@@ -480,8 +479,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void UpdateCompetitiveBadge(CompetitveBadge badge)
         {
-            CompetitiveRankBadge.Transformations.Clear();
-            CompetitiveRankBadge.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            CompetitiveRankBadge.Animations.Clear();
+            CompetitiveRankBadge.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             CompetitiveRankBadge.Image = CompetitiveBadgeHelper.Get(badge);
         }
 
@@ -490,8 +489,8 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         public void UpdateFlag(string countryName)
         {
-            TextCountryRank.Icon.Transformations.Clear();
-            TextCountryRank.Icon.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+            TextCountryRank.Icon.Animations.Clear();
+            TextCountryRank.Icon.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 500));
             TextCountryRank.Icon.Image = Flags.Get(countryName);
         }
 
@@ -558,8 +557,8 @@ namespace Quaver.Graphics.Online.Playercard
                     SetStats();
                     ShowStats();
 
-                    Transformations.Clear();
-                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 154, 150));
+                    Animations.Clear();
+                    Animations.Add(new Animation(AnimationProperty.Height, Easing.OutQuint, Height, 154, 150));
                     break;
                 case ConnectionStatus.Disconnected:
                     FullCard = false;
@@ -569,8 +568,8 @@ namespace Quaver.Graphics.Online.Playercard
 
                     HideStats();
 
-                    Transformations.Clear();
-                    Transformations.Add(new Transformation(TransformationProperty.Height, Easing.EaseOutQuint, Height, 96, 150));
+                    Animations.Clear();
+                    Animations.Add(new Animation(AnimationProperty.Height, Easing.OutQuint, Height, 96, 150));
                     break;
             }
         }

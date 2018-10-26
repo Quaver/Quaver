@@ -2,7 +2,7 @@
 using System.Data;
 using Microsoft.Xna.Framework;
 using Wobble.Graphics;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 
 namespace Quaver.Screens.Menu.UI.Panels
 {
@@ -39,7 +39,7 @@ namespace Quaver.Screens.Menu.UI.Panels
         }
 
         /// <summary>
-        ///     Aligns the panels and adds fade in transformations.
+        ///     Aligns the panels and adds fade in Animations.
         /// </summary>
         private void InitializePanels()
         {
@@ -51,11 +51,11 @@ namespace Quaver.Screens.Menu.UI.Panels
                 panel.Alignment = Alignment.MidLeft;
                 panel.Y = 30;
 
-                panel.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 0,
+                panel.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, 0,
                     StartingX + i * panel.Width + i * 10, 600 + 100 * i));
 
-                panel.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha,
-                    Easing.EaseOutQuint, 0, 1, 500 + 100 * i));
+                panel.Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha,
+                    Easing.OutQuint, 0, 1, 500 + 100 * i));
             }
         }
 

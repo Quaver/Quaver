@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Skinning;
@@ -46,6 +46,10 @@ namespace Quaver.Screens.Gameplay.UI.Counter
                 // Change the color to its active one.
                 Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[Judgement];
 
+                SpriteText.Text = value == 0
+                    ? JudgementHelper.JudgementToShortName(Judgement)
+                    : JudgementCount.ToString();
+
                 // Don't animate it if the user doesn't want to.
                 if (!ConfigManager.AnimateJudgementCounter.Value)
                     return;
@@ -54,6 +58,8 @@ namespace Quaver.Screens.Gameplay.UI.Counter
                 Width = JudgementCounter.DisplayItemSize.Y - JudgementCounter.DisplayItemSize.Y / 4;
                 Height = Width;
                 X = -JudgementCounter.DisplayItemSize.Y / 16;
+
+
             }
         }
 
@@ -82,12 +88,11 @@ namespace Quaver.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
 
-            SpriteText = new SpriteText(Fonts.Exo2Regular24, JudgementHelper.JudgementToShortName(j))
+            SpriteText = new SpriteText(BitmapFonts.Exo2SemiBold, JudgementHelper.JudgementToShortName(j), 10)
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                TextColor = Color.Black,
-                TextScale = 0.45f,
+                Tint = Color.Black,
                 X = 0,
             };
 

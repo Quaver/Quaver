@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Wobble;
 using Wobble.Graphics;
@@ -51,12 +51,11 @@ namespace Quaver.Screens.Edit.UI
                 Alignment = Alignment.MidLeft
             };
 
-            TextProgressPercent = new SpriteText(Fonts.Exo2Regular24, "")
+            TextProgressPercent = new SpriteText(BitmapFonts.Exo2Regular, "", 18)
             {
-                TextColor = Color.White,
+                Tint = Color.White,
                 Parent = Progress,
                 TextAlignment = Alignment.MidCenter,
-                TextScale = 0.65f
             };
 
             switch (Axis)

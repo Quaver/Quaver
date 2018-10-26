@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Notifications
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="image"></param>
         /// <param name="text"></param>
@@ -81,14 +81,12 @@ namespace Quaver.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteText(Fonts.AllerRegular16, text, new ScalableVector2(Width - Avatar.Width, Container.Height))
+            Content = new SpriteText(BitmapFonts.Exo2SemiBold, text, 12, true, (int) (Width - Avatar.Width - 5))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                Style = TextStyle.OverflowMultiLine,
-                TextScale = 0.70f,
-                X = Avatar.X + Avatar.Width + 10,
+                X = Avatar.X + Avatar.Width + 5,
                 Y = 10
             };
 
