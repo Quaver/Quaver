@@ -264,14 +264,14 @@ namespace Quaver.Online.Chat
         /// <param name="e"></param>
         public static void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
-            // Add the message to the appropriate channel.
-            Console.WriteLine(e.Message.SenderName);
-
             // Don't handle messages from non-online users. We should never get this since the packets are in order.
             if (!OnlineManager.OnlineUsers.ContainsKey(e.Message.SenderId))
                 return;
 
             e.Message.Sender = OnlineManager.OnlineUsers[e.Message.SenderId];
+
+            if (e.Message.Sender== OnlineManager.Self)
+                return;
 
             // Determine if the channel is a private chat or not.
             var isPrivate = !e.Message.Channel.StartsWith("#");
