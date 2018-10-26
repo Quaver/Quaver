@@ -34,8 +34,7 @@ namespace Quaver.Scheduling
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
-                                                                  "your runtime.log file to a developer.");
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Check runtime.log!");
             }
         });
 
@@ -56,8 +55,7 @@ namespace Quaver.Scheduling
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
-                                                                  "your runtime.log file to a developer.");
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Check runtime.log!");
             }
         });
     }
