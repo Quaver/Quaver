@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
-using Quaver.Screens.Connecting.UI;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
@@ -53,31 +52,38 @@ namespace Quaver.Graphics.Online.Username
                 Size = new ScalableVector2(WindowManager.Width, 200),
                 Alignment = Alignment.MidCenter,
                 Tint = Color.Black,
-                Alpha = 0.85f
+                Alpha = 0.95f
             };
 
-            Header = new SpriteText(BitmapFonts.Exo2SemiBoldItalic, "Create Username", 24)
+            var line = new Sprite()
+            {
+                Parent = ContainingBox,
+                Size = new ScalableVector2(ContainingBox.Width, 1),
+                Tint = Colors.MainAccent
+            };
+
+            Header = new SpriteText(BitmapFonts.Exo2SemiBoldItalic, "Create Username", 20)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
                 Y = 25
             };
 
-            TextContent = new SpriteText(BitmapFonts.Exo2Regular,
-                "Usernames must be between 3 to 15 characters and may only contain", 14)
+            TextContent = new SpriteText(BitmapFonts.Exo2Medium,
+                "Usernames must be between 3 to 15 characters and may only contain", 13)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
-                Y = Header.Y + 25,
+                Y = Header.Y + Header.Height + 5
             };
 
 
-            TextContent2 = new SpriteText(BitmapFonts.Exo2Regular,
-                "letters (A-Z), numbers (0-9), hyphens (-), and spaces.", 14)
+            TextContent2 = new SpriteText(BitmapFonts.Exo2Medium,
+                "letters (A-Z), numbers (0-9), hyphens (-), and spaces.", 13)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
-                Y = TextContent.Y + 10,
+                Y = TextContent.Y + TextContent.Height + 5
             };
 
 
