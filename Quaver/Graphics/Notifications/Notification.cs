@@ -81,12 +81,12 @@ namespace Quaver.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteText(BitmapFonts.Exo2Regular, text, 16, true, (int) Width - 5)
+            Content = new SpriteText(BitmapFonts.Exo2SemiBold, text, 12, true, (int) (Width - Avatar.Width - 5))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                X = Avatar.X + Avatar.Width + 10,
+                X = Avatar.X + Avatar.Width + 5,
                 Y = 10
             };
 
