@@ -22,6 +22,7 @@ using Quaver.Screens.Menu.UI.Tips;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select;
+using Quaver.Screens.SongSelect;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Discord.RPC;
@@ -344,7 +345,7 @@ namespace Quaver.Screens.Menu
                 return;
             }
 
-            QuaverScreenManager.ChangeScreen(new SelectScreen());
+            QuaverScreenManager.ChangeScreen(new SongSelectScreen());
         }
 
         /// <summary>

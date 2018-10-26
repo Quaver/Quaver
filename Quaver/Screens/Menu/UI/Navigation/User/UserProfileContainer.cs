@@ -6,13 +6,16 @@ using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Scheduling;
+using Quaver.Screens.SongSelect;
 using Quaver.Server.Client;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Menu.UI.Navigation.User
 {
@@ -21,7 +24,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// <summary>
         ///     Reference to the parent menu screern view.
         /// </summary>
-        private MenuScreenView View { get; }
+        private ScreenView View { get; }
 
         /// <summary>
         ///     The original width of the profile container.
@@ -69,7 +72,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// <summary>
         /// </summary>
         /// <param name="view"></param>
-        public UserProfileContainer(MenuScreenView view) : base(new ScalableVector2(OriginalWidth, 0),
+        public UserProfileContainer(ScreenView view) : base(new ScalableVector2(OriginalWidth, 0),
             new ScalableVector2(OriginalWidth, OriginalHeight))
         {
             View = view;
@@ -78,7 +81,15 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
             Alpha = 0.80f;
             Scrollbar.Visible = false;
 
-            NavbarButton = View.Navbar.RightAlignedItems.First() as NavbarItemUser;
+            switch (View)
+            {
+                case MenuScreenView menuView:
+                    NavbarButton = menuView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
+                    break;
+                case SongSelectScreenView selectView:
+                    NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
+                    break;
+            }
 
             if (NavbarButton == null)
                 throw new InvalidOperationException("Tried to get NavbarItemUser, but it's null!");
