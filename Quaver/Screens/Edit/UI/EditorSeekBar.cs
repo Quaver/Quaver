@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Wobble;
 using Wobble.Graphics;

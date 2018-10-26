@@ -1,4 +1,4 @@
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;

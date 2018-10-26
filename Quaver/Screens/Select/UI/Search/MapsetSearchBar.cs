@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -118,7 +118,7 @@ namespace Quaver.Screens.Select.UI.Search
             {
                 Parent = SearchBox,
                 Alignment = Alignment.MidRight,
-                Image = FontAwesome.Search,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
                 Size = new ScalableVector2(SearchBox.Height * 0.50f, SearchBox.Height * 0.50f),
                 Tint = Color.White,
                 X = -10

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble;

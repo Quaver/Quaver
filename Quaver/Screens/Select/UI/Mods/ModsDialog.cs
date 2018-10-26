@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
@@ -156,7 +156,7 @@ namespace Quaver.Screens.Select.UI.Mods
                 Parent = SceneHeaderBackground,
                 Size = new ScalableVector2(50, 50),
                 X = 25,
-                Image = FontAwesome.ArrowCircle,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_right_arrow_in_a_circle),
                 Alignment = Alignment.MidLeft
             };
 

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Helpers;
 using Quaver.Online.Chat;
 using Wobble.Graphics;
@@ -120,7 +120,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
                 Alignment = Alignment.MidLeft,
                 X = 25,
                 Size = new ScalableVector2(HeaderContainer.Height * 0.50f, HeaderContainer.Height * 0.50f),
-                Image = FontAwesome.Group,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users),
             };
 
             var chatChannels = new SpriteText(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 14)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
@@ -127,7 +127,7 @@ namespace Quaver.Screens.Edit
             var snaps = new List<string> { "1/1", "1/2", "1/3", "1/4", "1/6", "1/8", "1/12", "1/16", "1/32", "1/48" };
 
             BeatSnapSelector = new HorizontalSelector(snaps, new ScalableVector2(200, 30), BitmapFonts.Exo2Regular, 18,
-                                                    FontAwesome.ChevronSignLeft, FontAwesome.ChevronSignRight,
+                                                    FontAwesome.Get(FontAwesomeIcon.fa_chevron_sign_left), FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
                                                     new ScalableVector2(30, 30), 10, (item, index) =>
                 {
                     var screen = (EditorScreen) Screen;

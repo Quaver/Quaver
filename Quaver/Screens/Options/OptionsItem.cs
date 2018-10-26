@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Skinning;

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Server.Common.Enums;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
@@ -77,15 +77,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         public static Texture2D GetIcon(UserGroups groups)
         {
             if (groups.HasFlag(UserGroups.Developer))
-                return FontAwesome.Code;
+                return FontAwesome.Get(FontAwesomeIcon.fa_code);
 
             // Bot
             if (groups.HasFlag(UserGroups.Bot))
-                return FontAwesome.Wrench;
+                return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
 
             // Admin
             if (groups.HasFlag(UserGroups.Admin))
-                return FontAwesome.Gavel;
+                return FontAwesome.Get(FontAwesomeIcon.fa_legal_hammer);
 
             return null;
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -364,7 +364,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateNextSongButton()
         {
-            NextButton = new JukeboxButton(FontAwesome.StepForward)
+            NextButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -385,7 +385,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePauseResumeButton()
         {
-            PauseResumeButton = new JukeboxButton(FontAwesome.Pause)
+            PauseResumeButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -403,13 +403,13 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                 if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
                 {
                     AudioEngine.Track.Play();
-                    PauseResumeButton.Image = FontAwesome.Pause;
+                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
                     ChangeDiscordPresenceToSongTitle();
                 }
                 else
                 {
                     AudioEngine.Track.Pause();
-                    PauseResumeButton.Image = FontAwesome.Play;
+                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_play_button);
                     ChangeDiscordPresenceToIdle();
                 }
             };
@@ -420,7 +420,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateRestartButton()
         {
-            RestartButton = new JukeboxButton(FontAwesome.Undo)
+            RestartButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -449,7 +449,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePreviousSongButton()
         {
-            PreviousButton = new JukeboxButton(FontAwesome.StepBackward)
+            PreviousButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

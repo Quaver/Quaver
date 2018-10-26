@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Point = System.Drawing.Point;

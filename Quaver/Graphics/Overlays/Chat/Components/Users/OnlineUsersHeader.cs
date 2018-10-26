@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Server.Client.Handlers;
 using Wobble.Graphics;

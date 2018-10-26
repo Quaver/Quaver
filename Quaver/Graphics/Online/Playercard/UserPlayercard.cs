@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using osu_database_reader;
 using Quaver.API.Enums;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Online;
@@ -178,10 +178,10 @@ namespace Quaver.Graphics.Online.Playercard
                 switch (GameMode)
                 {
                     case GameMode.Keys4:
-                        TextGlobalRank.Icon.Image = FontAwesome.Comments;
+                        TextGlobalRank.Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_comments);
                         break;
                     case GameMode.Keys7:
-                        TextGlobalRank.Icon.Image = FontAwesome.ArrowLeft;
+                        TextGlobalRank.Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_left_arrow);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -245,7 +245,7 @@ namespace Quaver.Graphics.Online.Playercard
             Tint = Colors.DarkGray;
 
             Size = new ScalableVector2(426, FullCard ? 154 : 96);
-            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Textures/UI/Playercard/playercard-bg.png"));
+            Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Quaver.Resources/Textures/UI/Playercard/playercard-bg.png"));
 
             CreateTitle();
             CreateAvatar();
@@ -392,7 +392,7 @@ namespace Quaver.Graphics.Online.Playercard
         /// </summary>
         private void CreateStats(bool isVisible)
         {
-            TextOverallRating = new IconedText(FontAwesome.BarGraph, "00.00")
+            TextOverallRating = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_bar_graph_on_a_rectangle), "00.00")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -411,7 +411,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextGlobalRank = new IconedText(FontAwesome.Desktop, "#9,999,999")
+            TextGlobalRank = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), "#9,999,999")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -421,7 +421,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextOverallAccuracy = new IconedText(FontAwesome.Clock, "100.00%")
+            TextOverallAccuracy = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_time), "100.00%")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -430,7 +430,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextPlayCount = new IconedText(FontAwesome.GamePad, "1,000,000")
+            TextPlayCount = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "1,000,000")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -440,7 +440,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextCompetitiveMatchesWon = new IconedText(FontAwesome.Trophy, "1,000,000")
+            TextCompetitiveMatchesWon = new IconedText(FontAwesome.Get(FontAwesomeIcon.fa_trophy), "1,000,000")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

@@ -4,7 +4,7 @@ using System.Linq;
 using Amib.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Scheduling;

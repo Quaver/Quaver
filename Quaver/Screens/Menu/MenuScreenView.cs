@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -214,7 +214,7 @@ namespace Quaver.Screens.Menu
             const int targetY = -5;
             const int animationTime = 1100;
 
-            PowerButton = new ToolButton(FontAwesome.PowerOff, (o, e) => DialogManager.Show(new QuitDialog()))
+            PowerButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), (o, e) => DialogManager.Show(new QuitDialog()))
             {
                 Alignment = Alignment.BotRight,
             };
@@ -228,7 +228,7 @@ namespace Quaver.Screens.Menu
             MiddleContainer.AddContainedDrawable(PowerButton);
 
             // Create settings button
-            SettingsButton = new ToolButton(FontAwesome.Cog, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
+            SettingsButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), (o, e) => DialogManager.Show(new OptionsDialog(0.75f)))
             {
                 Parent = MiddleContainer,
                 Alignment = Alignment.BotRight,

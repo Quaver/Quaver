@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Quaver.Helpers;
 using Wobble.Bindables;

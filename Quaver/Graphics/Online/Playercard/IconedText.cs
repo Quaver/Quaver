@@ -1,6 +1,6 @@
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;

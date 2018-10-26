@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -96,7 +96,7 @@ namespace Quaver.Screens.Results.UI.ScoreResults
                     Parent = parent,
                     Size = new ScalableVector2(20, 20),
                     Position = new ScalableVector2(posX - 13, TitleText.Y + TitleText.Height + 17),
-                    Image = FontAwesome.Spinner
+                    Image = FontAwesome.Get(FontAwesomeIcon.fa_spinner_of_dots)
                 };
             }
 

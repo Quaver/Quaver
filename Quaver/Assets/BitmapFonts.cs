@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Resources;
+using Wobble;
 using Wobble.Graphics.BitmapFonts;
 
-namespace Quaver.Assets
+namespace Quaver.Resources
 {
     public static class BitmapFonts
     {
@@ -27,17 +27,17 @@ namespace Quaver.Assets
         /// </summary>
         public static void Load()
         {
-            BitmapFontFactory.AddFont(Exo2Bold, QuaverResources.exo2_bold);
-            BitmapFontFactory.AddFont(Exo2BoldItalic, QuaverResources.exo2_bolditalic);
-            BitmapFontFactory.AddFont(Exo2Italic, QuaverResources.exo2_italic);
-            BitmapFontFactory.AddFont(Exo2Light, QuaverResources.exo2_light);
-            BitmapFontFactory.AddFont(Exo2Medium, QuaverResources.exo2_medium);
-            BitmapFontFactory.AddFont(Exo2MediumItalic, QuaverResources.exo2_mediumitalic);
-            BitmapFontFactory.AddFont(Exo2Regular, QuaverResources.exo2_regular);
-            BitmapFontFactory.AddFont(Exo2SemiBold, QuaverResources.exo2_semibold);
-            BitmapFontFactory.AddFont(Exo2SemiBoldItalic, QuaverResources.exo2_semibolditalic);
-            BitmapFontFactory.AddFont(Exo2Thin, QuaverResources.exo2_thin);
-            BitmapFontFactory.AddFont(Exo2ThinItalic, QuaverResources.exo2_thinitalic);
+            BitmapFontFactory.AddFont(Exo2Bold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bold.otf"));
+            BitmapFontFactory.AddFont(Exo2BoldItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bolditalic.otf"));
+            BitmapFontFactory.AddFont(Exo2Italic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-italic.otf"));
+            BitmapFontFactory.AddFont(Exo2Light, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-light.otf"));
+            BitmapFontFactory.AddFont(Exo2Medium, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-medium.otf"));
+            BitmapFontFactory.AddFont(Exo2MediumItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-mediumitalic.otf"));
+            BitmapFontFactory.AddFont(Exo2Regular, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-regular.otf"));
+            BitmapFontFactory.AddFont(Exo2SemiBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-semibold.otf"));
+            BitmapFontFactory.AddFont(Exo2SemiBoldItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-semibolditalic.otf"));
+            BitmapFontFactory.AddFont(Exo2Thin, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-thin.otf"));
+            BitmapFontFactory.AddFont(Exo2ThinItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-thinitalic.otf"));
         }
     }
 }

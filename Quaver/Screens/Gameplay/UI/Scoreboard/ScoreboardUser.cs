@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Modifiers;
 using Quaver.Skinning;
 using Wobble;

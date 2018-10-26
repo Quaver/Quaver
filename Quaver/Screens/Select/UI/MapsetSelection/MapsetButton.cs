@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;

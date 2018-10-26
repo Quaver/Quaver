@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Skinning;
 using Wobble;
@@ -78,7 +78,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Alpha = 1,
-                Image = FontAwesome.CaretDown,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_caret_down),
                 Y = -Height - 3,
                 Size = new ScalableVector2(8, 8)
             };

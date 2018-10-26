@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -21,7 +21,6 @@ using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens;
 using Quaver.Screens.Menu;
-using Quaver.Shaders;
 using Quaver.Skinning;
 using Steamworks;
 using Wobble;
@@ -112,12 +111,11 @@ namespace Quaver
             base.LoadContent();
 
             Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
-
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            FontAwesome.Load();
             BitmapFonts.Load();
+            FontAwesome.Load();
             UserInterface.Load();
 
             // Load the user's skin

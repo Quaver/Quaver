@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Quaver.Skinning;
 using Wobble;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -213,7 +213,7 @@ namespace Quaver.Screens.Options
             };
 
 
-            ExitButton = new ImageButton(FontAwesome.Times, (sender, args) => DialogManager.Dismiss())
+            ExitButton = new ImageButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) => DialogManager.Dismiss())
             {
                 Parent = HeaderContainer,
                 Alignment = Alignment.MidRight,
@@ -392,7 +392,7 @@ namespace Quaver.Screens.Options
             }
 
             // Create the option's section
-            return new OptionsSection(this, FontAwesome.Desktop, new List<OptionsItem>
+            return new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), new List<OptionsItem>
             {
                 // Window Resolution
                 new OptionsItem(this, "Resolution", new HorizontalSelector(commonResolutions, new ScalableVector2(50, 10),
@@ -408,21 +408,21 @@ namespace Quaver.Screens.Options
 
                 // Full-screen
                 new OptionsItem(this, "Fullscreen", new Checkbox(ConfigManager.WindowFullScreen, new Vector2(20, 20),
-                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false),
+                        FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false),
                     () =>
                     {
                         GameBase.Game.Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
                     }),
 
                 // Background Brightness
-                new OptionsItem(this, "Background Brightness", new Slider(ConfigManager.BackgroundBrightness, Vector2.One, FontAwesome.CircleClosed)),
+                new OptionsItem(this, "Background Brightness", new Slider(ConfigManager.BackgroundBrightness, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
                 // Background Blur
-                new OptionsItem(this, "Background Blur", new Slider(ConfigManager.BackgroundBlur, Vector2.One, FontAwesome.CircleClosed)),
+                new OptionsItem(this, "Background Blur", new Slider(ConfigManager.BackgroundBlur, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
                 // Display FPS counter.
                 new OptionsItem(this, "Display FPS Counter", new Checkbox(ConfigManager.FpsCounter, new Vector2(20, 20),
-                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+                        FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), () => {}),
             }, true);
         }
 
@@ -430,22 +430,23 @@ namespace Quaver.Screens.Options
         ///     Creates the audio section of the options menu.
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Volume, new List<OptionsItem>()
+        private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol),
+            new List<OptionsItem>()
         {
-            new OptionsItem(this, "Master Volume", new Slider(ConfigManager.VolumeGlobal, Vector2.One, FontAwesome.CircleClosed)),
-            new OptionsItem(this, "Music Volume", new Slider(ConfigManager.VolumeMusic, Vector2.One, FontAwesome.CircleClosed)),
-            new OptionsItem(this, "Effect Volume", new Slider(ConfigManager.VolumeEffect, Vector2.One, FontAwesome.CircleClosed)),
+            new OptionsItem(this, "Master Volume", new Slider(ConfigManager.VolumeGlobal, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
+            new OptionsItem(this, "Music Volume", new Slider(ConfigManager.VolumeMusic, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
+            new OptionsItem(this, "Effect Volume", new Slider(ConfigManager.VolumeEffect, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
             // Pitch Audio w/ Rate.
             new OptionsItem(this, "Pitch Audio With Rate", new Checkbox(ConfigManager.Pitched, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), () => {}),
         });
 
         /// <summary>
         ///     Creates the misc section of the options menu
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Question, new List<OptionsItem>()
+        private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsItem>()
         {
             // Select osu!.db file
             /*new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
@@ -472,7 +473,7 @@ namespace Quaver.Screens.Options
 
             // Load osu! beatmaps, although we can't use osu! as actual text because... trademark :thumbsup:
             new OptionsItem(this, "Load peppy! beatmaps", new Checkbox(ConfigManager.AutoLoadOsuBeatmaps, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
 
             // Select Etterna Cache Folder
             /*new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
@@ -490,7 +491,7 @@ namespace Quaver.Screens.Options
 
             // Load charts from etterna.
             new OptionsItem(this, "Load Etterna Charts", new Checkbox(ConfigManager.AutoLoadEtternaCharts, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
         });
 
         /// <summary>
@@ -499,7 +500,7 @@ namespace Quaver.Screens.Options
         /// <returns></returns>
         private OptionsSection CreateGameplaySection() =>
             // Create section
-            new OptionsSection(this, FontAwesome.GamePad, new List<OptionsItem>()
+            new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsItem>()
             {
                 // Custom skin selection
                 CreateCustomSkinSelectionItem(),
@@ -517,27 +518,27 @@ namespace Quaver.Screens.Options
 
                     ConfigManager.Skin.Value = "";
                     SkinManager.Load();
-                }), new Vector2(20, 20), FontAwesome.CircleClosed, FontAwesome.CircleOpen, true)),
+                }), new Vector2(20, 20), FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), true)),
 
                 // DownScroll 4K
                 new OptionsItem(this, "Notes Scroll Down - 4K", new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // DownScroll 7K
                 new OptionsItem(this, "Notes Scroll Down - 7K", new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Song Time Progress
                 new OptionsItem(this, "Display Song Time Progress", new Checkbox(ConfigManager.DisplaySongTimeProgress, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Anim Judge Counter
                 new OptionsItem(this, "Animate Judgement Counter", new Checkbox(ConfigManager.AnimateJudgementCounter, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Bots Enabled
                 new OptionsItem(this, "Bots Enabled", new Checkbox(ConfigManager.BotsEnabled, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
             });
 
         /// <summary>
@@ -608,7 +609,7 @@ namespace Quaver.Screens.Options
         ///    Creates the keybinds section of the option's menu.
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateKeybindSection() => new OptionsSection(this, FontAwesome.Keyboard, new List<OptionsItem>
+        private OptionsSection CreateKeybindSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsItem>
         {
             // 4K
             new OptionsItem(this, "4K Layout", new TextButton(UserInterface.BlankBox,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Chat;
