@@ -5,6 +5,7 @@ using Quaver.Online.Chat;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Navigation.User;
+using Quaver.Screens.Menu.UI.Visualizer;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Primitives;
@@ -28,7 +29,12 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     The user's profile when the click on their name in the navbar.
         /// </summary>
-        public UserProfileContainer UserProfile { get; set; }
+        public UserProfileContainer UserProfile { get; private set; }
+
+        /// <summary>
+        ///     Audio visualizer at the bottom of the screen.
+        /// </summary>
+        public MenuAudioVisualizer Visualizer { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -39,6 +45,7 @@ namespace Quaver.Screens.SongSelect
             CreateNavbar();
             CreateBottomLine();
             CreateUserProfile();
+            CreateAudioVisualizer();
         }
 
         /// <inheritdoc />
@@ -107,6 +114,15 @@ namespace Quaver.Screens.SongSelect
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + Navbar.Line.Thickness,
             X = -64
+        };
+
+        /// <summary>
+        ///     Creates the audio visaulizer container for the screen
+        /// </summary>12
+        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+        {
+            Parent = Container,
+            Alignment = Alignment.BotLeft
         };
     }
 }
