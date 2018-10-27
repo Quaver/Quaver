@@ -316,7 +316,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         private void CreateSongTimeProgressBar()
         {
             SongTimeProgressBar = new ProgressBar(new Vector2(SongTitleContainer.Width, SongTitleContainer.Height - 4), 0,
-                AudioEngine.Track != null ? AudioEngine.Track.Length : int.MaxValue, 0, Color.Transparent, Colors.MainAccent)
+                AudioEngine.Track != null && !AudioEngine.Track.IsDisposed ? AudioEngine.Track.Length : int.MaxValue, 0, Color.Transparent, Colors.MainAccent)
             {
                 Alignment = Alignment.MidLeft,
                 ActiveBar =
