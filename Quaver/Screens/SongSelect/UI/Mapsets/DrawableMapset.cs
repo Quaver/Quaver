@@ -7,6 +7,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Resources;
 using Quaver.Scheduling;
+using Quaver.Screens.Loading;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -196,17 +197,21 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         }
 
         /// <summary>
-        ///     Fires the click event for this mapset.
-        /// </summary>
-        public void FireClickEvent() => OnClicked(null, EventArgs.Empty);
-
-        /// <summary>
         ///     Called when the button is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnClicked(object sender, EventArgs e)
         {
+            // If the user clicks on the mapset again while its already selected, then we can
+            // assume they want to play the map.
+            if (Container.SelectedMapsetIndex == MapsetIndex)
+            {
+                // TODO: Scores.
+                QuaverScreenManager.ChangeScreen(new MapLoadingScreen(null));
+                return;
+            }
+
             var map = Mapset.PreferredMap ?? Mapset.Maps.First();
             Container.SelectMap(MapsetIndex, map);
         }
