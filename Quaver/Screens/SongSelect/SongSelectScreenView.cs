@@ -9,6 +9,7 @@ using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.SongSelect.UI;
+using Quaver.Screens.SongSelect.UI.Banner;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Wobble;
 using Wobble.Graphics;
@@ -46,6 +47,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public MapsetScrollContainer MapsetScrollContainer { get; private set; }
 
+        /// <summary>
+        ///     The banner that displays some map information.
+        /// </summary>
+        public SelectMapBanner Banner { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -56,6 +62,7 @@ namespace Quaver.Screens.SongSelect
             CreateBottomLine();
             CreateAudioVisualizer();
             CreateMapsetScrollContainer();
+            CreateMapBanner();
 
             CreateUserProfile();
         }
@@ -162,6 +169,22 @@ namespace Quaver.Screens.SongSelect
 
             MapsetScrollContainer.X = MapsetScrollContainer.Width;
             MapsetScrollContainer.MoveToX(-64, Easing.OutBounce, 1200);
+        }
+
+        /// <summary>
+        ///     Creates the sprite that displays the map banner.
+        /// </summary>
+        private void CreateMapBanner()
+        {
+            Banner = new SelectMapBanner(this)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(0, Navbar.Line.Y + 20),
+            };
+
+            Banner.X = -Banner.Width;
+            Banner.MoveToX(64, Easing.OutQuint, 900);
         }
     }
 }
