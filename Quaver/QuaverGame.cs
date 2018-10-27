@@ -118,6 +118,8 @@ namespace Quaver
             FontAwesome.Load();
             UserInterface.Load();
 
+            BackgroundHelper.Initialize();
+
             // Load the user's skin
             SkinManager.Load();
 
@@ -162,7 +164,9 @@ namespace Quaver
 
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
+
             BackgroundManager.Update(gameTime);
+            BackgroundHelper.Update(gameTime);
             NotificationManager.Update(gameTime);
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
