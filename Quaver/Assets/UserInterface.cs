@@ -32,6 +32,7 @@ namespace Quaver.Resources
         public static Texture2D ThumbnailCompetitive { get; private set; }
         public static Texture2D ThumbnailCustomGames { get; private set; }
         public static Texture2D ThumbnailEditor { get; private set; }
+        public static Texture2D PlaycardBackground { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -58,6 +59,7 @@ namespace Quaver.Resources
             ThumbnailCompetitive = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-competitive.jpg"));
             ThumbnailCustomGames = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-custom-games.jpg"));
             ThumbnailEditor = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-editor.jpg"));
+            PlaycardBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-bg.png"));
         }
     }
 }

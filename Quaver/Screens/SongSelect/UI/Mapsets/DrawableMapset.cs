@@ -72,7 +72,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             Container = container;
             Size = new ScalableVector2(414, HEIGHT);
-            Tint = Color.Black;
+            Tint = Colors.MainAccentInactive;
+            Alpha = 0.85f;
+            Image = UserInterface.PlaycardBackground;
             AddBorder(Color.White, 2);
 
             Thumbnail = new Sprite()
@@ -153,7 +155,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Creator.MoveToX(targetX, Easing.OutQuint, 400);
 
                 Border.Animations.Clear();
-                Border.FadeToColor(Colors.MainAccent, Easing.Linear, 200);
+                Border.FadeToColor(Color.Gold, Easing.Linear, 200);
+                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 1, 400));
             }
 
             LoadThumbnail(map);
@@ -187,6 +190,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
                 Border.Animations.Clear();
                 Border.FadeToColor(Color.White, Easing.Linear, 200);
+                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 0.85f, 400));
 
                 Thumbnail.Animations.Clear();
                 Thumbnail.Alpha = 0;
