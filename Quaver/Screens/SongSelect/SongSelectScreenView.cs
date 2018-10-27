@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Online.Chat;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Screens.Menu.UI.Visualizer;
+using Quaver.Screens.SongSelect.UI;
+using Quaver.Screens.SongSelect.UI.Mapsets;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Screens;
 using Wobble.Window;
@@ -36,6 +41,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public MenuAudioVisualizer Visualizer { get; private set; }
 
+        /// <summary>
+        ///     Allows scrolling for different mapsets.
+        /// </summary>
+        public MapsetScrollContainer MapsetScrollContainer { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -44,8 +54,10 @@ namespace Quaver.Screens.SongSelect
         {
             CreateNavbar();
             CreateBottomLine();
-            CreateUserProfile();
             CreateAudioVisualizer();
+            CreateMapsetScrollContainer();
+
+            CreateUserProfile();
         }
 
         /// <inheritdoc />
@@ -60,7 +72,9 @@ namespace Quaver.Screens.SongSelect
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(Color.CornflowerBlue);
+            GameBase.Game.GraphicsDevice.Clear(Color.Black);
+
+            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 
@@ -119,10 +133,35 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Creates the audio visaulizer container for the screen
         /// </summary>12
-        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+        private void CreateAudioVisualizer()
         {
-            Parent = Container,
-            Alignment = Alignment.BotLeft
-        };
+            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft
+            };
+
+            Visualizer.Bars.ForEach(x =>
+            {
+                x.Tint = Colors.MainAccent;
+                x.Alpha = 0.50f;
+            });
+        }
+
+        /// <summary>
+        ///     Creates the container to scroll for different mapsets.
+        /// </summary>
+        private void CreateMapsetScrollContainer()
+        {
+            MapsetScrollContainer = new MapsetScrollContainer(this)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = Navbar.Line.Y + 2,
+            };
+
+            MapsetScrollContainer.X = MapsetScrollContainer.Width;
+            MapsetScrollContainer.MoveToX(-64, Easing.OutBounce, 1200);
+        }
     }
 }
