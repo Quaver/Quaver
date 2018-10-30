@@ -122,7 +122,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Info = info;
             InitializeSprites(info, ruleset);
-            InitializeObject(info, ruleset);
+            InitializeObject(info, ruleset, manager);
         }
 
         public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
@@ -178,7 +178,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         /// </summary>
         /// <param name="playfield"></param>
-        public void InitializeObject(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        public void InitializeObject(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
             // Update Hit Object State
             Info = info;

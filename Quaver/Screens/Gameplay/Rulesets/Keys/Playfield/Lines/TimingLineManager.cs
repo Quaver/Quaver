@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
+using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
 {
@@ -16,7 +17,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private Queue<TimingLineInfo> Info { get; set; }
 
         /// <summary>
-        ///     Reference to the ruleset this HitObject manager is for.
+        ///     Reference to the HitObjectManager
+        /// </summary>
+        public HitObjectManagerKeys HitObjectManager { get; }
+
+        /// <summary>
+        ///     Reference to the current Ruleset
         /// </summary>
         public GameplayRulesetKeys Ruleset { get; }
 
@@ -49,6 +55,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public TimingLineManager(GameplayRuleset ruleset)
         {
             Ruleset = (GameplayRulesetKeys)ruleset;
+            HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -67,7 +74,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
 
             // Create first Timing Line Info
-            var offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
+            var offset = HitObjectManager.GetPositionFromTime(songPos);
             Info.Enqueue(new TimingLineInfo(songPos, offset));
 
             // Generate Timing Lines
@@ -87,7 +94,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 }
 
                 // Create Timing Line Info
-                offset = Ruleset.Screen.TrackManager.GetPositionFromTime(songPos);
+                offset = HitObjectManager.GetPositionFromTime(songPos);
                 Info.Enqueue(new TimingLineInfo(songPos, offset));
             }
         }
@@ -100,7 +107,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Pool = new Queue<TimingLine>();
             while (Info.Count > 0)
             {
-                if (Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
+                if (Info.Peek().TrackOffset - HitObjectManager.Position < CreateObjectPosition)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
@@ -114,7 +121,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         {
             // Update line positions
             foreach (var line in Pool)
-                line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
+                line.UpdateSpritePosition(HitObjectManager.Position);
 
             // Recycle necessary pool objects
             while (Pool.Count > 0 && Pool.Peek().TrackOffset <= RecycleObjectPosition)
@@ -123,13 +130,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 if (Info.Count > 0)
                 {
                     line.Info = Info.Dequeue();
-                    line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
+                    line.UpdateSpritePosition(HitObjectManager.Position);
                     Pool.Enqueue(line);
                 }
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && Info.Peek().TrackOffset - Ruleset.Screen.TrackManager.Position < CreateObjectPosition)
+            while (Info.Count > 0 && Info.Peek().TrackOffset - HitObjectManager.Position < CreateObjectPosition)
                 CreatePoolObject(Info.Dequeue());
         }
 
@@ -140,7 +147,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private void CreatePoolObject(TimingLineInfo info)
         {
             var line = new TimingLine(Ruleset, info);
-            line.UpdateSpritePosition(Ruleset.Screen.TrackManager.Position);
+            line.UpdateSpritePosition(HitObjectManager.Position);
             Pool.Enqueue(line);
         }
     }
