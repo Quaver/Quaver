@@ -117,7 +117,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
+        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager) : base(info)
         {
             Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Info = info;
@@ -184,7 +184,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             Info = info;
             HitObjectSprite.Tint = Color.White;
             IsLongNote = info.EndTime > 0;
-            TrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.StartTime);
+            TrackPosition = manager.GetPositionFromTime(info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
 
@@ -201,13 +201,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White;
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-                LongNoteTrackPosition = ruleset.Screen.TrackManager.GetPositionFromTime(info.EndTime);
+                LongNoteTrackPosition = manager.GetPositionFromTime(info.EndTime);
                 InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            UpdateSpritePositions(ruleset.Screen.TrackManager.Position);
+            UpdateSpritePositions(manager.Position);
         }
 
         /// <inheritdoc />
