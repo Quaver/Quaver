@@ -164,11 +164,15 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Ruleset = ruleset;
             GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
-            InitializeInfoPool(map);
-            InitializeObjectPool();
+
+            // Initialize SV
             InitializeScrollVelocities(map);
             InitializePositionMarkers();
             UpdateCurrentPosition();
+
+            // Initialize Object Pool
+            InitializeInfoPool(map);
+            InitializeObjectPool();
         }
 
         /// <summary>
