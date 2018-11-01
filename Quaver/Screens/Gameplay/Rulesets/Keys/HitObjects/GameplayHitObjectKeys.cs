@@ -23,11 +23,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
     public class GameplayHitObjectKeys : GameplayHitObject
     {
         /// <summary>
-        ///     Reference to the actual playfield.
-        /// </summary>
-        private GameplayPlayfieldKeys Playfield { get; set; }
-
-        /// <summary>
         ///     Is determined by whether the player is holding the key that this hit object is binded to
         /// </summary>
         public bool CurrentlyBeingHeld { get; set; }
@@ -119,7 +114,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
         {
-            Playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             Info = info;
             InitializeSprites(info, ruleset);
             InitializeObject(info, ruleset, (HitObjectManagerKeys)ruleset.HitObjectManager);
@@ -128,7 +122,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
         {
             // Reference variables
-            var posX = Playfield.Stage.Receptors[info.Lane - 1].X;
+            var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+            var posX = playfield.Stage.Receptors[info.Lane - 1].X;
             var lane = info.Lane - 1;
 
             // Create the base HitObjectSprite
@@ -141,7 +136,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Update hit body's size to match image ratio
-            HitObjectSprite.Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
             // Create Hold Body
@@ -149,9 +144,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(Playfield.LaneSize, 0),
+                Size = new ScalableVector2(playfield.LaneSize, 0),
                 Position = new ScalableVector2(posX, 0),
-                Parent = Playfield.Stage.HitObjectContainer
+                Parent = playfield.Stage.HitObjectContainer
             };
 
             // Create the Hold End
@@ -159,19 +154,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                Size = new ScalableVector2(Playfield.LaneSize, 0),
-                Parent = Playfield.Stage.HitObjectContainer,
+                Size = new ScalableVector2(playfield.LaneSize, 0),
+                Parent = playfield.Stage.HitObjectContainer,
                 SpriteEffect = Effects
             };
 
             // Set long note end properties.
             LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
-            LongNoteEndSprite.Height = Playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndSprite.Height = playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = Playfield.Stage.HitObjectContainer;
+            HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
         }
 
         /// <inheritdoc />
