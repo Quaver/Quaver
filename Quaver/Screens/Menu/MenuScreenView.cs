@@ -175,7 +175,7 @@ namespace Quaver.Screens.Menu
             BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(64, WindowManager.Height - 64),
+                Position = new ScalableVector2(64, WindowManager.Height - 54),
                 Alpha = 0.90f
             };
 

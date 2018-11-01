@@ -93,15 +93,15 @@ namespace Quaver.Screens.SongSelect.UI.Banner
 
                 if (i == 0)
                 {
-                    metadata.X = 10;
+                    metadata.X = 5;
                     continue;
                 }
 
                 var previous = Items[i - 1];
-                metadata.X = previous.X + previous.Width + 10 + 10;
+                metadata.X = previous.X + previous.Width + 5 + 5;
             }
 
-            Items.ForEach(x => x.X += (Banner.Width - Items.Last().X) / Items.Count - 10);
+            Items.ForEach(x => x.X += (Banner.Width - Items.Last().X) / Items.Count / 2);
         }
     }
 }

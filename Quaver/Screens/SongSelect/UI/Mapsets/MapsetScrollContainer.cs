@@ -73,8 +73,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         /// <param name="view"></param>
         public MapsetScrollContainer(SongSelectScreenView view) : base(
-            new ScalableVector2(515, WindowManager.Height - 64 * 2 - 2),
-            new ScalableVector2(515, WindowManager.Height - 64 * 2 - 2))
+            new ScalableVector2(515, WindowManager.Height - 54 * 2 - 2),
+            new ScalableVector2(515, WindowManager.Height - 54 * 2 - 2))
         {
             View = view;
             OriginalContainerSize = Size;
@@ -122,12 +122,12 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <summary>
         ///     Selects a new select map/mapset.
         /// </summary>
-        public void SelectMap(int mapsetIndex, Map map)
+        public void SelectMap(int mapsetIndex, Map map, bool forceSelect = false)
         {
             var currentMapsetIndex = SelectedMapsetIndex;
 
             // Check if the same mapset is being selected.
-            if (currentMapsetIndex == mapsetIndex)
+            if (currentMapsetIndex == mapsetIndex && !forceSelect)
             {
                 Logger.Debug("Changing to same mapset.", LogType.Runtime);
                 return;
@@ -189,20 +189,77 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         }
 
         /// <summary>
+        ///     Initializes the container with new mapsets.
+        /// </summary>
+        public void InitializeWithNewSets()
+        {
+            lock (MapsetBuffer)
+            {
+                // Check if the selected mapset is in the new one.
+                var selectedMapIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+
+                // The currently selected mapset was found.
+                if (selectedMapIndex != -1)
+                {
+                    SelectedMapsetIndex = selectedMapIndex;
+                    SetPoolStartingIndex();
+                    RefreshMapsetBuffer();
+                    return;
+                }
+
+                // The selected mapset does not exist, so let's chooset
+                if (Screen.AvailableMapsets.Count <= 0)
+                    return;
+
+                SelectedMapsetIndex = 0;
+
+                // Determine pool starting index.
+                SetPoolStartingIndex();
+                RefreshMapsetBuffer();
+
+                var mapset = Screen.AvailableMapsets[SelectedMapsetIndex];
+                SelectMap(SelectedMapsetIndex, mapset.PreferredMap ?? mapset.Maps.First(), true);
+            }
+        }
+
+        private void RefreshMapsetBuffer()
+        {
+            for (var i = 0; i < MapsetBuffer.Count; i++)
+            {
+                // Mapset exists, so we can safely update it.
+                if (PoolStartingIndex + i < Screen.AvailableMapsets.Count)
+                {
+                    var mapset = MapsetBuffer[i];
+                    mapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex + i], PoolStartingIndex + i);
+
+                    mapset.Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpacing;
+
+                    if (i == SelectedMapsetIndex)
+                        mapset.DisplayAsSelected(MapManager.Selected.Value);
+
+                    if (mapset.Parent != this)
+                        AddContainedDrawable(mapset);
+                }
+                else
+                {
+                    if (MapsetBuffer[i].Parent == this)
+                        RemoveContainedDrawable(MapsetBuffer[i]);
+                }
+            }
+
+            RecalculateContainerHeight();
+            SnapToInitialMapset();
+            UpdateButtonSelectedStatus();
+        }
+
+        /// <summary>
         ///     Initializes all of the mapsets in the set.
         /// </summary>
         private void InitializeMapsetBuffer()
         {
             MapsetBuffer = new List<DrawableMapset>(MAX_MAPSETS_SHOWN);
 
-            // Based on the currently selected mapset, calculate starting index of which to update and draw
-            // the mapset buttons in the container.
-            if (SelectedMapsetIndex < MAX_MAPSETS_SHOWN / 2)
-                PoolStartingIndex = 0;
-            else if (SelectedMapsetIndex + MAX_MAPSETS_SHOWN > Screen.AvailableMapsets.Count)
-                PoolStartingIndex = Screen.AvailableMapsets.Count - MAX_MAPSETS_SHOWN;
-            else
-                PoolStartingIndex = SelectedMapsetIndex - MAX_MAPSETS_SHOWN / 2;
+            SetPoolStartingIndex();
 
             // Create MAX_MAPSETS_SHOWN amount of DrawableMapsets.
             for (var i = 0; i < MAX_MAPSETS_SHOWN && i < Screen.AvailableMapsets.Count; i++)
@@ -210,7 +267,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 var mapset = new DrawableMapset(this)
                 {
                     Alignment = Alignment.TopRight,
-                    Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpacing
+                    Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpacing,
+                    DestroyIfParentIsNull = false
                 };
 
                 mapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex + i], PoolStartingIndex + i);
@@ -228,6 +286,20 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             RecalculateContainerHeight();
             SnapToInitialMapset();
             UpdateButtonSelectedStatus();
+        }
+
+        /// <summary>
+        ///    Based on the currently selected mapset, calculate starting index of which to update and draw
+        ///    the mapset buttons in the container.
+        /// </summary>
+        private void SetPoolStartingIndex()
+        {
+            if (SelectedMapsetIndex < MAX_MAPSETS_SHOWN / 2)
+                PoolStartingIndex = 0;
+            else if (SelectedMapsetIndex + MAX_MAPSETS_SHOWN > Screen.AvailableMapsets.Count)
+                PoolStartingIndex = Screen.AvailableMapsets.Count - MAX_MAPSETS_SHOWN;
+            else
+                PoolStartingIndex = SelectedMapsetIndex - MAX_MAPSETS_SHOWN / 2;
         }
 
         /// <summary>

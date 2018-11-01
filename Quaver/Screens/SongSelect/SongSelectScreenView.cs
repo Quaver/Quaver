@@ -11,6 +11,7 @@ using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.SongSelect.UI;
 using Quaver.Screens.SongSelect.UI.Banner;
 using Quaver.Screens.SongSelect.UI.Mapsets;
+using Quaver.Screens.SongSelect.UI.Mapsets.Search;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -52,6 +53,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public SelectMapBanner Banner { get; private set; }
 
+        /// <summary>
+        ///     Allows for searching mapsets.
+        /// </summary>
+        public MapsetSearchContainer SearchContainer { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,6 +69,7 @@ namespace Quaver.Screens.SongSelect
             CreateAudioVisualizer();
             CreateMapsetScrollContainer();
             CreateMapBanner();
+            CreateMapsetSearchContainer();
 
             CreateUserProfile();
         }
@@ -119,7 +126,7 @@ namespace Quaver.Screens.SongSelect
             BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(64, WindowManager.Height - 64),
+                Position = new ScalableVector2(64, WindowManager.Height - 54),
                 Alpha = 0.90f
             };
 
@@ -185,6 +192,19 @@ namespace Quaver.Screens.SongSelect
 
             Banner.X = -Banner.Width;
             Banner.MoveToX(64, Easing.OutQuint, 900);
+        }
+
+        /// <summary>
+        ///     Creates the container that has mapset search capabilities.
+        /// </summary>
+        private void CreateMapsetSearchContainer()
+        {
+            SearchContainer = new MapsetSearchContainer(this)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Position = new ScalableVector2(-64, Navbar.Line.Y + 2)
+            };
         }
     }
 }
