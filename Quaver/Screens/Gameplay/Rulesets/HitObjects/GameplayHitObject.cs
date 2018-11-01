@@ -24,12 +24,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public int SnapIndex { get; set; }
 
         /// <summary>
-        ///     Ctor - 
-        /// </summary>
-        /// <param name="info"></param>
-        protected GameplayHitObject(HitObjectInfo info) => Info = info;
-
-        /// <summary>
         ///     Gets the timing point this object is in range of.
         /// </summary>
         /// <returns></returns>

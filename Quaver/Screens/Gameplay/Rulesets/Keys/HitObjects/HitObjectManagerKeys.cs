@@ -416,7 +416,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (lane.Count > 0)
             {
                 var info = lane.Dequeue();
-                hitObject.InitializeObject(info, this);
+                hitObject.InitializeObject(this, info);
                 ActiveNotes[info.Lane - 1].Enqueue(hitObject);
             }
             else
