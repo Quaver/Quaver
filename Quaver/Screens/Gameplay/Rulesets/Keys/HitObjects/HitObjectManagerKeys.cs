@@ -303,7 +303,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                         Ruleset.ScoreProcessor.Stats.Add(stat);
                         screenView.UpdateScoreboardUsers();
                     }
-                    // Otherwise recycle the object.
+                    // Otherwise just kill the object.
                     else
                     {
                         KillPoolObject(hitObject);
@@ -416,7 +416,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (lane.Count > 0)
             {
                 var info = lane.Dequeue();
-                hitObject.InitializeObject(this);
+                hitObject.InitializeObject(info, this);
                 ActiveNotes[info.Lane - 1].Enqueue(hitObject);
             }
             else

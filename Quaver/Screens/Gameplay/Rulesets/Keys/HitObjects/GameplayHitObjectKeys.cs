@@ -108,9 +108,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager) : base(info)
         {
-            Info = info;
-            InitializeSprites(ruleset);
-            InitializeObject(manager);
+            InitializeSprites(ruleset, info.Lane - 1);
+            InitializeObject(info, manager);
         }
 
         /// <summary>
@@ -118,12 +117,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ruleset"></param>
-        public void InitializeSprites(GameplayRulesetKeys ruleset)
+        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane)
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[Info.Lane - 1].X;
-            var lane = Info.Lane - 1;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -173,8 +171,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="manager"></param>
-        public void InitializeObject(HitObjectManagerKeys manager)
+        public void InitializeObject(HitObjectInfo info, HitObjectManagerKeys manager)
         {
+            // Update Hit Object State
+            if (info != null)
+                Info = info;
+
             // Update Hit Object State
             HitObjectSprite.Tint = Color.White;
             IsLongNote = Info.EndTime > 0;
