@@ -76,7 +76,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Current position for Hit Objects
         /// </summary>
-        public long Position { get; private set; }
+        public long CurrentTrackPosition { get; private set; }
 
         /// <summary>
         ///     Current SV index used for optimization when using UpdateCurrentPosition()
@@ -176,7 +176,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Initialize SV
             InitializeScrollVelocities(map);
             InitializePositionMarkers();
-            UpdateCurrentPosition();
+            UpdateCurrentTrackPosition();
 
             // Initialize Object Pool
             InitializeInfoPool(map);
@@ -236,7 +236,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            UpdateCurrentPosition();
+            UpdateCurrentTrackPosition();
             UpdateAndScoreActiveObjects();
             UpdateAndScoreHeldObjects();
             UpdateDeadObjects();
@@ -264,7 +264,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in Info)
             {
-                while (lane.Count > 0 && GetPositionFromTime(lane.Peek().StartTime) - Position < CreateObjectPosition)
+                while (lane.Count > 0 && GetPositionFromTime(lane.Peek().StartTime) - CurrentTrackPosition < CreateObjectPosition)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -314,7 +314,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in ObjectPool)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(Position);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
             }
         }
 
@@ -362,7 +362,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in HeldLongNotes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(Position);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
             }
         }
 
@@ -375,7 +375,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNotes)
             {
                 while (lane.Count > 0 &&
-                    (Position > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition))
+                    (CurrentTrackPosition > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -387,7 +387,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in lane)
                 {
                     // Update position
-                    hitObject.UpdateSpritePositions(Position);
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
                 }
             }
         }
@@ -650,7 +650,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Update Current position of the hit objects
         /// </summary>
         /// <param name="audioTime"></param>
-        public void UpdateCurrentPosition()
+        public void UpdateCurrentTrackPosition()
         {
             // Use necessary visual offset
             var audioTime = Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset;
@@ -660,7 +660,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 SvIndex++;
             }
-            Position = GetPositionFromTime(audioTime, SvIndex);
+            CurrentTrackPosition = GetPositionFromTime(audioTime, SvIndex);
         }
     }
 }
