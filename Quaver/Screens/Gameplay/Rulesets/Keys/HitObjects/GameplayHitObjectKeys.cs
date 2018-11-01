@@ -115,8 +115,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager) : base(info)
         {
             Info = info;
-            InitializeSprites(info, ruleset);
-            InitializeObject(info, manager);
+            InitializeSprites(ruleset);
+            InitializeObject(manager);
         }
 
         /// <summary>
@@ -124,12 +124,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ruleset"></param>
-        public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        public void InitializeSprites(GameplayRulesetKeys ruleset)
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
-            var posX = playfield.Stage.Receptors[info.Lane - 1].X;
-            var lane = info.Lane - 1;
+            var posX = playfield.Stage.Receptors[Info.Lane - 1].X;
+            var lane = Info.Lane - 1;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -179,13 +179,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="manager"></param>
-        public void InitializeObject(HitObjectInfo info, HitObjectManagerKeys manager)
+        public void InitializeObject(HitObjectManagerKeys manager)
         {
             // Update Hit Object State
-            Info = info;
             HitObjectSprite.Tint = Color.White;
-            IsLongNote = info.EndTime > 0;
-            TrackPosition = manager.GetPositionFromTime(info.StartTime);
+            IsLongNote = Info.EndTime > 0;
+            TrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
 
@@ -202,7 +201,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White;
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-                LongNoteTrackPosition = manager.GetPositionFromTime(info.EndTime);
+                LongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
