@@ -171,7 +171,7 @@ namespace Quaver.Screens.Gameplay
 
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.
-                if (nextObject.Info.StartTime - Timing.Time >= GameplayAudioTiming.StartDelay + 5000)
+                if (nextObject.Info.StartTime - Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset >= GameplayAudioTiming.StartDelay + 5000)
                     _onBreak = true;
                 // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
                 else if (_onBreak && nextObject.Info.StartTime - Timing.Time <= GameplayAudioTiming.StartDelay)
