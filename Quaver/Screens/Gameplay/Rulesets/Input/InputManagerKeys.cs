@@ -180,7 +180,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 return;
 
             // Remove HitObject from Object Pool. Will be recycled/killed as necessary.
-            hitObject = manager.ObjectPool[lane].Dequeue();
+            hitObject = manager.ActiveNotes[lane].Dequeue();
 
             // Update stats
             Ruleset.ScoreProcessor.Stats.Add(
