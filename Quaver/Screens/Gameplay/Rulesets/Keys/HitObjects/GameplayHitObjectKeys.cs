@@ -197,12 +197,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
                 LongNoteTrackPosition = manager.GetPositionFromTime(info.EndTime);
-                InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
+                InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            UpdateSpritePositions(manager.Position);
+            UpdateSpritePositions(manager.CurrentTrackPosition);
         }
 
         /// <inheritdoc />
@@ -239,13 +239,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((TrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed)); 
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((TrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding); 
 
         /// <summary>
         ///     Updates LN size
         /// </summary>
         /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
+        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
 
         /// <summary>
         ///     Updates the HitObject sprite positions

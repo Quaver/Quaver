@@ -41,12 +41,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         /// </summary>
-        private float CreateObjectPosition { get; set; } = 1500;
+        public float CreateObjectPosition { get; } = 150000;
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
         /// </summary>
-        private float RecycleObjectPosition { get; set; } = 1500;
+        public float RecycleObjectPosition { get; } = 150000;
 
         /// <summary>
         ///     Reference to the ruleset this HitObject manager is for.
@@ -83,6 +83,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Default value is 0. "0" means that Current time has not passed first SV point yet.
         /// </summary>
         private int SvIndex { get; set; } = 0;
+
+        /// <summary>
+        ///     Used to Round TrackPosition from Long to Float
+        /// </summary>
+        public static float TrackRounding { get; } = 100;
 
         /// <summary>
         ///     The speed at which objects fall down from the screen.
@@ -608,14 +613,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // NoSV Modifier is toggled on
             if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity))
-                return (long)time;
+                return (long)(time * TrackRounding);
 
             // Continue if SV is enabled
             long curPos = 0;
 
             // Time starts before the first SV point
             if (index == 0)
-                curPos = (long)(time * ScrollVelocities[0].Multiplier);
+                curPos = (long)(time * ScrollVelocities[0].Multiplier * TrackRounding);
 
             // Time starts after the first SV point and before the last SV point
             else if (index < VelocityPositionMarkers.Count)
@@ -625,7 +630,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 // Get position
                 curPos += VelocityPositionMarkers[index];
-                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier);
+                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
             }
 
             // Time starts after the last SV point
@@ -640,7 +645,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 // Get position
                 curPos += VelocityPositionMarkers[index];
-                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier);
+                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
             }
 
             return curPos;
