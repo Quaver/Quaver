@@ -7,9 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Config;
 using Quaver.Skinning;
-using Wobble;
 
 namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
 {
@@ -22,9 +20,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public abstract int ObjectsLeft { get; }
 
         /// <summary>
-        ///     The start time of the current earliest Hit Object in the Object Pool
+        ///     The next object in the pool. Used for skipping.
         /// </summary>
-        public abstract GameplayHitObject EarliestHitObject { get; }
+        public abstract HitObjectInfo NextHitObject { get; }
+
+        /// <summary>
+        ///     Used to determine if the player is currently on a break in the song.
+        /// </summary>
+        public abstract bool OnBreak { get; }
 
         /// <summary>
         ///     If there are no more objects and the map is complete.
@@ -46,7 +49,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        public static void PlayObjectHitSounds(HitObjectInfo hitObject)
+        public static void PlayObjectHitSounds(API.Maps.Structures.HitObjectInfo hitObject)
         {
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)

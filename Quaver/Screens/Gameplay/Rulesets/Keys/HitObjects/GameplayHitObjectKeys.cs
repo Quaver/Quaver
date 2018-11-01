@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -13,10 +9,8 @@ using Quaver.Graphics;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Skinning;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Window;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -112,19 +106,22 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager) : base(info)
+        public GameplayHitObjectKeys(API.Maps.Structures.HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
-            Info = info;
-            InitializeSprites(info, ruleset);
-            InitializeObject(info, ruleset, manager);
+            InitializeSprites(ruleset, info.Lane - 1);
+            InitializeObject(manager, info);
         }
 
-        public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
+        /// <summary>
+        ///     Initialize HitObject Sprite used for Object Pooling. Only gets initialized once upon object creation.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="ruleset"></param>
+        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane)
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
-            var posX = playfield.Stage.Receptors[info.Lane - 1].X;
-            var lane = info.Lane - 1;
+            var posX = playfield.Stage.Receptors[lane].X;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
@@ -169,17 +166,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
         }
 
-        /// <inheritdoc />
         /// <summary>
+        ///     Initialize Object when created/recycled within its object pool.
         /// </summary>
-        /// <param name="playfield"></param>
-        public void InitializeObject(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
+        /// <param name="info"></param>
+        /// <param name="manager"></param>
+        public void InitializeObject(HitObjectManagerKeys manager, API.Maps.Structures.HitObjectInfo info)
         {
-            // Update Hit Object State
             Info = info;
+
+            // Update Hit Object State
             HitObjectSprite.Tint = Color.White;
-            IsLongNote = info.EndTime > 0;
-            TrackPosition = manager.GetPositionFromTime(info.StartTime);
+            IsLongNote = Info.EndTime > 0;
+            TrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
 
@@ -196,13 +195,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White;
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-                LongNoteTrackPosition = manager.GetPositionFromTime(info.EndTime);
-                InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed;
+                LongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
+                InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
 
             // Update Positions
-            UpdateSpritePositions(manager.Position);
+            UpdateSpritePositions(manager.CurrentTrackPosition);
         }
 
         /// <inheritdoc />
@@ -216,36 +215,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Gets the correct HitObject texture also based on if we have note snapping and if
-        ///     the note is a long note or note.
-        ///
-        ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
-        ///     specified color.
-        ///
-        ///     If not, we default it to the first beat snap in the list.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
-        {
-            var skin = SkinManager.Skin.Keys[mode];
-
-            if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
-
-            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
-        }
-
-        /// <summary>
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((TrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed)); 
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((TrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding); 
 
         /// <summary>
         ///     Updates LN size
         /// </summary>
         /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed;
+        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (LongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
 
         /// <summary>
         ///     Updates the HitObject sprite positions
@@ -302,16 +281,24 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Starts looping the long note sprite.
-        ///     It will only be initiated when the player presses the note.
+        ///     Gets the correct HitObject texture also based on if we have note snapping and if
+        ///     the note is a long note or note.
+        ///
+        ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
+        ///     specified color.
+        ///
+        ///     If not, we default it to the first beat snap in the list.
         /// </summary>
-        public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+        /// <returns></returns>
+        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
+        {
+            var skin = SkinManager.Skin.Keys[mode];
 
-        /// <summary>
-        ///     Stops looping the long note sprite.
-        ///     It will only be initiated when the player releases the note.
-        /// </summary>
-        public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
+            if (skin.ColorObjectsBySnapDistance)
+                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
+
+            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+        }
 
         /// <summary>
         ///     When the object iself dies, we want to change it to a dead color.
@@ -341,9 +328,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // LongNoteEndSprite.FadeOut(dt, 240);
         }
 
-        public override void Initialize(HitObjectInfo info)
-        {
-            //throw new NotImplementedException();
-        }
+        /// <summary>
+        ///     Starts looping the long note sprite.
+        ///     It will only be initiated when the player presses the note.
+        /// </summary>
+        public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+
+        /// <summary>
+        ///     Stops looping the long note sprite.
+        ///     It will only be initiated when the player releases the note.
+        /// </summary>
+        public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
     }
 }
