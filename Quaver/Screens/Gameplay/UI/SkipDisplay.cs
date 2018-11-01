@@ -41,12 +41,12 @@ namespace Quaver.Screens.Gameplay.UI
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (Screen.OnBreak)
+            if (Screen.EligibleToSkip)
                 StartLoop(Direction.Forward, (int)(30 * AudioEngine.Track.Rate));
             else
                 StopLoop();
 
-            var targetAlpha = Screen.OnBreak ? 1 : 0;
+            var targetAlpha = Screen.EligibleToSkip ? 1 : 0;
             Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(dt / (120 / AudioEngine.Track.Rate), 1));
 
             base.Update(gameTime);

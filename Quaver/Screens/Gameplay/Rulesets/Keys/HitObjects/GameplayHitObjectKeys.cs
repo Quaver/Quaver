@@ -106,7 +106,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
+        public GameplayHitObjectKeys(API.Maps.Structures.HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
             InitializeSprites(ruleset, info.Lane - 1);
             InitializeObject(manager, info);
@@ -171,7 +171,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="manager"></param>
-        public void InitializeObject(HitObjectManagerKeys manager, HitObjectInfo info)
+        public void InitializeObject(HitObjectManagerKeys manager, API.Maps.Structures.HitObjectInfo info)
         {
             Info = info;
 

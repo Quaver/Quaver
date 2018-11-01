@@ -42,7 +42,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
                 }
             }
 
-            // Otherwise just return first point if we can't find it. 
+            // Otherwise just return first point if we can't find it.
             // Qua file won't be considered valid if it doesn't have at least one timing point.
             return timingPoints.First();
         }
@@ -53,7 +53,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="hitObject"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
+        public static int GetBeatSnap(API.Maps.Structures.HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
             var pos = info.StartTime - timingPoint.StartTime + 2;
