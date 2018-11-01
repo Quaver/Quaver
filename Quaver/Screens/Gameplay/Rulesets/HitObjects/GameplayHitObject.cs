@@ -26,12 +26,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public int SnapIndex { get; set; }
 
         /// <summary>
-        ///     Initializes the HitObject for pooling
-        /// </summary>
-        /// <param name="playfield"></param>
-        public abstract void Initialize(HitObjectInfo info);
-
-        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="info"></param>

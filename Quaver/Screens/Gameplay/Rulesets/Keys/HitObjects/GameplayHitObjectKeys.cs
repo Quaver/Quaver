@@ -116,7 +116,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Info = info;
             InitializeSprites(info, ruleset);
-            InitializeObject(info, ruleset, manager);
+            InitializeObject(info, manager);
         }
 
         public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
@@ -173,7 +173,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         /// </summary>
         /// <param name="playfield"></param>
-        public void InitializeObject(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
+        public void InitializeObject(HitObjectInfo info, HitObjectManagerKeys manager)
         {
             // Update Hit Object State
             Info = info;
@@ -213,26 +213,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Destroy();
             LongNoteBodySprite.Destroy();
             LongNoteEndSprite.Destroy();
-        }
-
-        /// <summary>
-        ///     Gets the correct HitObject texture also based on if we have note snapping and if
-        ///     the note is a long note or note.
-        ///
-        ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
-        ///     specified color.
-        ///
-        ///     If not, we default it to the first beat snap in the list.
-        /// </summary>
-        /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
-        {
-            var skin = SkinManager.Skin.Keys[mode];
-
-            if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
-
-            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>
@@ -302,16 +282,24 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Starts looping the long note sprite.
-        ///     It will only be initiated when the player presses the note.
+        ///     Gets the correct HitObject texture also based on if we have note snapping and if
+        ///     the note is a long note or note.
+        ///
+        ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
+        ///     specified color.
+        ///
+        ///     If not, we default it to the first beat snap in the list.
         /// </summary>
-        public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+        /// <returns></returns>
+        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
+        {
+            var skin = SkinManager.Skin.Keys[mode];
 
-        /// <summary>
-        ///     Stops looping the long note sprite.
-        ///     It will only be initiated when the player releases the note.
-        /// </summary>
-        public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
+            if (skin.ColorObjectsBySnapDistance)
+                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
+
+            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+        }
 
         /// <summary>
         ///     When the object iself dies, we want to change it to a dead color.
@@ -341,9 +329,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // LongNoteEndSprite.FadeOut(dt, 240);
         }
 
-        public override void Initialize(HitObjectInfo info)
-        {
-            //throw new NotImplementedException();
-        }
+        /// <summary>
+        ///     Starts looping the long note sprite.
+        ///     It will only be initiated when the player presses the note.
+        /// </summary>
+        public void StartLongNoteAnimation() => LongNoteBodySprite.StartLoop(Direction.Forward, 30);
+
+        /// <summary>
+        ///     Stops looping the long note sprite.
+        ///     It will only be initiated when the player releases the note.
+        /// </summary>
+        public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
     }
 }
