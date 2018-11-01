@@ -32,6 +32,41 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// </summary>
         private Sprite BannerSprite { get; }
 
+        /// <summary>
+        ///     A dark layer over the banner that provides some darkness.
+        /// </summary>
+        private Sprite Brightness { get; }
+
+        /// <summary>
+        ///     The name of the difficulty of themap.
+        /// </summary>
+        private SpriteText MapDifficultyName { get; set; }
+
+        /// <summary>
+        ///     Displays the title of the song.
+        /// </summary>
+        private SpriteText SongTitle { get; set; }
+
+        /// <summary>
+        ///     Displays the artist of the song.
+        /// </summary>
+        private SpriteText SongArtist { get; set; }
+
+        /// <summary>
+        ///     Displays the creator of the map.
+        /// </summary>
+        private SpriteText MapCreator { get; set; }
+
+        /// <summary>
+        ///     The flag that shows the ranked status of the map.
+        /// </summary>
+        private BannerRankedStatus RankedStatus { get; set; }
+
+        /// <summary>
+        ///     Displays all the metadata for the map.
+        /// </summary>
+        private BannerMetadata Metadata { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -41,7 +76,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             View = view;
             Tint = Color.Black;
 
-            Size = new ScalableVector2(518, 234);
+            Size = new ScalableVector2(620, 234);
             AddBorder(Colors.MainAccent, 3);
 
             Mask = new SpriteMaskContainer()
@@ -62,8 +97,24 @@ namespace Quaver.Screens.SongSelect.UI.Banner
 
             Mask.AddContainedSprite(BannerSprite);
 
+            Brightness = new Sprite()
+            {
+                Parent = this,
+                Size = Mask.Size,
+                Alignment = Alignment.MidCenter,
+                Tint = Color.Black
+            };
+
+            CreateMapDifficultyName();
+            CreateSongTitle();
+            CreateSongArtist();
+            CreateMapCreator();
+            CreateRankedStatus();
+            Metadata = new BannerMetadata(this);
+
             MapManager.Selected.ValueChanged += OnMapChange;
             LoadBanner(null);
+            UpdateText(MapManager.Selected.Value);
         }
 
         /// <summary>
@@ -87,6 +138,12 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             {
                 BannerSprite.Animations.Clear();
                 BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, BannerSprite.Alpha, 0, 500));
+            }
+
+            lock (Brightness.Animations)
+            {
+                Brightness.Animations.Clear();
+                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 1, 300));
             }
 
             var previousTex = BannerSprite.Image;
@@ -117,6 +174,12 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                             BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
                                 BannerSprite.Alpha, 1, 1000));
                         }
+
+                        lock (Brightness.Animations)
+                        {
+                            Brightness.Animations.Clear();
+                            Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
+                        }
                     }
                     // Otherwise skip it and dispose of the texture, as its not needed anymore.
                     else
@@ -133,10 +196,83 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         }
 
         /// <summary>
+        ///     Creates the SpriteText that displays the difficulty name of the map.
+        /// </summary>
+        private void CreateMapDifficultyName() => MapDifficultyName = new SpriteText(BitmapFonts.Exo2Bold, " ", 13)
+        {
+            Parent = this,
+            Alignment = Alignment.TopLeft,
+            X = 22,
+            Y = 50
+        };
+
+        /// <summary>
+        ///    Creates the SpriteText that displays the title of the song.
+        /// </summary>
+        private void CreateSongTitle() => SongTitle = new SpriteText(BitmapFonts.Exo2Bold, " ", 14)
+        {
+            Parent = this,
+            Alignment = Alignment.TopLeft,
+            X = MapDifficultyName.X,
+            Y = MapDifficultyName.Y + MapDifficultyName.Height + 8
+        };
+
+        /// <summary>
+        ///     Creates the text that displays the artist of the song.
+        /// </summary>
+        private void CreateSongArtist() => SongArtist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
+        {
+            Parent = this,
+            Alignment = Alignment.TopLeft,
+            X = SongTitle.X,
+            Y = SongTitle.Y + SongTitle.Height + 8
+        };
+
+        /// <summary>
+        ///    Creates the text that displays the creator of the map.
+        /// </summary>
+        private void CreateMapCreator() => MapCreator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+        {
+            Parent = this,
+            Alignment = Alignment.TopLeft,
+            X = SongTitle.X,
+            Y = SongArtist.Y + SongArtist.Height + 8
+        };
+
+        /// <summary>
+        ///     Creates the sprite that displays the ranked status of the map.
+        /// </summary>
+        private void CreateRankedStatus() => RankedStatus = new BannerRankedStatus()
+        {
+            Parent = this,
+            Alignment = Alignment.TopRight,
+            Y = Border.Thickness,
+            X = -Border.Thickness
+        };
+
+        /// <summary>
         ///     Called when the selected map is changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e) => LoadBanner(e.OldValue);
+        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+            LoadBanner(e.OldValue);
+            UpdateText(e.Value);
+        }
+
+        /// <summary>
+        ///     Updates the banner with a new map.
+        /// </summary>
+        /// <param name="map"></param>
+        private void UpdateText(Map map)
+        {
+            MapDifficultyName.Text = $"\"{map.DifficultyName}\"";
+            SongTitle.Text = map.Title;
+            SongArtist.Text = map.Artist;
+            MapCreator.Text = $"Created by: {map.Creator}";
+            RankedStatus.UpdateMap(map);
+            Metadata.UpdateAndAlignMetadata(map);
+        }
     }
 }
