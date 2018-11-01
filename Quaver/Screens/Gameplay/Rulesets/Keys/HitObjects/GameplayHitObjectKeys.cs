@@ -119,6 +119,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializeObject(info, manager);
         }
 
+        /// <summary>
+        ///     Initialize HitObject Sprite used for Object Pooling. Only gets initialized once upon object creation.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="ruleset"></param>
         public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
         {
             // Reference variables
@@ -169,10 +174,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
         }
 
-        /// <inheritdoc />
         /// <summary>
+        ///     Initialize Object when created/recycled within its object pool.
         /// </summary>
-        /// <param name="playfield"></param>
+        /// <param name="info"></param>
+        /// <param name="manager"></param>
         public void InitializeObject(HitObjectInfo info, HitObjectManagerKeys manager)
         {
             // Update Hit Object State
