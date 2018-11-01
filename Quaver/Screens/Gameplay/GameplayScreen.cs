@@ -161,13 +161,10 @@ namespace Quaver.Screens.Gameplay
         {
             get
             {
-                // todo: don't think the _onBreak variable is necessary
-                // By default if there aren't any objects left we aren't on a break.
-                if (Ruleset.HitObjectManager.ObjectsLeft <= 0)
-                    return false;
-
-                // Grab the next object in the object pool.
+                // Get the earliest hit object, and return false if there's no hit object.
                 var nextObject = Ruleset.HitObjectManager.EarliestHitObject;
+                if (nextObject == null)
+                    return false;
 
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.

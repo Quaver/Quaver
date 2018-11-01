@@ -120,6 +120,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var earliest = int.MaxValue;
                 GameplayHitObject hitOb = null;
+
+                // Check Main Object Pool
                 foreach (var lane in ObjectPool)
                 {
                     if (lane.Count > 0 && lane.Peek().Info.StartTime < earliest)
@@ -128,6 +130,17 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                         earliest = hitOb.Info.StartTime;
                     }
                 }
+
+                // Check LN Object Pool
+                foreach (var lane in HeldLongNotes)
+                {
+                    if (lane.Count > 0 && lane.Peek().Info.StartTime < earliest)
+                    {
+                        hitOb = lane.Peek();
+                        earliest = hitOb.Info.StartTime;
+                    }
+                }
+
                 return hitOb;
             }
         }
