@@ -559,12 +559,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void InitializePositionMarkers()
         {
             // Compute for Change Points
-            var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier);
+            var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier * TrackRounding);
             VelocityPositionMarkers.Add(position);
 
             for (var i = 1; i < ScrollVelocities.Count; i++)
             {
-                position += (long)((ScrollVelocities[i].StartTime - ScrollVelocities[i - 1].StartTime) * ScrollVelocities[i - 1].Multiplier);
+                position += (long)((ScrollVelocities[i].StartTime - ScrollVelocities[i - 1].StartTime) * TrackRounding * ScrollVelocities[i - 1].Multiplier);
                 VelocityPositionMarkers.Add(position);
             }
         }
@@ -629,7 +629,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 index--;
 
                 // Get position
-                curPos += VelocityPositionMarkers[index];
+                curPos = VelocityPositionMarkers[index];
                 curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
             }
 
@@ -644,7 +644,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 index--;
 
                 // Get position
-                curPos += VelocityPositionMarkers[index];
+                curPos = VelocityPositionMarkers[index];
                 curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
             }
 
