@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
@@ -24,6 +26,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public int SnapIndex { get; set; }
 
         /// <summary>
+        ///     Initializes the HitObject for pooling
+        /// </summary>
+        /// <param name="playfield"></param>
+        public abstract void Initialize(HitObjectInfo info);
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="info"></param>
+        protected GameplayHitObject(HitObjectInfo info) => Info = info;
+
+        /// <summary>
         ///     Gets the timing point this object is in range of.
         /// </summary>
         /// <returns></returns>
@@ -42,7 +56,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
                 }
             }
 
-            // Otherwise just return first point if we can't find it.
+            // Otherwise just return first point if we can't find it. 
             // Qua file won't be considered valid if it doesn't have at least one timing point.
             return timingPoints.First();
         }
@@ -53,7 +67,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="hitObject"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        public static int GetBeatSnap(API.Maps.Structures.HitObjectInfo info, TimingPointInfo timingPoint)
+        public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
             var pos = info.StartTime - timingPoint.StartTime + 2;

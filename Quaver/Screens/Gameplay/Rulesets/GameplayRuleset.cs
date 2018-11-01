@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Structures;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 
 namespace Quaver.Screens.Gameplay.Rulesets

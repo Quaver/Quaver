@@ -19,7 +19,7 @@ namespace Quaver.Screens.Edit.Rulesets.Keys.Playfield
         /// <summary>
         ///     The particular Qua HitObject this represents.
         /// </summary>
-        public API.Maps.Structures.HitObjectInfo Info { get; }
+        public HitObjectInfo Info { get; }
 
         /// <summary>
         ///     The container for HitObjects
@@ -106,7 +106,7 @@ namespace Quaver.Screens.Edit.Rulesets.Keys.Playfield
         /// </summary>
         /// <param name="container"></param>
         /// <param name="info"></param>
-        public EditorHitObjectKeys(EditorScrollContainerKeys container, API.Maps.Structures.HitObjectInfo info)
+        public EditorHitObjectKeys(EditorScrollContainerKeys container, HitObjectInfo info)
         {
             Container = container;
             Info = info;

@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Modifiers;
@@ -11,6 +16,7 @@ using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
+using Quaver.Skinning;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys
 {

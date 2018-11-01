@@ -24,12 +24,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <summary>
         ///     Position of the current Timing Line
         /// </summary>
-        public float TrackPosition { get; private set; }
+        public float PositionY { get; private set; }
 
         /// <summary>
         ///     Offset
         /// </summary>
-        public static float GlobalTrackOffset { get; set; }
+        public static float GlobalYOffset { get; set; } = 0;
 
         /// <inheritdoc />
         /// <summary>
@@ -59,8 +59,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
             TrackOffset = Info.TrackOffset - trackPosition;
-            TrackPosition = manager.HitPositionOffset + GlobalTrackOffset + (TrackOffset * speed / HitObjectManagerKeys.TrackRounding);
-            Y = TrackPosition;
+            PositionY = manager.HitPositionOffset + TrackOffset * speed + GlobalYOffset;
+            Y = PositionY;
         }
     }
 }
