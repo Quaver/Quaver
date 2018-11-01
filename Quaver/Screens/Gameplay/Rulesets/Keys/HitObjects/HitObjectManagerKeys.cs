@@ -74,11 +74,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public List<long> VelocityPositionMarkers { get; set; } = new List<long>();
 
         /// <summary>
-        ///     The Audio Timing Class that this class will be dependent on.
-        /// </summary>
-        private GameplayAudioTiming Timing { get; set; }
-
-        /// <summary>
         ///     Current position for Hit Objects
         /// </summary>
         public long Position { get; private set; }
@@ -644,7 +639,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateCurrentPosition()
         {
             // Use necessary visual offset
-            var audioTime = Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset;
+            var audioTime = Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset;
 
             // Update SV index if necessary. Afterwards update Position.
             while (SvIndex < ScrollVelocities.Count && audioTime >= ScrollVelocities[SvIndex].StartTime)
