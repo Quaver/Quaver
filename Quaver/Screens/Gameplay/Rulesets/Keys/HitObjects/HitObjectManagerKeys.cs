@@ -215,7 +215,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Create new Hit Object and add it into the pool with respect to its lane
         /// </summary>
         /// <param name="info"></param>
-        private void CreatePoolObject(HitObjectInfo info) => ObjectPool[info.Lane - 1].Enqueue(new GameplayHitObjectKeys(info, Ruleset, this));
+        private void CreatePoolObject(HitObjectInfo info) => ObjectPool[info.Lane - 1].Enqueue(new GameplayHitObjectKeys(info, Ruleset));
 
         /// <inheritdoc />
         /// <summary>
