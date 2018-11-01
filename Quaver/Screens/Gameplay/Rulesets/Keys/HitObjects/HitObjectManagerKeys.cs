@@ -109,9 +109,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             get
             {
                 var total = 0;
-                foreach (var lane in ActiveNotes) total += lane.Count;
-                foreach (var lane in HeldLongNotes) total += lane.Count;
-                foreach (var lane in DeadNotes) total += lane.Count;
+                ActiveNotes.ForEach(x => total += x.Count);
+                HeldLongNotes.ForEach(x => total += x.Count);
+                DeadNotes.ForEach(x => total += x.Count);
                 return total;
             }
         }
