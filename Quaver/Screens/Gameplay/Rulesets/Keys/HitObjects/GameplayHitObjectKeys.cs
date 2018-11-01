@@ -112,11 +112,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset) : base(info)
+        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager) : base(info)
         {
             Info = info;
             InitializeSprites(info, ruleset);
-            InitializeObject(info, ruleset, (HitObjectManagerKeys)ruleset.HitObjectManager);
+            InitializeObject(info, ruleset, manager);
         }
 
         public void InitializeSprites(HitObjectInfo info, GameplayRulesetKeys ruleset)
