@@ -223,6 +223,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            UpdateCurrentPosition();
             UpdateAndScoreActiveObjects();
             UpdateAndScoreHeldObjects();
             UpdateDeadObjects();
