@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -15,8 +13,6 @@ using Quaver.Modifiers;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Skinning;
-using Wobble;
-using Wobble.Graphics;
 
 namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
 {

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -22,7 +19,6 @@ using Quaver.Screens.Gameplay.Replays;
 using Quaver.Screens.Gameplay.Rulesets;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys;
-using Quaver.Screens.Menu;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;

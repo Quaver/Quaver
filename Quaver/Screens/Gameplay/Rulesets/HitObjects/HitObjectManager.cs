@@ -7,9 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Config;
 using Quaver.Skinning;
-using Wobble;
 
 namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
 {
