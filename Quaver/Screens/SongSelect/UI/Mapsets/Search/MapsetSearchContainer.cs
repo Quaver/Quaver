@@ -10,6 +10,7 @@ using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.Search;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
@@ -53,15 +54,22 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// </summary>
         private SelectableBorderedTextButton ButtonOrderByCreator { get; set; }
 
+        /// <summary>
+        ///     The amount of mapsets that are found.
+        /// </summary>
+        private SpriteText TextMapsetsFound { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public MapsetSearchContainer(SongSelectScreenView view)
         {
             View = view;
-            Size = new ScalableVector2(374, 80);
-            Tint = Color.Black;
-            Alpha = 0.65f;
+            Size = new ScalableVector2(334, 121);
+            Tint = Colors.DarkGray;
+
+            Alpha = 0.90f;
+            Image = UserInterface.SelectSearchBackground;
 
             CreateTextSearch();
             CreateSearchBox();
@@ -69,6 +77,31 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
             CreateOrderByArtistButton();
             CreateOrderByTitleButton();
             CreateOrderByCreatorButton();
+            CreateTextMapsetsFound();
+
+            var leftLine = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(2, Height),
+                Alpha = 0.75f
+            };
+
+            var rightLine = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(2, Height),
+                Alignment = Alignment.TopRight,
+                Alpha = 0.75f
+            };
+
+            // Line displayed at the bottom of the container.
+            var bottomline = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(Width, 2),
+                Alignment = Alignment.BotLeft,
+                Alpha = 0.75f
+            };
 
             ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsByChanged;
         }
@@ -97,11 +130,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// <summary>
         ///     Creates the heading text that says "search"
         /// </summary>
-        private void CreateTextSearch() => TextSearch = new SpriteText(BitmapFonts.Exo2Bold, "Search:", 13)
+        private void CreateTextSearch() => TextSearch = new SpriteText(BitmapFonts.Exo2SemiBold, "Search:", 13)
         {
             Parent = this,
-            X = 10,
-            Y = 10,
+            X = 15,
+            Y = 15,
         };
 
         /// <summary>
@@ -109,7 +142,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(280, TextSearch.Height + 5), BitmapFonts.Exo2Bold, 13)
+            SearchBox = new Textbox(new ScalableVector2(234, TextSearch.Height + 5), BitmapFonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 5, 0),
@@ -131,6 +164,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
                             MapsetHelper.SearchMapsets(MapManager.Mapsets, text));
 
                         View.MapsetScrollContainer.InitializeWithNewSets();
+
+                        UpdateMapsetsFoundText();
                     }
                 }
             };
@@ -141,7 +176,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// <summary>
         ///     Creates the text that displays "Order By:"
         /// </summary>
-        private void CreateTextOrderBy() => OrderBy = new SpriteText(BitmapFonts.Exo2Bold, "Order By:", 13)
+        private void CreateTextOrderBy() => OrderBy = new SpriteText(BitmapFonts.Exo2SemiBold, "Order By:", 13)
         {
             Parent = this,
             X = TextSearch.X,
@@ -260,6 +295,45 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
             };
 
             ButtonOrderByCreator.Size = new ScalableVector2(ButtonOrderByCreator.Text.Width + 20, ButtonOrderByCreator.Text.Height + 8);
+        }
+
+        /// <summary>
+        ///     The text that displays how many mapsets were found.
+        /// </summary>
+        private void CreateTextMapsetsFound()
+        {
+            TextMapsetsFound = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            {
+                Parent = this,
+                X = TextSearch.X,
+                Y = OrderBy.Y + OrderBy.Height + 15
+            };
+
+            UpdateMapsetsFoundText();
+        }
+
+        /// <summary>
+        ///    Updates the text with the amount of mapsets we have
+        /// </summary>
+        private void UpdateMapsetsFoundText()
+        {
+            var screen = View.Screen as SongSelectScreen;
+
+            if (screen.AvailableMapsets.Count > 0)
+            {
+                TextMapsetsFound.Text = $"{screen.AvailableMapsets.Count} Mapsets Available!";
+                TextMapsetsFound.Tint = Color.White;
+
+                TextMapsetsFound.ClearAnimations();
+                TextMapsetsFound.FadeToColor(Colors.MainAccent, Easing.OutQuint, 1000);
+            }
+            else
+            {
+                TextMapsetsFound.Text = $"No Mapsets Found!";
+
+                TextMapsetsFound.ClearAnimations();
+                TextMapsetsFound.FadeToColor(Colors.Negative, Easing.OutQuint, 1000);
+            }
         }
 
         /// <summary>

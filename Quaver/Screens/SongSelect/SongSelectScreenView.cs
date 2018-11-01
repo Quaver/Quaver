@@ -197,14 +197,11 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Creates the container that has mapset search capabilities.
         /// </summary>
-        private void CreateMapsetSearchContainer()
+        private void CreateMapsetSearchContainer() => SearchContainer = new MapsetSearchContainer(this)
         {
-            SearchContainer = new MapsetSearchContainer(this)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-64, Navbar.Line.Y + 2)
-            };
-        }
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            Position = new ScalableVector2(-64, Navbar.Line.Y + 3)
+        };
     }
 }
