@@ -43,8 +43,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         /// <param name="leaderboard"></param>
         protected LeaderboardScoreSection(LeaderboardContainer leaderboard) : base(
-            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 60f),
-            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 60f))
+            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 24f),
+            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 24f))
         {
             Leaderboard = leaderboard;
             Alpha = 1;
@@ -121,12 +121,14 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             {
                 var score = scores[i];
 
-                var drawable = new DrawableLeaderboardScore(this)
+                var drawable = new DrawableLeaderboardScore()
                 {
                     Parent = this,
-                    Y = i * DrawableLeaderboardScore.HEIGHT + i * 10
+                    Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
+                    X = -DrawableLeaderboardScore.WIDTH,
                 };
 
+                drawable.MoveToX(0, Easing.OutQuint, 300 + i * 50);
                 Scores.Add(drawable);
                 AddContainedDrawable(drawable);
             }

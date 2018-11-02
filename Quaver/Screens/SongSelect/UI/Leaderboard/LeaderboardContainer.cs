@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Resources;
 using Quaver.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -23,6 +25,11 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public Dictionary<LeaderboardType, LeaderboardScoreSection> Sections { get; } = new Dictionary<LeaderboardType, LeaderboardScoreSection>();
 
+        /// <summary>
+        ///     The best score achieved on the map.
+        /// </summary>
+        private DrawableLeaderboardScore BestScore { get; set; }
+
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
@@ -34,6 +41,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Alpha = 0;
 
             CreateSections();
+            CreateBestScore();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
 
             MapManager.Selected.ValueChanged += OnMapChange;
@@ -49,6 +57,20 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             base.Destroy();
         }
 
+        /// <summary>
+        ///     Creates the text that says PB
+        /// </summary>
+        private void CreateBestScore()
+        {
+            BestScore = new DrawableLeaderboardScore()
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = 302
+            };
+
+            BestScore.AddBorder(Color.White);
+        }
         /// <summary>
         ///     Creates all of the leaderboard sections that will be displayed.
         /// </summary>
