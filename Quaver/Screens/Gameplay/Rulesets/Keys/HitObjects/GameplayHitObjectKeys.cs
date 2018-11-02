@@ -171,7 +171,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="manager"></param>
-        public void InitializeObject(HitObjectManagerKeys manager, API.Maps.Structures.HitObjectInfo info)
+        public void InitializeObject(HitObjectManagerKeys manager, HitObjectInfo info)
         {
             Info = info;
 
