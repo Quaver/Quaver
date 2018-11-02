@@ -65,8 +65,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         public MapsetSearchContainer(SongSelectScreenView view)
         {
             View = view;
-            Size = new ScalableVector2(334, 121);
-            Tint = Colors.DarkGray;
+            Size = new ScalableVector2(580, 90);
 
             Alpha = 0.90f;
             Image = UserInterface.SelectSearchBackground;
@@ -83,7 +82,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
             {
                 Parent = this,
                 Size = new ScalableVector2(2, Height),
-                Alpha = 0.75f
+                Alpha = 0.75f,
+                Tint = Colors.MainAccent
             };
 
             var rightLine = new Sprite()
@@ -91,7 +91,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
                 Parent = this,
                 Size = new ScalableVector2(2, Height),
                 Alignment = Alignment.TopRight,
-                Alpha = 0.75f
+                Alpha = 0.75f,
+                Tint = Colors.MainAccent
             };
 
             // Line displayed at the bottom of the container.
@@ -100,7 +101,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
                 Parent = this,
                 Size = new ScalableVector2(Width, 2),
                 Alignment = Alignment.BotLeft,
-                Alpha = 0.75f
+                Alpha = 0.75f,
+                Tint = Colors.MainAccent
             };
 
             ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsByChanged;
@@ -142,7 +144,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(234, TextSearch.Height + 5), BitmapFonts.Exo2Bold, 13)
+            SearchBox = new Textbox(new ScalableVector2(478, 30), BitmapFonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 5, 0),
@@ -171,6 +173,15 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
             };
 
             SearchBox.AddBorder(Colors.MainAccent);
+
+            var searchIcon = new Sprite()
+            {
+                Parent = SearchBox,
+                Alignment = Alignment.MidRight,
+                X = -15,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
+                Size = new ScalableVector2(15, 15)
+            };
         }
 
         /// <summary>
@@ -304,9 +315,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         {
             TextMapsetsFound = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
-                Parent = this,
-                X = TextSearch.X,
-                Y = OrderBy.Y + OrderBy.Height + 15
+                Parent = ButtonOrderByCreator,
+                Alignment = Alignment.MidLeft,
+                X = ButtonOrderByCreator.Width + 30,
             };
 
             UpdateMapsetsFoundText();

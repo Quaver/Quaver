@@ -76,7 +76,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             View = view;
             Tint = Color.Black;
 
-            Size = new ScalableVector2(518, 234);
+            Size = new ScalableVector2(620, 234);
             AddBorder(Colors.MainAccent, 3);
 
             Mask = new SpriteMaskContainer()

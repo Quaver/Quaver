@@ -195,27 +195,25 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             lock (MapsetBuffer)
             {
-                // Check if the selected mapset is in the new one.
+                MapsetBuffer.ForEach(x => x.Destroy());
+                MapsetBuffer.Clear();
+
                 var selectedMapIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-                // The currently selected mapset was found.
                 if (selectedMapIndex != -1)
                 {
                     SelectedMapsetIndex = selectedMapIndex;
                     SetPoolStartingIndex();
-                    RefreshMapsetBuffer();
+                    InitializeMapsetBuffer();
                     return;
                 }
 
-                // The selected mapset does not exist, so let's chooset
                 if (Screen.AvailableMapsets.Count <= 0)
                     return;
 
                 SelectedMapsetIndex = 0;
-
-                // Determine pool starting index.
                 SetPoolStartingIndex();
-                RefreshMapsetBuffer();
+                InitializeMapsetBuffer();
 
                 var mapset = Screen.AvailableMapsets[SelectedMapsetIndex];
                 SelectMap(SelectedMapsetIndex, mapset.PreferredMap ?? mapset.Maps.First(), true);
