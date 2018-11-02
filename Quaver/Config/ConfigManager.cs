@@ -13,6 +13,7 @@ using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
+using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -246,6 +247,11 @@ namespace Quaver.Config
         internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
 
         /// <summary>
+        ///     The type of leaderboard that is displayed during song select.
+        /// </summary>
+        internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -418,6 +424,7 @@ namespace Quaver.Config
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
+            LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
