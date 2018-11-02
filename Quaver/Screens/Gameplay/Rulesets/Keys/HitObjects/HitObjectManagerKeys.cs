@@ -97,6 +97,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private int CurrentSvIndex { get; set; } = 0;
 
+        /// <summary>
+        ///     Current audio position with song and user offset values applied.
+        /// </summary>
+        public double CurrentAudioPosition { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -675,14 +680,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateCurrentTrackPosition()
         {
             // Use necessary visual offset
-            var audioTime = Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset;
+            CurrentAudioPosition = Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset;
 
             // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < ScrollVelocities.Count && audioTime >= ScrollVelocities[CurrentSvIndex].StartTime)
+            while (CurrentSvIndex < ScrollVelocities.Count && CurrentAudioPosition >= ScrollVelocities[CurrentSvIndex].StartTime)
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(audioTime, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition, CurrentSvIndex);
         }
     }
 }
