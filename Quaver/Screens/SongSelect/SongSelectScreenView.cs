@@ -16,6 +16,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
+using Wobble.Graphics.Sprites;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -58,6 +59,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public MapsetSearchContainer SearchContainer { get; private set; }
 
+        /// <summary>
+        ///     The divider line under the mapset banner.
+        /// </summary>
+        private Sprite DividerLine { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -70,6 +76,7 @@ namespace Quaver.Screens.SongSelect
             CreateMapsetScrollContainer();
             CreateMapBanner();
             CreateMapsetSearchContainer();
+            CreateDividerLine();
 
             CreateUserProfile();
         }
@@ -203,5 +210,24 @@ namespace Quaver.Screens.SongSelect
             Alignment = Alignment.TopRight,
             Position = new ScalableVector2(-64, Navbar.Line.Y + 3)
         };
+
+        /// <summary>
+        ///     Creates the divider line under the map banner.
+        /// </summary>
+        private void CreateDividerLine()
+        {
+            DividerLine = new Sprite()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Banner.Width, 1),
+                Position = new ScalableVector2(64, Banner.Y + Banner.Height + 30),
+                Alpha = 0,
+                Animations =
+                {
+                    new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 700)
+                }
+            };
+        }
     }
 }
