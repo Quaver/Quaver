@@ -197,8 +197,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
                 LongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
-                InitialLongNoteSize = (LongNoteTrackPosition - TrackPosition) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
-                CurrentLongNoteSize = InitialLongNoteSize;
+                UpdateLongNoteSize(TrackPosition);
+                InitialLongNoteSize = CurrentLongNoteSize;
             }
 
             // Update Positions
