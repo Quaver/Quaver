@@ -176,6 +176,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             Info = info;
 
             // Update Hit Object State
+            HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = Color.White;
             IsLongNote = Info.EndTime > 0;
             TrackPosition = manager.GetPositionFromTime(Info.StartTime);
@@ -262,6 +263,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteBodySprite.Visible = false;
                 LongNoteEndSprite.Visible = false;
+                HitObjectSprite.Visible = false;
                 return;
             }
 
