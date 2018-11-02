@@ -64,6 +64,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         private static int YSpacing { get; } = 15;
 
         /// <summary>
+        ///     The amount of space before the first mapset.
+        /// </summary>
+        private static int YSpaceBeforeFirstSet = 300;
+
+        /// <summary>
         ///     The index of the currently selected maps in <see cref="Screen"/> AvaialableMapsets
         /// </summary>
         public int SelectedMapsetIndex { get; private set; }
@@ -150,7 +155,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             nextMapset?.DisplayAsSelected(MapManager.Selected.Value);
 
             // Scroll the the place where the map is.
-            ScrollTo((-SelectedMapsetIndex + 1) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex + 1) * YSpacing + YSpacing, 2100);
+            ScrollTo((-SelectedMapsetIndex -3) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex - 3) * YSpacing + YSpaceBeforeFirstSet, 2100);
 
             // Load new audio if needed.
             LoadNewAudioTrackIfNecessary(previousMap);
@@ -230,7 +235,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                     var mapset = MapsetBuffer[i];
                     mapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex + i], PoolStartingIndex + i);
 
-                    mapset.Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpacing;
+                    mapset.Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstSet;
 
                     if (i == SelectedMapsetIndex)
                         mapset.DisplayAsSelected(MapManager.Selected.Value);
@@ -265,7 +270,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 var mapset = new DrawableMapset(this)
                 {
                     Alignment = Alignment.TopRight,
-                    Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpacing,
+                    Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstSet,
                     DestroyIfParentIsNull = false
                 };
 
@@ -317,7 +322,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         private void RecalculateContainerHeight()
         {
-            var totalUserHeight = DrawableMapset.HEIGHT * Screen.AvailableMapsets.Count + Screen.AvailableMapsets.Count * YSpacing + YSpacing;
+            var totalUserHeight = DrawableMapset.HEIGHT * Screen.AvailableMapsets.Count + Screen.AvailableMapsets.Count * YSpacing + YSpaceBeforeFirstSet * 2;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -348,7 +353,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
                     // Update the mapset's information and y position.
                     firstMapset.Y = (PoolStartingIndex + MAX_MAPSETS_SHOWN) * DrawableMapset.HEIGHT +
-                                    (PoolStartingIndex + MAX_MAPSETS_SHOWN) * YSpacing + YSpacing;
+                                    (PoolStartingIndex + MAX_MAPSETS_SHOWN) * YSpacing + YSpaceBeforeFirstSet;
 
                     lock (Screen.AvailableMapsets)
                         firstMapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex + MAX_MAPSETS_SHOWN],
@@ -378,7 +383,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                     if (!Rectangle.Intersect(lastMapset.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
                         return;
 
-                    lastMapset.Y = (PoolStartingIndex - 1) * DrawableMapset.HEIGHT + (PoolStartingIndex - 1) * YSpacing + YSpacing;
+                    lastMapset.Y = (PoolStartingIndex - 1) * DrawableMapset.HEIGHT + (PoolStartingIndex - 1) * YSpacing + YSpaceBeforeFirstSet;
 
                     lock (Screen.AvailableMapsets)
                         lastMapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex - 1], PoolStartingIndex - 1);
@@ -487,7 +492,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         private void SnapToInitialMapset()
         {
-            ContentContainer.Y = (-SelectedMapsetIndex + 1) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex + 1) * YSpacing + YSpacing;
+            ContentContainer.Y = (-SelectedMapsetIndex - 3) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex - 3) * YSpacing + YSpaceBeforeFirstSet;
 
             PreviousContentContainerY = ContentContainer.Y;
             TargetY = PreviousContentContainerY;

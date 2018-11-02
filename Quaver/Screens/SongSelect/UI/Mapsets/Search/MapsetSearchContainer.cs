@@ -224,7 +224,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(MapManager.Mapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };
@@ -262,7 +262,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(MapManager.Mapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };
@@ -300,7 +300,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(MapManager.Mapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };

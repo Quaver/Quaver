@@ -72,9 +72,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             Container = container;
             Size = new ScalableVector2(414, HEIGHT);
-            Tint = Colors.MainAccentInactive;
-            Alpha = 0.85f;
-            Image = UserInterface.PlaycardBackground;
+            Tint = Color.Black;
+            Alpha = 0.45f;
             AddBorder(Color.White, 2);
 
             Thumbnail = new Sprite()
@@ -151,8 +150,13 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 var targetX = 15 + Thumbnail.Width + 10;
 
                 Title.MoveToX(targetX, Easing.OutQuint, 400);
+                Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 1f, 400));
+
                 Artist.MoveToX(targetX, Easing.OutQuint, 400);
+                Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 1f, 400));
+
                 Creator.MoveToX(targetX, Easing.OutQuint, 400);
+                Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 1f, 400));
 
                 Border.Animations.Clear();
                 Border.FadeToColor(Color.Gold, Easing.Linear, 200);
@@ -185,12 +189,17 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 const int targetX = 15;
 
                 Title.MoveToX(targetX, Easing.OutQuint, 400);
+                Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 0.65f, 400));
+
                 Artist.MoveToX(targetX, Easing.OutQuint, 400);
+                Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 0.65f, 400));
+
                 Creator.MoveToX(targetX, Easing.OutQuint, 400);
+                Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 0.65f, 400));
 
                 Border.Animations.Clear();
                 Border.FadeToColor(Color.White, Easing.Linear, 200);
-                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 0.85f, 400));
+                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 0.65f, 400));
 
                 Thumbnail.Animations.Clear();
                 Thumbnail.Alpha = 0;
