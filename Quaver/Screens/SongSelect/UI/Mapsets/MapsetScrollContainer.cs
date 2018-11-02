@@ -88,8 +88,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 8;
-            Scrollbar.X += 8;
+            Scrollbar.Width = 5;
+            Scrollbar.X += 10;
             ScrollSpeed = 150;
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
