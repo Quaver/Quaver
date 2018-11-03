@@ -61,7 +61,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <summary>
         ///     The amount of y spacing between each mapset.
         /// </summary>
-        private static int YSpacing { get; } = 15;
+        private static int YSpacing { get; } = 10;
 
         /// <summary>
         ///     The amount of space before the first mapset.
