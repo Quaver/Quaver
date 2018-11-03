@@ -79,7 +79,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         /// </summary>
-        public float CreateObjectPosition { get; } = 150000;
+        public float CreateObjectPosition { get; } = -150000;
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
@@ -291,7 +291,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in HitObjectQueue)
             {
-                while (lane.Count > 0 && GetPositionFromTime(lane.Peek().StartTime) - CurrentTrackPosition < CreateObjectPosition)
+                while (lane.Count > 0 && GetPositionFromTime(lane.Peek().StartTime) + CurrentTrackPosition > CreateObjectPosition)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -402,7 +402,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in DeadNotes)
             {
                 while (lane.Count > 0 &&
-                    (CurrentTrackPosition > lane.Peek().LongNoteTrackPosition + RecycleObjectPosition))
+                    (CurrentTrackPosition - lane.Peek().LongNoteTrackPosition > RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }

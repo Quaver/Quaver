@@ -1,4 +1,5 @@
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using System;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -17,14 +18,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public TimingLineInfo Info { get; set; }
 
         /// <summary>
-        ///     Track offset of the current Timing Line
+        ///     Track Position of this Timing Line
         /// </summary>
-        public float TrackOffset { get; private set; }
-
-        /// <summary>
-        ///     Position of the current Timing Line
-        /// </summary>
-        public float TrackPosition { get; private set; }
+        public long TrackPosition { get; private set; }
 
         /// <summary>
         ///     Offset
@@ -53,14 +49,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <summary>
         ///     Update the current Timing Line Sprite position
         /// </summary>
-        /// <param name="trackPosition"></param>
-        public void UpdateSpritePosition(long trackPosition)
+        /// <param name="offset"></param>
+        public void UpdateSpritePosition(long offset)
         {
-            var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            TrackOffset = Info.TrackOffset - trackPosition;
-            TrackPosition = manager.HitPositionOffset + GlobalTrackOffset + (TrackOffset * speed / HitObjectManagerKeys.TrackRounding);
-            Y = TrackPosition;
+            TrackPosition = Info.TrackOffset - offset;
+            Y = (TrackPosition * speed / HitObjectManagerKeys.TrackRounding) + GlobalTrackOffset;
+            Console.WriteLine("offset: " + Info.TrackOffset  + ", position: " + TrackPosition + ", manager: " + offset);
         }
     }
 }

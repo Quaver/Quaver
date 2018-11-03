@@ -94,13 +94,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public void UpdateObjectPool()
         {
-            Console.WriteLine(Info.Count);
             // Update line positions
             foreach (var line in Pool)
                 line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
 
             // Recycle necessary pool objects
-            while (Pool.Count > 0 && Pool.Peek().TrackOffset <= HitObjectManager.RecycleObjectPosition)
+            while (Pool.Count > 0 && Pool.Peek().TrackPosition > HitObjectManager.RecycleObjectPosition)
             {
                 var line = Pool.Dequeue();
                 if (Info.Count > 0)
@@ -112,7 +111,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && Info.Peek().TrackOffset - HitObjectManager.CurrentTrackPosition < HitObjectManager.CreateObjectPosition)
+            while (Info.Count > 0 && Info.Peek().TrackOffset - HitObjectManager.CurrentTrackPosition > HitObjectManager.CreateObjectPosition)
                 CreatePoolObject(Info.Dequeue());
         }
 
