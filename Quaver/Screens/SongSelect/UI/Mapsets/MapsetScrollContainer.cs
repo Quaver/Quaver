@@ -97,7 +97,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Find the index of the selected map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-            BackgroundHelper.Background.Dim = 85;
+            BackgroundHelper.Background.Dim = 50;
 
             // Load the background of the map if necessary.
             if (BackgroundHelper.Map != MapManager.Selected.Value)

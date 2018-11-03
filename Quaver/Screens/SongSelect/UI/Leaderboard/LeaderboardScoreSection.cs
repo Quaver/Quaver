@@ -47,7 +47,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 24f))
         {
             Leaderboard = leaderboard;
-            Alpha = 1;
+            Alpha = 0;
             Tint = Color.CornflowerBlue;
 
             InputEnabled = true;
@@ -121,7 +121,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             {
                 var score = scores[i];
 
-                var drawable = new DrawableLeaderboardScore()
+                var drawable = new DrawableLeaderboardScore(score, i + 1)
                 {
                     Parent = this,
                     Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
@@ -134,7 +134,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             }
 
             // Calculate the height of the scroll container based on how many scores there are.
-            var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * scores.Count;
+            var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
