@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -57,35 +58,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private void GenerateTimingLineInfo(Qua map)
         {
             Info = new Queue<TimingLineInfo>();
-            var index = 0;
-
-            // set initial increment that will update songPos by 4 beat lengths
-            var songPos = map.TimingPoints[index].StartTime;
-            var increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
-
-            // Create first Timing Line Info
-            var offset = HitObjectManager.GetPositionFromTime(songPos);
-            Info.Enqueue(new TimingLineInfo(songPos, offset));
-
-            // Generate Timing Lines
-            while (songPos < map.Length)
+            for (var i = 0; i < map.TimingPoints.Count; i++)
             {
-                // Update songpos with increment
-                songPos += increment;
+                // Get target position and increment
+                // Target position has tolerance of 1ms so timing points dont overlap by chance
+                var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1: map.Length;
+                var increment = BpmToMeasureLengthMs / map.TimingPoints[i].Bpm;
 
-                // If songPos exceeds the next timing point (if next timing point exists):
-                // - Reset songPos to the next timing point and update increment
-                // - subtract Timing Point StartTime by 1 to add more tolerance when finding next Timing Point
-                if (index + 1 < map.TimingPoints.Count && songPos >= map.TimingPoints[index + 1].StartTime - 1)
+                // Initialize timing lines between current timing point and target position
+                for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
                 {
-                    index++;
-                    songPos = map.TimingPoints[index].StartTime;
-                    increment = BpmToMeasureLengthMs / map.TimingPoints[index].Bpm;
+                    if (songPos < target)
+                        Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
                 }
-
-                // Create Timing Line Info
-                offset = HitObjectManager.GetPositionFromTime(songPos);
-                Info.Enqueue(new TimingLineInfo(songPos, offset));
             }
         }
 
@@ -109,6 +94,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public void UpdateObjectPool()
         {
+            Console.WriteLine(Info.Count);
             // Update line positions
             foreach (var line in Pool)
                 line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
