@@ -117,6 +117,14 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public void UpdateWithScores(List<LocalScore> scores)
         {
+            // Calculate the height of the scroll container based on how many scores there are.
+            var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
+
+            if (totalUserHeight > Height)
+                ContentContainer.Height = totalUserHeight;
+            else
+                ContentContainer.Height = Height;
+
             for (var i = 0; i < scores.Count; i++)
             {
                 var score = scores[i];
@@ -132,14 +140,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 Scores.Add(drawable);
                 AddContainedDrawable(drawable);
             }
-
-            // Calculate the height of the scroll container based on how many scores there are.
-            var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
-
-            if (totalUserHeight > Height)
-                ContentContainer.Height = totalUserHeight;
-            else
-                ContentContainer.Height = Height;
         }
     }
 }

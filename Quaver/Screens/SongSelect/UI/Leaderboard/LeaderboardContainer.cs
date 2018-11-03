@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.Resources;
 using Quaver.Scheduling;
 using Wobble.Bindables;
@@ -41,7 +42,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Alpha = 0;
 
             CreateSections();
-            CreateBestScore();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
 
             MapManager.Selected.ValueChanged += OnMapChange;
@@ -60,9 +60,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Creates the text that says PB
         /// </summary>
-        private void CreateBestScore()
+        private void CreateBestScore(LocalScore score)
         {
-            BestScore = new DrawableLeaderboardScore()
+            BestScore = new DrawableLeaderboardScore(score)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -108,6 +108,12 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public void UpdateLeaderboardWithScores()
         {
+            if (BestScore != null)
+            {
+                lock (BestScore)
+                    BestScore?.Destroy();
+            }
+
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
             // Grab the map at the beginning before we fetch.
@@ -121,6 +127,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 try
                 {
                     var scores = section.FetchScores();
+                    section.IsFetching = false;
 
                     if (mapAtBeginning != MapManager.Selected.Value)
                         return;
@@ -130,10 +137,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                }
-                finally
-                {
-                    section.IsFetching = false;
                 }
             });
         }
