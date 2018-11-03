@@ -94,7 +94,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public void UpdateObjectPool()
         {
-            Console.WriteLine(Pool.Count + ", " + Info.Count);
             // Update line positions
             foreach (var line in Pool)
                 line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
