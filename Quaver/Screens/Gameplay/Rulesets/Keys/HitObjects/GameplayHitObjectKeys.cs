@@ -28,7 +28,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public bool IsLongNote { get; private set; }
 
         /// <summary>
-        ///     The Y-Offset from the receptor.
+        ///     The Y-Offset from the receptor. >0 = this object hasnt passed receptors.
         /// </summary>
         public long TrackPosition { get; set; }
 
@@ -106,7 +106,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public GameplayHitObjectKeys(API.Maps.Structures.HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
+        public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
             InitializeSprites(ruleset, info.Lane - 1);
             InitializeObject(manager, info);

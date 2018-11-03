@@ -18,7 +18,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public TimingLineInfo Info { get; set; }
 
         /// <summary>
-        ///     Track Position of this Timing Line
+        ///     Track Position of this Timing Line. >0 = this object hasnt passed receptors.
         /// </summary>
         public long TrackPosition { get; private set; }
 

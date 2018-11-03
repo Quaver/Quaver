@@ -87,7 +87,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public float RecycleObjectPosition { get; } = 150000;
 
         /// <summary>
-        ///     Current position for Hit Objects
+        ///     Current position for Hit Objects.
         /// </summary>
         public long CurrentTrackPosition { get; private set; }
 
