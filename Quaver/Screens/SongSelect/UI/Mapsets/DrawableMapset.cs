@@ -63,7 +63,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 104;
+        public static int HEIGHT { get; } = 80;
 
         /// <inheritdoc />
         /// <summary>
@@ -79,10 +79,10 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             Thumbnail = new Sprite()
             {
                 Parent = this,
-                Size = new ScalableVector2(HEIGHT * 0.85f + 40, HEIGHT * 0.85f),
+                Size = new ScalableVector2(HEIGHT * 0.85f + 40, HEIGHT * 0.82f + 1),
                 Alignment = Alignment.MidLeft,
                 X = 10,
-                Y = 2,
+                Y = 1,
                 Alpha = 0,
                 SetChildrenAlpha = true
             };
@@ -94,22 +94,21 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(15, 18)
+                Position = new ScalableVector2(15, 10)
             };
 
             Artist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5)
+                Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 3)
             };
 
             Creator = new SpriteText(BitmapFonts.Exo2Medium, " ", 10, false)
             {
                 Parent = this,
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Title.X, Artist.Y + Artist.Height + 5),
-                Tint = Colors.MainAccent
+                Alignment = Alignment.TopRight,
+                Position = new ScalableVector2(-5, Artist.Y + Artist.Height + 3)
             };
 
             Clicked += OnClicked;
@@ -155,7 +154,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Artist.MoveToX(targetX, Easing.OutQuint, 400);
                 Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 1f, 400));
 
-                Creator.MoveToX(targetX, Easing.OutQuint, 400);
                 Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 1f, 400));
 
                 Border.Animations.Clear();
@@ -194,7 +192,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Artist.MoveToX(targetX, Easing.OutQuint, 400);
                 Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 0.65f, 400));
 
-                Creator.MoveToX(targetX, Easing.OutQuint, 400);
                 Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 0.65f, 400));
 
                 Border.Animations.Clear();
