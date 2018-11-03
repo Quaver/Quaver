@@ -77,14 +77,21 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public int InitialPoolSizePerLane { get; } = 2;
 
         /// <summary>
-        ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
+        ///     Used to determine the max position for object pooling recycling/creation.
         /// </summary>
-        public float CreateObjectPosition { get; } = -150000;
+        private float ObjectPositionMagnitude { get; } = 150000;
+
+        /// <summary>
+        ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
+        ///     TODO: Update upon scroll speed changes
+        /// </summary>
+        public float CreateObjectPosition { get; private set; } = -150000;
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
+        ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float RecycleObjectPosition { get; } = 150000;
+        public float RecycleObjectPosition { get; private set; } = 150000;
 
         /// <summary>
         ///     Current position for Hit Objects.
@@ -403,7 +410,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 // todo: reference correct position to compensate for SV change
                 while (lane.Count > 0 &&
-                    (CurrentTrackPosition - lane.Peek().LongNoteTrackPosition > RecycleObjectPosition))
+                    (CurrentTrackPosition - lane.Peek().InitialLongNoteTrackPosition > RecycleObjectPosition))
                 {
                     RecyclePoolObject(lane.Dequeue());
                 }
@@ -472,10 +479,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Change start time and LN size.
             var time = Ruleset.Screen.Timing.Time;
-            gameplayHitObject.TrackPosition = GetPositionFromTime(time);
+            gameplayHitObject.InitialTrackPosition = GetPositionFromTime(time);
             gameplayHitObject.Info.StartTime = (int)time;
             gameplayHitObject.CurrentlyBeingHeld = false;
-            gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.TrackPosition);
+            gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
             gameplayHitObject.Kill();
 
             // Add to dead notes pool

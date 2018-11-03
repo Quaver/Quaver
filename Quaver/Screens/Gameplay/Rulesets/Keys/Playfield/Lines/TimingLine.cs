@@ -20,7 +20,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <summary>
         ///     Track Position of this Timing Line. >0 = this object hasnt passed receptors.
         /// </summary>
-        public long TrackPosition { get; private set; }
+        public float CurrentTrackPosition { get; private set; }
 
         /// <summary>
         ///     Offset
@@ -53,8 +53,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateSpritePosition(long offset)
         {
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            TrackPosition = Info.TrackOffset - offset;
-            Y = (TrackPosition * speed / HitObjectManagerKeys.TrackRounding) + GlobalTrackOffset;
+            CurrentTrackPosition = Info.TrackOffset - offset;
+            Y = (CurrentTrackPosition * speed / HitObjectManagerKeys.TrackRounding) + GlobalTrackOffset;
         }
     }
 }
