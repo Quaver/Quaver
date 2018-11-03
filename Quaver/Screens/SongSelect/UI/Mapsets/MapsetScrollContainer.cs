@@ -14,6 +14,8 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Window;
 
@@ -112,7 +114,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // Handle pool shifting when scrolling up or down.
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0;
+
             if (ContentContainer.Y < PreviousContentContainerY)
                 HandlePoolShifting(Direction.Forward);
             else if (ContentContainer.Y > PreviousContentContainerY)

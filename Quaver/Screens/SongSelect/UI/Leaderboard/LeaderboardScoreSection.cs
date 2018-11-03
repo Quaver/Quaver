@@ -8,6 +8,8 @@ using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Logging;
 
 namespace Quaver.Screens.SongSelect.UI.Leaderboard
@@ -68,6 +70,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0;
             HandleLoadingWheelAnimations();
             base.Update(gameTime);
         }
