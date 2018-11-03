@@ -94,7 +94,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(15, 10)
+                Position = new ScalableVector2(15, 12)
             };
 
             Artist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12, false)
@@ -108,7 +108,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-5, Artist.Y + Artist.Height + 3)
+                Position = new ScalableVector2(-5, Artist.Y + Artist.Height + 2)
             };
 
             Clicked += OnClicked;

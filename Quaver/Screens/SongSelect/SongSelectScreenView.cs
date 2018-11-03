@@ -117,7 +117,7 @@ namespace Quaver.Screens.SongSelect
         private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
         {
             new NavbarItem("Home", false, OnHomeButtonClicked),
-            new NavbarItem("Play", true),
+            new NavbarItem("Select Song", true),
             new NavbarItem("Download Maps"),
             new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
@@ -140,7 +140,7 @@ namespace Quaver.Screens.SongSelect
             BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(64, WindowManager.Height - 54),
+                Position = new ScalableVector2(20, WindowManager.Height - 54),
                 Alpha = 0.90f
             };
 
@@ -155,7 +155,7 @@ namespace Quaver.Screens.SongSelect
             Parent = Container,
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + Navbar.Line.Thickness,
-            X = -64
+            X = -28
         };
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Quaver.Screens.SongSelect
             };
 
             MapsetScrollContainer.X = MapsetScrollContainer.Width;
-            MapsetScrollContainer.MoveToX(-64, Easing.OutBounce, 1200);
+            MapsetScrollContainer.MoveToX(-28, Easing.OutBounce, 1200);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Quaver.Screens.SongSelect
             };
 
             Banner.X = -Banner.Width;
-            Banner.MoveToX(64, Easing.OutQuint, 900);
+            Banner.MoveToX(28, Easing.OutQuint, 900);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Quaver.Screens.SongSelect
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(-64, Navbar.Line.Y + 3)
+            Position = new ScalableVector2(-28, Navbar.Line.Y + 3)
         };
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Quaver.Screens.SongSelect
             Parent = Container,
             Alignment = Alignment.TopLeft,
             Size = new ScalableVector2(Banner.Width, 1),
-            Position = new ScalableVector2(64, Banner.Y + Banner.Height + 30),
+            Position = new ScalableVector2(28, Banner.Y + Banner.Height + 30),
             Alpha = 0,
             Animations =
             {
@@ -240,7 +240,7 @@ namespace Quaver.Screens.SongSelect
         private void CreateLeaderboard() => Leaderboard = new LeaderboardContainer(this)
         {
             Parent = Container,
-            Position = new ScalableVector2(64, DividerLine.Y + DividerLine.Height + 5)
+            Position = new ScalableVector2(28, DividerLine.Y + DividerLine.Height + 5)
         };
     }
 }

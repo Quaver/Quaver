@@ -175,7 +175,7 @@ namespace Quaver.Screens.Menu
             BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(64, WindowManager.Height - 54),
+                Position = new ScalableVector2(28, WindowManager.Height - 54),
                 Alpha = 0.90f
             };
 
@@ -298,7 +298,7 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + 20,
-            X = -64
+            X = -44
         };
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + Navbar.Line.Thickness,
-            X = -64
+            X = -28
         };
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace Quaver.Screens.Menu
         {
             Parent = Container,
             Alignment = Alignment.TopLeft,
-            X = 64,
+            X = 44,
             Y = Jukebox.Y,
         };
 
