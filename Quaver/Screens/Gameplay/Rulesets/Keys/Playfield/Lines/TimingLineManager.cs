@@ -99,7 +99,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
 
             // Recycle necessary pool objects
-            while (Pool.Count > 0 && Pool.Peek().CurrentTrackPosition < HitObjectManager.RecycleObjectPosition)
+            while (Pool.Count > 0 && HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectPosition)
             {
                 var line = Pool.Dequeue();
                 if (Info.Count > 0)
