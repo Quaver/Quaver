@@ -23,5 +23,12 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         /// </summary>
         public override List<LocalScore> FetchScores() => LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public override string GetNoScoresAvailableString(Map map) => "No local scores available. Be the first!";
     }
 }

@@ -460,6 +460,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Begin to load the new background.
             BackgroundHelper.QueueLoad((tex, map, previousTex) =>
             {
+                BackgroundHelper.HasBlurred = false;
+
                 // Get rid of the old texture
                 if (previousTex != UserInterface.MenuBackground)
                     previousTex.Dispose();

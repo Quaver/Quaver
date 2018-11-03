@@ -207,9 +207,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         private void CreateTimeAgo()
         {
-            // TODO: Get time for online scores.
-            var time = Score.IsOnline ? DateTime.UnixEpoch : DateTime.Parse(Score.DateTime);
-
+            var time = DateTime.Parse(Score.DateTime);
             var timeDifference = DateTime.Now - time;
 
             TimeAgo = new SpriteText(BitmapFonts.Exo2Bold, time.TimeAgo(CultureInfo.InvariantCulture), 11, false)

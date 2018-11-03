@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -9,6 +10,7 @@ using Quaver.Resources;
 using Quaver.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 
@@ -27,9 +29,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         public Dictionary<LeaderboardType, LeaderboardScoreSection> Sections { get; } = new Dictionary<LeaderboardType, LeaderboardScoreSection>();
 
         /// <summary>
-        ///     The best score achieved on the map.
+        ///     The text that displays that there are no scores available.
         /// </summary>
-        private DrawableLeaderboardScore BestScore { get; set; }
+        private SpriteText NoScoresAvailableText { get; set; }
 
         /// <inheritdoc />
         ///  <summary>
@@ -41,11 +43,30 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Size = new ScalableVector2(View.Banner.Width, 370);
             Alpha = 0;
 
+            CreateNoScoresAvailableText();
             CreateSections();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
 
             MapManager.Selected.ValueChanged += OnMapChange;
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Creates the text that displays that there are no scores available.
+        /// </summary>
+        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Visible = false
+        };
 
         /// <inheritdoc />
         /// <summary>
@@ -62,15 +83,16 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         private void CreateBestScore(LocalScore score)
         {
-            BestScore = new DrawableLeaderboardScore(score)
+            /*BestScore = new DrawableLeaderboardScore(score)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 302
             };
 
-            BestScore.AddBorder(Color.White);
+            BestScore.AddBorder(Color.White);*/
         }
+
         /// <summary>
         ///     Creates all of the leaderboard sections that will be displayed.
         /// </summary>
@@ -108,37 +130,56 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public void UpdateLeaderboardWithScores()
         {
-            if (BestScore != null)
-            {
-                lock (BestScore)
-                    BestScore?.Destroy();
-            }
-
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
             // Grab the map at the beginning before we fetch.
             var mapAtBeginning = MapManager.Selected.Value;
+            section.IsFetching = true;
+            NoScoresAvailableText.Visible = false;
 
             section.ClearScores();
-            section.IsFetching = true;
 
-            Scheduler.RunThread(() =>
+            Scheduler.RunAfter(() =>
             {
                 try
                 {
-                    var scores = section.FetchScores();
-                    section.IsFetching = false;
-
-                    if (mapAtBeginning != MapManager.Selected.Value)
+                    // If we already have scores catched to use, then just use them.
+                    if (mapAtBeginning.Scores.Value != null && mapAtBeginning.Scores.Value.Count > 0)
+                    {
+                        section.IsFetching = false;
+                        section.UpdateWithScores(mapAtBeginning.Scores.Value);
                         return;
+                    }
 
-                    section.UpdateWithScores(scores);
+                    var scores = section.FetchScores();
+                    MapManager.Selected.Value.Scores.Value = scores;
+
+                    lock (NoScoresAvailableText)
+                    {
+                        if (scores.Count == 0)
+                        {
+                            NoScoresAvailableText.Text = section.GetNoScoresAvailableString(mapAtBeginning);
+                            NoScoresAvailableText.Alpha = 0;
+                            NoScoresAvailableText.Visible = true;
+                            NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                        }
+                        else
+                        {
+                            NoScoresAvailableText.Visible = false;
+                        }
+                    }
+
+                    if (mapAtBeginning == MapManager.Selected.Value)
+                    {
+                        section.IsFetching = false;
+                        section.UpdateWithScores(scores);
+                    }
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
                 }
-            });
+            }, 200);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Resources;
@@ -43,8 +44,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         /// <param name="leaderboard"></param>
         protected LeaderboardScoreSection(LeaderboardContainer leaderboard) : base(
-            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 24f),
-            new ScalableVector2(leaderboard.Width, leaderboard.Height - DrawableLeaderboardScore.HEIGHT - 24f))
+            new ScalableVector2(leaderboard.Width, leaderboard.Height),
+            new ScalableVector2(leaderboard.Width, leaderboard.Height))
         {
             Leaderboard = leaderboard;
             Alpha = 0;
@@ -104,6 +105,13 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         public abstract List<LocalScore> FetchScores();
 
         /// <summary>
+        ///     Gets a string that is displayed when no scores are available.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public abstract string GetNoScoresAvailableString(Map map);
+
+        /// <summary>
         ///     Clears all the scores on the leaderboard.
         /// </summary>
         public void ClearScores()
@@ -117,28 +125,31 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public void UpdateWithScores(List<LocalScore> scores)
         {
-            // Calculate the height of the scroll container based on how many scores there are.
-            var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
-
-            if (totalUserHeight > Height)
-                ContentContainer.Height = totalUserHeight;
-            else
-                ContentContainer.Height = Height;
-
-            for (var i = 0; i < scores.Count; i++)
+            lock (Scores)
             {
-                var score = scores[i];
+                // Calculate the height of the scroll container based on how many scores there are.
+                var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
 
-                var drawable = new DrawableLeaderboardScore(score, i + 1)
+                if (totalUserHeight > Height)
+                    ContentContainer.Height = totalUserHeight;
+                else
+                    ContentContainer.Height = Height;
+
+                for (var i = 0; i < scores.Count; i++)
                 {
-                    Parent = this,
-                    Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
-                    X = -DrawableLeaderboardScore.WIDTH,
-                };
+                    var score = scores[i];
 
-                drawable.MoveToX(0, Easing.OutQuint, 300 + i * 50);
-                Scores.Add(drawable);
-                AddContainedDrawable(drawable);
+                    var drawable = new DrawableLeaderboardScore(score, i + 1)
+                    {
+                        Parent = this,
+                        Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
+                        X = -DrawableLeaderboardScore.WIDTH,
+                    };
+
+                    drawable.MoveToX(0, Easing.OutQuint, 300 + i * 50);
+                    Scores.Add(drawable);
+                    AddContainedDrawable(drawable);
+                }
             }
         }
     }
