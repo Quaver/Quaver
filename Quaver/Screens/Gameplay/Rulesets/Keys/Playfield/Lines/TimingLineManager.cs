@@ -82,7 +82,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Pool = new Queue<TimingLine>();
             while (Info.Count > 0)
             {
-                if (Info.Peek().TrackOffset - HitObjectManager.CurrentTrackPosition < HitObjectManager.CreateObjectPosition)
+                if (Info.Peek().TrackOffset + HitObjectManager.CurrentTrackPosition > HitObjectManager.CreateObjectPosition)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
@@ -94,6 +94,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         public void UpdateObjectPool()
         {
+            Console.WriteLine(Pool.Count + ", " + Info.Count);
             // Update line positions
             foreach (var line in Pool)
                 line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
@@ -111,7 +112,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             }
 
             // Create new pool objects if they are in range
-            while (Info.Count > 0 && Info.Peek().TrackOffset - HitObjectManager.CurrentTrackPosition > HitObjectManager.CreateObjectPosition)
+            while (Info.Count > 0 && HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
                 CreatePoolObject(Info.Dequeue());
         }
 

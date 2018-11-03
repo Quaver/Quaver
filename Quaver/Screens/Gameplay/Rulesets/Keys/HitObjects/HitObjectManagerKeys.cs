@@ -291,7 +291,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add more hit objects to the pool if necessary
             foreach (var lane in HitObjectQueue)
             {
-                while (lane.Count > 0 && GetPositionFromTime(lane.Peek().StartTime) + CurrentTrackPosition > CreateObjectPosition)
+                while (lane.Count > 0 && CurrentTrackPosition - GetPositionFromTime(lane.Peek().StartTime) > CreateObjectPosition)
                 {
                     CreatePoolObject(lane.Dequeue());
                 }
@@ -401,6 +401,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if dead object is ready for recycle
             foreach (var lane in DeadNotes)
             {
+                // todo: reference correct position to compensate for SV change
                 while (lane.Count > 0 &&
                     (CurrentTrackPosition - lane.Peek().LongNoteTrackPosition > RecycleObjectPosition))
                 {

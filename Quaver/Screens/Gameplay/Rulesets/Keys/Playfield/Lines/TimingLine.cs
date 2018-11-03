@@ -55,7 +55,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
             TrackPosition = Info.TrackOffset - offset;
             Y = (TrackPosition * speed / HitObjectManagerKeys.TrackRounding) + GlobalTrackOffset;
-            Console.WriteLine("offset: " + Info.TrackOffset  + ", position: " + TrackPosition + ", manager: " + offset);
         }
     }
 }
