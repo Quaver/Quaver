@@ -36,7 +36,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     Initializes the background helper for the entire game.
         /// </summary>
-        public static void Initialize() => Background = new BackgroundImage(UserInterface.MenuBackground, 0, false);
+        public static void Initialize() => Background = new BackgroundImage(UserInterface.MenuBackground, 0);
 
         /// <summary>
         /// </summary>

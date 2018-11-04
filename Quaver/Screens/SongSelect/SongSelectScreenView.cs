@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Online.Chat;
@@ -11,6 +12,7 @@ using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.SongSelect.UI;
 using Quaver.Screens.SongSelect.UI.Banner;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
+using Quaver.Screens.SongSelect.UI.Maps;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Screens.SongSelect.UI.Mapsets.Search;
 using Wobble;
@@ -84,7 +86,7 @@ namespace Quaver.Screens.SongSelect
             CreateMapsetSearchContainer();
             CreateDividerLine();
             CreateLeaderboard();
-
+            
             CreateUserProfile();
         }
 
@@ -161,20 +163,11 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Creates the audio visaulizer container for the screen
         /// </summary>12
-        private void CreateAudioVisualizer()
+        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
         {
-            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
-            {
-                Parent = Container,
-                Alignment = Alignment.BotLeft
-            };
-
-            Visualizer.Bars.ForEach(x =>
-            {
-                x.Tint = Colors.MainAccent;
-                x.Alpha = 0.50f;
-            });
-        }
+            Parent = Container,
+            Alignment = Alignment.BotLeft
+        };
 
         /// <summary>
         ///     Creates the container to scroll for different mapsets.

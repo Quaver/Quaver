@@ -63,7 +63,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 80;
+        public static int HEIGHT { get; } = 86;
 
         /// <inheritdoc />
         /// <summary>
@@ -71,9 +71,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         public DrawableMapset(MapsetScrollContainer container)
         {
             Container = container;
-            Size = new ScalableVector2(414, HEIGHT);
+            Size = new ScalableVector2(416, HEIGHT);
             Tint = Color.Black;
-            Alpha = 0.45f;
+            Alpha = 0.85f;
             AddBorder(Color.White, 2);
 
             Thumbnail = new Sprite()
@@ -142,6 +142,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Animations.Clear();
                 ChangeWidthTo(514, Easing.OutQuint, 400);
 
+                Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.85f, 400));
+
                 Title.Animations.Clear();
                 Artist.Animations.Clear();
                 Creator.Animations.Clear();
@@ -179,6 +181,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             {
                 Animations.Clear();
                 ChangeWidthTo(414, Easing.OutQuint, 400);
+
+                Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
 
                 Title.Animations.Clear();
                 Artist.Animations.Clear();
