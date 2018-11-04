@@ -102,8 +102,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             BackgroundHelper.Background.Dim = 50;
 
             // Load the background of the map if necessary.
-            if (BackgroundHelper.Map != MapManager.Selected.Value)
-                LoadNewBackgroundIfNecessary(null);
+            //if (BackgroundHelper.Map != MapManager.Selected.Value)
+            //    LoadNewBackgroundIfNecessary(null);
 
             InitializeMapsetBuffer();
         }
@@ -162,7 +162,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             // Load new audio if needed.
             LoadNewAudioTrackIfNecessary(previousMap);
-            LoadNewBackgroundIfNecessary(previousMap);
+            // LoadNewBackgroundIfNecessary(previousMap);
         }
 
         /// <summary>
@@ -226,36 +226,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 var mapset = Screen.AvailableMapsets[SelectedMapsetIndex];
                 SelectMap(SelectedMapsetIndex, mapset.PreferredMap ?? mapset.Maps.First(), true);
             }
-        }
-
-        private void RefreshMapsetBuffer()
-        {
-            for (var i = 0; i < MapsetBuffer.Count; i++)
-            {
-                // Mapset exists, so we can safely update it.
-                if (PoolStartingIndex + i < Screen.AvailableMapsets.Count)
-                {
-                    var mapset = MapsetBuffer[i];
-                    mapset.UpdateWithNewMapset(Screen.AvailableMapsets[PoolStartingIndex + i], PoolStartingIndex + i);
-
-                    mapset.Y = (PoolStartingIndex + i) * DrawableMapset.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstSet;
-
-                    if (i == SelectedMapsetIndex)
-                        mapset.DisplayAsSelected(MapManager.Selected.Value);
-
-                    if (mapset.Parent != this)
-                        AddContainedDrawable(mapset);
-                }
-                else
-                {
-                    if (MapsetBuffer[i].Parent == this)
-                        RemoveContainedDrawable(MapsetBuffer[i]);
-                }
-            }
-
-            RecalculateContainerHeight();
-            SnapToInitialMapset();
-            UpdateButtonSelectedStatus();
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <param name="gameTime"></param>
         public static void Draw(GameTime gameTime)
         {
-            if (!HasBlurred)
+            /*if (!HasBlurred)
             {
                 try
                 {
@@ -67,7 +67,7 @@ namespace Quaver.Graphics.Backgrounds
 
                 Background.Image = newTex;
                 HasBlurred = true;
-            }
+            }*/
 
             Background?.Draw(gameTime);
         }
@@ -79,6 +79,9 @@ namespace Quaver.Graphics.Backgrounds
         /// <param name="afterLoad"></param>
         public static void QueueLoad(Action<Texture2D, Map, Texture2D> afterLoad) => Scheduler.RunThread(() =>
         {
+            afterLoad(UserInterface.MenuBackground, Map, Background.Image);
+
+            return;
             var currentTex = Background.Image;
             Map = MapManager.Selected.Value;
 

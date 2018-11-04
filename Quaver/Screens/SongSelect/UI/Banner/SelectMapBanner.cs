@@ -112,8 +112,8 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             CreateRankedStatus();
             Metadata = new BannerMetadata(this);
 
-            MapManager.Selected.ValueChanged += OnMapChange;
-            LoadBanner(null);
+            //MapManager.Selected.ValueChanged += OnMapChange;
+            //LoadBanner(null);
             UpdateText(MapManager.Selected.Value);
         }
 

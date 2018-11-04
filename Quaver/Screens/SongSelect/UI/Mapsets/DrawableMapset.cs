@@ -161,7 +161,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 1, 400));
             }
 
-            LoadThumbnail(map);
+            // LoadThumbnail(map);
         }
 
         /// <summary>
