@@ -171,8 +171,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int) Ruleset.Screen.Timing.Time;
             var hitDifference = gameplayHitObject.Info.StartTime - time;
-            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Press);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press);
             var lane = gameplayHitObject.Info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -195,8 +194,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             ));
 
             // Update Scoreboard
-            var screenView = (GameplayScreenView)Ruleset.Screen.View;
-            screenView.UpdateScoreboardUsers();
+            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
             // Update Playfield
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
@@ -238,9 +236,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var hitDifference = manager.HeldLongNotes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
-            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Release);
-            GameplayScreenView screenView;
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
@@ -262,8 +258,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 ));
 
                 // Update scoreboard
-                screenView = (GameplayScreenView)Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
+                ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
                 // Update Playfield
                 playfield.Stage.ComboDisplay.MakeVisible();
@@ -300,8 +295,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
-            screenView = (GameplayScreenView)Ruleset.Screen.View;
-            screenView.UpdateScoreboardUsers();
+            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
             // Perform hit burst animation
             playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
@@ -333,6 +327,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                         NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
+
+                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
             }
             // Increase
             else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
@@ -348,6 +344,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                         NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
+                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
             }
         }
     }
