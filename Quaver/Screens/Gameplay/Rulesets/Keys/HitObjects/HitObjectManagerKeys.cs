@@ -79,19 +79,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Used to determine the max position for object pooling recycling/creation.
         /// </summary>
-        private float ObjectPositionMagnitude { get; } = 150000;
+        private float ObjectPositionMagnitude { get; } = 300000;
 
         /// <summary>
         ///     The position at which the next Hit Object must be at in order to add a new Hit Object to the pool.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float CreateObjectPosition { get; private set; } = -150000;
+        public float CreateObjectPosition { get; private set; }
 
         /// <summary>
         ///     The position at which the earliest Hit Object must be at before its recycled.
         ///     TODO: Update upon scroll speed changes
         /// </summary>
-        public float RecycleObjectPosition { get; private set; } = 150000;
+        public float RecycleObjectPosition { get; private set; }
 
         /// <summary>
         ///     Current position for Hit Objects.
@@ -208,6 +208,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
 
             // Initialize SV
+            UpdatePoolingPositions();
             InitializeScrollVelocities(map);
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
@@ -431,8 +432,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void ForceUpdateLNSize()
         {
             // Update Object Reference Positions with new scroll speed
-            RecycleObjectPosition = ObjectPositionMagnitude / ScrollSpeed;
-            CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
+            UpdatePoolingPositions();
 
             // Update HitObject LN size
             foreach (var lane in ActiveNotes)
@@ -445,6 +445,15 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in lane)
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
+        }
+
+        /// <summary>
+        ///     Update Hitobject pooling positions to compensate for scroll speed.
+        /// </summary>
+        private void UpdatePoolingPositions()
+        {
+            RecycleObjectPosition = ObjectPositionMagnitude / ScrollSpeed;
+            CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
         }
 
         /// <summary>

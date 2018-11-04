@@ -238,6 +238,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             var hitDifference = manager.HeldLongNotes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
             var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
 
+            // Update animations
+            playfield.Stage.HitLightingObjects[lane].StopHolding();
+            gameplayHitObject.StopLongNoteAnimation();
+
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
@@ -264,7 +268,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 playfield.Stage.ComboDisplay.MakeVisible();
                 playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.EndTime - (int) Ruleset.Screen.Timing.Time);
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-                playfield.Stage.HitLightingObjects[lane].StopHolding();
 
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
