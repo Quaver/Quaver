@@ -112,9 +112,20 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             CreateRankedStatus();
             Metadata = new BannerMetadata(this);
 
-            //MapManager.Selected.ValueChanged += OnMapChange;
+            MapManager.Selected.ValueChanged += OnMapChange;
+
             //LoadBanner(null);
             UpdateText(MapManager.Selected.Value);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChange;
+            base.Destroy();
         }
 
         /// <summary>
@@ -257,7 +268,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// <param name="e"></param>
         private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            LoadBanner(e.OldValue);
+            // LoadBanner(e.OldValue);
             UpdateText(e.Value);
         }
 
