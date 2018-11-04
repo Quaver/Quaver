@@ -82,18 +82,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             ChangeScrollSpeed();
 
             // Handle Replay Input Manager if necessary.
+            // - Grab the previous replay frame that we're on and update the replay's input manager to see if we have any updated frames.
+            // - If the current and previous frames are the same, we don't have to do anything.
             if (ReplayInputManager != null)
             {
-                // Grab the previous replay frame that we're on.
                 var previousReplayFrame = ReplayInputManager.CurrentFrame;
-
-                // Update the replay's input manager to see if we have any updated frames.
                 ReplayInputManager?.HandleInput();
 
-                // Grab the current replay frame.
-                // - If the two frames are the same, we don't have to update Key Press state.
-                var currentReplayFrame = ReplayInputManager.CurrentFrame;
-                if (previousReplayFrame == currentReplayFrame)
+                if (previousReplayFrame == ReplayInputManager.CurrentFrame)
                     return;
             }
 
@@ -101,7 +97,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             for (var lane = 0; lane < BindingStore.Count; lane++)
             {
                 // Is determined by whether a key is uniquely released or pressed.
-                //  - If this value is false, it will not bother handling key press/releases. 
+                // Will not bother handling key presses/releases if this value is false.
                 var needsUpdating = false;
 
                 // A key was uniquely pressed.
@@ -137,8 +133,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                     continue;
 
                 // Update Playfield
-                var stage = ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage;
-                stage.SetReceptorAndLightingActivity(lane, BindingStore[lane].Pressed);
+                ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage.SetReceptorAndLightingActivity(lane, BindingStore[lane].Pressed);
 
                 // Handle Key Pressing/Releasing for this specific frame
                 var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
