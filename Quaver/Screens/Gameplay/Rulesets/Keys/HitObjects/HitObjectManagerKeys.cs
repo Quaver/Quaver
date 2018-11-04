@@ -428,6 +428,26 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
+        ///     Force update LN Size if:
+        ///     - Scroll Speed gets changed.
+        ///     - Acceleration/Deceleration modifiers are toggled on.
+        /// </summary>
+        public void ForceUpdateLNSize()
+        {
+            foreach (var lane in ActiveNotes)
+            {
+                foreach (var hitObject in lane)
+                    hitObject.UpdateLongNoteSize(CurrentTrackPosition);
+            }
+
+            foreach (var lane in DeadNotes)
+            {
+                foreach (var hitObject in lane)
+                    hitObject.UpdateLongNoteSize(CurrentTrackPosition);
+            }
+        }
+
+        /// <summary>
         ///     Kills a note at a specific index of the object pool.
         /// </summary>
         /// <param name="index"></param>
