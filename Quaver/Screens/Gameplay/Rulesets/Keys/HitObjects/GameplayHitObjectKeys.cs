@@ -230,6 +230,20 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (InitialLongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
 
         /// <summary>
+        ///     Will forcibly update LN on scroll speed change or specific modifier.
+        /// </summary>
+        public void ForceUpdateLongnote(long offset)
+        {
+            if (offset < InitialTrackPosition)
+            {
+                UpdateLongNoteSize(InitialTrackPosition);
+                InitialLongNoteSize = CurrentLongNoteSize;
+            }
+
+            UpdateSpritePositions(offset);
+        }
+
+        /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
         public void UpdateSpritePositions(long offset)

@@ -437,13 +437,13 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             foreach (var lane in ActiveNotes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateLongNoteSize(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
 
             foreach (var lane in DeadNotes)
             {
                 foreach (var hitObject in lane)
-                    hitObject.UpdateLongNoteSize(CurrentTrackPosition);
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
         }
 
