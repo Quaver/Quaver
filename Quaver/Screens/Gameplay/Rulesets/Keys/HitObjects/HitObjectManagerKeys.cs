@@ -430,15 +430,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void ForceUpdateLNSize()
         {
-            RecycleObjectPosition = ObjectPositionMagnitude;
-            CreateObjectPosition = -ObjectPositionMagnitude;
+            // Update Object Reference Positions with new scroll speed
+            RecycleObjectPosition = ObjectPositionMagnitude / ScrollSpeed;
+            CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
 
+            // Update HitObject LN size
             foreach (var lane in ActiveNotes)
             {
                 foreach (var hitObject in lane)
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
-
             foreach (var lane in DeadNotes)
             {
                 foreach (var hitObject in lane)
