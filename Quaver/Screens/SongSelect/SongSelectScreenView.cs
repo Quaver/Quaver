@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -20,6 +21,8 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
+using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -53,6 +56,11 @@ namespace Quaver.Screens.SongSelect
         public MapsetScrollContainer MapsetScrollContainer { get; private set; }
 
         /// <summary>
+        ///     Allows scrolling to different difficulties (maps))
+        /// </summary>
+        public DifficultyScrollContainer DifficultyScrollContainer { get; private set; }
+
+        /// <summary>
         ///     The banner that displays some map information.
         /// </summary>
         public SelectMapBanner Banner { get; private set; }
@@ -72,6 +80,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         private LeaderboardContainer Leaderboard { get; set; }
 
+        /// <summary>
+        ///     Dictates which container (mapsets, or difficulties) are currently active.
+        /// </summary>
+        public SelectContainerStatus ActiveContainer { get; private set; } = SelectContainerStatus.Mapsets;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -82,11 +95,13 @@ namespace Quaver.Screens.SongSelect
             CreateBottomLine();
             CreateAudioVisualizer();
             CreateMapsetScrollContainer();
+            CreateDifficultyScrollContainer();
             CreateMapBanner();
             CreateMapsetSearchContainer();
             CreateDividerLine();
             CreateLeaderboard();
-            
+
+            // Needs to be called last so it's above the entire UI
             CreateUserProfile();
         }
 
@@ -94,7 +109,16 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
+        public override void Update(GameTime gameTime)
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                SwitchToContainer(SelectContainerStatus.Mapsets);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                SwitchToContainer(SelectContainerStatus.Difficulty);
+
+            Container?.Update(gameTime);
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -186,6 +210,22 @@ namespace Quaver.Screens.SongSelect
         }
 
         /// <summary>
+        ///     Creates the container to scroll to different maps.
+        /// </summary>
+        private void CreateDifficultyScrollContainer()
+        {
+            DifficultyScrollContainer = new DifficultyScrollContainer()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = MapsetScrollContainer.Y,
+            };
+
+            // Hide it originally.
+            DifficultyScrollContainer.X = DifficultyScrollContainer.Width;
+        }
+
+        /// <summary>
         ///     Creates the sprite that displays the map banner.
         /// </summary>
         private void CreateMapBanner()
@@ -235,5 +275,38 @@ namespace Quaver.Screens.SongSelect
             Parent = Container,
             Position = new ScalableVector2(28, DividerLine.Y + DividerLine.Height + 5)
         };
+
+        /// <summary>
+        ///     Switches the UI to the specified ScrollContainer.
+        /// </summary>
+        /// <param name="container"></param>
+        public void SwitchToContainer(SelectContainerStatus container)
+        {
+            if (container == ActiveContainer)
+                return;
+
+            const int time = 500;
+            const int targetX = -28;
+
+            MapsetScrollContainer.ClearAnimations();
+            DifficultyScrollContainer.ClearAnimations();
+
+            switch (container)
+            {
+                case SelectContainerStatus.Mapsets:
+                    MapsetScrollContainer.MoveToX(targetX, Easing.OutQuint, time);
+                    DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, time);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, time);
+                    DifficultyScrollContainer.MoveToX(targetX, Easing.OutQuint, time);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(container), container, null);
+            }
+
+            ActiveContainer = container;
+            Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
+        }
     }
 }

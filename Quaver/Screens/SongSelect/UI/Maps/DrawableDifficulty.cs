@@ -8,7 +8,7 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Screens.SongSelect.UI.Maps
 {
-    public class DrawableMap : Button
+    public class DrawableDifficulty : Button
     {
         /// <summary>
         ///     Sprite that represents the game mode of the map.
@@ -44,7 +44,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableMap()
+        public DrawableDifficulty()
         {
             Size = new ScalableVector2(416, HEIGHT);
             Tint = Color.Black;
