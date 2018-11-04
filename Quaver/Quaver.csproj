@@ -3,8 +3,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <StartupObject />
+    <StartupObject>Quaver.Program</StartupObject>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
@@ -21,16 +22,23 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
-    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj" />
-    <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj" />
+    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
+    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="INIFileParser">
       <HintPath>INIFileParser.dll</HintPath>
     </Reference>
+    <Reference Include="Steamworks.NET">
+      <HintPath>Steamworks.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Graphics\Dialogs\" />
+    <None Update="steam_api64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

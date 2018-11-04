@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Screens.Edit;
@@ -81,7 +81,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
                 // Export Replay Button
                 CreateButton("Edit Map", (sender, args) =>
                 {
-                    ScreenManager.ChangeScreen(new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    QuaverScreenManager.ChangeScreen(new EditorScreen(MapManager.Selected.Value.LoadQua()));
                 }),
             };
 
@@ -109,9 +109,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
         /// <returns></returns>
         private static TextButton CreateButton(string text, EventHandler onClick)
         {
-            var btn = new TextButton(UserInterface.SearchBar, Fonts.Exo2Regular24, text.ToUpper(), 0.50f, onClick)
+            var btn = new TextButton(UserInterface.SearchBar, BitmapFonts.Exo2Regular, text.ToUpper(), 16, onClick)
             {
-                Text = {TextColor = Color.White}
+                Text = {Tint = Color.White}
             };
 
             return btn;

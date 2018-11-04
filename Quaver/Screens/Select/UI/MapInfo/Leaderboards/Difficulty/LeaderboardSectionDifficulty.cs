@@ -7,7 +7,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Select.UI.MapsetSelection;
 using Wobble.Graphics;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
@@ -33,7 +33,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         {
             Difficulties = new List<LeaderboardDifficultyButton>();
 
-            ScrollContainer.EasingType = Easing.EaseOutQuint;
+            ScrollContainer.EasingType = Easing.OutQuint;
             ScrollContainer.TimeToCompleteScroll = 1500;
             ScrollContainer.Scrollbar.Tint = Color.White;
             ScrollContainer.Scrollbar.Width = 3;
@@ -134,15 +134,15 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
 
                     difficulty.X = -difficulty.Width;
 
-                    var t = new Transformation(TransformationProperty.X, Easing.EaseOutQuint, difficulty.X, 0, 600 + 90 * i);
-                    difficulty.Transformations.Add(t);
+                    var t = new Animation(AnimationProperty.X, Easing.OutQuint, difficulty.X, 0, 600 + 90 * i);
+                    difficulty.Animations.Add(t);
 
                     Difficulties.Add(difficulty);
                 }
             }
 
             // Reset the height of the content container.
-            ScrollContainer.ContentContainer.Transformations.Clear();
+            ScrollContainer.ContentContainer.Animations.Clear();
             ScrollContainer.ContentContainer.Y = 0;
             ScrollContainer.TargetY = ScrollContainer.ContentContainer.Y;
             ScrollContainer.PreviousTargetY = ScrollContainer.ContentContainer.Y;
@@ -198,7 +198,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         /// </summary>
         private void SnapToSelectedDifficulty(int mapIndex)
         {
-            ScrollContainer.ContentContainer.Transformations.Clear();
+            ScrollContainer.ContentContainer.Animations.Clear();
 
             if (mapIndex > 2)
                 ScrollContainer.ContentContainer.Y = (-mapIndex + 2) * (Difficulties.First().Height + 5);

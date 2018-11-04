@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
 using Amib.Threading;
 using Quaver.Graphics.Notifications;
-using Quaver.Logging;
+using Wobble.Logging;
 using Action = Amib.Threading.Action;
 
 namespace Quaver.Scheduling
@@ -33,9 +33,8 @@ namespace Quaver.Scheduling
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
-                                                                  "your runtime.log file to a developer.");
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Check runtime.log!");
             }
         });
 
@@ -55,9 +54,8 @@ namespace Quaver.Scheduling
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
-                                                                  "your runtime.log file to a developer.");
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Check runtime.log!");
             }
         });
     }

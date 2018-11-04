@@ -9,7 +9,7 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
@@ -92,7 +92,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             Scrollbar.Tint = Color.White;
 
             ScrollSpeed = 150;
-            EasingType = Easing.EaseOutQuint;
+            EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 2100;
 
             // Select the first map of the first mapset for now.
@@ -229,7 +229,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             PreviousContentContainerY = ContentContainer.Y - 90;
             TargetY = PreviousContentContainerY;
             PreviousTargetY = PreviousContentContainerY;
-            ContentContainer.Transformations.Clear();
+            ContentContainer.Animations.Clear();
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // TODO: Fix this.
             if (SelectedMapIndex == -1)
             {
-                ScreenManager.ChangeScreen(new SelectScreen());
+                QuaverScreenManager.ChangeScreen(new SelectScreen());
                 return;
             }
 
@@ -434,9 +434,9 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             var thumbnail = MapsetButtons[SelectedMapsetIndex].Thumbnail;
 
             thumbnail.Image = BackgroundManager.Background.Image;
-            thumbnail.Transformations.Clear();
-            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
-            thumbnail.Transformations.Add(t);
+            thumbnail.Animations.Clear();
+            var t = new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 250);
+            thumbnail.Animations.Add(t);
         }
     }
 }

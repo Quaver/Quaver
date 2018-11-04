@@ -7,3 +7,9 @@
 [submodule "Wobble"]
 	path = Wobble
 	url = https://github.com/Quaver/Wobble
+[submodule "Quaver.Server.Common"]
+	path = Quaver.Server.Common
+	url = https://github.com/Swan/Quaver.Server.Common
+[submodule "Quaver.Server.Client"]
+	path = Quaver.Server.Client
+	url = https://github.com/Swan/Quaver.Server.Client

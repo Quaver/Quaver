@@ -4,15 +4,16 @@ using System.Linq;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
-using Quaver.Logging;
 using Quaver.Parsers.Etterna;
 using Quaver.Parsers.Osu;
 using Quaver.Scheduling;
+using Quaver.Screens;
 using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using Wobble;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Database.Maps
@@ -52,7 +53,7 @@ namespace Quaver.Database.Maps
         private static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
             if (!QueueReady)
-                Logger.LogInfo($"Detected directory change at: {e.FullPath}", LogType.Runtime);
+                Logger.Debug($"Detected directory change at: {e.FullPath}", LogType.Runtime);
 
             QueueReady = true;
         }
@@ -81,7 +82,7 @@ namespace Quaver.Database.Maps
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -135,7 +136,7 @@ namespace Quaver.Database.Maps
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogError(ex, LogType.Runtime);
+                        Logger.Error(ex, LogType.Runtime);
                         NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
                     }
 
@@ -147,11 +148,11 @@ namespace Quaver.Database.Maps
             {
                 try
                 {
-                    ScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
+                    QuaverScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError(ex, LogType.Runtime);
+                    Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
             }
@@ -168,7 +169,7 @@ namespace Quaver.Database.Maps
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogError(ex, LogType.Runtime);
+                        Logger.Error(ex, LogType.Runtime);
                         NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
                     }
 
@@ -188,7 +189,7 @@ namespace Quaver.Database.Maps
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogError(ex, LogType.Runtime);
+                        Logger.Error(ex, LogType.Runtime);
                         NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
                     }
 

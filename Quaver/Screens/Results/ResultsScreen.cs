@@ -18,8 +18,8 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
@@ -27,16 +27,26 @@ using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
 using Quaver.Screens.Select;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
+using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Results
 {
-    public class ResultsScreen : Screen
+    public class ResultsScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Results;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -45,7 +55,7 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Where we are coming from when loading this results screen.
         /// </summary>
-        public ResultsScreenType Type { get; }
+        public ResultsScreenType ResultsScreenType { get; }
 
         /// <summary>
         ///     Reference to the gameplay screen that was just played (if it exists)
@@ -116,7 +126,7 @@ namespace Quaver.Screens.Results
         {
             GameplayScreen = gameplayScreen;
             Qua = GameplayScreen.Map;
-            Type = ResultsScreenType.FromGameplay;
+            ResultsScreenType = ResultsScreenType.FromGameplay;
 
             InitializeScreen();
         }
@@ -129,7 +139,7 @@ namespace Quaver.Screens.Results
         {
             Replay = replay;
             ScoreProcessor = new ScoreProcessorKeys(replay);
-            Type = ResultsScreenType.FromReplayFile;
+            ResultsScreenType = ResultsScreenType.FromReplayFile;
 
             InitializeScreen();
         }
@@ -160,7 +170,7 @@ namespace Quaver.Screens.Results
             };
 
             ScoreProcessor = new ScoreProcessorKeys(Replay);
-            Type = ResultsScreenType.FromLocalScore;
+            ResultsScreenType = ResultsScreenType.FromLocalScore;
 
             InitializeScreen();
         }
@@ -170,7 +180,7 @@ namespace Quaver.Screens.Results
         /// </summary>
         private void InitializeScreen()
         {
-            switch (Type)
+            switch (ResultsScreenType)
             {
                 case ResultsScreenType.FromGameplay:
                     InitializeFromGameplay();
@@ -231,6 +241,19 @@ namespace Quaver.Screens.Results
             Scheduler.RunThread(SaveHitData);
             Scheduler.RunThread(SaveHealthData);
 #endif
+
+            // Submit score if online
+            if (OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Submitting score...");
+
+                Scheduler.RunThread(() =>
+                {
+                    OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
+                        ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                        SteamManager.PTicket));
+                });
+            }
         }
 
         /// <summary>
@@ -280,8 +303,8 @@ namespace Quaver.Screens.Results
             // Send the user back to the song select screen with an error if there was no found mapset.
             if (mapset == null)
             {
-                Logger.LogError($"You do not have the map that this replay is for", LogType.Runtime);
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                Logger.Error($"You do not have the map that this replay is for", LogType.Runtime);
+                QuaverScreenManager.ChangeScreen(new MenuScreen());
                 return;
             }
 
@@ -323,7 +346,7 @@ namespace Quaver.Screens.Results
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There was an error saving your score. Check Runtime.log for more details.");
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
 
             try
@@ -333,7 +356,7 @@ namespace Quaver.Screens.Results
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -384,7 +407,7 @@ namespace Quaver.Screens.Results
             }
             catch (Exception e)
             {
-                Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
+                Logger.Error($"There was an error when writing debug replay files: {e}", LogType.Runtime);
             }
         }
 
@@ -395,7 +418,7 @@ namespace Quaver.Screens.Results
         {
             NotificationManager.Show(NotificationLevel.Info, "One moment, we're exporting your replay.");
 
-            if (Type == ResultsScreenType.FromLocalScore)
+            if (ResultsScreenType == ResultsScreenType.FromLocalScore)
             {
                 try
                 {
@@ -473,7 +496,7 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Action that goes back to the song select screen.
         /// </summary>
-        public void GoBackToMenu() => ScreenManager.ChangeScreen(new SelectScreen());
+        public void GoBackToMenu() => QuaverScreenManager.ChangeScreen(new SelectScreen());
 
         /// <summary>
         ///     Loads up local scores and watches the replay.
@@ -484,7 +507,7 @@ namespace Quaver.Screens.Results
 
             // If the replay is from a local score, then read the replay here.
             // NOTE: If loading from gameplay/replay file, the replay to use is already established.
-            if (Type == ResultsScreenType.FromLocalScore)
+            if (ResultsScreenType == ResultsScreenType.FromLocalScore)
             {
                 try
                 {
@@ -492,14 +515,14 @@ namespace Quaver.Screens.Results
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
-                    ScreenManager.ChangeScreen(new SelectScreen());
+                    Logger.Error(e, LogType.Runtime);
+                    QuaverScreenManager.ChangeScreen(new SelectScreen());
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                     return;
                 }
             }
 
-            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
+            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
         }
 
         /// <summary>
@@ -508,7 +531,7 @@ namespace Quaver.Screens.Results
         public void RetryMap()
         {
             var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
-            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores));
+            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores));
         }
 
         /// <summary>
@@ -519,10 +542,10 @@ namespace Quaver.Screens.Results
             DiscordManager.Client.CurrentPresence.Timestamps = null;
 
             // Don't change if we're loading in from a replay file.
-            if (Type == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
+            if (ResultsScreenType == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
             {
                 DiscordManager.Client.CurrentPresence.Details = "Idle";
-                DiscordManager.Client.CurrentPresence.State = "In the menus";
+                DiscordManager.Client.CurrentPresence.State = "In the Menus";
                 DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
                 return;
             }
@@ -537,5 +560,11 @@ namespace Quaver.Screens.Results
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "",
+            (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
     }
 }

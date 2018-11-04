@@ -9,7 +9,7 @@ using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -17,6 +17,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Modifiers;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
@@ -28,7 +29,7 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 using Wobble.Window;
@@ -136,7 +137,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     The results screen to be loaded in the future on play completion.
         /// </summary>
-        private Screen FutureResultsScreen { get; set; }
+        private QuaverScreen FutureResultsScreen { get; set; }
 
         /// <summary>
         ///     When the results screen has successfully loaded, we'll be considered clear
@@ -186,10 +187,10 @@ namespace Quaver.Screens.Gameplay
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Tint = Color.Black,
                 Alpha = 1,
-                Transformations =
+                Animations =
                 {
                     // Fade in from black.
-                    new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 1500)
+                    new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 1500)
                 }
             };
 
@@ -484,13 +485,13 @@ namespace Quaver.Screens.Gameplay
             // Start fading out the screen.
             if (!FadingOnPlayCompletion)
             {
-                Transitioner.Transformations.Clear();
+                Transitioner.Animations.Clear();
 
                 // Get the initial alpha of the sceen transitioner, because it can be different based
-                // on if the user failed or not, and use this in the transformation
+                // on if the user failed or not, and use this in the Animation
                 var initialAlpha = Screen.Failed ? 0.65f : 0;
 
-                Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, initialAlpha, 1, 1000));
+                Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, initialAlpha, 1, 1000));
                 FadingOnPlayCompletion = true;
             }
 
@@ -498,7 +499,7 @@ namespace Quaver.Screens.Gameplay
             {
                 // Change background dim before switching screens.
                 BackgroundManager.Background.Dim = 0;
-                ScreenManager.ChangeScreen(FutureResultsScreen);
+                QuaverScreenManager.ChangeScreen(FutureResultsScreen);
             }
         }
 
@@ -518,12 +519,12 @@ namespace Quaver.Screens.Gameplay
 
         private void FadeBackgroundToDim()
         {
-            BackgroundManager.Background.BrightnessSprite.Transformations.Clear();
+            BackgroundManager.Background.BrightnessSprite.Animations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, BackgroundManager.Background.BrightnessSprite.Alpha,
+            var t = new Animation(AnimationProperty.Alpha, Easing.Linear, BackgroundManager.Background.BrightnessSprite.Alpha,
                 (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
 
-            BackgroundManager.Background.BrightnessSprite.Transformations.Add(t);
+            BackgroundManager.Background.BrightnessSprite.Animations.Add(t);
 
             // Blur background strength
             // BackgroundManager.Background.Strength = ConfigManager.BackgroundBlur.Value;

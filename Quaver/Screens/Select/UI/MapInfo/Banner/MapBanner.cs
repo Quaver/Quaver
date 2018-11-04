@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -10,7 +10,7 @@ using Quaver.Helpers;
 using Quaver.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Window;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Banner
@@ -181,7 +181,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Artist Text.
         /// </summary>
-        private void CreateArtistText() => TextArtist = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Artist,  0.65f)
+        private void CreateArtistText() => TextArtist = new SpriteText(BitmapFonts.Exo2Regular, MapManager.Selected.Value.Artist, 16)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -191,7 +191,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the song title text.
         /// </summary>
-        private void CreateTitleText() => TextTitle = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Title,  0.60f)
+        private void CreateTitleText() => TextTitle = new SpriteText(BitmapFonts.Exo2Regular, MapManager.Selected.Value.Title,  16)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -200,8 +200,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Difficulty text
         /// </summary>
-        private void CreateDifficultyText() => TextDifficulty = new SpriteText(Fonts.Exo2BoldItalic24,
-            MapManager.Selected.Value.DifficultyName,  0.50f)
+        private void CreateDifficultyText() => TextDifficulty = new SpriteText(BitmapFonts.Exo2BoldItalic,
+            MapManager.Selected.Value.DifficultyName,  16)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -210,8 +210,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Creator text.
         /// </summary>
-        private void CreateCreatorText() => TextCreator = new SpriteText(Fonts.Exo2Regular24,
-            $"- By: {MapManager.Selected.Value.Creator}",  0.45f)
+        private void CreateCreatorText() => TextCreator = new SpriteText(BitmapFonts.Exo2Regular,
+            $"- By: {MapManager.Selected.Value.Creator}", 16)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -222,7 +222,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// </summary>
         private void CreateModsText()
         {
-            TextMods = new SpriteText(Fonts.Exo2Italic24, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 0.45f)
+            TextMods = new SpriteText(BitmapFonts.Exo2BoldItalic, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 16)
             {
                 Parent = Brightness,
                 Alignment = Alignment.TopRight,
@@ -238,17 +238,10 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         {
             const int leftSideSpacing = 15;
 
-            var textArtistSize = TextArtist.MeasureString() / 2f;
-            TextArtist.Position = new ScalableVector2(textArtistSize.X + leftSideSpacing, textArtistSize.Y + 25);
-
-            var textTitleSize = TextTitle.MeasureString() / 2f;
-            TextTitle.Position = new ScalableVector2(textTitleSize.X + leftSideSpacing, TextArtist.Y + textArtistSize.Y + 15);
-
-            var textDifficultySize = TextDifficulty.MeasureString() / 2f;
-            TextDifficulty.Position = new ScalableVector2(textDifficultySize.X + leftSideSpacing, TextTitle.Y + textTitleSize.Y + 15);
-
-            var textCreatorSize = TextCreator.MeasureString() / 2f;
-            TextCreator.Position = new ScalableVector2(textCreatorSize.X + leftSideSpacing, TextDifficulty.Y + textDifficultySize.Y + 15);
+            TextArtist.Position = new ScalableVector2(leftSideSpacing, TextArtist.Height + 25);
+            TextTitle.Position = new ScalableVector2(leftSideSpacing, TextArtist.Y + TextArtist.Height + 15);
+            TextDifficulty.Position = new ScalableVector2(leftSideSpacing, TextTitle.Y + TextTitle.Height + 15);
+            TextCreator.Position = new ScalableVector2(leftSideSpacing, TextDifficulty.Y + TextDifficulty.Height + 15);
         }
 
         /// <summary>
@@ -268,8 +261,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// </summary>
         private void AlignModsText()
         {
-            var modsTextSize = TextMods.MeasureString() / 2f;
-            TextMods.Position = new ScalableVector2(-modsTextSize.X - 15, 15);
+            TextMods.Position = new ScalableVector2(-15, 15);
         }
 
         /// <summary>
@@ -341,9 +333,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             if (fadeBackground)
             {
                 // Dim the background.
-                Brightness.Transformations.Clear();
-                var brightnessTf = new Transformation(TransformationProperty.Alpha, Easing.Linear, Brightness.Alpha, 1, 200);
-                Brightness.Transformations.Add(brightnessTf);
+                Brightness.Animations.Clear();
+                var brightnessTf = new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 1, 200);
+                Brightness.Animations.Add(brightnessTf);
             }
 
             // Update song information text
@@ -380,9 +372,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             Background.Image = e.Texture;
 
             // Undim the background.
-            Brightness.Transformations.Clear();
-            var brightnessTf = new Transformation(TransformationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.40f, 300);
-            Brightness.Transformations.Add(brightnessTf);
+            Brightness.Animations.Clear();
+            var brightnessTf = new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.40f, 300);
+            Brightness.Animations.Add(brightnessTf);
         }
 
         /// <summary>

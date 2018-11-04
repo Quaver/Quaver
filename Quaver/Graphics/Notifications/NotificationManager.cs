@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Helpers;
 using Wobble.Graphics;
 
@@ -31,10 +31,10 @@ namespace Quaver.Graphics.Notifications
         /// <summary>
         ///     The initial position every queued notification.
         /// </summary>
-        private static Vector2 InitialPosition { get; } = new Vector2(350, 120);
+        private static Vector2 InitialPosition { get; } = new Vector2(350, 130);
 
         ///  <summary>
-        /// 
+        ///
         ///  </summary>
         /// <param name="gameTime"></param>
         public static void Update(GameTime gameTime)

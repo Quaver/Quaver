@@ -1,4 +1,4 @@
-﻿using Quaver.Assets;
+using Quaver.Resources;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;
@@ -26,18 +26,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         {
             Tint = Color.Black;
             Alpha = 0;
-            KeyText = new SpriteText(Fonts.Exo2Regular24, key.ToUpper() + ":")
+            KeyText = new SpriteText(BitmapFonts.Exo2Regular, key.ToUpper() + ":", 16)
             {
                 Parent = this,
-                TextScale = 0.45f,
                 Alignment = Alignment.MidLeft,
                 Y = 1
             };
 
-            ValueText = new SpriteText(Fonts.Exo2BoldItalic24, value.ToUpper())
+            ValueText = new SpriteText(BitmapFonts.Exo2BoldItalic, value.ToUpper(), 16)
             {
                 Parent = this,
-                TextScale = 0.45f,
                 Alignment = Alignment.MidLeft,
                 Y = 1
             };
@@ -50,10 +48,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// </summary>
         private void AlignText()
         {
-            KeyText.X = KeyText.MeasureString().X / 2f;
-            ValueText.X = KeyText.MeasureString().X + 3 + ValueText.MeasureString().X / 2f;
-            Size = new ScalableVector2(KeyText.MeasureString().X / 2f + 10 + ValueText.MeasureString().X / 2f + ValueText.X / 2f,
-                KeyText.MeasureString().Y);
+            KeyText.X = KeyText.Width;
+            ValueText.X = ValueText.Width;
+            Size = new ScalableVector2(KeyText.Width + 10 + ValueText.Width + ValueText.X / 2f, KeyText.Height);
         }
 
         /// <summary>

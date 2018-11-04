@@ -21,7 +21,7 @@ namespace Quaver.Modifiers.Mods.Mania
 
         /// <inheritdoc />
         /// <summary>
-        ///     Type
+        ///     ResultsScreenType
         /// </summary>
         public ModType Type { get; set; } = ModType.DifficultyDecrease;
 

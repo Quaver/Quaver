@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Logging;
+using Quaver.API.Enums;
+using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Bindables;
+using Wobble.Logging;
 
 namespace Quaver.Config
 {
@@ -234,10 +236,19 @@ namespace Quaver.Config
         internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     The currently selected game mode.
+        /// </summary>
+        internal static Bindable<GameMode> SelectedGameMode { get; private set; }
+
+        /// <summary>
+        ///     How the user is currently filtering their online users.
+        /// </summary>
+        internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
-
         internal static Bindable<Keys> KeyMania4K2 { get; private set; }
         internal static Bindable<Keys> KeyMania4K3 { get; private set; }
         internal static Bindable<Keys> KeyMania4K4 { get; private set; }
@@ -296,6 +307,11 @@ namespace Quaver.Config
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
 
         /// <summary>
+        ///     Dictates whether or not to display debug log messages.
+        /// </summary>
+        internal static Bindable<bool> DebugDisplayLogMessages { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -341,9 +357,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-
-            Logger.Initialize();
-            Logger.LogSuccess("quaver.cfg config file successfully read.", LogType.Runtime);
+            Logger.Important("Config file has been successfully read.", LogType.Runtime);
         }
 
         /// <summary>
@@ -372,11 +386,8 @@ namespace Quaver.Config
             LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
             DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
             SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
-            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
-            AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
-            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
-            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
-            Username = ReadValue(@"Username", "", data);
+            SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
+            Username = ReadValue(@"Username", "Player", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
@@ -406,6 +417,11 @@ namespace Quaver.Config
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
+            SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
+            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
+            AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
+            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -426,6 +442,11 @@ namespace Quaver.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
+
+            // Have to do this manually.
+            if (string.IsNullOrEmpty(Username.Value))
+                Username.Value = "Player";
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
@@ -492,6 +513,9 @@ namespace Quaver.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
+                    DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
+                    SelectedGameMode.ValueChanged += AutoSaveConfiguration;
+                    SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
@@ -678,7 +702,7 @@ namespace Quaver.Config
 
                 // If too many attempts were made.
                 if (attempts == 2)
-                    Logger.LogError("Too many write attempts to the config file have been made.", LogType.Runtime);
+                    Logger.Error("Too many write attempts to the config file have been made.", LogType.Runtime);
             }
 
             LastWrite = GameBase.Game.TimeRunning;

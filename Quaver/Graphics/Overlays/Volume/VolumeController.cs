@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
@@ -146,7 +146,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region masterVolumeSlider
 
             // Create master volume slider.
-            MasterVolumeSlider = new Slider(ConfigManager.VolumeGlobal, SliderSize, FontAwesome.CircleClosed)
+            MasterVolumeSlider = new Slider(ConfigManager.VolumeGlobal, SliderSize, FontAwesome.Get(FontAwesomeIcon.fa_circle))
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.TopLeft,
@@ -158,7 +158,7 @@ namespace Quaver.Graphics.Overlays.Volume
             MasterVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
-                Image = FontAwesome.Volume,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol),
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(25, 25),
                 Y = MasterVolumeSlider.Y - 10,
@@ -173,7 +173,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region musicVolumeSlider
 
             // Create music volume slider.
-            MusicVolumeSlider = new Slider(ConfigManager.VolumeMusic, SliderSize, FontAwesome.CircleClosed)
+            MusicVolumeSlider = new Slider(ConfigManager.VolumeMusic, SliderSize, FontAwesome.Get(FontAwesomeIcon.fa_circle))
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.MidLeft,
@@ -185,7 +185,7 @@ namespace Quaver.Graphics.Overlays.Volume
             MusicVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
-                Image = FontAwesome.Music,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol),
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(25, 25),
                 Y = MusicVolumeSlider.Y,
@@ -200,7 +200,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region effectVolumeSlider
 
             // Create master volume slider.
-            EffectVolumeSlider = new Slider(ConfigManager.VolumeEffect, SliderSize, FontAwesome.CircleClosed)
+            EffectVolumeSlider = new Slider(ConfigManager.VolumeEffect, SliderSize, FontAwesome.Get(FontAwesomeIcon.fa_circle))
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.BotLeft,
@@ -212,7 +212,7 @@ namespace Quaver.Graphics.Overlays.Volume
             EffectVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
-                Image = FontAwesome.Headphones,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_music_headphones),
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(25, 25),
                 Y = EffectVolumeSlider.Y + 10,

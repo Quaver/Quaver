@@ -1,18 +1,23 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
@@ -88,7 +93,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             CreateModsText();
 
             section.ScrollContainer.AddContainedDrawable(this);
-            Clicked += (sender, args) => ScreenManager.ChangeScreen(new ResultsScreen(Score));
+            Clicked += (sender, args) => QuaverScreenManager.ChangeScreen(new ResultsScreen(Score));
         }
 
         /// <inheritdoc />
@@ -101,17 +106,49 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (Score.IsOnline)
+            {
+                // ReSharper disable once DelegateSubtraction
+                SteamManager.SteamUserAvatarLoaded -= OnAvatarLoaded;
+            }
+
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the user's avatar.
         /// </summary>
-        private void CreateAvatar() => Avatar = new Sprite()
+        private void CreateAvatar()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            Size = new ScalableVector2(Height, Height),
-            Image = ConfigManager.Username.Value == Score.Name ? UserInterface.YouAvatar : UserInterface.UnknownAvatar,
-            X = 50
-        };
+            Avatar = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Height, Height),
+                X = 50
+            };
+
+            if (Score.IsOnline)
+                SteamManager.SteamUserAvatarLoaded += OnAvatarLoaded;
+
+            if (ConfigManager.Username.Value == Score.Name)
+                Avatar.Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
+            else if (Score.IsOnline && SteamManager.UserAvatars.ContainsKey((ulong) Score.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong) Score.SteamId];
+            else
+            {
+                // Request steam avatar.
+                Avatar.Image = UserInterface.UnknownAvatar;
+
+                if (Score.IsOnline)
+                    SteamManager.SendAvatarRetrievalRequest((ulong) Score.SteamId);
+            }
+        }
 
         /// <summary>
         ///     Creates the grade achieved sprite.
@@ -128,95 +165,55 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         ///    Creates the rank text
         /// </summary>
-        private void CreateRank(int rank)
+        private void CreateRank(int rank) => Rank = new SpriteText(BitmapFonts.Exo2Italic, $"{rank}.", 18)
         {
-            Rank = new SpriteText(Fonts.Exo2Italic24, $"{rank}.")
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = 18,
-                TextScale = 0.60f
-            };
-
-            var rankSize = Rank.MeasureString() / 2f;
-            Rank.X += rankSize.X;
-        }
+            Parent = this,
+            Alignment = Alignment.MidLeft,
+            X = 18,
+        };
 
         /// <summary>
         ///     Creates the text for the username.
         /// </summary>
-        private void CreateUsername()
+        private void CreateUsername() => Username = new SpriteText(BitmapFonts.Exo2BoldItalic, Score.Name, 14)
         {
-            Username = new SpriteText(Fonts.Exo2BoldItalic24, Score.Name)
-            {
-                Parent = this,
-                TextScale = 0.50f,
-                X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = 5
-            };
-
-            var size = Username.MeasureString() / 2f;
-            Username.X += size.X;
-            Username.Y += size.Y;
-        }
+            Parent = this,
+            X = GradeAchieved.X + GradeAchieved.Width + 10,
+            Y = 5
+        };
 
         /// <summary>
         ///     Creates the text that displays
         /// </summary>
         /// <param name="value"></param>
-        private void CreateScoreText(string value)
+        private void CreateScoreText(string value) => ScoreText = new SpriteText(BitmapFonts.Exo2Regular, $"{value} / {Score.MaxCombo}x", 14)
         {
-            ScoreText = new SpriteText(Fonts.Exo2Regular24, $"{value} / {Score.MaxCombo}x")
-            {
-                Parent = this,
-                TextScale = 0.45f,
-                X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = Height - 5
-            };
-
-            var size = ScoreText.MeasureString() / 2f;
-
-            ScoreText.X += size.X;
-            ScoreText.Y -= size.Y;
-        }
+            Parent = this,
+            X = GradeAchieved.X + GradeAchieved.Width + 10,
+            Y = Height - 5
+        };
 
         /// <summary>
         ///    Creates the text that displays the accuracy.
         /// </summary>
-        private void CreateAccuracyText()
+        private void CreateAccuracyText() => Accuracy = new SpriteText(BitmapFonts.Exo2Regular, StringHelper.AccuracyToString((float)Score.Accuracy), 14)
         {
-            Accuracy = new SpriteText(Fonts.Exo2Regular24, StringHelper.AccuracyToString((float) Score.Accuracy))
-            {
-                Parent = this,
-                Alignment = Alignment.BotRight,
-                TextScale = 0.45f,
-                X = -10,
-                Y = -5
-            };
-
-            var size = Accuracy.MeasureString() / 2f;
-            Accuracy.X -= size.X;
-            Accuracy.Y -= size.Y;
-        }
+            Parent = this,
+            Alignment = Alignment.BotRight,
+            X = -10,
+            Y = -5
+        };
 
         /// <summary>
         ///     Creates the text that displays the mods.
         /// </summary>
-        private void CreateModsText()
+        private void CreateModsText() => Mods = new SpriteText(BitmapFonts.Exo2Regular, ModHelper.GetModsString(Score.Mods), 14)
         {
-            Mods = new SpriteText(Fonts.Exo2Regular24, ModHelper.GetModsString(Score.Mods))
-            {
-                Parent = this,
-                Alignment = Alignment.TopRight,
-                TextScale = 0.45f,
-                X = -10,
-                Y = 5
-            };
-
-            var size = Mods.MeasureString() / 2f;
-            Mods.X -= size.X;
-            Mods.Y += size.Y;
-        }
+            Parent = this,
+            Alignment = Alignment.TopRight,
+            X = -10,
+            Y = 5
+        };
 
         /// <summary>
         ///
@@ -237,6 +234,32 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Section.ScrollContainer.ScreenRectangle.ToRectangle());
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+        }
+
+        /// <summary>
+        ///     Called when a steam avatar has loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (!Score.IsOnline)
+                return;
+
+            // If it doesn't apply to this message.
+            if (e.SteamId != (ulong) Score.SteamId)
+                return;
+
+            try
+            {
+                Avatar.Animations.Clear();
+                Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                Avatar.Image = e.Texture;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, LogType.Runtime);
+            }
         }
     }
 }

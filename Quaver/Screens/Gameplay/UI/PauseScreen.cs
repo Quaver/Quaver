@@ -10,7 +10,7 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 using Wobble.Window;
@@ -61,10 +61,6 @@ namespace Quaver.Screens.Gameplay.UI
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Alpha = 0,
                 Image = SkinManager.Skin.PauseBackground,
-                SpriteBatchOptions = new SpriteBatchOptions()
-                {
-                    BlendState = BlendState.NonPremultiplied
-                }
             };
 
             // Continue Button
@@ -93,7 +89,7 @@ namespace Quaver.Screens.Gameplay.UI
                     return;
 
                 SkinManager.Skin.SoundRetry.CreateChannel().Play();
-                ScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             })
             {
                 Parent = this,
@@ -151,10 +147,10 @@ namespace Quaver.Screens.Gameplay.UI
         {
             ClearTransformations();
 
-            Background.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 400));
-            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Continue.Width, GetActivePosX(Continue),  400));
-            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Retry.Width, GetActivePosX(Retry), 400));
-            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Quit.Width, GetActivePosX(Quit), 400));
+            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 400));
+            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Continue.Width, GetActivePosX(Continue),  400));
+            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Retry.Width, GetActivePosX(Retry), 400));
+            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Quit.Width, GetActivePosX(Quit), 400));
         }
 
         /// <summary>
@@ -164,10 +160,10 @@ namespace Quaver.Screens.Gameplay.UI
         {
             ClearTransformations();
 
-            Background.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 400));
-            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Continue), -Continue.Width, 800));
-            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Retry), -Retry.Width, 800));
-            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Quit), -Quit.Width, 800));
+            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 400));
+            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Continue), -Continue.Width, 800));
+            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Retry), -Retry.Width, 800));
+            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Quit), -Quit.Width, 800));
         }
 
         /// <summary>
@@ -180,14 +176,14 @@ namespace Quaver.Screens.Gameplay.UI
         public static float GetActivePosX(ImageButton button) => WindowManager.Width / 2f - button.Width / 2f;
 
         /// <summary>
-        ///     Clears all transformations for the pause overlay.
+        ///     Clears all Animations for the pause overlay.
         /// </summary>
         private void ClearTransformations()
         {
-            Background.Transformations.Clear();
-            Continue.Transformations.Clear();
-            Retry.Transformations.Clear();
-            Quit.Transformations.Clear();
+            Background.Animations.Clear();
+            Continue.Animations.Clear();
+            Retry.Animations.Clear();
+            Quit.Animations.Clear();
         }
     }
 }

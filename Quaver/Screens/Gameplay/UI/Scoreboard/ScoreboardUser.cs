@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Modifiers;
 using Quaver.Skinning;
 using Wobble;
@@ -148,31 +148,29 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create username text.
-            Username = new SpriteText(Fonts.AllerRegular16, GetUsernameFormatted())
+            Username = new SpriteText(BitmapFonts.Exo2Bold, GetUsernameFormatted(), 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                TextScale = 0.85f
+                X = Avatar.Width + 10
             };
 
-            SetUsernamePosition();
-
             // Create score text.
-            Score = new SpriteText(Fonts.AllerRegular16, Processor.Score.ToString("N0"))
+            Score = new SpriteText(BitmapFonts.Exo2Medium, Processor.Score.ToString("N0"), 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                TextScale = 0.70f,
-                Alpha = textAlpha
+                Alpha = textAlpha,
+                Y = Username.Y + Username.Height + 2,
+                X = Username.X
             };
 
             // Create score text.
-            Combo = new SpriteText(Fonts.AllerRegular16, $"{Processor.Combo:N0}x")
+            Combo = new SpriteText(BitmapFonts.Exo2Medium, $"{Processor.Combo:N0}x", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                TextScale = 0.78f,
                 Alpha = textAlpha
             };
 
@@ -183,18 +181,8 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
                 Alignment = Alignment.MidCenter,
                 Alpha = textAlpha
             };
-            HitBurst.X = HitBurst.Frames[0].Width / 2f - 20;
-        }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="dt"></param>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            UpdateScoreTextAndPosition();
-            base.Update(gameTime);
+            HitBurst.X = HitBurst.Frames[0].Width / 2f - 20;
         }
 
         /// <summary>
@@ -202,13 +190,14 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal void CalculateScoreForNextObject()
         {
-            // Don't bother calculating if the type is self, because we already have it calculated.
-            // but perform the judgement animation however.
             if (Type == ScoreboardUserType.Self)
             {
+                Score.Text = Processor.Score.ToString("N0");
+                Combo.Text = Processor.Combo.ToString("N0") + "x";
+
                 // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
                 HitBurst.PerformJudgementAnimation(Processor.Combo == 0 ? Judgement.Miss : Processor.Stats.Last().Judgement);
-                SetTextColorBasedOnHealth();
+                SetTintBasedOnHealth();
                 return;
             }
 
@@ -233,43 +222,12 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
                 HitBurst.PerformJudgementAnimation(judgement);
             }
 
-            SetTextColorBasedOnHealth();
+            SetTintBasedOnHealth();
 
-            CurrentHitStat++;
-        }
-
-        /// <summary>
-        ///     Sets the correct username position.
-        /// </summary>
-        private void SetUsernamePosition()
-        {
-            // Set username position.
-            var usernameTextSize = Username.Font.MeasureString(Username.Text);
-            Username.X = Avatar.Width + usernameTextSize.X * Username.TextScale / 2f + 10;
-            Username.Y = usernameTextSize.Y * Username.TextScale / 2f + 2;
-        }
-
-        /// <summary>
-        ///     Updates the text & position to stay aligned.
-        /// </summary>
-        private void UpdateScoreTextAndPosition()
-        {
-            // Username
-            SetUsernamePosition();
-
-            // Score
             Score.Text = Processor.Score.ToString("N0");
-
-            var scoreTextSize = Score.Font.MeasureString(Score.Text);
-            Score.X = Avatar.Width + scoreTextSize.X * Score.TextScale / 2f + 12;
-            Score.Y = Username.Y + scoreTextSize.Y * Score.TextScale / 2f + 12;
-
-            // Combo
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
-            var comboTextSize = Combo.Font.MeasureString(Combo.Text);
-            Combo.X = -comboTextSize.X * Combo.TextScale / 2f - 8;
-            Combo.Y = 0;
+            CurrentHitStat++;
         }
 
         /// <summary>
@@ -282,16 +240,16 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Sets the text's color based on how much health the user has.
         /// </summary>
-        private void SetTextColorBasedOnHealth()
+        private void SetTintBasedOnHealth()
         {
             if (Processor.Health >= 60)
-                Username.TextColor = Color.White;
+                Username.Tint = Color.White;
             else if (Processor.Health >= 40)
-                Username.TextColor = Color.Yellow;
+                Username.Tint = Color.Yellow;
             else if (Processor.Health >= 1)
-                Username.TextColor = Color.Orange;
+                Username.Tint = Color.Orange;
             else
-                Username.TextColor = Color.Red;
+                Username.Tint = Color.Red;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Wobble;
 using Wobble.Graphics;
@@ -32,7 +32,7 @@ namespace Quaver.Screens.Results.UI.ScoreResults
         /// <param name="name"></param>
         public ScoreResultsTable(ResultsScreen screen, string name, List<ScoreResultsInfoItem> items)
                                     : base(new Vector2((WindowManager.Width - 120) / 2f, 120),
-                                            name, Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
+                                            name, BitmapFonts.Exo2Regular, 18, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
             ResultValueItems = items;

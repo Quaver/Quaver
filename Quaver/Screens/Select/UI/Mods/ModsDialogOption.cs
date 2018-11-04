@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
@@ -23,13 +23,13 @@ namespace Quaver.Screens.Select.UI.Mods
         /// <param name="text"></param>
         /// <param name="clickAction"></param>
         public ModsDialogOption(ModsDialogModifier modifier, string text, EventHandler clickAction)
-            : base(UserInterface.BlankBox, Fonts.Exo2Regular24, text, 0.55f, clickAction)
+            : base(UserInterface.BlankBox, BitmapFonts.Exo2Regular, text, 22, clickAction)
         {
             Modifier = modifier;
             Parent = Modifier;
             Tint = ColorHelper.HexToColor("#22af22");
 
-            Size = new ScalableVector2(Text.MeasureString().X + 60, Modifier.Height * 0.55f);
+            Size = new ScalableVector2(60, Modifier.Height);
 
             Deselect();
         }

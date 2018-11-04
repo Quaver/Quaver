@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -13,15 +13,16 @@ using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
-using Quaver.Logging;
+using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
-using Quaver.Screens.Connecting;
+using Quaver.Screens;
 using Quaver.Screens.Menu;
-using Quaver.Screens.Splash;
-using Quaver.Shaders;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -33,6 +34,8 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.IO;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -49,6 +52,11 @@ namespace Quaver
         ///     The volume controller for the game.
         /// </summary>
         public VolumeController VolumeController { get; private set; }
+
+        /// <summary>
+        ///     The current activated screen.
+        /// </summary>
+        public QuaverScreen CurrentScreen { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -102,17 +110,16 @@ namespace Quaver
         {
             base.LoadContent();
 
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
+
             // Load all game assets.
+            BitmapFonts.Load();
             FontAwesome.Load();
-            Fonts.Load();
-            Titles.Load();
             UserInterface.Load();
 
             // Load the user's skin
             SkinManager.Load();
-
-            // Initialize the logger now that we have fonts loaded
-            Logger.Initialize();
 
             // Create the global FPS counter.
             CreateFpsCounter();
@@ -124,7 +131,7 @@ namespace Quaver
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            ScreenManager.ChangeScreen(new SplashScreen());
+            QuaverScreenManager.ChangeScreen(new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -134,6 +141,7 @@ namespace Quaver
         /// </summary>
         protected override void UnloadContent()
         {
+            OnlineManager.Client?.Disconnect();
             base.UnloadContent();
         }
 
@@ -149,11 +157,28 @@ namespace Quaver
 
             base.Update(gameTime);
 
+            if (SteamManager.IsInitialized)
+                SteamAPI.RunCallbacks();
+
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
+            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
+
+            // Global Input
+#if DEBUG
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
+            {
+                ConfigManager.DebugDisplayLogMessages.Value = !ConfigManager.DebugDisplayLogMessages.Value;
+
+                NotificationManager.Show(NotificationLevel.Info,
+                    ConfigManager.DebugDisplayLogMessages.Value
+                        ? $"You are now displaying debug log messages. Press F5 to toggle them off."
+                        : $"You are now hiding debug log messages. Press F5 to toggle them on.");
+            }
+#endif
         }
 
         /// <inheritdoc />
@@ -168,17 +193,17 @@ namespace Quaver
             base.Draw(gameTime);
 
             GameBase.DefaultSpriteBatchOptions.Begin();
-            Logger.Draw(gameTime);
             SpriteBatch.End();
-
-            NotificationManager.Draw(gameTime);
 
             // Draw dialogs
             DialogManager.Draw(gameTime);
 
+            NotificationManager.Draw(gameTime);
+
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
 
+            LogManager.Draw(gameTime);
         }
 
         /// <summary>
@@ -187,6 +212,10 @@ namespace Quaver
         private static void PerformGameSetup()
         {
             ConfigManager.Initialize();
+
+            Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
+            ConfigManager.DebugDisplayLogMessages.ValueChanged += (o, e) => Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
+
             DeleteTemporaryFiles();
 
             LocalScoreCache.CreateTable();
@@ -206,7 +235,6 @@ namespace Quaver
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
             {
                 AudioTrack.GlobalVolume = e.Value;
-                AudioSample.GlobalVolume = e.Value;
             };
 
             // Change track volume whenever it changed
@@ -262,14 +290,14 @@ namespace Quaver
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(Fonts.AllerBold16, 0.80f)
+            var fpsCounter = new FpsCounter(BitmapFonts.Exo2SemiBold, 16)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
                 TextFps =
                 {
-                    TextColor = Color.LimeGreen
+                    Tint = Color.LimeGreen
                 },
                 X = -10,
                 Y = -10,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Modifiers;
 using Quaver.Skinning;
@@ -80,7 +80,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Alpha = 1,
-                Image = FontAwesome.CaretDown,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_caret_down),
                 Y = -Height - 3,
                 Size = new ScalableVector2(8, 8)
             };
@@ -116,6 +116,7 @@ namespace Quaver.Screens.Gameplay.UI
                 CurrentLinePoolIndex = 0;
 
             LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
+
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods);
             LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
         }

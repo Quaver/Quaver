@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 
@@ -52,14 +52,13 @@ namespace Quaver.Screens.Select.UI.Search
         /// </summary>
         private void CreateOrderByText()
         {
-            TextOrderBy = new SpriteText(Fonts.Exo2Regular24, "Order By:", 0.45f)
+            TextOrderBy = new SpriteText(BitmapFonts.Exo2Regular, "Order By:", 14)
             {
                 Parent = this,
-                TextColor = Colors.MainAccent
+                Tint = Colors.MainAccent
             };
 
-            TextOrderBy.Y += TextOrderBy.MeasureString().Y + 1;
-            TextOrderBy.X = FilterButtons[OrderMapsetsBy.Artist].X - TextOrderBy.MeasureString().X / 2f - 10;
+            TextOrderBy.X = FilterButtons[OrderMapsetsBy.Artist].X - 10;
         }
 
         private void CreateFilterButtons()
@@ -73,22 +72,18 @@ namespace Quaver.Screens.Select.UI.Search
             {
                 var orderOption = enumValues[i];
 
-                var button = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, orderOption, 0.45f)
+                var button = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, orderOption, 14)
                 {
                     Parent = this,
                     Alpha = 0,
                     Text =
                     {
-                        TextColor = (OrderMapsetsBy) i == ConfigManager.SelectOrderMapsetsBy.Value ? Colors.SecondaryAccent : Color.White
+                        Tint = (OrderMapsetsBy) i == ConfigManager.SelectOrderMapsetsBy.Value ? Colors.SecondaryAccent : Color.White
                     }
                 };
 
-                var textSize = button.Text.MeasureString();
                 const int extraButtonHeight = 5;
-                button.Size = new ScalableVector2(textSize.X, textSize.Y + extraButtonHeight);
-
-                button.X = SearchBar.SearchBox.X + SearchBar.SearchBox.Width - textSize.X / 2f;
-                button.Y += (textSize.Y - extraButtonHeight) / 2f;
+                button.Size = new ScalableVector2(button.Text.Width, button.Text.Height + extraButtonHeight);
 
                 // When the button is clicked
                 var option = (OrderMapsetsBy) i;
@@ -121,8 +116,8 @@ namespace Quaver.Screens.Select.UI.Search
                 return;
 
             // Change the color of the button.
-            button.Text.Transformations.Clear();
-            button.Text.Transformations.Add(new Transformation(Easing.Linear, button.Text.TextColor, Colors.SecondaryAccent, 200));
+            button.Text.Animations.Clear();
+            button.Text.Animations.Add(new Animation(Easing.Linear, button.Text.Tint, Colors.SecondaryAccent, 200));
 
             // Change the color of the other buttons.
             foreach (var item in FilterButtons)
@@ -130,8 +125,8 @@ namespace Quaver.Screens.Select.UI.Search
                 if (item.Key == orderMapsetsBy)
                     continue;
 
-                item.Value.Text.Transformations.Clear();
-                item.Value.Text.Transformations.Add(new Transformation(Easing.Linear, button.Text.TextColor,
+                item.Value.Text.Animations.Clear();
+                item.Value.Text.Animations.Add(new Animation(Easing.Linear, button.Text.Tint,
                                                         Color.White, 200));
             }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -37,7 +37,7 @@ namespace Quaver.Screens.Results.UI.Statistics
         /// <param name="stats"></param>
         public ResultsScoreStatistics(ResultsScreen screen, JudgementBreakdown breakdown, List<StatisticContainer> stats = null)
                                     : base(new Vector2(breakdown.Width, breakdown.Height),
-                                                "Statistics", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
+                                                "Statistics", BitmapFonts.Exo2Regular, 22, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
             X = Width / 2f + 10;
@@ -67,12 +67,11 @@ namespace Quaver.Screens.Results.UI.Statistics
             if (StatsContainers.Count == 0)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                new SpriteText(Fonts.Exo2Regular24, "No statistics available. Play the map or watch the replay to retrieve them.")
+                new SpriteText(BitmapFonts.Exo2Regular, "No statistics available. Play the map or watch the replay to retrieve them.", 14)
                 {
                     Parent = content,
                     Alignment = Alignment.MidCenter,
                     TextAlignment = Alignment.MidCenter,
-                    TextScale = 0.50f
                 };
 
                 return content;
@@ -110,13 +109,13 @@ namespace Quaver.Screens.Results.UI.Statistics
                 StatsContainers[i].Content.SetChildrenAlpha = true;
 
                 // Create Tab Button
-                StatsContainers[i].Button = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24,
-                                                            StatsContainers[i].Name.ToUpper(), 0.45f)
+                StatsContainers[i].Button = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular,
+                                                            StatsContainers[i].Name.ToUpper(), 16)
                 {
                     Parent = buttonContainer,
                     Alignment = Alignment.MidLeft,
                     Size = new ScalableVector2(150, buttonContainer.Height),
-                    Text = {TextColor = Color.Black}
+                    Text = {Tint = Color.Black}
                 };
 
                 // Make a shorter reference to the tab button for easy access.
@@ -126,14 +125,14 @@ namespace Quaver.Screens.Results.UI.Statistics
                 if (i == 0)
                 {
                     btn.Tint = Colors.SecondaryAccent;
-                    btn.Text.TextColor = Color.Black;
+                    btn.Text.Tint = Color.Black;
                 }
                 // Any other buttons need to be placed as inactive.
                 else
                 {
                     btn.Tint = Color.Black;
                     btn.Alpha = 0.50f;
-                    btn.Text.TextColor = Color.White;
+                    btn.Text.Tint = Color.White;
 
                     // Set button position
                     btn.X = btn.Width * i + i * 10;
@@ -177,7 +176,7 @@ namespace Quaver.Screens.Results.UI.Statistics
                     container.Button.FadeToColor(container.Button.IsHovered ? Colors.SecondaryAccentInactive : Color.Black, dt, 60);
 
                     container.Button.Alpha = MathHelper.Lerp(container.Button.Alpha, 0.5f, (float) Math.Min(dt / 60, 1));
-                    container.Button.Text.TextColor = Color.White;
+                    container.Button.Text.Tint = Color.White;
 
                     // Make sure that the container content itself is hidden
                     container.Content.Alpha = MathHelper.Lerp(container.Content.Alpha, 0, (float)Math.Min(dt / 240, 1));
@@ -187,7 +186,7 @@ namespace Quaver.Screens.Results.UI.Statistics
                     // Make sure button is yellow and focused.
                     container.Button.Alpha = MathHelper.Lerp(container.Button.Alpha, 1f, (float)Math.Min(dt / 60, 1));
                     container.Button.FadeToColor(Colors.SecondaryAccent, dt, 60);
-                    container.Button.Text.TextColor = Color.Black;
+                    container.Button.Text.Tint = Color.Black;
 
                     // Make sure that the contaier content itself is visible
                     container.Content.Alpha = MathHelper.Lerp(container.Content.Alpha, 1, (float)Math.Min(dt / 240, 1));

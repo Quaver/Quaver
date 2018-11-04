@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,10 +7,10 @@ using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Maps;
 using Quaver.Config;
-using Quaver.Logging;
 using Quaver.Parsers.Etterna;
 using SQLite;
 using Wobble;
+using Wobble.Logging;
 using GameMode = Quaver.API.Enums.GameMode;
 
 namespace Quaver.Database.Maps
@@ -50,7 +50,7 @@ namespace Quaver.Database.Maps
 
                 // Fetch all the new maps after syncing and return them.
                 var maps = FetchAllMaps();
-                Logger.LogSuccess($"{maps.Count} maps have been successfully loaded.", LogType.Runtime);
+                Logger.Important($"{maps.Count} maps have been successfully loaded.", LogType.Runtime);
 
                 if (ConfigManager.AutoLoadOsuBeatmaps.Value)
                     maps = maps.Concat(LoadMapsFromOsuDb()).ToList();
@@ -59,13 +59,13 @@ namespace Quaver.Database.Maps
                     maps = maps.Concat(LoadMapsFromEtternaCache()).ToList();
 
                 var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
-                Logger.LogSuccess($"Successfully loaded {maps.Count} in {mapsets.Count} directories.", LogType.Runtime);
+                Logger.Important($"Successfully loaded {maps.Count} in {mapsets.Count} directories.", LogType.Runtime);
 
                 return mapsets;
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 File.Delete(DatabasePath);
                 return LoadMapDatabase();
             }
@@ -80,11 +80,11 @@ namespace Quaver.Database.Maps
             {
                 var conn = new SQLiteConnection(DatabasePath);
                 conn.CreateTable<Map>();
-                Logger.LogSuccess($"Map Database has been created.", LogType.Runtime);
+                Logger.Important($"Map Database has been created.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }
@@ -98,7 +98,7 @@ namespace Quaver.Database.Maps
         {
             // Find all the.qua files in the directory.
             var maps = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories);
-            Logger.LogInfo($"Found: {maps.Length} .qua files in the /songs/ directory.", LogType.Runtime);
+            Logger.Debug($"Found: {maps.Length} .qua files in the /songs/ directory.", LogType.Runtime);
 
             CacheByFileCount(maps);
 
@@ -107,7 +107,7 @@ namespace Quaver.Database.Maps
             mapsList.RemoveAll(x => !File.Exists(x));
             maps = mapsList.ToArray();
 
-            Logger.LogImportant($"After removing missing .qua files, there are now {maps.Length}", LogType.Runtime);
+            Logger.Important($"After removing missing .qua files, there are now {maps.Length}", LogType.Runtime);
 
             CacheByMd5Checksum(maps);
             RemoveMissingMaps();
@@ -130,7 +130,7 @@ namespace Quaver.Database.Maps
             if (mapInDb.Count == maps.Length)
                 return;
 
-            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {maps.Length} vs {mapInDb.Count}", LogType.Runtime);
+            Logger.Important($"Incorrect # of .qua files vs maps detected. {maps.Length} vs {mapInDb.Count}", LogType.Runtime);
 
             // This'll store all the maps we'll be adding into the database.
             var mapsToCache = new List<Map>();
@@ -177,7 +177,7 @@ namespace Quaver.Database.Maps
             var mismatchedMaps = mapInDb
                 .Except(mapInDb.Where(map => fileChecksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
-            Logger.LogImportant($"Found: {mismatchedMaps.Count} maps with unmatched checksums", LogType.Runtime);
+            Logger.Important($"Found: {mismatchedMaps.Count} maps with unmatched checksums", LogType.Runtime);
 
             if (mismatchedMaps.Count > 0)
                 DeleteMapsFromDatabase(mismatchedMaps);
@@ -225,7 +225,7 @@ namespace Quaver.Database.Maps
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
                 }
             }
             DeleteMapsFromDatabase(mapsToDelete);
@@ -272,11 +272,11 @@ namespace Quaver.Database.Maps
                 foreach (var map in maps)
                     new SQLiteConnection(DatabasePath).Delete(map);
 
-                Logger.LogSuccess($"Successfully deleted {maps.Count} maps from the database.", LogType.Runtime);
+                Logger.Important($"Successfully deleted {maps.Count} maps from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -340,11 +340,11 @@ namespace Quaver.Database.Maps
 
                     // Delete the file if its actually a duplicate.
                     File.Delete($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
-                    Logger.LogImportant($"Removed duplicate map: {ConfigManager.SongDirectory}/{map.Directory}/{map.Path}", LogType.Runtime);
+                    Logger.Important($"Removed duplicate map: {ConfigManager.SongDirectory}/{map.Directory}/{map.Path}", LogType.Runtime);
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
                 }
             }
         }
@@ -363,7 +363,7 @@ namespace Quaver.Database.Maps
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }
@@ -383,7 +383,7 @@ namespace Quaver.Database.Maps
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 throw;
             }
         }
@@ -445,12 +445,12 @@ namespace Quaver.Database.Maps
                     maps.Add(newMap);
                 }
 
-                Logger.LogSuccess($"Finished loading: {maps.Count} osu!mania maps", LogType.Runtime);
+                Logger.Important($"Finished loading: {maps.Count} osu!mania maps", LogType.Runtime);
                 return maps;
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
                 return new List<Map>();
             }
         }
@@ -515,7 +515,7 @@ namespace Quaver.Database.Maps
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
 
             return maps;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Skinning;
@@ -100,7 +100,6 @@ namespace Quaver.Screens.Options
             selector.Parent = this;
             selector.Alignment = Alignment.MidRight;
             selector.Size = new ScalableVector2(200, 30);
-            selector.SelectedItemText.TextScale = 0.50f;
 
             selector.ButtonSelectLeft.Size = new ScalableVector2(selector.Height, selector.Height);
             selector.ButtonSelectLeft.X -= 15;
@@ -134,14 +133,13 @@ namespace Quaver.Screens.Options
             slider.Height = 2;
             slider.X -= 80;
 
-            ValueText = new SpriteText(Fonts.Exo2Regular24, slider.BindedValue.Value.ToString())
+            ValueText = new SpriteText(BitmapFonts.Exo2Regular, slider.BindedValue.Value.ToString(), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                TextScale = 0.60f
             };
 
-            ValueText.X -= ValueText.MeasureString().X / 2f + 20;
+            ValueText.X -= ValueText.Width + 20;
 
             // Set the OnChange function to just update the value of the text.
             OnChange = () => { ValueText.Text = slider.BindedValue.Value.ToString(); };
@@ -171,8 +169,7 @@ namespace Quaver.Screens.Options
             button.Parent = this;
             button.Alignment = Alignment.MidRight;
             button.Size = new ScalableVector2(200, 30);
-            button.Text.TextScale = 0.50f;
-            button.Text.TextColor = Color.Black;
+            button.Text.Tint = Color.Black;
             button.Tint = Colors.SecondaryAccent;
             button.X -= 10;
 
@@ -197,14 +194,13 @@ namespace Quaver.Screens.Options
         /// </summary>
         private void CreateNameText()
         {
-            NameText = new SpriteText(Fonts.Exo2Regular24, Name)
+            NameText = new SpriteText(BitmapFonts.Exo2Regular, Name, 18)
             {
                 Parent = this,
-                TextScale = 0.45f,
                 Alignment = Alignment.MidLeft,
             };
 
-            NameText.X += NameText.MeasureString().X / 2f + 15;
+            NameText.X += NameText.Width + 15;
         }
 
         /// <inheritdoc />

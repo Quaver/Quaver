@@ -14,26 +14,35 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
-using Quaver.Logging;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Screens.Gameplay.Replays;
 using Quaver.Screens.Gameplay.Rulesets;
 using Quaver.Screens.Gameplay.Rulesets.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Screens.Menu;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
-using Wobble.Graphics.Transformations;
+using Wobble.Graphics.Animations;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Gameplay
 {
-    public class GameplayScreen : Screen
+    public class GameplayScreen : QuaverScreen
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override QuaverScreenType Type { get; } = QuaverScreenType.Gameplay;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -396,7 +405,7 @@ namespace Quaver.Screens.Gameplay
                 if (gameTime == null)
                 {
                     const string log = "Cannot pause if GameTime is null";
-                    Logger.LogError(log, LogType.Runtime);
+                    Logger.Error(log, LogType.Runtime);
 
                     throw new InvalidOperationException(log);
                 }
@@ -441,10 +450,11 @@ namespace Quaver.Screens.Gameplay
                 DiscordManager.Client.CurrentPresence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time.";
                 DiscordManager.Client.CurrentPresence.Timestamps = null;
                 DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
                 // Fade in the transitioner.
-                screenView.Transitioner.Transformations.Clear();
-                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
+                screenView.Transitioner.Animations.Clear();
+                screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
 
                 // Activate pause menu
                 screenView.PauseScreen.Activate();
@@ -462,13 +472,14 @@ namespace Quaver.Screens.Gameplay
             ResumeTime = GameBase.Game.TimeRunning;
 
             // Fade screen transitioner
-            screenView.Transitioner.Transformations.Clear();
-            var alphaTransformation = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.75f, 0, 400);
-            screenView.Transitioner.Transformations.Add(alphaTransformation);
+            screenView.Transitioner.Animations.Clear();
+            var alphaTransformation = new Animation(AnimationProperty.Alpha, Easing.Linear, 0.75f, 0, 400);
+            screenView.Transitioner.Animations.Add(alphaTransformation);
 
             // Deactivate pause screen.
             screenView.PauseScreen.Deactivate();
             SetRichPresence();
+            OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
         }
 
         /// <summary>
@@ -492,7 +503,7 @@ namespace Quaver.Screens.Gameplay
                     HasQuit = true;
 
                     var view = (GameplayScreenView) View;
-                    view.Transitioner.Transformations.Clear();
+                    view.Transitioner.Animations.Clear();
                     break;
             }
         }
@@ -587,8 +598,8 @@ namespace Quaver.Screens.Gameplay
                     screenView.FadingOnRestartKeyPress = true;
                     screenView.FadingOnRestartKeyRelease = false;
 
-                    screenView.Transitioner.Transformations.Clear();
-                    screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                    screenView.Transitioner.Animations.Clear();
+                    screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear,
                         screenView.Transitioner.Alpha, 1, 100));
                 }
 
@@ -598,9 +609,9 @@ namespace Quaver.Screens.Gameplay
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
                     if (InReplayMode)
-                        ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
                     else
-                        ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
+                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
                 return;
@@ -615,8 +626,8 @@ namespace Quaver.Screens.Gameplay
                 screenView.FadingOnRestartKeyPress = false;
                 screenView.FadingOnRestartKeyRelease = true;
 
-                screenView.Transitioner.Transformations.Clear();
-                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 200));
+                screenView.Transitioner.Animations.Clear();
+                screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 200));
             }
         }
 
@@ -639,8 +650,8 @@ namespace Quaver.Screens.Gameplay
             }
             catch (AudioEngineException e)
             {
-                Console.WriteLine(e);
-                Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
+                Logger.Warning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
             }
             finally
             {
@@ -673,7 +684,42 @@ namespace Quaver.Screens.Gameplay
                 End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate)
             };
 
+            presence.Assets.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordManager.Client.SetPresence(presence);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override UserClientStatus GetClientStatus()
+        {
+            ClientStatus status;
+
+            string content;
+
+            if (InReplayMode)
+            {
+                status = ClientStatus.Watching;
+                content = LoadedReplay.PlayerName;
+            }
+            else if (IsResumeInProgress)
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+            else if (IsPaused)
+            {
+                status = ClientStatus.Paused;
+                content = "";
+            }
+            else
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+
+            return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, content, (long) ModManager.Mods);
         }
     }
 }

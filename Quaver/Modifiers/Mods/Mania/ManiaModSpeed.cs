@@ -4,7 +4,6 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
-using Quaver.Logging;
 
 namespace Quaver.Modifiers.Mods.Mania
 {
@@ -18,13 +17,13 @@ namespace Quaver.Modifiers.Mods.Mania
 
         /// <inheritdoc />
         /// <summary>
-        ///     Identifier (None. Speed is a Type and doesn't have an identifier)
+        ///     Identifier (None. Speed is a ResultsScreenType and doesn't have an identifier)
         /// </summary>
         public ModIdentifier ModIdentifier { get; set; }
 
         /// <inheritdoc />
         /// <summary>
-        ///     Type
+        ///     ResultsScreenType
         /// </summary>
         public ModType Type { get; set; } = ModType.Speed;
 

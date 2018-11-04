@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Assets;
+using Quaver.Resources;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -205,17 +205,15 @@ namespace Quaver.Screens.Options
                 Tint = Color.LightGray
             };
 
-            HeaderText = new SpriteText(Fonts.Exo2Regular24, "Options Menu")
+            HeaderText = new SpriteText(BitmapFonts.Exo2Regular, "Options Menu", 22)
             {
                 Parent = HeaderContainer,
-                TextScale = 0.65f,
                 Alignment = Alignment.MidLeft,
                 X = HeaderFlag.X + 5
             };
 
-            HeaderText.X += HeaderText.MeasureString().X / 1.5f;
 
-            ExitButton = new ImageButton(FontAwesome.Times, (sender, args) => DialogManager.Dismiss())
+            ExitButton = new ImageButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) => DialogManager.Dismiss())
             {
                 Parent = HeaderContainer,
                 Alignment = Alignment.MidRight,
@@ -239,7 +237,7 @@ namespace Quaver.Screens.Options
                 Y = 1
             };
 
-            FooterOkButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "OK", 0.55f,
+            FooterOkButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "OK", 18,
                 (sender, args) => ConfirmChanges())
             {
                 Parent = FooterContainer,
@@ -249,11 +247,12 @@ namespace Quaver.Screens.Options
                 Tint = Colors.SecondaryAccent,
                 Text =
                 {
-                    TextColor = Color.Black
+                    Tint = Color.Black
                 }
             };
 
-            FooterCancelButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Cancel", 0.55f, (sender, args) => DialogManager.Dismiss())
+            FooterCancelButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Cancel", 18,
+                (sender, args) => DialogManager.Dismiss())
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
@@ -262,7 +261,7 @@ namespace Quaver.Screens.Options
                 Tint = Colors.SecondaryAccent,
                 Text =
                 {
-                    TextColor = Color.Black
+                    Tint = Color.Black
                 }
             };
         }
@@ -393,11 +392,11 @@ namespace Quaver.Screens.Options
             }
 
             // Create the option's section
-            return new OptionsSection(this, FontAwesome.Desktop, new List<OptionsItem>
+            return new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), new List<OptionsItem>
             {
                 // Window Resolution
                 new OptionsItem(this, "Resolution", new HorizontalSelector(commonResolutions, new ScalableVector2(50, 10),
-                    Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
+                    BitmapFonts.Exo2Regular, 16, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                     10, (val, index) =>
                     {
                         SkinManager.Skin.SoundClick.CreateChannel().Play();
@@ -409,21 +408,21 @@ namespace Quaver.Screens.Options
 
                 // Full-screen
                 new OptionsItem(this, "Fullscreen", new Checkbox(ConfigManager.WindowFullScreen, new Vector2(20, 20),
-                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false),
+                        FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false),
                     () =>
                     {
                         GameBase.Game.Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
                     }),
 
                 // Background Brightness
-                new OptionsItem(this, "Background Brightness", new Slider(ConfigManager.BackgroundBrightness, Vector2.One, FontAwesome.CircleClosed)),
+                new OptionsItem(this, "Background Brightness", new Slider(ConfigManager.BackgroundBrightness, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
                 // Background Blur
-                new OptionsItem(this, "Background Blur", new Slider(ConfigManager.BackgroundBlur, Vector2.One, FontAwesome.CircleClosed)),
+                new OptionsItem(this, "Background Blur", new Slider(ConfigManager.BackgroundBlur, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
                 // Display FPS counter.
                 new OptionsItem(this, "Display FPS Counter", new Checkbox(ConfigManager.FpsCounter, new Vector2(20, 20),
-                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+                        FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), () => {}),
             }, true);
         }
 
@@ -431,25 +430,26 @@ namespace Quaver.Screens.Options
         ///     Creates the audio section of the options menu.
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Volume, new List<OptionsItem>()
+        private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol),
+            new List<OptionsItem>()
         {
-            new OptionsItem(this, "Master Volume", new Slider(ConfigManager.VolumeGlobal, Vector2.One, FontAwesome.CircleClosed)),
-            new OptionsItem(this, "Music Volume", new Slider(ConfigManager.VolumeMusic, Vector2.One, FontAwesome.CircleClosed)),
-            new OptionsItem(this, "Effect Volume", new Slider(ConfigManager.VolumeEffect, Vector2.One, FontAwesome.CircleClosed)),
+            new OptionsItem(this, "Master Volume", new Slider(ConfigManager.VolumeGlobal, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
+            new OptionsItem(this, "Music Volume", new Slider(ConfigManager.VolumeMusic, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
+            new OptionsItem(this, "Effect Volume", new Slider(ConfigManager.VolumeEffect, Vector2.One, FontAwesome.Get(FontAwesomeIcon.fa_circle))),
 
             // Pitch Audio w/ Rate.
             new OptionsItem(this, "Pitch Audio With Rate", new Checkbox(ConfigManager.Pitched, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), () => {}),
         });
 
         /// <summary>
         ///     Creates the misc section of the options menu
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Question, new List<OptionsItem>()
+        private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsItem>()
         {
             // Select osu!.db file
-            /*new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            /*new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
             (sender, e) =>
             {
                 // Create the openFileDialog object.
@@ -473,10 +473,10 @@ namespace Quaver.Screens.Options
 
             // Load osu! beatmaps, although we can't use osu! as actual text because... trademark :thumbsup:
             new OptionsItem(this, "Load peppy! beatmaps", new Checkbox(ConfigManager.AutoLoadOsuBeatmaps, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
 
             // Select Etterna Cache Folder
-            /*new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            /*new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
             (sender, e) =>
             {
                 using(var fbd = new FolderBrowserDialog())
@@ -491,7 +491,7 @@ namespace Quaver.Screens.Options
 
             // Load charts from etterna.
             new OptionsItem(this, "Load Etterna Charts", new Checkbox(ConfigManager.AutoLoadEtternaCharts, new Vector2(20, 20),
-                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
         });
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace Quaver.Screens.Options
         /// <returns></returns>
         private OptionsSection CreateGameplaySection() =>
             // Create section
-            new OptionsSection(this, FontAwesome.GamePad, new List<OptionsItem>()
+            new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsItem>()
             {
                 // Custom skin selection
                 CreateCustomSkinSelectionItem(),
@@ -518,27 +518,27 @@ namespace Quaver.Screens.Options
 
                     ConfigManager.Skin.Value = "";
                     SkinManager.Load();
-                }), new Vector2(20, 20), FontAwesome.CircleClosed, FontAwesome.CircleOpen, true)),
+                }), new Vector2(20, 20), FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), true)),
 
                 // DownScroll 4K
                 new OptionsItem(this, "Notes Scroll Down - 4K", new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // DownScroll 7K
                 new OptionsItem(this, "Notes Scroll Down - 7K", new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Song Time Progress
                 new OptionsItem(this, "Display Song Time Progress", new Checkbox(ConfigManager.DisplaySongTimeProgress, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Anim Judge Counter
                 new OptionsItem(this, "Animate Judgement Counter", new Checkbox(ConfigManager.AnimateJudgementCounter, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
 
                 // Bots Enabled
                 new OptionsItem(this, "Bots Enabled", new Checkbox(ConfigManager.BotsEnabled, new Vector2(20, 20),
-                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+                    FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false)),
             });
 
         /// <summary>
@@ -569,7 +569,7 @@ namespace Quaver.Screens.Options
             }
 
             return new OptionsItem(this, "Custom Skin", new HorizontalSelector(skinsList, new ScalableVector2(50, 10),
-                Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
+                BitmapFonts.Exo2Regular, 16, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                 10, (val, index) =>
                 {
                     SkinManager.Skin.SoundClick.CreateChannel().Play();
@@ -592,7 +592,7 @@ namespace Quaver.Screens.Options
 
             // Create Item
             return new OptionsItem(this, "Default Skin", new HorizontalSelector(defaultSkins, new ScalableVector2(50, 10),
-                                    Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare,
+                                    BitmapFonts.Exo2Regular, 16, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare,
                                     new ScalableVector2(10, 10), 10,
             (val, index) =>
             {
@@ -609,109 +609,105 @@ namespace Quaver.Screens.Options
         ///    Creates the keybinds section of the option's menu.
         /// </summary>
         /// <returns></returns>
-        private OptionsSection CreateKeybindSection()
+        private OptionsSection CreateKeybindSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsItem>
         {
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            return new OptionsSection(this, FontAwesome.Keyboard, new List<OptionsItem>
-            {
-                // 4K
-                new OptionsItem(this, "4K Layout", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // 4K
+            new OptionsItem(this, "4K Layout", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("4K Lane 1", ConfigManager.KeyMania4K1),
-                            new KeybindingOptionStore("4K Lane 2", ConfigManager.KeyMania4K2),
-                            new KeybindingOptionStore("4K Lane 3", ConfigManager.KeyMania4K3),
-                            new KeybindingOptionStore("4K Lane 4", ConfigManager.KeyMania4K4),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("4K Lane 1", ConfigManager.KeyMania4K1),
+                        new KeybindingOptionStore("4K Lane 2", ConfigManager.KeyMania4K2),
+                        new KeybindingOptionStore("4K Lane 3", ConfigManager.KeyMania4K3),
+                        new KeybindingOptionStore("4K Lane 4", ConfigManager.KeyMania4K4),
+                    }, 0.85f));
+                })),
 
-                // 7K
-                new OptionsItem(this, "7K Layout", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // 7K
+            new OptionsItem(this, "7K Layout", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("7K Lane 1", ConfigManager.KeyMania7K1),
-                            new KeybindingOptionStore("7K Lane 2", ConfigManager.KeyMania7K2),
-                            new KeybindingOptionStore("7K Lane 3", ConfigManager.KeyMania7K3),
-                            new KeybindingOptionStore("7K Lane 4", ConfigManager.KeyMania7K4),
-                            new KeybindingOptionStore("7K Lane 5", ConfigManager.KeyMania7K5),
-                            new KeybindingOptionStore("7K Lane 6", ConfigManager.KeyMania7K6),
-                            new KeybindingOptionStore("7K Lane 7", ConfigManager.KeyMania7K7),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("7K Lane 1", ConfigManager.KeyMania7K1),
+                        new KeybindingOptionStore("7K Lane 2", ConfigManager.KeyMania7K2),
+                        new KeybindingOptionStore("7K Lane 3", ConfigManager.KeyMania7K3),
+                        new KeybindingOptionStore("7K Lane 4", ConfigManager.KeyMania7K4),
+                        new KeybindingOptionStore("7K Lane 5", ConfigManager.KeyMania7K5),
+                        new KeybindingOptionStore("7K Lane 6", ConfigManager.KeyMania7K6),
+                        new KeybindingOptionStore("7K Lane 7", ConfigManager.KeyMania7K7),
+                    }, 0.85f));
+                })),
 
-                // Change Scroll Speed
-                new OptionsItem(this, "Decrease/Increase Scroll Speed", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Change Scroll Speed
+            new OptionsItem(this, "Decrease/Increase Scroll Speed", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
-                            new KeybindingOptionStore("Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed)
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
+                        new KeybindingOptionStore("Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed)
+                    }, 0.85f));
+                })),
 
-                // Pause
-                new OptionsItem(this, "Pause", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Pause
+            new OptionsItem(this, "Pause", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Pause", ConfigManager.KeyPause),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("Pause", ConfigManager.KeyPause),
+                    }, 0.85f));
+                })),
 
-                // Skip Song Intro
-                new OptionsItem(this, "Skip Song Intro", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Skip Song Intro
+            new OptionsItem(this, "Skip Song Intro", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Skip Song Intro", ConfigManager.KeySkipIntro),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("Skip Song Intro", ConfigManager.KeySkipIntro),
+                    }, 0.85f));
+                })),
 
-                // Restart Map
-                new OptionsItem(this, "Quick Restart", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Restart Map
+            new OptionsItem(this, "Quick Restart", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Quick Restart", ConfigManager.KeyRestartMap),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("Quick Restart", ConfigManager.KeyRestartMap),
+                    }, 0.85f));
+                })),
 
-                // Quick Exit
-                new OptionsItem(this, "Quick Exit", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Quick Exit
+            new OptionsItem(this, "Quick Exit", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Quick Exit", ConfigManager.KeyQuickExit),
-                        }, 0.85f));
-                    })),
+                        new KeybindingOptionStore("Quick Exit", ConfigManager.KeyQuickExit),
+                    }, 0.85f));
+                })),
 
-                // Restart Map
-                new OptionsItem(this, "Toggle Scoreboard Display", new TextButton(UserInterface.BlankBox,
-                    Fonts.Exo2Regular24, "Change", 0.50f,
-                    (sender, e) =>
+            // Restart Map
+            new OptionsItem(this, "Toggle Scoreboard Display", new TextButton(UserInterface.BlankBox,
+                BitmapFonts.Exo2Regular, "Change", 14,
+                (sender, e) =>
+                {
+                    DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
                     {
-                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
-                        {
-                            new KeybindingOptionStore("Toggle Scoreboard Display", ConfigManager.KeyScoreboardVisible),
-                        }, 0.85f));
-                    })),
-            });
-        }
+                        new KeybindingOptionStore("Toggle Scoreboard Display", ConfigManager.KeyScoreboardVisible),
+                    }, 0.85f));
+                })),
+        });
     }
 }

@@ -7,9 +7,10 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
-using Quaver.Logging;
 using Quaver.Modifiers.Mods;
 using Quaver.Modifiers.Mods.Mania;
+using Wobble.Audio.Tracks;
+using Wobble.Logging;
 
 namespace Quaver.Modifiers
 {
@@ -130,7 +131,7 @@ namespace Quaver.Modifiers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -181,14 +182,17 @@ namespace Quaver.Modifiers
             try
             {
                 CurrentModifiersList.RemoveAll(x => x.Type == ModType.Speed);
-                AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
+
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
+
                 CheckModInconsistencies();
 
                 ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
             }
             catch (Exception e)
             {
-                Logger.LogError(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
@@ -199,7 +203,7 @@ namespace Quaver.Modifiers
         {
             try
             {
-                if (!AudioEngine.Track.IsDisposed)
+                if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
             }
             catch (Exception e)

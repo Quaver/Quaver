@@ -38,7 +38,7 @@ namespace Quaver.Graphics
         /// <param name="headerTextAlignment"></param>
         /// <param name="headerHeight"></param>
         /// <param name="headerColor"></param>
-        internal HeaderedContainer(Vector2 size, string text, SpriteFont font, float textScale,
+        internal HeaderedContainer(Vector2 size, string text, string font, int fontSize,
             Alignment headerTextAlignment, float headerHeight, Color headerColor)
         {
             Size = new ScalableVector2(size.X, size.Y);
@@ -51,10 +51,9 @@ namespace Quaver.Graphics
                 Tint = headerColor
             };
 
-            HeaderText = new SpriteText(font, text)
+            HeaderText = new SpriteText(font, text, fontSize)
             {
                 Parent = Header,
-                TextScale = textScale,
                 Alignment = headerTextAlignment,
                 TextAlignment = headerTextAlignment
             };
