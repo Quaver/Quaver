@@ -408,7 +408,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Check to see if dead object is ready for recycle
             foreach (var lane in DeadNotes)
             {
-                // todo: reference correct position to compensate for SV change
                 while (lane.Count > 0 &&
                     (CurrentTrackPosition - lane.Peek().InitialLongNoteTrackPosition > RecycleObjectPosition))
                 {
@@ -421,19 +420,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 foreach (var hitObject in lane)
                 {
-                    // Update position
                     hitObject.UpdateSpritePositions(CurrentTrackPosition);
                 }
             }
         }
 
         /// <summary>
-        ///     Force update LN Size if:
-        ///     - Scroll Speed gets changed.
-        ///     - Acceleration/Deceleration modifiers are toggled on.
+        ///     Force update LN Size if user changes scroll speed settings during gameplay.
         /// </summary>
         public void ForceUpdateLNSize()
         {
+            RecycleObjectPosition = ObjectPositionMagnitude;
+            CreateObjectPosition = -ObjectPositionMagnitude;
+
             foreach (var lane in ActiveNotes)
             {
                 foreach (var hitObject in lane)
