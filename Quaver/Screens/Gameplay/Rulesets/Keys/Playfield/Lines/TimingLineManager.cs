@@ -47,6 +47,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         {
             Ruleset = (GameplayRulesetKeys)ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
+            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffset;
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -82,7 +83,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             Pool = new Queue<TimingLine>();
             while (Info.Count > 0)
             {
-                if (Info.Peek().TrackOffset + HitObjectManager.CurrentTrackPosition > HitObjectManager.CreateObjectPosition)
+                if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
                     CreatePoolObject(Info.Dequeue());
                 else
                     break;
@@ -95,8 +96,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateObjectPool()
         {
             // Update line positions
-            foreach (var line in Pool)
-                line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
+            if (Pool.Count > 0)
+            {
+                foreach (var line in Pool)
+                    line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
+            }
 
             // Recycle necessary pool objects
             while (Pool.Count > 0 && HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.RecycleObjectPosition)

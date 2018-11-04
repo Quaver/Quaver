@@ -198,7 +198,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 LongNoteEndSprite.Tint = Color.White;
                 LongNoteEndSprite.Visible = true;
                 LongNoteBodySprite.Visible = true;
-               InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
+                InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
             }
