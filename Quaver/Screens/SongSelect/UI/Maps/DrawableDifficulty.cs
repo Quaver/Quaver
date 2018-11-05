@@ -39,7 +39,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 74;
+        public static int HEIGHT { get; } = 86;
 
         /// <inheritdoc />
         /// <summary>
