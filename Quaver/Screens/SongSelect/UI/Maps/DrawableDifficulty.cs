@@ -67,20 +67,20 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                 Position = new ScalableVector2(Mode.X + Mode.Width + 10, 12)
             };
 
-            TextDifficulty = new SpriteText(BitmapFonts.Exo2SemiBold, "Difficulty:", 12, false)
+            TextDifficulty = new SpriteText(BitmapFonts.Exo2SemiBold, "Difficulty:", 12)
             {
                 Parent = this,
                 Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 3)
             };
 
-            TextDifficultyRating = new SpriteText(BitmapFonts.Exo2Bold, " ", 12, false)
+            TextDifficultyRating = new SpriteText(BitmapFonts.Exo2Bold, " ", 12)
             {
                 Parent = this,
                 Position = new ScalableVector2(TextDifficulty.X + TextDifficulty.Width + 1, TextDifficulty.Y),
                 Tint = ColorHelper.DifficultyToColor(19.12f)
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2Medium, " ", 10, false)
+            Creator = new SpriteText(BitmapFonts.Exo2Medium, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
