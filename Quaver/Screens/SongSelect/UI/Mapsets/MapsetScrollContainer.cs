@@ -153,7 +153,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             // Update the newly selected map.
             MapManager.Selected.Value = map;
-            Logger.Debug($"{nextMapset.Mapset.Maps.Count} maps in this set", LogType.Runtime);
 
             View.SwitchToContainer(SelectContainerStatus.Mapsets);
 
