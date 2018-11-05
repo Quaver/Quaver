@@ -21,11 +21,6 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         private SpriteText DifficultyName { get; }
 
         /// <summary>
-        ///     The text that says "Difficulty:"
-        /// </summary>
-        private SpriteText TextDifficulty { get; }
-
-        /// <summary>
         ///     Displays the actual difficulty rating.
         /// </summary>
         private SpriteText TextDifficultyRating { get; }
@@ -61,30 +56,24 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_dot_and_circle)
             };
 
-            DifficultyName = new SpriteText(BitmapFonts.Exo2Bold, " ", 13)
+            DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
-                Position = new ScalableVector2(Mode.X + Mode.Width + 10, 12)
+                Position = new ScalableVector2(Mode.X + Mode.Width + 15, 12)
             };
 
-            TextDifficulty = new SpriteText(BitmapFonts.Exo2SemiBold, "Difficulty:", 12)
+            TextDifficultyRating = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
             {
                 Parent = this,
-                Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 3)
-            };
-
-            TextDifficultyRating = new SpriteText(BitmapFonts.Exo2Bold, " ", 12)
-            {
-                Parent = this,
-                Position = new ScalableVector2(TextDifficulty.X + TextDifficulty.Width + 1, TextDifficulty.Y),
+                Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 4),
                 Tint = ColorHelper.DifficultyToColor(19.12f)
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2Medium, " ", 10)
+            Creator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-5, TextDifficultyRating.Y + TextDifficultyRating.Height - 4)
+                Position = new ScalableVector2(-5, TextDifficultyRating.Y + TextDifficultyRating.Height + 3)
             };
         }
 
@@ -100,6 +89,20 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             TextDifficultyRating.Text = StringHelper.AccuracyToString(map.DifficultyRating).Replace("%", "");
             TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(map.DifficultyRating);
             Creator.Text = $"By: {map.Creator}";
+        }
+
+        /// <summary>
+        ///     Displays the difficulty when it is selected.
+        /// </summary>
+        public void DisplayAsSelected()
+        {
+        }
+
+        /// <summary>
+        ///     Displays the difficulty when deselected.
+        /// </summary>
+        public void DisplayAsDeselected()
+        {
         }
     }
 }
