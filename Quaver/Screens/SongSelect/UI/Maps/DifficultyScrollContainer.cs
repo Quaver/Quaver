@@ -72,6 +72,11 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         private float PreviousContentContainerY { get; set; }
 
+        /// <summary>
+        ///     Quick reference to the current mapset.
+        /// </summary>
+        private Mapset CurrentMapset => Screen.AvailableMapsets[View.MapsetScrollContainer.SelectedMapsetIndex];
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -92,6 +97,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
 
+            ContentContainer.SetChildrenVisibility = true;
+
             // The index of the selected map.
             InitializeBuffer();
         }
@@ -111,6 +118,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
+
             base.Update(gameTime);
         }
 
@@ -132,14 +140,12 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     DestroyIfParentIsNull = false
                 };
 
-                if (i >= MapManager.Selected.Value.Mapset.Maps.Count)
-                    break;
-                difficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex + i]);
                 DifficultyBuffer.Add(difficulty);
 
-                if (i >= MapManager.Selected.Value.Mapset.Maps.Count)
+                if (i >= CurrentMapset.Maps.Count)
                     continue;
 
+                difficulty.UpdateWithNewMap(CurrentMapset.Maps[PoolStartingIndex + i]);
                 AddContainedDrawable(difficulty);
 
                 /*if (i == SelectedMapsetIndex)
@@ -157,14 +163,17 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         private void SetPoolStartingIndex()
         {
-            SelectedMapIndex = Screen.AvailableMapsets[View.MapsetScrollContainer.SelectedMapsetIndex].Maps.FindIndex(x => x == MapManager.Selected.Value);
+            SelectedMapIndex = CurrentMapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
 
             if (SelectedMapIndex < MAX_BUFFER_SIZE / 2)
                 PoolStartingIndex = 0;
-            else if (SelectedMapIndex + MAX_BUFFER_SIZE > MapManager.Selected.Value.Mapset.Maps.Count)
-                PoolStartingIndex = MapManager.Selected.Value.Mapset.Maps.Count - MAX_BUFFER_SIZE;
+            else if (SelectedMapIndex + MAX_BUFFER_SIZE > CurrentMapset.Maps.Count)
+                PoolStartingIndex = CurrentMapset.Maps.Count - MAX_BUFFER_SIZE;
             else
                 PoolStartingIndex = SelectedMapIndex - MAX_BUFFER_SIZE / 2;
+
+            if (PoolStartingIndex < 0)
+                PoolStartingIndex = 0;
         }
 
         /// <summary>
@@ -172,8 +181,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         private void RecalculateContainerHeight()
         {
-            var totalUserHeight = DrawableDifficulty.HEIGHT * MapManager.Selected.Value.Mapset.Maps.Count +
-                                  MapManager.Selected.Value.Mapset.Maps.Count * YSpacing + YSpaceBeforeFirstDifficulty * 2;
+            var totalUserHeight = DrawableDifficulty.HEIGHT * CurrentMapset.Maps.Count +
+                                  CurrentMapset.Maps.Count * YSpacing + YSpaceBeforeFirstDifficulty * 2;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -186,7 +195,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         private void SnapToInitialDifficulty()
         {
-            ContentContainer.Y = (-SelectedMapIndex - 3) * DrawableDifficulty.HEIGHT + (-SelectedMapIndex - 3) * YSpacing + YSpaceBeforeFirstDifficulty;
+            ContentContainer.Y = (-SelectedMapIndex - 3) * DrawableDifficulty.HEIGHT + (-SelectedMapIndex - 3)
+                                 * YSpacing + YSpaceBeforeFirstDifficulty;
 
             PreviousContentContainerY = ContentContainer.Y;
             TargetY = PreviousContentContainerY;
@@ -204,8 +214,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             {
                 case Direction.Forward:
                     // If there are no available maps then there's no need to do anything.
-                    if (MapManager.Selected.Value.Mapset.Maps.ElementAtOrDefault(PoolStartingIndex) == null
-                        || MapManager.Selected.Value.Mapset.Maps.ElementAtOrDefault(PoolStartingIndex + MAX_BUFFER_SIZE) == null)
+                    if (CurrentMapset.Maps.ElementAtOrDefault(PoolStartingIndex) == null
+                        || CurrentMapset.Maps.ElementAtOrDefault(PoolStartingIndex + MAX_BUFFER_SIZE) == null)
                         return;
 
                     var firstDifficulty = DifficultyBuffer.First();
@@ -219,9 +229,9 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     firstDifficulty.Y = (PoolStartingIndex + MAX_BUFFER_SIZE) * DrawableDifficulty.HEIGHT +
                                     (PoolStartingIndex + MAX_BUFFER_SIZE) * YSpacing + YSpaceBeforeFirstDifficulty;
 
-                    lock (MapManager.Selected.Value.Mapset.Maps)
+                    lock (CurrentMapset.Maps)
                     {
-                        firstDifficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex + MAX_BUFFER_SIZE]);
+                        firstDifficulty.UpdateWithNewMap(CurrentMapset.Maps[PoolStartingIndex + MAX_BUFFER_SIZE]);
                     }
 
                     // Circuluarly Shift the list forward one.
@@ -238,7 +248,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     break;
                 case Direction.Backward:
                     // If there are no previous available map then there's no need to shift.
-                    if (MapManager.Selected.Value.Mapset.Maps.ElementAtOrDefault(PoolStartingIndex - 1) == null)
+                    if (CurrentMapset.Maps.ElementAtOrDefault(PoolStartingIndex - 1) == null)
                         return;
 
                     var lastDifficulty = DifficultyBuffer.Last();
@@ -248,11 +258,12 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     if (!Rectangle.Intersect(lastDifficulty.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
                         return;
 
-                    lastDifficulty.Y = (PoolStartingIndex - 1) * DrawableDifficulty.HEIGHT + (PoolStartingIndex - 1) * YSpacing + YSpaceBeforeFirstDifficulty;
+                    lastDifficulty.Y = (PoolStartingIndex - 1) * DrawableDifficulty.HEIGHT + (PoolStartingIndex - 1)
+                                       * YSpacing + YSpaceBeforeFirstDifficulty;
 
-                    lock (MapManager.Selected.Value.Mapset.Maps)
+                    lock (CurrentMapset.Maps)
                     {
-                        lastDifficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex - 1]);
+                        lastDifficulty.UpdateWithNewMap(CurrentMapset.Maps[PoolStartingIndex - 1]);
                     }
 
                     DifficultyBuffer.Remove(lastDifficulty);
@@ -278,7 +289,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             SetPoolStartingIndex();
 
-            var maps = MapManager.Selected.Value.Mapset.Maps;
+            var maps = CurrentMapset.Maps;
 
             // Go through each map, determine if it is needed to be displayed.
             // If it is, update the map contents/add it to the contained drawables.
@@ -287,11 +298,13 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             {
                 var difficulty = DifficultyBuffer[i];
 
-                // Drawable is needed.
+                difficulty.Y = (PoolStartingIndex + i) * DrawableDifficulty.HEIGHT + (PoolStartingIndex + i)
+                               * YSpacing + YSpaceBeforeFirstDifficulty;
+
+                // Drawable needs to be contained and updated.
                 if (i < MAX_BUFFER_SIZE && i < maps.Count)
                 {
-                    difficulty.Y = (PoolStartingIndex + i) * DrawableDifficulty.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstDifficulty;
-                    difficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex + i]);
+                    difficulty.UpdateWithNewMap(CurrentMapset.Maps[PoolStartingIndex + i]);
 
                     if (difficulty.Parent != ContentContainer)
                         AddContainedDrawable(difficulty);
