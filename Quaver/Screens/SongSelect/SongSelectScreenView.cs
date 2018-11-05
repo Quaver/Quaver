@@ -214,11 +214,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         private void CreateDifficultyScrollContainer()
         {
-            DifficultyScrollContainer = new DifficultyScrollContainer()
+            DifficultyScrollContainer = new DifficultyScrollContainer(this)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Y = MapsetScrollContainer.Y,
+                Y = MapsetScrollContainer.Y
             };
 
             // Hide it originally.

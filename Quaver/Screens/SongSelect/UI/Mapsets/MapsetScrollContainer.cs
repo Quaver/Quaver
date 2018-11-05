@@ -154,6 +154,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Update the newly selected map.
             MapManager.Selected.Value = map;
 
+            View.SwitchToContainer(SelectContainerStatus.Mapsets);
+
+            // Since we're changing sets, initailize the new difficulties for the set.
+            View.DifficultyScrollContainer.ReInitializeDifficulties();
+
             selectedMapset?.DisplayAsDeselected();
             nextMapset?.DisplayAsSelected(MapManager.Selected.Value);
 
