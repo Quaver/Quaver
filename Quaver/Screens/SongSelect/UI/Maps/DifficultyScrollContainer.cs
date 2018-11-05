@@ -255,7 +255,6 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                         lastDifficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex - 1]);
                     }
 
-
                     DifficultyBuffer.Remove(lastDifficulty);
                     DifficultyBuffer.Insert(0, lastDifficulty);
 
@@ -291,6 +290,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                 // Drawable is needed.
                 if (i < MAX_BUFFER_SIZE && i < maps.Count)
                 {
+                    difficulty.Y = (PoolStartingIndex + i) * DrawableDifficulty.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstDifficulty;
                     difficulty.UpdateWithNewMap(MapManager.Selected.Value.Mapset.Maps[PoolStartingIndex + i]);
 
                     if (difficulty.Parent != ContentContainer)
