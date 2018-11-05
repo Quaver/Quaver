@@ -226,7 +226,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // Initialize collections
             var keyCount = Ruleset.Map.GetKeyCount();
-            HitObjectQueue = new List<Queue<API.Maps.Structures.HitObjectInfo>>(keyCount);
+            HitObjectQueue = new List<Queue<HitObjectInfo>>(keyCount);
             ActiveNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             DeadNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             HeldLongNotes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
@@ -234,7 +234,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Add HitObject Info to Info pool
             for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
             {
-                HitObjectQueue.Add(new Queue<API.Maps.Structures.HitObjectInfo>());
+                HitObjectQueue.Add(new Queue<HitObjectInfo>());
                 ActiveNotes.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
                 DeadNotes.Add(new Queue<GameplayHitObjectKeys>());
                 HeldLongNotes.Add(new Queue<GameplayHitObjectKeys>());
