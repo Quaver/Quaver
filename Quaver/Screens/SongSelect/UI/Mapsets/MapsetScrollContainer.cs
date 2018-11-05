@@ -154,6 +154,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Update the newly selected map.
             MapManager.Selected.Value = map;
 
+            var activeContainer = View.ActiveContainer;
+
+            View.DifficultyScrollContainer.Visible = false;
+            View.DifficultyScrollContainer.ContentContainer.Visible = false;
+            View.DifficultyScrollContainer.X = View.DifficultyScrollContainer.Width;
             View.SwitchToContainer(SelectContainerStatus.Mapsets);
 
             // Since we're changing sets, initailize the new difficulties for the set.
@@ -163,7 +168,10 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             nextMapset?.DisplayAsSelected(MapManager.Selected.Value);
 
             // Scroll the the place where the map is.
-            ScrollTo((-SelectedMapsetIndex -3) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex - 3) * YSpacing + YSpaceBeforeFirstSet, 2100);
+            var targetScroll = (-SelectedMapsetIndex -3) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex - 3)
+                               * YSpacing + YSpaceBeforeFirstSet;
+
+            ScrollTo(targetScroll, activeContainer == SelectContainerStatus.Mapsets ? 2100 : 1800);
 
             // Load new audio if needed.
             LoadNewAudioTrackIfNecessary(previousMap);

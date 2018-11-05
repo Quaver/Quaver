@@ -77,6 +77,11 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         private Mapset CurrentMapset => Screen.AvailableMapsets[View.MapsetScrollContainer.SelectedMapsetIndex];
 
+        /// <summary>
+        ///     Determines if the container has had animations in the previous frame
+        /// </summary>
+        private bool HasAnimationsInPreviousFrame { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -118,6 +123,13 @@ namespace Quaver.Screens.SongSelect.UI.Maps
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
+
+            // The container is finished with all of its animations so we can safely make it visible again.
+            if (HasAnimationsInPreviousFrame && Animations.Count == 0)
+            {
+                Visible = true;
+                ContentContainer.Visible = true;
+            }
 
             base.Update(gameTime);
         }

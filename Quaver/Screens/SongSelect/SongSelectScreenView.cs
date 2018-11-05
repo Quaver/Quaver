@@ -298,6 +298,9 @@ namespace Quaver.Screens.SongSelect
                     DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, time);
                     break;
                 case SelectContainerStatus.Difficulty:
+                    DifficultyScrollContainer.Visible = true;
+                    DifficultyScrollContainer.ContentContainer.Visible = true;
+
                     MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, time);
                     DifficultyScrollContainer.MoveToX(targetX, Easing.OutQuint, time);
                     break;
