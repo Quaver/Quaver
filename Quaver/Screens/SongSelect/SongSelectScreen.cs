@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.Modifiers;
+using Quaver.Screens.Loading;
+using Quaver.Screens.Menu;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
@@ -78,6 +82,36 @@ namespace Quaver.Screens.SongSelect
         private void HandleInput()
         {
             var view = View as SongSelectScreenView;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            {
+                switch (view.ActiveContainer)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        QuaverScreenManager.ChangeScreen(new MenuScreen());
+                        break;
+                    case SelectContainerStatus.Difficulty:
+                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            {
+                switch (view.ActiveContainer)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        view.SwitchToContainer(SelectContainerStatus.Difficulty);
+                        break;
+                    case SelectContainerStatus.Difficulty:
+                        QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
                 view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);

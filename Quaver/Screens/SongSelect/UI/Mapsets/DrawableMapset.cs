@@ -217,12 +217,10 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <param name="e"></param>
         private void OnClicked(object sender, EventArgs e)
         {
-            // If the user clicks on the mapset again while its already selected, then we can
-            // assume they want to play the map.
+            // Whenever someone clicks the set, switch containers to the difficulties.
             if (Container.SelectedMapsetIndex == MapsetIndex)
             {
-                // TODO: Scores.
-                QuaverScreenManager.ChangeScreen(new MapLoadingScreen(null));
+                Container.View.SwitchToContainer(SelectContainerStatus.Difficulty);
                 return;
             }
 
