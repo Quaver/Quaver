@@ -347,5 +347,37 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     difficulty.DisplayAsDeselected();
             }
         }
+
+        /// <summary>
+        ///     Selects the next difficulty (either forward or backward)
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SelectNextDifficulty(Direction direction)
+        {
+            var mapsetContainer = View.MapsetScrollContainer;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    var nextDifficulty = SelectedMapIndex + 1;
+
+
+                    if (CurrentMapset.Maps.ElementAtOrDefault(nextDifficulty) == null)
+                        return;
+
+                    mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[nextDifficulty], true);
+                    break;
+                case Direction.Backward:
+                    var previousDifficulty = SelectedMapIndex - 1;
+
+                    if (CurrentMapset.Maps.ElementAtOrDefault(previousDifficulty) == null)
+                        return;
+
+                    mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[previousDifficulty], true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
     }
 }

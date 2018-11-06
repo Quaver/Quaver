@@ -114,10 +114,34 @@ namespace Quaver.Screens.SongSelect
             }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
-                view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
+            {
+                switch (view.ActiveContainer)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
+                        break;
+                    case SelectContainerStatus.Difficulty:
+                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
-                view?.MapsetScrollContainer.SelectNextMapset(Direction.Backward);
+            {
+                switch (view.ActiveContainer)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Backward);
+                        break;
+                    case SelectContainerStatus.Difficulty:
+                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Backward);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
     }
 }
