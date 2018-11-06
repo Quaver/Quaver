@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
@@ -34,6 +36,11 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         private SpriteText NoScoresAvailableText { get; set; }
 
+        /// <summary>
+        ///     To cancel tasks.
+        /// </summary>
+        private CancellationTokenSource Source { get; set; }
+
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
@@ -44,17 +51,28 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Size = new ScalableVector2(View.Banner.Width, 370);
             Alpha = 0;
 
+            Source = new CancellationTokenSource();
             CreateNoScoresAvailableText();
             CreateSections();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
+
+            MapManager.Selected.ValueChanged += OnMapChange;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
+        public override void Destroy()
         {
-            base.Update(gameTime);
+            MapManager.Selected.ValueChanged -= OnMapChange;
+
+            if (Source != null)
+            {
+                Source.Dispose();
+                Source = null;
+            }
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -111,24 +129,71 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 }
             }
 
-            LoadScores();
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
+            LoadScores(Source.Token).Start();
         }
 
         /// <summary>
         ///     Loads scores for the current map.
+        ///
+        ///     This needs to be reworked heavily. I don't like this entire system of cancelling
+        ///     the token everywhere.......................................
+        ///
+        ///     Lord help me.
         /// </summary>
-        public void LoadScores()
+        public Task LoadScores(CancellationToken cancellationToken = default) => new Task(() =>
         {
-            var map = MapManager.Selected.Value;
-            var section = Sections[ConfigManager.LeaderboardSection.Value];
-
-            section.IsFetching = true;
-            NoScoresAvailableText.Visible = false;
-
-            ThreadScheduler.Run(() =>
+            try
             {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            });
+                var map = MapManager.Selected.Value;
+                var section = Sections[ConfigManager.LeaderboardSection.Value];
+
+                section.ClearScores();
+                section.IsFetching = true;
+                NoScoresAvailableText.Visible = false;
+
+                var scores = section.FetchScores();
+                section.IsFetching = false;
+
+                lock (NoScoresAvailableText)
+                {
+                    if (scores.Count == 0)
+                    {
+                        NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
+                        NoScoresAvailableText.Alpha = 0;
+                        NoScoresAvailableText.Visible = true;
+                        NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
+                    }
+                    else
+                    {
+                        NoScoresAvailableText.Visible = false;
+                    }
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                section.UpdateWithScores(map, scores, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                // ignored.
+            }
+        });
+
+        /// <summary>
+        ///     Called whenever the selected map changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
+            LoadScores(Source.Token).Start();
         }
     }
 }

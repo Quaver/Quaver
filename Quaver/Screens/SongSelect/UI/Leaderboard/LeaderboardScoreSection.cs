@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
@@ -126,14 +128,16 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Updates the leaderboard with new scores.
         /// </summary>
-        public void UpdateWithScores(Map map, List<LocalScore> scores)
+        public void UpdateWithScores(Map map, List<LocalScore> scores, CancellationToken cancellationToken = default)
         {
-            lock (Scores)
-            {
-                ClearScores();
+            var newScores = new List<DrawableLeaderboardScore>();
 
+            try
+            {
                 if (map != MapManager.Selected.Value)
                     return;
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // Calculate the height of the scroll container based on how many scores there are.
                 var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
@@ -143,9 +147,10 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 else
                     ContentContainer.Height = Height;
 
-
                 for (var i = 0; i < scores.Count; i++)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var score = scores[i];
 
                     var drawable = new DrawableLeaderboardScore(score, i + 1)
@@ -156,9 +161,20 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     };
 
                     drawable.MoveToX(0, Easing.OutQuint, 300 + i * 50);
+                    newScores.Add(drawable);
                     Scores.Add(drawable);
                     AddContainedDrawable(drawable);
                 }
+            }
+            catch (Exception e)
+            {
+                // ignored.
+                newScores.ForEach(x =>
+                {
+                    x.Parent = null;
+                    x.Destroy();
+                });
+                newScores = null;
             }
         }
     }
