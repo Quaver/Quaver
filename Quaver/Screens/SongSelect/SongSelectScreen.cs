@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
@@ -65,7 +66,9 @@ namespace Quaver.Screens.SongSelect
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            KeepPlayingAudioTrackAtPreview();
             HandleInput();
+
             base.Update(gameTime);
         }
 
@@ -141,6 +144,21 @@ namespace Quaver.Screens.SongSelect
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Plays the audio track at the preview time if it has stopped
+        /// </summary>
+        private static void KeepPlayingAudioTrackAtPreview()
+        {
+            lock (AudioEngine.Track)
+            {
+                if (AudioEngine.Track == null)
+                    return;
+
+                if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
+                    AudioEngine.PlaySelectedTrackAtPreview();
             }
         }
     }
