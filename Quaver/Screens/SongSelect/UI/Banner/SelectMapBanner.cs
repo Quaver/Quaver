@@ -162,7 +162,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             // Reference the map before running the load thread.
             var map = MapManager.Selected.Value;
 
-            Scheduler.RunThread(() =>
+            ThreadScheduler.Run(() =>
             {
                 try
                 {

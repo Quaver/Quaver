@@ -465,7 +465,7 @@ namespace Quaver.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     FutureResultsScreen = new ResultsScreen(Screen);
                     ClearToExitScreen = true;

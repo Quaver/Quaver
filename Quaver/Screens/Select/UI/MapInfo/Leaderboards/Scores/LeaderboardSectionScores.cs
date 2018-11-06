@@ -136,7 +136,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             ClearLeaderboard();
 
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            Scheduler.RunThread(() =>
+            ThreadScheduler.Run(() =>
             {
                 // If we already have scores cached, then use them.
                 if (scores != null && scores.Count != 0)

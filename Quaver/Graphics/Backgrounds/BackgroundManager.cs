@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Backgrounds
 
             var oldTexture = Background.Image;
 
-            Scheduler.RunThread(delegate
+            ThreadScheduler.Run(delegate
             {
                 if (requestCount != LoadRequestCount)
                 {

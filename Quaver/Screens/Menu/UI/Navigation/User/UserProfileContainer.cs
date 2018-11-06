@@ -300,7 +300,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 case ConnectionStatus.Connecting:
                     break;
                 case ConnectionStatus.Connected:
-                    Scheduler.RunThread(() => OnlineManager.Client?.Disconnect());
+                    ThreadScheduler.Run(() => OnlineManager.Client?.Disconnect());
                     break;
                 case ConnectionStatus.Reconnecting:
                     break;

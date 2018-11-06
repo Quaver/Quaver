@@ -234,12 +234,12 @@ namespace Quaver.Screens.Results
             if (GameplayScreen.HasQuit || GameplayScreen.InReplayMode)
                 return;
 
-            Scheduler.RunThread(SaveLocalScore);
+            ThreadScheduler.Run(SaveLocalScore);
 
 #if DEBUG
-            Scheduler.RunThread(SaveDebugReplayData);
-            Scheduler.RunThread(SaveHitData);
-            Scheduler.RunThread(SaveHealthData);
+            ThreadScheduler.Run(SaveDebugReplayData);
+            ThreadScheduler.Run(SaveHitData);
+            ThreadScheduler.Run(SaveHealthData);
 #endif
 
             // Submit score if online
@@ -247,7 +247,7 @@ namespace Quaver.Screens.Results
             {
                 NotificationManager.Show(NotificationLevel.Info, "Submitting score...");
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
                         ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),

@@ -126,10 +126,15 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Updates the leaderboard with new scores.
         /// </summary>
-        public void UpdateWithScores(List<LocalScore> scores)
+        public void UpdateWithScores(Map map, List<LocalScore> scores)
         {
             lock (Scores)
             {
+                ClearScores();
+
+                if (map != MapManager.Selected.Value)
+                    return;
+
                 // Calculate the height of the scroll container based on how many scores there are.
                 var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
 
@@ -137,6 +142,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     ContentContainer.Height = totalUserHeight;
                 else
                     ContentContainer.Height = Height;
+
 
                 for (var i = 0; i < scores.Count; i++)
                 {

@@ -190,7 +190,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
 
                 LoadingNextTrack = true;
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     try
                     {

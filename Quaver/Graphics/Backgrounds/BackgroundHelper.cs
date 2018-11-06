@@ -77,7 +77,7 @@ namespace Quaver.Graphics.Backgrounds
         ///     Then calls "afterLoad();"
         /// </summary>
         /// <param name="afterLoad"></param>
-        public static void QueueLoad(Action<Texture2D, Map, Texture2D> afterLoad) => Scheduler.RunThread(() =>
+        public static void QueueLoad(Action<Texture2D, Map, Texture2D> afterLoad) => ThreadScheduler.Run(() =>
         {
             afterLoad(UserInterface.MenuBackground, Map, Background.Image);
 

@@ -78,7 +78,7 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Displays the leaderboard to show user scores.
         /// </summary>
-        private LeaderboardContainer Leaderboard { get; set; }
+        public LeaderboardContainer Leaderboard { get; private set; }
 
         /// <summary>
         ///     Dictates which container (mapsets, or difficulties) are currently active.

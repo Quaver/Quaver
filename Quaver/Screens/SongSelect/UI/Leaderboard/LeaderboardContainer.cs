@@ -8,6 +8,7 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Resources;
 using Quaver.Scheduling;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -46,8 +47,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             CreateNoScoresAvailableText();
             CreateSections();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
-
-            MapManager.Selected.ValueChanged += OnMapChange;
         }
 
         /// <summary>
@@ -67,16 +66,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Alignment = Alignment.MidCenter,
             Visible = false
         };
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            // ReSharper disable once DelegateSubtraction
-            MapManager.Selected.ValueChanged -= OnMapChange;
-            base.Destroy();
-        }
 
         /// <summary>
         ///     Creates the text that says PB
@@ -122,71 +111,24 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 }
             }
 
-            UpdateLeaderboardWithScores();
+            LoadScores();
         }
 
         /// <summary>
-        ///     Updates the leaderboard with new scores.
+        ///     Loads scores for the current map.
         /// </summary>
-        public void UpdateLeaderboardWithScores()
+        public void LoadScores()
         {
+            var map = MapManager.Selected.Value;
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
-            // Grab the map at the beginning before we fetch.
-            var mapAtBeginning = MapManager.Selected.Value;
             section.IsFetching = true;
             NoScoresAvailableText.Visible = false;
 
-            section.ClearScores();
-
-            Scheduler.RunAfter(() =>
+            ThreadScheduler.Run(() =>
             {
-                try
-                {
-                    // If we already have scores catched to use, then just use them.
-                    if (mapAtBeginning.Scores.Value != null && mapAtBeginning.Scores.Value.Count > 0)
-                    {
-                        section.IsFetching = false;
-                        section.UpdateWithScores(mapAtBeginning.Scores.Value);
-                        return;
-                    }
 
-                    var scores = section.FetchScores();
-                    MapManager.Selected.Value.Scores.Value = scores;
-
-                    lock (NoScoresAvailableText)
-                    {
-                        if (scores.Count == 0)
-                        {
-                            NoScoresAvailableText.Text = section.GetNoScoresAvailableString(mapAtBeginning);
-                            NoScoresAvailableText.Alpha = 0;
-                            NoScoresAvailableText.Visible = true;
-                            NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
-                        }
-                        else
-                        {
-                            NoScoresAvailableText.Visible = false;
-                        }
-                    }
-
-                    if (mapAtBeginning == MapManager.Selected.Value)
-                    {
-                        section.IsFetching = false;
-                        section.UpdateWithScores(scores);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            }, 200);
+            });
         }
-
-        /// <summary>
-        ///     Called when the selected map has changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e) => UpdateLeaderboardWithScores();
     }
 }

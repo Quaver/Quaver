@@ -265,7 +265,7 @@ namespace Quaver.Screens.Select.UI.Mods
 
             Animations.Clear();
             Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint, Y, WindowManager.Height, 900));
-            Scheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
+            ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
         }
     }
 }

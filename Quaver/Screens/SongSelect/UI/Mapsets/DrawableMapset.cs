@@ -76,7 +76,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             Alpha = 0.85f;
             AddBorder(Color.White, 2);
 
-            Thumbnail = new Sprite()
+            Thumbnail = new Sprite
             {
                 Parent = this,
                 Size = new ScalableVector2(HEIGHT * 0.85f + 40, HEIGHT * 0.82f + 1),
@@ -245,7 +245,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     Handles (poorly) the edge case of then the mapset isn't selected anymore,
         ///     and disposes of the loaded texture in case it took too long.
         /// </summary>
-        private void LoadThumbnail(Map map) => Scheduler.RunThread(() =>
+        private void LoadThumbnail(Map map) => ThreadScheduler.Run(() =>
         {
             try
             {

@@ -162,7 +162,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             Overlay.ChatChannelList.RealignButtons();
 
             // Destroy the button after it finishes its Animation.
-            Scheduler.RunAfter(() => channelButton.Destroy(), 150);
+            ThreadScheduler.RunAfter(() => channelButton.Destroy(), 150);
 
             // Automatically select the button behind it. if it exists.
             if (buttonIndex != -1 && buttonIndex - 1 >= 0)

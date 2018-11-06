@@ -109,7 +109,7 @@ namespace Quaver.Online.Chat
                 if (!IsActive)
                 {
                     Dialog.IsClickable = false;
-                    Scheduler.RunAfter(() => { DialogManager.Dismiss(Dialog); }, 450);
+                    ThreadScheduler.RunAfter(() => { DialogManager.Dismiss(Dialog); }, 450);
                 }
                 else
                 {

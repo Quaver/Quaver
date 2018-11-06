@@ -198,9 +198,10 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             ScrollTo(targetScroll, activeContainer == SelectContainerStatus.Mapsets ? 2100 : 1800);
 
-            // Load new audio if needed.
+
             LoadNewAudioTrackIfNecessary(previousMap);
             // LoadNewBackgroundIfNecessary(previousMap);
+            View.Leaderboard.LoadScores();
         }
 
         /// <summary>
@@ -429,7 +430,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track.Fade(0, 200);
 
-            Scheduler.RunThread(() =>
+            ThreadScheduler.Run(() =>
             {
                 lock (AudioEngine.Track)
                 {

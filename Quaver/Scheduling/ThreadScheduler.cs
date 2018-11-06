@@ -7,7 +7,7 @@ using Action = Amib.Threading.Action;
 
 namespace Quaver.Scheduling
 {
-    public static class Scheduler
+    public static class ThreadScheduler
     {
         /// <summary>
         ///     Thread pool used to run things in the background.
@@ -25,7 +25,7 @@ namespace Quaver.Scheduling
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public static IWorkItemResult RunThread(Action action) => ThreadPool.QueueWorkItem(delegate
+        public static IWorkItemResult Run(Action action) => ThreadPool.QueueWorkItem(delegate
         {
             try
             {

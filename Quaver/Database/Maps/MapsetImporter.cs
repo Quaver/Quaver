@@ -128,7 +128,7 @@ namespace Quaver.Database.Maps
             {
                 NotificationManager.Show(NotificationLevel.Info, "Importing mapset - please wait...");
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     try
                     {
@@ -161,7 +161,7 @@ namespace Quaver.Database.Maps
             {
                 NotificationManager.Show(NotificationLevel.Info, "Importing .osz file - please wait...");
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     try
                     {
@@ -181,7 +181,7 @@ namespace Quaver.Database.Maps
             {
                 NotificationManager.Show(NotificationLevel.Info, "Importing .sm file - please wait...");
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     try
                     {

@@ -409,7 +409,7 @@ namespace Quaver.Graphics.Overlays.Chat
             JoinChannelDialog.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
                 JoinChannelDialog.Y, JoinChannelDialog.Height, 850));
 
-            Scheduler.RunAfter(() =>
+            ThreadScheduler.RunAfter(() =>
             {
                 DialogManager.Dismiss(JoinChannelDialog);
                 JoinChannelDialog = null;
