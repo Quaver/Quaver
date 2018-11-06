@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.Helpers;
 using Quaver.Resources;
+using Quaver.Screens.Loading;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -157,7 +160,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             // Don't bother if the map is already selected.
             if (Map == MapManager.Selected.Value)
             {
-
+                QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
                 return;
             }
 
