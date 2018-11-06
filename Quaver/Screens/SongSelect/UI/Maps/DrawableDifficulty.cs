@@ -154,8 +154,11 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <param name="e"></param>
         private void OnClicked(object sender, EventArgs e)
         {
-            var view = Container.View;
+            // Don't bother if the map is already selected.
+            if (Map == MapManager.Selected.Value)
+                return;
 
+            var view = Container.View;
             view.MapsetScrollContainer.SelectMap(view.MapsetScrollContainer.SelectedMapsetIndex, Map, true);
         }
     }
