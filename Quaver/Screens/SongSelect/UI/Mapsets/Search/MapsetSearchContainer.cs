@@ -151,6 +151,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
                 Alignment = Alignment.MidLeft,
                 Tint = Colors.DarkGray,
                 Alpha = 0.75f,
+                AllowSubmission = false,
                 InputText =
                 {
                     Tint = Color.White
@@ -166,7 +167,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
                             MapsetHelper.SearchMapsets(MapManager.Mapsets, text));
 
                         View.MapsetScrollContainer.InitializeWithNewSets();
-
                         UpdateMapsetsFoundText();
                     }
                 }
