@@ -426,12 +426,13 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             if (previousMap != null && MapManager.GetAudioPath(previousMap) == MapManager.GetAudioPath(MapManager.Selected.Value))
                 return;
 
-            lock (AudioEngine.Track)
-            {
-                if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
-                    AudioEngine.Track.Fade(0, 200);
 
-                Scheduler.RunThread(() =>
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Fade(0, 200);
+
+            Scheduler.RunThread(() =>
+            {
+                lock (AudioEngine.Track)
                 {
                     try
                     {
@@ -449,8 +450,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                     {
                         // ignored.
                     }
-                });
-            }
+                }
+            });
         }
 
         /// <summary>
