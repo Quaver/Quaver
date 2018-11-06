@@ -109,16 +109,7 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
-                SwitchToContainer(SelectContainerStatus.Mapsets);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
-                SwitchToContainer(SelectContainerStatus.Difficulty);
-
-            Container?.Update(gameTime);
-        }
+        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
 
         /// <inheritdoc />
         /// <summary>

@@ -143,8 +143,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             }
 
             // Find the currently selected mapset.
-            var selectedMapset = MapsetBuffer.Find(x => x.MapsetIndex == SelectedMapsetIndex);
-            var nextMapset = MapsetBuffer.Find(x => x.MapsetIndex == mapsetIndex);
+            var selectedMapsetIndex = MapsetBuffer.Find(x => x.MapsetIndex == SelectedMapsetIndex);
+            var selectedMapset = Screen.AvailableMapsets[SelectedMapsetIndex];
+
+            var nextMapsetIndex = MapsetBuffer.Find(x => x.MapsetIndex == mapsetIndex);
+            var nextMapset = Screen.AvailableMapsets[mapsetIndex];
 
             // Set the new mapset.
             SelectedMapsetIndex = mapsetIndex;
@@ -165,7 +168,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             var activeContainer = View.ActiveContainer;
 
             // Switching to a different mapset so we need to reinitialize difficulties.
-            if (nextMapset != selectedMapset)
+            if (selectedMapset != nextMapset)
             {
                 diffContainer.Visible = false;
                 diffContainer.ContentContainer.Visible = false;
@@ -186,9 +189,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 diffContainer.UpdateButtonSelectedStatus();
             }
 
-
-            selectedMapset?.DisplayAsDeselected();
-            nextMapset?.DisplayAsSelected(MapManager.Selected.Value);
+            selectedMapsetIndex?.DisplayAsDeselected();
+            nextMapsetIndex?.DisplayAsSelected(MapManager.Selected.Value);
 
             // Scroll the the place where the map is.
             var targetScroll = (-SelectedMapsetIndex -3) * DrawableMapset.HEIGHT + (-SelectedMapsetIndex - 3)
@@ -298,6 +300,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             RecalculateContainerHeight();
             SnapToInitialMapset();
             UpdateButtonSelectedStatus();
+            View.SwitchToContainer(SelectContainerStatus.Mapsets);
+            View.DifficultyScrollContainer?.ReInitializeDifficulties();
         }
 
         /// <summary>
