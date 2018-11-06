@@ -10,6 +10,7 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Resources;
 using Quaver.Scheduling;
+using Quaver.Screens.SongSelect.UI.Maps;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -154,15 +155,37 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Update the newly selected map.
             MapManager.Selected.Value = map;
 
+            // Grab a reference to the difficulty scroll container.
+            var diffContainer = View.DifficultyScrollContainer;
+
+            // Grab the new selected map index.
+            diffContainer.SelectedMapIndex = map.Mapset.Maps.FindIndex(x => x == map);
+
+            // Grab the currently active scroll container before switching.
             var activeContainer = View.ActiveContainer;
 
-            View.DifficultyScrollContainer.Visible = false;
-            View.DifficultyScrollContainer.ContentContainer.Visible = false;
-            View.DifficultyScrollContainer.X = View.DifficultyScrollContainer.Width;
-            View.SwitchToContainer(SelectContainerStatus.Mapsets);
+            // Switching to a different mapset so we need to reinitialize difficulties.
+            if (nextMapset != selectedMapset)
+            {
+                diffContainer.Visible = false;
+                diffContainer.ContentContainer.Visible = false;
+                diffContainer.X = diffContainer.Width;
+                View.SwitchToContainer(SelectContainerStatus.Mapsets);
 
-            // Since we're changing sets, initailize the new difficulties for the set.
-            View.DifficultyScrollContainer.ReInitializeDifficulties();
+                // Since we're changing sets, initailize the new difficulties for the set.
+                diffContainer.ReInitializeDifficulties();
+            }
+            // Switching to a different map in the set, so all that's needed is just scrolling to it.
+            else
+            {
+                var targetDifficultyScroll = (-diffContainer.SelectedMapIndex - 3) * DrawableDifficulty.HEIGHT+ (-diffContainer.SelectedMapIndex - 3)
+                                             * diffContainer.YSpacing + diffContainer.YSpaceBeforeFirstDifficulty;
+
+                // Scroll to the focused difficulty position
+                diffContainer.ScrollTo(targetDifficultyScroll, 2100);
+                diffContainer.UpdateButtonSelectedStatus();
+            }
+
 
             selectedMapset?.DisplayAsDeselected();
             nextMapset?.DisplayAsSelected(MapManager.Selected.Value);

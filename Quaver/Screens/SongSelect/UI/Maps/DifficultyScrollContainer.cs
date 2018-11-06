@@ -36,7 +36,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <summary>
         ///     The index of the selected map in the set.
         /// </summary>
-        public int SelectedMapIndex { get; private set; }
+        public int SelectedMapIndex { get; set; }
 
         /// <summary>
         ///     The buffer of DrawableDifficulty that's used to display the mapset's containing maps.
@@ -46,7 +46,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <summary>
         ///     The amount of maps able to be used in <see cref="DifficultyBuffer"/>
         /// </summary>
-        public static int MAX_BUFFER_SIZE { get; } = 8;
+        public static int MAX_BUFFER_SIZE { get; } = 12;
 
         /// <summary>
         ///     The index of difficulties at which the difficulties will be displayed.
@@ -145,7 +145,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             // Create MAX_BUFFER_SIZE  amount of DrawableDifficulties
             for (var i = 0; i < MAX_BUFFER_SIZE; i++)
             {
-                var difficulty = new DrawableDifficulty()
+                var difficulty = new DrawableDifficulty(this)
                 {
                     Alignment = Alignment.TopRight,
                     Y = (PoolStartingIndex + i) * DrawableDifficulty.HEIGHT + (PoolStartingIndex + i) * YSpacing + YSpaceBeforeFirstDifficulty,
@@ -160,13 +160,13 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                 difficulty.UpdateWithNewMap(CurrentMapset.Maps[PoolStartingIndex + i]);
                 AddContainedDrawable(difficulty);
 
-                /*if (i == SelectedMapsetIndex)
-                    mapset.DisplayAsSelected(MapManager.Selected.Value);*/
+                if (i == SelectedMapIndex)
+                    difficulty.DisplayAsSelected();
             }
 
             RecalculateContainerHeight();
             SnapToInitialDifficulty();
-            // UpdateButtonSelectedStatus();
+            UpdateButtonSelectedStatus();
         }
 
         /// <summary>
@@ -250,11 +250,11 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     DifficultyBuffer.Remove(firstDifficulty);
                     DifficultyBuffer.Add(firstDifficulty);
 
-                    /*// Make sure the set is corrected selected/deselected
-                    if (PoolStartingIndex + MAX_BUFFER_SIZE == SelectedMapsetIndex)
-                        //firstDifficulty.DisplayAsSelected(MapManager.Selected.Value);
+                    // Make sure the set is corrected selected/deselected
+                    if (PoolStartingIndex + MAX_BUFFER_SIZE == SelectedMapIndex)
+                        firstDifficulty.DisplayAsSelected();
                     else
-                        //firstDifficulty.DisplayAsDeselected();*/
+                        firstDifficulty.DisplayAsDeselected();
 
                     PoolStartingIndex++;
                     break;
@@ -282,10 +282,10 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                     DifficultyBuffer.Insert(0, lastDifficulty);
 
                     // Make sure the set is correctly selected/deselected.
-                    /*if (PoolStartingIndex - 1 == SelectedMapsetIndex)
-                        lastDifficulty.DisplayAsSelected(MapManager.Selected.Value);
+                    if (PoolStartingIndex - 1 == SelectedMapIndex)
+                        lastDifficulty.DisplayAsSelected();
                     else
-                        lastDifficulty.DisplayAsDeselected();*/
+                        lastDifficulty.DisplayAsDeselected();
 
                     PoolStartingIndex--;
                     break;
@@ -331,6 +331,21 @@ namespace Quaver.Screens.SongSelect.UI.Maps
 
             RecalculateContainerHeight();
             SnapToInitialDifficulty();
+            UpdateButtonSelectedStatus();
+        }
+
+        /// <summary>
+        ///    Updates all of the buttons to their given selected status
+        /// </summary>
+        public void UpdateButtonSelectedStatus()
+        {
+            foreach (var difficulty in DifficultyBuffer)
+            {
+                if (difficulty.Map == MapManager.Selected.Value)
+                    difficulty.DisplayAsSelected();
+                else
+                    difficulty.DisplayAsDeselected();
+            }
         }
     }
 }

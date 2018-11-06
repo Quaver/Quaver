@@ -285,7 +285,7 @@ namespace Quaver.Screens.SongSelect
             if (container == ActiveContainer)
                 return;
 
-            const int time = 500;
+            const int time = 400;
             const int targetX = -28;
 
             MapsetScrollContainer.ClearAnimations();
@@ -294,10 +294,14 @@ namespace Quaver.Screens.SongSelect
             switch (container)
             {
                 case SelectContainerStatus.Mapsets:
+                    MapsetScrollContainer.Parent = Container;
+
                     MapsetScrollContainer.MoveToX(targetX, Easing.OutQuint, time);
                     DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, time);
                     break;
                 case SelectContainerStatus.Difficulty:
+                    DifficultyScrollContainer.Parent = Container;
+
                     DifficultyScrollContainer.Visible = true;
                     DifficultyScrollContainer.ContentContainer.Visible = true;
 
@@ -309,6 +313,7 @@ namespace Quaver.Screens.SongSelect
             }
 
             ActiveContainer = container;
+            SearchContainer.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
         }
     }
