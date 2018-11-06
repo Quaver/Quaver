@@ -426,7 +426,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             if (previousMap != null && MapManager.GetAudioPath(previousMap) == MapManager.GetAudioPath(MapManager.Selected.Value))
                 return;
 
-
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track.Fade(0, 200);
 

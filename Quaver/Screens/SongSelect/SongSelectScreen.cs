@@ -84,37 +84,82 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         private void HandleInput()
         {
+            HandleKeyPressEscape();
+            HandleKeyPressEnter();
+            HandleKeyPressRight();
+            HandleKeyPressLeft();
+            HandleKeyPressControlRateChange();
+        }
+
+        /// <summary>
+        ///     Plays the audio track at the preview time if it has stopped
+        /// </summary>
+        private static void KeepPlayingAudioTrackAtPreview()
+        {
+            lock (AudioEngine.Track)
+            {
+                if (AudioEngine.Track == null)
+                    return;
+
+                if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
+                    AudioEngine.PlaySelectedTrackAtPreview();
+            }
+        }
+
+        /// <summary>
+        ///     Handles when the user presses escape.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void HandleKeyPressEscape()
+        {
             var view = View as SongSelectScreenView;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-            {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        QuaverScreenManager.ChangeScreen(new MenuScreen());
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            switch (view.ActiveContainer)
             {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        view.SwitchToContainer(SelectContainerStatus.Difficulty);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case SelectContainerStatus.Mapsets:
+                    QuaverScreenManager.ChangeScreen(new MenuScreen());
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    view.SwitchToContainer(SelectContainerStatus.Mapsets);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the enter key.
+        /// </summary>
+        private void HandleKeyPressEnter()
+        {
+            var view = View as SongSelectScreenView;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Mapsets:
+                    view.SwitchToContainer(SelectContainerStatus.Difficulty);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the right key
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void HandleKeyPressRight()
+        {
+            var view = View as SongSelectScreenView;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
             {
@@ -130,35 +175,53 @@ namespace Quaver.Screens.SongSelect
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+        /// <summary>
+        ///     Handles when the user presses the left key.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void HandleKeyPressLeft()
+        {
+            var view = View as SongSelectScreenView;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
+                return;
+
+            switch (view.ActiveContainer)
             {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Backward);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Backward);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case SelectContainerStatus.Mapsets:
+                    view?.MapsetScrollContainer.SelectNextMapset(Direction.Backward);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Backward);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         /// <summary>
-        ///     Plays the audio track at the preview time if it has stopped
+        ///     Handles when the user wants to increase/decrease the rate of the song.
         /// </summary>
-        private static void KeepPlayingAudioTrackAtPreview()
+        private static void HandleKeyPressControlRateChange()
         {
-            lock (AudioEngine.Track)
-            {
-                if (AudioEngine.Track == null)
-                    return;
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
 
-                if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
-                    AudioEngine.PlaySelectedTrackAtPreview();
+            // Increase rate.
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+
+            // Decrease Rate
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+
+            // Change from pitched to non-pitched
+            if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
+            {
+                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+                Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}", LogType.Runtime);
             }
         }
     }
