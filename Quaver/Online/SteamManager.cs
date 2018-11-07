@@ -184,7 +184,8 @@ namespace Quaver.Online
         {
             Logger.Debug($"Requesting Steam Avatar for user: {steamId}...", LogType.Network);
 
-            var tex = LoadAvatar(steamId);
+            var tex = LoadAvatar(steamId) ?? UserInterface.UnknownAvatar;
+
             UserAvatars[steamId] = tex;
             SteamUserAvatarLoaded?.Invoke(typeof(SteamManager), new SteamAvatarLoadedEventArgs(steamId, tex));
 
