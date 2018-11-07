@@ -41,6 +41,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 return ScoreCache[map];
 
             var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum);
+            map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
             var scores = new List<LocalScore>();
 
@@ -49,8 +50,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 ScoreCache[map] = scores;
                 return scores;
             }
-
-            map.NeedsOnlineUpdate = onlineScores.Code == OnlineScoresResponseCode.NeedsUpdate;
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
