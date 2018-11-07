@@ -43,6 +43,11 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         private List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
 
+        /// <summary>
+        ///     Cached scores for individual maps.
+        /// </summary>
+        public Dictionary<Map, List<LocalScore>> ScoreCache { get; } = new Dictionary<Map, List<LocalScore>>();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

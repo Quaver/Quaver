@@ -5,6 +5,7 @@ using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Online;
+using Wobble.Logging;
 
 namespace Quaver.Screens.SongSelect.UI.Leaderboard
 {
@@ -32,16 +33,27 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             if (!OnlineManager.Connected)
                 return new List<LocalScore>();
 
+            // Get previously cached scores.
+            if (ScoreCache.ContainsKey(MapManager.Selected.Value))
+            {
+                Logger.Debug($"Already have previous global scores. Fetching from cache.", LogType.Runtime, false);
+                return ScoreCache[MapManager.Selected.Value];
+            }
+
             var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
 
             var scores = new List<LocalScore>();
 
             if (onlineScores?.Scores == null)
+            {
+                ScoreCache[MapManager.Selected.Value] = scores;
                 return scores;
+            }
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
 
+            ScoreCache[MapManager.Selected.Value] = scores;
             return scores;
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Wobble.Logging;
 
 namespace Quaver.Screens.SongSelect.UI.Leaderboard
 {
@@ -22,7 +23,19 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override List<LocalScore> FetchScores() => LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+        public override List<LocalScore> FetchScores()
+        {
+            if (ScoreCache.ContainsKey(MapManager.Selected.Value))
+            {
+                Logger.Debug($"Already have previous local scores. Fetching from cache.", LogType.Runtime, false);
+                return ScoreCache[MapManager.Selected.Value];
+            }
+
+            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+            ScoreCache[MapManager.Selected.Value] = scores;
+
+            return scores;
+        }
 
         /// <inheritdoc />
         /// <summary>

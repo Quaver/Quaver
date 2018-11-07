@@ -64,6 +64,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public override void Destroy()
         {
+            // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChange;
 
             if (Source != null)
@@ -146,10 +147,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         public Task LoadScores(CancellationToken cancellationToken = default) => new Task(() =>
         {
             var section = Sections[ConfigManager.LeaderboardSection.Value];
-            
+
             try
             {
-
                 section.ClearScores();
                 section.IsFetching = true;
                 NoScoresAvailableText.Visible = false;
