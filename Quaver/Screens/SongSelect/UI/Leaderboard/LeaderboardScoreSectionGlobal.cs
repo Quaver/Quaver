@@ -33,27 +33,29 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             if (!OnlineManager.Connected)
                 return new List<LocalScore>();
 
+            var map = MapManager.Selected.Value;
+
             // Get previously cached scores.
-            if (ScoreCache.ContainsKey(MapManager.Selected.Value))
+            if (ScoreCache.ContainsKey(map))
             {
                 Logger.Debug($"Already have previous global scores. Fetching from cache.", LogType.Runtime, false);
-                return ScoreCache[MapManager.Selected.Value];
+                return ScoreCache[map];
             }
 
-            var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum);
+            var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum);
 
             var scores = new List<LocalScore>();
 
             if (onlineScores?.Scores == null)
             {
-                ScoreCache[MapManager.Selected.Value] = scores;
+                ScoreCache[map] = scores;
                 return scores;
             }
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
 
-            ScoreCache[MapManager.Selected.Value] = scores;
+            ScoreCache[map] = scores;
             return scores;
         }
 

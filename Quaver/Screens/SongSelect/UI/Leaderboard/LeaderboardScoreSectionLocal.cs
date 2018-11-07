@@ -25,14 +25,16 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public override List<LocalScore> FetchScores()
         {
-            if (ScoreCache.ContainsKey(MapManager.Selected.Value))
+            var map = MapManager.Selected.Value;
+
+            if (ScoreCache.ContainsKey(map))
             {
                 Logger.Debug($"Already have previous local scores. Fetching from cache.", LogType.Runtime, false);
-                return ScoreCache[MapManager.Selected.Value];
+                return ScoreCache[map];
             }
 
-            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
-            ScoreCache[MapManager.Selected.Value] = scores;
+            var scores = LocalScoreCache.FetchMapScores(map.Md5Checksum);
+            ScoreCache[map] = scores;
 
             return scores;
         }
