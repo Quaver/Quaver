@@ -8,8 +8,10 @@ using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Online;
 using Quaver.Resources;
 using Quaver.Scheduling;
+using Quaver.Server.Client;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -57,6 +59,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             SwitchSections(ConfigManager.LeaderboardSection.Value);
 
             MapManager.Selected.ValueChanged += OnMapChange;
+            OnlineManager.Status.ValueChanged += OnOnlineStatusChange;
         }
 
         /// <inheritdoc />
@@ -66,6 +69,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChange;
+
+            // ReSharper disable once DelegateSubtraction
+            OnlineManager.Status.ValueChanged -= OnOnlineStatusChange;
 
             if (Source != null)
             {
@@ -199,6 +205,34 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <param name="e"></param>
         private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e)
         {
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
+            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
+        }
+
+        /// <summary>
+        ///     Called whenever the user's onlinestatus is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnOnlineStatusChange(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+            // If not connected clear all old scores in the cache.
+            if (e.Value != ConnectionStatus.Connected)
+            {
+                Sections[LeaderboardType.Global].ScoreCache.Clear();
+                return;
+            }
+
+            if (e.Value != ConnectionStatus.Connected || e.OldValue == ConnectionStatus.Connected)
+                return;
+
+            if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Global)
+                return;
+
+            // When the user connects again, load scores.
             Source.Cancel();
             Source.Dispose();
             Source = new CancellationTokenSource();
