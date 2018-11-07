@@ -160,6 +160,12 @@ namespace Quaver.Database.Maps
         public Bindable<List<LocalScore>> Scores { get; } = new Bindable<List<LocalScore>>(null);
 
         /// <summary>
+        ///     Determines if this map is outdated and needs an update.
+        /// </summary>
+        [Ignore]
+        public bool NeedsOnlineUpdate { get; set; }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>
