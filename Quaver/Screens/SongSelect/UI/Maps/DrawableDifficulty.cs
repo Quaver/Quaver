@@ -10,6 +10,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 
 namespace Quaver.Screens.SongSelect.UI.Maps
 {
@@ -166,6 +167,17 @@ namespace Quaver.Screens.SongSelect.UI.Maps
 
             var view = Container.View;
             view.MapsetScrollContainer.SelectMap(view.MapsetScrollContainer.SelectedMapsetIndex, Map, true);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     In this case, we only want buttons to be clickable if they're in the bounds of the scroll container.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool IsMouseInClickArea()
+        {
+            var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Container.ScreenRectangle.ToRectangle());
+            return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }
 }

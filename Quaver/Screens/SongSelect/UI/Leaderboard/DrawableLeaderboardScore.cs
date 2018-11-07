@@ -13,10 +13,12 @@ using Steamworks;
 using TimeAgo;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 
 namespace Quaver.Screens.SongSelect.UI.Leaderboard
 {
-    public class DrawableLeaderboardScore : Sprite
+    public class DrawableLeaderboardScore : Button
     {
         /// <summary>
         ///     The score this drawable represents.
@@ -218,6 +220,17 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 Y = TextScore.Y + 2,
                 Tint = (long)timeDifference.TotalMilliseconds < 60 * 60 * 1000 ? Colors.MainAccent : Color.White
             };
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     In this case, we only want buttons to be clickable if they're in the bounds of the scroll container.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool IsMouseInClickArea()
+        {
+            var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Parent.ScreenRectangle.ToRectangle());
+            return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }
 }
