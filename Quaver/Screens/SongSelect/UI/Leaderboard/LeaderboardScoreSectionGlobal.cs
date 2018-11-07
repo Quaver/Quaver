@@ -5,6 +5,7 @@ using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Online;
+using Quaver.Server.Client.Events.Scores;
 using Wobble.Logging;
 
 namespace Quaver.Screens.SongSelect.UI.Leaderboard
@@ -37,10 +38,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
             // Get previously cached scores.
             if (ScoreCache.ContainsKey(map))
-            {
-                Logger.Debug($"Already have previous global scores. Fetching from cache.", LogType.Runtime, false);
                 return ScoreCache[map];
-            }
 
             var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum);
 
@@ -51,6 +49,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 ScoreCache[map] = scores;
                 return scores;
             }
+
+            map.NeedsOnlineUpdate = onlineScores.Code == OnlineScoresResponseCode.NeedsUpdate;
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
@@ -66,10 +66,25 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <returns></returns>
         public override string GetNoScoresAvailableString(Map map)
         {
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            return map.RankedStatus == RankedStatus.Ranked
-                ? "No scores submitted. Be the first!"
-                : "No scores avaialable. This map isn't ranked!";
+            if (!OnlineManager.Connected)
+                return "You must be logged in to view online scores!";
+
+            if (map.NeedsOnlineUpdate)
+                return "Your map is outdated. Please update it!";
+
+            switch (map.RankedStatus)
+            {
+                case RankedStatus.NotSubmitted:
+                    return "This map is not submitted online!";
+                case RankedStatus.Unranked:
+                    return "This map is not ranked!";
+                case RankedStatus.Ranked:
+                    return "No scores available. Be the first!";
+                case RankedStatus.DanCourse:
+                    return "Unavailable!";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

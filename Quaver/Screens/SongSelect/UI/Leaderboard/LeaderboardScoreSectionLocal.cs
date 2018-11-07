@@ -28,10 +28,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             var map = MapManager.Selected.Value;
 
             if (ScoreCache.ContainsKey(map))
-            {
-                Logger.Debug($"Already have previous local scores. Fetching from cache.", LogType.Runtime, false);
                 return ScoreCache[map];
-            }
 
             var scores = LocalScoreCache.FetchMapScores(map.Md5Checksum);
             ScoreCache[map] = scores;
