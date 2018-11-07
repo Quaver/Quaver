@@ -13,6 +13,7 @@ using Quaver.Screens.Menu;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -84,6 +85,9 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         private void HandleInput()
         {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
             HandleKeyPressEscape();
             HandleKeyPressEnter();
             HandleKeyPressRight();
