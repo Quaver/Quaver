@@ -132,7 +132,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Source.Cancel();
             Source.Dispose();
             Source = new CancellationTokenSource();
-            LoadScores(Source.Token).Start();
+            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
         }
 
         /// <summary>
@@ -145,28 +145,35 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public Task LoadScores(CancellationToken cancellationToken = default) => new Task(() =>
         {
+            var section = Sections[ConfigManager.LeaderboardSection.Value];
+            
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var map = MapManager.Selected.Value;
-                var section = Sections[ConfigManager.LeaderboardSection.Value];
 
                 section.ClearScores();
                 section.IsFetching = true;
                 NoScoresAvailableText.Visible = false;
+
+                Thread.Sleep(300);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var map = MapManager.Selected.Value;
 
                 var scores = section.FetchScores();
                 section.IsFetching = false;
 
                 lock (NoScoresAvailableText)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     if (scores.Count == 0)
                     {
                         NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
                         NoScoresAvailableText.Alpha = 0;
                         NoScoresAvailableText.Visible = true;
-                        NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
+
+                        NoScoresAvailableText.ClearAnimations();
+                        NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 150));
                     }
                     else
                     {
@@ -180,6 +187,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             catch (Exception e)
             {
                 // ignored.
+                section.IsFetching = true;
+                NoScoresAvailableText.Visible = false;
             }
         });
 
@@ -193,7 +202,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Source.Cancel();
             Source.Dispose();
             Source = new CancellationTokenSource();
-            LoadScores(Source.Token).Start();
+            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
         }
     }
 }
