@@ -60,7 +60,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// <summary>
         ///     The flag that shows the ranked status of the map.
         /// </summary>
-        private BannerRankedStatus RankedStatus { get; set; }
+        public BannerRankedStatus RankedStatus { get; private set; }
 
         /// <summary>
         ///     Displays all the metadata for the map.

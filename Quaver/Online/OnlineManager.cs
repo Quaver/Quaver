@@ -12,6 +12,7 @@ using Quaver.Graphics.Online.Username;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
+using Quaver.Screens.SongSelect;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -378,6 +379,16 @@ namespace Quaver.Online
             }
 
             // TODO: Update map in db with new status...
+            var game = GameBase.Game as QuaverGame;
+
+            // If in song select, update the banner of the currently selected map.
+            if (game.CurrentScreen is SongSelectScreen screen)
+            {
+                var view = screen.View as SongSelectScreenView;
+
+                if (MapManager.Selected.Value == map)
+                    view.Banner.RankedStatus.UpdateMap(map);
+            }
 
             Logger.Debug($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
         }
