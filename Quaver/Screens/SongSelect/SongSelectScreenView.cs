@@ -305,6 +305,7 @@ namespace Quaver.Screens.SongSelect
 
             ActiveContainer = container;
             SearchContainer.Parent = Container;
+            UserProfile.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
         }
     }
