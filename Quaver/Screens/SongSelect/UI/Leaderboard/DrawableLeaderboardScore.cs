@@ -12,6 +12,7 @@ using Quaver.Skinning;
 using Steamworks;
 using TimeAgo;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
@@ -97,6 +98,16 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             CreateScore();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnAvatarLoaded;
+            base.Destroy();
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -153,9 +164,24 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 else
                     Avatar.Image = UserInterface.YouAvatar;
             }
+            else if (Score.IsOnline)
+            {
+                // Check to see if we have a Steam avatar for this user cached.
+                if (SteamManager.UserAvatars.ContainsKey((ulong) Score.SteamId))
+                {
+                    Avatar.Image = SteamManager.UserAvatars[(ulong) Score.SteamId];
+                    return;
+                }
+
+                Avatar.Alpha = 0;
+                Avatar.Image = UserInterface.YouAvatar;
+
+                // Otherwise we need to request for it.
+                SteamManager.SteamUserAvatarLoaded += OnAvatarLoaded;
+                SteamManager.SendAvatarRetrievalRequest((ulong) Score.SteamId);
+            }
             else
             {
-                // TODO: Fix for online scores.
                 Avatar.Image = UserInterface.UnknownAvatar;
             }
         }
@@ -231,6 +257,22 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Parent.ScreenRectangle.ToRectangle());
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+        }
+
+        /// <summary>
+        ///     Called when a Steam avatar has loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (e.SteamId != (ulong) Score.SteamId)
+                return;
+
+            Avatar.Image = e.Texture;
+            Avatar.ClearAnimations();
+            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
         }
     }
 }
