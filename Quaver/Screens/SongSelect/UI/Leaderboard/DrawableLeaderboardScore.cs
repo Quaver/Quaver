@@ -101,6 +101,16 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.40f : 0.60f, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
