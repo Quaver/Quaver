@@ -109,7 +109,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         ///     Switches to a different section on the leaderboards.
         /// </summary>
         /// <param name="type"></param>
-        public void SwitchSections(LeaderboardType type)
+        private void SwitchSections(LeaderboardType type)
         {
             ConfigManager.LeaderboardSection.Value = type;
 
@@ -155,6 +155,13 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
+            cancellationToken.ThrowIfCancellationRequested();
+
+            section.IsFetching = true;
+            NoScoresAvailableText.Visible = false;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Scroll to the top of the container and reset the height of the container
             // (removes the scroll wheel)
             section.ScrollTo(0, 1);
@@ -163,9 +170,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             try
             {
                 section.ClearScores();
-                section.IsFetching = true;
-                NoScoresAvailableText.Visible = false;
-
                 Thread.Sleep(300);
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -243,7 +247,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <param name="e"></param>
         private void OnLeaderboardSectionChange(object sender, BindableValueChangedEventArgs<LeaderboardType> e)
         {
-            Sections[e.OldValue].ClearScores();;
+            Sections[e.OldValue].ClearScores();
             Sections[e.OldValue].Visible = false;
             Sections[e.Value].Visible = true;
 
