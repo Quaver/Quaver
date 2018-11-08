@@ -13,6 +13,7 @@ using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.SongSelect.UI;
 using Quaver.Screens.SongSelect.UI.Banner;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
+using Quaver.Screens.SongSelect.UI.Leaderboard.Selector;
 using Quaver.Screens.SongSelect.UI.Maps;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Screens.SongSelect.UI.Mapsets.Search;
@@ -71,14 +72,14 @@ namespace Quaver.Screens.SongSelect
         public MapsetSearchContainer SearchContainer { get; private set; }
 
         /// <summary>
-        ///     The divider line under the mapset banner.
-        /// </summary>
-        private Sprite DividerLine { get; set; }
-
-        /// <summary>
         ///     Displays the leaderboard to show user scores.
         /// </summary>
         public LeaderboardContainer Leaderboard { get; private set; }
+
+        /// <summary>
+        ///     Allows the user to select between different leaderboard sections.
+        /// </summary>
+        public LeaderboardSelector LeaderboardSelector { get; private set; }
 
         /// <summary>
         ///     Dictates which container (mapsets, or difficulties) are currently active.
@@ -98,7 +99,7 @@ namespace Quaver.Screens.SongSelect
             CreateDifficultyScrollContainer();
             CreateMapBanner();
             CreateMapsetSearchContainer();
-            CreateDividerLine();
+            CreateLeaderboardSelector();
             CreateLeaderboard();
 
             // Needs to be called last so it's above the entire UI
@@ -243,28 +244,24 @@ namespace Quaver.Screens.SongSelect
         };
 
         /// <summary>
-        ///     Creates the divider line under the map banner.
-        /// </summary>
-        private void CreateDividerLine() => DividerLine = new Sprite()
-        {
-            Parent = Container,
-            Alignment = Alignment.TopLeft,
-            Size = new ScalableVector2(Banner.Width, 1),
-            Position = new ScalableVector2(28, Banner.Y + Banner.Height + 30),
-            Alpha = 0,
-            Animations =
-            {
-                new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 700)
-            }
-        };
-
-        /// <summary>
         ///     Creates the container that houses the leaderboard.
         /// </summary>
         private void CreateLeaderboard() => Leaderboard = new LeaderboardContainer(this)
         {
             Parent = Container,
-            Position = new ScalableVector2(28, DividerLine.Y + DividerLine.Height + 5)
+            Position = new ScalableVector2(28 - Banner.Border.Thickness, LeaderboardSelector.Y + LeaderboardSelector.Height)
+        };
+
+        /// <summary>
+        ///     Creates the interface to select between different leaderboard sections.
+        /// </summary>
+        private void CreateLeaderboardSelector() => LeaderboardSelector = new LeaderboardSelector(this, new List<LeaderboardSelectorItem>()
+        {
+            new LeaderboardSelectorItemRankings(LeaderboardType.Local, "Local Scores"),
+            new LeaderboardSelectorItemRankings(LeaderboardType.Global, "Global Scores")
+        })
+        {
+            Parent = Container
         };
 
         /// <summary>

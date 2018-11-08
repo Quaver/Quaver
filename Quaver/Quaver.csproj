@@ -6,7 +6,6 @@
     <StartupObject>Quaver.Program</StartupObject>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />

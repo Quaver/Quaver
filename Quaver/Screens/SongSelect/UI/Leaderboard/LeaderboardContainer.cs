@@ -50,7 +50,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         public LeaderboardContainer(SongSelectScreenView view)
         {
             View = view;
-            Size = new ScalableVector2(View.Banner.Width, 370);
+            Size = new ScalableVector2(View.Banner.Width, 356);
             Alpha = 0;
 
             Source = new CancellationTokenSource();
@@ -60,6 +60,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
             MapManager.Selected.ValueChanged += OnMapChange;
             OnlineManager.Status.ValueChanged += OnOnlineStatusChange;
+            ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChange;
         }
 
         /// <inheritdoc />
@@ -72,6 +73,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnOnlineStatusChange;
+
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.LeaderboardSection.ValueChanged -= OnLeaderboardSectionChange;
 
             if (Source != null)
             {
@@ -91,21 +95,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Alignment = Alignment.MidCenter,
             Visible = false
         };
-
-        /// <summary>
-        ///     Creates the text that says PB
-        /// </summary>
-        private void CreateBestScore(LocalScore score)
-        {
-            /*BestScore = new DrawableLeaderboardScore(score)
-            {
-                Parent = this,
-                Alignment = Alignment.TopCenter,
-                Y = 302
-            };
-
-            BestScore.AddBorder(Color.White);*/
-        }
 
         /// <summary>
         ///     Creates all of the leaderboard sections that will be displayed.
@@ -139,7 +128,19 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Source.Cancel();
             Source.Dispose();
             Source = new CancellationTokenSource();
-            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
+            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token).Start());
+        }
+
+        /// <summary>
+        ///     Cancels any existing token for loading scores and loads new scores for the current
+        ///     map.
+        /// </summary>
+        public void LoadNewScores()
+        {
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
+            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token).Start());
         }
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         ///
         ///     Lord help me.
         /// </summary>
-        public Task LoadScores(CancellationToken cancellationToken = default) => new Task(() =>
+        private Task InitiateScoreLoad(CancellationToken cancellationToken = default) => new Task(() =>
         {
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
@@ -203,13 +204,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e)
-        {
-            Source.Cancel();
-            Source.Dispose();
-            Source = new CancellationTokenSource();
-            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
-        }
+        private void OnMapChange(object sender, BindableValueChangedEventArgs<Map> e) => LoadNewScores();
 
         /// <summary>
         ///     Called whenever the user's onlinestatus is changed.
@@ -233,10 +228,21 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 return;
 
             // When the user connects again, load scores.
-            Source.Cancel();
-            Source.Dispose();
-            Source = new CancellationTokenSource();
-            ThreadScheduler.Run(() => LoadScores(Source.Token).Start());
+            LoadNewScores();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLeaderboardSectionChange(object sender, BindableValueChangedEventArgs<LeaderboardType> e)
+        {
+            Sections[e.OldValue].ClearScores();;
+            Sections[e.OldValue].Visible = false;
+            Sections[e.Value].Visible = true;
+
+            LoadNewScores();
         }
     }
 }

@@ -201,7 +201,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             LoadNewAudioTrackIfNecessary(previousMap);
             // LoadNewBackgroundIfNecessary(previousMap);
-            View.Leaderboard.LoadScores();
+            View.Leaderboard.LoadNewScores();
         }
 
         /// <summary>
