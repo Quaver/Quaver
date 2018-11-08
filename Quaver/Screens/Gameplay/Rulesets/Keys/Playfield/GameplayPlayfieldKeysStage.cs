@@ -39,6 +39,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         public Container HitObjectContainer { get; private set; }
 
         /// <summary>
+        ///     The Container that holds every Timing Line object
+        /// </summary>
+        public Container TimingLineContainer { get; private set; }
+
+        /// <summary>
         ///     The left side of the stage.
         /// </summary>
         public Sprite StageLeft { get; private set; }
@@ -129,12 +134,14 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
             // the receptors first, or the playfield first.
             if (Skin.ReceptorsOverHitObjects)
             {
+                CreateTimingLineContainer();
                 CreateHitObjectContainer();
                 CreateReceptorsAndLighting();
             }
             else
             {
                 CreateReceptorsAndLighting();
+                CreateTimingLineContainer();
                 CreateHitObjectContainer();
             }
 
@@ -282,6 +289,16 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     Creates the HitObjectContainer
         /// </summary>
         private void CreateHitObjectContainer() => HitObjectContainer = new Container
+        {
+            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
+            Alignment = Alignment.TopCenter,
+            Parent = Playfield.ForegroundContainer
+        };
+
+        /// <summary>
+        ///     Creates the TimingLineContainer
+        /// </summary>
+        private void CreateTimingLineContainer() => TimingLineContainer = new Container
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,

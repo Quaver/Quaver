@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Resources;
 using Quaver.Database.Maps;
+using Quaver.Modifiers;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -114,8 +116,9 @@ namespace Quaver.Screens.Gameplay.UI
                 CurrentLinePoolIndex = 0;
 
             LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
-            LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime;
-            LineObjectPool[CurrentLinePoolIndex].Alpha = 0.85f;
+
+            LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime / ModHelper.GetRateFromMods(ModManager.Mods);
+            LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
         }
     }
 }

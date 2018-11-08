@@ -6,11 +6,7 @@
     <StartupObject>Quaver.Program</StartupObject>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Graphics\Dialogs\**" />
-    <EmbeddedResource Remove="Graphics\Dialogs\**" />
-    <None Remove="Graphics\Dialogs\**" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
