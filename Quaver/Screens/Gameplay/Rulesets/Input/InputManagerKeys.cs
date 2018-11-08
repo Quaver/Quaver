@@ -174,7 +174,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 return;
 
             // Remove HitObject from Object Pool. Will be recycled/killed as necessary.
-            gameplayHitObject = manager.ActiveNotes[lane].Dequeue();
+            gameplayHitObject = manager.ActiveNoteLanes[lane].Dequeue();
 
             // Update stats
             Ruleset.ScoreProcessor.Stats.Add(
@@ -230,7 +230,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Get judgement and references
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            var hitDifference = manager.HeldLongNotes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
+            var hitDifference = manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
             var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
 
             // Update animations
@@ -241,7 +241,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             if (judgement != Judgement.Ghost)
             {
                 // Dequeue from pool
-                gameplayHitObject = manager.HeldLongNotes[lane].Dequeue();
+                gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
 
                 // Update stats
                 Ruleset.ScoreProcessor.Stats.Add(
