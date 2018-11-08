@@ -98,7 +98,6 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             // Update line positions
             if (Pool.Count > 0)
             {
-                Console.WriteLine(Info.Count + ", " + Pool.Count + ", " + HitObjectManager.RecycleObjectPosition + ", " + Pool.Peek().CurrentTrackPosition);
                 foreach (var line in Pool)
                     line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
             }
