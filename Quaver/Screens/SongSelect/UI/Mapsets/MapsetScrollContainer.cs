@@ -158,6 +158,10 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Update the newly selected map.
             MapManager.Selected.Value = map;
 
+            // Set the preferred map to this, so that if the user switches back and forth sets,
+            // it'll be on the same one.
+            nextMapset.PreferredMap = map;
+
             // Grab a reference to the difficulty scroll container.
             var diffContainer = View.DifficultyScrollContainer;
 

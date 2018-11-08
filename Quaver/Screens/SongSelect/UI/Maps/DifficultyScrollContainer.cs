@@ -364,7 +364,6 @@ namespace Quaver.Screens.SongSelect.UI.Maps
                 case Direction.Forward:
                     var nextDifficulty = SelectedMapIndex + 1;
 
-
                     if (CurrentMapset.Maps.ElementAtOrDefault(nextDifficulty) == null)
                         return;
 
