@@ -74,6 +74,11 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// </summary>
         private SpriteText Mods { get; set; }
 
+        /// <summary>
+        ///     The container in which the metadata will be housed in.
+        /// </summary>
+        private ScrollContainer Container { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -110,6 +115,12 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                 Size = Mask.Size,
                 Alignment = Alignment.MidCenter,
                 Tint = Color.Black
+            };
+
+            Container = new ScrollContainer(Size, Size)
+            {
+                Parent = this,
+                Alpha = 0
             };
 
             CreateMapDifficultyName();
@@ -219,46 +230,65 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// <summary>
         ///     Creates the SpriteText that displays the difficulty name of the map.
         /// </summary>
-        private void CreateMapDifficultyName() => MapDifficultyName = new SpriteText(BitmapFonts.Exo2Bold, " ", 13)
+        private void CreateMapDifficultyName()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            X = 22,
-            Y = 50
-        };
+            MapDifficultyName = new SpriteText(BitmapFonts.Exo2Bold, " ", 13)
+            {
+                Alignment = Alignment.TopLeft,
+                X = 22,
+                Y = 50
+            };
+
+            Container.AddContainedDrawable(MapDifficultyName);
+        }
 
         /// <summary>
         ///    Creates the SpriteText that displays the title of the song.
         /// </summary>
-        private void CreateSongTitle() => SongTitle = new SpriteText(BitmapFonts.Exo2Bold, " ", 14)
+        private void CreateSongTitle()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            X = MapDifficultyName.X,
-            Y = MapDifficultyName.Y + MapDifficultyName.Height + 8
-        };
+            SongTitle = new SpriteText(BitmapFonts.Exo2Bold, " ", 14)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                X = MapDifficultyName.X,
+                Y = MapDifficultyName.Y + MapDifficultyName.Height + 8
+            };
+
+            Container.AddContainedDrawable(SongTitle);
+        }
 
         /// <summary>
         ///     Creates the text that displays the artist of the song.
         /// </summary>
-        private void CreateSongArtist() => SongArtist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
+        private void CreateSongArtist()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            X = SongTitle.X,
-            Y = SongTitle.Y + SongTitle.Height + 8
-        };
+            SongArtist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                X = SongTitle.X,
+                Y = SongTitle.Y + SongTitle.Height + 8
+            };
+
+            Container.AddContainedDrawable(SongArtist);
+        }
 
         /// <summary>
         ///    Creates the text that displays the creator of the map.
         /// </summary>
-        private void CreateMapCreator() => MapCreator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+        private void CreateMapCreator()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            X = SongTitle.X,
-            Y = SongArtist.Y + SongArtist.Height + 8
-        };
+            MapCreator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                X = SongTitle.X,
+                Y = SongArtist.Y + SongArtist.Height + 8
+            };
+
+            Container.AddContainedDrawable(MapCreator);
+        }
 
         /// <summary>
         ///     Creates the sprite that displays the ranked status of the map.
