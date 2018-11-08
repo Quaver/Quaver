@@ -75,7 +75,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <summary>
         ///     Quick reference to the current mapset.
         /// </summary>
-        private Mapset CurrentMapset => Screen.AvailableMapsets[View.MapsetScrollContainer.SelectedMapsetIndex];
+        private Mapset CurrentMapset => Screen.AvailableMapsets.ElementAtOrDefault(View.MapsetScrollContainer.SelectedMapsetIndex);
 
         /// <summary>
         ///     Determines if the container has had animations in the previous frame
@@ -222,6 +222,9 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <param name="direction"></param>
         private void HandlePoolShifting(Direction direction)
         {
+            if (CurrentMapset == null)
+                return;
+
             switch (direction)
             {
                 case Direction.Forward:
