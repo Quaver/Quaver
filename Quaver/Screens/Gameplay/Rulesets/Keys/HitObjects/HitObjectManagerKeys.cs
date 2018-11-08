@@ -483,7 +483,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 var info = lane.Dequeue();
                 gameplayHitObject.InitializeObject(this, info);
-                HeldLongNoteLanes[info.Lane - 1].Enqueue(gameplayHitObject);
+                ActiveNoteLanes[info.Lane - 1].Enqueue(gameplayHitObject);
             }
             else
             {
