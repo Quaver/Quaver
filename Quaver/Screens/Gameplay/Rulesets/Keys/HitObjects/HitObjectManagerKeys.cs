@@ -452,7 +452,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdatePoolingPositions()
         {
-            RecycleObjectPosition = ObjectPositionMagnitude / ScrollSpeed;
+            RecycleObjectPosition = (ObjectPositionMagnitude / 4) / ScrollSpeed;
             CreateObjectPosition = -ObjectPositionMagnitude / ScrollSpeed;
         }
 
