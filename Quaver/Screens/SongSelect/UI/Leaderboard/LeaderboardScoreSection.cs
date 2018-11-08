@@ -106,6 +106,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 return;
 
             var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
+            LoadingWheel.ClearAnimations();
             LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
         }
 
