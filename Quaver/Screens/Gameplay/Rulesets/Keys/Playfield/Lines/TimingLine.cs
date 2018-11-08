@@ -52,9 +52,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="offset"></param>
         public void UpdateSpritePosition(long offset)
         {
-            var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            CurrentTrackPosition = Info.TrackOffset - offset;
-            Y = (CurrentTrackPosition * speed / HitObjectManagerKeys.TrackRounding) + GlobalTrackOffset;
+            CurrentTrackPosition = offset - Info.TrackOffset;
+            Y = GlobalTrackOffset + (CurrentTrackPosition * (GameplayRulesetKeys.IsDownscroll ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
         }
     }
 }
