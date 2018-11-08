@@ -332,10 +332,17 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     return;
 
                 // The percentage of how far the mouse is inside of the progress bar.
-                var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
+                try
+                {
+                    var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
 
-                Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
-                AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
+                    AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, LogType.Runtime);
+                }
             })
             {
                 Parent = SongTimeProgressBar,
