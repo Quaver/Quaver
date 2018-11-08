@@ -438,14 +438,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             UpdatePoolingPositions();
 
             // Update HitObject LN size
-            foreach (var lane in ActiveNoteLanes)
+            for (var i = 0; i < ActiveNoteLanes.Count; i++)
             {
-                foreach (var hitObject in lane)
+                foreach (var hitObject in ActiveNoteLanes[i])
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
-            }
-            foreach (var lane in DeadNoteLanes)
-            {
-                foreach (var hitObject in lane)
+                foreach (var hitObject in DeadNoteLanes[i])
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
         }
