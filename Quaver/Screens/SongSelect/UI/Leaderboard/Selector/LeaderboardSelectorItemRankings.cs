@@ -17,11 +17,18 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard.Selector
         /// <param name="type"></param>
         /// <param name="text"></param>
         public LeaderboardSelectorItemRankings(LeaderboardType type, string text) :
-            base(text, type == ConfigManager.LeaderboardSection.Value, null)
+            base(text, type == ConfigManager.LeaderboardSection.Value)
         {
             Type = type;
             ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChange;
-            Clicked += (sender, args) => { ConfigManager.LeaderboardSection.Value = Type; };
+
+            Clicked += (sender, args) =>
+            {
+                if (ConfigManager.LeaderboardSection.Value == Type)
+                    return;
+
+                ConfigManager.LeaderboardSection.Value = Type;
+            };
         }
 
         /// <inheritdoc />
