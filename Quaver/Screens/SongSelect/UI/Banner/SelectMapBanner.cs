@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Quaver.Modifiers;
 using Quaver.Resources;
 using Quaver.Scheduling;
 using Quaver.Screens.Select;
@@ -67,6 +69,11 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// </summary>
         private BannerMetadata Metadata { get; }
 
+        /// <summary>
+        ///     Displays the currently activated mods.
+        /// </summary>
+        private SpriteText Mods { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -110,10 +117,11 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             CreateSongArtist();
             CreateMapCreator();
             CreateRankedStatus();
+            CreateMods();
             Metadata = new BannerMetadata(this);
 
             MapManager.Selected.ValueChanged += OnMapChange;
-
+            ModManager.ModsChanged += OnModsChanged;
             //LoadBanner(null);
             UpdateText(MapManager.Selected.Value);
         }
@@ -125,6 +133,8 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         {
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChange;
+            ModManager.ModsChanged -= OnModsChanged;
+
             base.Destroy();
         }
 
@@ -273,6 +283,17 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         }
 
         /// <summary>
+        ///     Creates the text that displays the mods.
+        /// </summary>
+        private void CreateMods() => Mods = new SpriteText(BitmapFonts.Exo2Bold, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 12)
+        {
+            Parent = this,
+            Alignment = Alignment.TopLeft,
+            X = MapDifficultyName.X,
+            Y = 10
+        };
+
+        /// <summary>
         ///     Updates the banner with a new map.
         /// </summary>
         /// <param name="map"></param>
@@ -285,5 +306,12 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             RankedStatus.UpdateMap(map);
             Metadata.UpdateAndAlignMetadata(map);
         }
+
+        /// <summary>
+        ///     Called when the activated mods change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Mods.Text = $"Mods: {ModHelper.GetModsString(e.Mods)}";
     }
 }
