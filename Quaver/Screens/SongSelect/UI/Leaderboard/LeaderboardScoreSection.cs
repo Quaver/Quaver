@@ -170,6 +170,10 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     Scores.Add(drawable);
                     AddContainedDrawable(drawable);
                 }
+
+                // This is a hack... It's to place the leaderboard selector on top so that the
+                // buttons are technically on top of the leaderboard score ones.
+                Leaderboard.View.LeaderboardSelector.Parent = Leaderboard.View.Container;
             }
             catch (Exception e)
             {
