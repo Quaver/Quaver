@@ -195,7 +195,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Alignment = Alignment.MidLeft,
             X = Avatar.X + Avatar.Width + 10,
             Size = new ScalableVector2(HEIGHT * 0.65f, HEIGHT * 0.65f),
-            Image = SkinManager.Skin.Grades[GradeHelper.GetGradeFromAccuracy((float) Score.Accuracy)]
+            Image = Score.Grade == API.Enums.Grade.F ? SkinManager.Skin.Grades[API.Enums.Grade.F]
+                : SkinManager.Skin.Grades[GradeHelper.GetGradeFromAccuracy((float) Score.Accuracy)]
         };
 
         /// <summary>

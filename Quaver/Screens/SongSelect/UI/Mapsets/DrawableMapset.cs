@@ -223,7 +223,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 Container.View.SwitchToContainer(SelectContainerStatus.Difficulty);
                 return;
             }
-            
+
             var map = Mapset.PreferredMap ?? Mapset.Maps.First();
             Container.SelectMap(MapsetIndex, map);
         }
