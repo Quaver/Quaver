@@ -10,6 +10,7 @@ using Quaver.Database.Scores;
 using Quaver.Modifiers;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
+using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
@@ -93,6 +94,7 @@ namespace Quaver.Screens.SongSelect
             HandleKeyPressRight();
             HandleKeyPressLeft();
             HandleKeyPressControlRateChange();
+            HandleKeyPressTab();
         }
 
         /// <summary>
@@ -227,6 +229,20 @@ namespace Quaver.Screens.SongSelect
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
                 Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}", LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the tab key
+        /// </summary>
+        private static void HandleKeyPressTab()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
+                ConfigManager.LeaderboardSection.Value = LeaderboardType.Global;
+            else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Global)
+                ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
         }
     }
 }
