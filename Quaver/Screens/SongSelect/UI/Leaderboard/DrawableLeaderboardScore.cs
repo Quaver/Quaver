@@ -85,7 +85,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Rank = rank;
 
             Size = new ScalableVector2(WIDTH, HEIGHT);
-            Tint = Color.Black;
+            Tint = Rank == -1 ? Colors.MainAccent : Color.Black;
             Alpha = 0.60f;
 
             // If there is no score, then we'll consider this to be a "No personal Best" score.
@@ -151,7 +151,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
-            X = 18
+            X = 18,
+            Tint = Rank == -1 ? Colors.SecondaryAccent : Color.White
         };
 
         /// <summary>

@@ -29,10 +29,10 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override List<LocalScore> FetchScores()
+        public override FetchedScoreStore FetchScores()
         {
             if (!OnlineManager.Connected)
-                return new List<LocalScore>();
+                return new FetchedScoreStore(new List<LocalScore>());
 
             var map = MapManager.Selected.Value;
 
@@ -47,15 +47,17 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
             if (onlineScores?.Scores == null)
             {
-                ScoreCache[map] = scores;
-                return scores;
+                ScoreCache[map] = new FetchedScoreStore(new List<LocalScore>());
+                return ScoreCache[map];
             }
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
 
-            ScoreCache[map] = scores;
-            return scores;
+            var pb = onlineScores.PersonalBest != null ? LocalScore.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;
+
+            ScoreCache[map] = new FetchedScoreStore(scores, pb);
+            return ScoreCache[map];
         }
 
         /// <inheritdoc />

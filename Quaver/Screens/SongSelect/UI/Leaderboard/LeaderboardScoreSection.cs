@@ -46,7 +46,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Cached scores for individual maps.
         /// </summary>
-        public Dictionary<Map, List<LocalScore>> ScoreCache { get; } = new Dictionary<Map, List<LocalScore>>();
+        public Dictionary<Map, FetchedScoreStore> ScoreCache { get; } = new Dictionary<Map, FetchedScoreStore>();
 
         /// <inheritdoc />
         /// <summary>
@@ -113,7 +113,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Fetches scores to display on this section.
         /// </summary>
-        public abstract List<LocalScore> FetchScores();
+        public abstract FetchedScoreStore FetchScores();
 
         /// <summary>
         ///     Gets a string that is displayed when no scores are available.
@@ -134,7 +134,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     Updates the leaderboard with new scores.
         /// </summary>
-        public void UpdateWithScores(Map map, List<LocalScore> scores, CancellationToken cancellationToken = default)
+        public void UpdateWithScores(Map map, FetchedScoreStore scoreStore, CancellationToken cancellationToken = default)
         {
             var newScores = new List<DrawableLeaderboardScore>();
 
@@ -145,21 +145,31 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
                 cancellationToken.ThrowIfCancellationRequested();
 
+                var scoreCount = scoreStore.PersonalBest != null ? scoreStore.Scores.Count + 1 : scoreStore.Scores.Count;
+
                 // Calculate the height of the scroll container based on how many scores there are.
-                var totalUserHeight =  scores.Count * DrawableLeaderboardScore.HEIGHT + 10 * (scores.Count - 1);
+                var totalUserHeight =  scoreCount * DrawableLeaderboardScore.HEIGHT + 10 * (scoreCount - 1);
 
                 if (totalUserHeight > Height)
                     ContentContainer.Height = totalUserHeight;
                 else
                     ContentContainer.Height = Height;
 
-                for (var i = 0; i < scores.Count; i++)
+                for (var i = 0; i < scoreCount; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var score = scores[i];
+                    LocalScore score;
 
-                    var drawable = new DrawableLeaderboardScore(score, i + 1)
+                    if (scoreStore.PersonalBest != null)
+                        score = i == 0 ? scoreStore.PersonalBest : scoreStore.Scores[i - 1];
+                    else
+                        score = scoreStore.Scores[i];
+
+                    var isPersonalBest = scoreStore.PersonalBest != null && i == 0;
+                    var rank = scoreStore.PersonalBest != null ? (isPersonalBest ? -1 : i) : i + 1;
+
+                    var drawable = new DrawableLeaderboardScore(score, rank)
                     {
                         Parent = this,
                         Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,

@@ -23,7 +23,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override List<LocalScore> FetchScores()
+        public override FetchedScoreStore FetchScores()
         {
             var map = MapManager.Selected.Value;
 
@@ -31,9 +31,9 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 return ScoreCache[map];
 
             var scores = LocalScoreCache.FetchMapScores(map.Md5Checksum);
-            ScoreCache[map] = scores;
+            ScoreCache[map] = new FetchedScoreStore(scores);
 
-            return scores;
+            return ScoreCache[map];
         }
 
         /// <inheritdoc />

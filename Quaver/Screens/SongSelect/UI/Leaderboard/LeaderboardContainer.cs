@@ -182,7 +182,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    if (scores.Count == 0)
+                    if (scores.Scores.Count == 0)
                     {
                         NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
                         NoScoresAvailableText.Alpha = 0;
