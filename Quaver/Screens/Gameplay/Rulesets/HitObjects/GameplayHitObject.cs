@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Quaver.API.Maps.Structures;
 
 namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
@@ -12,46 +10,18 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     The info of this particular HitObject from the map file.
         /// </summary>
-        public HitObjectInfo Info { get; }
-
-        /// <summary>
-        ///     The true start time of the object.
-        /// </summary>
-        public float TrueStartTime { get; set; }
-
-        /// <summary>
-        ///     The true end time of the object.
-        /// </summary>
-        public float TrueEndTime { get; set; }
+        public HitObjectInfo Info { get; set; }
 
         /// <summary>
         ///     The list of possible beat snaps.
         /// </summary>
-        private static int[] BeatSnaps = {48, 24, 16, 12, 8, 6, 4, 3};
+        private static int[] BeatSnaps { get; } = { 48, 24, 16, 12, 8, 6, 4, 3 };
 
         /// <summary>
         ///     The beat snap index
         ///     (See: BeatSnaps array)
         /// </summary>
         public int SnapIndex { get; set; }
-
-        /// <summary>
-        ///     Initializes the HitObject's sprite.
-        /// </summary>
-        /// <param name="playfield"></param>
-        public abstract void InitializeSprite(IGameplayPlayfield playfield);
-
-        /// <summary>
-        ///     Ctor - 
-        /// </summary>
-        /// <param name="info"></param>
-        protected GameplayHitObject(HitObjectInfo info)
-        {
-            Info = info;
-
-            TrueStartTime = Info.StartTime;
-            TrueEndTime = Info.EndTime;
-        }
 
         /// <summary>
         ///     Gets the timing point this object is in range of.
@@ -72,7 +42,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
                 }
             }
 
-            // Otherwise just return first point if we can't find it. 
+            // Otherwise just return first point if we can't find it.
             // Qua file won't be considered valid if it doesn't have at least one timing point.
             return timingPoints.First();
         }
@@ -83,10 +53,10 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="hitObject"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        public static int GetBeatSnap(HitObjectInfo hitObject, TimingPointInfo timingPoint)
+        public static int GetBeatSnap(API.Maps.Structures.HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = hitObject.StartTime - timingPoint.StartTime + 2;
+            var pos = info.StartTime - timingPoint.StartTime + 2;
             var beatlength = 60000 / timingPoint.Bpm;
 
             // subtract pos until it's less than beat length. multiple loops for efficiency

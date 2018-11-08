@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -123,7 +121,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed => Ruleset.ScoreProcessor.Health <= 0 || ForceFail;
+        public bool Failed => (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
@@ -162,31 +160,9 @@ namespace Quaver.Screens.Gameplay
         public double TimeSincePlayEnded { get; set; }
 
         /// <summary>
-        ///     If the user is currently on a break in the song.
+        ///     If the user is eligible to skip to the next object.
         /// </summary>
-        private bool _onBreak;
-        public bool OnBreak
-        {
-            get
-            {
-                // By default if there aren't any objects left we aren't on a break.
-                if (Ruleset.HitObjectManager.ObjectPool.Count <= 0)
-                    return false;
-
-                // Grab the next object in the object pool.
-                var nextObject = Ruleset.HitObjectManager.ObjectPool.First();
-
-                // If the player is currently not on a break, then we want to detect if it's on a break
-                // by checking if the next object is 10 seconds away.
-                if (nextObject.TrueStartTime - Timing.Time >= GameplayAudioTiming.StartDelay + 5000)
-                    _onBreak = true;
-                // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
-                else if (_onBreak && nextObject.TrueStartTime - Timing.Time <= GameplayAudioTiming.StartDelay)
-                    _onBreak = false;
-
-                return _onBreak;
-            }
-        }
+        public bool EligibleToSkip => Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >= GameplayAudioTiming.StartDelay + 5000;
 
         /// <summary>
         ///     The amount of times the user has paused.
@@ -301,7 +277,7 @@ namespace Quaver.Screens.Gameplay
                     SkipToNextObject();
 
                 // Only allow offset changes if the map hasn't started or if we're on a break
-                if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.OnBreak)
+                if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
                     // Handle offset +
                     if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
@@ -660,31 +636,27 @@ namespace Quaver.Screens.Gameplay
         /// </summary>
         private void SkipToNextObject()
         {
-            if (!OnBreak || IsPaused || IsResumeInProgress)
+            if (!EligibleToSkip || IsPaused || IsResumeInProgress)
                 return;
 
             // Get the skip time of the next object.
-            var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - GameplayAudioTiming.StartDelay;
+            var nextObject = Ruleset.HitObjectManager.NextHitObject.StartTime;
+            var skipTime = nextObject - GameplayAudioTiming.StartDelay * ModHelper.GetRateFromMods(ModManager.Mods);
 
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 AudioEngine.Track.Seek(skipTime);
-                AudioEngine.Track.Play();
-
-                // Set the actual song time to the position in the audio if it was successful.
-                Timing.Time = AudioEngine.Track.Time;
             }
-            catch (AudioEngineException)
+            catch (AudioEngineException e)
             {
+                Logger.Error(e, LogType.Runtime);
                 Logger.Warning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
-
-                // If there is no audio file, make sure the actual song time is set to the skip time.
-                const int actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)
-                Timing.Time = skipTime + actualSongTimeOffset;
             }
             finally
             {
+                Timing.Time = AudioEngine.Track.Time;
+
                 if (InReplayMode)
                 {
                     var inputManager = (KeysInputManager)Ruleset.InputManager;

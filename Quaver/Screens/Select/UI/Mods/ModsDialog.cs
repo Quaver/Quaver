@@ -239,13 +239,29 @@ namespace Quaver.Screens.Select.UI.Mods
                     Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 90
                 },
 
+                // No Fail
+                new ModsDialogModifierBool(this, new ModNoFail())
+                {
+                    Parent = SceneBackground,
+                    Alignment = Alignment.TopLeft,
+                    Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
+                },
+
+                // NSV
+                new ModsDialogModifierBool(this, new ManiaModNoSliderVelocities())
+                {
+                    Parent = SceneBackground,
+                    Alignment = Alignment.TopLeft,
+                    Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
+                },
+
                 // No Pause
                 new ModsDialogModifierBool(this, new ManiaModNoPause())
                 {
                     Parent = SceneBackground,
                     Alignment = Alignment.TopLeft,
                     Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
-                }
+                },
             };
 
             for (var i = 0; i < Modifiers.Count; i++)

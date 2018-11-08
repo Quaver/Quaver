@@ -78,52 +78,53 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>Sta
         public void HandleInput(double dt)
         {
-            // Handle replay input if necessary.
+            // Handle scroll speed changes if necessary.
+            ChangeScrollSpeed();
+
+            // Handle Replay Input Manager if necessary.
+            // - Grab the previous replay frame that we're on and update the replay's input manager to see if we have any updated frames.
+            // - If the current and previous frames are the same, we don't have to do anything.
             if (ReplayInputManager != null)
             {
-                // Grab the previous replay frame that we're on.
                 var previousReplayFrame = ReplayInputManager.CurrentFrame;
-
-                // Update the replay's input manager to see if we have any updated frames.
                 ReplayInputManager?.HandleInput();
 
-                // Grab the current replay frame.
-                var currentReplayFrame = ReplayInputManager.CurrentFrame;
-
-                // If the two frames are the same, we don't have to update the key press state.
-                if (previousReplayFrame == currentReplayFrame)
+                if (previousReplayFrame == ReplayInputManager.CurrentFrame)
                     return;
             }
 
-            for (var i = 0; i < BindingStore.Count; i++)
+            // Handle Key States
+            for (var lane = 0; lane < BindingStore.Count; lane++)
             {
-                // Keeps track of if this key input is is important enough for us to want to
-                // update more things like animations, score, etc.
+                // Is determined by whether a key is uniquely released or pressed.
+                // Will not bother handling key presses/releases if this value is false.
                 var needsUpdating = false;
 
                 // A key was uniquely pressed.
-                if (!BindingStore[i].Pressed && (KeyboardManager.IsUniqueKeyPress(BindingStore[i].Key.Value) && ReplayInputManager == null
-                                                || ReplayInputManager != null && ReplayInputManager.UniquePresses[i]))
+                if (!BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyPress(BindingStore[lane].Key.Value) && ReplayInputManager == null
+                                                || ReplayInputManager != null && ReplayInputManager.UniquePresses[lane]))
                 {
-                    // We've already handling the unique key press, so reset it.
+                    // Update Replay Manager. Reset UniquePresses value for this lane.
                     if (ReplayInputManager != null)
-                        ReplayInputManager.UniquePresses[i] = false;
+                        ReplayInputManager.UniquePresses[lane] = false;
 
-                    BindingStore[i].Pressed = true;
+                    // Toggle this key on from BindingStore and enable needsUpdating value to handle key press
+                    BindingStore[lane].Pressed = true;
                     needsUpdating = true;
 
                     var screenView = (GameplayScreenView) Ruleset.Screen.View;
                     screenView.KpsDisplay.AddClick();
                 }
                 // A key was uniquely released.
-                else if (BindingStore[i].Pressed && (KeyboardManager.IsUniqueKeyRelease(BindingStore[i].Key.Value) && ReplayInputManager == null
-                                                    || ReplayInputManager != null && ReplayInputManager.UniqueReleases[i]))
+                else if (BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyRelease(BindingStore[lane].Key.Value) && ReplayInputManager == null
+                                                    || ReplayInputManager != null && ReplayInputManager.UniqueReleases[lane]))
                 {
-                    // We're already handling the unique key release so reset.
+                    // Update Replay Manager. Reset UniquePresses value for this lane.
                     if (ReplayInputManager != null)
-                        ReplayInputManager.UniqueReleases[i] = false;
+                        ReplayInputManager.UniqueReleases[lane] = false;
 
-                    BindingStore[i].Pressed = false;
+                    // Toggle this key on from BindingStore and enable needsUpdating value to handle key release
+                    BindingStore[lane].Pressed = false;
                     needsUpdating = true;
                 }
 
@@ -131,335 +132,174 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 if (!needsUpdating)
                     continue;
 
-                // Update the receptor of the playfield
-                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-                playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+                // Update Playfield
+                ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage.SetReceptorAndLightingActivity(lane, BindingStore[lane].Pressed);
 
-                // Get the object manager itself.
+                // Handle Key Pressing/Releasing for this specific frame
                 var manager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
-
-                // Find the object that is nearest in the lane that the user has pressed.
-                var objectIndex = manager.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.Timing.Time);
-
-                // Don't proceed if an object wasn't found.
-                if (objectIndex == -1)
-                    continue;
-
-                // If the key was pressed during this frame.
-                if (BindingStore[i].Pressed)
+                if (BindingStore[lane].Pressed)
                 {
-                    HandleKeyPress(manager, (GameplayHitObjectKeys)manager.ObjectPool[objectIndex], objectIndex);
+                    var hitObject = manager.GetClosestTap(lane);
+                    if (hitObject != null)
+                        HandleKeyPress(manager, hitObject);
                 }
-                // If the key was released during this frame.
                 else
                 {
-                    // Find the index of the actual closest LN and handle the key release
-                    // if so.
-                    for (var j = 0; j < manager.HeldLongNotes.Count; j++)
-                    {
-                        // Handle the release.
-                        if (manager.HeldLongNotes[j].Info.Lane == i + 1)
-                            HandleKeyRelease(manager, j);
-                    }
+                    var hitObject = manager.GetClosestRelease(lane);
+                    if (hitObject != null)
+                        HandleKeyRelease(manager, hitObject);
                 }
             }
-
-            // Handle scroll speed changes.
-            ChangeScrollSpeed();
         }
 
         /// <summary>
         ///     Handles an individual key press during gameplay.
         /// </summary>
         /// <param name="manager"></param>
-        /// <param name="hitObject"></param>
+        /// <param name="gameplayHitObject"></param>
         /// <param name="objectIndex"></param>
-        private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeys hitObject, int objectIndex)
+        private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeys gameplayHitObject)
         {
-            // Play the HitSounds for this object.
-            HitObjectManager.PlayObjectHitSounds(manager.ObjectPool[objectIndex].Info);
+            // Play the HitSounds of closest hit object.
+            HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
 
-            //NEW
+            // Get Judgement and references
             var time = (int) Ruleset.Screen.Timing.Time;
-            var hitDifference = (int) (hitObject.TrueStartTime - time);
-            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Press);
+            var hitDifference = gameplayHitObject.Info.StartTime - time;
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press);
+            var lane = gameplayHitObject.Info.Lane - 1;
 
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
                 return;
 
-            var stat = new HitStat(HitStatType.Hit, KeyPressType.Press, hitObject.Info, time, judgement, hitDifference,
-                                        Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-            Ruleset.ScoreProcessor.Stats.Add(stat);
+            // Remove HitObject from Object Pool. Will be recycled/killed as necessary.
+            gameplayHitObject = manager.ActiveNoteLanes[lane].Dequeue();
 
-            var screenView = (GameplayScreenView)Ruleset.Screen.View;
-            screenView.UpdateScoreboardUsers();
+            // Update stats
+            Ruleset.ScoreProcessor.Stats.Add(
+                new HitStat(
+                    HitStatType.Hit,
+                    KeyPressType.Press,
+                    gameplayHitObject.Info, time,
+                    judgement,
+                    hitDifference,
+                    Ruleset.ScoreProcessor.Accuracy,
+                    Ruleset.ScoreProcessor.Health
+            ));
 
+            // Update Scoreboard
+            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
+
+            // Update Playfield
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
+            playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - Ruleset.Screen.Timing.Time);
+            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+            // Update Object Pooling
             switch (judgement)
             {
                 // Handle early miss cases here.
-                case Judgement.Miss when hitObject.IsLongNote:
-                    manager.KillPoolObject(objectIndex);
+                case Judgement.Miss when gameplayHitObject.IsLongNote:
+                    manager.KillPoolObject(gameplayHitObject);
                     break;
-                // Handle non-miss cases.
+                // Handle miss cases.
                 case Judgement.Miss:
-                    manager.RecyclePoolObject(objectIndex);
+                    manager.RecyclePoolObject(gameplayHitObject);
                     break;
+                // Handle non-miss cases. Perform Hit Lighting Animation and Handle Object pooling.
                 default:
-                    if (hitObject.IsLongNote)
-                        manager.ChangePoolObjectStatusToHeld(objectIndex);
-                    // If the object is not an LN, recycle it.
+                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(gameplayHitObject.IsLongNote);
+                    if (gameplayHitObject.IsLongNote)
+                    {
+                        manager.ChangePoolObjectStatusToHeld(gameplayHitObject);
+                        gameplayHitObject.StartLongNoteAnimation();
+                    }
                     else
-                        manager.RecyclePoolObject(objectIndex);
+                        manager.RecyclePoolObject(gameplayHitObject);
                     break;
             }
-
-            // Make the combo display visible since it is now changing.
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-
-            // Also add a judgement to the hit error.
-            playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.Time);
-
-            // Perform hit burst animation
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-
-            // Don't execute any further if the user early missed, as these
-            // are things pertaining to animations when the user actually hits the note.
-            if (judgement == Judgement.Miss)
-                return;
-
-            // Perform hit lighting animation
-            var laneIndex = hitObject.Info.Lane - 1;
-
-            // If the object is a long note, let the hitlighting actually know about it.
-            if (hitObject.IsLongNote)
-                playfield.Stage.HitLightingObjects[laneIndex].IsHoldingLongNote = true;
-
-            playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation();
-
-            #region Old HandleKeyPress
-            //OLD
-            /*
-            // Check which hit window this object's timing is in
-            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
-            {
-                var time = Ruleset.Screen.Timing.Time;
-                var hitDifference = hitObject.TrueStartTime - time;
-
-                // Check if the user actually hit the object.
-                if (!(Math.Abs(hitDifference) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement)j]))
-                    continue;
-
-                var judgement = (Judgement)j;
-
-                // Update the user's score
-                Ruleset.ScoreProcessor.CalculateScore(hitDifference);
-
-                // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference,
-                                        Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
-
-                var screenView = (GameplayScreenView) Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
-
-                switch (judgement)
-                {
-                    // Handle early miss cases here.
-                    case Judgement.Miss when hitObject.IsLongNote:
-                        manager.KillPoolObject(objectIndex);
-                        break;
-                    // Handle non-miss cases.
-                    case Judgement.Miss:
-                        manager.RecyclePoolObject(objectIndex);
-                        break;
-                    default:
-                        if (hitObject.IsLongNote)
-                            manager.ChangePoolObjectStatusToHeld(objectIndex);
-                        // If the object is not an LN, recycle it.
-                        else
-                            manager.RecyclePoolObject(objectIndex);
-                        break;
-                }
-
-                // Make the combo display visible since it is now changing.
-                var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-                playfield.Stage.ComboDisplay.MakeVisible();
-
-                // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.Time);
-
-                // Perform hit burst animation
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-
-                // Don't execute any further if the user early missed, as these
-                // are things pertaining to animations when the user actually hits the note.
-                if (judgement == Judgement.Miss)
-                    return;
-
-                // Perform hit lighting animation
-                var laneIndex = hitObject.Info.Lane - 1;
-
-                // If the object is a long note, let the hitlighting actually know about it.
-                if (hitObject.IsLongNote)
-                    playfield.Stage.HitLightingObjects[laneIndex].IsHoldingLongNote = true;
-
-                playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation();
-                break;
-            }
-            */
-            #endregion
         }
 
         /// <summary>
         ///     Handles an individual key release during gameplay.
         /// </summary>
-        private void HandleKeyRelease(HitObjectManagerKeys manager, int noteIndex)
+        private void HandleKeyRelease(HitObjectManagerKeys manager, GameplayHitObjectKeys gameplayHitObject)
         {
-            // Don't bother executing if there aren't any long notes.
-            if (manager.HeldLongNotes.Count == 0)
-                return;
-
+            // Get judgement and references
+            var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
+            var hitDifference = manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - (int) Ruleset.Screen.Timing.Time;
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
 
-            // Stop looping hit lighting.
-            playfield.Stage.HitLightingObjects[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
-
-            // Calculate Score + Get Judgement.
-            var hitDifference = (int) (manager.HeldLongNotes[noteIndex].TrueEndTime - (int) Ruleset.Screen.Timing.Time);
-            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
-            var judgement = processor.CalculateScore(hitDifference, KeyPressType.Release);
+            // Update animations
+            playfield.Stage.HitLightingObjects[lane].StopHolding();
+            gameplayHitObject.StopLongNoteAnimation();
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
+                // Dequeue from pool
+                gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
 
-                // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
-                                            judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
+                // Update stats
+                Ruleset.ScoreProcessor.Stats.Add(
+                    new HitStat(
+                        HitStatType.Hit,
+                        KeyPressType.Release,
+                        gameplayHitObject.Info,
+                        (int)Ruleset.Screen.Timing.Time,
+                        judgement,
+                        hitDifference,
+                        Ruleset.ScoreProcessor.Accuracy,
+                        Ruleset.ScoreProcessor.Health
+                ));
 
-                var screenView = (GameplayScreenView)Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
+                // Update scoreboard
+                ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
-                // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement(judgement, manager.HeldLongNotes[noteIndex].TrueEndTime - (int) Ruleset.Screen.Timing.Time);
-
-                // Perform hit burst animation
+                // Update Playfield
+                playfield.Stage.ComboDisplay.MakeVisible();
+                playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.EndTime - (int) Ruleset.Screen.Timing.Time);
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
 
-                // Lastly kill the object.
-                manager.KillHoldPoolObject(noteIndex, true);
-            }
-            // If LN has been released early
-            else
-            {
-                // Judgement for when the player releases too early
-                const Judgement missedJudgement = Judgement.Miss;
+                // If the player recieved an early miss or "okay",
+                // show the player that they were inaccurate by killing the object instead of recycling it
+                if (judgement == Judgement.Miss || judgement == Judgement.Okay)
+                    manager.KillHoldPoolObject(gameplayHitObject);
+                else
+                    manager.RecyclePoolObject(gameplayHitObject);
 
-                // Count it as a miss if it was released early and kill the hold.
-                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
-
-                // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, KeyPressType.Release, manager.HeldLongNotes[noteIndex].Info, (int) Ruleset.Screen.Timing.Time,
-                                            Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
-
-                var screenView = (GameplayScreenView)Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
-
-                // Perform hit burst animation
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
-
-                manager.KillHoldPoolObject(noteIndex);
-            }
-
-            #region Old HandleKeyRelease
-            // OLD
-            /*
-
-            // Don't bother executing if there aren't any long notes.
-            if (manager.HeldLongNotes.Count == 0)
                 return;
-
-            // Check which window the object has
-            var receivedJudgementIndex = -1;
-
-            // Stores the hit time difference. Declared out of scope of the loop so we can use it
-            // to store hit data.
-            double timeDiff = 0;
-
-            // JudgementWindow.Count -1 here because we don't count "misses" in this case, which is the last judgement.
-            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count - 1; j++)
-            {
-                // Get the release window of the current judgement.
-                var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement)j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement)j];
-
-                timeDiff = manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time;
-                if (!(Math.Abs(timeDiff) < releaseWindow))
-                    continue;
-
-                receivedJudgementIndex = j;
-                break;
             }
 
-            // Make the combo display visible since it is now changing.
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-
-            // Stop looping hit lighting.
-            playfield.Stage.HitLightingObjects[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
-
-            // If LN has been released during a window
-            if (receivedJudgementIndex != -1)
-            {
-                // Calc new score.
-                var receivedJudgement = (Judgement)receivedJudgementIndex;
-                Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
-
-                // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
-                                            receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
-
-                var screenView = (GameplayScreenView)Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
-
-                // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time);
-
-                // Perform hit burst animation
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation((Judgement)receivedJudgementIndex);
-
-                // Lastly kill the object.
-                manager.KillHoldPoolObject(noteIndex, true);
-            }
             // If LN has been released early
-            else
-            {
-                const Judgement receivedJudgement = Judgement.Miss;
+            // Judgement for when the player releases too early
+            const Judgement missedJudgement = Judgement.Miss;
 
-                // Count it as an okay if it was released early and kill the hold.
-                Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
+            // Add new hit stat data and update score
+            Ruleset.ScoreProcessor.Stats.Add(
+                new HitStat(
+                    HitStatType.Hit,
+                    KeyPressType.Release,
+                    gameplayHitObject.Info,
+                    (int)Ruleset.Screen.Timing.Time,
+                    Judgement.Miss,
+                    hitDifference,
+                    Ruleset.ScoreProcessor.Accuracy,
+                    Ruleset.ScoreProcessor.Health
+            ));
+            Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
-                // Add new hit stat data.
-                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
-                                            receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
-                Ruleset.ScoreProcessor.Stats.Add(stat);
+            // Update scoreboard
+            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
-                var screenView = (GameplayScreenView)Ruleset.Screen.View;
-                screenView.UpdateScoreboardUsers();
+            // Perform hit burst animation
+            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
-                // Perform hit burst animation
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
-
-                manager.KillHoldPoolObject(noteIndex);
-            }
-            */
-            #endregion
+            // Update Object Pool
+            manager.KillHoldPoolObject(gameplayHitObject);
         }
 
         /// <summary>
@@ -468,7 +308,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         private void ChangeScrollSpeed()
         {
             // Only allow scroll speed changes if the map hasn't started or if we're on a break
-            if (Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.OnBreak)
+            if (Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip)
                 return;
 
             // Decrease
@@ -485,6 +325,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                         NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
+
+                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
             }
             // Increase
             else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
@@ -500,6 +342,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                         NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
+                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
             }
         }
     }

@@ -5,11 +5,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <StartupObject>Quaver.Program</StartupObject>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Graphics\Dialogs\**" />
-    <EmbeddedResource Remove="Graphics\Dialogs\**" />
-    <None Remove="Graphics\Dialogs\**" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
