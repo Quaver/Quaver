@@ -155,6 +155,11 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
+            // Scroll to the top of the container and reset the height of the container
+            // (removes the scroll wheel)
+            section.ScrollTo(0, 1);
+            section.ContentContainer.Height = section.Height;
+
             try
             {
                 section.ClearScores();
