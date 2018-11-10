@@ -4,8 +4,13 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <StartupObject>Quaver.Program</StartupObject>
+    <Description>The ultimate, community-driven and open source competitive rhythm game.</Description>
+    <AssemblyName>Quaver</AssemblyName>
+    <Title>Quaver</Title>
+    <Product>Quaver</Product>
+    <Version>0.0.0</Version>
+    <FileVersion>0.0.0</FileVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
@@ -15,6 +20,7 @@
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NSubsys" Version="0.7.0-build20180604-0047" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
