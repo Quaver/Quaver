@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Helpers;
 using Wobble.Graphics;

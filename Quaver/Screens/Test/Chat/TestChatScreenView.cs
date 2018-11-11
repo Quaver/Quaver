@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Quaver.Resources;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Graphics;

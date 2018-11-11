@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble;
 using Wobble.Assets;
 
-namespace Quaver.Resources
+namespace Quaver.Assets
 {
     public static class FontAwesome
     {

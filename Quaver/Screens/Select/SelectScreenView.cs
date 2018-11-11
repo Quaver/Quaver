@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Resources;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;

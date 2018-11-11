@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble;
 using Wobble.Assets;
 
-namespace Quaver.Resources
+namespace Quaver.Assets
 {
     public static class UserInterface
     {

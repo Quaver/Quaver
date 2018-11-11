@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;

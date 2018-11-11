@@ -9,7 +9,7 @@ using IniParser.Model;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
 using Wobble;
