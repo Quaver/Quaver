@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;

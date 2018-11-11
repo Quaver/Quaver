@@ -1,6 +1,6 @@
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Graphics.Overlays.Chat.Components.Dialogs;
 using Quaver.Screens.Menu.UI.Navigation.User;
 using Wobble.Graphics;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Screens.Edit;

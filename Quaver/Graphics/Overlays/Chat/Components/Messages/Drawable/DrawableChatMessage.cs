@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Online.Chat;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Skinning;

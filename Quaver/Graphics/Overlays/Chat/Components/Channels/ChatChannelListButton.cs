@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;

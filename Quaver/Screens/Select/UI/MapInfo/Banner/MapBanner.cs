@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
