@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Screens.Loading;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

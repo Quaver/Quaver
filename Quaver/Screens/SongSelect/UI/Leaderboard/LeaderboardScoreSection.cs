@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;

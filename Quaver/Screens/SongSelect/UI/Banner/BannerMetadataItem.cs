@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 

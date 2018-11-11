@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Database.Maps;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Scheduling;
 using WebSocketSharp;
 using Wobble;

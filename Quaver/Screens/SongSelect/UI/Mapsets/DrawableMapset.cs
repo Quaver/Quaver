@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Scheduling;
 using Quaver.Screens.Loading;
 using Quaver.Skinning;

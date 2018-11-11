@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Scheduling;
 using Steamworks;
 using Wobble;
@@ -203,9 +204,7 @@ namespace Quaver.Online
             // Check if we got an icon type.
             if (icon != 0)
             {
-                uint width;
-                uint height;
-                var ret = SteamUtils.GetImageSize(icon, out width, out height);
+                var ret = SteamUtils.GetImageSize(icon, out var width, out var height);
 
                 if (ret && width > 0 && height > 0)
                 {

@@ -7,7 +7,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Helpers;
 using Quaver.Online;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Skinning;
 using Steamworks;
 using TimeAgo;

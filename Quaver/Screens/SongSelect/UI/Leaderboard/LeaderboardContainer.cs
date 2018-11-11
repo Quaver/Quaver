@@ -9,7 +9,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Online;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Wobble;

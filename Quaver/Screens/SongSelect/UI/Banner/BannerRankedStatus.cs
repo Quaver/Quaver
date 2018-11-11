@@ -2,7 +2,7 @@
 using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;

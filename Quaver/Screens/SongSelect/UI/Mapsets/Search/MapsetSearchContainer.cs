@@ -5,7 +5,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Helpers;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.Search;
 using Wobble.Bindables;
