@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Wobble;
 using Wobble.Assets;
 
-namespace Quaver.Resources
+namespace Quaver.Assets
 {
     public static class TitleHelper
     {

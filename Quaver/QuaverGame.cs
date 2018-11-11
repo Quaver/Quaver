@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;

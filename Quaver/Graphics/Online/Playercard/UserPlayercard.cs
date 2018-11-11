@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using osu_database_reader;
 using Quaver.API.Enums;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Online;
@@ -400,7 +400,7 @@ namespace Quaver.Graphics.Online.Playercard
                 Visible = isVisible
             };
 
-            TextCountryRank = new IconedText(Flags.Get(User.CountryName), "#9,999,999")
+            TextCountryRank = new IconedText(Flags.Get(User.OnlineUser.CountryFlag), "#9,999,999")
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,

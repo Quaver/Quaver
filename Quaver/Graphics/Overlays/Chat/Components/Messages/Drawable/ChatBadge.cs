@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Server.Common.Enums;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;

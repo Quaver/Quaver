@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Audio;
 using Wobble;
 using Wobble.Graphics;

@@ -9,7 +9,7 @@ using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;

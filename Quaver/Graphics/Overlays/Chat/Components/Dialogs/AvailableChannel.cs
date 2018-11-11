@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
 using Quaver.Screens.Menu.UI.Navigation.User;

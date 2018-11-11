@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using Quaver.Resources;
+using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu.UI.Navigation.User;
