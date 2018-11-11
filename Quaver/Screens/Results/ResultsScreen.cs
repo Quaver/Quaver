@@ -27,6 +27,7 @@ using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
 using Quaver.Screens.Select;
+using Quaver.Screens.SongSelect;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
@@ -496,7 +497,7 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Action that goes back to the song select screen.
         /// </summary>
-        public void GoBackToMenu() => QuaverScreenManager.ChangeScreen(new SelectScreen());
+        public void GoBackToMenu() => QuaverScreenManager.ChangeScreen(new SongSelectScreen());
 
         /// <summary>
         ///     Loads up local scores and watches the replay.
