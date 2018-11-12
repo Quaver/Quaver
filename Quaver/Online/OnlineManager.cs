@@ -351,6 +351,8 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
+            Logger.Important($"Retrieved scores for map: {e.Id} / {e.Md5}\n{e.Json}", LogType.Network);
+
             var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
 
             if (mapsets.Count == 0)

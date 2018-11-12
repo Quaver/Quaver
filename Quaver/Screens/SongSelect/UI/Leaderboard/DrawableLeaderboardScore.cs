@@ -224,7 +224,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
         private void CreateTextScoreAndCombo() => TextScore = new SpriteText(BitmapFonts.Exo2Bold,
-            $"{Score.Score:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
+            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.Score:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
