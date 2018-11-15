@@ -279,6 +279,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             MapsetBuffer = new List<DrawableMapset>(MAX_MAPSETS_SHOWN);
 
             SetPoolStartingIndex();
+            Console.WriteLine(PoolStartingIndex);
 
             // Create MAX_MAPSETS_SHOWN amount of DrawableMapsets.
             for (var i = 0; i < MAX_MAPSETS_SHOWN && i < Screen.AvailableMapsets.Count; i++)
@@ -321,6 +322,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 PoolStartingIndex = Screen.AvailableMapsets.Count - MAX_MAPSETS_SHOWN;
             else
                 PoolStartingIndex = SelectedMapsetIndex - MAX_MAPSETS_SHOWN / 2;
+
+            if (PoolStartingIndex < 0)
+                PoolStartingIndex = 0;
         }
 
         /// <summary>
