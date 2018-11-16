@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Helpers;
 using Quaver.Assets;
+using Quaver.Graphics;
 using Quaver.Screens.Loading;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -27,9 +29,9 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         public Map Map { get; private set; }
 
         /// <summary>
-        ///     Sprite that represents the game mode of the map.
+        ///     The top line of the difficulty that shows if it is selected
         /// </summary>
-        private Sprite Mode { get; }
+        private Sprite TopLine { get; }
 
         /// <summary>
         ///     The name of the difficulty.
@@ -61,23 +63,19 @@ namespace Quaver.Screens.SongSelect.UI.Maps
 
             Size = new ScalableVector2(416, HEIGHT);
             Tint = Color.Black;
-            Alpha = 0.85f;
-            AddBorder(Color.White, 2);
+            Alpha = 0.75f;
 
-            Mode = new Sprite
+            TopLine = new Sprite()
             {
                 Parent = this,
-                Size = new ScalableVector2(Height * 0.70f, Height * 0.70f),
-                Alignment = Alignment.MidLeft,
-                X = 10,
-                Y = 2,
-                Image = FontAwesome.Get(FontAwesomeIcon.fa_dot_and_circle)
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Width, 4)
             };
 
             DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
-                Position = new ScalableVector2(Mode.X + Mode.Width + 15, 12)
+                Position = new ScalableVector2(15, 12)
             };
 
             TextDifficultyRating = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
@@ -105,8 +103,6 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             Map = map;
 
-            // TODO: Update game mode sprite.
-
             DifficultyName.Text = map.DifficultyName;
             TextDifficultyRating.Text = StringHelper.AccuracyToString(map.DifficultyRating).Replace("%", "");
             TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(map.DifficultyRating);
@@ -120,16 +116,16 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             Animations.Clear();
             ChangeWidthTo(514, Easing.OutQuint, 400);
-
-            Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.85f, 400));
+            FadeToColor(Colors.MainAccentInactive, Easing.OutQuint, 300);
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();
             Creator.ClearAnimations();
 
-            Border.Animations.Clear();
-            Border.FadeToColor(Color.Gold, Easing.Linear, 200);
-            Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 1, 400));
+            TopLine.Animations.Clear();
+            TopLine.ChangeWidthTo(514, Easing.OutQuint, 400);
+            TopLine.FadeToColor(Colors.MainAccent, Easing.Linear, 100);
+            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 1, 200));
         }
 
         /// <summary>
@@ -139,16 +135,16 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             Animations.Clear();
             ChangeWidthTo(414, Easing.OutQuint, 400);
-
-            Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
+            FadeToColor(Color.Black, Easing.OutQuint, 300);
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();
             Creator.ClearAnimations();
 
-            Border.Animations.Clear();
-            Border.FadeToColor(Color.White, Easing.Linear, 200);
-            Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 0.65f, 400));
+            TopLine.Animations.Clear();
+            TopLine.ChangeWidthTo(414, Easing.OutQuint, 400);
+            TopLine.FadeToColor(Color.White, Easing.Linear, 100);
+            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 0.75f, 200));
         }
 
         /// <summary>

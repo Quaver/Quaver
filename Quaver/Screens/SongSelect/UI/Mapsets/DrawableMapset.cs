@@ -40,9 +40,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         public int MapsetIndex { get; set; }
 
         /// <summary>
-        ///     The thumbnail of the mapset.
+        ///     The top line of the mapset that shows if it is selected
         /// </summary>
-        public Sprite Thumbnail { get; }
+        public Sprite TopLine { get; }
 
         /// <summary>
         ///    The title of the song.
@@ -72,23 +72,16 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             Container = container;
             Size = new ScalableVector2(416, HEIGHT);
+            Alpha = 0.75f;
             Tint = Color.Black;
-            Alpha = 0.85f;
-            AddBorder(Color.White, 2);
+            Image = UserInterface.BlankBox;
 
-            Thumbnail = new Sprite
+            TopLine = new Sprite()
             {
                 Parent = this,
-                Size = new ScalableVector2(HEIGHT * 0.85f + 40, HEIGHT * 0.82f + 1),
-                Alignment = Alignment.MidLeft,
-                X = 10,
-                Y = 1,
-                Alpha = 0,
-                SetChildrenAlpha = true
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Width, 4)
             };
-
-            Thumbnail.AddBorder(Color.White);
-            Thumbnail.Border.Alpha = Thumbnail.Alpha;
 
             Title = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
@@ -132,38 +125,23 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         public void DisplayAsSelected(Map map)
         {
-            lock (Animations)
-            lock (Title.Animations)
-            lock (Artist.Animations)
-            lock (Creator.Animations)
-            lock (Border.Animations)
-            {
-                // Change the width of the set outwards to appear it as selected.
-                Animations.Clear();
-                ChangeWidthTo(514, Easing.OutQuint, 400);
+            // Change the width of the set outwards to appear it as selected.
+            Animations.Clear();
+            ChangeWidthTo(514, Easing.OutQuint, 400);
+            FadeToColor(Colors.MainAccentInactive, Easing.OutQuint, 300);
 
-                Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.85f, 400));
+            TopLine.Animations.Clear();
+            TopLine.ChangeWidthTo(514, Easing.OutQuint, 400);
+            TopLine.FadeToColor(Colors.MainAccent, Easing.Linear, 100);
+            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 1, 200));
 
-                Title.Animations.Clear();
-                Artist.Animations.Clear();
-                Creator.Animations.Clear();
+            Title.Animations.Clear();
+            Artist.Animations.Clear();
+            Creator.Animations.Clear();
 
-                var targetX = 15 + Thumbnail.Width + 10;
-
-                Title.MoveToX(targetX, Easing.OutQuint, 400);
-                Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 1f, 400));
-
-                Artist.MoveToX(targetX, Easing.OutQuint, 400);
-                Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 1f, 400));
-
-                Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 1f, 400));
-
-                Border.Animations.Clear();
-                Border.FadeToColor(Color.Gold, Easing.Linear, 200);
-                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 1, 400));
-            }
-
-            // LoadThumbnail(map);
+            Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 1f, 400));
+            Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 1f, 400));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 1f, 400));
         }
 
         /// <summary>
@@ -172,42 +150,24 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         public void DisplayAsDeselected()
         {
             // Push set outwards to make it appear as selected.
-            lock (Animations)
-            lock (Title.Animations)
-            lock (Artist.Animations)
-            lock (Creator.Animations)
-            lock (Border.Animations)
-            lock (Thumbnail.Animations)
-            {
-                Animations.Clear();
-                ChangeWidthTo(414, Easing.OutQuint, 400);
+            Animations.Clear();
+            ChangeWidthTo(414, Easing.OutQuint, 400);
+            FadeToColor(Color.Black, Easing.OutQuint, 300);
 
-                Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
+            TopLine.Animations.Clear();
+            TopLine.ChangeWidthTo(414, Easing.OutQuint, 400);
+            TopLine.FadeToColor(Color.White, Easing.Linear, 100);
+            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 0.75f, 200));
 
-                Title.Animations.Clear();
-                Artist.Animations.Clear();
-                Creator.Animations.Clear();
+            // Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
 
-                const int targetX = 15;
+            Title.Animations.Clear();
+            Artist.Animations.Clear();
+            Creator.Animations.Clear();
 
-                Title.MoveToX(targetX, Easing.OutQuint, 400);
-                Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 0.65f, 400));
-
-                Artist.MoveToX(targetX, Easing.OutQuint, 400);
-                Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 0.65f, 400));
-
-                Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 0.65f, 400));
-
-                Border.Animations.Clear();
-                Border.FadeToColor(Color.White, Easing.Linear, 200);
-                Border.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Border.Alpha, 0.65f, 400));
-
-                Thumbnail.Animations.Clear();
-                Thumbnail.Alpha = 0;
-
-                if (Thumbnail.Image != null && Thumbnail.Image != WobbleAssets.WhiteBox)
-                    Thumbnail.Image.Dispose();
-            }
+            Title.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Title.Alpha, 0.65f, 400));
+            Artist.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Artist.Alpha, 0.65f, 400));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 0.65f, 400));
         }
 
         /// <summary>
@@ -238,39 +198,5 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Container.ScreenRectangle.ToRectangle());
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
-
-        /// <summary>
-        ///     Loads and updates the thumbnail of the mapset in a separate thread
-        ///
-        ///     Handles (poorly) the edge case of then the mapset isn't selected anymore,
-        ///     and disposes of the loaded texture in case it took too long.
-        /// </summary>
-        private void LoadThumbnail(Map map) => ThreadScheduler.Run(() =>
-        {
-            try
-            {
-                var tex = AssetLoader.LoadTexture2DFromFile(MapManager.GetBackgroundPath(map));
-
-                lock (Thumbnail.Animations)
-                {
-                    Thumbnail.Animations.Clear();
-
-                    // Check to see if the selected map is still the same.
-                    // if it is, then we'll want to display it.
-                    if (Container.SelectedMapsetIndex == MapsetIndex)
-                    {
-                        Thumbnail.Image = tex;
-                        Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Thumbnail.Alpha, 1, 300));
-                    }
-                    // Otherwise dispose of the texture as it's no longer needed.
-                    else
-                        tex.Dispose();
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        });
     }
 }
