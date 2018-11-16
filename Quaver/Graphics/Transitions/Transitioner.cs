@@ -58,7 +58,7 @@ namespace Quaver.Graphics.Transitions
         public static void FadeIn()
         {
             Blackness.ClearAnimations();
-            Blackness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Blackness.Alpha, 1, 200));
+            Blackness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Blackness.Alpha, 1, 300));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Quaver.Graphics.Transitions
         public static void FadeOut()
         {
             Blackness.ClearAnimations();
-            Blackness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Blackness.Alpha, 0, 200));
+            Blackness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Blackness.Alpha, 0, 300));
         }
     }
 }
