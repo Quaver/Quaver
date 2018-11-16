@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -345,7 +346,11 @@ namespace Quaver.Screens.Menu
                 return;
             }
 
-            QuaverScreenManager.ChangeScreen(new SongSelectScreen());
+            var button = (Button) sender;
+            button.IsClickable = false;
+
+            AudioEngine.Track?.Fade(10, 500);
+            QuaverScreenManager.ScheduleScreenChange(() => new SongSelectScreen());
         }
 
         /// <summary>

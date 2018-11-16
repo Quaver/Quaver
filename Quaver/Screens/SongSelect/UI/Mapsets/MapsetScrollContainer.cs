@@ -101,7 +101,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
             InitializeMapsetBuffer();
-            LoadNewAudioTrackIfNecessary();
             LoadNewBackgroundIfNecessary(null);
         }
 
@@ -425,7 +424,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         /// <param name="previousMap"></param>
         /// <param name="forceLoad"></param>
-        private static void LoadNewAudioTrackIfNecessary(Map previousMap = null)
+        public static void LoadNewAudioTrackIfNecessary(Map previousMap = null)
         {
             if (previousMap != null && MapManager.GetAudioPath(previousMap) == MapManager.GetAudioPath(MapManager.Selected.Value))
                 return;

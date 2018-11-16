@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using osu_database_reader;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Modifiers;
@@ -52,6 +53,15 @@ namespace Quaver.Screens.Menu
             HandleInput(gameTime);
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+            base.OnFirstUpdate();
         }
 
         /// <summary>

@@ -55,7 +55,10 @@ namespace Quaver.Screens.Select
 
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
-                new ToolbarItem("Home", () => QuaverScreenManager.ChangeScreen(new MenuScreen())),
+                new ToolbarItem("Home", () =>
+                {
+                    QuaverScreenManager.ChangeScreen(new MenuScreen());
+                }),
                 new ToolbarItem("Play", () => {}, true)
             }, new List<ToolbarItem>(), new ScalableVector2(WindowManager.Width, 80))
             {

@@ -11,6 +11,7 @@ using Quaver.Modifiers;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
+using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Wobble.Graphics;
@@ -77,6 +78,15 @@ namespace Quaver.Screens.SongSelect
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void OnFirstUpdate()
+        {
+            MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
+            base.OnFirstUpdate();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Selecting,
             -1, "", (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
@@ -126,7 +136,11 @@ namespace Quaver.Screens.SongSelect
             switch (view.ActiveContainer)
             {
                 case SelectContainerStatus.Mapsets:
-                    QuaverScreenManager.ChangeScreen(new MenuScreen());
+                    QuaverScreenManager.ScheduleScreenChange(() =>
+                    {
+                        AudioEngine.Track?.Fade(10, 500);
+                        return new MenuScreen();
+                    });
                     break;
                 case SelectContainerStatus.Difficulty:
                     view.SwitchToContainer(SelectContainerStatus.Mapsets);

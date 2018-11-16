@@ -15,6 +15,7 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
+using Quaver.Graphics.Transitions;
 using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -127,13 +128,15 @@ namespace Quaver
             CreateFpsCounter();
             VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
+            Transitioner.Initialize();
 
             // Make the cursor appear over the volume controller.
             ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            QuaverScreenManager.ChangeScreen(new MenuScreen());
+
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -144,6 +147,7 @@ namespace Quaver
         protected override void UnloadContent()
         {
             OnlineManager.Client?.Disconnect();
+            Transitioner.Dispose();
             base.UnloadContent();
         }
 
@@ -183,6 +187,9 @@ namespace Quaver
                         : $"You are now hiding debug log messages. Press F5 to toggle them on.");
             }
 #endif
+
+            QuaverScreenManager.Update(gameTime);
+            Transitioner.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -207,7 +214,7 @@ namespace Quaver
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
 
-            LogManager.Draw(gameTime);
+            Transitioner.Draw(gameTime);
         }
 
         /// <summary>

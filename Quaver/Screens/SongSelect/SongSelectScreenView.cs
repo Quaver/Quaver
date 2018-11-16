@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -154,7 +155,11 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnHomeButtonClicked(object sender, EventArgs e) => QuaverScreenManager.ChangeScreen(new MenuScreen());
+        private static void OnHomeButtonClicked(object sender, EventArgs e)
+        {
+            AudioEngine.Track?.Fade(10, 500);
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+        }
 
         /// <summary>
         ///     Creates the background for the screen
