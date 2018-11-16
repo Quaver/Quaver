@@ -57,13 +57,23 @@ namespace Quaver.Graphics.Backgrounds
             try
             {
                 var path = MapManager.GetBackgroundPath(Map);
-                var tex = AssetLoader.LoadTexture2DFromFile(path);
 
-                Background.Image = tex;
-                afterLoad(tex, Map, currentTex);
+                if (File.Exists(path))
+                {
+                    var tex = AssetLoader.LoadTexture2DFromFile(path);
+                    Background.Image = tex;
+                    afterLoad(tex, Map, currentTex);
+                }
+                else
+                {
+                    var tex = UserInterface.MenuBackground;
+                    Background.Image = tex;
+                    afterLoad(tex, Map, currentTex);
+                }
             }
             catch (Exception e)
             {
+                Background.Image = UserInterface.MenuBackground;
                 afterLoad(UserInterface.MenuBackground, Map, currentTex);
             }
         });

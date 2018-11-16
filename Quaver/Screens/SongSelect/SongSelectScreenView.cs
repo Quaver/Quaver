@@ -103,9 +103,9 @@ namespace Quaver.Screens.SongSelect
             CreateNavbar();
             CreateBottomLine();
             CreateAudioVisualizer();
+            CreateMapBanner();
             CreateMapsetScrollContainer();
             CreateDifficultyScrollContainer();
-            CreateMapBanner();
             CreateMapsetSearchContainer();
             CreateLeaderboardSelector();
             CreateLeaderboard();

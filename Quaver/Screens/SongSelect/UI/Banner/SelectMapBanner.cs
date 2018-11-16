@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
@@ -177,34 +178,21 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                 Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 1, 300));
             }
 
-            // Reference the map before running the load thread.
-            var map = MapManager.Selected.Value;
+            BannerSprite.Image = tex;
 
-            // If the map is still the same, perform an animation.
-            if (map == MapManager.Selected.Value)
+            // Fade in bg
+            lock (BannerSprite.Animations)
             {
-                BannerSprite.Image = tex;
+                BannerSprite.Animations.Clear();
 
-                // Fade in bg
-                lock (BannerSprite.Animations)
-                {
-                    BannerSprite.Animations.Clear();
-
-                    BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
-                        BannerSprite.Alpha, 1, 1000));
-                }
-
-                lock (Brightness.Animations)
-                {
-                    Brightness.Animations.Clear();
-                    Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
-                }
+                BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
+                    BannerSprite.Alpha, 1, 1000));
             }
-            // Otherwise skip it and dispose of the texture, as its not needed anymore.
-            else
+
+            lock (Brightness.Animations)
             {
-                if (tex != UserInterface.MenuBackground)
-                    tex.Dispose();
+                Brightness.Animations.Clear();
+                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
             }
         }
 
