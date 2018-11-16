@@ -93,7 +93,7 @@ namespace Quaver.Screens.Results.UI
                 Size = new ScalableVector2(BackgroundBorder.Width - 2, BackgroundBorder.Height - 2),
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(1, 1),
-                Image = BackgroundManager.Background.Image
+                Image = BackgroundHelper.Background.Image
             };
 
             Title = new SpriteText(BitmapFonts.Exo2Regular, Screen.SongTitle, 16)

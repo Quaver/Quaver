@@ -155,7 +155,7 @@ namespace Quaver.Screens.Gameplay
             BackgroundContainer = new Container();
 
             BackgroundHelper.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
-            
+
             BackgroundManager.PermittedToFadeIn = false;
             FadeBackgroundToDim();
             BackgroundManager.Loaded += OnBackgroundLoaded;
