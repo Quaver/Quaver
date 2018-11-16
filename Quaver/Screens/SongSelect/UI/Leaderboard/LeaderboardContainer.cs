@@ -170,12 +170,14 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             try
             {
                 section.ClearScores();
+                cancellationToken.ThrowIfCancellationRequested();
                 Thread.Sleep(300);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var map = MapManager.Selected.Value;
 
                 var scores = section.FetchScores();
+                cancellationToken.ThrowIfCancellationRequested();
                 section.IsFetching = false;
 
                 lock (NoScoresAvailableText)
@@ -202,7 +204,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             }
             catch (Exception e)
             {
-                // ignored.
                 section.IsFetching = true;
                 NoScoresAvailableText.Visible = false;
             }
