@@ -276,7 +276,9 @@ namespace Quaver.Online
 
             // Send client status update packet.
             var game = (QuaverGame) GameBase.Game;
-            Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
+
+            if (game.CurrentScreen != null)
+                Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
 
             ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() {Self});
 
