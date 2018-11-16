@@ -107,6 +107,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             //    LoadNewBackgroundIfNecessary(null);
 
             InitializeMapsetBuffer();
+            LoadNewAudioTrackIfNecessary();
         }
 
         /// <inheritdoc />
@@ -202,7 +203,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
             ScrollTo(targetScroll, activeContainer == SelectContainerStatus.Mapsets ? 2100 : 1800);
 
-
             LoadNewAudioTrackIfNecessary(previousMap);
             // LoadNewBackgroundIfNecessary(previousMap);
             View.Leaderboard.LoadNewScores();
@@ -279,7 +279,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             MapsetBuffer = new List<DrawableMapset>(MAX_MAPSETS_SHOWN);
 
             SetPoolStartingIndex();
-            Console.WriteLine(PoolStartingIndex);
 
             // Create MAX_MAPSETS_SHOWN amount of DrawableMapsets.
             for (var i = 0; i < MAX_MAPSETS_SHOWN && i < Screen.AvailableMapsets.Count; i++)
@@ -430,6 +429,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     If necessary, it will load and play the selected map's audio.
         /// </summary>
         /// <param name="previousMap"></param>
+        /// <param name="forceLoad"></param>
         private static void LoadNewAudioTrackIfNecessary(Map previousMap = null)
         {
             if (previousMap != null && MapManager.GetAudioPath(previousMap) == MapManager.GetAudioPath(MapManager.Selected.Value))
