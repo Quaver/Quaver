@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -22,6 +23,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -31,6 +33,11 @@ namespace Quaver.Screens.SongSelect
 {
     public class SongSelectScreenView : ScreenView
     {
+        /// <summary>
+        ///     The background image for the screen
+        /// </summary>
+        public BackgroundImage Background { get; private set; }
+
         /// <summary>
         ///     The navigation bar used to go back/open up dialogs.
         /// </summary>
@@ -92,6 +99,7 @@ namespace Quaver.Screens.SongSelect
         /// <param name="screen"></param>
         public SongSelectScreenView(Screen screen) : base(screen)
         {
+            CreateBackground();
             CreateNavbar();
             CreateBottomLine();
             CreateAudioVisualizer();
@@ -119,8 +127,6 @@ namespace Quaver.Screens.SongSelect
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
-
-            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 
@@ -149,6 +155,11 @@ namespace Quaver.Screens.SongSelect
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private static void OnHomeButtonClicked(object sender, EventArgs e) => QuaverScreenManager.ChangeScreen(new MenuScreen());
+
+        /// <summary>
+        ///     Creates the background for the screen
+        /// </summary>
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20) { Parent = Container };
 
         /// <summary>
         ///     Creates the line at the bottom of the screen.

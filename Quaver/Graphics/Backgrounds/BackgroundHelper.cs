@@ -29,11 +29,6 @@ namespace Quaver.Graphics.Backgrounds
         public static Map Map { get; private set; }
 
         /// <summary>
-        ///     Determines if the background has been blurred yet.
-        /// </summary>
-        public static bool HasBlurred { get; set; } = true;
-
-        /// <summary>
         ///     Initializes the background helper for the entire game.
         /// </summary>
         public static void Initialize() => Background = new BackgroundImage(UserInterface.MenuBackground, 0);
@@ -47,30 +42,7 @@ namespace Quaver.Graphics.Backgrounds
         ///     Set per screen.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Draw(GameTime gameTime)
-        {
-            /*if (!HasBlurred)
-            {
-                try
-                {
-                    GameBase.Game.SpriteBatch.End();
-                }
-                catch (Exception e)
-                {
-
-                }
-
-                var oldTex = Background.Image;
-
-                var blur = new GaussianBlur(0.75f);
-                var newTex = blur.PerformGaussianBlur(oldTex);
-
-                Background.Image = newTex;
-                HasBlurred = true;
-            }*/
-
-            Background?.Draw(gameTime);
-        }
+        public static void Draw(GameTime gameTime) => Background?.Draw(gameTime);
 
         /// <summary>
         ///     Queues the background for the currently selected map to load.
@@ -79,9 +51,6 @@ namespace Quaver.Graphics.Backgrounds
         /// <param name="afterLoad"></param>
         public static void QueueLoad(Action<Texture2D, Map, Texture2D> afterLoad) => ThreadScheduler.Run(() =>
         {
-            afterLoad(UserInterface.MenuBackground, Map, Background.Image);
-
-            return;
             var currentTex = Background.Image;
             Map = MapManager.Selected.Value;
 
@@ -89,6 +58,8 @@ namespace Quaver.Graphics.Backgrounds
             {
                 var path = MapManager.GetBackgroundPath(Map);
                 var tex = AssetLoader.LoadTexture2DFromFile(path);
+
+                Background.Image = tex;
                 afterLoad(tex, Map, currentTex);
             }
             catch (Exception e)

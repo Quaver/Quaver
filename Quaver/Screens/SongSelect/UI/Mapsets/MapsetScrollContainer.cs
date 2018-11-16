@@ -100,14 +100,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Find the index of the selected map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-            BackgroundHelper.Background.Dim = 20;
-
-            // Load the background of the map if necessary.
-            //if (BackgroundHelper.Map != MapManager.Selected.Value)
-            //    LoadNewBackgroundIfNecessary(null);
-
             InitializeMapsetBuffer();
             LoadNewAudioTrackIfNecessary();
+            LoadNewBackgroundIfNecessary(null);
         }
 
         /// <inheritdoc />
@@ -204,7 +199,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             ScrollTo(targetScroll, activeContainer == SelectContainerStatus.Mapsets ? 2100 : 1800);
 
             LoadNewAudioTrackIfNecessary(previousMap);
-            // LoadNewBackgroundIfNecessary(previousMap);
+            LoadNewBackgroundIfNecessary(previousMap);
             View.Leaderboard.LoadNewScores();
         }
 
@@ -465,25 +460,17 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <summary>
         ///     Loads the new background and performs a fade in animation
         /// </summary>
-        private static void LoadNewBackgroundIfNecessary(Map previousMap)
+        private void LoadNewBackgroundIfNecessary(Map previousMap)
         {
             if (previousMap != null && MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
-            // Start the fadeout on the background.
-            lock (BackgroundHelper.Background.Animations)
-            {
-                BackgroundHelper.Background.Animations.Clear();
-
-                BackgroundHelper.Background.Animations.Add(new Animation(AnimationProperty.Alpha,
-                    Easing.OutQuint, BackgroundHelper.Background.Alpha, 0, 500));
-            }
+            View.Banner?.Brightness?.ClearAnimations();
+            View.Banner?.Brightness?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, View.Banner.Brightness.Alpha, 1, 200));
 
             // Begin to load the new background.
             BackgroundHelper.QueueLoad((tex, map, previousTex) =>
             {
-                BackgroundHelper.HasBlurred = false;
-
                 // Get rid of the old texture
                 if (previousTex != UserInterface.MenuBackground)
                     previousTex.Dispose();
@@ -491,16 +478,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 // If the map is still the same, perform an animation.
                 if (map == MapManager.Selected.Value)
                 {
-                    BackgroundHelper.Background.Image = tex;
-
-                    // Fade in bg
-                    lock (BackgroundHelper.Background.Animations)
-                    {
-                        BackgroundHelper.Background.Animations.Clear();
-
-                        BackgroundHelper.Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
-                            BackgroundHelper.Background.Alpha, 1, 500));
-                    }
+                    View.Banner?.LoadBanner(tex);
                 }
                 // Otherwise skip it and dispose of the texture, as its not needed anymore.
                 else

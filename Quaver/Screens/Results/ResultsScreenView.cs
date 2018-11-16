@@ -65,9 +65,6 @@ namespace Quaver.Screens.Results
         /// <param name="screen"></param>
         public ResultsScreenView(Screen screen) : base(screen)
         {
-            // BackgroundManager.Background.Strength = 8;
-            BackgroundManager.Background.Dim = 60;
-
             CreateMapInformation();
             CreateScoreResults();
             CreateOnlineResultsInfo();
@@ -77,6 +74,8 @@ namespace Quaver.Screens.Results
 
             // Create transitioner last, so any fade animations draw on top.
             CreateScreenTransitioner();
+
+            BackgroundHelper.Background.Dim = 60;
         }
 
         /// <inheritdoc />
@@ -92,7 +91,7 @@ namespace Quaver.Screens.Results
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
-            BackgroundManager.Draw(gameTime);
+            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 

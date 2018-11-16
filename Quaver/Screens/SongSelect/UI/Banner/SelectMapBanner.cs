@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -37,7 +38,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// <summary>
         ///     A dark layer over the banner that provides some darkness.
         /// </summary>
-        private Sprite Brightness { get; }
+        public Sprite Brightness { get; }
 
         /// <summary>
         ///     The name of the difficulty of themap.
@@ -114,7 +115,8 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                 Parent = this,
                 Size = Mask.Size,
                 Alignment = Alignment.MidCenter,
-                Tint = Color.Black
+                Tint = Color.Black,
+                Alpha = 1
             };
 
             Container = new ScrollContainer(Size, Size)
@@ -133,7 +135,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
 
             MapManager.Selected.ValueChanged += OnMapChange;
             ModManager.ModsChanged += OnModsChanged;
-            //LoadBanner(null);
+            LoadBanner(null);
             UpdateText(MapManager.Selected.Value);
         }
 
@@ -152,11 +154,8 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// <summary>
         ///     Loads the banner for the currently selected map.
         /// </summary>
-        private void LoadBanner(Map previousMap)
+        public void LoadBanner(Texture2D tex)
         {
-            if (previousMap != null && MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
-                return;
-
             Border.Tint = Colors.MainAccent;
 
             lock (Border.Animations)
@@ -178,53 +177,35 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                 Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 1, 300));
             }
 
-            var previousTex = BannerSprite.Image;
-
             // Reference the map before running the load thread.
             var map = MapManager.Selected.Value;
 
-            ThreadScheduler.Run(() =>
+            // If the map is still the same, perform an animation.
+            if (map == MapManager.Selected.Value)
             {
-                try
+                BannerSprite.Image = tex;
+
+                // Fade in bg
+                lock (BannerSprite.Animations)
                 {
-                    // Get rid of the old texture
-                    if (previousTex != null && previousTex != UserInterface.MenuBackground)
-                        previousTex.Dispose();
+                    BannerSprite.Animations.Clear();
 
-                    var tex = AssetLoader.LoadTexture2DFromFile(MapManager.GetBackgroundPath(map));
-
-                    // If the map is still the same, perform an animation.
-                    if (map == MapManager.Selected.Value)
-                    {
-                        BannerSprite.Image = tex;
-
-                        // Fade in bg
-                        lock (BannerSprite.Animations)
-                        {
-                            BannerSprite.Animations.Clear();
-
-                            BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
-                                BannerSprite.Alpha, 1, 1000));
-                        }
-
-                        lock (Brightness.Animations)
-                        {
-                            Brightness.Animations.Clear();
-                            Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
-                        }
-                    }
-                    // Otherwise skip it and dispose of the texture, as its not needed anymore.
-                    else
-                    {
-                        if (tex != UserInterface.MenuBackground)
-                            tex.Dispose();
-                    }
+                    BannerSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint,
+                        BannerSprite.Alpha, 1, 1000));
                 }
-                catch (Exception)
+
+                lock (Brightness.Animations)
                 {
-                    // ignored
+                    Brightness.Animations.Clear();
+                    Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
                 }
-            });
+            }
+            // Otherwise skip it and dispose of the texture, as its not needed anymore.
+            else
+            {
+                if (tex != UserInterface.MenuBackground)
+                    tex.Dispose();
+            }
         }
 
         /// <summary>

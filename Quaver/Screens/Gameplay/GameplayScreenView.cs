@@ -224,8 +224,7 @@ namespace Quaver.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            BackgroundManager.Draw(gameTime);
-            BackgroundContainer.Draw(gameTime);
+            BackgroundHelper.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
