@@ -359,26 +359,33 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             var mapsetContainer = View.MapsetScrollContainer;
 
-            switch (direction)
+            try
             {
-                case Direction.Forward:
-                    var nextDifficulty = SelectedMapIndex + 1;
+                switch (direction)
+                {
+                    case Direction.Forward:
+                        var nextDifficulty = SelectedMapIndex + 1;
 
-                    if (CurrentMapset.Maps.ElementAtOrDefault(nextDifficulty) == null)
-                        return;
+                        if (CurrentMapset.Maps.ElementAtOrDefault(nextDifficulty) == null)
+                            return;
 
-                    mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[nextDifficulty], true);
-                    break;
-                case Direction.Backward:
-                    var previousDifficulty = SelectedMapIndex - 1;
+                        mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[nextDifficulty], true);
+                        break;
+                    case Direction.Backward:
+                        var previousDifficulty = SelectedMapIndex - 1;
 
-                    if (CurrentMapset.Maps.ElementAtOrDefault(previousDifficulty) == null)
-                        return;
+                        if (CurrentMapset.Maps.ElementAtOrDefault(previousDifficulty) == null)
+                            return;
 
-                    mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[previousDifficulty], true);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                        mapsetContainer.SelectMap(mapsetContainer.SelectedMapsetIndex, CurrentMapset.Maps[previousDifficulty], true);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }
