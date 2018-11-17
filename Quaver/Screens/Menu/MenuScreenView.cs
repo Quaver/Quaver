@@ -123,7 +123,7 @@ namespace Quaver.Screens.Menu
             CreatePanelContainer();
             CreateJukebox();
             CreateUserProfile();
-            CreatePlayercard();
+            // CreatePlayercard();
         }
 
         /// <inheritdoc />
