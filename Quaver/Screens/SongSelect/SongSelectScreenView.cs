@@ -256,7 +256,11 @@ namespace Quaver.Screens.SongSelect
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(-28, Navbar.Line.Y + 3)
+            Position = new ScalableVector2(580, Navbar.Line.Y + 3),
+            Animations =
+            {
+                new Animation(AnimationProperty.X, Easing.OutBounce, 580, -28, 1200)
+            }
         };
 
         /// <summary>
