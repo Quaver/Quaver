@@ -1,15 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using osu.Shared;
 using Quaver.Assets;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
+using Quaver.Scheduling;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Screens.Options;
 using Quaver.Screens.Select.UI.Mods;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -44,6 +50,11 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
         ///     The button to go to the options menu
         /// </summary>
         private BorderedTextButton Options { get; set; }
+
+        /// <summary>
+        ///     The time the user last exported a map
+        /// </summary>
+        private long LastExportTime { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -135,7 +146,20 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
 
             ExportMapset.Clicked += (o, e) =>
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back soon!");
+                if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Slow down! You can only export a set every 2 seconds.");
+                    return;
+                }
+
+                LastExportTime = GameBase.Game.TimeRunning;
+
+                ThreadScheduler.Run(() =>
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to file...");
+                    MapManager.Selected.Value.Mapset.ExportToZip();
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
+                });
             };
 
             AddContainedDrawable(ExportMapset);
