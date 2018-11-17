@@ -91,7 +91,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             Tint = Color.Black;
 
             Size = new ScalableVector2(620, 234);
-            AddBorder(Colors.MainAccent, 3);
+            AddBorder(Color.White, 2);
 
             Mask = new SpriteMaskContainer()
             {
@@ -157,14 +157,6 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         /// </summary>
         public void LoadBanner(Texture2D tex)
         {
-            Border.Tint = Colors.MainAccent;
-
-            lock (Border.Animations)
-            {
-                Border.Animations.Clear();
-                Border.FadeToColor(Color.White, Easing.Linear, 500);
-            }
-
             // Start the fadeout on the background.
             lock (BannerSprite.Animations)
             {
