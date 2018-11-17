@@ -85,7 +85,7 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public override void OnFirstUpdate()
         {
-            MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
+            LoadOrFadeAudioTrack();
             base.OnFirstUpdate();
         }
 
@@ -262,6 +262,25 @@ namespace Quaver.Screens.SongSelect
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Global;
             else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Global)
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
+        }
+
+        /// <summary>
+        ///    If we've already got a working AudioTrack for the selected map, then fade it in.
+        ///     Otherwise load it up at its preview.
+        /// </summary>
+        private static void LoadOrFadeAudioTrack()
+        {
+            if (AudioEngine.Track != null)
+            {
+                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || AudioEngine.Track.IsPaused)
+                    MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
+                else
+                    AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 500);
+
+                return;
+            }
+
+            MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
         }
     }
 }
