@@ -14,6 +14,7 @@ using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -59,6 +60,10 @@ namespace Quaver.Screens.SongSelect
             AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(AvailableMapsets);
 
             Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.", LogType.Runtime);
+
+            DiscordManager.Client.CurrentPresence.Details = "Selecting a song";
+            DiscordManager.Client.CurrentPresence.State = "In the Menus";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
 
             View = new SongSelectScreenView(this);
         }
