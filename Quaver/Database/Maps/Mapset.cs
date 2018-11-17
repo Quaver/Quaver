@@ -78,6 +78,7 @@ namespace Quaver.Database.Maps
                                 break;
                         }
 
+
                         File.Copy(path, $"{tempFolder}/{map.Path}");
 
                         // Copy over audio file if necessary
@@ -103,6 +104,8 @@ namespace Quaver.Database.Maps
 
                 Process.Start("explorer.exe", "/select, \"" + outputPath.Replace("/", "\\") + "\"");
             }
+
+            System.IO.Directory.Delete(tempFolder, true);
         }
     }
 }
