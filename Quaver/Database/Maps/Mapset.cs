@@ -54,32 +54,29 @@ namespace Quaver.Database.Maps
             {
                 foreach (var map in Maps)
                 {
-                    var path = "";
-
                     try
                     {
                         switch (map.Game)
                         {
                             case MapGame.Quaver:
-                                path = $"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}";
+                                var path = $"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}";
+                                File.Copy(path, $"{tempFolder}/{map.Path}");
                                 break;
                             // Map is from osu!, so we need to convert it to .qua format
                             case MapGame.Osu:
-                                var osuPath = $"{MapManager.OsuSongsFolder}/{map.Directory}/{map.Path}";
+                                var osuPath = $"{MapManager.OsuSongsFolder}{map.Directory}/{map.Path}";
 
-                                Logger.Debug($"Need to convert osu beatmap at path: ${osuPath} to .qua...", LogType.Runtime);
+                                var osu = new OsuBeatmap(osuPath);
+                                map.BackgroundPath = osu.Background;
 
-                                var qua = new OsuBeatmap(osuPath).ToQua();
+                                var name = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
+                                var savePath = $"{tempFolder}/{name}";
 
-                                path = $"{tempFolder}/{map.Artist} - ${map.Title} [${map.DifficultyName}]";
-                                qua.Save(StringHelper.FileNameSafeString(path));
+                                osu.ToQua().Save(savePath);
 
-                                Logger.Debug($"Successfully converted osu beatmap: ${osuPath}", LogType.Runtime);
+                                Logger.Debug($"Successfully converted osu beatmap: {osuPath}", LogType.Runtime);
                                 break;
                         }
-
-
-                        File.Copy(path, $"{tempFolder}/{map.Path}");
 
                         // Copy over audio file if necessary
                         if (File.Exists(MapManager.GetAudioPath(map)) && !File.Exists($"{tempFolder}/{map.AudioPath}"))
@@ -98,7 +95,7 @@ namespace Quaver.Database.Maps
                 archive.AddAllFromDirectory(tempFolder);
 
                 var outputPath = $"{ConfigManager.DataDirectory}/Exports/" +
-                                 $"{StringHelper.FileNameSafeString(Artist + " " + Title + " " + GameBase.Game.TimeRunning)}.qp";
+                                 $"{StringHelper.FileNameSafeString(Artist + " - " + Title + " - " + GameBase.Game.TimeRunning)}.qp";
 
                 archive.SaveTo(outputPath, CompressionType.Deflate);
 
