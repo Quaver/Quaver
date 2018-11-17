@@ -19,6 +19,7 @@ using Quaver.Screens.SongSelect.UI.Leaderboard.Selector;
 using Quaver.Screens.SongSelect.UI.Maps;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Screens.SongSelect.UI.Mapsets.Search;
+using Quaver.Screens.SongSelect.UI.Toolbox;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -90,6 +91,11 @@ namespace Quaver.Screens.SongSelect
         public LeaderboardSelector LeaderboardSelector { get; private set; }
 
         /// <summary>
+        ///     ScrollContainer for extra toolbox options
+        /// </summary>
+        public ToolboxContainer ToolboxContainer { get; private set; }
+
+        /// <summary>
         ///     Dictates which container (mapsets, or difficulties) are currently active.
         /// </summary>
         public SelectContainerStatus ActiveContainer { get; private set; } = SelectContainerStatus.Mapsets;
@@ -110,6 +116,7 @@ namespace Quaver.Screens.SongSelect
             CreateMapsetSearchContainer();
             CreateLeaderboardSelector();
             CreateLeaderboard();
+            CreateToolboxContainer();
 
             // Needs to be called last so it's above the entire UI
             CreateUserProfile();
@@ -324,6 +331,19 @@ namespace Quaver.Screens.SongSelect
             SearchContainer.Parent = Container;
             UserProfile.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
+        }
+
+        /// <summary>
+        ///     Creates the container which contains a toolbox of clickable actions for the user to perform
+        /// </summary>
+        private void CreateToolboxContainer()
+        {
+            ToolboxContainer = new ToolboxContainer()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = BottomLine.Y
+            };
         }
     }
 }
