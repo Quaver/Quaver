@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 
 namespace Quaver.Screens
@@ -53,9 +54,7 @@ namespace Quaver.Screens
         ///     Called the first update call.
         ///     Used for when the screen has already finished initializing
         /// </summary>
-        public virtual void OnFirstUpdate()
-        {
-        }
+        public virtual void OnFirstUpdate() => Button.IsGloballyClickable = true;
 
         /// <summary>
         ///     Called to begin the exit to a new screen
@@ -63,6 +62,8 @@ namespace Quaver.Screens
         public virtual void Exit(Func<QuaverScreen> screen, int delay = 0)
         {
             Exiting = true;
+            Button.IsGloballyClickable = false;
+
             ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
 
             if (delay > 0)
