@@ -111,11 +111,10 @@ namespace Quaver.Screens.SongSelect
             CreateNavbar();
             CreateBottomLine();
             CreateAudioVisualizer();
+            CreateMapBanner();
             CreateMapsetScrollContainer();
             CreateDifficultyScrollContainer();
             CreateMapsetSearchContainer();
-            CreateMapBanner();
-
             CreateLeaderboardSelector();
             CreateLeaderboard();
             CreateToolboxContainer();
@@ -260,7 +259,7 @@ namespace Quaver.Screens.SongSelect
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(0, Navbar.Line.Y),
+                Position = new ScalableVector2(0, Navbar.Line.Y + 20),
             };
 
             Banner.X = -Banner.Width;
