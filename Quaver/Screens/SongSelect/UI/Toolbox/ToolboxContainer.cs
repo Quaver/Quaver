@@ -82,7 +82,7 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
                 Text = { Font = BitmapFonts.Exo2Bold},
                 Tint = Color.Black,
                 Alpha = 0.75f,
-                X = 30
+                X = 0
             };
 
             Mods.Height -= 1;
@@ -177,7 +177,7 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
                 Tint = Color.Black,
                 Alpha = 0.75f,
                 Alignment = Alignment.TopRight,
-                X = -30
+                X = 0
             };
 
             Play.Height -= 1;
