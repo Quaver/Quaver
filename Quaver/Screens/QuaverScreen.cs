@@ -25,6 +25,11 @@ namespace Quaver.Screens
         public override ScreenView View { get; protected set; }
 
         /// <summary>
+        ///     Dictates if the screen is currently exiting.
+        /// </summary>
+        public bool Exiting { get; private set; }
+
+        /// <summary>
         ///     Event invoked when the screen is about to exit.
         /// </summary>
         public event EventHandler<ScreenExitingEventArgs> ScreenExiting;
@@ -57,6 +62,7 @@ namespace Quaver.Screens
         /// </summary>
         public virtual void Exit(Func<QuaverScreen> screen, int delay = 0)
         {
+            Exiting = true;
             ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
 
             if (delay > 0)

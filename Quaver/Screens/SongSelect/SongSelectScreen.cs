@@ -102,7 +102,7 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         private void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0)
+            if (DialogManager.Dialogs.Count != 0 || Exiting)
                 return;
 
             HandleKeyPressEscape();
