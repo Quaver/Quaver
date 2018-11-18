@@ -76,7 +76,7 @@ namespace Quaver.Screens
         /// <param name="screen"></param>
         public static void ChangeScreen(QuaverScreen screen)
         {
-            Logger.Debug($"Changed to Screen '{screen.Type}'", LogType.Runtime);
+            Logger.Important($"Changed to Screen '{screen.Type}'", LogType.Runtime);
 
             var game = (QuaverGame) GameBase.Game;
             game.CurrentScreen = screen;
@@ -111,6 +111,8 @@ namespace Quaver.Screens
                 {
                     QueuedScreen = newScreen();
                 }
+
+                Logger.Important($"Scheduled screen change to: '{QueuedScreen.Type}'. w/ {DelayedScreenChangeTime}ms delay", LogType.Runtime);
             });
         }
 
