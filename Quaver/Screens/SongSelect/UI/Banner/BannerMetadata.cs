@@ -73,6 +73,17 @@ namespace Quaver.Screens.SongSelect.UI.Banner
                 Length,
                 Difficulty
             };
+
+            ModManager.ModsChanged += OnModsChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            ModManager.ModsChanged -= OnModsChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -83,7 +94,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         public void UpdateAndAlignMetadata(Map map)
         {
             Mode.UpdateValue(ModeHelper.ToShortHand(map.Mode));
-            Bpm.UpdateValue((map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods)).ToString(CultureInfo.InvariantCulture));
+            Bpm.UpdateValue(((int)(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))).ToString(CultureInfo.InvariantCulture));
             Length.UpdateValue(TimeSpan.FromMilliseconds(map.SongLength * ModHelper.GetRateFromMods(ModManager.Mods)).ToString(@"mm\:ss"));
             Difficulty.UpdateValue("0.00");
 
@@ -103,5 +114,10 @@ namespace Quaver.Screens.SongSelect.UI.Banner
 
             Items.ForEach(x => x.X += (Banner.Width - Items.Last().X) / Items.Count / 2);
         }
+
+        /// <summary>
+        ///     Called when game modifiers have changed.
+        /// </summary>
+        private void OnModsChanged(object o, ModsChangedEventArgs e) => UpdateAndAlignMetadata(MapManager.Selected.Value);
     }
 }
