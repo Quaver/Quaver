@@ -16,6 +16,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
@@ -37,6 +38,7 @@ using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 using Wobble.Screens;
 
@@ -212,6 +214,21 @@ namespace Quaver.Screens.Results
             InputManager.HandleInput();
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            // Make cursor visible again
+            var game = GameBase.Game as QuaverGame;
+            var cursor = game.GlobalUserInterface.Cursor;
+            cursor.Alpha = 1;
+
+            BackgroundHelper.Background.Dim = 60;
+
+            base.OnFirstUpdate();
         }
 
         /// <inheritdoc />

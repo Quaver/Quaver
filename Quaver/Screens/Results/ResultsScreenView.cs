@@ -74,8 +74,6 @@ namespace Quaver.Screens.Results
 
             // Create transitioner last, so any fade animations draw on top.
             CreateScreenTransitioner();
-
-            BackgroundHelper.Background.Dim = 60;
         }
 
         /// <inheritdoc />

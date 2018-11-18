@@ -16,8 +16,10 @@ using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using SevenZip.Compression.LZ;
+using Wobble;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -296,6 +298,10 @@ namespace Quaver.Screens.SongSelect
 
             Exit(() =>
             {
+                var game = GameBase.Game as QuaverGame;
+                var cursor = game.GlobalUserInterface.Cursor;
+                cursor.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, cursor.Alpha, 0, 200));
+
                 if (AudioEngine.Track != null)
                 {
                     lock (AudioEngine.Track)
