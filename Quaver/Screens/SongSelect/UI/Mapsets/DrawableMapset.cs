@@ -40,11 +40,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         public int MapsetIndex { get; set; }
 
         /// <summary>
-        ///     The top line of the mapset that shows if it is selected
-        /// </summary>
-        public Sprite TopLine { get; }
-
-        /// <summary>
         ///    The title of the song.
         /// </summary>
         public SpriteText Title { get; }
@@ -63,7 +58,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 86;
+        public static int HEIGHT { get; } = 92;
 
         /// <inheritdoc />
         /// <summary>
@@ -72,16 +67,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             Container = container;
             Size = new ScalableVector2(416, HEIGHT);
-            Alpha = 0.75f;
-            Tint = Color.Black;
-            Image = UserInterface.BlankBox;
-
-            TopLine = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(Width, 4)
-            };
+            Image = UserInterface.SelectButtonBackground;
 
             Title = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
@@ -127,13 +113,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             // Change the width of the set outwards to appear it as selected.
             Animations.Clear();
-            ChangeWidthTo(514, Easing.OutQuint, 400);
-            FadeToColor(Colors.MainAccentInactive, Easing.OutQuint, 300);
-
-            TopLine.Animations.Clear();
-            TopLine.ChangeWidthTo(514, Easing.OutQuint, 400);
-            TopLine.FadeToColor(Colors.MainAccent, Easing.Linear, 100);
-            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 1, 200));
+            ChangeWidthTo(574, Easing.OutQuint, 400);
+            FadeToColor(Colors.MainAccent, Easing.OutQuint, 300);
 
             Title.Animations.Clear();
             Artist.Animations.Clear();
@@ -153,11 +134,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             Animations.Clear();
             ChangeWidthTo(414, Easing.OutQuint, 400);
             FadeToColor(Color.Black, Easing.OutQuint, 300);
-
-            TopLine.Animations.Clear();
-            TopLine.ChangeWidthTo(414, Easing.OutQuint, 400);
-            TopLine.FadeToColor(Color.White, Easing.Linear, 100);
-            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 0.75f, 200));
 
             // Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
 

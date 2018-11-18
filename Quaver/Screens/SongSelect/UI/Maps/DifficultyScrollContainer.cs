@@ -87,8 +87,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// </summary>
         /// <param name="view"></param>
         public DifficultyScrollContainer(SongSelectScreenView view) : base(
-            new ScalableVector2(515, WindowManager.Height - 54 * 2 - 2),
-            new ScalableVector2(515, WindowManager.Height - 54 * 2 - 2))
+            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2),
+            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2))
         {
             View = view;
             OriginalContainerSize = Size;

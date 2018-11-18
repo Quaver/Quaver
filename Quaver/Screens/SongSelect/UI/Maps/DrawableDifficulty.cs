@@ -9,6 +9,7 @@ using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Screens.Loading;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -30,11 +31,6 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         public Map Map { get; private set; }
 
         /// <summary>
-        ///     The top line of the difficulty that shows if it is selected
-        /// </summary>
-        private Sprite TopLine { get; }
-
-        /// <summary>
         ///     The name of the difficulty.
         /// </summary>
         private SpriteText DifficultyName { get; }
@@ -53,7 +49,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 86;
+        public static int HEIGHT { get; } = 92;
 
         /// <inheritdoc />
         /// <summary>
@@ -63,15 +59,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             Container = container;
 
             Size = new ScalableVector2(416, HEIGHT);
-            Tint = Color.Black;
-            Alpha = 0.75f;
-
-            TopLine = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(Width, 4)
-            };
+            Image = UserInterface.SelectButtonBackground;
 
             DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
             {
@@ -116,17 +104,16 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         public void DisplayAsSelected()
         {
             Animations.Clear();
-            ChangeWidthTo(514, Easing.OutQuint, 400);
-            FadeToColor(Colors.MainAccentInactive, Easing.OutQuint, 300);
+            ChangeWidthTo(574, Easing.OutQuint, 400);
+            FadeToColor(Colors.MainAccent, Easing.OutQuint, 300);
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();
             Creator.ClearAnimations();
 
-            TopLine.Animations.Clear();
-            TopLine.ChangeWidthTo(514, Easing.OutQuint, 400);
-            TopLine.FadeToColor(Colors.MainAccent, Easing.Linear, 100);
-            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 1, 200));
+            DifficultyName.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, DifficultyName.Alpha, 1f, 400));
+            TextDifficultyRating.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, TextDifficultyRating.Alpha, 1f, 400));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 1f, 400));
         }
 
         /// <summary>
@@ -142,10 +129,9 @@ namespace Quaver.Screens.SongSelect.UI.Maps
             TextDifficultyRating.Animations.Clear();
             Creator.ClearAnimations();
 
-            TopLine.Animations.Clear();
-            TopLine.ChangeWidthTo(414, Easing.OutQuint, 400);
-            TopLine.FadeToColor(Color.White, Easing.Linear, 100);
-            TopLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TopLine.Alpha, 0.75f, 200));
+            DifficultyName.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, DifficultyName.Alpha, 0.65f, 400));
+            TextDifficultyRating.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, TextDifficultyRating.Alpha, 0.65f, 400));
+            Creator.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Creator.Alpha, 0.65f, 400));
         }
 
         /// <summary>
