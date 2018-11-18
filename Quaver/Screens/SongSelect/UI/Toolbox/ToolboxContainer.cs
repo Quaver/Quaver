@@ -187,7 +187,9 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
 
             Play.Clicked += (o, e) =>
             {
-                QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as SongSelectScreen;
+                screen?.ExitToGameplay();
             };
 
             AddContainedDrawable(Play);

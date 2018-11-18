@@ -8,6 +8,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Modifiers;
+using Quaver.Scheduling;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
@@ -141,11 +142,7 @@ namespace Quaver.Screens.SongSelect
             switch (view.ActiveContainer)
             {
                 case SelectContainerStatus.Mapsets:
-                    QuaverScreenManager.ScheduleScreenChange(() =>
-                    {
-                        AudioEngine.Track?.Fade(10, 500);
-                        return new MenuScreen();
-                    });
+                    ExitToMenu();
                     break;
                 case SelectContainerStatus.Difficulty:
                     view.SwitchToContainer(SelectContainerStatus.Mapsets);
@@ -171,7 +168,7 @@ namespace Quaver.Screens.SongSelect
                     view.SwitchToContainer(SelectContainerStatus.Difficulty);
                     break;
                 case SelectContainerStatus.Difficulty:
-                    QuaverScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+                    ExitToGameplay();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -282,5 +279,36 @@ namespace Quaver.Screens.SongSelect
 
             MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
         }
+
+        /// <summary>
+        ///     Exits the screen to schedule loading the map and ultimately the gameplay screen
+        /// </summary>
+        public void ExitToGameplay() => Exit(() =>
+        {
+            ThreadScheduler.RunAfter(() =>
+            {
+                if (AudioEngine.Track == null)
+                    return;
+
+                lock (AudioEngine.Track)
+                    AudioEngine.Track?.Fade(10, 300);
+            }, 500);
+
+            return new MapLoadingScreen(new List<LocalScore>());
+        }, 500);
+
+        /// <summary>
+        ///     Exits the screen back to the main menu
+        /// </summary>
+        public void ExitToMenu() => Exit(() =>
+        {
+            if (AudioEngine.Track != null)
+            {
+                lock (AudioEngine.Track)
+                    AudioEngine.Track?.Fade(10, 300);
+            }
+
+            return new MenuScreen();
+        });
     }
 }

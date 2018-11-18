@@ -162,10 +162,10 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnHomeButtonClicked(object sender, EventArgs e)
+        private void OnHomeButtonClicked(object sender, EventArgs e)
         {
-            AudioEngine.Track?.Fade(10, 500);
-            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+            var screen = Screen as SongSelectScreen;
+            screen.ExitToMenu();
         }
 
         /// <summary>

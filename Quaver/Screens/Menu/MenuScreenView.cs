@@ -338,7 +338,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnSinglePlayerPanelClicked(object sender, EventArgs e)
+        private void OnSinglePlayerPanelClicked(object sender, EventArgs e)
         {
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {
@@ -349,8 +349,12 @@ namespace Quaver.Screens.Menu
             var button = (Button) sender;
             button.IsClickable = false;
 
-            AudioEngine.Track?.Fade(10, 500);
-            QuaverScreenManager.ScheduleScreenChange(() => new SongSelectScreen());
+            var screen = Screen as MenuScreen;
+            screen?.Exit(() =>
+            {
+                AudioEngine.Track?.Fade(10, 300);
+                return new SongSelectScreen();
+            });
         }
 
         /// <summary>

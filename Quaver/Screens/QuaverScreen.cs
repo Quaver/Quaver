@@ -24,6 +24,11 @@ namespace Quaver.Screens
         /// </summary>
         public override ScreenView View { get; protected set; }
 
+        /// <summary>
+        ///     Event invoked when the screen is about to exit.
+        /// </summary>
+        public event EventHandler<ScreenExitingEventArgs> ScreenExiting;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -45,7 +50,19 @@ namespace Quaver.Screens
         /// </summary>
         public virtual void OnFirstUpdate()
         {
+        }
 
+        /// <summary>
+        ///     Called to begin the exit to a new screen
+        /// </summary>
+        public virtual void Exit(Func<QuaverScreen> screen, int delay = 0)
+        {
+            ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
+
+            if (delay > 0)
+                QuaverScreenManager.ScheduleScreenChange(screen, delay);
+            else
+                QuaverScreenManager.ScheduleScreenChange(screen);
         }
 
         /// <summary>

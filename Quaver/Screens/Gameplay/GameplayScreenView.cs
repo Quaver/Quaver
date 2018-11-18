@@ -466,12 +466,7 @@ namespace Quaver.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                ThreadScheduler.Run(() =>
-                {
-                    FutureResultsScreen = new ResultsScreen(Screen);
-                    ClearToExitScreen = true;
-                });
-
+                Screen.Exit(() => new ResultsScreen(Screen), 1500);
                 ResultsScreenLoadInitiated = true;
             }
 
@@ -500,7 +495,6 @@ namespace Quaver.Screens.Gameplay
             {
                 // Change background dim before switching screens.
                 BackgroundManager.Background.Dim = 0;
-                QuaverScreenManager.ChangeScreen(FutureResultsScreen);
             }
         }
 

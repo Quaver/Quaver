@@ -34,6 +34,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Logging;
@@ -497,7 +498,16 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Action that goes back to the song select screen.
         /// </summary>
-        public void GoBackToMenu() => QuaverScreenManager.ChangeScreen(new SongSelectScreen());
+        public void GoBackToMenu() => Exit(() =>
+        {
+            if (AudioEngine.Track != null)
+            {
+                lock (AudioEngine.Track)
+                    AudioEngine.Track.Fade(10, 300);
+            }
+
+            return new SongSelectScreen();
+        });
 
         /// <summary>
         ///     Loads up local scores and watches the replay.
@@ -523,7 +533,16 @@ namespace Quaver.Screens.Results
                 }
             }
 
-            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                return new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay);
+            });
         }
 
         /// <summary>
@@ -532,7 +551,17 @@ namespace Quaver.Screens.Results
         public void RetryMap()
         {
             var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
-            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores));
+
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                return new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores);
+            });
         }
 
         /// <summary>

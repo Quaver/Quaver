@@ -608,6 +608,7 @@ namespace Quaver.Screens.Gameplay
                 {
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
+                    // Use ChangeScreen here to give instant feedback. Can't be threaded
                     if (InReplayMode)
                         QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
                     else
