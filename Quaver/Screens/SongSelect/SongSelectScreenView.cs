@@ -111,10 +111,11 @@ namespace Quaver.Screens.SongSelect
             CreateNavbar();
             CreateBottomLine();
             CreateAudioVisualizer();
-            CreateMapBanner();
             CreateMapsetScrollContainer();
             CreateDifficultyScrollContainer();
             CreateMapsetSearchContainer();
+            CreateMapBanner();
+
             CreateLeaderboardSelector();
             CreateLeaderboard();
             CreateToolboxContainer();
@@ -259,7 +260,7 @@ namespace Quaver.Screens.SongSelect
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(0, Navbar.Line.Y + 20),
+                Position = new ScalableVector2(0, Navbar.Line.Y),
             };
 
             Banner.X = -Banner.Width;
@@ -340,6 +341,7 @@ namespace Quaver.Screens.SongSelect
             ActiveContainer = container;
             SearchContainer.Parent = Container;
             UserProfile.Parent = Container;
+            Banner.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
         }
 

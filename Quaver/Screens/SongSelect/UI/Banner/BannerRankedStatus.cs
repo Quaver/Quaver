@@ -11,28 +11,10 @@ namespace Quaver.Screens.SongSelect.UI.Banner
 {
     public class BannerRankedStatus : Sprite
     {
-        /// <summary>
-        ///     The text that displays the ranked status of the map.
-        /// </summary>
-        private SpriteText Status { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public BannerRankedStatus()
-        {
-            Size = new ScalableVector2(168, 26);
-            Tint = Color.LimeGreen;
-
-            Status = new SpriteText(BitmapFonts.Exo2Bold, "Not Submitted", 11, false)
-            {
-                Parent = this,
-                Alignment = Alignment.MidCenter
-            };
-
-            Alpha = 0.85f;
-            AddBorder(Color.DarkGreen, 2);
-        }
+        public BannerRankedStatus() => Size = new ScalableVector2(105, 38);
 
         /// <summary>
         ///     Updates the ranked status with a new map.
@@ -44,24 +26,16 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             switch (map.RankedStatus)
             {
                 case RankedStatus.NotSubmitted:
-                    Status.Text = "Not Submitted";
-                    Tint = ColorHelper.HexToColor("#A62639");
-                    Border.Tint = ColorHelper.HexToColor("#511C29");
+                    Image = UserInterface.StatusNotSubmitted;
                     break;
                 case RankedStatus.Unranked:
-                    Status.Text = "Unranked";
-                    Tint = ColorHelper.HexToColor("#594E36");
-                    Border.Tint = ColorHelper.HexToColor("#2F2504");
+                    Image = UserInterface.StatusUnranked;
                     break;
                 case RankedStatus.Ranked:
-                    Status.Text = "Ranked";
-                    Tint = ColorHelper.HexToColor("#73BA9B");
-                    Border.Tint = ColorHelper.HexToColor($"#003E1F");
+                    Image = UserInterface.StatusRanked;
                     break;
                 case RankedStatus.DanCourse:
-                    Status.Text = "Dan Course";
-                    Tint = ColorHelper.HexToColor("#49306B");
-                    Border.Tint = ColorHelper.HexToColor($"#635380");
+                    Image = UserInterface.StatusDanCourse;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

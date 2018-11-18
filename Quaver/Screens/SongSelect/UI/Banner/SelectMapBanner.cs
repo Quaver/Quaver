@@ -90,7 +90,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             View = view;
             Tint = Color.Black;
 
-            Size = new ScalableVector2(620, 234);
+            Size = new ScalableVector2(674, 234);
             AddBorder(Color.White, 2);
 
             Mask = new SpriteMaskContainer()
@@ -258,8 +258,8 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         {
             Parent = this,
             Alignment = Alignment.TopRight,
-            Y = Border.Thickness,
-            X = -Border.Thickness
+            Y = 5,
+            X = -8
         };
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             Parent = this,
             Alignment = Alignment.TopLeft,
             X = MapDifficultyName.X,
-            Y = 10
+            Y = 15
         };
 
         /// <summary>
