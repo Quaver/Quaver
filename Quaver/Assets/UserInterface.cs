@@ -33,6 +33,7 @@ namespace Quaver.Assets
         public static Texture2D StatusUnranked { get; private set; }
         public static Texture2D StatusNotSubmitted { get; private set; }
         public static Texture2D StatusDanCourse { get; private set; }
+        public static Texture2D SelectButtonBackground { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -65,6 +66,7 @@ namespace Quaver.Assets
             StatusUnranked = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-unranked.png"));
             StatusNotSubmitted = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-not-submitted.png"));
             StatusDanCourse = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-dancourse.png"));
+            SelectButtonBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/select-button-background.png"));
         }
     }
 }
