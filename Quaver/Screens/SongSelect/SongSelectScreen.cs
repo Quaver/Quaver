@@ -303,7 +303,7 @@ namespace Quaver.Screens.SongSelect
                 }
 
                 return new MapLoadingScreen(new List<LocalScore>());
-            }, 50);
+            }, 100);
         }
 
         /// <summary>

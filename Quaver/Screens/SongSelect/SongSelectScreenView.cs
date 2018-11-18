@@ -368,12 +368,12 @@ namespace Quaver.Screens.SongSelect
             if (!screen.IsExitingToGameplay)
                 return;
 
-            MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, 300);
-            DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, 300);
-            SearchContainer.MoveToX(SearchContainer.Width, Easing.OutQuint, 300);
-            Banner.MoveToX(-Banner.Width, Easing.OutQuint, 300);
-            LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 300);
-            Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 300);
+            MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, 400);
+            DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, 400);
+            SearchContainer.MoveToX(SearchContainer.Width, Easing.OutQuint, 400);
+            Banner.MoveToX(-Banner.Width, Easing.OutQuint, 400);
+            LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 400);
+            Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 400);
 
             ToolboxContainer.Exit();
 

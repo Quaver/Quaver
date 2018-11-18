@@ -229,11 +229,11 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
         /// </summary>
         public void Exit()
         {
-            Mods.MoveToY((int)Mods.Height * 2, Easing.OutQuint, 300);
-            Edit.MoveToY((int)Edit.Height * 2, Easing.OutQuint, 300);
-            ExportMapset.MoveToY((int)ExportMapset.Height * 2, Easing.OutQuint, 300);
-            Play.MoveToY((int)Play.Height * 2, Easing.OutQuint, 300);
-            Options.MoveToY((int)Options.Height * 2, Easing.OutQuint, 300);
+            Mods.MoveToY((int)Mods.Height * 2, Easing.OutQuint, 400);
+            Edit.MoveToY((int)Edit.Height * 2, Easing.OutQuint, 400);
+            ExportMapset.MoveToY((int)ExportMapset.Height * 2, Easing.OutQuint, 400);
+            Play.MoveToY((int)Play.Height * 2, Easing.OutQuint, 400);
+            Options.MoveToY((int)Options.Height * 2, Easing.OutQuint, 400);
         }
     }
 }
