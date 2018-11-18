@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -119,6 +120,45 @@ namespace Quaver.Screens.Menu.UI.Navigation
                     item.X = previous.X - item.Width + 1;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Performs an exit animation for the navbar
+        /// </summary>
+        public void Exit()
+        {
+            Line.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+            Line.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Line.Alpha, 0, 200));
+
+            LeftAlignedItems.ForEach(x =>
+            {
+                x.BottomLine.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+                x.BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.BottomLine.Alpha, 0, 200));
+                x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.Alpha, 0, 200));
+
+                x.Children.ForEach(y =>
+                {
+                    if (y is Sprite sprite)
+                    {
+                        y.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, sprite.Alpha, 0, 200));
+                    }
+                });
+            });
+
+            RightAlignedItems.ForEach(x =>
+            {
+                x.BottomLine.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+                x.BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.BottomLine.Alpha, 0, 200));
+                x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.Alpha, 0, 200));
+
+                x.Children.ForEach(y =>
+                {
+                    if (y is Sprite sprite)
+                    {
+                        y.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, sprite.Alpha, 0, 200));
+                    }
+                });
+            });
         }
     }
 }

@@ -223,5 +223,17 @@ namespace Quaver.Screens.SongSelect.UI.Toolbox
 
             AddContainedDrawable(Options);
         }
+
+        /// <summary>
+        ///     Performs an exit animation for the buttons
+        /// </summary>
+        public void Exit()
+        {
+            Mods.MoveToY((int)Mods.Height * 2, Easing.OutQuint, 300);
+            Edit.MoveToY((int)Edit.Height * 2, Easing.OutQuint, 300);
+            ExportMapset.MoveToY((int)ExportMapset.Height * 2, Easing.OutQuint, 300);
+            Play.MoveToY((int)Play.Height * 2, Easing.OutQuint, 300);
+            Options.MoveToY((int)Options.Height * 2, Easing.OutQuint, 300);
+        }
     }
 }

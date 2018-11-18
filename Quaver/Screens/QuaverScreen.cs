@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens
@@ -70,6 +71,8 @@ namespace Quaver.Screens
                 QuaverScreenManager.ScheduleScreenChange(screen, delay);
             else
                 QuaverScreenManager.ScheduleScreenChange(screen);
+
+            ScreenExiting = null;
         }
 
         /// <summary>

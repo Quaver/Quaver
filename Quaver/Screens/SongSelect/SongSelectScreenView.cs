@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Audio;
@@ -118,6 +119,9 @@ namespace Quaver.Screens.SongSelect
             CreateLeaderboard();
             CreateToolboxContainer();
 
+            var selectScreen = Screen as SongSelectScreen;
+            selectScreen.ScreenExiting += OnScreenExiting;
+
             // Needs to be called last so it's above the entire UI
             CreateUserProfile();
         }
@@ -141,7 +145,13 @@ namespace Quaver.Screens.SongSelect
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            var screen = Screen as SongSelectScreen;
+            screen.ScreenExiting -= OnScreenExiting;
+
+            Container?.Destroy();
+        }
 
         /// <summary>
         ///     Creates the navbar for this screen.
@@ -344,6 +354,35 @@ namespace Quaver.Screens.SongSelect
                 Alignment = Alignment.TopCenter,
                 Y = BottomLine.Y
             };
+        }
+
+        /// <summary>
+        ///     Called when the screen is exiting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            var screen = Screen as SongSelectScreen;
+
+            if (!screen.IsExitingToGameplay)
+                return;
+
+            MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, 300);
+            DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, 300);
+            SearchContainer.MoveToX(SearchContainer.Width, Easing.OutQuint, 300);
+            Banner.MoveToX(-Banner.Width, Easing.OutQuint, 300);
+            LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 300);
+            Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 300);
+
+            ToolboxContainer.Exit();
+
+            BottomLine.SpriteBatchOptions = new SpriteBatchOptions()
+            {
+                BlendState = BlendState.AlphaBlend
+            };
+            BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, BottomLine.Alpha, 0, 200));
+            Navbar.Exit();
         }
     }
 }

@@ -15,6 +15,7 @@ using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using SevenZip.Compression.LZ;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -46,6 +47,12 @@ namespace Quaver.Screens.SongSelect
         ///     The mapsets that are currently available to be displayed.
         /// </summary>
         public List<Mapset> AvailableMapsets { get; set; }
+
+        /// <summary>
+        ///     Is true if we're going from song select to gameplay.
+        ///     True when exiting
+        /// </summary>
+        public bool IsExitingToGameplay { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -283,19 +290,21 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Exits the screen to schedule loading the map and ultimately the gameplay screen
         /// </summary>
-        public void ExitToGameplay() => Exit(() =>
+        public void ExitToGameplay()
         {
-            ThreadScheduler.RunAfter(() =>
+            IsExitingToGameplay = true;
+
+            Exit(() =>
             {
-                if (AudioEngine.Track == null)
-                    return;
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track?.Fade(10, 500);
+                }
 
-                lock (AudioEngine.Track)
-                    AudioEngine.Track?.Fade(10, 300);
-            }, 500);
-
-            return new MapLoadingScreen(new List<LocalScore>());
-        }, 500);
+                return new MapLoadingScreen(new List<LocalScore>());
+            }, 50);
+        }
 
         /// <summary>
         ///     Exits the screen back to the main menu
