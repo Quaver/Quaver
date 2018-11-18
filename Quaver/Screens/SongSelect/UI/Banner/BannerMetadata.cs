@@ -95,7 +95,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
         {
             Mode.UpdateValue(ModeHelper.ToShortHand(map.Mode));
             Bpm.UpdateValue(((int)(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))).ToString(CultureInfo.InvariantCulture));
-            Length.UpdateValue(TimeSpan.FromMilliseconds(map.SongLength * ModHelper.GetRateFromMods(ModManager.Mods)).ToString(@"mm\:ss"));
+            Length.UpdateValue(TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods)).ToString(@"mm\:ss"));
             Difficulty.UpdateValue("0.00");
 
             for (var i = 0; i < Items.Count; i++)
