@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble;
 using Wobble.Assets;
@@ -28,6 +29,10 @@ namespace Quaver.Assets
         public static Texture2D ThumbnailEditor { get; private set; }
         public static Texture2D PlaycardBackground { get; private set; }
         public static Texture2D LoadingWheel { get; private set; }
+        public static Texture2D StatusRanked { get; private set; }
+        public static Texture2D StatusUnranked { get; private set; }
+        public static Texture2D StatusNotSubmitted { get; private set; }
+        public static Texture2D StatusDanCourse { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -56,6 +61,10 @@ namespace Quaver.Assets
             ThumbnailEditor = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-editor.jpg"));
             PlaycardBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-bg.png"));
             LoadingWheel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/loading-wheel.png"));
+            StatusRanked = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-ranked.png"));
+            StatusUnranked = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-unranked.png"));
+            StatusNotSubmitted = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-not-submitted.png"));
+            StatusDanCourse = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-dancourse.png"));
         }
     }
 }
