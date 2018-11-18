@@ -366,6 +366,7 @@ namespace Quaver.Screens.Gameplay
             {
                 Pause();
                 TimePauseKeyHeld = 0;
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             }
             else
             {
@@ -423,6 +424,7 @@ namespace Quaver.Screens.Gameplay
                 IsPaused = true;
                 IsResumeInProgress = false;
                 PauseCount++;
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 if (!InReplayMode)
                 {
