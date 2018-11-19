@@ -65,7 +65,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         public MapsetSearchContainer(SongSelectScreenView view)
         {
             View = view;
-            Size = new ScalableVector2(580, 90);
+            Size = new ScalableVector2(620, 90);
 
             Alpha = 0.90f;
             Image = UserInterface.SelectSearchBackground;
@@ -144,7 +144,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(478, 30), BitmapFonts.Exo2Bold, 13)
+            SearchBox = new Textbox(new ScalableVector2(514, 30), BitmapFonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 5, 0),
@@ -313,11 +313,11 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets.Search
         /// </summary>
         private void CreateTextMapsetsFound()
         {
-            TextMapsetsFound = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            TextMapsetsFound = new SpriteText(BitmapFonts.Exo2Medium, " ", 13)
             {
                 Parent = ButtonOrderByCreator,
                 Alignment = Alignment.MidLeft,
-                X = ButtonOrderByCreator.Width + 30,
+                X = ButtonOrderByCreator.Width + 84,
             };
 
             UpdateMapsetsFoundText();
