@@ -140,6 +140,11 @@ namespace Quaver.Config
         internal static Bindable<bool> FpsCounter { get; private set; }
 
         /// <summary>
+        ///     FPS Limit
+        /// </summary>
+        internal static BindableInt FpsLimit { get; private set; }
+
+        /// <summary>
         ///     Determines if the health bar + multiplier is at top or bottom of the playfield
         /// </summary>
         internal static Bindable<bool> HealthBarPositionTop { get; private set; }
@@ -408,6 +413,7 @@ namespace Quaver.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
+            FpsLimit = ReadInt(@"FpsLimit", 240, 60, 999, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
@@ -485,6 +491,7 @@ namespace Quaver.Config
                     WindowFullScreen.ValueChanged += AutoSaveConfiguration;
                     WindowLetterboxed.ValueChanged += AutoSaveConfiguration;
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
+                    FpsLimit.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
