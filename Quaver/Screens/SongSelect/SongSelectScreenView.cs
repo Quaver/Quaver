@@ -8,11 +8,15 @@ using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Quaver.Graphics.Notifications;
 using Quaver.Online.Chat;
+using Quaver.Scheduling;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.Navigation;
 using Quaver.Screens.Menu.UI.Navigation.User;
 using Quaver.Screens.Menu.UI.Visualizer;
+using Quaver.Screens.Options;
+using Quaver.Screens.Select.UI.Mods;
 using Quaver.Screens.SongSelect.UI;
 using Quaver.Screens.SongSelect.UI.Banner;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
@@ -27,6 +31,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -46,10 +51,6 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public Navbar Navbar { get; private set; }
 
-        /// <summary>
-        ///     The line on the bottom.
-        /// </summary>
-        public Line BottomLine { get; private set; }
 
         /// <summary>
         ///     The user's profile when the click on their name in the navbar.
@@ -97,9 +98,19 @@ namespace Quaver.Screens.SongSelect
         public ToolboxContainer ToolboxContainer { get; private set; }
 
         /// <summary>
+        ///     The navigation bar at the bottom
+        /// </summary>
+        public Navbar BottomNavbar { get; private set; }
+
+        /// <summary>
         ///     Dictates which container (mapsets, or difficulties) are currently active.
         /// </summary>
         public SelectContainerStatus ActiveContainer { get; private set; } = SelectContainerStatus.Mapsets;
+
+        /// <summary>
+        ///     The time the user last exported a map
+        /// </summary>
+        private long LastExportTime { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -109,7 +120,6 @@ namespace Quaver.Screens.SongSelect
         {
             CreateBackground();
             CreateNavbar();
-            CreateBottomLine();
             CreateAudioVisualizer();
             CreateMapBanner();
             CreateMapsetScrollContainer();
@@ -117,7 +127,8 @@ namespace Quaver.Screens.SongSelect
             CreateMapsetSearchContainer();
             CreateLeaderboardSelector();
             CreateLeaderboard();
-            CreateToolboxContainer();
+            // CreateToolboxContainer();
+            CreateBottomNavbar();
 
             var selectScreen = Screen as SongSelectScreen;
             selectScreen.ScreenExiting += OnScreenExiting;
@@ -182,21 +193,6 @@ namespace Quaver.Screens.SongSelect
         ///     Creates the background for the screen
         /// </summary>
         private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20) { Parent = Container };
-
-        /// <summary>
-        ///     Creates the line at the bottom of the screen.
-        /// </summary>
-        private void CreateBottomLine()
-        {
-            BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
-            {
-                Parent = Container,
-                Position = new ScalableVector2(20, WindowManager.Height - 54),
-                Alpha = 0.90f
-            };
-
-            BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
-        }
 
         /// <summary>
         ///     Creates the user profile container.
@@ -345,28 +341,13 @@ namespace Quaver.Screens.SongSelect
         }
 
         /// <summary>
-        ///     Creates the container which contains a toolbox of clickable actions for the user to perform
-        /// </summary>
-        private void CreateToolboxContainer()
-        {
-            ToolboxContainer = new ToolboxContainer()
-            {
-                Parent = Container,
-                Alignment = Alignment.TopCenter,
-                Y = BottomLine.Y
-            };
-        }
-
-        /// <summary>
         ///     Called when the screen is exiting
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
         {
-            var screen = Screen as SongSelectScreen;
-
-            if (!screen.IsExitingToGameplay)
+            if (Screen is SongSelectScreen screen && !screen.IsExitingToGameplay)
                 return;
 
             MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, 400);
@@ -375,15 +356,57 @@ namespace Quaver.Screens.SongSelect
             Banner.MoveToX(-Banner.Width, Easing.OutQuint, 400);
             LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 400);
             Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 400);
-
-            ToolboxContainer.Exit();
-
-            BottomLine.SpriteBatchOptions = new SpriteBatchOptions()
-            {
-                BlendState = BlendState.AlphaBlend
-            };
-            BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, BottomLine.Alpha, 0, 200));
             Navbar.Exit();
+            BottomNavbar.Exit();
         }
+
+        /// <summary>
+        ///     Creates the navbar at the bottom of the screen
+        /// </summary>
+        private void CreateBottomNavbar() => BottomNavbar = new Navbar(new List<NavbarItem>()
+        {
+            // Mods
+            new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModsDialog()), true, false, true),
+
+            // Edit
+            new NavbarItem("Edit", false, (o, e) =>
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back soon!");
+            }, true, false, true),
+
+            // Export Mapset
+            new NavbarItem("Export", false, (o, e) =>
+            {
+                if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Slow down! You can only export a set every 2 seconds.");
+                    return;
+                }
+
+                LastExportTime = GameBase.Game.TimeRunning;
+
+                ThreadScheduler.Run(() =>
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to file...");
+                    MapManager.Selected.Value.Mapset.ExportToZip();
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
+                });
+            }, true, false, true)
+        }, new List<NavbarItem>()
+        {
+            // Play
+            new NavbarItem("Play", false, (o, e) =>
+            {
+                var screen = Screen as SongSelectScreen;
+                screen?.ExitToGameplay();
+            }, true, false, true),
+
+            // Game Options
+            new NavbarItem("Options", false, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)), true, false, true)
+        }, true)
+        {
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+        };
     }
 }
