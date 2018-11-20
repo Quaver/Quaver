@@ -35,6 +35,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -158,14 +159,12 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the navbar.
         /// </summary>
-        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
+        private void CreateNavbar() => Navbar = Navbar = new NavbarMain(new List<NavbarItem>
         {
             new NavbarItem("Home", true),
-            new NavbarItem("Download Maps"),
-            new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
         {
-            new NavbarItemUser(this),
+            new NavbarItemUser(this)
         }) { Parent = Container };
 
         /// <summary>

@@ -90,7 +90,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     Aligns the items from the left.
         /// </summary>
-        private void AlignLeftItems()
+        protected void AlignLeftItems()
         {
             //var startingX = QuaverLogo.X + QuaverLogo.Width;
             var startingX = IsUpsideDown ? -6 : 0;

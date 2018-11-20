@@ -51,7 +51,6 @@ namespace Quaver.Screens.SongSelect
         /// </summary>
         public Navbar Navbar { get; private set; }
 
-
         /// <summary>
         ///     The user's profile when the click on their name in the navbar.
         /// </summary>
@@ -162,12 +161,10 @@ namespace Quaver.Screens.SongSelect
         /// <summary>
         ///     Creates the navbar for this screen.
         /// </summary>
-        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
+        private void CreateNavbar() => Navbar = new NavbarMain(new List<NavbarItem>
         {
             new NavbarItem("Home", false, OnHomeButtonClicked),
             new NavbarItem("Select Song", true),
-            new NavbarItem("Download Maps"),
-            new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this)

@@ -151,11 +151,11 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
             var parent = Parent;
 
-            while (parent != null && parent.GetType() != typeof(Navbar))
+            while (parent != null && parent.GetType().IsAssignableFrom(typeof(Navbar)))
             {
                 parent = parent.Parent;
 
-                if (parent.GetType() != typeof(Navbar))
+                if (!parent.GetType().IsAssignableFrom(typeof(Navbar)))
                     continue;
 
                 var navbar = parent as Navbar;

@@ -243,6 +243,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
         /// <param name="e"></param>
         private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
         {
+            Console.WriteLine("HELLO?");
             UpdateConnectionStatus();
             UpdateButtons();
         }
