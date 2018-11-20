@@ -397,8 +397,18 @@ namespace Quaver.Screens.SongSelect
             // Play
             new NavbarItem("Play", false, (o, e) =>
             {
-                var screen = Screen as SongSelectScreen;
-                screen?.ExitToGameplay();
+                switch (ActiveContainer)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        SwitchToContainer(SelectContainerStatus.Difficulty);
+                        break;
+                    case SelectContainerStatus.Difficulty:
+                        var screen = Screen as SongSelectScreen;
+                        screen?.ExitToGameplay();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }, true, false, true),
 
             // Game Options
