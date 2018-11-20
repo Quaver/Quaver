@@ -13,6 +13,7 @@ using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Quaver.Screens.SongSelect.UI.Mapsets;
+using Quaver.Screens.SongSelect.UI.Modifiers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using SevenZip.Compression.LZ;
@@ -120,6 +121,7 @@ namespace Quaver.Screens.SongSelect
             HandleKeyPressLeft();
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
+            HandleKeyPressF1();
         }
 
         /// <summary>
@@ -268,6 +270,17 @@ namespace Quaver.Screens.SongSelect
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Global;
             else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Global)
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the F1 key
+        /// </summary>
+        private void HandleKeyPressF1()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                return;
+
+            DialogManager.Show(new ModifiersDialog());
         }
 
         /// <summary>

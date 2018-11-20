@@ -24,6 +24,7 @@ using Quaver.Screens.SongSelect.UI.Leaderboard.Selector;
 using Quaver.Screens.SongSelect.UI.Maps;
 using Quaver.Screens.SongSelect.UI.Mapsets;
 using Quaver.Screens.SongSelect.UI.Mapsets.Search;
+using Quaver.Screens.SongSelect.UI.Modifiers;
 using Quaver.Screens.SongSelect.UI.Toolbox;
 using Wobble;
 using Wobble.Graphics;
@@ -358,7 +359,7 @@ namespace Quaver.Screens.SongSelect
         private void CreateBottomNavbar() => BottomNavbar = new Navbar(new List<NavbarItem>()
         {
             // Mods
-            new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModsDialog()), true, false, true),
+            new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModifiersDialog()), true, false, true),
 
             // Edit
             new NavbarItem("Edit", false, (o, e) =>
