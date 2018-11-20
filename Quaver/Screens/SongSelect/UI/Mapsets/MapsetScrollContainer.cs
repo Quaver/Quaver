@@ -64,7 +64,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <summary>
         ///     The amount of y spacing between each mapset.
         /// </summary>
-        private static int YSpacing { get; } = 10;
+        private static int YSpacing { get; } = 5;
 
         /// <summary>
         ///     The amount of space before the first mapset.
@@ -249,7 +249,16 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
                 {
                     SelectedMapsetIndex = selectedMapIndex;
                     SetPoolStartingIndex();
+
+                    if (View.ActiveContainer == SelectContainerStatus.Mapsets)
+                    {
+                        ClearAnimations();
+                        X = Width;
+                        MoveToX(-28, Easing.OutBounce, 1200);
+                    }
+
                     InitializeMapsetBuffer();
+
                     return;
                 }
 
@@ -258,6 +267,14 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
 
                 SelectedMapsetIndex = 0;
                 SetPoolStartingIndex();
+
+                if (View.ActiveContainer == SelectContainerStatus.Mapsets)
+                {
+                    ClearAnimations();
+                    X = Width;
+                    MoveToX(-28, Easing.OutBounce, 1200);
+                }
+
                 InitializeMapsetBuffer();
 
                 var mapset = Screen.AvailableMapsets[SelectedMapsetIndex];

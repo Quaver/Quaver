@@ -93,11 +93,6 @@ namespace Quaver.Screens.SongSelect
         public LeaderboardSelector LeaderboardSelector { get; private set; }
 
         /// <summary>
-        ///     ScrollContainer for extra toolbox options
-        /// </summary>
-        public ToolboxContainer ToolboxContainer { get; private set; }
-
-        /// <summary>
         ///     The navigation bar at the bottom
         /// </summary>
         public Navbar BottomNavbar { get; private set; }

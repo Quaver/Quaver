@@ -34,7 +34,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <summary>
         ///     The width of the score.
         /// </summary>
-        public static int WIDTH { get; } = 674;
+        public static int WIDTH { get; } = 620;
 
         /// <summary>
         ///     The rank of the score.

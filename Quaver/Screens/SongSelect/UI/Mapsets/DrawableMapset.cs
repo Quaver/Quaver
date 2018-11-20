@@ -58,7 +58,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 92;
+        public static int HEIGHT { get; } = 84;
 
         /// <inheritdoc />
         /// <summary>
@@ -66,7 +66,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         public DrawableMapset(MapsetScrollContainer container)
         {
             Container = container;
-            Size = new ScalableVector2(416, HEIGHT);
+            Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
             Title = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
@@ -87,7 +87,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-5, Artist.Y + Artist.Height + 2)
+                Position = new ScalableVector2(-10, Artist.Y + Artist.Height + 2)
             };
 
             Clicked += OnClicked;
@@ -113,8 +113,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         {
             // Change the width of the set outwards to appear it as selected.
             Animations.Clear();
-            ChangeWidthTo(574, Easing.OutQuint, 400);
-            FadeToColor(Colors.MainAccent, Easing.OutQuint, 300);
+            ChangeWidthTo(500, Easing.OutQuint, 600);
+            FadeToColor(new Color(68, 174, 221), Easing.OutQuint, 300);
 
             Title.Animations.Clear();
             Artist.Animations.Clear();
@@ -130,12 +130,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         public void DisplayAsDeselected()
         {
-            // Push set outwards to make it appear as selected.
             Animations.Clear();
-            ChangeWidthTo(414, Easing.OutQuint, 400);
+            ChangeWidthTo(410,Easing.OutQuint, 600);
             FadeToColor(Color.Black, Easing.OutQuint, 300);
-
-            // Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0.50f, 400));
 
             Title.Animations.Clear();
             Artist.Animations.Clear();

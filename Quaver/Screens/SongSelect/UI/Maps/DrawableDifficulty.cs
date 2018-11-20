@@ -49,7 +49,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         ///     The height of the drawable mapset.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static int HEIGHT { get; } = 92;
+        public static int HEIGHT { get; } = 84;
 
         /// <inheritdoc />
         /// <summary>
@@ -58,7 +58,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         {
             Container = container;
 
-            Size = new ScalableVector2(416, HEIGHT);
+            Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
             DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
@@ -104,8 +104,8 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         public void DisplayAsSelected()
         {
             Animations.Clear();
-            ChangeWidthTo(574, Easing.OutQuint, 400);
-            FadeToColor(Colors.MainAccent, Easing.OutQuint, 300);
+            ChangeWidthTo(500, Easing.OutQuint, 400);
+            FadeToColor(new Color(68, 174, 221), Easing.OutQuint, 300);
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();
@@ -122,7 +122,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         public void DisplayAsDeselected()
         {
             Animations.Clear();
-            ChangeWidthTo(414, Easing.OutQuint, 400);
+            ChangeWidthTo(410, Easing.OutQuint, 400);
             FadeToColor(Color.Black, Easing.OutQuint, 300);
 
             DifficultyName.Animations.Clear();

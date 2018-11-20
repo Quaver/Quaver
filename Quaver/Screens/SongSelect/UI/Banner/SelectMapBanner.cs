@@ -90,7 +90,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             View = view;
             Tint = Color.Black;
 
-            Size = new ScalableVector2(674, 234);
+            Size = new ScalableVector2(620, 234);
             AddBorder(Color.White, 2);
 
             Mask = new SpriteMaskContainer()
@@ -184,7 +184,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             lock (Brightness.Animations)
             {
                 Brightness.Animations.Clear();
-                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
+                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.60f, 300));
             }
         }
 
