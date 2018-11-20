@@ -64,7 +64,12 @@ namespace Quaver
         /// </summary>
         public QuaverGame()
         {
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
+            // Calculate ticks from FPS
+            var ConvertFPSToTicks = (int)(1.0 / ConfigManager.FpsLimit.Value) * 10000000;
+            // Set FPS limit
+            TargetElapsedTime = TimeSpan.FromTicks(ConvertFPSToTicks);
+
             Graphics.SynchronizeWithVerticalRetrace = false;
             Graphics.ApplyChanges();
 
