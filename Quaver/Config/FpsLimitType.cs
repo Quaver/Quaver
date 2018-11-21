@@ -1,6 +1,6 @@
 namespace Quaver.Config
 {
-    public enum LimitBy
+    public enum FpsLimitType
     {
         Unlimited,
         Limited,

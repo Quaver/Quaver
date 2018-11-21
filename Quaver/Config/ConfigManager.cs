@@ -140,14 +140,14 @@ namespace Quaver.Config
         internal static Bindable<bool> FpsCounter { get; private set; }
 
         /// <summary>
-        ///     FPS Type
+        ///     The type of FPS limiter that is activated
         /// </summary>
-        internal static Bindable<LimitBy> FpsType { get; private set; }
+        internal static Bindable<FpsLimitType> FpsLimiterType { get; private set; }
 
         /// <summary>
-        ///     FPS Limit
+        ///     The custom value for FPS limiting
         /// </summary>
-        internal static BindableInt FpsLimit { get; private set; }
+        internal static BindableInt CustomFpsLimit { get; private set; }
 
         /// <summary>
         ///     Determines if the health bar + multiplier is at top or bottom of the playfield
@@ -418,8 +418,8 @@ namespace Quaver.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
-            FpsType = ReadValue(@"FpsType", LimitBy.Unlimited, data);
-            FpsLimit = ReadInt(@"FpsLimit", 240, 60, 999, data);
+            FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
+            CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
@@ -497,8 +497,8 @@ namespace Quaver.Config
                     WindowFullScreen.ValueChanged += AutoSaveConfiguration;
                     WindowLetterboxed.ValueChanged += AutoSaveConfiguration;
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
-                    FpsType.ValueChanged += AutoSaveConfiguration;
-                    FpsLimit.ValueChanged += AutoSaveConfiguration;
+                    FpsLimiterType.ValueChanged += AutoSaveConfiguration;
+                    CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;

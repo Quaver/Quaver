@@ -64,19 +64,7 @@ namespace Quaver
         /// </summary>
         public QuaverGame()
         {
-            var ConvertFPSToTicks = 0.0;
-
-            // Calculate ticks from FPS
-            if (ConfigManager.FpsType.Value == LimitBy.Custom)
-                ConvertFPSToTicks = (1.0 / ConfigManager.FpsLimit.Value) * 10000000;
-            else
-                ConvertFPSToTicks = (1.0 / 240) * 10000000;
-
-            // Set FPS limit
-            TargetElapsedTime = TimeSpan.FromTicks((int)ConvertFPSToTicks);
-
-            Graphics.SynchronizeWithVerticalRetrace = false;
-            Graphics.ApplyChanges();
+            InitializeFpsLimiting();
 
             Graphics.PreparingDeviceSettings += (sender, args) =>
             {
@@ -198,16 +186,33 @@ namespace Quaver
             }
 #endif
 
+            // Handles FPS limiter changes
             if (KeyboardManager.IsUniqueKeyPress(Keys.F7))
             {
-                Logger.Debug("FPS Change", LogType.Runtime);
+                var index = (int) ConfigManager.FpsLimiterType.Value;
 
-                var index = (int) ConfigManager.FpsType.Value;
-
-                if (index + 1 <= Enum.GetNames(typeof(LimitBy)).Length)
-                    ConfigManager.FpsType.Value = (LimitBy) index + 1;
+                if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
+                    ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
                 else
-                    ConfigManager.FpsType.Value = LimitBy.Unlimited;
+                    ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
+
+                switch (ConfigManager.FpsLimiterType.Value)
+                {
+                    case FpsLimitType.Unlimited:
+                        NotificationManager.Show(NotificationLevel.Info, "FPS is now unlimited.");
+                        break;
+                    case FpsLimitType.Limited:
+                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
+                        break;
+                    case FpsLimitType.RefreshRate:
+                        NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                        break;
+                    case FpsLimitType.Custom:
+                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now custom limited to: {ConfigManager.CustomFpsLimit.Value}");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             QuaverScreenManager.Update(gameTime);
@@ -242,7 +247,7 @@ namespace Quaver
         /// <summary>
         ///     Performs any initial setup the game needs to run.
         /// </summary>
-        private static void PerformGameSetup()
+        private void PerformGameSetup()
         {
             ConfigManager.Initialize();
 
@@ -276,9 +281,12 @@ namespace Quaver
                 if (AudioEngine.Track != null)
                     AudioEngine.Track.Volume = e.Value;
             };
-            
+
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
+
+            // Called when the user changes their FPS limiter
+            ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
 
             DiscordManager.CreateClient("376180410490552320");
             DiscordManager.Client.SetPresence(new RichPresence()
@@ -345,5 +353,37 @@ namespace Quaver
         ///     Shows the FPs counter based on the current config variable.
         /// </summary>
         private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
+
+        /// <summary>
+        ///    Handles limiting/unlimiting FPS based on user config
+        /// </summary>
+        private void InitializeFpsLimiting()
+        {
+            switch (ConfigManager.FpsLimiterType.Value)
+            {
+                case FpsLimitType.Unlimited:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = false;
+                    break;
+                case FpsLimitType.Limited:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = true;
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    break;
+                case FpsLimitType.RefreshRate:
+                    Graphics.SynchronizeWithVerticalRetrace = true;
+                    IsFixedTimeStep = true;
+                    break;
+                case FpsLimitType.Custom:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
+                    IsFixedTimeStep = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Graphics.ApplyChanges();
+        }
     }
 }
