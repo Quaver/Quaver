@@ -13,7 +13,7 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Name
         /// </summary>
-        public string Name { get; set; } = "ManiaModSpeed";
+        public string Name { get; set; } = "Speed";
 
         /// <inheritdoc />
         /// <summary>
@@ -31,7 +31,7 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Desc
         /// </summary>
-        public string Description { get; set; } = "Change the speed of the song!";
+        public string Description { get; set; } = "Change the audio rate of the song.";
 
         /// <inheritdoc />
         /// <summary>
