@@ -100,6 +100,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             // Find the index of the selected map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
+            BackgroundHelper.Loaded += OnBackgroundLoaded;
+            BackgroundHelper.Blurred += OnBackgroundBlurred;
+
             InitializeMapsetBuffer();
             LoadNewBackgroundIfNecessary(null);
         }
@@ -121,6 +124,17 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             PreviousContentContainerY = ContentContainer.Y;
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BackgroundHelper.Loaded -= OnBackgroundLoaded;
+            BackgroundHelper.Blurred -= OnBackgroundBlurred;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -484,25 +498,8 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             View.Banner?.Brightness?.ClearAnimations();
             View.Banner?.Brightness?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, View.Banner.Brightness.Alpha, 1, 200));
 
-            // Begin to load the new background.
-            BackgroundHelper.QueueLoad((tex, map, previousTex) =>
-            {
-                // Get rid of the old texture
-                if (previousTex != UserInterface.MenuBackground)
-                    previousTex.Dispose();
-
-                // If the map is still the same, perform an animation.
-                if (map == MapManager.Selected.Value)
-                {
-                    View.Banner?.LoadBanner(tex);
-                }
-                // Otherwise skip it and dispose of the texture, as its not needed anymore.
-                else
-                {
-                    if (tex != UserInterface.MenuBackground)
-                        tex.Dispose();
-                }
-            });
+            BackgroundHelper.FadeToBlack();
+            BackgroundHelper.Load(MapManager.Selected.Value);
         }
 
         /// <summary>
@@ -516,6 +513,33 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
             TargetY = PreviousContentContainerY;
             PreviousTargetY = PreviousContentContainerY;
             ContentContainer.Animations.Clear();
+        }
+
+        /// <summary>
+        ///     Called when the background of the current map has been loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            if (e.Map != MapManager.Selected.Value)
+                return;
+
+            View?.Banner.LoadBanner(e.Texture);
+        }
+
+        /// <summary>
+        ///     Called when the background of the current map has been blurred.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
+        {
+            if (e.Map != MapManager.Selected.Value)
+                return;
+
+            BackgroundHelper.Background.Image = e.Texture;
+            BackgroundHelper.FadeIn();
         }
     }
 }

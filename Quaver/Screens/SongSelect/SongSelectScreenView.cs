@@ -113,7 +113,9 @@ namespace Quaver.Screens.SongSelect
         /// <param name="screen"></param>
         public SongSelectScreenView(Screen screen) : base(screen)
         {
-            CreateBackground();
+            // CreateBackground();
+            BackgroundHelper.Background.Dim = 40;
+
             CreateNavbar();
             CreateAudioVisualizer();
             CreateMapBanner();
@@ -145,6 +147,7 @@ namespace Quaver.Screens.SongSelect
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
+            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 

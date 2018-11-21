@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Database.Maps;
@@ -9,6 +11,7 @@ using Quaver.Scheduling;
 using WebSocketSharp;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI;
 using Wobble.Logging;
@@ -24,14 +27,48 @@ namespace Quaver.Graphics.Backgrounds
         public static BackgroundImage Background { get; private set; }
 
         /// <summary>
+        ///     The currently loaded raw background texture.
+        /// </summary>
+        public static Texture2D RawTexture { get; private set; }
+
+        /// <summary>
+        ///     A cached version of the blurred texture
+        /// </summary>
+        public static Texture2D BlurredTexture { get; private set; }
+
+        /// <summary>
         ///     The individual map this background is for.
         /// </summary>
         public static Map Map { get; private set; }
 
         /// <summary>
+        ///     Dictates if we have a cached blurred texture of the current background
+        /// </summary>
+        private static bool ShouldBlur { get; set; }
+
+        /// <summary>
+        ///     Cancellation token to stop the existing background load tasks
+        /// </summary>
+        private static CancellationTokenSource Source { get; set; }
+
+        /// <summary>
+        ///     Event invoked when a new background has been loaded
+        /// </summary>
+        public static event EventHandler<BackgroundLoadedEventArgs> Loaded;
+
+        /// <summary>
+        ///     Event invoked when a new background has been blurred
+        /// </summary>
+        public static event EventHandler<BackgroundBlurredEventArgs> Blurred;
+
+        /// <summary>
         ///     Initializes the background helper for the entire game.
         /// </summary>
-        public static void Initialize() => Background = new BackgroundImage(UserInterface.MenuBackground, 0);
+        public static void Initialize()
+        {
+            Background = new BackgroundImage(UserInterface.MenuBackground, 0);
+            Source = new CancellationTokenSource();
+        }
 
         /// <summary>
         /// </summary>
@@ -42,40 +79,84 @@ namespace Quaver.Graphics.Backgrounds
         ///     Set per screen.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Draw(GameTime gameTime) => Background?.Draw(gameTime);
+        public static void Draw(GameTime gameTime)
+        {
+            if (ShouldBlur)
+            {
+                try
+                {
+                    GameBase.Game.SpriteBatch.End();
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
+                var blur = new GaussianBlur(0.1f);
+                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture))));
+                ShouldBlur = false;
+                Blurred?.Invoke(typeof(BackgroundHelper), new BackgroundBlurredEventArgs(Map, BlurredTexture));
+            }
+
+            Background?.Draw(gameTime);
+        }
 
         /// <summary>
-        ///     Queues the background for the currently selected map to load.
-        ///     Then calls "afterLoad();"
+        ///     Queues a load of the background for a map
         /// </summary>
-        /// <param name="afterLoad"></param>
-        public static void QueueLoad(Action<Texture2D, Map, Texture2D> afterLoad) => ThreadScheduler.Run(() =>
+        public static void Load(Map map) => ThreadScheduler.Run(() =>
         {
-            var currentTex = Background.Image;
-            Map = MapManager.Selected.Value;
-
-            try
+            Task.Run(async () =>
             {
-                var path = MapManager.GetBackgroundPath(Map);
+                Source.Cancel();
+                Source.Dispose();
+                Source = new CancellationTokenSource();
 
-                if (File.Exists(path))
+                Map = map;
+                var token = Source.Token;
+
+                token.ThrowIfCancellationRequested();
+
+                try
                 {
-                    var tex = AssetLoader.LoadTexture2DFromFile(path);
-                    Background.Image = tex;
-                    afterLoad(tex, Map, currentTex);
+                    var path = MapManager.GetBackgroundPath(map);
+
+                    var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackground;
+                    RawTexture = tex;
+
+                    token.ThrowIfCancellationRequested();
+
+                    await Task.Delay(100, token);
+                    ShouldBlur = true;
+                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
                 }
-                else
+                catch (OperationCanceledException e)
                 {
-                    var tex = UserInterface.MenuBackground;
-                    Background.Image = tex;
-                    afterLoad(tex, Map, currentTex);
+                    // ignored
                 }
-            }
-            catch (Exception e)
-            {
-                Background.Image = UserInterface.MenuBackground;
-                afterLoad(UserInterface.MenuBackground, Map, currentTex);
-            }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
         });
+
+        /// <summary>
+        ///     Fades the background brightness all the way to black
+        /// </summary>
+        public static void FadeToBlack()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 1, 250));
+        }
+
+        /// <summary>
+        ///     Unfades the background
+        /// </summary>
+        public static void FadeIn()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 250));
+        }
     }
 }

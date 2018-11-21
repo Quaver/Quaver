@@ -184,7 +184,7 @@ namespace Quaver.Screens.SongSelect.UI.Banner
             lock (Brightness.Animations)
             {
                 Brightness.Animations.Clear();
-                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.60f, 300));
+                Brightness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.45f, 300));
             }
         }
 
