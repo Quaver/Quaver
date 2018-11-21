@@ -5,7 +5,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
-using Quaver.Modifiers.Mods.Mania;
+using Quaver.Modifiers.Mods.Gameplay;
 using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -232,7 +232,7 @@ namespace Quaver.Screens.Select.UI.Mods
             Modifiers = new List<ModsDialogModifier>
             {
                 // Autoplay
-                new ModsDialogModifierBool(this, new ManiaModAutoplay())
+                new ModsDialogModifierBool(this, new ModAutoplay())
                 {
                     Parent = SceneBackground,
                     Alignment = Alignment.TopLeft,

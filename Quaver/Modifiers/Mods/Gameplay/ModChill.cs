@@ -1,9 +1,9 @@
 using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     /// <summary>
-    ///     ManiaModChill gameplayModifier. Makes the hit timing windows 
+    ///     ManiaModChill gameplayModifier. Makes the hit timing windows
     /// </summary>
     internal class ManiaModChill : IGameplayModifier
     {
@@ -11,7 +11,7 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Name
         /// </summary>
-        public string Name { get; set; } = "ManiaModChill";
+        public string Name { get; set; } = "ModChill";
 
         /// <inheritdoc />
         /// <summary>
@@ -30,7 +30,7 @@ namespace Quaver.Modifiers.Mods.Mania
         ///     Desc
         /// </summary>
         public string Description { get; set; } = "Make it easier on yourself.";
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     If gameplayModifier is ranked

@@ -1,6 +1,6 @@
 using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     /// <summary>
     ///     ManiaModStrict Mod. Makes the hit timing windows harder during gameplay.
@@ -11,7 +11,7 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Name
         /// </summary>
-        public string Name { get; set; } = "ManiaModStrict";
+        public string Name { get; set; } = "ModStrict";
 
         /// <inheritdoc />
         /// <summary>

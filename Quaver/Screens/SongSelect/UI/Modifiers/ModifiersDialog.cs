@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Graphics;
-using Quaver.Modifiers.Mods.Mania;
+using Quaver.Modifiers.Mods.Gameplay;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens.Select.UI.Mods;
@@ -172,7 +172,12 @@ namespace Quaver.Screens.SongSelect.UI.Modifiers
         {
             ModsList = new List<DrawableModifier>()
             {
-                new DrawableModifierBool(this, new ManiaModAutoplay())
+                new DrawableModifierSpeed(this)
+                {
+                    Alignment = Alignment.TopLeft
+                },
+
+                new DrawableModifierBool(this, new ModAutoplay())
                 {
                     Alignment = Alignment.TopLeft,
                 },

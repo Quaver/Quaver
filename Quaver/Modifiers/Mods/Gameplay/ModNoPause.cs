@@ -1,6 +1,6 @@
 ﻿using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     internal class ManiaModNoPause : IGameplayModifier
     {
@@ -10,7 +10,7 @@ namespace Quaver.Modifiers.Mods.Mania
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "A wise man once said, \"Pausing is cheating.\"";
+        public string Description { get; set; } = "A wise man once said - Pausing is Cheating™";
 
         public bool Ranked { get; set; } = true;
 

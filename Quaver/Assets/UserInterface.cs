@@ -34,6 +34,9 @@ namespace Quaver.Assets
         public static Texture2D StatusNotSubmitted { get; private set; }
         public static Texture2D StatusDanCourse { get; private set; }
         public static Texture2D SelectButtonBackground { get; private set; }
+        public static Texture2D HorizontalSelectorLeft { get; private set; }
+        public static Texture2D HorizontalSelectorRight { get; private set; }
+        public static Texture2D HorizontalSelectorMiddle { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -67,6 +70,9 @@ namespace Quaver.Assets
             StatusNotSubmitted = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-not-submitted.png"));
             StatusDanCourse = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/RankedStatus/status-dancourse.png"));
             SelectButtonBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/select-button-background.png"));
+            HorizontalSelectorLeft = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-left.png"));
+            HorizontalSelectorRight = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-right.png"));
+            HorizontalSelectorMiddle = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-middle.png"));
         }
     }
 }

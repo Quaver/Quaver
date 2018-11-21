@@ -8,7 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Modifiers.Mods;
-using Quaver.Modifiers.Mods.Mania;
+using Quaver.Modifiers.Mods.Gameplay;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
 
@@ -86,7 +86,7 @@ namespace Quaver.Modifiers
                     gameplayModifier = new ManiaModNoPause();
                     break;
                 case ModIdentifier.Autoplay:
-                    gameplayModifier = new ManiaModAutoplay();
+                    gameplayModifier = new ModAutoplay();
                     break;
                 case ModIdentifier.Paused:
                     gameplayModifier = new ManiaModPaused();

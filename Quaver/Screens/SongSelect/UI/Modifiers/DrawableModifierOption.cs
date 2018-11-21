@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Helpers;
@@ -30,7 +31,8 @@ namespace Quaver.Screens.SongSelect.UI.Modifiers
             Alpha = 0.75f;
             UsePreviousSpriteBatchOptions = true;
             Text.UsePreviousSpriteBatchOptions = true;
-            Size = new ScalableVector2(60, Modifier.Height);
+            Size = new ScalableVector2(60, Modifier.Height * 0.75f);
+
             Deselect();
         }
 

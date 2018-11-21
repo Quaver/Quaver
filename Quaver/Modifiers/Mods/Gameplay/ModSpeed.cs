@@ -1,11 +1,9 @@
-using System;
-using System.ComponentModel;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     internal class ManiaModSpeed : IGameplayModifier
     {
@@ -31,7 +29,7 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Desc
         /// </summary>
-        public string Description { get; set; } = "Change the audio rate of the song.";
+        public string Description { get; set; } = "Change the audio playback rate of the song.";
 
         /// <inheritdoc />
         /// <summary>

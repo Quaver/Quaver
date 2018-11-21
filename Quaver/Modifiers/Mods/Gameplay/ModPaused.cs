@@ -1,6 +1,6 @@
 ﻿using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     public class ManiaModPaused : IGameplayModifier
     {

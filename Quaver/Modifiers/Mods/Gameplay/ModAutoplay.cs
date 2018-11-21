@@ -1,8 +1,8 @@
 ﻿using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
-    public class ManiaModAutoplay : IGameplayModifier
+    public class ModAutoplay : IGameplayModifier
     {
         public string Name { get; set; } = "Autoplay";
 

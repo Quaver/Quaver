@@ -89,7 +89,7 @@ namespace Quaver.Screens.SongSelect.UI.Modifiers
         /// <summary>
         ///     Creates the text that states the modifier's name.
         /// </summary>
-        private void CreateModifierName() => ModifierName = new SpriteText(BitmapFonts.Exo2Bold, Modifier.Name, 13)
+        private void CreateModifierName() => ModifierName = new SpriteText(BitmapFonts.Exo2Bold, Modifier.Name , 13)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

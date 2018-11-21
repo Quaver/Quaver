@@ -1,6 +1,6 @@
 ﻿using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods.Mania
+namespace Quaver.Modifiers.Mods.Gameplay
 {
     public class ModNoFail : IGameplayModifier
     {
@@ -12,7 +12,7 @@ namespace Quaver.Modifiers.Mods.Mania
 
         public string Description { get; set; } = "Failure is not an option.";
 
-        public bool Ranked { get; set; } = true;
+        public bool Ranked { get; set; } = false;
 
         public float ScoreMultiplierAddition { get; set; }
 
