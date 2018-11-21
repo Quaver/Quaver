@@ -57,7 +57,7 @@ namespace Quaver.Screens.SongSelect.UI.Maps
         /// <summary>
         ///     The amount of space between each difficulty.
         /// </summary>
-        public int YSpacing { get; } = 10;
+        public int YSpacing { get; } = 5;
 
         /// <summary>
         ///     The amount of y space that is given before the first difficulty,
