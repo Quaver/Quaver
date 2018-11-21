@@ -17,8 +17,16 @@ namespace Quaver.Screens.SongSelect.UI.Modifiers
         {
             var options = new List<DrawableModifierOption>
             {
-                new DrawableModifierOption(this, "OFF", (o, e) => ModManager.RemoveMod(Modifier.ModIdentifier)),
-                new DrawableModifierOption(this, "ON", (o, e) => ModManager.AddMod(Modifier.ModIdentifier))
+                new DrawableModifierOption(this, "OFF", (o, e) =>
+                {
+                    if (ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                        ModManager.RemoveMod(Modifier.ModIdentifier);
+                }),
+                new DrawableModifierOption(this, "ON", (o, e) =>
+                {
+                    if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                        ModManager.AddMod(Modifier.ModIdentifier);
+                })
             };
 
             return options;
