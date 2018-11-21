@@ -64,7 +64,17 @@ namespace Quaver
         /// </summary>
         public QuaverGame()
         {
-            IsFixedTimeStep = false;
+            var ConvertFPSToTicks = 0.0;
+
+            // Calculate ticks from FPS
+            if (ConfigManager.FpsType.Value == LimitBy.Custom)
+                ConvertFPSToTicks = (1.0 / ConfigManager.FpsLimit.Value) * 10000000;
+            else
+                ConvertFPSToTicks = (1.0 / 240) * 10000000;
+
+            // Set FPS limit
+            TargetElapsedTime = TimeSpan.FromTicks((int)ConvertFPSToTicks);
+
             Graphics.SynchronizeWithVerticalRetrace = false;
             Graphics.ApplyChanges();
 
@@ -188,6 +198,18 @@ namespace Quaver
             }
 #endif
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F7))
+            {
+                Logger.Debug("FPS Change", LogType.Runtime);
+
+                var index = (int) ConfigManager.FpsType.Value;
+
+                if (index + 1 <= Enum.GetNames(typeof(LimitBy)).Length)
+                    ConfigManager.FpsType.Value = (LimitBy) index + 1;
+                else
+                    ConfigManager.FpsType.Value = LimitBy.Unlimited;
+            }
+
             QuaverScreenManager.Update(gameTime);
             Transitioner.Update(gameTime);
         }
@@ -254,7 +276,7 @@ namespace Quaver
                 if (AudioEngine.Track != null)
                     AudioEngine.Track.Volume = e.Value;
             };
-
+            
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
 
