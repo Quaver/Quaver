@@ -87,6 +87,10 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             else
                 targetSendButtonAlpha = 0.85f;
 
+            // Reset if empty
+            if (Textbox.RawText == "")
+                CurrentMessage = 0;
+
             // Change the textbox's text based on
             if (!Textbox.Focused && ChatManager.MuteTimeLeft > 0)
             {
@@ -157,10 +161,12 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             var chatMessage = new ChatMessage(Overlay.ActiveChannel.Name, text);
             ChatManager.SendMessage(Overlay.ActiveChannel, chatMessage);
 
+            // Delete element if message is found
+            if (PreviousMessages.Contains(text))
+                PreviousMessages.Remove(text);
+ 
             // Save messages
             PreviousMessages.Add(text);
-            // Reset message
-            CurrentMessage = 0;
 
             // Scroll to the bottom when sending chat messages
             var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
