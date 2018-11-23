@@ -454,7 +454,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         ///     If necessary, it will load and play the selected map's audio.
         /// </summary>
         /// <param name="previousMap"></param>
-        /// <param name="forceLoad"></param>
         public static void LoadNewAudioTrackIfNecessary(Map previousMap = null)
         {
             if (previousMap != null && MapManager.GetAudioPath(previousMap) == MapManager.GetAudioPath(MapManager.Selected.Value))

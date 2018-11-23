@@ -291,8 +291,11 @@ namespace Quaver.Screens.SongSelect
         {
             if (AudioEngine.Track != null)
             {
-                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || AudioEngine.Track.IsPaused)
+                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || AudioEngine.Track.IsPaused ||
+                    MapManager.GetAudioPath(AudioEngine.Map) != MapManager.GetAudioPath(MapManager.Selected.Value))
+                {
                     MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
+                }
                 else
                     AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 500);
 
