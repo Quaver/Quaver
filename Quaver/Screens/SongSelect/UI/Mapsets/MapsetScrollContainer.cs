@@ -491,12 +491,6 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         private void LoadNewBackgroundIfNecessary(Map previousMap)
         {
-            if (previousMap != null)
-            {
-                Console.WriteLine(MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value));
-            }
-
-
             if (previousMap != null && MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
