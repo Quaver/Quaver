@@ -15,8 +15,8 @@ using Quaver.Screens.Select.UI.Leaderboard;
 using Quaver.Screens.Select.UI.Leaderboard.Selector;
 using Quaver.Screens.Select.UI.Maps;
 using Quaver.Screens.Select.UI.Mapsets;
-using Quaver.Screens.Select.UI.Mapsets.Search;
 using Quaver.Screens.Select.UI.Modifiers;
+using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -112,7 +112,6 @@ namespace Quaver.Screens.Select
             CreateMapsetSearchContainer();
             CreateLeaderboardSelector();
             CreateLeaderboard();
-            // CreateToolboxContainer();
             CreateBottomNavbar();
 
             var selectScreen = Screen as SelectScreen;
@@ -253,7 +252,7 @@ namespace Quaver.Screens.Select
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(580, Navbar.Line.Y + 3),
+            Position = new ScalableVector2(580, Navbar.Line.Y + 2),
             Animations =
             {
                 new Animation(AnimationProperty.X, Easing.OutBounce, 580, -28, 1200)

@@ -12,7 +12,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 
-namespace Quaver.Screens.Select.UI.Mapsets.Search
+namespace Quaver.Screens.Select.UI.Search
 {
     public class MapsetSearchContainer : Sprite
     {
@@ -64,7 +64,7 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
             View = view;
             Size = new ScalableVector2(620, 90);
 
-            Alpha = 0.90f;
+            Alpha = 0.80f;
             Image = UserInterface.SelectSearchBackground;
 
             CreateTextSearch();
@@ -79,8 +79,6 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
             {
                 Parent = this,
                 Size = new ScalableVector2(2, Height),
-                Alpha = 0.75f,
-                Tint = Colors.MainAccent
             };
 
             var rightLine = new Sprite()
@@ -88,8 +86,6 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
                 Parent = this,
                 Size = new ScalableVector2(2, Height),
                 Alignment = Alignment.TopRight,
-                Alpha = 0.75f,
-                Tint = Colors.MainAccent
             };
 
             // Line displayed at the bottom of the container.
@@ -98,8 +94,6 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
                 Parent = this,
                 Size = new ScalableVector2(Width, 2),
                 Alignment = Alignment.BotLeft,
-                Alpha = 0.75f,
-                Tint = Colors.MainAccent
             };
 
             ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsByChanged;
@@ -141,7 +135,7 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(514, 30), BitmapFonts.Exo2Bold, 13)
+            SearchBox = new Textbox(new ScalableVector2(518, 30), BitmapFonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 5, 0),
@@ -196,7 +190,7 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
         /// </summary>
         private void CreateOrderByArtistButton()
         {
-            ButtonOrderByArtist = new SelectableBorderedTextButton("Artist", ColorHelper.HexToColor("#9d84ec"),
+            ButtonOrderByArtist = new SelectableBorderedTextButton("Artist", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Artist)
             {
                 Parent = OrderBy,
@@ -204,9 +198,13 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
                 Text =
                 {
                     Font = BitmapFonts.Exo2SemiBold,
-                    FontSize = 10,
-                    ForceDrawAtSize = false,
-                    Alignment = Alignment.MidCenter
+                    FontSize = 13,
+                    ForceDrawAtSize = true,
+                    Alignment = Alignment.TopLeft
+                },
+                Border =
+                {
+                    Visible = false
                 }
             };
 
@@ -234,17 +232,20 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
         /// </summary>
         private void CreateOrderByTitleButton()
         {
-            ButtonOrderByTitle = new SelectableBorderedTextButton("Title", ColorHelper.HexToColor("#9d84ec"),
+            ButtonOrderByTitle = new SelectableBorderedTextButton("Title", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Title)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width + 15,
+                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width,
                 Text =
                 {
                     Font = BitmapFonts.Exo2SemiBold,
-                    FontSize = 10,
-                    ForceDrawAtSize = false,
-                    Alignment = Alignment.MidCenter
+                    FontSize = 13,
+                    Alignment = Alignment.TopLeft
+                },
+                Border =
+                {
+                    Visible = false
                 }
             };
 
@@ -272,17 +273,20 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
         /// </summary>
         private void CreateOrderByCreatorButton()
         {
-            ButtonOrderByCreator= new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#9d84ec"),
+            ButtonOrderByCreator= new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Creator)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width + 15,
+                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width,
                 Text =
                 {
                     Font = BitmapFonts.Exo2SemiBold,
-                    FontSize = 10,
-                    ForceDrawAtSize = false,
-                    Alignment = Alignment.MidCenter
+                    FontSize = 13,
+                    Alignment = Alignment.TopLeft
+                },
+                Border =
+                {
+                    Visible = false
                 }
             };
 
@@ -312,9 +316,10 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
         {
             TextMapsetsFound = new SpriteText(BitmapFonts.Exo2Medium, " ", 13)
             {
-                Parent = ButtonOrderByCreator,
-                Alignment = Alignment.MidLeft,
-                X = ButtonOrderByCreator.Width + 84,
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                X = -10,
+                Y = OrderBy.Y
             };
 
             UpdateMapsetsFoundText();
@@ -329,15 +334,13 @@ namespace Quaver.Screens.Select.UI.Mapsets.Search
 
             if (screen.AvailableMapsets.Count > 0)
             {
-                TextMapsetsFound.Text = $"{screen.AvailableMapsets.Count} Mapsets Available!";
-                TextMapsetsFound.Tint = Color.White;
-
                 TextMapsetsFound.ClearAnimations();
-                TextMapsetsFound.FadeToColor(Colors.MainAccent, Easing.OutQuint, 1000);
+                TextMapsetsFound.Text = $"{screen.AvailableMapsets.Count} mapsets available";
+                TextMapsetsFound.Tint = Color.White;
             }
             else
             {
-                TextMapsetsFound.Text = $"No Mapsets Found!";
+                TextMapsetsFound.Text = $"No mapsets found";
 
                 TextMapsetsFound.ClearAnimations();
                 TextMapsetsFound.FadeToColor(Colors.Negative, Easing.OutQuint, 1000);
