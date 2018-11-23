@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -10,6 +12,8 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
+using Wobble.Input;
+using Wobble.Logging;
 
 namespace Quaver.Graphics.Overlays.Chat.Components
 {
@@ -26,6 +30,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         public Textbox Textbox { get; private set; }
 
         /// <summary>
+        ///     The list of chat channels the user is currently in.
+        /// </summary>
+        public List<string> PreviousMessages { get; set; } = new List<string>();
+
+        /// <summary>
         ///     The button used to alternatively send the message.
         /// </summary>
         public BorderedTextButton SendButton { get; private set; }
@@ -34,6 +43,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         ///     Determines if the mute has been initated in the textbox.
         /// </summary>
         private bool MuteInitiatedInTextbox { get; set; }
+
+        /// <summary>
+        ///     Current showing message
+        /// </summary>
+        private int CurrentMessage { get; set; } = 0;
 
         /// <inheritdoc />
         /// <summary>
@@ -88,6 +102,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Textbox.InputText.Text = "Type to send a message";
                 MuteInitiatedInTextbox = false;
             }
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Up) && PreviousMessages.Count > 0 && CurrentMessage < PreviousMessages.Count)
+            {
+                CurrentMessage++;
+                Textbox.RawText = PreviousMessages[PreviousMessages.Count - CurrentMessage];
+            }
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Down) && PreviousMessages.Count > 0 && CurrentMessage > 0)
+            {
+                CurrentMessage--;
+
+                // Reset if no other saved messages
+                if (CurrentMessage == 0)
+                    Textbox.RawText = null;
+                else
+                    Textbox.RawText = PreviousMessages[PreviousMessages.Count - CurrentMessage];
+            }
 
             SendButton.Alpha = MathHelper.Lerp(SendButton.Alpha, targetSendButtonAlpha, (float) Math.Min(dt / 60f, 1));
 
@@ -128,6 +157,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             var chatMessage = new ChatMessage(Overlay.ActiveChannel.Name, text);
             ChatManager.SendMessage(Overlay.ActiveChannel, chatMessage);
+            // Save messages
+            PreviousMessages.Add(text);
 
             // Scroll to the bottom when sending chat messages
             var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
@@ -137,28 +168,25 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     Creates the button to send chage messages.
         /// </summary>
-        private void CreateSendButton()
+        private void CreateSendButton() => SendButton = new BorderedTextButton("Send Message", Colors.MainAccent, (sender, args) =>
         {
-            SendButton = new BorderedTextButton("Send Message", Colors.MainAccent, (sender, args) =>
-            {
-                if (string.IsNullOrEmpty(Textbox.RawText))
-                    return;
+            if (string.IsNullOrEmpty(Textbox.RawText))
+                return;
 
-                Textbox.OnSubmit?.Invoke(Textbox.RawText);
-                Textbox.RawText = string.Empty;
-                Textbox.ReadjustTextbox();
-            })
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
-                X = Textbox.Width + 20,
-                Text =
+            Textbox.OnSubmit?.Invoke(Textbox.RawText);
+            Textbox.RawText = string.Empty;
+            Textbox.ReadjustTextbox();
+        })
+        {
+            Parent = this,
+            Alignment = Alignment.MidLeft,
+            Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
+            X = Textbox.Width + 20,
+            Text =
                 {
                     FontSize = 13,
                     UsePreviousSpriteBatchOptions = true
                 }
-            };
-        }
+        };
     }
 }
