@@ -76,7 +76,7 @@ namespace Quaver.Screens.SongSelect.UI.Modifiers
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 Close();
         }
 
