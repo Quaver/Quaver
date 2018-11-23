@@ -491,6 +491,12 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         private void LoadNewBackgroundIfNecessary(Map previousMap)
         {
+            if (previousMap != null)
+            {
+                Console.WriteLine(MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value));
+            }
+
+
             if (previousMap != null && MapManager.GetBackgroundPath(previousMap) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
@@ -521,7 +527,7 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// <param name="e"></param>
         private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
         {
-            if (e.Map != MapManager.Selected.Value)
+            if (e.Map != MapManager.Selected.Value && MapManager.GetBackgroundPath(e.Map) != MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
             View?.Banner.LoadBanner(e.Texture);
@@ -532,9 +538,9 @@ namespace Quaver.Screens.SongSelect.UI.Mapsets
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
+        private static void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
         {
-            if (e.Map != MapManager.Selected.Value)
+            if (e.Map != MapManager.Selected.Value && MapManager.GetBackgroundPath(e.Map) != MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
             BackgroundHelper.Background.Image = e.Texture;
