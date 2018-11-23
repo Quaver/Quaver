@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Online;
-using Quaver.Screens.SongSelect;
+using Quaver.Screens.Select;
 using Steamworks;
 using Wobble;
 using Wobble.Bindables;
@@ -182,7 +182,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
                 case MenuScreenView menuView:
                     menuView.UserProfile?.PerformClickAnimation(Selected);
                     break;
-                case SongSelectScreenView selectView:
+                case SelectScreenView selectView:
                     selectView.UserProfile?.PerformClickAnimation(Selected);
                     break;
             }

@@ -12,7 +12,7 @@ using Quaver.Graphics.Online.Username;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
-using Quaver.Screens.SongSelect;
+using Quaver.Screens.Select;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -386,9 +386,9 @@ namespace Quaver.Online
             var game = GameBase.Game as QuaverGame;
 
             // If in song select, update the banner of the currently selected map.
-            if (game.CurrentScreen is SongSelectScreen screen)
+            if (game.CurrentScreen is SelectScreen screen)
             {
-                var view = screen.View as SongSelectScreenView;
+                var view = screen.View as SelectScreenView;
 
                 if (MapManager.Selected.Value == map)
                     view.Banner.RankedStatus.UpdateMap(map);

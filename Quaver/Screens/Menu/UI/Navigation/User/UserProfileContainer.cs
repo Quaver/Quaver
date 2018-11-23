@@ -6,7 +6,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Scheduling;
-using Quaver.Screens.SongSelect;
+using Quaver.Screens.Select;
 using Quaver.Server.Client;
 using Wobble;
 using Wobble.Bindables;
@@ -86,7 +86,7 @@ namespace Quaver.Screens.Menu.UI.Navigation.User
                 case MenuScreenView menuView:
                     NavbarButton = menuView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
                     break;
-                case SongSelectScreenView selectView:
+                case SelectScreenView selectView:
                     NavbarButton = selectView?.Navbar.RightAlignedItems.First() as NavbarItemUser;
                     break;
             }

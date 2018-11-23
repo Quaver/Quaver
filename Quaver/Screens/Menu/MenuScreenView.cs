@@ -22,7 +22,7 @@ using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
-using Quaver.Screens.SongSelect;
+using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Discord.RPC;
@@ -351,7 +351,7 @@ namespace Quaver.Screens.Menu
             screen?.Exit(() =>
             {
                 AudioEngine.Track?.Fade(10, 300);
-                return new SongSelectScreen();
+                return new SelectScreen();
             });
         }
 

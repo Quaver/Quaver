@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
-using Quaver.Screens.SongSelect.UI.Leaderboard;
+using Quaver.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Logging;
