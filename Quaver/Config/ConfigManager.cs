@@ -11,8 +11,6 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
-using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
-using Quaver.Screens.Select.UI.Search;
 using Quaver.Screens.SongSelect.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
@@ -242,11 +240,6 @@ namespace Quaver.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
-        ///     The selected leaderboard section.
-        /// </summary>
-        internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
-
-        /// <summary>
         ///     The currently selected game mode.
         /// </summary>
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
@@ -434,7 +427,6 @@ namespace Quaver.Config
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
-            SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
@@ -532,7 +524,6 @@ namespace Quaver.Config
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     BackgroundParallax.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
-                    SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;

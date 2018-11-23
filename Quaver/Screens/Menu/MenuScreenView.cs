@@ -22,7 +22,6 @@ using Quaver.Screens.Menu.UI.Panels;
 using Quaver.Screens.Menu.UI.Tips;
 using Quaver.Screens.Menu.UI.Visualizer;
 using Quaver.Screens.Options;
-using Quaver.Screens.Select;
 using Quaver.Screens.SongSelect;
 using Wobble;
 using Wobble.Assets;

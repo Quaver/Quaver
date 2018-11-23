@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Screens.Gameplay.UI.Health;
-using Quaver.Screens.Select.UI.Search;
 using Quaver.Skinning;
 
 namespace Quaver.Config

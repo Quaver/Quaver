@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Helpers;
 using Quaver.Modifiers;
-using Quaver.Screens.Select.UI.Mods;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;

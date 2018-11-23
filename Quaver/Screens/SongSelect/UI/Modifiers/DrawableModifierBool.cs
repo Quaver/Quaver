@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Quaver.Modifiers;
-using Quaver.Screens.Select.UI.Mods;
 
 namespace Quaver.Screens.SongSelect.UI.Modifiers
 {

@@ -7,7 +7,6 @@ using Quaver.Graphics;
 using Quaver.Modifiers.Mods.Gameplay;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
-using Quaver.Screens.Select.UI.Mods;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;

@@ -7,7 +7,6 @@ using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Helpers;
 using Quaver.Assets;
 using Quaver.Scheduling;
-using Quaver.Screens.Select.UI.Search;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;

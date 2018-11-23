@@ -27,7 +27,6 @@ using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
-using Quaver.Screens.Select;
 using Quaver.Screens.SongSelect;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
@@ -544,7 +543,7 @@ namespace Quaver.Screens.Results
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    QuaverScreenManager.ChangeScreen(new SelectScreen());
+                    QuaverScreenManager.ChangeScreen(new SongSelectScreen());
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                     return;
                 }
