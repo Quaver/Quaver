@@ -157,6 +157,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             var chatMessage = new ChatMessage(Overlay.ActiveChannel.Name, text);
             ChatManager.SendMessage(Overlay.ActiveChannel, chatMessage);
 
+            // Save messages
+            PreviousMessages.Add(text);
+
             // Scroll to the bottom when sending chat messages
             var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
             messageContainer.ScrollTo(-messageContainer.ContentContainer.Height, 800);
