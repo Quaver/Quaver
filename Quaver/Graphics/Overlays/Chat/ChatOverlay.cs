@@ -405,15 +405,11 @@ namespace Quaver.Graphics.Overlays.Chat
 
             TimeSinceLastChannelDialogOpened = 0;
 
-            JoinChannelDialog.Animations.Clear();
-            JoinChannelDialog.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
-                JoinChannelDialog.Y, JoinChannelDialog.Height, 850));
+            JoinChannelDialog.InterfaceContainer.Animations.Clear();
+            JoinChannelDialog.InterfaceContainer.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
+                JoinChannelDialog.InterfaceContainer.Y, JoinChannelDialog.InterfaceContainer.Height, 600));
 
-            ThreadScheduler.RunAfter(() =>
-            {
-                DialogManager.Dismiss(JoinChannelDialog);
-                JoinChannelDialog = null;
-            }, 300);
+            ThreadScheduler.RunAfter(() => DialogManager.Dismiss(JoinChannelDialog), 450);
         }
     }
 }
