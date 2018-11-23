@@ -183,15 +183,13 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             }
             catch (Exception e)
             {
-                // ignored.
                 newScores.ForEach(x =>
                 {
                     x.Parent = null;
                     x.Destroy();
                 });
-                newScores = null;
 
-                Logger.Error(e, LogType.Runtime);
+                newScores = null;
             }
         }
     }

@@ -353,7 +353,7 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
-            Logger.Important($"Retrieved scores for map: {e.Id} / {e.Md5}\n{e.Json}", LogType.Network);
+            Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5} | {e.Response.Code}", LogType.Network);
 
             var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
 
@@ -393,8 +393,6 @@ namespace Quaver.Online
                 if (MapManager.Selected.Value == map)
                     view.Banner.RankedStatus.UpdateMap(map);
             }
-
-            Logger.Debug($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
         }
 
         /// <summary>
