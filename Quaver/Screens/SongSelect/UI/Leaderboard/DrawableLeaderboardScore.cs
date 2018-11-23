@@ -250,7 +250,18 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             var time = DateTime.Parse(Score.DateTime);
             var timeDifference = DateTime.Now - time;
 
-            TimeAgo = new SpriteText(BitmapFonts.Exo2Bold, time.TimeAgo(CultureInfo.InvariantCulture), 11, false)
+            string timeAgo;
+
+            try
+            {
+                timeAgo = time.TimeAgo(CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                timeAgo = "1 minute ago";
+            }
+
+            TimeAgo = new SpriteText(BitmapFonts.Exo2Bold, timeAgo, 11, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

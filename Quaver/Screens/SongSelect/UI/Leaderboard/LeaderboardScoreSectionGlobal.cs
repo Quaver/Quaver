@@ -36,28 +36,19 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
 
             var map = MapManager.Selected.Value;
 
-            // Get previously cached scores.
-            if (ScoreCache.ContainsKey(map))
-                return ScoreCache[map];
-
             var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum);
             map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
             var scores = new List<LocalScore>();
 
             if (onlineScores?.Scores == null)
-            {
-                ScoreCache[map] = new FetchedScoreStore(new List<LocalScore>());
-                return ScoreCache[map];
-            }
+                return new FetchedScoreStore(new List<LocalScore>());
 
             foreach (var score in onlineScores.Scores)
                 scores.Add(LocalScore.FromOnlineScoreboardScore(score));
 
             var pb = onlineScores.PersonalBest != null ? LocalScore.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;
-
-            ScoreCache[map] = new FetchedScoreStore(scores, pb);
-            return ScoreCache[map];
+            return new FetchedScoreStore(scores, pb);
         }
 
         /// <inheritdoc />

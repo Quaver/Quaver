@@ -43,11 +43,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         private List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
 
-        /// <summary>
-        ///     Cached scores for individual maps.
-        /// </summary>
-        public Dictionary<Map, FetchedScoreStore> ScoreCache { get; } = new Dictionary<Map, FetchedScoreStore>();
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -138,6 +133,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             var newScores = new List<DrawableLeaderboardScore>();
 
+            Console.WriteLine("got here?");
             try
             {
                 if (map != MapManager.Selected.Value)
@@ -154,6 +150,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     ContentContainer.Height = totalUserHeight;
                 else
                     ContentContainer.Height = Height;
+
+                Console.WriteLine("got here 2");
 
                 for (var i = 0; i < scoreCount; i++)
                 {
@@ -182,6 +180,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     AddContainedDrawable(drawable);
                 }
 
+                Console.WriteLine("got here 3?");
+
                 // This is a hack... It's to place the leaderboard selector on top so that the
                 // buttons are technically on top of the leaderboard score ones.
                 Leaderboard.View.LeaderboardSelector.Parent = Leaderboard.View.Container;
@@ -195,6 +195,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                     x.Destroy();
                 });
                 newScores = null;
+
+                Logger.Error(e, LogType.Runtime);
             }
         }
     }

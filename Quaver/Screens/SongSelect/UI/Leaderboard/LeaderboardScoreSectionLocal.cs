@@ -27,13 +27,8 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         {
             var map = MapManager.Selected.Value;
 
-            if (ScoreCache.ContainsKey(map))
-                return ScoreCache[map];
-
             var scores = LocalScoreCache.FetchMapScores(map.Md5Checksum);
-            ScoreCache[map] = new FetchedScoreStore(scores);
-
-            return ScoreCache[map];
+            return new FetchedScoreStore(scores);
         }
 
         /// <inheritdoc />

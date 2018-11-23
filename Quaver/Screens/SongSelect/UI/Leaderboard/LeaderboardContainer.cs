@@ -53,7 +53,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             Size = new ScalableVector2(View.Banner.Width, 356);
             Alpha = 0;
 
-            Source = new CancellationTokenSource();
             CreateNoScoresAvailableText();
             CreateSections();
             SwitchSections(ConfigManager.LeaderboardSection.Value);
@@ -125,10 +124,10 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
                 }
             }
 
-            Source.Cancel();
-            Source.Dispose();
+            Source?.Cancel();
+            Source?.Dispose();
             Source = new CancellationTokenSource();
-            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token).Start());
+            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token));
         }
 
         /// <summary>
@@ -137,10 +136,10 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// </summary>
         public void LoadNewScores()
         {
-            Source.Cancel();
-            Source.Dispose();
+            Source?.Cancel();
+            Source?.Dispose();
             Source = new CancellationTokenSource();
-            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token).Start());
+            ThreadScheduler.Run(() => InitiateScoreLoad(Source.Token));
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         ///
         ///     Lord help me.
         /// </summary>
-        private Task InitiateScoreLoad(CancellationToken cancellationToken = default) => new Task(() =>
+        private Task InitiateScoreLoad(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var section = Sections[ConfigManager.LeaderboardSection.Value];
 
@@ -171,7 +170,7 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
             {
                 section.ClearScores();
                 cancellationToken.ThrowIfCancellationRequested();
-                Thread.Sleep(300);
+                await Task.Delay(400, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var map = MapManager.Selected.Value;
@@ -224,13 +223,6 @@ namespace Quaver.Screens.SongSelect.UI.Leaderboard
         /// <exception cref="NotImplementedException"></exception>
         private void OnOnlineStatusChange(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
         {
-            // If not connected clear all old scores in the cache.
-            if (e.Value != ConnectionStatus.Connected)
-            {
-                Sections[LeaderboardType.Global].ScoreCache.Clear();
-                return;
-            }
-
             if (e.Value != ConnectionStatus.Connected || e.OldValue == ConnectionStatus.Connected)
                 return;
 
