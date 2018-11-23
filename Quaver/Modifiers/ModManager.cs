@@ -8,7 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Modifiers.Mods;
-using Quaver.Modifiers.Mods.Mania;
+using Quaver.Modifiers.Mods.Gameplay;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
 
@@ -86,7 +86,7 @@ namespace Quaver.Modifiers
                     gameplayModifier = new ManiaModNoPause();
                     break;
                 case ModIdentifier.Autoplay:
-                    gameplayModifier = new ManiaModAutoplay();
+                    gameplayModifier = new ModAutoplay();
                     break;
                 case ModIdentifier.Paused:
                     gameplayModifier = new ManiaModPaused();
@@ -112,6 +112,7 @@ namespace Quaver.Modifiers
             gameplayModifier.InitializeMod();
 
             ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+            Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
         }
 
         /// <summary>
@@ -128,6 +129,7 @@ namespace Quaver.Modifiers
                 CurrentModifiersList.Remove(removedMod);
 
                 ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+                Logger.Debug($"Removed mod: {removedMod.ModIdentifier}.", LogType.Runtime, false);
             }
             catch (Exception e)
             {
@@ -151,6 +153,7 @@ namespace Quaver.Modifiers
             CheckModInconsistencies();
 
             ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+            Logger.Debug("Removed all modifiers", LogType.Runtime, false);
         }
 
         /// <summary>
@@ -189,6 +192,7 @@ namespace Quaver.Modifiers
                 CheckModInconsistencies();
 
                 ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+                Logger.Debug("Removed all speed modifiers", LogType.Runtime, false);
             }
             catch (Exception e)
             {

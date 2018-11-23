@@ -19,10 +19,11 @@ namespace Quaver.Helpers
         {
             // Easy
             if (rating < 15)
-                return new Color(0, 255, 0);
+                return Color.Green;
             // Medium
             if (rating < 30)
                 return new Color(255, 255, 0);
+
             // Hard
             return new Color(255, 0, 0);
         }

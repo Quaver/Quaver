@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using osu_database_reader;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Modifiers;
+using Quaver.Online;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -28,6 +30,12 @@ namespace Quaver.Screens.Menu
         public sealed override ScreenView View { get; protected set; }
 
         /// <summary>
+        ///     Dictates if this is the first ever menu screen load.
+        ///     Used to determine if we should auto-connect to the server
+        /// </summary>
+        public static bool FirstMenuLoad { get; set; }
+
+        /// <summary>
         /// </summary>
         public MenuScreen()
         {
@@ -41,6 +49,12 @@ namespace Quaver.Screens.Menu
             }
 
             View = new MenuScreenView(this);
+
+            if (!FirstMenuLoad)
+            {
+                OnlineManager.Login();
+                FirstMenuLoad = true;
+            }
         }
 
         /// <inheritdoc />
@@ -54,13 +68,22 @@ namespace Quaver.Screens.Menu
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+            base.OnFirstUpdate();
+        }
+
         /// <summary>
         ///     Handles all the input for this screen.
         /// </summary>
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
-            if (DialogManager.Dialogs.Count > 0)
+            if (DialogManager.Dialogs.Count > 0 || Exiting)
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))

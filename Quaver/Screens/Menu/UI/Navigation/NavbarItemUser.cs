@@ -5,22 +5,25 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Online;
+using Quaver.Screens.Select;
 using Steamworks;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Animations;
 using Wobble.Logging;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Menu.UI.Navigation
 {
     public class NavbarItemUser : NavbarItem
     {
         /// <summary>
-        ///     Reference to the parent menu screen view.
+        ///     Reference to the parent screen view.
         /// </summary>
-        public MenuScreenView View { get; }
+        public ScreenView View { get; }
 
         /// <summary>
         ///     The user's avatar.
@@ -35,7 +38,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
-        public NavbarItemUser(MenuScreenView view)
+        public NavbarItemUser(ScreenView view)
         {
             View = view;
 
@@ -148,11 +151,11 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
             var parent = Parent;
 
-            while (parent != null && parent.GetType() != typeof(Navbar))
+            while (parent != null && parent.GetType().IsAssignableFrom(typeof(Navbar)))
             {
                 parent = parent.Parent;
 
-                if (parent.GetType() != typeof(Navbar))
+                if (!parent.GetType().IsAssignableFrom(typeof(Navbar)))
                     continue;
 
                 var navbar = parent as Navbar;
@@ -173,7 +176,16 @@ namespace Quaver.Screens.Menu.UI.Navigation
         private void OnClick(object sender, EventArgs e)
         {
             Selected = !Selected;
-            View.UserProfile?.PerformClickAnimation(Selected);
+
+            switch (View)
+            {
+                case MenuScreenView menuView:
+                    menuView.UserProfile?.PerformClickAnimation(Selected);
+                    break;
+                case SelectScreenView selectView:
+                    selectView.UserProfile?.PerformClickAnimation(Selected);
+                    break;
+            }
         }
     }
 }

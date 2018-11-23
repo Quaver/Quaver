@@ -154,6 +154,8 @@ namespace Quaver.Screens.Gameplay
             Screen = (GameplayScreen)screen;
             BackgroundContainer = new Container();
 
+            BackgroundHelper.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
+
             BackgroundManager.PermittedToFadeIn = false;
             FadeBackgroundToDim();
             BackgroundManager.Loaded += OnBackgroundLoaded;
@@ -224,8 +226,7 @@ namespace Quaver.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            BackgroundManager.Draw(gameTime);
-            BackgroundContainer.Draw(gameTime);
+            BackgroundHelper.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
@@ -465,12 +466,7 @@ namespace Quaver.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                Scheduler.RunThread(() =>
-                {
-                    FutureResultsScreen = new ResultsScreen(Screen);
-                    ClearToExitScreen = true;
-                });
-
+                Screen.Exit(() => new ResultsScreen(Screen), 1500);
                 ResultsScreenLoadInitiated = true;
             }
 
@@ -499,7 +495,6 @@ namespace Quaver.Screens.Gameplay
             {
                 // Change background dim before switching screens.
                 BackgroundManager.Background.Dim = 0;
-                QuaverScreenManager.ChangeScreen(FutureResultsScreen);
             }
         }
 

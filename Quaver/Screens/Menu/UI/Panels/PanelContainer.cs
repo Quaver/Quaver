@@ -16,7 +16,7 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <summary>
         ///     The X position where
         /// </summary>
-        public static int StartingX => 64;
+        public static int StartingX => 44;
 
         /// <summary>
         ///
@@ -52,7 +52,7 @@ namespace Quaver.Screens.Menu.UI.Panels
                 panel.Y = 30;
 
                 panel.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, 0,
-                    StartingX + i * panel.Width + i * 10, 600 + 100 * i));
+                    StartingX + i * panel.Width + i * 15, 600 + 100 * i));
 
                 panel.Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha,
                     Easing.OutQuint, 0, 1, 500 + 100 * i));

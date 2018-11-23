@@ -366,6 +366,7 @@ namespace Quaver.Screens.Gameplay
             {
                 Pause();
                 TimePauseKeyHeld = 0;
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             }
             else
             {
@@ -423,6 +424,7 @@ namespace Quaver.Screens.Gameplay
                 IsPaused = true;
                 IsResumeInProgress = false;
                 PauseCount++;
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 if (!InReplayMode)
                 {
@@ -608,6 +610,7 @@ namespace Quaver.Screens.Gameplay
                 {
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
+                    // Use ChangeScreen here to give instant feedback. Can't be threaded
                     if (InReplayMode)
                         QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
                     else

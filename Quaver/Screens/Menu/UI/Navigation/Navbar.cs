@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -31,13 +32,19 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// </summary>
         public List<NavbarItem> RightAlignedItems { get; }
 
+        /// <summary>
+        ///     Dictates if the navbar is upside down
+        /// </summary>
+        private bool IsUpsideDown { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public Navbar(List<NavbarItem> leftAlignedItems, List<NavbarItem> rightAlignedItems)
+        public Navbar(List<NavbarItem> leftAlignedItems, List<NavbarItem> rightAlignedItems, bool isUpsideDown = false)
         {
             LeftAlignedItems = leftAlignedItems;
             RightAlignedItems = rightAlignedItems;
+            IsUpsideDown = isUpsideDown;
 
             Tint = Color.Transparent;
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
@@ -57,7 +64,7 @@ namespace Quaver.Screens.Menu.UI.Navigation
             Line = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = this,
-                Position = new ScalableVector2(64, 64),
+                Position = new ScalableVector2(28, IsUpsideDown ? WindowManager.Height - 54 : 54),
                 Alpha = 0.90f
             };
 
@@ -83,10 +90,10 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <summary>
         ///     Aligns the items from the left.
         /// </summary>
-        private void AlignLeftItems()
+        protected void AlignLeftItems()
         {
             //var startingX = QuaverLogo.X + QuaverLogo.Width;
-            var startingX = 0;
+            var startingX = IsUpsideDown ? -6 : 0;
 
             for (var i = 0; i < LeftAlignedItems.Count; i++)
             {
@@ -94,7 +101,8 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
                 item.Parent = Line;
                 item.X = startingX + i * item.Width;
-                item.Y -= item.Height;
+
+                item.Y = IsUpsideDown ? item.Height / 4f - 8 : -item.Height;
             }
         }
 
@@ -105,11 +113,14 @@ namespace Quaver.Screens.Menu.UI.Navigation
         {
             var startingX = Width - Line.X * 2;
 
+            if (IsUpsideDown)
+                startingX += 8;
+
             for (var i = 0; i < RightAlignedItems.Count; i++)
             {
                 var item = RightAlignedItems[i];
                 item.Parent = Line;
-                item.Y = -item.Height;
+                item.Y = IsUpsideDown ? item.Height / 4f - 8 : -item.Height;
 
                 if (i == 0)
                     item.X = startingX - item.Width * (i + 1);
@@ -119,6 +130,45 @@ namespace Quaver.Screens.Menu.UI.Navigation
                     item.X = previous.X - item.Width + 1;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Performs an exit animation for the navbar
+        /// </summary>
+        public void Exit()
+        {
+            Line.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+            Line.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Line.Alpha, 0, 200));
+
+            LeftAlignedItems.ForEach(x =>
+            {
+                x.BottomLine.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+                x.BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.BottomLine.Alpha, 0, 200));
+                x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.Alpha, 0, 200));
+
+                x.Children.ForEach(y =>
+                {
+                    if (y is Sprite sprite)
+                    {
+                        y.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, sprite.Alpha, 0, 200));
+                    }
+                });
+            });
+
+            RightAlignedItems.ForEach(x =>
+            {
+                x.BottomLine.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.AlphaBlend};
+                x.BottomLine.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.BottomLine.Alpha, 0, 200));
+                x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, x.Alpha, 0, 200));
+
+                x.Children.ForEach(y =>
+                {
+                    if (y is Sprite sprite)
+                    {
+                        y.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, sprite.Alpha, 0, 200));
+                    }
+                });
+            });
         }
     }
 }

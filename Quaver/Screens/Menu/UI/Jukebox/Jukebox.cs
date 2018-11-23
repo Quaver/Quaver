@@ -190,7 +190,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
 
                 LoadingNextTrack = true;
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     try
                     {
@@ -316,7 +316,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         private void CreateSongTimeProgressBar()
         {
             SongTimeProgressBar = new ProgressBar(new Vector2(SongTitleContainer.Width, SongTitleContainer.Height - 4), 0,
-                AudioEngine.Track != null ? AudioEngine.Track.Length : int.MaxValue, 0, Color.Transparent, Colors.MainAccent)
+                AudioEngine.Track != null && !AudioEngine.Track.IsDisposed ? AudioEngine.Track.Length : int.MaxValue, 0, Color.Transparent, Colors.MainAccent)
             {
                 Alignment = Alignment.MidLeft,
                 ActiveBar =
@@ -332,10 +332,17 @@ namespace Quaver.Screens.Menu.UI.Jukebox
                     return;
 
                 // The percentage of how far the mouse is inside of the progress bar.
-                var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
+                try
+                {
+                    var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
 
-                Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
-                AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
+                    AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, LogType.Runtime);
+                }
             })
             {
                 Parent = SongTimeProgressBar,

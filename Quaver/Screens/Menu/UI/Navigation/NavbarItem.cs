@@ -25,6 +25,35 @@ namespace Quaver.Screens.Menu.UI.Navigation
         public bool Selected { get; set; }
 
         /// <summary>
+        ///     Dictates if the line is upside down
+        /// </summary>
+        private bool IsUpsideDown { get; set; }
+
+        /// <summary>
+        ///     Dictates if we'll always be showing the navbar line
+        /// </summary>
+        private bool AlwaysShowLine { get; set; }
+
+        /// <summary>
+        ///     The color of the line when selected
+        /// </summary>
+        private Color _lineColor = Color.White;
+        public Color LineColor
+        {
+            get => _lineColor;
+            set
+            {
+                _lineColor = value;
+                BottomLine.Tint = _lineColor;
+            }
+        }
+
+        /// <summary>
+        ///     If true, the box will be highlighted when the button is hovered
+        /// </summary>
+        public bool HighlightOnHover { get; set; }
+
+        /// <summary>
         /// </summary>
         public NavbarItem()
         {
@@ -38,9 +67,15 @@ namespace Quaver.Screens.Menu.UI.Navigation
         /// <param name="name"></param>
         /// <param name="selected"></param>
         /// <param name="clickAction"></param>
-        public NavbarItem(string name, bool selected = false, EventHandler clickAction = null) : base(clickAction)
+        /// <param name="isUpsideDown"></param>
+        /// <param name="alwaysShowLine"></param>
+        public NavbarItem(string name, bool selected = false, EventHandler clickAction = null, bool isUpsideDown = false,
+            bool alwaysShowLine = false, bool highlightOnHover = false) : base(clickAction)
         {
             Selected = selected;
+            IsUpsideDown = isUpsideDown;
+            AlwaysShowLine = alwaysShowLine;
+            HighlightOnHover = highlightOnHover;
 
             UsePreviousSpriteBatchOptions = true;
             Size = new ScalableVector2(175, 45);
@@ -93,11 +128,14 @@ namespace Quaver.Screens.Menu.UI.Navigation
 
             if (BottomLine != null)
             {
-                if (Selected || IsHovered)
+                if (Selected || IsHovered || AlwaysShowLine)
                     BottomLine.Width = MathHelper.Lerp(BottomLine.Width, Width, (float) Math.Min(dt / 60, 1));
                 else
                     BottomLine.Width = MathHelper.Lerp(BottomLine.Width, 0, (float) Math.Min(dt / 60, 1));
             }
+
+            if (HighlightOnHover && !Selected)
+                Alpha = MathHelper.Lerp(Alpha, HighlightOnHover && IsHovered ? 0.25f : 0, (float) Math.Min(dt / 240, 1));
 
             base.Update(gameTime);
         }
@@ -108,9 +146,10 @@ namespace Quaver.Screens.Menu.UI.Navigation
         protected void CreateBottomLine() => BottomLine = new Sprite()
         {
             Parent = this,
-            Alignment = Alignment.BotCenter,
+            Alignment = IsUpsideDown ? Alignment.TopCenter : Alignment.BotCenter,
             Size = new ScalableVector2(Selected ? Width : 0, 3),
-            Y = 3,
+            Y = IsUpsideDown ? -3 : 3,
+            Tint = LineColor
         };
     }
 }
