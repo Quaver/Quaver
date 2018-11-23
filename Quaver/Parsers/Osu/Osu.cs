@@ -67,7 +67,7 @@ namespace Quaver.Parsers.Osu
 
                 for (var i = 0; i < filesInDir.Length; i++)
                 {
-                    switch (Path.GetExtension(filesInDir[i]))
+                    switch (Path.GetExtension(filesInDir[i]).ToLower())
                     {
                         case ".osu":
                             // Ignore .osu files
