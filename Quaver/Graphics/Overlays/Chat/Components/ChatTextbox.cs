@@ -112,7 +112,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
                 // Reset if no other saved messages
                 if (CurrentMessage == 0)
-                    Textbox.RawText = null;
+                    Textbox.RawText = "";
                 else
                     Textbox.RawText = PreviousMessages[PreviousMessages.Count - CurrentMessage];
             }
@@ -159,6 +159,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             // Save messages
             PreviousMessages.Add(text);
+            // Reset message
+            CurrentMessage = 0;
 
             // Scroll to the bottom when sending chat messages
             var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
