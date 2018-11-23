@@ -62,17 +62,7 @@ namespace Quaver
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverGame()
-        {
-            InitializeFpsLimiting();
-
-            Graphics.PreparingDeviceSettings += (sender, args) =>
-            {
-                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-                Graphics.PreferMultiSampling = true;
-                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-            };
-        }
+        public QuaverGame() => InitializeFpsLimiting();
 
         /// <inheritdoc />
         /// <summary>
