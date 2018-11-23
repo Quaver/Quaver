@@ -260,10 +260,9 @@ namespace Quaver.Graphics.Online.Playercard
                 case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Connected:
                     CreateStats(true);
                     break;
-                case PlayercardType.Self when OnlineManager.Status.Value == ConnectionStatus.Disconnected:
+                case PlayercardType.Self when OnlineManager.Status.Value != ConnectionStatus.Disconnected:
                     break;
                 default:
-                    CreateStats(true);
                     break;
             }
 

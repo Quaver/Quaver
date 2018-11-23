@@ -24,10 +24,17 @@ namespace Quaver.Audio
         public static AudioTrack Track { get; internal set; }
 
         /// <summary>
+        ///     The map the loaded AudioTrack is for.
+        /// </summary>
+        public static Map Map { get; private set; }
+
+        /// <summary>
         ///     Loads the track for the currently selected map.
         /// </summary>
         public static void LoadCurrentTrack()
         {
+            Map = MapManager.Selected.Value;
+
             if (Track != null && !Track.IsDisposed)
                 Track.Dispose();
 

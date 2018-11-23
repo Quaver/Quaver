@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -33,6 +34,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -121,7 +123,7 @@ namespace Quaver.Screens.Menu
             CreatePanelContainer();
             CreateJukebox();
             CreateUserProfile();
-            CreatePlayercard();
+            // CreatePlayercard();
         }
 
         /// <inheritdoc />
@@ -156,14 +158,12 @@ namespace Quaver.Screens.Menu
         /// <summary>
         ///     Creates the navbar.
         /// </summary>
-        private void CreateNavbar() => Navbar = new Navbar(new List<NavbarItem>
+        private void CreateNavbar() => Navbar = Navbar = new NavbarMain(new List<NavbarItem>
         {
             new NavbarItem("Home", true),
-            new NavbarItem("Download Maps"),
-            new NavbarItem("Open Chat", false, (o, e) => ChatManager.ToggleChatOverlay(true))
         }, new List<NavbarItem>
         {
-            new NavbarItemUser(this),
+            new NavbarItemUser(this)
         }) { Parent = Container };
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Quaver.Screens.Menu
             BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
             {
                 Parent = Container,
-                Position = new ScalableVector2(64, WindowManager.Height - 64),
+                Position = new ScalableVector2(28, WindowManager.Height - 54),
                 Alpha = 0.90f
             };
 
@@ -297,7 +297,7 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + 20,
-            X = -64
+            X = -44
         };
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace Quaver.Screens.Menu
             Parent = Container,
             Alignment = Alignment.TopRight,
             Y = Navbar.Line.Y + Navbar.Line.Thickness,
-            X = -64
+            X = -28
         };
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Quaver.Screens.Menu
         {
             Parent = Container,
             Alignment = Alignment.TopLeft,
-            X = 64,
+            X = 44,
             Y = Jukebox.Y,
         };
 
@@ -336,7 +336,7 @@ namespace Quaver.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnSinglePlayerPanelClicked(object sender, EventArgs e)
+        private void OnSinglePlayerPanelClicked(object sender, EventArgs e)
         {
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {
@@ -344,7 +344,15 @@ namespace Quaver.Screens.Menu
                 return;
             }
 
-            QuaverScreenManager.ChangeScreen(new SelectScreen());
+            var button = (Button) sender;
+            button.IsClickable = false;
+
+            var screen = Screen as MenuScreen;
+            screen?.Exit(() =>
+            {
+                AudioEngine.Track?.Fade(10, 300);
+                return new SelectScreen();
+            });
         }
 
         /// <summary>

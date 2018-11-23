@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <StartupObject>Quaver.Program</StartupObject>
+    <LangVersion>7.1</LangVersion>
     <Description>The ultimate, community-driven and open source competitive rhythm game.</Description>
     <AssemblyName>Quaver</AssemblyName>
     <Title>Quaver</Title>
@@ -25,6 +26,7 @@
     <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+    <PackageReference Include="TimeAgo" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />

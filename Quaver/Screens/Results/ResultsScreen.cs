@@ -16,6 +16,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
@@ -33,8 +34,10 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 using Wobble.Screens;
 
@@ -215,6 +218,21 @@ namespace Quaver.Screens.Results
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void OnFirstUpdate()
+        {
+            // Make cursor visible again
+            var game = GameBase.Game as QuaverGame;
+            var cursor = game.GlobalUserInterface.Cursor;
+            cursor.Alpha = 1;
+
+            BackgroundHelper.Background.Dim = 60;
+
+            base.OnFirstUpdate();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             OnExit = null;
@@ -234,12 +252,12 @@ namespace Quaver.Screens.Results
             if (GameplayScreen.HasQuit || GameplayScreen.InReplayMode)
                 return;
 
-            Scheduler.RunThread(SaveLocalScore);
+            ThreadScheduler.Run(SaveLocalScore);
 
 #if DEBUG
-            Scheduler.RunThread(SaveDebugReplayData);
-            Scheduler.RunThread(SaveHitData);
-            Scheduler.RunThread(SaveHealthData);
+            ThreadScheduler.Run(SaveDebugReplayData);
+            ThreadScheduler.Run(SaveHitData);
+            ThreadScheduler.Run(SaveHealthData);
 #endif
 
             // Submit score if online
@@ -247,7 +265,7 @@ namespace Quaver.Screens.Results
             {
                 NotificationManager.Show(NotificationLevel.Info, "Submitting score...");
 
-                Scheduler.RunThread(() =>
+                ThreadScheduler.Run(() =>
                 {
                     OnlineManager.Client?.Submit(new OnlineScore(GameplayScreen.MapHash, GameplayScreen.ReplayCapturer.Replay,
                         ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
@@ -496,7 +514,16 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Action that goes back to the song select screen.
         /// </summary>
-        public void GoBackToMenu() => QuaverScreenManager.ChangeScreen(new SelectScreen());
+        public void GoBackToMenu() => Exit(() =>
+        {
+            if (AudioEngine.Track != null)
+            {
+                lock (AudioEngine.Track)
+                    AudioEngine.Track.Fade(10, 300);
+            }
+
+            return new SelectScreen();
+        });
 
         /// <summary>
         ///     Loads up local scores and watches the replay.
@@ -522,7 +549,16 @@ namespace Quaver.Screens.Results
                 }
             }
 
-            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                return new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay);
+            });
         }
 
         /// <summary>
@@ -531,7 +567,17 @@ namespace Quaver.Screens.Results
         public void RetryMap()
         {
             var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
-            QuaverScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores));
+
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                return new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores);
+            });
         }
 
         /// <summary>

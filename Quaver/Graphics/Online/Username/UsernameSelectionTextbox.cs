@@ -58,7 +58,7 @@ namespace Quaver.Graphics.Online.Username
         {
             DialogManager.Dismiss();
 
-            Scheduler.RunThread(() =>
+            ThreadScheduler.Run(() =>
             {
                 OnlineManager.Client.ChooseUsername(text, SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
                     SteamManager.PTicket, SteamManager.PcbTicket);

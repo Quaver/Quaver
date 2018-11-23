@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             var channelName = new SpriteText(BitmapFonts.Exo2BoldItalic, chan.Name, 24)
             {
                 Parent = this,
-                X = 200,
+                X = 60,
                 Y = 5
             };
 
@@ -136,7 +136,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -205,
+                X = -65,
                 Text =
                 {
                     FontSize = 13,

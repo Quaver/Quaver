@@ -24,7 +24,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
         /// <summary>
         ///     The actual content of the interface
         /// </summary>
-        private Sprite InterfaceContainer { get; set; }
+        public Sprite InterfaceContainer { get; private set; }
 
         /// <summary>
         ///     The container for the header of the interface.
@@ -83,9 +83,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Dialogs
             Parent = this,
             Alignment = Alignment.BotLeft,
             SetChildrenAlpha = true,
-            Size = new ScalableVector2(Width, 400),
+            Size = new ScalableVector2(Width, 350),
             Tint = new Color(63, 68, 91),
-            Y = 400,
+            Y = 350,
             Alpha = 0,
             Animations =
             {

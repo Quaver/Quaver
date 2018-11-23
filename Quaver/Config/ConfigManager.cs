@@ -11,8 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Scheduling;
-using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
-using Quaver.Screens.Select.UI.Search;
+using Quaver.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -139,6 +138,16 @@ namespace Quaver.Config
         internal static Bindable<bool> FpsCounter { get; private set; }
 
         /// <summary>
+        ///     The type of FPS limiter that is activated
+        /// </summary>
+        internal static Bindable<FpsLimitType> FpsLimiterType { get; private set; }
+
+        /// <summary>
+        ///     The custom value for FPS limiting
+        /// </summary>
+        internal static BindableInt CustomFpsLimit { get; private set; }
+
+        /// <summary>
         ///     Determines if the health bar + multiplier is at top or bottom of the playfield
         /// </summary>
         internal static Bindable<bool> HealthBarPositionTop { get; private set; }
@@ -231,11 +240,6 @@ namespace Quaver.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
-        ///     The selected leaderboard section.
-        /// </summary>
-        internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
-
-        /// <summary>
         ///     The currently selected game mode.
         /// </summary>
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
@@ -244,6 +248,11 @@ namespace Quaver.Config
         ///     How the user is currently filtering their online users.
         /// </summary>
         internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
+
+        /// <summary>
+        ///     The type of leaderboard that is displayed during song select.
+        /// </summary>
+        internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -402,6 +411,8 @@ namespace Quaver.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
+            FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
+            CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
@@ -416,8 +427,8 @@ namespace Quaver.Config
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
-            SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
+            LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
@@ -478,6 +489,8 @@ namespace Quaver.Config
                     WindowFullScreen.ValueChanged += AutoSaveConfiguration;
                     WindowLetterboxed.ValueChanged += AutoSaveConfiguration;
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
+                    FpsLimiterType.ValueChanged += AutoSaveConfiguration;
+                    CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
@@ -511,7 +524,6 @@ namespace Quaver.Config
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     BackgroundParallax.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
-                    SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;

@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Config;
-using Quaver.Screens.Select.UI.Search;
 using Wobble;
 
 namespace Quaver.Database.Maps

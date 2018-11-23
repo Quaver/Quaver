@@ -15,6 +15,7 @@ using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Online.Playercard;
 using Quaver.Graphics.Overlays.Volume;
+using Quaver.Graphics.Transitions;
 using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Online.Chat;
@@ -61,19 +62,7 @@ namespace Quaver
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverGame()
-        {
-            IsFixedTimeStep = false;
-            Graphics.SynchronizeWithVerticalRetrace = false;
-            Graphics.ApplyChanges();
-
-            Graphics.PreparingDeviceSettings += (sender, args) =>
-            {
-                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-                Graphics.PreferMultiSampling = true;
-                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-            };
-        }
+        public QuaverGame() => InitializeFpsLimiting();
 
         /// <inheritdoc />
         /// <summary>
@@ -118,6 +107,8 @@ namespace Quaver
             FontAwesome.Load();
             UserInterface.Load();
 
+            BackgroundHelper.Initialize();
+
             // Load the user's skin
             SkinManager.Load();
 
@@ -125,13 +116,15 @@ namespace Quaver
             CreateFpsCounter();
             VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
+            Transitioner.Initialize();
 
             // Make the cursor appear over the volume controller.
             ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
-            QuaverScreenManager.ChangeScreen(new MenuScreen());
+
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -142,6 +135,7 @@ namespace Quaver
         protected override void UnloadContent()
         {
             OnlineManager.Client?.Disconnect();
+            Transitioner.Dispose();
             base.UnloadContent();
         }
 
@@ -162,7 +156,9 @@ namespace Quaver
 
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
+
             BackgroundManager.Update(gameTime);
+            BackgroundHelper.Update(gameTime);
             NotificationManager.Update(gameTime);
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
@@ -179,6 +175,38 @@ namespace Quaver
                         : $"You are now hiding debug log messages. Press F5 to toggle them on.");
             }
 #endif
+
+            // Handles FPS limiter changes
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F7))
+            {
+                var index = (int) ConfigManager.FpsLimiterType.Value;
+
+                if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
+                    ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
+                else
+                    ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
+
+                switch (ConfigManager.FpsLimiterType.Value)
+                {
+                    case FpsLimitType.Unlimited:
+                        NotificationManager.Show(NotificationLevel.Info, "FPS is now unlimited.");
+                        break;
+                    case FpsLimitType.Limited:
+                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
+                        break;
+                    case FpsLimitType.RefreshRate:
+                        NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                        break;
+                    case FpsLimitType.Custom:
+                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now custom limited to: {ConfigManager.CustomFpsLimit.Value}");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            QuaverScreenManager.Update(gameTime);
+            Transitioner.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -203,13 +231,13 @@ namespace Quaver
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
 
-            LogManager.Draw(gameTime);
+            Transitioner.Draw(gameTime);
         }
 
         /// <summary>
         ///     Performs any initial setup the game needs to run.
         /// </summary>
-        private static void PerformGameSetup()
+        private void PerformGameSetup()
         {
             ConfigManager.Initialize();
 
@@ -246,6 +274,9 @@ namespace Quaver
 
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
+
+            // Called when the user changes their FPS limiter
+            ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
 
             DiscordManager.CreateClient("376180410490552320");
             DiscordManager.Client.SetPresence(new RichPresence()
@@ -312,5 +343,37 @@ namespace Quaver
         ///     Shows the FPs counter based on the current config variable.
         /// </summary>
         private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
+
+        /// <summary>
+        ///    Handles limiting/unlimiting FPS based on user config
+        /// </summary>
+        private void InitializeFpsLimiting()
+        {
+            switch (ConfigManager.FpsLimiterType.Value)
+            {
+                case FpsLimitType.Unlimited:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = false;
+                    break;
+                case FpsLimitType.Limited:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = true;
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    break;
+                case FpsLimitType.RefreshRate:
+                    Graphics.SynchronizeWithVerticalRetrace = true;
+                    IsFixedTimeStep = true;
+                    break;
+                case FpsLimitType.Custom:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
+                    IsFixedTimeStep = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Graphics.ApplyChanges();
+        }
     }
 }

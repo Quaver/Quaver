@@ -36,7 +36,7 @@ namespace Quaver.Screens.Menu.UI.Panels
         /// <summary>
         ///     The original size of the panel.
         /// </summary>
-        private ScalableVector2 OriginalSize { get; } = new ScalableVector2(302, 302);
+        private ScalableVector2 OriginalSize { get; } = new ScalableVector2(310, 310);
 
         /// <inheritdoc />
         /// <summary>

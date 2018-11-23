@@ -12,6 +12,7 @@ using Quaver.Graphics.Online.Username;
 using Quaver.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Online.Chat;
 using Quaver.Scheduling;
+using Quaver.Screens.Select;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -275,7 +276,9 @@ namespace Quaver.Online
 
             // Send client status update packet.
             var game = (QuaverGame) GameBase.Game;
-            Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
+
+            if (game.CurrentScreen != null)
+                Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
 
             ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() {Self});
 
@@ -350,6 +353,8 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
         {
+            Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5} | {e.Response.Code}", LogType.Network);
+
             var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
 
             if (mapsets.Count == 0)
@@ -378,8 +383,16 @@ namespace Quaver.Online
             }
 
             // TODO: Update map in db with new status...
+            var game = GameBase.Game as QuaverGame;
 
-            Logger.Debug($"Retrieved Scores/Status For Map: {map.Md5Checksum} ({map.MapId}) - {map.RankedStatus}", LogType.Network);
+            // If in song select, update the banner of the currently selected map.
+            if (game.CurrentScreen is SelectScreen screen)
+            {
+                var view = screen.View as SelectScreenView;
+
+                if (MapManager.Selected.Value == map)
+                    view.Banner.RankedStatus.UpdateMap(map);
+            }
         }
 
         /// <summary>

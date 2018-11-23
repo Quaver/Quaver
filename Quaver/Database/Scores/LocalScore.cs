@@ -115,6 +115,11 @@ namespace Quaver.Database.Scores
         public int PauseCount { get; set; }
 
         /// <summary>
+        ///     The performance rating of the score
+        /// </summary>
+        public double PerformanceRating { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]
@@ -182,6 +187,7 @@ namespace Quaver.Database.Scores
                 DateTime = dtDateTime.ToString(CultureInfo.InvariantCulture),
                 Mode = score.Mode,
                 Score = score.TotalScore,
+                PerformanceRating = score.PerformanceRating,
                 Grade = GradeHelper.GetGradeFromAccuracy((float) score.Accuracy),
                 Accuracy = score.Accuracy,
                 MaxCombo = score.MaxCombo,
