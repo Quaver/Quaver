@@ -54,14 +54,14 @@ namespace Quaver.Database.Maps
             var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
             Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
 
-            SyncMissingFiles(quaFiles);
+            SyncMissingOrUpdatedFiles(quaFiles);
         }
 
         /// <summary>
         ///     Checks the maps in the database vs. the amount of .qua files on disk.
         ///     If there's a mismatch, it will add any missing ones
         /// </summary>
-        private static void SyncMissingFiles(List<string> files)
+        private static void SyncMissingOrUpdatedFiles(IReadOnlyCollection<string> files)
         {
             var maps = FetchAll();
 
@@ -80,13 +80,13 @@ namespace Quaver.Database.Maps
                         if (map.Md5Checksum == MapsetHelper.GetMd5Checksum(filePath))
                             continue;
 
-                        Logger.Important($"Map {filePath} has been updated. Need to update cache.", LogType.Runtime);
-
                         var newMap = Map.FromQua(map.LoadQua(), filePath);
                         newMap.CalculateDifficulties();
 
                         newMap.Id = map.Id;
                         new SQLiteConnection(DatabasePath).Update(newMap);
+
+                        Logger.Important($"Updated cached map: {newMap.Id}, as the file was updated.", LogType.Runtime);
                     }
 
                     continue;
