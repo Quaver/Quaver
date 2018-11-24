@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Helpers;
+using Quaver.Modifiers;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -76,6 +77,14 @@ namespace Quaver.Screens.Select.UI.Maps
             };
 
             Clicked += OnClicked;
+            ModManager.ModsChanged += OnModsChanged;
+        }
+
+        /// <summary />
+        public override void Destroy()
+        {
+            ModManager.ModsChanged -= OnModsChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -87,8 +96,11 @@ namespace Quaver.Screens.Select.UI.Maps
             Map = map;
 
             DifficultyName.Text = map.DifficultyName;
-            TextDifficultyRating.Text = StringHelper.AccuracyToString(map.DifficultyRating).Replace("%", "");
-            TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(map.DifficultyRating);
+
+            var difficulty = (float) map.DifficultyFromMods(ModManager.Mods);
+
+            TextDifficultyRating.Text = StringHelper.AccuracyToString(difficulty).Replace("%", "");
+            TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(difficulty);
             Creator.Text = $"By: {map.Creator}";
         }
 
@@ -156,6 +168,29 @@ namespace Quaver.Screens.Select.UI.Maps
         {
             var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Container.ScreenRectangle.ToRectangle());
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+        }
+
+        /// <summary>
+        ///     Called when the activated modifiers have changed.
+        ///     Used for updating difficulty values.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (Map == null)
+                return;
+
+            var difficulty = (float) Map.DifficultyFromMods(ModManager.Mods);
+
+            var value = StringHelper.AccuracyToString(difficulty).Replace("%", "");
+
+            // Don't bother updating the text if the difficulty value is the same as what's already there
+            if (value == TextDifficultyRating.Text)
+                return;
+
+            TextDifficultyRating.Text = value;
+            TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(difficulty);
         }
     }
 }

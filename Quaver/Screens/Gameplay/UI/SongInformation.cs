@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Audio;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Helpers;
 using Quaver.Modifiers;
@@ -128,14 +129,17 @@ namespace Quaver.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Rating = new SpriteText(BitmapFonts.Exo2Regular, $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate)).Replace("%", "")}",
+            var difficulty = (float) MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
+
+            Rating = new SpriteText(BitmapFonts.Exo2Regular,
+                $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",
                 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = Creator.Y + TextYSpacing + TextYSpacing * 0.75f,
                 Alpha = 0,
-                Tint = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(AudioEngine.Track.Rate))
+                Tint = ColorHelper.DifficultyToColor(difficulty)
             };
 
             // Get a formatted string of the activated mods.
