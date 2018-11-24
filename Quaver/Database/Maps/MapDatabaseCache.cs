@@ -27,8 +27,23 @@ namespace Quaver.Database.Maps
         /// </summary>
         public static void Load(bool fullSync)
         {
+            if (fullSync)
+            {
+                if (File.Exists(DatabasePath))
+                    File.Delete(DatabasePath);
+            }
+
             CreateTable();
-            PerformFullSync();
+
+            // Fetch all of the .qua files inside of the song directory
+            var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
+            Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
+
+            SyncMissingOrUpdatedFiles(quaFiles);
+
+            if (fullSync)
+                AddNonCachedFiles(quaFiles);
+
             OrderAndSetMapsets();
         }
 
@@ -48,18 +63,6 @@ namespace Quaver.Database.Maps
                 Logger.Error(e, LogType.Runtime);
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     Syncs the cache and makes sure that it is up-to-date
-        /// </summary>
-        private static void PerformFullSync()
-        {
-            // Fetch all of the .qua files inside of the song directory
-            var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
-            Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
-
-            SyncMissingOrUpdatedFiles(quaFiles);
         }
 
         /// <summary>
@@ -100,6 +103,34 @@ namespace Quaver.Database.Maps
                 // The file doesn't exist, so we can safely delete it from the cache.
                 new SQLiteConnection(DatabasePath).Delete(map);
                 Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Adds any new files that are currently not cached.
+        ///     Used if the user adds a file to the folder.
+        /// </summary>
+        /// <param name="files"></param>
+        private static void AddNonCachedFiles(List<string> files)
+        {
+            var maps = FetchAll();
+
+            foreach (var file in files)
+            {
+                if (maps.Any(x => BackslashToForward(file) == BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")))
+                    continue;
+
+                // Found map that isn't cached in the database yet.
+                try
+                {
+                    var map = Map.FromQua(Qua.Parse(file), file);
+                    map.CalculateDifficulties();
+                    InsertMap(map);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
             }
         }
 
