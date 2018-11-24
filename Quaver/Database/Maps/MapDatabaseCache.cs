@@ -23,10 +23,7 @@ namespace Quaver.Database.Maps
         public static void Load(bool fullSync)
         {
             CreateTable();
-
-            if (fullSync)
-                PerformFullSync();
-
+            PerformFullSync();
             OrderAndSetMapsets();
         }
 
@@ -68,26 +65,16 @@ namespace Quaver.Database.Maps
         {
             var maps = FetchAll();
 
-            // Stores the list of missing maps to be cached
-            var mapsToCache = new List<Map>();
-
-            foreach (var file in files)
+            foreach (var map in maps)
             {
-                // Check to see if the map exists in the cache already
-                if (maps.Any(x => BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}") == BackslashToForward(file)))
+                var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
+
+                if (files.Any(x => BackslashToForward(x) == filePath))
                     continue;
 
-                try
-                {
-                    mapsToCache.Add(Map.FromQua(Qua.Parse(file), file));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
+                new SQLiteConnection(DatabasePath).Delete(map);
+                Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
             }
-
-            Logger.Important($"Found {mapsToCache.Count} maps that need to be cached", LogType.Runtime);
         }
 
         /// <summary>
