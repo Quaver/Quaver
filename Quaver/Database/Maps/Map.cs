@@ -23,6 +23,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The MD5 Of the file.
         /// </summary>
+        [Unique]
         public string Md5Checksum { get; set; }
 
         /// <summary>
@@ -74,11 +75,6 @@ namespace Quaver.Database.Maps
         ///     The last time the user has played the map.
         /// </summary>
         public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss");
-
-        /// <summary>
-        ///     The difficulty rating of the map.
-        /// </summary>
-        public float DifficultyRating { get; set; }
 
         /// <summary>
         ///     The creator of the map.
@@ -136,6 +132,35 @@ namespace Quaver.Database.Maps
         public int LocalOffset { get; set; }
 
         /// <summary>
+        ///     The version of the difficulty calculator that was used in this cache
+        /// </summary>
+        public string DifficultyCalculatorVersion { get; set; }
+
+        /// <summary>
+        ///     The last time the file was modified
+        /// </summary>
+        public DateTime LastFileWrite { get; set; }
+
+#region DIFFICULTY_RATINGS
+        public double Difficulty05X { get; set; }
+        public double Difficulty06X { get; set; }
+        public double Difficulty07X { get; set; }
+        public double Difficulty08X { get; set; }
+        public double Difficulty09X { get; set; }
+        public double Difficulty10X { get; set; }
+        public double Difficulty11X { get; set; }
+        public double Difficulty12X { get; set; }
+        public double Difficulty13X { get; set; }
+        public double Difficulty14X { get; set; }
+        public double Difficulty15X { get; set; }
+        public double Difficulty16X { get; set; }
+        public double Difficulty17X { get; set; }
+        public double Difficulty18X { get; set; }
+        public double Difficulty19X { get; set; }
+        public double Difficulty20X { get; set; }
+ #endregion
+
+        /// <summary>
         ///     Determines if this map is an osu! map.
         /// </summary>
         [Ignore]
@@ -172,29 +197,34 @@ namespace Quaver.Database.Maps
         /// <param name="qua"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static Map FromQua(Qua qua, string path) => new Map
+        public static Map FromQua(Qua qua, string path)
         {
-            Md5Checksum = MapsetHelper.GetMd5Checksum(path),
-            Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) ?? throw new InvalidOperationException()).Name.Replace("\\", "/"),
-            Path = System.IO.Path.GetFileName(path)?.Replace("\\", "/"),
-            Artist = qua.Artist,
-            Title = qua.Title,
-            HighestRank = Grade.None,
-            AudioPath = qua.AudioFile,
-            AudioPreviewTime = qua.SongPreviewTime,
-            BackgroundPath = qua.BackgroundFile,
-            Description = qua.Description,
-            MapId = qua.MapId,
-            MapSetId = qua.MapSetId,
-            Bpm = qua.GetCommonBpm(),
-            Creator = qua.Creator,
-            DifficultyName = qua.DifficultyName,
-            Source = qua.Source,
-            Tags = qua.Tags,
-            SongLength =  qua.Length,
-            Mode = qua.Mode,
-            DifficultyRating = qua.AverageNotesPerSecond()
-        };
+            var map = new Map
+            {
+                Md5Checksum = MapsetHelper.GetMd5Checksum(path),
+                Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) ?? throw new InvalidOperationException()).Name.Replace("\\", "/"),
+                Path = System.IO.Path.GetFileName(path)?.Replace("\\", "/"),
+                Artist = qua.Artist,
+                Title = qua.Title,
+                HighestRank = Grade.None,
+                AudioPath = qua.AudioFile,
+                AudioPreviewTime = qua.SongPreviewTime,
+                BackgroundPath = qua.BackgroundFile,
+                Description = qua.Description,
+                MapId = qua.MapId,
+                MapSetId = qua.MapSetId,
+                Bpm = qua.GetCommonBpm(),
+                Creator = qua.Creator,
+                DifficultyName = qua.DifficultyName,
+                Source = qua.Source,
+                Tags = qua.Tags,
+                SongLength =  qua.Length,
+                Mode = qua.Mode,
+            };
+
+            map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
+            return map;
+        }
 
         /// <summary>
         ///     Loads the .qua, .osu or .sm file for a map.
@@ -254,6 +284,71 @@ namespace Quaver.Database.Maps
         {
             Scores.UnHookEventHandlers();
             Scores.Value?.Clear();
+        }
+
+        /// <summary>
+        ///     Calculates the difficulty of the entire map
+        /// </summary>
+        public void CalculateDifficulties()
+        {
+            var qua = LoadQua();
+
+            Difficulty05X = qua.SolveDifficulty(ModIdentifier.Speed05X).OverallDifficulty;
+            Difficulty06X = qua.SolveDifficulty(ModIdentifier.Speed06X).OverallDifficulty;
+            Difficulty07X = qua.SolveDifficulty(ModIdentifier.Speed07X).OverallDifficulty;
+            Difficulty08X = qua.SolveDifficulty(ModIdentifier.Speed08X).OverallDifficulty;
+            Difficulty09X = qua.SolveDifficulty(ModIdentifier.Speed09X).OverallDifficulty;
+            Difficulty10X = qua.SolveDifficulty().OverallDifficulty;
+            Difficulty11X = qua.SolveDifficulty(ModIdentifier.Speed11X).OverallDifficulty;
+            Difficulty12X = qua.SolveDifficulty(ModIdentifier.Speed12X).OverallDifficulty;
+            Difficulty13X = qua.SolveDifficulty(ModIdentifier.Speed13X).OverallDifficulty;
+            Difficulty14X = qua.SolveDifficulty(ModIdentifier.Speed14X).OverallDifficulty;
+            Difficulty15X = qua.SolveDifficulty(ModIdentifier.Speed15X).OverallDifficulty;
+            Difficulty16X = qua.SolveDifficulty(ModIdentifier.Speed16X).OverallDifficulty;
+            Difficulty17X = qua.SolveDifficulty(ModIdentifier.Speed17X).OverallDifficulty;
+            Difficulty18X = qua.SolveDifficulty(ModIdentifier.Speed18X).OverallDifficulty;
+            Difficulty19X = qua.SolveDifficulty(ModIdentifier.Speed19X).OverallDifficulty;
+            Difficulty20X = qua.SolveDifficulty(ModIdentifier.Speed20X).OverallDifficulty;
+        }
+
+        /// <summary>
+        ///     Retrieve the map's difficulty rating from given mods
+        /// </summary>
+        /// <returns></returns>
+        public double DifficultyFromMods(ModIdentifier mods)
+        {
+            if (mods.HasFlag(ModIdentifier.Speed05X))
+                return Difficulty05X;
+            if (mods.HasFlag(ModIdentifier.Speed06X))
+                return Difficulty06X;
+            if (mods.HasFlag(ModIdentifier.Speed07X))
+                return Difficulty07X;
+            if (mods.HasFlag(ModIdentifier.Speed08X))
+                return Difficulty08X;
+            if (mods.HasFlag(ModIdentifier.Speed09X))
+                return Difficulty09X;
+            if (mods.HasFlag(ModIdentifier.Speed11X))
+                return Difficulty11X;
+            if (mods.HasFlag(ModIdentifier.Speed12X))
+                return Difficulty12X;
+            if (mods.HasFlag(ModIdentifier.Speed13X))
+                return Difficulty13X;
+            if (mods.HasFlag(ModIdentifier.Speed14X))
+                return Difficulty14X;
+            if (mods.HasFlag(ModIdentifier.Speed15X))
+                return Difficulty15X;
+            if (mods.HasFlag(ModIdentifier.Speed16X))
+                return Difficulty16X;
+            if (mods.HasFlag(ModIdentifier.Speed17X))
+                return Difficulty17X;
+            if (mods.HasFlag(ModIdentifier.Speed18X))
+                return Difficulty18X;
+            if (mods.HasFlag(ModIdentifier.Speed19X))
+                return Difficulty19X;
+            if (mods.HasFlag(ModIdentifier.Speed20X))
+                return Difficulty20X;
+
+            return Difficulty10X;
         }
     }
 

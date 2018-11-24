@@ -5,6 +5,7 @@ using System.Linq;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Helpers;
 using Quaver.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -93,7 +94,7 @@ namespace Quaver.Screens.Select.UI.Banner
             Mode.UpdateValue(ModeHelper.ToShortHand(map.Mode));
             Bpm.UpdateValue(((int)(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))).ToString(CultureInfo.InvariantCulture));
             Length.UpdateValue(TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods)).ToString(@"mm\:ss"));
-            Difficulty.UpdateValue("0.00");
+            Difficulty.UpdateValue(StringHelper.AccuracyToString((float) map.DifficultyFromMods(ModManager.Mods)).Replace("%", ""));
 
             for (var i = 0; i < Items.Count; i++)
             {

@@ -11,7 +11,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The currently selected map.
         /// </summary>
-        public static Bindable<Map> Selected { get; set; }
+        public static Bindable<Map> Selected { get; set; } = new Bindable<Map>(null);
 
         /// <summary>
         ///     The list of mapsets that are currently loaded.

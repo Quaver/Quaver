@@ -13,6 +13,7 @@ namespace Quaver.Screens
         Menu,
         Results,
         Select,
-        Splash
+        Splash,
+        Importing
     }
 }

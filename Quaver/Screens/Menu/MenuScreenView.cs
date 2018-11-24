@@ -13,6 +13,7 @@ using Quaver.Graphics.Online.Playercard;
 using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Online.Chat;
+using Quaver.Screens.Importing;
 using Quaver.Screens.Menu.UI.Buttons;
 using Quaver.Screens.Menu.UI.Dialogs;
 using Quaver.Screens.Menu.UI.Jukebox;
@@ -338,16 +339,29 @@ namespace Quaver.Screens.Menu
         /// <param name="e"></param>
         private void OnSinglePlayerPanelClicked(object sender, EventArgs e)
         {
+            var screen = Screen as MenuScreen;
+
+            // We have maps in the queue, so we need to go to the import screen first
+            if (MapsetImporter.Queue.Count != 0)
+            {
+                screen?.Exit(() =>
+                {
+                    AudioEngine.Track?.Fade(10, 300);
+                    return new ImportingScreen();
+                });
+
+                return;
+            }
+
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try downloading some!");
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
                 return;
             }
 
             var button = (Button) sender;
             button.IsClickable = false;
 
-            var screen = Screen as MenuScreen;
             screen?.Exit(() =>
             {
                 AudioEngine.Track?.Fade(10, 300);

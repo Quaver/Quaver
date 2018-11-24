@@ -157,7 +157,6 @@ namespace Quaver.Screens.Edit
 
             LastSavedMap = ObjectHelper.DeepClone(Map);
 
-            MapCache.LoadAndSetMapsets();
             NotificationManager.Show(NotificationLevel.Success, "Map has successfully been saved!", (sender, e) => Process.Start(path));
         }
 

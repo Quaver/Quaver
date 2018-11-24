@@ -154,7 +154,7 @@ namespace Quaver.Screens.Select.UI.Search
 
                     lock (selectScreen.AvailableMapsets)
                     {
-                        selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(
+                        selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(
                             MapsetHelper.SearchMapsets(MapManager.Mapsets, text));
 
                         View.MapsetScrollContainer.InitializeWithNewSets();
@@ -219,7 +219,7 @@ namespace Quaver.Screens.Select.UI.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };
@@ -260,7 +260,7 @@ namespace Quaver.Screens.Select.UI.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };
@@ -301,7 +301,7 @@ namespace Quaver.Screens.Select.UI.Search
 
                 lock (selectScreen.AvailableMapsets)
                 {
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(selectScreen.AvailableMapsets);
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(selectScreen.AvailableMapsets);
                     View.MapsetScrollContainer.InitializeWithNewSets();
                 }
             };
