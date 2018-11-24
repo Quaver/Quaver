@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using osu.Shared;
+using osu_database_reader.BinaryFiles;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using SQLite;
 using Wobble.Logging;
+using GameMode = osu.Shared.GameMode;
 
 namespace Quaver.Database.Maps
 {
@@ -92,6 +97,7 @@ namespace Quaver.Database.Maps
                     continue;
                 }
 
+                // The file doesn't exist, so we can safely delete it from the cache.
                 new SQLiteConnection(DatabasePath).Delete(map);
                 Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
             }
@@ -112,28 +118,6 @@ namespace Quaver.Database.Maps
         private static string BackslashToForward(string p) => p.Replace("\\", "/");
 
         /// <summary>
-        ///     Inserts a list of given maps into the database
-        /// </summary>
-        /// <param name="maps"></param>
-        private static void InsertMaps(IReadOnlyCollection<Map> maps)
-        {
-            if (maps.Count == 0)
-                return;
-
-            foreach (var map in maps)
-            {
-                try
-                {
-                    new SQLiteConnection(DatabasePath).InsertOrReplace(map);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            }
-        }
-
-        /// <summary>
         ///     Inserts an individual map to the database.
         /// </summary>
         /// <param name="map"></param>
@@ -150,11 +134,75 @@ namespace Quaver.Database.Maps
         }
 
         /// <summary>
+        ///     Reads the osu!.db file defined in config and loads all of those maps into the cache.
+        /// </summary>
+        private static IEnumerable<Map> LoadOsuBeatmapDatabase()
+        {
+            var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
+            MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
+
+            // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
+            var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7 )).ToList();
+            osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
+
+            var osuToQuaverMaps = new List<Map>();
+
+            foreach (var map in osuBeatmaps)
+            {
+                var newMap = new Map
+                {
+                    Md5Checksum = map.BeatmapChecksum,
+                    Directory = map.FolderName,
+                    Path = map.BeatmapFileName,
+                    Artist = map.Artist,
+                    Title = map.Title,
+                    MapSetId = -1,
+                    MapId = -1,
+                    DifficultyName = map.Version,
+                    RankedStatus = RankedStatus.NotSubmitted,
+                    Creator = map.Creator,
+                    AudioPath = map.AudioFileName,
+                    AudioPreviewTime = map.AudioPreviewTime,
+                    Description = $"",
+                    Source = map.SongSource,
+                    Tags = map.SongTags,
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
+                    SongLength = map.TotalTime,
+                    Game = MapGame.Osu,
+                    BackgroundPath = "",
+                };
+
+                // Get the BPM of the osu! maps
+                if (map.TimingPoints != null)
+                {
+                    try
+                    {
+                        newMap.Bpm = Math.Round(60000 / map.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
+                    }
+                    catch (Exception e)
+                    {
+                        newMap.Bpm = 0;
+                    }
+                }
+
+                osuToQuaverMaps.Add(newMap);
+            }
+
+            return osuToQuaverMaps;
+        }
+
+        /// <summary>
         ///     Fetches all maps, groups them into mapsets, sets them to allow them to be played.
         /// </summary>
         public static void OrderAndSetMapsets()
         {
-            var mapsets = MapsetHelper.ConvertMapsToMapsets(FetchAll());
+            var maps = FetchAll();
+
+            if (ConfigManager.AutoLoadOsuBeatmaps.Value)
+                maps = maps.Concat(LoadOsuBeatmapDatabase()).ToList();
+
+            var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
         }
     }
