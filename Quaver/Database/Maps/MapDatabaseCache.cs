@@ -40,9 +40,7 @@ namespace Quaver.Database.Maps
             Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
 
             SyncMissingOrUpdatedFiles(quaFiles);
-
-            if (fullSync)
-                AddNonCachedFiles(quaFiles);
+            AddNonCachedFiles(quaFiles);
 
             OrderAndSetMapsets();
         }
