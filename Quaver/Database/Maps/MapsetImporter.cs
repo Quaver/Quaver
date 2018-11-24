@@ -55,35 +55,6 @@ namespace Quaver.Database.Maps
         /// <param name="e"></param>
         private static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
-            Logger.Debug($"Detected directory change at: {e.FullPath}", LogType.Runtime);
-        }
-
-        /// <summary>
-        ///     Responsible for extracting the files from the .qp
-        /// </summary>
-        /// <param name="fileName"></param>
-        internal static void Import(string fileName)
-        {
-            var extractPath = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(fileName)}/";
-
-            try
-            {
-
-                using (var archive = ArchiveFactory.Open(fileName))
-                {
-                    foreach (var entry in archive.Entries)
-                    {
-                        if (!entry.IsDirectory)
-                        {
-                            entry.WriteToDirectory(extractPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
         }
 
         /// <summary>
@@ -141,9 +112,15 @@ namespace Quaver.Database.Maps
                 try
                 {
                     if (file.EndsWith(".qp"))
+                    {
                         ExtractQuaverMapset(file, extractDirectory);
+                        File.Delete(file);
+                    }
                     else if (file.EndsWith(".osz"))
+                    {
                         Osu.ConvertOsz(file, extractDirectory);
+                        File.Delete(file);
+                    }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
 
