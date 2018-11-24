@@ -1,8 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Graphics;
 using Wobble;
+using Wobble.Graphics;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Screens.Importing
 {
@@ -13,17 +18,31 @@ namespace Quaver.Screens.Importing
         /// </summary>
         private BackgroundImage Background { get; set; }
 
+        /// <summary>
+        ///     The loading wheel that shows we're currently importing maps.
+        /// </summary>
+        private Sprite LoadingWheel { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public ImportingScreenView(Screen screen) : base(screen) => CreateBackground();
+        public ImportingScreenView(Screen screen) : base(screen)
+        {
+            CreateBackground();
+            CreateBanner();
+            CreateLoadingWheel();
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
+        public override void Update(GameTime gameTime)
+        {
+            HandleLoadingWheelAnimations();
+            Container?.Update(gameTime);
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -46,5 +65,59 @@ namespace Quaver.Screens.Importing
         {
             Parent = Container
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateLoadingWheel() => LoadingWheel = new Sprite
+        {
+            Parent = Container,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(60, 60),
+            Image = UserInterface.LoadingWheel,
+            Tint = Color.Yellow,
+            Y = 20
+        };
+
+        /// <summary>
+        ///     Animates the loading wheel.
+        /// </summary>
+        private void HandleLoadingWheelAnimations()
+        {
+            if (LoadingWheel.Animations.Count != 0)
+                return;
+
+            var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
+            LoadingWheel.ClearAnimations();
+            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+        }
+
+        /// <summary>
+        ///     Creates the banner at the top of the screen
+        /// </summary>
+        private void CreateBanner()
+        {
+            var background = new Sprite()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(WindowManager.Width, 150),
+                Tint = Color.Black,
+                Alpha = 0.85f
+            };
+
+            var line = new Sprite()
+            {
+                Parent = background,
+                Size = new ScalableVector2(background.Width, 1),
+                Tint = Colors.MainAccent
+            };
+
+            var header = new SpriteText(BitmapFonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
+            {
+                Parent = background,
+                Alignment = Alignment.TopCenter,
+                Y = 22
+            };
+        }
     }
 }
