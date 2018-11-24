@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Config;
+using Quaver.Converters.Osu;
+using Quaver.Converters.StepMania;
 using Quaver.Graphics.Notifications;
-using Quaver.Parsers.Etterna;
-using Quaver.Parsers.Osu;
 using Quaver.Scheduling;
 using Quaver.Screens;
+using Quaver.Screens.Importing;
 using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
@@ -21,9 +24,9 @@ namespace Quaver.Database.Maps
     public static class MapsetImporter
     {
         /// <summary>
-        ///     If the import queue has maps ready to be imported.
+        ///     List of file paths that are ready to be imported to the game.
         /// </summary>
-        public static bool QueueReady { get; private set; }
+        public static List<string> Queue { get; } = new List<string>();
 
         /// <summary>
         /// Watches the songs directory for any changes.
@@ -52,10 +55,7 @@ namespace Quaver.Database.Maps
         /// <param name="e"></param>
         private static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
-            if (!QueueReady)
-                Logger.Debug($"Detected directory change at: {e.FullPath}", LogType.Runtime);
-
-            QueueReady = true;
+            Logger.Debug($"Detected directory change at: {e.FullPath}", LogType.Runtime);
         }
 
         /// <summary>
@@ -87,61 +87,26 @@ namespace Quaver.Database.Maps
         }
 
         /// <summary>
-        ///     Reloads the maps properly
-        /// </summary>
-        /// <returns></returns>
-        internal static void AfterImport()
-        {
-            var oldMaps = MapManager.Mapsets;
-
-            // Import all the maps to the db
-            MapCache.LoadAndSetMapsets();
-
-            // Update the selected map with the new one.
-            // This button should only be on the song select state, so no need to check for states here.
-            var newMapsets = MapManager.Mapsets.Where(x => oldMaps.All(y => y.Directory != x.Directory)).ToList();
-
-            // In the event that the user imports maps when there weren't any maps previously.
-            if (oldMaps.Count == 0)
-            {
-            }
-            else if (newMapsets.Count > 0)
-            {
-                var map = newMapsets.Last().Maps.Last();
-                map.ChangeSelected();
-            }
-
-            NotificationManager.Show(NotificationLevel.Success, "Successfully imported mapset!");
-            QueueReady = false;
-        }
-
-        /// <summary>
         ///     Allows files to be dropped into the window.
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
-            // TODO: Don't perform these actions automatically. Wait until an actual good time
-            // TODO: Since some require screen/map changes.
-
-            // Quaver Mapset
-            if (e.EndsWith(".qp"))
+            // Mapset files
+            if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
             {
-                NotificationManager.Show(NotificationLevel.Info, "Importing mapset - please wait...");
+                Queue.Add(e);
 
-                ThreadScheduler.Run(() =>
-                {
-                    try
-                    {
-                        Import(e);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
-                    }
+                var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
+                NotificationManager.Show(NotificationLevel.Info, log);
 
-                    AfterImport();
-                });
+                var game = GameBase.Game as QuaverGame;
+                var screen = game.CurrentScreen;
+
+                // If in song select, automatically go to the import screen
+                if (screen.Type != QuaverScreenType.Select || screen.Exiting)
+                    return;
+
+                screen.Exit(() => new ImportingScreen());
             }
             // Quaver Replay
             else if (e.EndsWith(".qr"))
@@ -156,46 +121,101 @@ namespace Quaver.Database.Maps
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
             }
-            // osu! beatmap archive
-            else if (e.EndsWith(".osz"))
+        }
+
+        /// <summary>
+        ///     Goes through all the mapsets in the queue and imports them.
+        /// </summary>
+        public static void ImportMapsetsInQueue()
+        {
+            Map selectedMap = null;
+
+            if (MapManager.Selected.Value != null)
+                selectedMap = MapManager.Selected.Value;
+
+            foreach (var file in Queue)
             {
-                NotificationManager.Show(NotificationLevel.Info, "Importing .osz file - please wait...");
+                var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
 
-                ThreadScheduler.Run(() =>
+                try
                 {
-                    try
-                    {
-                        Osu.ConvertOsz(e, 0);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
-                    }
+                    if (file.EndsWith(".qp"))
+                        ExtractQuaverMapset(file, extractDirectory);
+                    else if (file.EndsWith(".osz"))
+                        Osu.ConvertOsz(file, extractDirectory);
+                    else if (file.EndsWith(".sm"))
+                        Stepmania.ConvertFile(file, extractDirectory);
 
-                    AfterImport();
-                });
+                    selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
+
+                    Logger.Important($"Successfully imported {file}", LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Success, $"Successfully imported file: {Path.GetFileName(file)}");
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
             }
-            // StepMania file
-            else if (e.EndsWith(".sm"))
+
+            MapDatabaseCache.OrderAndSetMapsets();
+
+            var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == selectedMap?.Md5Checksum));
+            MapManager.Selected.Value =MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);
+
+            Queue.Clear();
+        }
+
+        /// <summary>
+        ///     Responsible for extracting the files from the .qp
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="extractPath"></param>
+        private static void ExtractQuaverMapset(string fileName, string extractPath)
+        {
+            try
             {
-                NotificationManager.Show(NotificationLevel.Info, "Importing .sm file - please wait...");
-
-                ThreadScheduler.Run(() =>
+                using (var archive = ArchiveFactory.Open(fileName))
                 {
-                    try
+                    foreach (var entry in archive.Entries)
                     {
-                        StepManiaConverter.ConvertSm(e);
+                        if (!entry.IsDirectory)
+                            entry.WriteToDirectory(extractPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error, "There was an issue when trying to import that mapset.");
-                    }
-
-                    AfterImport();
-                });
+                }
             }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Inserts an entire extracted directory of maps to the DB
+        /// </summary>
+        /// <param name="extractDirectory"></param>
+        private static Map InsertAndUpdateSelectedMap(string extractDirectory)
+        {
+            // Go through each file in the directory and import it into the database.
+            var quaFiles = Directory.GetFiles(extractDirectory, "*.qua", SearchOption.AllDirectories).ToList();
+            Map lastImported = null;
+
+            try
+            {
+                foreach (var quaFile in quaFiles)
+                {
+                    var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
+                    map.CalculateDifficulties();
+                    MapDatabaseCache.InsertMap(map);
+                    lastImported = map;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            return lastImported;
         }
     }
 }

@@ -163,19 +163,6 @@ namespace Quaver
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
-            // Global Input
-#if DEBUG
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
-            {
-                ConfigManager.DebugDisplayLogMessages.Value = !ConfigManager.DebugDisplayLogMessages.Value;
-
-                NotificationManager.Show(NotificationLevel.Info,
-                    ConfigManager.DebugDisplayLogMessages.Value
-                        ? $"You are now displaying debug log messages. Press F5 to toggle them off."
-                        : $"You are now hiding debug log messages. Press F5 to toggle them on.");
-            }
-#endif
-
             // Handles FPS limiter changes
             if (KeyboardManager.IsUniqueKeyPress(Keys.F7))
             {
@@ -247,7 +234,7 @@ namespace Quaver
             DeleteTemporaryFiles();
 
             LocalScoreCache.CreateTable();
-            MapCache.LoadAndSetMapsets();
+            MapDatabaseCache.Load(false);
 
             // Force garabge collection.
             GC.Collect();

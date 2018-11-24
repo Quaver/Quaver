@@ -93,7 +93,7 @@ namespace Quaver.Database.Maps
         /// <param name="mapsets"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static List<Mapset> OrderMapsetByConfigValue(IEnumerable<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsetsByConfigValue(IEnumerable<Mapset> mapsets)
         {
             switch (ConfigManager.SelectOrderMapsetsBy.Value)
             {
@@ -113,9 +113,9 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsByDifficulty(List<Mapset> mapsets)
         {
-            mapsets.ForEach(x => x.Maps = x.Maps.OrderBy(y => y.DifficultyRating).ToList());
+            mapsets.ForEach(x => x.Maps = x.Maps.OrderBy(y => y.Difficulty10X).ToList());
             return mapsets;
         }
 
@@ -193,7 +193,7 @@ namespace Quaver.Database.Maps
                                     exitLoop = true;
                                 break;
                             case "diff":
-                                if (!CompareValues(map.DifficultyRating, searchQuery.Value, searchQuery.Operator))
+                                if (!CompareValues(map.Difficulty10X, searchQuery.Value, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "length":

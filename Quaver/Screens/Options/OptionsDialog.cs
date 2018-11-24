@@ -448,50 +448,7 @@ namespace Quaver.Screens.Options
         /// <returns></returns>
         private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsItem>()
         {
-            // Select osu!.db file
-            /*new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
-            (sender, e) =>
-            {
-                // Create the openFileDialog object.
-                var openFileDialog = new OpenFileDialog()
-                {
-                    InitialDirectory = "c:\\",
-                    Filter = "Osu Database File (*.db)| *.db",
-                    FilterIndex = 0,
-                    RestoreDirectory = true,
-                    Multiselect = false
-                };
 
-                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
-
-                NotificationManager.Show(NotificationLevel.Success, $".db file has been set. You can now \"Load peppy! beatmaps\"");
-            })),*/
-
-            // Load osu! beatmaps, although we can't use osu! as actual text because... trademark :thumbsup:
-            new OptionsItem(this, "Load peppy! beatmaps", new Checkbox(ConfigManager.AutoLoadOsuBeatmaps, new Vector2(20, 20),
-                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
-
-            // Select Etterna Cache Folder
-            /*new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Regular, "Select", 0.50f,
-            (sender, e) =>
-            {
-                using(var fbd = new FolderBrowserDialog())
-                {
-                    var result = fbd.ShowDialog();
-
-                    ConfigManager.EtternaCacheFolderPath.Value = fbd.SelectedPath;
-                }
-
-                NotificationManager.Show(NotificationLevel.Success, $"Etterna Cache Folder has been set. You can now \"Load Etterna Charts\"");
-            })),*/
-
-            // Load charts from etterna.
-            new OptionsItem(this, "Load Etterna Charts", new Checkbox(ConfigManager.AutoLoadEtternaCharts, new Vector2(20, 20),
-                FontAwesome.Get(FontAwesomeIcon.fa_circle), FontAwesome.Get(FontAwesomeIcon.fa_circle_shape_outline), false), MapCache.LoadAndSetMapsets),
         });
 
         /// <summary>

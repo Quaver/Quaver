@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using Wobble.Logging;
 
-namespace Quaver.Parsers.Osu
+namespace Quaver.Converters.Osu
 {
     public static class Osu
     {
