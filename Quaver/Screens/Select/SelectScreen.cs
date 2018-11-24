@@ -7,6 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Modifiers;
+using Quaver.Screens.Importing;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Select.UI.Leaderboard;
@@ -58,6 +59,13 @@ namespace Quaver.Screens.Select
         /// </summary>
         public SelectScreen()
         {
+            // Go to the import screen if we've imported a map not on the select screen
+            if (MapsetImporter.Queue.Count > 0)
+            {
+                Exit(() => new ImportingScreen());
+                return;
+            }
+
             // Grab the mapsets available to the user according to their previous search term.
             AvailableMapsets = MapsetHelper.SearchMapsets(MapManager.Mapsets, PreviousSearchTerm);
 
@@ -65,7 +73,7 @@ namespace Quaver.Screens.Select
             if (AvailableMapsets.Count == 0)
                 AvailableMapsets = MapManager.Mapsets;
 
-            AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(AvailableMapsets);
+            AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
 
             Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.", LogType.Runtime);
 
@@ -126,11 +134,14 @@ namespace Quaver.Screens.Select
         /// </summary>
         private static void KeepPlayingAudioTrackAtPreview()
         {
+            if (AudioEngine.Track == null)
+            {
+                AudioEngine.PlaySelectedTrackAtPreview();
+                return;
+            }
+
             lock (AudioEngine.Track)
             {
-                if (AudioEngine.Track == null)
-                    return;
-
                 if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
                     AudioEngine.PlaySelectedTrackAtPreview();
             }
