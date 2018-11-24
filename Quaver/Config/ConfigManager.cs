@@ -209,17 +209,6 @@ namespace Quaver.Config
         internal static Bindable<bool> AutoLoadOsuBeatmaps { get; private set; }
 
         /// <summary>
-        ///     The path of the Etterna cache folder
-        ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
-        /// </summary>
-        internal static Bindable<string> EtternaCacheFolderPath { get; private set; }
-
-        /// <summary>
-        ///     Dictates whether or not the game will be loaded with all of the Etterna maps
-        /// </summary>
-        internal static Bindable<bool> AutoLoadEtternaCharts { get; private set; }
-
-        /// <summary>
         ///     If the scoreboard is currently visible.
         /// </summary>
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
@@ -431,8 +420,6 @@ namespace Quaver.Config
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
-            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
-            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -473,8 +460,6 @@ namespace Quaver.Config
                     SongDirectory.ValueChanged += AutoSaveConfiguration;
                     OsuDbPath.ValueChanged += AutoSaveConfiguration;
                     AutoLoadOsuBeatmaps.ValueChanged += AutoSaveConfiguration;
-                    EtternaCacheFolderPath.ValueChanged += AutoSaveConfiguration;
-                    AutoLoadEtternaCharts.ValueChanged += AutoSaveConfiguration;
                     Username.ValueChanged += AutoSaveConfiguration;
                     VolumeGlobal.ValueChanged += AutoSaveConfiguration;
                     VolumeEffect.ValueChanged += AutoSaveConfiguration;
