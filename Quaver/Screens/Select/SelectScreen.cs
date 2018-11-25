@@ -332,7 +332,7 @@ namespace Quaver.Screens.Select
                         AudioEngine.Track?.Fade(10, 500);
                 }
 
-                return new MapLoadingScreen(new List<LocalScore>());
+                return new MapLoadingScreen(new List<Score>());
             }, 100);
         }
 

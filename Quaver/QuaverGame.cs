@@ -233,7 +233,7 @@ namespace Quaver
 
             DeleteTemporaryFiles();
 
-            LocalScoreCache.CreateTable();
+            ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
 
             // Force garabge collection.

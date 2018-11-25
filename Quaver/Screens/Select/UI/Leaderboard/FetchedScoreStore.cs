@@ -5,10 +5,10 @@ namespace Quaver.Screens.Select.UI.Leaderboard
 {
     public struct FetchedScoreStore
     {
-        public List<LocalScore> Scores { get; }
-        public LocalScore PersonalBest { get; }
+        public List<Score> Scores { get; }
+        public Score PersonalBest { get; }
 
-        public FetchedScoreStore(List<LocalScore> scores, LocalScore personalBest = null)
+        public FetchedScoreStore(List<Score> scores, Score personalBest = null)
         {
             Scores = scores;
             PersonalBest = personalBest;

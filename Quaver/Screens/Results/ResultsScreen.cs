@@ -151,7 +151,7 @@ namespace Quaver.Screens.Results
         ///     When loading up the results screen with a local score.
         /// </summary>
         /// <param name="score"></param>
-        public ResultsScreen(LocalScore score)
+        public ResultsScreen(Score score)
         {
             MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
             Qua = MapManager.Selected.Value.Qua;
@@ -161,7 +161,7 @@ namespace Quaver.Screens.Results
             Replay = new Replay(score.Mode, score.Name, score.Mods, score.MapMd5)
             {
                 Date = Convert.ToDateTime(score.DateTime, CultureInfo.InvariantCulture),
-                Score = score.Score,
+                Score = score.TotalScore,
                 Accuracy = (float)score.Accuracy,
                 MaxCombo = score.MaxCombo,
                 CountMarv = score.CountMarv,
@@ -356,10 +356,10 @@ namespace Quaver.Screens.Results
             var scoreId = 0;
             try
             {
-                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                var localScore = Score.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
                     GameplayScreen.PauseCount);
 
-                scoreId = LocalScoreCache.InsertScoreIntoDatabase(localScore);
+                scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
             catch (Exception e)
             {
@@ -530,7 +530,7 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void WatchReplay()
         {
-            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+            var scores = ScoreDatabaseCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
 
             // If the replay is from a local score, then read the replay here.
             // NOTE: If loading from gameplay/replay file, the replay to use is already established.
@@ -566,7 +566,7 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void RetryMap()
         {
-            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+            var scores = ScoreDatabaseCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
 
             Exit(() =>
             {

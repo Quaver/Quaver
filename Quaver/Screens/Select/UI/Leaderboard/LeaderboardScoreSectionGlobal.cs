@@ -30,22 +30,22 @@ namespace Quaver.Screens.Select.UI.Leaderboard
         public override FetchedScoreStore FetchScores()
         {
             if (!OnlineManager.Connected)
-                return new FetchedScoreStore(new List<LocalScore>());
+                return new FetchedScoreStore(new List<Score>());
 
             var map = MapManager.Selected.Value;
 
             var onlineScores = OnlineManager.Client?.RetrieveOnlineScores(map.MapId, map.Md5Checksum);
             map.NeedsOnlineUpdate = onlineScores?.Code == OnlineScoresResponseCode.NeedsUpdate;
 
-            var scores = new List<LocalScore>();
+            var scores = new List<Score>();
 
             if (onlineScores?.Scores == null)
-                return new FetchedScoreStore(new List<LocalScore>());
+                return new FetchedScoreStore(new List<Score>());
 
             foreach (var score in onlineScores.Scores)
-                scores.Add(LocalScore.FromOnlineScoreboardScore(score));
+                scores.Add(Score.FromOnlineScoreboardScore(score));
 
-            var pb = onlineScores.PersonalBest != null ? LocalScore.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;
+            var pb = onlineScores.PersonalBest != null ? Score.FromOnlineScoreboardScore(onlineScores.PersonalBest) : null;
             return new FetchedScoreStore(scores, pb);
         }
 

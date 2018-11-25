@@ -151,7 +151,7 @@ namespace Quaver.Screens.Select.UI.Leaderboard
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    LocalScore score;
+                    Score score;
 
                     if (scoreStore.PersonalBest != null)
                         score = i == 0 ? scoreStore.PersonalBest : scoreStore.Scores[i - 1];

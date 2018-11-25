@@ -25,7 +25,7 @@ namespace Quaver.Screens.Select.UI.Leaderboard
         {
             var map = MapManager.Selected.Value;
 
-            var scores = LocalScoreCache.FetchMapScores(map.Md5Checksum);
+            var scores = ScoreDatabaseCache.FetchMapScores(map.Md5Checksum);
             return new FetchedScoreStore(scores);
         }
 

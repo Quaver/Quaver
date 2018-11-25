@@ -66,7 +66,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     The list of scores displayed on the leaderboard.
         /// </summary>
-        public List<LocalScore> LocalScores { get; }
+        public List<Score> LocalScores { get; }
 
         /// <summary>
         ///     The MD5 hash of the map being played.
@@ -191,7 +191,7 @@ namespace Quaver.Screens.Gameplay
         /// <param name="md5"></param>
         /// <param name="scores"></param>
         /// <param name="replay"></param>
-        public GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
+        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
