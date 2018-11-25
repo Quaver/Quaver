@@ -25,6 +25,7 @@ using Wobble.Input;
 using Wobble.Logging;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Online.Chat;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Screens.Menu.UI.Jukebox
 {
@@ -145,7 +146,7 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             AnimateSongTitleText();
             SetSongTimeProgressBarStatus();
             SelectNextTrackIfFinished();
-            JukeboxControls();
+            HandleJukeboxInput();
 
             base.Update(gameTime);
         }
@@ -153,23 +154,28 @@ namespace Quaver.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Jukebox controls
         /// </summary>
-        private void JukeboxControls() {
-            if (ChatManager.IsActive)
+        private void HandleJukeboxInput() {
+            if (DialogManager.Dialogs.Count != 0)
                 return;
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
-                SelectNextTrack(Direction.Backward);
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.X))
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
+                PreviousButton.FireButtonClickEvent();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.X))
             {
-                AudioEngine.LoadCurrentTrack();
-                AudioEngine.Track?.Play();
+                RestartButton.FireButtonClickEvent();
+                NotificationManager.Show(NotificationLevel.Info, "Restarted track");
             }
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.C))
-                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
-                    AudioEngine.Track.Play();
-                else
-                    AudioEngine.Track.Pause();
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.V))
-                SelectNextTrack(Direction.Forward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.C))
+            {
+                var isPaused = AudioEngine.Track.IsPaused;
+                PauseResumeButton.FireButtonClickEvent();
+                NotificationManager.Show(NotificationLevel.Info, isPaused ? "Resumed track" : "Paused track");
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.V))
+                NextButton.FireButtonClickEvent();
         }
 
         /// <summary>
