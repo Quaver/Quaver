@@ -220,7 +220,7 @@ namespace Quaver.Screens.Result
         /// </summary>
         private void SubmitScore()
         {
-            NotificationManager.Show(NotificationLevel.Info, "Submitting score");
+            // NotificationManager.Show(NotificationLevel.Info, "Submitting score");
         }
     }
 }

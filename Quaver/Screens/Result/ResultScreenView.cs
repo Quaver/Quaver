@@ -17,6 +17,16 @@ namespace Quaver.Screens.Result
         /// </summary>
         private ResultMapInformation MapInformation { get; set; }
 
+        /// <summary>
+        ///     Container for displaying everything about the achieved score
+        /// </summary>
+        private ResultScoreContainer ScoreContainer { get; set; }
+
+        /// <summary>
+        ///     Container for displaying buttons on the screen
+        /// </summary>
+        private ResultButtonContainer ButtonContainer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -24,7 +34,14 @@ namespace Quaver.Screens.Result
         public ResultScreenView(Screen screen) : base(screen)
         {
             CreateMapInformation();
+            CreateScoreContainer();
+            CreateButtonContainer();
             BackgroundHelper.Blurred += OnBackgroundBlurred;
+
+            var quaverScreen = Screen as QuaverScreen;
+
+            // ReSharper disable once PossibleNullReferenceException
+            quaverScreen.ScreenExiting += OnScreenExiting;
         }
 
         /// <inheritdoc />
@@ -51,6 +68,12 @@ namespace Quaver.Screens.Result
         public override void Destroy()
         {
             BackgroundHelper.Blurred -= OnBackgroundBlurred;
+
+            var quaverScreen = Screen as QuaverScreen;
+
+            // ReSharper disable once PossibleNullReferenceException
+            quaverScreen.ScreenExiting -= OnScreenExiting;
+
             Container?.Destroy();
         }
 
@@ -91,6 +114,54 @@ namespace Quaver.Screens.Result
 
             MapInformation.Y = -MapInformation.Height;
             MapInformation.MoveToY(28, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        ///     Creates the sprite that displays the achieved score
+        /// </summary>
+        private void CreateScoreContainer()
+        {
+            ScoreContainer = new ResultScoreContainer
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = 28 + MapInformation.Height + 30
+            };
+
+            ScoreContainer.X = -ScoreContainer.Width - 100;
+            ScoreContainer.MoveToX(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        ///     Creates the sprite that contains all of the navigation buttons for the screen
+        /// </summary>
+        private void CreateButtonContainer()
+        {
+            ButtonContainer = new ResultButtonContainer()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+            };
+
+            ButtonContainer.Y = ScoreContainer.Y + ScoreContainer.Height + 20 + ButtonContainer.Height;
+            ButtonContainer.MoveToY((int) (ButtonContainer.Y - ButtonContainer.Height), Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        ///     Called when the screen is exiting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            MapInformation.ClearAnimations();
+            MapInformation.MoveToY((int)-MapInformation.Height, Easing.OutQuint, 600);
+
+            ButtonContainer.ClearAnimations();
+            ButtonContainer.MoveToY((int) (ScoreContainer.Y + ScoreContainer.Height + 20 + ButtonContainer.Height), Easing.OutQuint, 600);
+
+            ScoreContainer.ClearAnimations();
+            ScoreContainer.MoveToX(ScoreContainer.Width + 100, Easing.OutQuint, 600);
         }
     }
 }
