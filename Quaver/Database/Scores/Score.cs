@@ -4,6 +4,7 @@ using System.Globalization;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
 using Quaver.Helpers;
 using Quaver.Server.Client.Structures;
 using SQLite;
@@ -202,5 +203,23 @@ namespace Quaver.Database.Scores
 
             return localScore;
         }
+
+        /// <summary>
+        ///     Converts the score object into a blank replay.
+        /// </summary>
+        /// <returns></returns>
+        public Replay ToReplay() => new Replay(Mode, Name, Mods, MapMd5)
+        {
+            Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),
+            Score = TotalScore,
+            Accuracy = (float)Accuracy,
+            MaxCombo = MaxCombo,
+            CountMarv = CountMarv,
+            CountPerf = CountPerf,
+            CountGreat = CountGreat,
+            CountGood = CountGood,
+            CountOkay = CountOkay,
+            CountMiss = CountMiss
+        };
     }
 }
