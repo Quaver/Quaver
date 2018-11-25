@@ -23,6 +23,8 @@ using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
+using Microsoft.Xna.Framework.Input;
+using Quaver.Online.Chat;
 
 namespace Quaver.Screens.Menu.UI.Jukebox
 {
@@ -143,8 +145,31 @@ namespace Quaver.Screens.Menu.UI.Jukebox
             AnimateSongTitleText();
             SetSongTimeProgressBarStatus();
             SelectNextTrackIfFinished();
+            JukeboxControls();
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Jukebox controls
+        /// </summary>
+        private void JukeboxControls() {
+            if (ChatManager.IsActive)
+                return;
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
+                SelectNextTrack(Direction.Backward);
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.X))
+            {
+                AudioEngine.LoadCurrentTrack();
+                AudioEngine.Track?.Play();
+            }
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.C))
+                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
+                    AudioEngine.Track.Play();
+                else
+                    AudioEngine.Track.Pause();
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.V))
+                SelectNextTrack(Direction.Forward);
         }
 
         /// <summary>
