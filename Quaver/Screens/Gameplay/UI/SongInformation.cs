@@ -78,7 +78,7 @@ namespace Quaver.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(BitmapFonts.Exo2Regular, $"Watching {Screen.LoadedReplay.PlayerName}", 13)
+            Watching = new SpriteText(BitmapFonts.Exo2Regular, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
