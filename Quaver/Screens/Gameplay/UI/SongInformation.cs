@@ -14,6 +14,7 @@ using Quaver.Modifiers;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Window;
 
 namespace Quaver.Screens.Gameplay.UI
 {
@@ -28,11 +29,6 @@ namespace Quaver.Screens.Gameplay.UI
         ///     Text that says "watching" when watching a replay.
         /// </summary>
         private SpriteText Watching { get; }
-
-        /// <summary>
-        ///     The player's name of the replay that we're watching.
-        /// </summary>
-        private SpriteText PlayerName { get; }
 
         /// <summary>
         ///     The title of the song
@@ -82,28 +78,13 @@ namespace Quaver.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(BitmapFonts.Exo2Regular, "Watching", 13)
+            Watching = new SpriteText(BitmapFonts.Exo2Regular, $"Watching {Screen.LoadedReplay.PlayerName}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 25,
                 Alpha = 0
             };
-
-            // Handle positioning and create player name text if we're actually
-            // watching a replay.
-            if (Screen.InReplayMode)
-            {
-                PlayerName = new SpriteText(BitmapFonts.Exo2Regular, Screen.LoadedReplay.PlayerName, 13)
-                {
-                    Parent = this,
-                    Alignment = Alignment.TopCenter,
-                    Y = Watching.Y,
-                    Tint = Colors.MainAccent,
-                    Alpha = 0,
-                    X = Watching.X + Watching.Width + 2
-                };
-            }
 
             Title = new SpriteText(BitmapFonts.Exo2Regular, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
             {
@@ -174,10 +155,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Mods.Alpha = alpha;
 
                 if (Screen.InReplayMode)
-                {
                     Watching.Alpha = alpha;
-                    PlayerName.Alpha = alpha;
-                }
             }
             else
             {
