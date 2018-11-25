@@ -284,6 +284,7 @@ namespace Quaver.Screens.Gameplay
                     {
                         MapManager.Selected.Value.LocalOffset += 5;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
 
                     // Handle offset -
@@ -291,6 +292,7 @@ namespace Quaver.Screens.Gameplay
                     {
                         MapManager.Selected.Value.LocalOffset -= 5;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
                 }
             }
