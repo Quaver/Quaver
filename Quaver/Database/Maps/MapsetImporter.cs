@@ -183,7 +183,7 @@ namespace Quaver.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.CalculateDifficulties();
-                    MapDatabaseCache.InsertMap(map);
+                    MapDatabaseCache.InsertMap(map, quaFile);
                     lastImported = map;
                 }
             }

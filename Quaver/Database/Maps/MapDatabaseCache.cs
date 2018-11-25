@@ -123,7 +123,7 @@ namespace Quaver.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(file), file);
                     map.CalculateDifficulties();
-                    InsertMap(map);
+                    InsertMap(map, file);
                 }
                 catch (Exception e)
                 {
@@ -150,11 +150,30 @@ namespace Quaver.Database.Maps
         ///     Inserts an individual map to the database.
         /// </summary>
         /// <param name="map"></param>
-        public static void InsertMap(Map map)
+        /// <param name="file"></param>
+        public static void InsertMap(Map map, string file)
         {
             try
             {
                 new SQLiteConnection(DatabasePath).Insert(map);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                File.Delete(file);
+            }
+        }
+
+        /// <summary>
+        ///     Updates an individual map in the database.
+        /// </summary>
+        /// <param name="map"></param>
+        public static void UpdateMap(Map map)
+        {
+            try
+            {
+                new SQLiteConnection(DatabasePath).Update(map);
+                Logger.Debug($"Updated map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
             }
             catch (Exception e)
             {
