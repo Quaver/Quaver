@@ -94,6 +94,7 @@ namespace Quaver.Screens.Result
         public ResultScreen(Replay replay)
         {
             Replay = replay;
+            Console.WriteLine(replay.Date);
             ResultsType = ResultScreenType.Replay;
             ScoreProcessor = new ScoreProcessorKeys(replay);
 
@@ -209,8 +210,8 @@ namespace Quaver.Screens.Result
         /// </summary>
         private void InitializeIfReplayType()
         {
-            if (ResultsType != ResultScreenType.Gameplay)
-                throw new InvalidOperationException("Cannot call this if ResultsType is not Score");
+            if (ResultsType != ResultScreenType.Replay)
+                throw new InvalidOperationException("Cannot call this if ResultsType is not Replay");
         }
 
         /// <summary>
