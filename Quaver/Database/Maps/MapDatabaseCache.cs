@@ -165,6 +165,23 @@ namespace Quaver.Database.Maps
         }
 
         /// <summary>
+        ///     Updates an individual map in the database.
+        /// </summary>
+        /// <param name="map"></param>
+        public static void UpdateMap(Map map)
+        {
+            try
+            {
+                new SQLiteConnection(DatabasePath).Update(map);
+                Logger.Debug($"Updated map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
         ///     Reads the osu!.db file defined in config and loads all of those maps into the cache.
         /// </summary>
         private static IEnumerable<Map> LoadOsuBeatmapDatabase()

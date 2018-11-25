@@ -382,7 +382,8 @@ namespace Quaver.Online
                     throw new ArgumentOutOfRangeException();
             }
 
-            // TODO: Update map in db with new status...
+            MapDatabaseCache.UpdateMap(map);
+
             var game = GameBase.Game as QuaverGame;
 
             // If in song select, update the banner of the currently selected map.
