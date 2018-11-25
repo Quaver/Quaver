@@ -26,6 +26,7 @@ using Quaver.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -341,10 +342,14 @@ namespace Quaver.Screens.Gameplay
         {
             // Use the replay's name for the scoreboard if we're watching one.
             var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
+
+            var selfAatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+                : UserInterface.UnknownAvatar;
+
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar,
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAatar,
                     ModManager.Mods)
                 {
                     Parent = Container,
