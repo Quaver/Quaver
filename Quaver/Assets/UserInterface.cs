@@ -21,8 +21,6 @@ namespace Quaver.Assets
         public static Texture2D SelectBorder { get; private set; }
         public static Texture2D SearchBar { get; private set; }
         public static Texture2D SelectSearchBackground { get; private set; }
-        public static Texture2D RankedStatusFlag { get; private set; }
-        public static Texture2D MetadataContainer { get; private set; }
         public static Texture2D ThumbnailSinglePlayer { get; private set; }
         public static Texture2D ThumbnailCompetitive { get; private set; }
         public static Texture2D ThumbnailCustomGames { get; private set; }
@@ -57,8 +55,6 @@ namespace Quaver.Assets
             SelectBorder = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/select-border.png"));
             SelectSearchBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/select-search-background.png"));
             SearchBar = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/search-bar.png"));
-            RankedStatusFlag = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/ranked-status-flag.png"));
-            MetadataContainer = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/metadata-container.png"));
             ThumbnailSinglePlayer = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-single-player.jpg"));
             ThumbnailCompetitive = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-competitive.jpg"));
             ThumbnailCustomGames = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/thumbnail-custom-games.jpg"));
