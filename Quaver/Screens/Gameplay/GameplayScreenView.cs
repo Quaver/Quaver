@@ -24,6 +24,7 @@ using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
 using Quaver.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Result;
 using Quaver.Screens.Results;
 using Quaver.Skinning;
 using Steamworks;
@@ -471,7 +472,7 @@ namespace Quaver.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                Screen.Exit(() => new ResultsScreen(Screen), 1500);
+                Screen.Exit(() => new ResultScreen(Screen), 500);
                 ResultsScreenLoadInitiated = true;
             }
 
