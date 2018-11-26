@@ -111,7 +111,9 @@ namespace Quaver.Screens.Result
         {
             Score = score;
             ResultsType = ResultScreenType.Score;
-            ScoreProcessor = new ScoreProcessorKeys(score.ToReplay());
+
+            Replay = score.ToReplay();
+            ScoreProcessor = new ScoreProcessorKeys(Replay);
 
             InitializeIfScoreType();
             View = new ResultScreenView(this);

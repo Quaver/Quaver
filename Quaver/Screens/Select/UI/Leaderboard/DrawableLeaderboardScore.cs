@@ -11,6 +11,7 @@ using Quaver.Online;
 using Quaver.Skinning;
 using Steamworks;
 using TimeAgo;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -96,6 +97,13 @@ namespace Quaver.Screens.Select.UI.Leaderboard
             }
 
             CreateScore();
+
+            Clicked += (sender, args) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game.CurrentScreen as SelectScreen;
+                screen.ExitToResults(Score);
+            };
         }
 
         /// <inheritdoc />

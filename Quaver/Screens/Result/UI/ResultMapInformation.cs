@@ -161,10 +161,8 @@ namespace Quaver.Screens.Result.UI
                     text += $" {now.ToShortDateString()} @ {time}";
                     break;
                 case ResultScreenType.Score:
-                    break;
                 case ResultScreenType.Replay:
                     var replayTime = string.Format("{0:hh:mm:ss tt}", Screen.Replay.Date);
-                    Console.WriteLine(Screen.Replay.Date);
                     text += $" {Screen.Replay.Date.ToShortDateString()} @ {replayTime}";
                     break;
                 default:
