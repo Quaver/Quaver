@@ -21,6 +21,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Wobble;
+using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -148,8 +149,19 @@ namespace Quaver.Screens.Result
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
+            var view = View as ResultScreenView;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Exit(() => new SelectScreen());
+                ExitToMenu();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+                view?.ButtonContainer.ChangeSelectedButton(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                view?.ButtonContainer.ChangeSelectedButton(Direction.Forward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                view?.ButtonContainer.SelectedButton.FireButtonClickEvent();
         }
 
         /// <inheritdoc />
@@ -290,6 +302,32 @@ namespace Quaver.Screens.Result
                 NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
                 Logger.Error(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Exits the screen back to the main menu
+        /// </summary>
+        public void ExitToMenu() => Exit(() => new SelectScreen());
+
+        /// <summary>
+        ///     Exports the currently loaded replay to a file.
+        /// </summary>
+        public void ExportReplay()
+        {
+        }
+
+        /// <summary>
+        ///     Exits the screen to watch a replay
+        /// </summary>
+        public void ExitToWatchReplay()
+        {
+        }
+
+        /// <summary>
+        ///     Exits the screen to retry the map
+        /// </summary>
+        public void ExitToRetryMap()
+        {
         }
     }
 }

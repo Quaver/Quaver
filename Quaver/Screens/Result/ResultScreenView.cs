@@ -25,7 +25,7 @@ namespace Quaver.Screens.Result
         /// <summary>
         ///     Container for displaying buttons on the screen
         /// </summary>
-        private ResultButtonContainer ButtonContainer { get; set; }
+        public ResultButtonContainer ButtonContainer { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -137,7 +137,7 @@ namespace Quaver.Screens.Result
         /// </summary>
         private void CreateButtonContainer()
         {
-            ButtonContainer = new ResultButtonContainer()
+            ButtonContainer = new ResultButtonContainer(Screen as ResultScreen)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
