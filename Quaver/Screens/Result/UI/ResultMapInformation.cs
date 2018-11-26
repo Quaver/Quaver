@@ -99,11 +99,11 @@ namespace Quaver.Screens.Result.UI
         /// </summary>
         private void UpdateThumbnailImage()
         {
-            if (BackgroundHelper.Map != null && MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(MapManager.Selected.Value))
+            if (BackgroundHelper.Map == null || MapManager.GetBackgroundPath(BackgroundHelper.Map) != MapManager.GetBackgroundPath(MapManager.Selected.Value))
                 return;
 
             Thumbnail.Image = BackgroundHelper.RawTexture;
-            Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Thumbnail.Alpha, 1, 300));
+            Thumbnail.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Thumbnail.Alpha, 1, 200));
         }
 
         /// <summary>
