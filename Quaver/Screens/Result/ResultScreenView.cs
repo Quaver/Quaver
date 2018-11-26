@@ -86,7 +86,7 @@ namespace Quaver.Screens.Result
             if (BackgroundHelper.Map != null && MapManager.GetBackgroundPath(BackgroundHelper.Map) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
             {
                 BackgroundHelper.Background.Image = BackgroundHelper.BlurredTexture;
-                BackgroundHelper.FadeIn();
+                BackgroundHelper.FadeIn(0.5f);
                 return;
             }
 
@@ -158,7 +158,7 @@ namespace Quaver.Screens.Result
             MapInformation.MoveToY((int)-MapInformation.Height, Easing.OutQuint, 600);
 
             ButtonContainer.ClearAnimations();
-            ButtonContainer.MoveToY((int) (ScoreContainer.Y + ScoreContainer.Height + 20 + ButtonContainer.Height), Easing.OutQuint, 600);
+            ButtonContainer.MoveToY((int) (ScoreContainer.Y + ScoreContainer.Height + 50 + ButtonContainer.Height), Easing.OutQuint, 600);
 
             ScoreContainer.ClearAnimations();
             ScoreContainer.MoveToX(ScoreContainer.Width + 100, Easing.OutQuint, 600);
