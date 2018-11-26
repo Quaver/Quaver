@@ -2,20 +2,28 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Modifiers;
+using Quaver.Online;
+using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Select;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Result
@@ -60,7 +68,12 @@ namespace Quaver.Screens.Result
         /// <summary>
         ///     Reference to the map that was played for this score.
         /// </summary>
-        public Map Map => MapManager.Selected.Value;
+        public static Map Map => MapManager.Selected.Value;
+
+        /// <summary>
+        ///     Reference to the user's set scroll speed.
+        /// </summary>
+        private static int ScrollSpeed => Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
 
         /// <summary>
         /// </summary>
@@ -215,12 +228,68 @@ namespace Quaver.Screens.Result
         }
 
         /// <summary>
-        ///     Submits a score locally & to the server if applicable.
-        ///     Also handles replay saving.
+        ///     Goes through the score submission process.
+        ///     saves score to local database.
         /// </summary>
         private void SubmitScore()
         {
-            // NotificationManager.Show(NotificationLevel.Info, "Submitting score");
+            // Always clear cached scores after submitting
+            MapManager.Selected.Value.ClearScores();
+
+            // Don't save scores if the user quit themself.
+            if (Screen.HasQuit || Screen.InReplayMode)
+                return;
+
+            // Don't submit scores at all if the user has ALL misses for their judgements.
+            // They basically haven't actually played the map.
+            if (ScoreProcessor.CurrentJudgements[Judgement.Miss] == ScoreProcessor.TotalJudgementCount)
+                return;
+
+            ThreadScheduler.Run(SaveLocalScore);
+
+            // Don't submit scores if disconnected from the server completely.
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+                return;
+
+            ThreadScheduler.Run(() =>
+            {
+                Logger.Important($"Beginning to submit score on map: {Screen.MapHash}", LogType.Network);
+
+                OnlineManager.Client?.Submit(new OnlineScore(Screen.MapHash, Screen.ReplayCapturer.Replay,
+                    ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                    SteamManager.PTicket));
+            });
+        }
+
+        /// <summary>
+        ///     Saves a local score to the database.
+        /// </summary>
+        private void SaveLocalScore()
+        {
+            var scoreId = 0;
+
+            try
+            {
+                var localScore = Score.FromScoreProcessor(ScoreProcessor, Screen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                    Screen.PauseCount);
+
+                scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "There was an error saving your score. Check Runtime.log for more details.");
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            try
+            {
+                Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
+                Logger.Error(e, LogType.Runtime);
+            }
         }
     }
 }
