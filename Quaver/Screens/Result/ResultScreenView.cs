@@ -121,7 +121,7 @@ namespace Quaver.Screens.Result
         /// </summary>
         private void CreateScoreContainer()
         {
-            ScoreContainer = new ResultScoreContainer
+            ScoreContainer = new ResultScoreContainer(Screen as ResultScreen)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -144,7 +144,7 @@ namespace Quaver.Screens.Result
             };
 
             ButtonContainer.Y = ScoreContainer.Y + ScoreContainer.Height + 20 + ButtonContainer.Height;
-            ButtonContainer.MoveToY((int) (ButtonContainer.Y - ButtonContainer.Height), Easing.OutQuint, 600);
+            ButtonContainer.MoveToY((int) (ButtonContainer.Y - ButtonContainer.Height + 10), Easing.OutQuint, 600);
         }
 
         /// <summary>

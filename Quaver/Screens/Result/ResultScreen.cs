@@ -344,6 +344,13 @@ namespace Quaver.Screens.Result
                         replay = Replay;
                         break;
                     case ResultScreenType.Score:
+                        // Prevent exporting online scores for now.
+                        if (Score.IsOnline)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "Exporting online scores is not implemented yet!");
+                            return;
+                        }
+
                         replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
                         break;
                     default:
@@ -409,6 +416,13 @@ namespace Quaver.Screens.Result
                         replay = Replay;
                         break;
                     case ResultScreenType.Score:
+                        // Prevent watching online replays for now.
+                        if (Score.IsOnline)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "Watching online replays is not implemented yet!");
+                            return;
+                        }
+
                         replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
                         break;
                     default:
