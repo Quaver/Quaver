@@ -86,6 +86,26 @@ namespace Quaver.Database.Maps
             {
                 try
                 {
+                    switch (screen.Type)
+                    {
+                        // Don't allow replay import on these screens
+                        case QuaverScreenType.Connecting:
+                        case QuaverScreenType.Edit:
+                        case QuaverScreenType.Gameplay:
+                        case QuaverScreenType.Loading:
+                        case QuaverScreenType.Importing:
+                        case QuaverScreenType.Splash:
+                            NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
+                            return;
+                        // Allow replay import on these screens
+                        case QuaverScreenType.Menu:
+                        case QuaverScreenType.Results:
+                        case QuaverScreenType.Select:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
                     var replay = new Replay(e);
 
                     // Find the map associated with the replay.
