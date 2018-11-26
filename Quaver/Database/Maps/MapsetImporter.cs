@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Replays;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Converters.Osu;
 using Quaver.Converters.StepMania;
@@ -63,6 +64,9 @@ namespace Quaver.Database.Maps
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
+
             // Mapset files
             if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
             {
@@ -70,9 +74,6 @@ namespace Quaver.Database.Maps
 
                 var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
-
-                var game = GameBase.Game as QuaverGame;
-                var screen = game.CurrentScreen;
 
                 // If in song select, automatically go to the import screen
                 if (screen.Type != QuaverScreenType.Select || screen.Exiting)
@@ -86,7 +87,28 @@ namespace Quaver.Database.Maps
                 try
                 {
                     var replay = new Replay(e);
-                    QuaverScreenManager.ChangeScreen(new ResultScreen(replay));
+
+                    // Find the map associated with the replay.
+                    var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == replay.MapMd5));
+
+                    if (mapset == null)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You do not have the map associated with this replay.");
+                        return;
+                    }
+
+                    MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
+
+                    screen.Exit(() =>
+                    {
+                        if (AudioEngine.Track != null)
+                        {
+                            lock (AudioEngine.Track)
+                                AudioEngine.Track.Fade(10, 300);
+                        }
+
+                        return new ResultScreen(replay);
+                    });
                 }
                 catch (Exception ex)
                 {

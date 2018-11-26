@@ -83,7 +83,7 @@ namespace Quaver.Screens.Result
         public void HandleBackgroundChange()
         {
             // If we've already got the background loaded up, then use it.
-            if (MapManager.GetBackgroundPath(BackgroundHelper.Map) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
+            if (BackgroundHelper.Map != null && MapManager.GetBackgroundPath(BackgroundHelper.Map) == MapManager.GetBackgroundPath(MapManager.Selected.Value))
             {
                 BackgroundHelper.Background.Image = BackgroundHelper.BlurredTexture;
                 BackgroundHelper.FadeIn();
