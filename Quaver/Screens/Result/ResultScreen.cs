@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
+using Quaver.Helpers;
 using Quaver.Modifiers;
 using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
+using Quaver.Screens.Loading;
 using Quaver.Screens.Select;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
@@ -77,6 +82,16 @@ namespace Quaver.Screens.Result
         private static int ScrollSpeed => Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
 
         /// <summary>
+        ///     The last time the replay was exported
+        /// </summary>
+        private long LastReplayExportTime { get; set; }
+
+        /// <summary>
+        ///     Song title + Difficulty name.
+        /// </summary>
+        public string SongTitle => $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]";
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultScreen(GameplayScreen screen)
@@ -108,7 +123,6 @@ namespace Quaver.Screens.Result
         public ResultScreen(Replay replay)
         {
             Replay = replay;
-            Console.WriteLine(replay.Date);
             ResultsType = ResultScreenType.Replay;
             ScoreProcessor = new ScoreProcessorKeys(replay);
 
@@ -314,6 +328,64 @@ namespace Quaver.Screens.Result
         /// </summary>
         public void ExportReplay()
         {
+            Replay replay;
+
+            try
+            {
+                switch (ResultsType)
+                {
+                    case ResultScreenType.Gameplay:
+                    case ResultScreenType.Replay:
+                        replay = Replay;
+                        break;
+                    case ResultScreenType.Score:
+                        replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return;
+            }
+
+            // Run a check for if the replay has data
+            if (!replay.HasData)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "This replay has no data!");
+                return;
+            }
+
+            // Don't allow autoplay replays to be exported
+            if (replay.Mods.HasFlag(ModIdentifier.Autoplay))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot export replays that have the Autoplay mod");
+                return;
+            }
+
+            // Make sure the user isn't spamming the export button and proceed to export
+            if (GameBase.Game.TimeRunning - LastReplayExportTime >= 5000 || LastReplayExportTime == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "One moment. The replay is getting exported.");
+                LastReplayExportTime = GameBase.Game.TimeRunning;
+
+                ThreadScheduler.Run(() =>
+                {
+                    var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {StringHelper.FileNameSafeString(SongTitle)} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.Game.TimeRunning}.qr";
+                    Replay.Write(path);
+
+                    // Open containing folder
+                    Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+                    NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
+                });
+            }
+            else
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Please wait a few moments before exporting again!");
+                return;
+            }
         }
 
         /// <summary>
@@ -321,13 +393,49 @@ namespace Quaver.Screens.Result
         /// </summary>
         public void ExitToWatchReplay()
         {
+            Replay replay;
+
+            try
+            {
+                switch (ResultsType)
+                {
+                    case ResultScreenType.Gameplay:
+                    case ResultScreenType.Replay:
+                        replay = Replay;
+                        break;
+                    case ResultScreenType.Score:
+                        replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Unable to read replay file");
+                Logger.Error(e, LogType.Runtime);
+                return;
+            }
+
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                // Load up the .qua file again
+                var qua = MapManager.Selected.Value.LoadQua();
+                MapManager.Selected.Value.Qua = qua;
+
+                return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
+            });
         }
 
         /// <summary>
         ///     Exits the screen to retry the map
         /// </summary>
-        public void ExitToRetryMap()
-        {
-        }
+        public void ExitToRetryMap() => Exit(() => new MapLoadingScreen(new List<Score>()));
     }
 }
