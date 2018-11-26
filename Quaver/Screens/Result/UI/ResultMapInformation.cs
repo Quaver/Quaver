@@ -109,7 +109,8 @@ namespace Quaver.Screens.Result.UI
         /// <summary>
         ///     Creates the text that displays the difficulty name of the map.
         /// </summary>
-        private void CreateDifficultyName() => DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{Map.DifficultyName}]", 13)
+        private void CreateDifficultyName() => DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{Map.DifficultyName}] " +
+                                                                                                         $"+ {ModHelper.GetModsString(Screen.ScoreProcessor.Mods)}", 13)
         {
             Parent = this,
             X = Thumbnail.X + Thumbnail.Width + 10,
