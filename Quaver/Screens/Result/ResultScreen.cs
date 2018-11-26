@@ -136,7 +136,8 @@ namespace Quaver.Screens.Result
         {
             MakeCursorVisible();
 
-            AudioEngine.PlaySelectedTrackAtPreview();
+            if (ResultsType == ResultScreenType.Replay)
+                AudioEngine.PlaySelectedTrackAtPreview();
 
             BackgroundHelper.Background.BrightnessSprite.ClearAnimations();
             BackgroundHelper.Background.BrightnessSprite.Alpha = 1;
