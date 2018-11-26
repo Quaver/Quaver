@@ -48,7 +48,7 @@ namespace Quaver.Screens.Result.UI
         public ResultButtonContainer(ResultScreen screen)
         {
             Screen = screen;
-            Size = new ScalableVector2(WindowManager.Width - 56, 60);
+            Size = new ScalableVector2(WindowManager.Width - 56, 54);
             Tint = Color.Black;
             Alpha = 0;
 
@@ -66,7 +66,7 @@ namespace Quaver.Screens.Result.UI
                 CreateButton("Back", true, (o, e) => Screen.ExitToMenu()),
                 CreateButton("Export Replay", false, (o, e) => Screen.ExportReplay()),
                 CreateButton("Watch Replay", false, (o, e) => Screen.ExitToWatchReplay()),
-                CreateButton("Retry", false, (o, e) => Screen.ExitToRetryMap())
+                CreateButton("Retry", false, (o, e) => Screen.ExitToRetryMap()),
             };
 
             // Go through each button and initialize the sprite further.
@@ -117,12 +117,18 @@ namespace Quaver.Screens.Result.UI
         ///     requirements the container needs
         /// </summary>
         /// <returns></returns>
-        private SelectableBorderedTextButton CreateButton(string text, bool selected, EventHandler onClick) =>
-            new SelectableBorderedTextButton(text, Color.White, Colors.MainAccent, selected, onClick)
+        private SelectableBorderedTextButton CreateButton(string text, bool selected, EventHandler onClick)
         {
-            Height = Height,
-            Tint = Color.Black,
-            Alpha = 0.45f
-        };
+            var btn = new SelectableBorderedTextButton(text, Color.White, Colors.MainAccent, selected, onClick)
+            {
+                Height = Height,
+                Tint = Color.Black,
+                Alpha = 0.45f
+            };
+
+            btn.Width++;
+
+            return btn;
+        }
     }
 }
