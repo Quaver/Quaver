@@ -31,16 +31,23 @@ namespace Quaver.Screens.Result.UI
         public ResultKeyValueItem(ResultKeyValueItemType type, string key, string value)
         {
             Type = type;
-            Alpha = 0;
+            Alpha = 0f;
             Tint = Color.CornflowerBlue;
 
             CreateTextKey(key);
             CreateTextValue(value);
 
-            var width = Math.Max(TextKey.Width, TextValue.Width);
-            var height = TextKey.Height + TextValue.Height + 5;
-
-            Size = new ScalableVector2(width, height);
+            switch (Type)
+            {
+                case ResultKeyValueItemType.Vertical:
+                    Size = new ScalableVector2(Math.Max(TextKey.Width, TextValue.Width), TextKey.Height + TextValue.Height + 5);
+                    break;
+                case ResultKeyValueItemType.Horizontal:
+                    Size = new ScalableVector2(TextKey.Width + 5 + TextValue.Width, TextKey.Height);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -48,7 +55,7 @@ namespace Quaver.Screens.Result.UI
         private void CreateTextKey(string key) => TextKey = new SpriteText(BitmapFonts.Exo2Medium, key, 13)
         {
             Parent = this,
-            Alignment = Alignment.TopCenter,
+            Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
             Tint = Colors.SecondaryAccent
         };
 
@@ -61,12 +68,12 @@ namespace Quaver.Screens.Result.UI
             TextValue = new SpriteText(BitmapFonts.Exo2Medium, value, 13)
             {
                 Parent = this,
-                Alignment = Alignment.TopCenter,
+                Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
                 Y = Type == ResultKeyValueItemType.Vertical ? TextKey.Height + 5 : 0,
             };
 
             if (Type == ResultKeyValueItemType.Horizontal)
-                TextValue.X = TextKey.Width / 2f + TextValue.Width / 2f + 10;
+                TextValue.X = TextKey.Width + 5;
         }
     }
 

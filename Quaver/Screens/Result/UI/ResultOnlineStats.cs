@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Helpers;
 using Quaver.Online;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Scores;
@@ -134,23 +136,20 @@ namespace Quaver.Screens.Result.UI
             TextSubmittingScore = new SpriteText(BitmapFonts.Exo2Medium, "SUBMITTING SCORE", 13)
             {
                 Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = Container.VerticalDividerLine.X / 2f,
+                Alignment = Alignment.MidCenter,
             };
 
             SubmittingLoadingWheel = new Sprite()
             {
                 Parent = this,
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(TextSubmittingScore.Height, TextSubmittingScore.Height),
-                Image = UserInterface.LoadingWheel
+                Image = UserInterface.LoadingWheel,
+                X = TextSubmittingScore.Width / 2f + 20
             };
 
             AddContainedDrawable(TextSubmittingScore);
             AddContainedDrawable(SubmittingLoadingWheel);
-
-            TextSubmittingScore.X -= TextSubmittingScore.Width / 2f + SubmittingLoadingWheel.Width / 2f;
-            SubmittingLoadingWheel.X = TextSubmittingScore.X + TextSubmittingScore.Width + 5;
         }
 
         /// <summary>
@@ -198,25 +197,39 @@ namespace Quaver.Screens.Result.UI
 
             Stats = new List<ResultKeyValueItem>()
             {
-                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "MAP RANK", score.Score.Rank == -1 ? "N/A" : $"#{score.Score.Rank:n0}"),
-                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "GLOBAL RANK", $"#{score.Stats.NewGlobalRank:n0}"),
-                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "COUNTRY RANK", $"#{score.Stats.NewGlobalRank:n0}")
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "MAP RANK:", score.Score.Rank == -1 ? "N/A" : $"#{score.Score.Rank:n0}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "GLOBAL RANK:", $"#{score.Stats.NewGlobalRank:n0}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "COUNTRY RANK:", $"#{score.Stats.NewGlobalRank:n0}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "OVL. RATING:",
+                    $"{score.Stats.OverallPerformanceRating:0.00}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "OVL. ACCURACY:",
+                    $"{StringHelper.AccuracyToString((float) score.Stats.OverallAccuracy)}"),
             };
+
+            var totalWidth = 0f;
 
             for (var i = 0; i < Stats.Count; i++)
             {
                 var item = Stats[i];
                 item.Parent = this;
                 item.Alignment = Alignment.MidLeft;
-                item.X = (Container.VerticalDividerLine.X - 100) / Stats.Count * i + 70;
-                item.Y += 13;
+                totalWidth += item.Width;
 
                 item.TextKey.Alpha = 0;
                 item.TextValue.Alpha = 0;
-
                 item.TextKey.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, item.TextKey.Alpha, 1, 300));
                 item.TextValue.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, item.TextValue.Alpha, 1, 300));
+
+                if (i == 0)
+                    continue;
+
+                var last = Stats[i - 1];
+                item.Parent = last;
+                item.X = last.Width + 50;
+                totalWidth += 50;
             }
+
+            Stats.First().X = Width / 2f - totalWidth / 2f;
         }
     }
 }
