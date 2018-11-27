@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Online;
@@ -111,7 +112,7 @@ namespace Quaver.Screens.Result.UI
         /// </summary>
         private void CreateDisconnectedText()
         {
-            var disconnectedText = new SpriteText(BitmapFonts.Exo2SemiBold, "You must be logged in to submit scores", 13)
+            var disconnectedText = new SpriteText(BitmapFonts.Exo2SemiBold, "Please login to begin submitting scores", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -126,6 +127,10 @@ namespace Quaver.Screens.Result.UI
         /// </summary>
         private void CreateSubmittingText()
         {
+            // Scores aren't submitted if the user has all misses
+            if (Screen.ScoreProcessor.TotalJudgementCount == Screen.ScoreProcessor.CurrentJudgements[Judgement.Miss])
+                return;
+
             TextSubmittingScore = new SpriteText(BitmapFonts.Exo2Medium, "SUBMITTING SCORE", 13)
             {
                 Parent = this,
@@ -171,15 +176,13 @@ namespace Quaver.Screens.Result.UI
             SubmittingLoadingWheel.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, SubmittingLoadingWheel.Alpha, 0, 100));
             TextSubmittingScore.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TextSubmittingScore.Alpha, 0, 100));
 
-            Console.WriteLine(e.Response.Status);
-
             switch (e.Response.Status)
             {
                 case 200:
                     AddStatsAfterSubmission(e.Response);
                     break;
                 case 400:
-                    Logger.Error($"Map unranked", LogType.Network);
+                    Logger.Warning($"Map unranked", LogType.Network);
                     break;
             }
         }
@@ -192,13 +195,6 @@ namespace Quaver.Screens.Result.UI
         {
             if (score.Map.Md5 != MapManager.Selected.Value.Md5Checksum)
                 return;
-
-            Console.WriteLine(score.Score.PersonalBest);
-            Console.WriteLine(score.Score.Rank);
-            Console.WriteLine(score.Score.PerformanceRating);
-            Console.WriteLine(score.Stats.NewGlobalRank);
-            Console.WriteLine(score.Stats.OverallAccuracy);
-            Console.WriteLine(score.Stats.OverallPerformanceRating);
 
             Stats = new List<ResultKeyValueItem>()
             {
