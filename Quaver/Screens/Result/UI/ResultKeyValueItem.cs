@@ -10,6 +10,8 @@ namespace Quaver.Screens.Result.UI
 {
     public class ResultKeyValueItem : Sprite
     {
+        public ResultKeyValueItemType Type { get; }
+
         /// <summary>
         ///     The key or "Heading"
         /// </summary>
@@ -23,10 +25,12 @@ namespace Quaver.Screens.Result.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public ResultKeyValueItem(string key, string value)
+        public ResultKeyValueItem(ResultKeyValueItemType type, string key, string value)
         {
+            Type = type;
             Alpha = 0;
             Tint = Color.CornflowerBlue;
 
@@ -48,11 +52,27 @@ namespace Quaver.Screens.Result.UI
             Tint = Colors.SecondaryAccent
         };
 
-        private void CreateTextValue(string value) => TextValue = new SpriteText(BitmapFonts.Exo2Medium, value, 13)
+        /// <summary>
+
+        /// </summary>
+        /// <param name="value"></param>
+        private void CreateTextValue(string value)
         {
-            Parent = this,
-            Alignment = Alignment.TopCenter,
-            Y = TextKey.Height + 5
-        };
+            TextValue = new SpriteText(BitmapFonts.Exo2Medium, value, 13)
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = Type == ResultKeyValueItemType.Vertical ? TextKey.Height + 5 : 0,
+            };
+
+            if (Type == ResultKeyValueItemType.Horizontal)
+                TextValue.X = TextKey.Width / 2f + TextValue.Width / 2f + 10;
+        }
+    }
+
+    public enum ResultKeyValueItemType
+    {
+        Vertical,
+        Horizontal
     }
 }

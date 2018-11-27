@@ -62,6 +62,11 @@ namespace Quaver.Screens.Result.UI
         /// </summary>
         private ResultJudgementBreakdown JudgementBreakdown { get; set; }
 
+        /// <summary>
+        ///     Displays online stats if necessary
+        /// </summary>
+        private ResultOnlineStats OnlineStats { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -81,6 +86,7 @@ namespace Quaver.Screens.Result.UI
             CreateStatisticsText();
             CreateKeyValueItems();
             CreateJudgementBreakdown();
+            CreateOnlineStats();
         }
 
         /// <summary>
@@ -165,10 +171,10 @@ namespace Quaver.Screens.Result.UI
         {
             ResultKeyValueItems = new List<ResultKeyValueItem>()
             {
-                new ResultKeyValueItem("SCORE RATING", "00.00"),
-                new ResultKeyValueItem("TOTAL SCORE", $"{Screen.ScoreProcessor.Score:N0}"),
-                new ResultKeyValueItem("ACCURACY", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
-                new ResultKeyValueItem("MAX COMBO", $"{Screen.ScoreProcessor.MaxCombo}x"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "SCORE RATING", "00.00"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "TOTAL SCORE", $"{Screen.ScoreProcessor.Score:N0}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "ACCURACY", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
+                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "MAX COMBO", $"{Screen.ScoreProcessor.MaxCombo}x"),
             };
 
             for (var i = 0; i < ResultKeyValueItems.Count; i++)
@@ -197,6 +203,15 @@ namespace Quaver.Screens.Result.UI
         {
             Parent = this,
             Y = ResultKeyValueItemDividerLine.Y + ResultKeyValueItemDividerLine.Height,
+            X = Border.Thickness
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateOnlineStats() => OnlineStats = new ResultOnlineStats(Screen, this)
+        {
+            Parent = this,
+            Y = BottomHorizontalDividerLine.Y,
             X = Border.Thickness
         };
     }

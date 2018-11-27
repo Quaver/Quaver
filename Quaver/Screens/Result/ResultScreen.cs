@@ -54,7 +54,7 @@ namespace Quaver.Screens.Result
         /// <summary>
         ///    Reference to the gameplay screen, if the user was previous playing
         /// </summary>
-        public GameplayScreen Screen { get; }
+        public GameplayScreen Gameplay { get; }
 
         /// <summary>
         ///     Reference to the score if the user is coming from a scoreboard score.
@@ -93,12 +93,12 @@ namespace Quaver.Screens.Result
 
         /// <summary>
         /// </summary>
-        /// <param name="screen"></param>
-        public ResultScreen(GameplayScreen screen)
+        /// <param name="gameplay"></param>
+        public ResultScreen(GameplayScreen gameplay)
         {
-            Screen = screen;
+            Gameplay = gameplay;
             ResultsType = ResultScreenType.Gameplay;
-            ScoreProcessor = Screen.Ruleset.ScoreProcessor;
+            ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
 
             InitializeIfGameplayType();
             View = new ResultScreenView(this);
@@ -210,14 +210,14 @@ namespace Quaver.Screens.Result
 
             // Stop `capturing` the replay. Not sure if this is necessary since update isn't even called and
             // it wouldn't be capturing anyway.
-            Screen.ReplayCapturer.ShouldCapture = false;
+            Gameplay.ReplayCapturer.ShouldCapture = false;
 
             // Keep the same replay and score processor if the user was watching a replay before,
-            if (Screen.InReplayMode)
+            if (Gameplay.InReplayMode)
             {
-                Replay = Screen.LoadedReplay;
-                ScoreProcessor = Replay.Mods.HasFlag(ModIdentifier.Autoplay) ? Screen.Ruleset.ScoreProcessor : new ScoreProcessorKeys(Replay);
-                ScoreProcessor.Stats = Screen.Ruleset.ScoreProcessor.Stats;
+                Replay = Gameplay.LoadedReplay;
+                ScoreProcessor = Replay.Mods.HasFlag(ModIdentifier.Autoplay) ? Gameplay.Ruleset.ScoreProcessor : new ScoreProcessorKeys(Replay);
+                ScoreProcessor.Stats = Gameplay.Ruleset.ScoreProcessor.Stats;
 
                 // Remove all modifiers that was played during the replay, so the user doesn't still have them
                 // activated when they go back to select.
@@ -228,9 +228,9 @@ namespace Quaver.Screens.Result
             // User has played the map, and wasn't watching a replay, so we can proceed normally.
 
             // Set the replay that the user has generated
-            Replay = Screen.ReplayCapturer.Replay;
-            Replay.PauseCount = Screen.PauseCount;
-            ScoreProcessor = Screen.Ruleset.ScoreProcessor;
+            Replay = Gameplay.ReplayCapturer.Replay;
+            Replay.PauseCount = Gameplay.PauseCount;
+            ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
             Replay.FromScoreProcessor(ScoreProcessor);
 
             // Remove paused modifier if enabled.
@@ -268,7 +268,7 @@ namespace Quaver.Screens.Result
             MapManager.Selected.Value.ClearScores();
 
             // Don't save scores if the user quit themself.
-            if (Screen.HasQuit || Screen.InReplayMode)
+            if (Gameplay.HasQuit || Gameplay.InReplayMode)
                 return;
 
             // Don't submit scores at all if the user has ALL misses for their judgements.
@@ -284,9 +284,9 @@ namespace Quaver.Screens.Result
 
             ThreadScheduler.Run(() =>
             {
-                Logger.Important($"Beginning to submit score on map: {Screen.MapHash}", LogType.Network);
+                Logger.Important($"Beginning to submit score on map: {Gameplay.MapHash}", LogType.Network);
 
-                OnlineManager.Client?.Submit(new OnlineScore(Screen.MapHash, Screen.ReplayCapturer.Replay,
+                OnlineManager.Client?.Submit(new OnlineScore(Gameplay.MapHash, Gameplay.ReplayCapturer.Replay,
                     ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
                     SteamManager.PTicket));
             });
@@ -301,8 +301,8 @@ namespace Quaver.Screens.Result
 
             try
             {
-                var localScore = Score.FromScoreProcessor(ScoreProcessor, Screen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
-                    Screen.PauseCount);
+                var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                    Gameplay.PauseCount);
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
