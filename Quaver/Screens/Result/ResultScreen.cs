@@ -230,8 +230,8 @@ namespace Quaver.Screens.Result
             // Set the replay that the user has generated
             Replay = Screen.ReplayCapturer.Replay;
             Replay.PauseCount = Screen.PauseCount;
-
             ScoreProcessor = Screen.Ruleset.ScoreProcessor;
+            Replay.FromScoreProcessor(ScoreProcessor);
 
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
