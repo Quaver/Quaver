@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Database.Maps;
@@ -109,13 +110,20 @@ namespace Quaver.Screens.Result.UI
         /// <summary>
         ///     Creates the text that displays the difficulty name of the map.
         /// </summary>
-        private void CreateDifficultyName() => DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{Map.DifficultyName}] " +
-                                                                                                         $"+ {ModHelper.GetModsString(Screen.ScoreProcessor.Mods)}", 13)
+        private void CreateDifficultyName()
         {
-            Parent = this,
-            X = Thumbnail.X + Thumbnail.Width + 10,
-            Y = 25
-        };
+            var text = $"[{Map.DifficultyName}]";
+
+            if (Screen.ScoreProcessor.Mods != 0)
+                text += $" + {ModHelper.GetModsString(Screen.ScoreProcessor.Mods)}";
+
+            DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, text, 13)
+            {
+                Parent = this,
+                X = Thumbnail.X + Thumbnail.Width + 10,
+                Y = 25
+            };
+        }
 
         /// <summary>
         ///     Creates the text that displays the title of the song.
