@@ -25,7 +25,6 @@ using Quaver.Screens.Gameplay.UI.Counter;
 using Quaver.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Result;
-using Quaver.Screens.Results;
 using Quaver.Skinning;
 using Steamworks;
 using Wobble;
