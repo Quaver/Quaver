@@ -20,6 +20,7 @@ using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
+using Quaver.Screens.Result.UI;
 using Quaver.Screens.Select;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
@@ -491,7 +492,8 @@ namespace Quaver.Screens.Result
             IsFetchingOnlineReplay = true;
             Logger.Important($"Fetching online replay for score: {Score.Id}", LogType.Network);
 
-            NotificationManager.Show(NotificationLevel.Info, "Downloading replay. Please Wait!");
+            var dialog = new DownloadingReplayDialog();
+            DialogManager.Show(dialog);
 
             ThreadScheduler.Run(() =>
             {
@@ -526,6 +528,7 @@ namespace Quaver.Screens.Result
                 }
                 finally
                 {
+                    DialogManager.Dismiss(dialog);
                     File.Delete(path);
                     IsFetchingOnlineReplay = false;
                 }
