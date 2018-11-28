@@ -34,7 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpCompress" Version="0.22.0" />
-    <PackageReference Include="SmartThreadPool.dll" Version="2.2.4" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,8 @@
 using System;
 using System.Threading;
-using Amib.Threading;
 using Quaver.Shared.Graphics.Notifications;
+using UniversalThreadManagement;
 using Wobble.Logging;
-using Action = Amib.Threading.Action;
 
 namespace Quaver.Shared.Scheduling
 {
