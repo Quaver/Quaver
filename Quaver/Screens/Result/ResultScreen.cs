@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -90,6 +91,11 @@ namespace Quaver.Screens.Result
         ///     Song title + Difficulty name.
         /// </summary>
         public string SongTitle => $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]";
+
+        /// <summary>
+        ///     Dictates if we're in the midst of fetching an online replay for watching.
+        /// </summary>
+        public bool IsFetchingOnlineReplay { get; set; }
 
         /// <summary>
         /// </summary>
@@ -326,13 +332,22 @@ namespace Quaver.Screens.Result
         /// <summary>
         ///     Exits the screen back to the main menu
         /// </summary>
-        public void ExitToMenu() => Exit(() => new SelectScreen());
+        public void ExitToMenu()
+        {
+            if (IsFetchingOnlineReplay)
+                return;
+
+            Exit(() => new SelectScreen());
+        }
 
         /// <summary>
         ///     Exports the currently loaded replay to a file.
         /// </summary>
         public void ExportReplay()
         {
+            if (IsFetchingOnlineReplay)
+                return;
+
             Replay replay;
 
             try
@@ -344,10 +359,9 @@ namespace Quaver.Screens.Result
                         replay = Replay;
                         break;
                     case ResultScreenType.Score:
-                        // Prevent exporting online scores for now.
                         if (Score.IsOnline)
                         {
-                            NotificationManager.Show(NotificationLevel.Warning, "Exporting online scores is not implemented yet!");
+                            NotificationManager.Show(NotificationLevel.Warning, "You must watch the online replay before exporting it.");
                             return;
                         }
 
@@ -405,6 +419,9 @@ namespace Quaver.Screens.Result
         /// </summary>
         public void ExitToWatchReplay()
         {
+            if (IsFetchingOnlineReplay)
+                return;
+
             Replay replay;
 
             try
@@ -419,11 +436,11 @@ namespace Quaver.Screens.Result
                         // Prevent watching online replays for now.
                         if (Score.IsOnline)
                         {
-                            NotificationManager.Show(NotificationLevel.Warning, "Watching online replays is not implemented yet!");
+                            WatchOnlineReplay();
                             return;
                         }
-
-                        replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
+                        else
+                            replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -433,6 +450,12 @@ namespace Quaver.Screens.Result
             {
                 NotificationManager.Show(NotificationLevel.Error, "Unable to read replay file");
                 Logger.Error(e, LogType.Runtime);
+                return;
+            }
+
+            if (replay == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Could not read replay");
                 return;
             }
 
@@ -456,5 +479,57 @@ namespace Quaver.Screens.Result
         ///     Exits the screen to retry the map
         /// </summary>
         public void ExitToRetryMap() => Exit(() => new MapLoadingScreen(new List<Score>()));
+
+        /// <summary>
+        ///     Exits to watch a replay online.
+        /// </summary>
+        private void WatchOnlineReplay()
+        {
+            if (IsFetchingOnlineReplay)
+                return;
+
+            IsFetchingOnlineReplay = true;
+            Logger.Important($"Fetching online replay for score: {Score.Id}", LogType.Network);
+
+            NotificationManager.Show(NotificationLevel.Info, "Downloading replay. Please Wait!");
+
+            ThreadScheduler.Run(() =>
+            {
+                var dir = $"{ConfigManager.DataDirectory}/Downloads";
+                var path = $"{dir}/{Score.Id}.qr";
+                Directory.CreateDirectory(dir);
+
+                try
+                {
+                    OnlineManager.Client?.DownloadReplay(Score.Id, path);
+                    var replay = new Replay(path);
+
+                    // Load up the .qua file again
+                    var qua = MapManager.Selected.Value.LoadQua();
+                    MapManager.Selected.Value.Qua = qua;
+
+                    Exit(() =>
+                    {
+                        if (AudioEngine.Track != null)
+                        {
+                            lock (AudioEngine.Track)
+                                AudioEngine.Track.Fade(10, 300);
+                        }
+
+                        return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
+                    });
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Network);
+                    NotificationManager.Show(NotificationLevel.Error, "Failed to download online replay");
+                }
+                finally
+                {
+                    File.Delete(path);
+                    IsFetchingOnlineReplay = false;
+                }
+            });
+        }
     }
 }
