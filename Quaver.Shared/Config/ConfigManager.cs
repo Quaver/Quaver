@@ -5,8 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using IniParser;
-using IniParser.Model;
+using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
@@ -370,7 +369,7 @@ namespace Quaver.Shared.Config
             if (!File.Exists(_gameDirectory + "/quaver.cfg"))
                 File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
 
-            var data = new FileIniDataParser().ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+            var data = new IniFileParser.IniFileParser().ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.

@@ -22,9 +22,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="INIFileParser.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Steamworks.NET.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -34,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.0" />
+    <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
