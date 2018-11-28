@@ -28,6 +28,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Wobble;
+using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -108,6 +109,7 @@ namespace Quaver.Screens.Result
             ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
 
             InitializeIfGameplayType();
+            ChangeDiscordPresence();
             View = new ResultScreenView(this);
         }
 
@@ -136,6 +138,8 @@ namespace Quaver.Screens.Result
             ScoreProcessor = new ScoreProcessorKeys(replay);
 
             InitializeIfReplayType();
+            ChangeDiscordPresence();
+
             View = new ResultScreenView(this);
         }
 
@@ -533,6 +537,32 @@ namespace Quaver.Screens.Result
                     IsFetchingOnlineReplay = false;
                 }
             });
+        }
+
+        /// <summary>
+        ///     Changes discord rich presence to show results.
+        /// </summary>
+        private void ChangeDiscordPresence()
+        {
+            DiscordManager.Client.CurrentPresence.Timestamps = null;
+
+            // Don't change if we're loading in from a replay file.
+            if (ResultsType == ResultScreenType.Replay || Gameplay.InReplayMode)
+            {
+                DiscordManager.Client.CurrentPresence.Details = "Idle";
+                DiscordManager.Client.CurrentPresence.State = "In the Menus";
+                DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                return;
+            }
+
+            var state = Gameplay.Failed ? "Fail" : "Pass";
+            var score = $"{ScoreProcessor.Score / 1000}k";
+            var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
+            var grade = Gameplay.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
+            var combo = $"{ScoreProcessor.MaxCombo}x";
+
+            DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {score} {acc} {combo}";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
     }
 }

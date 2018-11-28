@@ -13,7 +13,6 @@ using Quaver.Scheduling;
 using Quaver.Screens;
 using Quaver.Screens.Importing;
 using Quaver.Screens.Result;
-using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
