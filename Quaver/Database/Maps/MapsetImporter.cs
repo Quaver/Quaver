@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Replays;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Converters.Osu;
 using Quaver.Converters.StepMania;
@@ -11,6 +12,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Scheduling;
 using Quaver.Screens;
 using Quaver.Screens.Importing;
+using Quaver.Screens.Result;
 using Quaver.Screens.Results;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
@@ -62,6 +64,9 @@ namespace Quaver.Database.Maps
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
+            var game = GameBase.Game as QuaverGame;
+            var screen = game.CurrentScreen;
+
             // Mapset files
             if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
             {
@@ -69,9 +74,6 @@ namespace Quaver.Database.Maps
 
                 var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
-
-                var game = GameBase.Game as QuaverGame;
-                var screen = game.CurrentScreen;
 
                 // If in song select, automatically go to the import screen
                 if (screen.Type != QuaverScreenType.Select || screen.Exiting)
@@ -84,7 +86,49 @@ namespace Quaver.Database.Maps
             {
                 try
                 {
-                    QuaverScreenManager.ChangeScreen(new ResultsScreen(new Replay(e)));
+                    switch (screen.Type)
+                    {
+                        // Don't allow replay import on these screens
+                        case QuaverScreenType.Connecting:
+                        case QuaverScreenType.Edit:
+                        case QuaverScreenType.Gameplay:
+                        case QuaverScreenType.Loading:
+                        case QuaverScreenType.Importing:
+                        case QuaverScreenType.Splash:
+                            NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
+                            return;
+                        // Allow replay import on these screens
+                        case QuaverScreenType.Menu:
+                        case QuaverScreenType.Results:
+                        case QuaverScreenType.Select:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    var replay = new Replay(e);
+
+                    // Find the map associated with the replay.
+                    var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == replay.MapMd5));
+
+                    if (mapset == null)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You do not have the map associated with this replay.");
+                        return;
+                    }
+
+                    MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
+
+                    screen.Exit(() =>
+                    {
+                        if (AudioEngine.Track != null)
+                        {
+                            lock (AudioEngine.Track)
+                                AudioEngine.Track.Fade(10, 300);
+                        }
+
+                        return new ResultScreen(replay);
+                    });
                 }
                 catch (Exception ex)
                 {

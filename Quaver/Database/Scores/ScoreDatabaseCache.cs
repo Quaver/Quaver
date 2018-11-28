@@ -8,7 +8,7 @@ using Wobble.Logging;
 
 namespace Quaver.Database.Scores
 {
-    public static class LocalScoreCache
+    public static class ScoreDatabaseCache
     {
          /// <summary>
         ///     The path of the local scores database
@@ -24,9 +24,9 @@ namespace Quaver.Database.Scores
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<LocalScore>();
+                conn.CreateTable<Score>();
 
-                Logger.Important("LocalScores SQLite table has been created", LogType.Runtime);
+                Logger.Important("Scores table has been created", LogType.Runtime);
             }
             catch (Exception e)
             {
@@ -40,22 +40,22 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="md5"></param>
         /// <returns></returns>
-        internal static List<LocalScore> FetchMapScores(string md5)
+        internal static List<Score> FetchMapScores(string md5)
         {
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
-                var sql = $"SELECT * FROM 'LocalScore' WHERE MapMd5=? ORDER BY Score DESC LIMIT 50";
+                var sql = $"SELECT * FROM 'Score' WHERE MapMd5=? ORDER BY TotalScore DESC LIMIT 50";
 
-                var scores = conn.Query<LocalScore>(sql, md5);
+                var scores = conn.Query<Score>(sql, md5);
                 conn.Close();
 
-                return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.Score).ToList();
+                return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.TotalScore).ToList();
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                return new List<LocalScore>();
+                return new List<Score>();
             }
         }
 
@@ -64,14 +64,14 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static int InsertScoreIntoDatabase(LocalScore score)
+        internal static int InsertScoreIntoDatabase(Score score)
         {
             try
             {
                 if (score != null)
                     new SQLiteConnection(DatabasePath).Insert(score);
 
-                return new SQLiteConnection(DatabasePath).Table<LocalScore>().Count();
+                return new SQLiteConnection(DatabasePath).Table<Score>().Count();
             }
             catch (Exception e)
             {
@@ -85,7 +85,7 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static void DeleteScoreFromDatabase(LocalScore score)
+        internal static void DeleteScoreFromDatabase(Score score)
         {
             try
             {

@@ -10,6 +10,7 @@ using Quaver.Modifiers;
 using Quaver.Screens.Importing;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Result;
 using Quaver.Screens.Select.UI.Leaderboard;
 using Quaver.Screens.Select.UI.Mapsets;
 using Quaver.Screens.Select.UI.Modifiers;
@@ -332,7 +333,7 @@ namespace Quaver.Screens.Select
                         AudioEngine.Track?.Fade(10, 500);
                 }
 
-                return new MapLoadingScreen(new List<LocalScore>());
+                return new MapLoadingScreen(new List<Score>());
             }, 100);
         }
 
@@ -349,5 +350,11 @@ namespace Quaver.Screens.Select
 
             return new MenuScreen();
         });
+
+        /// <summary>
+        ///     Exits the screen to results with a given score.
+        /// </summary>
+        /// <param name="score"></param>
+        public void ExitToResults(Score score) => Exit(() => new ResultScreen(score));
     }
 }

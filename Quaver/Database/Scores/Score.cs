@@ -4,6 +4,7 @@ using System.Globalization;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
 using Quaver.Helpers;
 using Quaver.Server.Client.Structures;
 using SQLite;
@@ -15,7 +16,7 @@ namespace Quaver.Database.Scores
     ///     When retrieving data from the scores db, this is all the data that will be able to be
     ///     accessed
     /// </summary>
-    public class LocalScore
+    public class Score
     {
         /// <summary>
         ///     The Id of the score
@@ -42,7 +43,7 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     The score the player achieved
         /// </summary>
-        public int Score { get; set; }
+        public int TotalScore { get; set; }
 
         /// <summary>
         ///     The grade achieved for this score
@@ -139,15 +140,15 @@ namespace Quaver.Database.Scores
         /// <param name="name"></param>
         /// <param name="scrollSpeed"></param>
         /// <returns></returns>
-        public static LocalScore FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount)
+        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount)
         {
-            var score = new LocalScore()
+            var score = new Score()
             {
                 MapMd5 = md5,
                 Name = name,
                 DateTime = $"{System.DateTime.Now.ToShortDateString()} {System.DateTime.Now.ToShortTimeString()}",
                 Mode = processor.Map.Mode,
-                Score = processor.Score,
+                TotalScore = processor.Score,
                 Grade = processor.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(processor.Accuracy),
                 Accuracy = processor.Accuracy,
                 MaxCombo = processor.MaxCombo,
@@ -171,13 +172,13 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        public static LocalScore FromOnlineScoreboardScore(OnlineScoreboardScore score)
+        public static Score FromOnlineScoreboardScore(OnlineScoreboardScore score)
         {
             // Unix timestamp is seconds past epoch
             var dtDateTime = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(score.Timestamp / 1000f).ToLocalTime();
 
-            var localScore = new LocalScore()
+            var localScore = new Score()
             {
                 IsOnline = true,
                 Id = score.Id,
@@ -186,7 +187,7 @@ namespace Quaver.Database.Scores
                 Name = score.Username,
                 DateTime = dtDateTime.ToString(CultureInfo.InvariantCulture),
                 Mode = score.Mode,
-                Score = score.TotalScore,
+                TotalScore = score.TotalScore,
                 PerformanceRating = score.PerformanceRating,
                 Grade = GradeHelper.GetGradeFromAccuracy((float) score.Accuracy),
                 Accuracy = score.Accuracy,
@@ -202,5 +203,23 @@ namespace Quaver.Database.Scores
 
             return localScore;
         }
+
+        /// <summary>
+        ///     Converts the score object into a blank replay.
+        /// </summary>
+        /// <returns></returns>
+        public Replay ToReplay() => new Replay(Mode, Name, Mods, MapMd5)
+        {
+            Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),
+            Score = TotalScore,
+            Accuracy = (float)Accuracy,
+            MaxCombo = MaxCombo,
+            CountMarv = CountMarv,
+            CountPerf = CountPerf,
+            CountGreat = CountGreat,
+            CountGood = CountGood,
+            CountOkay = CountOkay,
+            CountMiss = CountMiss
+        };
     }
 }

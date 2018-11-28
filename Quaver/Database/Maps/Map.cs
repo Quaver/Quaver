@@ -182,7 +182,7 @@ namespace Quaver.Database.Maps
         ///     The scores for this map.
         /// </summary>
         [Ignore]
-        public Bindable<List<LocalScore>> Scores { get; } = new Bindable<List<LocalScore>>(null);
+        public Bindable<List<Score>> Scores { get; } = new Bindable<List<Score>>(null);
 
         /// <summary>
         ///     Determines if this map is outdated and needs an update.

@@ -11,6 +11,7 @@ using Quaver.Online;
 using Quaver.Skinning;
 using Steamworks;
 using TimeAgo;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -24,7 +25,7 @@ namespace Quaver.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The score this drawable represents.
         /// </summary>
-        public LocalScore Score { get; }
+        public Score Score { get; }
 
         /// <summary>
         ///     The height of an inidvidual leaderboard score.
@@ -79,7 +80,7 @@ namespace Quaver.Screens.Select.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableLeaderboardScore(LocalScore score = null, int rank = -1)
+        public DrawableLeaderboardScore(Score score = null, int rank = -1)
         {
             Score = score;
             Rank = rank;
@@ -96,6 +97,13 @@ namespace Quaver.Screens.Select.UI.Leaderboard
             }
 
             CreateScore();
+
+            Clicked += (sender, args) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game.CurrentScreen as SelectScreen;
+                screen.ExitToResults(Score);
+            };
         }
 
         /// <inheritdoc />
@@ -224,7 +232,7 @@ namespace Quaver.Screens.Select.UI.Leaderboard
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
         private void CreateTextScoreAndCombo() => TextScore = new SpriteText(BitmapFonts.Exo2Bold,
-            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.Score:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
+            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,

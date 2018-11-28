@@ -34,11 +34,11 @@ namespace Quaver.Screens.Loading
         /// <summary>
         ///     The local scores from the leaderboard that'll be used during gameplay.
         /// </summary>
-        private List<LocalScore> Scores { get; }
+        private List<Score> Scores { get; }
 
         /// <summary>
         /// </summary>
-        public MapLoadingScreen(List<LocalScore> scores)
+        public MapLoadingScreen(List<Score> scores)
         {
             Scores = scores;
             View = new MapLoadingScreenView(this);
@@ -127,7 +127,7 @@ namespace Quaver.Screens.Loading
                         throw new ArgumentOutOfRangeException();
                 }
 
-                Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<LocalScore>()));
+                Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>()));
             }
             catch (Exception e)
             {

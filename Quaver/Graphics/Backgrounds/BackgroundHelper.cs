@@ -158,5 +158,15 @@ namespace Quaver.Graphics.Backgrounds
             Background.BrightnessSprite.ClearAnimations();
             Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 250));
         }
+
+        /// <summary>
+        ///     Unfades the background to a specific alpha
+        /// </summary>
+        /// <param name="alpha"></param>
+        public static void FadeIn(float alpha)
+        {
+            Background.BrightnessSprite.ClearAnimations();
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, alpha, 250));
+        }
     }
 }
