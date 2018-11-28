@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
