@@ -1,52 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <StartupObject>Quaver.Program</StartupObject>
-    <LangVersion>7.1</LangVersion>
-    <Description>The ultimate, community-driven and open source competitive rhythm game.</Description>
-    <AssemblyName>Quaver</AssemblyName>
-    <Title>Quaver</Title>
-    <Product>Quaver</Product>
-    <Version>0.0.0</Version>
-    <FileVersion>0.0.0</FileVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Icon.bmp" />
     <None Remove="Icon.ico" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Icon.bmp" />
     <EmbeddedResource Include="Icon.ico" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="NSubsys" Version="0.7.0-build20180604-0047" />
-    <PackageReference Include="SharpCompress" Version="0.22.0" />
-    <PackageReference Include="SmartThreadPool.NetCore" Version="2.3.0" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
-    <PackageReference Include="TimeAgo" Version="1.0.8" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
-    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
-    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
+    <ProjectReference Include="..\Quaver.Shared\Quaver.Shared.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="INIFileParser">
-      <HintPath>INIFileParser.dll</HintPath>
-    </Reference>
-    <Reference Include="Steamworks.NET">
-      <HintPath>Steamworks.NET.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="steam_api64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+
 </Project>

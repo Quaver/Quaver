@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Quaver.Config;
-using Quaver.Online;
+using Quaver.Shared;
+using Quaver.Shared.Config;
+using Quaver.Shared.Online;
 using Wobble.Logging;
 
 namespace Quaver
