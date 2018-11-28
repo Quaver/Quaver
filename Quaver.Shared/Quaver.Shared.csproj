@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
+    <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
+    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
+    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
+    <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
+    <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="INIFileParser">
+      <HintPath>INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="Steamworks.NET">
+      <HintPath>Steamworks.NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="INIFileParser.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Steamworks.NET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="steam_api64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.22.0" />
+    <PackageReference Include="SmartThreadPool.dll" Version="2.2.4" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="TimeAgo" Version="1.0.8" />
+  </ItemGroup>
+</Project>
