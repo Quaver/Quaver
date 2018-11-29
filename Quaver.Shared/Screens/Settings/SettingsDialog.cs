@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
@@ -193,6 +194,9 @@ namespace Quaver.Shared.Screens.Settings
                 // Audio
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), "Audio", new List<Drawable>
                 {
+                    new SettingsSlider(this, "Master Volume", ConfigManager.VolumeGlobal),
+                    new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic),
+                    new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect)
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>

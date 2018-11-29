@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <param name="name"></param>
         public SettingsItem(SettingsDialog dialog, string name)
         {
-            Size = new ScalableVector2(dialog.ContentContainer.Width - 10, 40);
+            Size = new ScalableVector2(dialog.ContentContainer.Width - dialog.DividerLine.X - 10, 40);
             Tint = Color.Black;
             Alpha = 0.65f;
 
