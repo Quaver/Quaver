@@ -73,6 +73,22 @@ namespace Quaver.Shared.Screens.Settings
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 DialogManager.Dismiss(this);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+            {
+                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                    KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                {
+                    var index = Sections.FindIndex(x => x == SelectedSection);
+                    SwitchSelected(index == 0 ? Sections.Last() : Sections[index - 1]);
+                }
+                else
+                {
+                    var index = Sections.FindIndex(x => x == SelectedSection);
+                    SwitchSelected(index == Sections.Count - 1 ? Sections.First() : Sections[index + 1]);
+                }
+
+            }
         }
 
         /// <summary>
