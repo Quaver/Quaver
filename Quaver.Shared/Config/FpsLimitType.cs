@@ -4,7 +4,7 @@ namespace Quaver.Shared.Config
     {
         Unlimited,
         Limited,
-        RefreshRate,
+        Vsync,
         Custom
     }
 }

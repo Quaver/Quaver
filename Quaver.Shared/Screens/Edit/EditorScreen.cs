@@ -177,9 +177,6 @@ namespace Quaver.Shared.Screens.Edit
                 case MapGame.Osu:
                     qua = new OsuBeatmap($"{MapManager.OsuSongsFolder}/{map.Directory}/{map.Path}").ToQua();
                     break;
-                case MapGame.Etterna:
-                    NotificationManager.Show(NotificationLevel.Error, "Etterna maps aren't eligible to be edited");
-                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

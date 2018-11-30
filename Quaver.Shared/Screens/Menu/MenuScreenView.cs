@@ -16,7 +16,6 @@ using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Panels;
 using Quaver.Shared.Screens.Menu.UI.Tips;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
-using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble;

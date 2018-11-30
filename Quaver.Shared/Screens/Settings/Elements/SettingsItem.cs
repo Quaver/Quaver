@@ -1,12 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Helpers;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
 
-namespace Quaver.Shared.Screens.Settings
+namespace Quaver.Shared.Screens.Settings.Elements
 {
     public class SettingsItem : Sprite
     {

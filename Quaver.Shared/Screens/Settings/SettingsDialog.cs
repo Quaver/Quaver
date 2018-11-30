@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Menu.UI.Navigation.User;
+using Quaver.Shared.Screens.Settings.Elements;
+using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -13,6 +22,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Settings
 {
@@ -36,6 +46,16 @@ namespace Quaver.Shared.Screens.Settings
         public Sprite DividerLine { get; private set; }
 
         /// <summary>
+        ///     The button to save changes.
+        /// </summary>
+        private BorderedTextButton OkButton { get; set; }
+
+        /// <summary>
+        ///     The button to cancel existing changes
+        /// </summary>
+        private BorderedTextButton CancelButton { get; set; }
+
+        /// <summary>
         ///     The list of available settings sections.
         /// </summary>
         private List<SettingsSection> Sections { get; set; }
@@ -45,11 +65,36 @@ namespace Quaver.Shared.Screens.Settings
         /// </summary>
         public SettingsSection SelectedSection { get; private set; }
 
+        /// <summary>
+        ///     If non-null, we require a skin reload.
+        /// </summary>
+        public string NewQueuedSkin { get; set; }
+
+        /// <summary>
+        ///     A newly queued default skin, if the user chooses to change it.
+        /// </summary>
+        public DefaultSkins NewQueuedDefaultSkin { get; set; }
+
+        /// <summary>
+        ///     If the user has changed their resolution and it needs to change when they press OK.
+        /// </summary>
+        public Point NewQueuedScreenResolution { get; set; }
+
+        /// <summary>
+        ///     The time that the user has requested their skin be reloaded.
+        /// </summary>
+        private long TimeSkinReloadRequested { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public SettingsDialog() : base(0)
         {
+            // Important. Make sure sure the default values that are sent in config if the values
+            // are non nullable.
+            NewQueuedDefaultSkin = ConfigManager.DefaultSkin.Value;
+            NewQueuedScreenResolution = new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Alpha, 0.65f, 300));
             CreateContent();
         }
@@ -70,8 +115,21 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleSkinReloading();
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
+            if (TimeSkinReloadRequested != 0)
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 DialogManager.Dismiss(this);
 
@@ -88,7 +146,6 @@ namespace Quaver.Shared.Screens.Settings
                     var index = Sections.FindIndex(x => x == SelectedSection);
                     SwitchSelected(index == Sections.Count - 1 ? Sections.First() : Sections[index + 1]);
                 }
-
             }
         }
 
@@ -151,8 +208,70 @@ namespace Quaver.Shared.Screens.Settings
                 Alignment = Alignment.BotLeft,
                 Y = 1
             };
+
+            CreateOkButton();
+            CreateCancelButton();
         }
 
+        /// <summary>
+        ///     Creates the button to save changes
+        /// </summary>
+        private void CreateOkButton()
+        {
+            OkButton = new BorderedTextButton("OK", Color.LimeGreen)
+            {
+                Parent = FooterContainer,
+                Alignment = Alignment.MidRight,
+                X = -20
+            };
+
+            OkButton.Clicked += (o, e) =>
+            {
+                // Determines whether we'll be dismissing the dialog if no changes have been made.
+                var dismissDalog = true;
+
+                // Handle skin reloads
+                if (NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                {
+                    ConfigManager.Skin.Value = NewQueuedSkin;
+                    ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
+
+                    Transitioner.FadeIn();
+                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                    IsGloballyClickable = false;
+                    dismissDalog = false;
+                }
+
+                // Handle screen resolution changes.
+                if (NewQueuedScreenResolution.X != ConfigManager.WindowWidth.Value &&
+                    NewQueuedScreenResolution.Y != ConfigManager.WindowHeight.Value)
+                {
+                    ConfigManager.WindowWidth.Value = NewQueuedScreenResolution.X;
+                    ConfigManager.WindowHeight.Value = NewQueuedScreenResolution.Y;
+                    WindowManager.ChangeScreenResolution(NewQueuedScreenResolution);
+
+                    dismissDalog = false;
+                }
+
+                if (dismissDalog)
+                    DialogManager.Dismiss(this);
+            };
+        }
+
+        /// <summary>
+        ///     Creates the button to cancel all changes
+        /// </summary>
+        private void CreateCancelButton()
+        {
+            CancelButton = new BorderedTextButton("Cancel", Color.Crimson)
+            {
+                Parent = FooterContainer,
+                Alignment = Alignment.MidRight,
+                X = OkButton.X - OkButton.Width - 20
+            };
+
+            CancelButton.Clicked += (o, e) => DialogManager.Dismiss(this);
+        }
         /// <summary>
         /// </summary>
         private void CreateDividerLine() => DividerLine = new Sprite
@@ -173,50 +292,51 @@ namespace Quaver.Shared.Screens.Settings
                 // Video
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), "Video", new List<Drawable>
                 {
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-                    new SettingsItem(this, "Resolution"),
-
+                    new SettingsResolution(this, "Screen Resolution"),
+                    new SettingsBool(this, "Fullscreen", ConfigManager.WindowFullScreen),
+                    new SettingsFpsLimiter(this),
+                    new SettingsBool(this, "Display FPS Counter", ConfigManager.FpsCounter)
                 }),
                 // Audio
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), "Audio", new List<Drawable>
                 {
                     new SettingsSlider(this, "Master Volume", ConfigManager.VolumeGlobal),
                     new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic),
-                    new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect)
+                    new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect),
+                    new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched)
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
-                }),
-                // Skin
-                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>
-                {
+                    new SettingsCustomSkin(this, "Custom Skin"),
+                    new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
+                    new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
+                    new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
+                    new SettingsBool(this, "Notes Fall Downwards (4 Keys)", ConfigManager.DownScroll4K),
+                    new SettingsBool(this, "Notes Fall Downwards (7 Keys)", ConfigManager.DownScroll7K),
+                    new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
+                    new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
+                    new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
                 {
-                }),
-                // Network
-                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "Network", new List<Drawable>
-                {
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (4 Keys)"),
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (7 Keys)"),
+                    new SettingsKeybind(this, "Pause", ConfigManager.KeyPause),
+                    new SettingsKeybind(this, "Skip Intro", ConfigManager.KeySkipIntro),
+                    new SettingsKeybind(this, "Restart Map", ConfigManager.KeyRestartMap),
+                    new SettingsKeybind(this, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
+                    new SettingsKeybind(this, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
+                    new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
+                    new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
+                    new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
                 }),
                 // Misc
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>
                 {
+                    new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps)
                 })
             };
 
@@ -264,6 +384,27 @@ namespace Quaver.Shared.Screens.Settings
             SelectedSection.Container.Parent = ContentContainer;
 
             Logger.Debug($"Switched to options section: {section.Name}", LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Called every frame. Waits for a skin reload to be queued up.
+        /// </summary>
+        private void HandleSkinReloading()
+        {
+            // Reload skin when applicable
+            if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
+            {
+                SkinManager.Load();
+                NewQueuedSkin = null;
+                TimeSkinReloadRequested = 0;
+                IsGloballyClickable = true;
+
+                ThreadScheduler.RunAfter(() =>
+                {
+                    Transitioner.FadeOut();
+                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
+                }, 200);
+            }
         }
     }
 }

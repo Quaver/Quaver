@@ -6,7 +6,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
 
-namespace Quaver.Shared.Screens.Settings
+namespace Quaver.Shared.Screens.Settings.Elements
 {
     public class SettingsSlider : SettingsItem
     {
@@ -31,7 +31,6 @@ namespace Quaver.Shared.Screens.Settings
             Bindable = bindable;
             bindable.ValueChanged += OnValueChanged;
 
-            Console.WriteLine(bindable.Value);
             Value = new SpriteText(BitmapFonts.Exo2Medium, $"{bindable.Value.ToString()}", 13)
             {
                 Parent = this,

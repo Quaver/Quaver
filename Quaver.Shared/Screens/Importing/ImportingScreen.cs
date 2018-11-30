@@ -3,6 +3,8 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Settings;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Screens;
 
@@ -36,6 +38,16 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void OnFirstUpdate()
         {
+            // Exit out of the options dialog if it's open
+            foreach (var dialog in DialogManager.Dialogs)
+            {
+                if (!(dialog is SettingsDialog))
+                    continue;
+
+                DialogManager.Dismiss(dialog);
+                break;
+            }
+
             ThreadScheduler.Run(() =>
             {
                 MapsetImporter.ImportMapsetsInQueue();
