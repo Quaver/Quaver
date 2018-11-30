@@ -38,16 +38,6 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void OnFirstUpdate()
         {
-            // Exit out of the options dialog if it's open
-            foreach (var dialog in DialogManager.Dialogs)
-            {
-                if (!(dialog is SettingsDialog))
-                    continue;
-
-                DialogManager.Dismiss(dialog);
-                break;
-            }
-
             ThreadScheduler.Run(() =>
             {
                 MapsetImporter.ImportMapsetsInQueue();
