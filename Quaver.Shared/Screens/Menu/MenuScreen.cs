@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Menu
 
             View = new MenuScreenView(this);
 
-            if (!FirstMenuLoad)
+            if (!FirstMenuLoad && ConfigManager.AutoLoginToServer.Value)
             {
                 OnlineManager.Login();
                 FirstMenuLoad = true;

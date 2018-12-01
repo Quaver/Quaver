@@ -203,6 +203,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
 
         /// <summary>
+        ///     If true, the user will be auto logged into the server.
+        /// </summary>
+        internal static Bindable<bool> AutoLoginToServer { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -361,6 +366,7 @@ namespace Quaver.Shared.Config
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -420,6 +426,7 @@ namespace Quaver.Shared.Config
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
                     Pitched.ValueChanged += AutoSaveConfiguration;
                     ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
+                    AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.ValueChanged += AutoSaveConfiguration;
