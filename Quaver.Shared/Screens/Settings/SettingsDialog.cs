@@ -15,6 +15,7 @@ using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Settings.Elements;
 using Quaver.Shared.Skinning;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -322,8 +323,23 @@ namespace Quaver.Shared.Screens.Settings
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
                 {
-                    new SettingsKeybindMultiple(this, "Gameplay Layout (4 Keys)"),
-                    new SettingsKeybindMultiple(this, "Gameplay Layout (7 Keys)"),
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (4 Keys)", new List<Bindable<Keys>>
+                    {
+                        ConfigManager.KeyMania4K1,
+                        ConfigManager.KeyMania4K2,
+                        ConfigManager.KeyMania4K3,
+                        ConfigManager.KeyMania4K4
+                    }),
+                    new SettingsKeybindMultiple(this, "Gameplay Layout (7 Keys)", new List<Bindable<Keys>>
+                    {
+                        ConfigManager.KeyMania7K1,
+                        ConfigManager.KeyMania7K2,
+                        ConfigManager.KeyMania7K3,
+                        ConfigManager.KeyMania7K4,
+                        ConfigManager.KeyMania7K5,
+                        ConfigManager.KeyMania7K6,
+                        ConfigManager.KeyMania7K7
+                    }),
                     new SettingsKeybind(this, "Pause", ConfigManager.KeyPause),
                     new SettingsKeybind(this, "Skip Intro", ConfigManager.KeySkipIntro),
                     new SettingsKeybind(this, "Restart Map", ConfigManager.KeyRestartMap),
