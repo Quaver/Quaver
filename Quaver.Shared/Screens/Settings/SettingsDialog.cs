@@ -86,6 +86,12 @@ namespace Quaver.Shared.Screens.Settings
         /// </summary>
         private long TimeSkinReloadRequested { get; set; }
 
+        /// <summary>
+        ///     If true, the dialog won't close if the user presses escape.
+        ///     This is used for when keybinds are changed (and the user wants to change it to escape).
+        /// </summary>
+        public bool PreventExitOnEscapeKeybindPress { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -128,7 +134,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (TimeSkinReloadRequested != 0)
+            if (TimeSkinReloadRequested != 0 || PreventExitOnEscapeKeybindPress)
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))

@@ -100,10 +100,18 @@ namespace Quaver.Shared.Screens.Settings.Elements
                         if (Button.Text.Text != key)
                             Button.Text.Text = key;
 
+                        if (keys.First() == Keys.Escape)
+                            Dialog.PreventExitOnEscapeKeybindPress = true;
+
                         Button.Selected = false;
                         WaitingForKeyPress = false;
                     }
                 }
+            }
+            else
+            {
+                // Important. Makes it so the dialog doesn't close when the user presses escape as a keybind.
+                Dialog.PreventExitOnEscapeKeybindPress = false;
             }
 
             base.Update(gameTime);
