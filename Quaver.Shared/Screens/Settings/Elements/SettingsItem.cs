@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
@@ -38,7 +39,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void Update(GameTime gameTime)
         {
             FadeToColor(GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                    ? Color.White : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
+                    ? ColorHelper.HexToColor("#7e7e7e") : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
 
             base.Update(gameTime);
         }
