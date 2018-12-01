@@ -24,13 +24,6 @@ namespace Quaver.Shared.Database.Maps
         public static string OsuSongsFolder { get; set; }
 
         /// <summary>
-        ///     The Etterna parent folder.
-        ///     NOTE: The Map directory themselves have /songs/ already on it.
-        ///     Thank you SM guys!
-        /// </summary>
-        public static string EtternaFolder { get; set; }
-
-        /// <summary>
         ///     The current path of the selected map's audio file
         /// </summary>
         public static string CurrentAudioPath => GetAudioPath(Selected.Value);
@@ -60,8 +53,6 @@ namespace Quaver.Shared.Database.Maps
                     return $@"{OsuSongsFolder}/{map.Directory}/{osu.Background}";
                 case MapGame.Quaver:
                     return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath;
-                case MapGame.Etterna:
-                    return EtternaFolder + "/" + map.Directory + "/" + map.BackgroundPath;
                 default:
                     return "";
             }
@@ -80,8 +71,6 @@ namespace Quaver.Shared.Database.Maps
                     return OsuSongsFolder + "/" + map.Directory + "/" + map.AudioPath;
                 case MapGame.Quaver:
                     return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.AudioPath;
-                case MapGame.Etterna:
-                    return EtternaFolder + "/" + map.Directory + "/" + map.AudioPath;
                 default:
                     return "";
             }

@@ -3,6 +3,8 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Settings;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Screens;
 

@@ -9,7 +9,6 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
-using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Select.UI.Banner;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Leaderboard.Selector;
@@ -17,6 +16,7 @@ using Quaver.Shared.Screens.Select.UI.Maps;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Quaver.Shared.Screens.Select.UI.Search;
+using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -395,7 +395,7 @@ namespace Quaver.Shared.Screens.Select
             }, true, false, true),
 
             // Game Options
-            new NavbarItem("Options", false, (o, e) => DialogManager.Show(new OptionsDialog(0.75f)), true, false, true)
+            new NavbarItem("Options", false, (o, e) => DialogManager.Show(new SettingsDialog()), true, false, true)
         }, true)
         {
             Parent = Container,

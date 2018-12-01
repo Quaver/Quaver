@@ -247,12 +247,6 @@ namespace Quaver.Shared.Database.Maps
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
                     break;
-                case MapGame.Etterna:
-                    // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
-                    // other than through this means.
-                    var sm = StepManiaFile.Parse(MapManager.EtternaFolder + Directory + "/" + Path).ToQua();
-                    qua = sm.Find(x => x.DifficultyName == DifficultyName);
-                    break;
                 default:
                     throw new InvalidEnumArgumentException();
             }
@@ -358,6 +352,5 @@ namespace Quaver.Shared.Database.Maps
     {
         Quaver,
         Osu,
-        Etterna
     }
 }

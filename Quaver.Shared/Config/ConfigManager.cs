@@ -97,11 +97,6 @@ namespace Quaver.Shared.Config
         internal static BindableInt BackgroundBrightness { get; private set; }
 
         /// <summary>
-        ///     The background blur strength during gameplay
-        /// </summary>
-        internal static BindableInt BackgroundBlur { get; private set; }
-
-        /// <summary>
         ///     The height of the window.
         /// </summary>
         internal static BindableInt WindowHeight { get; private set; }
@@ -112,24 +107,9 @@ namespace Quaver.Shared.Config
         internal static BindableInt WindowWidth { get; private set; }
 
         /// <summary>
-        ///     4k Hit Position offset from receptor
-        /// </summary>
-        internal static BindableInt UserHitPositionOffset4K { get; private set; }
-
-        /// <summary>
-        ///     7k Hit Position offset from receptor
-        /// </summary>
-        internal static BindableInt UserHitPositionOffset7K { get; private set; }
-
-        /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
         internal static Bindable<bool> WindowFullScreen { get; private set; }
-
-        /// <summary>
-        ///     Is the window letterboxed?
-        /// </summary>
-        internal static Bindable<bool> WindowLetterboxed { get; private set; }
 
         /// <summary>
         ///     Should the game display the FPS Counter?
@@ -147,25 +127,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt CustomFpsLimit { get; private set; }
 
         /// <summary>
-        ///     Determines if the health bar + multiplier is at top or bottom of the playfield
-        /// </summary>
-        internal static Bindable<bool> HealthBarPositionTop { get; private set; }
-
-        /// <summary>
         ///     Determines if we should show the song time progress display in the
         ///     gameplay screen.
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgress { get; private set; }
-
-        /// <summary>
-        ///     If the user is choosing to play with bots.
-        /// </summary>
-        internal static Bindable<bool> BotsEnabled { get; private set; }
-
-        /// <summary>
-        ///     The amount of bots to be playing with.
-        /// </summary>
-        internal static BindableInt BotCount { get; private set; }
 
         /// <summary>
         ///     The scroll speed for mania 4k
@@ -218,11 +183,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AnimateJudgementCounter { get; private set; }
 
         /// <summary>
-        ///     As the mouse moves, the background will move as well.
-        /// </summary>
-        internal static Bindable<bool> BackgroundParallax { get; private set; }
-
-        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
@@ -241,6 +201,11 @@ namespace Quaver.Shared.Config
         ///     The type of leaderboard that is displayed during song select.
         /// </summary>
         internal static Bindable<LeaderboardType> LeaderboardSection { get; private set; }
+
+        /// <summary>
+        ///     If true, the user will be auto logged into the server.
+        /// </summary>
+        internal static Bindable<bool> AutoLoginToServer { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -273,11 +238,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeySkipIntro { get; private set; }
 
         /// <summary>
-        ///     The key to take a screenshot of the game window.
-        /// </summary>
-        internal static Bindable<Keys> KeyTakeScreenshot { get; private set; }
-
-        /// <summary>
         ///     The key to toggle the overlay
         /// </summary>
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
@@ -302,11 +262,6 @@ namespace Quaver.Shared.Config
         ///     The key to quickly exit the map.
         /// </summary>
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
-
-        /// <summary>
-        ///     Dictates whether or not to display debug log messages.
-        /// </summary>
-        internal static Bindable<bool> DebugDisplayLogMessages { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -389,15 +344,10 @@ namespace Quaver.Shared.Config
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
-            BackgroundBlur = ReadInt(@"BackgroundBlur", 8, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
-            HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
-            UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4K", 0, 0, byte.MaxValue, data);
-            UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7K", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
-            WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
@@ -410,15 +360,13 @@ namespace Quaver.Shared.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
-            BotsEnabled = ReadValue(@"BotsEnabled", false, data);
-            BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
-            BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
+            AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -432,14 +380,12 @@ namespace Quaver.Shared.Config
             KeyMania7K7 = ReadValue(@"KeyMania7K7", Keys.L, data);
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
-            KeyTakeScreenshot = ReadValue(@"KeyTakeScreenshot", Keys.F12, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
-            DebugDisplayLogMessages = ReadValue(@"DebugDisplayLogMessages", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -464,14 +410,9 @@ namespace Quaver.Shared.Config
                     VolumeEffect.ValueChanged += AutoSaveConfiguration;
                     VolumeMusic.ValueChanged += AutoSaveConfiguration;
                     BackgroundBrightness.ValueChanged += AutoSaveConfiguration;
-                    BackgroundBlur.ValueChanged += AutoSaveConfiguration;
                     WindowHeight.ValueChanged += AutoSaveConfiguration;
                     WindowWidth.ValueChanged += AutoSaveConfiguration;
-                    HealthBarPositionTop.ValueChanged += AutoSaveConfiguration;
-                    UserHitPositionOffset4K.ValueChanged += AutoSaveConfiguration;
-                    UserHitPositionOffset7K.ValueChanged += AutoSaveConfiguration;
                     WindowFullScreen.ValueChanged += AutoSaveConfiguration;
-                    WindowLetterboxed.ValueChanged += AutoSaveConfiguration;
                     FpsCounter.ValueChanged += AutoSaveConfiguration;
                     FpsLimiterType.ValueChanged += AutoSaveConfiguration;
                     CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
@@ -485,6 +426,7 @@ namespace Quaver.Shared.Config
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
                     Pitched.ValueChanged += AutoSaveConfiguration;
                     ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
+                    AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.ValueChanged += AutoSaveConfiguration;
@@ -498,18 +440,14 @@ namespace Quaver.Shared.Config
                     KeyMania7K7.ValueChanged += AutoSaveConfiguration;
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
-                    KeyTakeScreenshot.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyScoreboardVisible.ValueChanged += AutoSaveConfiguration;
-                    BotsEnabled.ValueChanged += AutoSaveConfiguration;
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
-                    BackgroundParallax.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
-                    DebugDisplayLogMessages.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                 });
@@ -739,7 +677,7 @@ namespace Quaver.Shared.Config
     /// <summary>
     ///     Enum containing a number representation of the default skins we have available
     /// </summary>
-    internal enum DefaultSkins
+    public enum DefaultSkins
     {
         Bar,
         Arrow

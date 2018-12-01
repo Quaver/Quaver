@@ -178,7 +178,14 @@ namespace Quaver.Shared.Database.Maps
             MapDatabaseCache.OrderAndSetMapsets();
 
             var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == selectedMap?.Md5Checksum));
-            MapManager.Selected.Value =MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);
+
+            if (mapset == null)
+            {
+                mapset = MapManager.Mapsets.First();
+                MapManager.Selected.Value = mapset.Maps.First();
+            }
+            else
+                MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == selectedMap?.Md5Checksum);
 
             Queue.Clear();
         }

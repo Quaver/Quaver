@@ -97,7 +97,6 @@ namespace Quaver.Shared.Screens.Result.UI
             switch (OnlineManager.Status.Value)
             {
                 case ConnectionStatus.Disconnected:
-                    CreateDisconnectedText();
                     break;
                 case ConnectionStatus.Connecting:
                 case ConnectionStatus.Connected:
@@ -107,21 +106,6 @@ namespace Quaver.Shared.Screens.Result.UI
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        /// <summary>
-        ///     Creates the text that tells the user they need to be logged in to submit scores
-        /// </summary>
-        private void CreateDisconnectedText()
-        {
-            var disconnectedText = new SpriteText(BitmapFonts.Exo2SemiBold, "Please login to begin submitting scores", 13)
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = Container.VerticalDividerLine.X / 2f,
-            };
-
-            disconnectedText.X -= disconnectedText.Width / 2f;
         }
 
         /// <summary>

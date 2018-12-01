@@ -115,10 +115,6 @@ namespace Quaver.Shared.Screens.Loading
                     case MapGame.Osu:
                         md5 = MapsetHelper.GetMd5Checksum($"{MapManager.OsuSongsFolder}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
                         break;
-                    case MapGame.Etterna:
-                        // Etterna uses some weird ChartKey system, no point in implementing that here.
-                        md5 = MapManager.Selected.Value.Md5Checksum;
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

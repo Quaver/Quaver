@@ -349,28 +349,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
             };
 
-            // Create bots on the scoreboard.
-            if (ConfigManager.BotsEnabled.Value)
-            {
-                // Generate bots users on the scoreboard if need be.
-                for (var i = 0; i < ConfigManager.BotCount.Value && users.Count - 1 < ConfigManager.BotCount.Value; i++)
-                {
-                    // Create new bot.
-                    var bot = new Bot(Screen.Map, BotLevel.Decent);
-
-                    // Keep selecting usernames if we have duplicate bot names.
-                    while (users.Any(x => x.Username.Text.Contains(bot.Name)))
-                        bot.Name = Bot.GenerateRandomName();
-
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.HitStats,
-                        UserInterface.UnknownAvatar, ModManager.Mods)
-                    {
-                        Parent = Container,
-                        Alignment = Alignment.MidLeft
-                    });
-                }
-            }
-
             Scoreboard = new Scoreboard(users) { Parent = Container };
         }
 
@@ -386,7 +364,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var mapScores = MapManager.Selected.Value.Scores.Value;
 
-            if (ConfigManager.BotsEnabled.Value || mapScores == null || mapScores.Count <= 0 || Scoreboard.Users.Count != 1)
+            if (mapScores == null || mapScores.Count <= 0 || Scoreboard.Users.Count != 1)
                 return;
 
             for (var i = 0; i < 5 && i < mapScores.Count; i++)

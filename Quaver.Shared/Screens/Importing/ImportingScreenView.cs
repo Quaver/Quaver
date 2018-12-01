@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
 using Wobble.Window;
 

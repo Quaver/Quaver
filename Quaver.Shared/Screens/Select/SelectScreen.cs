@@ -16,7 +16,9 @@ using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
+using Quaver.Shared.Screens.Settings;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -61,7 +63,7 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreen()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0)
+            if (MapsetImporter.Queue.Count > 0 || MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -82,6 +84,7 @@ namespace Quaver.Shared.Screens.Select
             DiscordManager.Client.CurrentPresence.State = "In the Menus";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
 
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             View = new SelectScreenView(this);
         }
 
@@ -95,6 +98,17 @@ namespace Quaver.Shared.Screens.Select
             HandleInput();
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -356,5 +370,18 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         /// <param name="score"></param>
         public void ExitToResults(Score score) => Exit(() => new ResultScreen(score));
+
+        /// <summary>
+        ///     Called when the user changes whether they want to load osu maps or not
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (e.Value == MapDatabaseCache.LoadedMapsFromOtherGames)
+                return;
+
+            Exit(() => new ImportingScreen());
+        }
     }
 }

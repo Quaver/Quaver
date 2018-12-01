@@ -175,7 +175,7 @@ namespace Quaver.Shared
                     case FpsLimitType.Limited:
                         NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
                         break;
-                    case FpsLimitType.RefreshRate:
+                    case FpsLimitType.Vsync:
                         NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
                         break;
                     case FpsLimitType.Custom:
@@ -222,9 +222,6 @@ namespace Quaver.Shared
         {
             ConfigManager.Initialize();
 
-            Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
-            ConfigManager.DebugDisplayLogMessages.ValueChanged += (o, e) => Logger.DisplayMessages = ConfigManager.DebugDisplayLogMessages.Value;
-
             DeleteTemporaryFiles();
 
             ScoreDatabaseCache.CreateTable();
@@ -240,27 +237,16 @@ namespace Quaver.Shared
             AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
             AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value;
 
-            // Change master volume whenever it changes.
-            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
-            {
-                AudioTrack.GlobalVolume = e.Value;
-            };
-
-            // Change track volume whenever it changed
-            ConfigManager.VolumeMusic.ValueChanged += (sender, e) =>
-            {
-                if (AudioEngine.Track != null)
-                    AudioEngine.Track.Volume = e.Value;
-            };
-
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = e.Value;;
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => { if (AudioEngine.Track != null) AudioEngine.Track.Volume = e.Value;  };
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
-
-            // Called when the user changes their FPS limiter
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
+            ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
 
+            // Handle discord rich presence.
             DiscordManager.CreateClient("376180410490552320");
-            DiscordManager.Client.SetPresence(new RichPresence()
+            DiscordManager.Client.SetPresence(new RichPresence
             {
                 Assets = new Wobble.Discord.RPC.Assets()
                 {
@@ -341,7 +327,7 @@ namespace Quaver.Shared
                     IsFixedTimeStep = true;
                     TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
                     break;
-                case FpsLimitType.RefreshRate:
+                case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
                     IsFixedTimeStep = true;
                     break;

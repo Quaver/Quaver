@@ -21,6 +21,11 @@ namespace Quaver.Shared.Database.Maps
         private static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
 
         /// <summary>
+        ///     Dictates if we currently have loaded maps from other games.
+        /// </summary>
+        public static bool LoadedMapsFromOtherGames { get; private set; }
+
+        /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
@@ -247,7 +252,14 @@ namespace Quaver.Shared.Database.Maps
             var maps = FetchAll();
 
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
+            {
                 maps = maps.Concat(LoadOsuBeatmapDatabase()).ToList();
+                LoadedMapsFromOtherGames = true;
+            }
+            else
+            {
+                LoadedMapsFromOtherGames = false;
+            }
 
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));

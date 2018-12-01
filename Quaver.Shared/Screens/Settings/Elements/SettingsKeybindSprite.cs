@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
@@ -7,14 +7,14 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Options.Keybindings
+namespace Quaver.Shared.Screens.Settings.Elements
 {
-    public class KeybindSprite : Sprite
+    public class SettingsKeybindSprite : Sprite
     {
-        /// <summary>
+         /// <summary>
         ///     The binded key.
         /// </summary>
-        private Bindable<Keys> Key { get; }
+        public Bindable<Keys> Key { get; }
 
         /// <summary>
         ///     The text that displays the current keybind
@@ -30,13 +30,15 @@ namespace Quaver.Shared.Screens.Options.Keybindings
         /// <summary>
         /// </summary>
         /// <param name="key"></param>
-        public KeybindSprite(Bindable<Keys> key)
+        public SettingsKeybindSprite(Bindable<Keys> key)
         {
             Key = key;
-            Image = UserInterface.RoundedSquare;
-            Size = new ScalableVector2(75, 75);
+            Image = UserInterface.BlankBox;
+            Tint = Color.Transparent;
+            AddBorder(Color.White, 2);
+            Size = new ScalableVector2(54, 54);
 
-            KeyText = new SpriteText(BitmapFonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 18)
+            KeyText = new SpriteText(BitmapFonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
@@ -51,8 +53,8 @@ namespace Quaver.Shared.Screens.Options.Keybindings
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            FadeToColor(Selected ? Colors.SecondaryAccent : Color.White, gameTime.ElapsedGameTime.TotalMilliseconds, 60);
-            KeyText.FadeToColor(Selected ? Colors.SecondaryAccent : Color.White, gameTime.ElapsedGameTime.TotalMilliseconds, 60);
+            Border.FadeToColor(Selected ? Colors.MainAccent : Color.White, gameTime.ElapsedGameTime.TotalMilliseconds, 60);
+            KeyText.FadeToColor(Selected ? Colors.MainAccent : Color.White, gameTime.ElapsedGameTime.TotalMilliseconds, 60);
 
             base.Update(gameTime);
         }
@@ -64,7 +66,6 @@ namespace Quaver.Shared.Screens.Options.Keybindings
         {
             // ReSharper disable once DelegateSubtraction
             Key.ValueChanged -= OnKeybindChanged;
-
             base.Destroy();
         }
 

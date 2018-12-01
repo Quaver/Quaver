@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -53,7 +55,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             Tint = Color.CornflowerBlue;
 
             InputEnabled = true;
-            Scrollbar.Tint = Color.White;
+            Scrollbar.Tint = ColorHelper.HexToColor("#212121");
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
             ScrollSpeed = 150;
