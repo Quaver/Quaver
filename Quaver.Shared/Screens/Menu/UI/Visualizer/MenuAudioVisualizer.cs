@@ -2,6 +2,7 @@
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -59,8 +60,20 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            InterpolateBars();
+            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+                InterpolateBars();
+
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+                base.Draw(gameTime);
         }
 
         /// <summary>

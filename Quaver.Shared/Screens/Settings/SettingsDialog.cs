@@ -360,7 +360,8 @@ namespace Quaver.Shared.Screens.Settings
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>
                 {
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
-                    new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps)
+                    new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
+                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer)
                 })
             };
 
