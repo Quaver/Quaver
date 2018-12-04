@@ -51,7 +51,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
-        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => TimingLineManager = CreateTimingLineManager();
+        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
+        {
+            if (ConfigManager.DisplayTimingLines.Value)
+                TimingLineManager = CreateTimingLineManager();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -60,7 +64,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused)
+            if (!Screen.Failed && !Screen.IsPaused && ConfigManager.DisplayTimingLines.Value)
                 TimingLineManager.UpdateObjectPool();
 
             base.Update(gameTime);
