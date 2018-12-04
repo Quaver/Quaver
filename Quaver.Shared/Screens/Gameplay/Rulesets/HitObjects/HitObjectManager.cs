@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
@@ -62,8 +63,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        public static void PlayObjectHitSounds(API.Maps.Structures.HitObjectInfo hitObject)
+        public static void PlayObjectHitSounds(HitObjectInfo hitObject)
         {
+            if (!ConfigManager.EnableHitsounds.Value)
+                return;
+
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
                 SkinManager.Skin.SoundHit.CreateChannel().Play();
