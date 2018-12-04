@@ -658,6 +658,7 @@ namespace Quaver.Shared.Skinning
             // So you can't have 1/48, but not have 1/3, etc.
             var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
+
             // If it can find the appropriate files, load them.
             objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
 

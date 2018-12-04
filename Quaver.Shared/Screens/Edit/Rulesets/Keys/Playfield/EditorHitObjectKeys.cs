@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Rulesets.Keys.Playfield
 
         /// <summary>
         ///     The LN end sprite.
-        /// </summary>         
+        /// </summary>
         private Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Quaver.Shared.Screens.Edit.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private void CreateLongNote()
         {
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.Edit.Rulesets.Keys.Playfield
         {
             // Get Note Snapping
             if (SkinManager.Skin.Keys[Container.Playfield.Mode].ColorObjectsBySnapDistance)
-                SnapIndex = GameplayHitObject.GetBeatSnap(Info, Container.Playfield.Screen.Map.GetTimingPointAt(Info.StartTime));
+                SnapIndex = 0;
             else
                 SnapIndex = 0;
 

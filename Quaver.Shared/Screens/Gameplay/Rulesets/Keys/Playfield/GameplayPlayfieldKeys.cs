@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     Ctor 
+        ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="ruleset"></param>

@@ -62,7 +62,8 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ResultsType == ResultScreenType.Gameplay)
                 CreateStats();
 
-            OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
         }
 
         /// <inheritdoc />
@@ -82,7 +83,9 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         public override void Destroy()
         {
-            OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
+
             base.Destroy();
         }
 
