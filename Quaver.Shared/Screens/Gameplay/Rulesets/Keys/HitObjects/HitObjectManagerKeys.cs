@@ -196,7 +196,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     return playfield.ReceptorPositionY + skin.HitPosOffsetY;
 
                 // Up Scroll
-                return playfield.ReceptorPositionY - skin.HitPosOffsetY;
+                return playfield.ReceptorPositionY + skin.HitPosOffsetY;
             }
         }
 
