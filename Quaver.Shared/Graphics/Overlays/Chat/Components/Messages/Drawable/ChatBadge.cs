@@ -84,6 +84,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (groups.HasFlag(UserGroups.Admin))
                 return FontAwesome.Get(FontAwesomeIcon.fa_legal_hammer);
 
+            if (groups.HasFlag(UserGroups.Moderator))
+                return FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
+
             return null;
         }
 
@@ -103,7 +106,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             // Admin
             if (groups.HasFlag(UserGroups.Admin))
-                return "Admin";
+                return "Administrator";
+
+            // Mod
+            if (groups.HasFlag(UserGroups.Moderator))
+                return "Moderator";
 
             return null;
         }

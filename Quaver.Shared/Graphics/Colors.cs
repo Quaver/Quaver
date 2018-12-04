@@ -63,6 +63,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
                 return MainAccent;
+            if (userGroups.HasFlag(UserGroups.Moderator))
+                return ColorHelper.HexToColor($"#9d84ec");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 
