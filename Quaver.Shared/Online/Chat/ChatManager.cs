@@ -403,6 +403,13 @@ namespace Quaver.Shared.Online.Chat
 
             OnlineManager.OnlineUsers[e.UserId].OnlineUser.MuteEndTime = e.EndTime;
 
+            // Purge the chat of a user's messages.
+            lock (Dialog.ChannelMessageContainers)
+            {
+                foreach (var container in Dialog.ChannelMessageContainers.Values)
+                    container.PurgeUserMessages(e.UserId);
+            }
+
             // If the mute is for the current user, then display a message in chat.
             if (e.UserId != OnlineManager.Self.OnlineUser.Id || Dialog.ActiveChannel == null)
                 return;
