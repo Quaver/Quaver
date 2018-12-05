@@ -28,7 +28,7 @@ Any contributions can be made through opening a pull request. When contributing 
 
 If you are wanting to develop a feature with the goal of having it being in the Steam release, open up an issue first, so we can discuss if it is in the scope of what we are trying to accomplish.
 
-When contributing, please remember to follow our [code style](https://github.com/Swan/Quaver/blob/release/CODESTYLE.md), so the codebase is consistent across the board. If you have any issues with our approaches to structuring/styling our code, feel free to bring this up.
+When contributing, please remember to follow our [code style](https://github.com/Swan/Quaver/blob/master/CODESTYLE.md), so the codebase is consistent across the board. If you have any issues with our approaches to structuring/styling our code, feel free to bring this up.
 
 # LICENSE
 
