@@ -34,6 +34,6 @@ When contributing, please remember to follow our [code style](https://github.com
 
 The Quaver game client is split up into submodules which are subject to their own individual licensing. Please see each submodule to view their respective license(s).
 
-The code in this repository is released and licensed under the [Mozilla Public License 2.0](). Please see the [LICENSE]() file for more information. In short, if you are making any modifications to this software, you **must** disclose the source code of the modified version of the file(s), and include the original copyright notice.
+The code in this repository is released and licensed under the [Mozilla Public License 2.0](https://github.com/Swan/Quaver/blob/license-and-readme/LICENSE). Please see the [LICENSE](https://github.com/Swan/Quaver/blob/license-and-readme/LICENSE) file for more information. In short, if you are making any modifications to this software, you **must** disclose the source code of the modified version of the file(s), and include the original copyright notice.
 
 Please be aware that all game assets are released and covered by a separate license. This should be noted when using this software to create derivatives for commercial purposes. Please see the [Quaver.Resources](https://github.com/Swan/Quaver.Resources) repository for further information regarding licensing.
