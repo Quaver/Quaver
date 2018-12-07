@@ -597,12 +597,13 @@ namespace Quaver.Screens.Results
             }
 
             var state = GameplayScreen.Failed ? "Fail" : "Pass";
+            var fc = GameplayScreen.LastRecordedCombo == ScoreProcessor.MaxCombo ? "FC " : "";
             var score = $"{ScoreProcessor.Score / 1000}k";
             var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
             var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
             var combo = $"{ScoreProcessor.MaxCombo}x";
 
-            DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {score} {acc} {combo}";
+            DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {fc}{acc} {combo}";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
 
