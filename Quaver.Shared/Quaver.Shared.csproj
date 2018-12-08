@@ -14,9 +14,6 @@
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="INIFileParser">
-      <HintPath>INIFileParser.dll</HintPath>
-    </Reference>
     <Reference Include="Steamworks.NET">
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
