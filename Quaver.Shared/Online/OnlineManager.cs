@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -125,7 +125,6 @@ namespace Quaver.Shared.Online
                 throw new InvalidOperationException("Cannot subscribe to events if there is no OnlineClient.");
 
             Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
-            Client.OnLoginFailed += OnLoginFailed;
             Client.OnChooseUsername += OnChooseUsername;
             Client.OnChooseUsernameResponse += OnChooseAUsernameResponse;
             Client.OnDisconnection += OnDisconnection;
@@ -155,29 +154,6 @@ namespace Quaver.Shared.Online
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private static void OnConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e) => Status.Value = e.Status;
-
-        /// <summary>
-        ///     When login to the server fails, this event handler will be called.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnLoginFailed(object sender, FailureToLoginEventArgs e)
-        {
-            switch (e.ResponseCode)
-            {
-                case -100:
-                    NotificationManager.Show(NotificationLevel.Error, "No response from the server.");
-                    break;
-                case 401:
-                    NotificationManager.Show(NotificationLevel.Error, "You are banned.");
-                    break;
-                case 400:
-                    NotificationManager.Show(NotificationLevel.Error, "An issue has occurred during the login process.");
-                    break;
-            }
-
-            Logger.Error(e.Error, LogType.Network);
-        }
 
         /// <summary>
         ///     Called when the user needs to choose a username.
