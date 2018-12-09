@@ -123,7 +123,6 @@ namespace Quaver.Shared.Screens.Menu
             CreatePanelContainer();
             CreateJukebox();
             CreateUserProfile();
-            // CreatePlayercard();
         }
 
         /// <inheritdoc />
@@ -160,12 +159,12 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         private void CreateNavbar() => Navbar = Navbar = new NavbarMain(new List<NavbarItem>
         {
+            new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", true),
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
             new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Swan/Quaver/issues")),
-            new NavbarItem("Website", false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL)),
         }) { Parent = Container };
 
         /// <summary>

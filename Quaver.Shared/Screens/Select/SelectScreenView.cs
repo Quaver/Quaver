@@ -163,13 +163,13 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void CreateNavbar() => Navbar = new NavbarMain(new List<NavbarItem>
         {
+            new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", false, OnHomeButtonClicked),
             new NavbarItem("Select Song", true),
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
             new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Swan/Quaver/issues")),
-            new NavbarItem("Website", false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL)),
         }) { Parent = Container };
 
         /// <summary>
