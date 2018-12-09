@@ -382,6 +382,12 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
+            if (e.Response == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Failed to submit score! Retrying shortly.");
+                return;
+            }
+
             if (e.Response.Status != 200)
                 return;
 
