@@ -21,7 +21,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The application id for steam.
         /// </summary>
-        public static uint ApplicationId => 480;
+        public static uint ApplicationId => 980610;
 
         /// <summary>
         ///     Determines if steam is initialized or not.
