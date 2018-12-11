@@ -1,15 +1,15 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Quaver.API.Enums;
 
-namespace Quaver.Shared.Modifiers.Mods.Gameplay
+namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ManiaModNoSliderVelocities: IGameplayModifier
+    internal class ModNoSliderVelocities: IGameplayModifier
     {
         /// <inheritdoc />
         /// <summary>
@@ -43,20 +43,9 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
 
         /// <inheritdoc />
         /// <summary>
-        ///     The addition to the score multiplier this gameplayModifier will have
-        /// </summary>
-        public float ScoreMultiplierAddition { get; set; } = 0;
-
-        /// <inheritdoc />
-        /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
-
-        /// <summary>
-        ///     The speed alteration rate the game's clock will be set to.
-        /// </summary>
-        public float SpeedAlterationRate { get; set; } = 1.0f;
 
         /// <inheritdoc />
         /// <summary>

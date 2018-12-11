@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -10,9 +10,9 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 
-namespace Quaver.Shared.Modifiers.Mods.Gameplay
+namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ManiaModSpeed : IGameplayModifier
+    internal class ModSpeed : IGameplayModifier
     {
         /// <inheritdoc />
         /// <summary>
@@ -46,12 +46,6 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
 
         /// <inheritdoc />
         /// <summary>
-        ///     Score x
-        /// </summary>
-        public float ScoreMultiplierAddition { get; set; } = 0;
-
-        /// <inheritdoc />
-        /// <summary>
         ///     Incompatible Mods
         /// </summary>
         public ModIdentifier[] IncompatibleMods { get; set; } =
@@ -77,7 +71,7 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
         ///     Ctor - Set speed
         /// </summary>
         /// <param name="modIdentifier"></param>
-        public ManiaModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
+        public ModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
 
         /// <inheritdoc />
         /// <summary>
