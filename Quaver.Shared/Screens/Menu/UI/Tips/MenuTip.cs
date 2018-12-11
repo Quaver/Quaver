@@ -1,12 +1,15 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -35,17 +38,48 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private bool IsGoingForward { get; set; }
 
+        /// <summary>
+        ///     Random number generator for selecting tips.
+        /// </summary>
+        private Random RNG { get; }
+
+        /// <summary>
+        ///     List of menu tips to be randomly displayed.
+        ///     Eventually we'll want to move this out to a localized file, but it's fine for now.
+        /// </summary>
+        private List<string> Tips { get; } = new List<string>
+        {
+            "You can import new maps by dragging them into the game window",
+            "You can watch a replay by dragging a replay file into the window",
+            "Pressing CTRL and +/- during song select will change the audio rate",
+            "Any elements not covered by a custom skin will resort to the selected default skin",
+            "You can quickly access the modifier menu by pressing F1 during song select",
+            $"Pressing {ConfigManager.KeyToggleOverlay.Value} will open/close the in-game chat",
+            "Mapsets are a grouping of individual map difficulties",
+            "There isn't an editor in the game yet. This is a planned feature",
+            "Pausing during gameplay will invalidate your score from online ranking",
+            "You can send replays to a friend by exporting them in the results screen",
+            "You can send mapsets to a friend by exporting them in the song select screen",
+            "If our knees were bent the other way, what do you think chairs would look like?",
+            "This game is still incomplete. Some features have not been developed yet",
+            "You can report any bugs you find by clicking the button in the top right",
+            "Accuracy is a large part of Quaver. Make sure you're on beat!",
+            $"Your audio offset can be changed in-game by pressing - or + during gameplay",
+            $"You can change your scroll speed during gameplay by pressing {ConfigManager.KeyDecreaseScrollSpeed.Value} or {ConfigManager.KeyDecreaseScrollSpeed.Value}",
+        };
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public MenuTip() : base(new ScalableVector2(0, 45), new ScalableVector2(0, 45))
         {
+            RNG = new Random();
             Tint = Color.Black;
             Alpha = 0.25f;
 
             CreateTextTip();
             CreateTextTipContent();
-            UpdateTip("If our knees were bent the other way, what would chairs look like?");
+            UpdateTip(Tips[SelectRandomTip()]);
         }
 
         /// <inheritdoc />
@@ -56,14 +90,13 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            //
             if (Animations.Count == 0)
             {
                 TimeTipActive += dt;
 
                 if (!IsGoingForward)
                 {
-                    UpdateTip($"안녕하세요");
+                    UpdateTip(Tips[SelectRandomTip()]);
                 }
 
                 if (TimeTipActive >= 10000 && IsGoingForward)
@@ -103,6 +136,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
 
             AddContainedDrawable(TextTipContent);
         }
+
         /// <summary>
         ///     Updates the tip with new text and performs an animation.
         /// </summary>
@@ -119,5 +153,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
 
             IsGoingForward = true;
         }
+
+        /// <summary>
+        ///     Gets the index of a random tip
+        ///     <see cref="Tips"/>
+        /// </summary>
+        /// <returns></returns>
+        private int SelectRandomTip() => RNG.Next(0, Tips.Count - 1);
     }
 }
