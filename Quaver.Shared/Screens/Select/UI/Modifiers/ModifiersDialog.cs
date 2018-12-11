@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Modifiers.Mods.Gameplay;
+using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -191,12 +191,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft,
                 },
 
-                new DrawableModifierBool(this, new ManiaModNoSliderVelocities())
+                new DrawableModifierBool(this, new ModNoSliderVelocities())
                 {
                     Alignment = Alignment.TopLeft,
                 },
 
-                new DrawableModifierBool(this, new ManiaModNoPause())
+                new DrawableModifierBool(this, new ModNoPause())
                 {
                     Alignment = Alignment.TopLeft,
                 },

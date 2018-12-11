@@ -1,15 +1,15 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Quaver.API.Enums;
 
-namespace Quaver.Shared.Modifiers.Mods.Gameplay
+namespace Quaver.Shared.Modifiers.Mods
 {
-    public class ManiaModPaused : IGameplayModifier
+    public class ModPaused : IGameplayModifier
     {
         public string Name { get; set; } = "Paused";
 
@@ -20,8 +20,6 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
         public string Description { get; set; } = "Player paused in gameplay";
 
         public bool Ranked { get; set; } = false;
-
-        public float ScoreMultiplierAddition { get; set; } = 0;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = {ModIdentifier.NoPause};
 
