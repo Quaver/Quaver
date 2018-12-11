@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Enums;
 using Quaver.Shared.Helpers;
@@ -63,6 +70,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
                 return MainAccent;
+            if (userGroups.HasFlag(UserGroups.Moderator))
+                return ColorHelper.HexToColor($"#9d84ec");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

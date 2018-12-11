@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Common.Enums;
@@ -84,6 +91,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (groups.HasFlag(UserGroups.Admin))
                 return FontAwesome.Get(FontAwesomeIcon.fa_legal_hammer);
 
+            if (groups.HasFlag(UserGroups.Moderator))
+                return FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
+
             return null;
         }
 
@@ -103,7 +113,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             // Admin
             if (groups.HasFlag(UserGroups.Admin))
-                return "Admin";
+                return "Administrator";
+
+            // Mod
+            if (groups.HasFlag(UserGroups.Moderator))
+                return "Moderator";
 
             return null;
         }

@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -91,14 +98,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
             // Change the textbox's text based on
             if (!Textbox.Focused && ChatManager.MuteTimeLeft > 0)
             {
-                var t = TimeSpan.FromMilliseconds(ChatManager.MuteTimeLeft);
-                Textbox.InputText.Text = $"You are currently muted for another {t.Days} days {t.Hours} hours {t.Minutes} minutes and {t.Seconds} seconds.";
-                Textbox.InputText.Tint = Color.OrangeRed;
+                // var t = TimeSpan.FromMilliseconds(ChatManager.MuteTimeLeft);
+                // Textbox.InputText.Text = $"You are currently muted for another {t.Days} days {t.Hours} hours {t.Minutes} minutes and {t.Seconds} seconds.";
+                // Textbox.InputText.Tint = Color.OrangeRed;
                 MuteInitiatedInTextbox = true;
             }
             else if (MuteInitiatedInTextbox)
             {
-                Textbox.InputText.Tint = Color.White;
+                Textbox.InputText.Alpha = 0.5f;
                 Textbox.InputText.Text = "Type to send a message";
                 MuteInitiatedInTextbox = false;
             }
@@ -161,7 +168,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
             // Delete element if message is found
             if (PreviousMessages.Contains(text))
                 PreviousMessages.Remove(text);
- 
+
             // Save messages
             PreviousMessages.Add(text);
 

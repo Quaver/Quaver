@@ -1,4 +1,11 @@
-﻿using System;
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -322,6 +329,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
                     new SettingsBool(this, "Notes Fall Downwards (4 Keys)", ConfigManager.DownScroll4K),
                     new SettingsBool(this, "Notes Fall Downwards (7 Keys)", ConfigManager.DownScroll7K),
+                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                    new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
@@ -359,7 +368,8 @@ namespace Quaver.Shared.Screens.Settings
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>
                 {
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
-                    new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps)
+                    new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
+                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer)
                 })
             };
 

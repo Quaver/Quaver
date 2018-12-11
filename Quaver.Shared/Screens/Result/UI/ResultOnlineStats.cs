@@ -1,4 +1,11 @@
-﻿using System;
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -62,7 +69,8 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ResultsType == ResultScreenType.Gameplay)
                 CreateStats();
 
-            OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
         }
 
         /// <inheritdoc />
@@ -82,7 +90,9 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         public override void Destroy()
         {
-            OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
+
             base.Destroy();
         }
 

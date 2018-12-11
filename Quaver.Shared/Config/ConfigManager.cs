@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -208,6 +215,21 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> AutoLoginToServer { get; private set; }
 
         /// <summary>
+        ///     If true, timing lines will be displayed during gameplay
+        /// </summary>
+        internal static Bindable<bool> DisplayTimingLines { get; private set; }
+
+        /// <summary>
+        ///     If true, the audio visualizer in the menus will be displayed.
+        /// </summary>
+        internal static Bindable<bool> DisplayMenuAudioVisualizer { get; private set; }
+
+        /// <summary>
+        ///     If true, hitsounds in gameplay will be played.
+        /// </summary>
+        internal static Bindable<bool> EnableHitsounds { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -367,6 +389,9 @@ namespace Quaver.Shared.Config
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
+            DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
+            DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
+            EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -396,6 +421,7 @@ namespace Quaver.Shared.Config
                 .ContinueWith(t =>
                 {
                     // SET AUTO-SAVE FUNCTIONALITY FOR EACH BINDED VALUE.
+                    // This is so shit tbcfh, lol.
                     GameDirectory.ValueChanged += AutoSaveConfiguration;
                     SkinDirectory.ValueChanged += AutoSaveConfiguration;
                     ScreenshotDirectory.ValueChanged += AutoSaveConfiguration;
@@ -427,6 +453,9 @@ namespace Quaver.Shared.Config
                     Pitched.ValueChanged += AutoSaveConfiguration;
                     ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
                     AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
+                    DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
+                    DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
+                    EnableHitsounds.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.ValueChanged += AutoSaveConfiguration;

@@ -1,7 +1,15 @@
-﻿using System.Collections.Generic;
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System.Collections.Generic;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -59,8 +67,20 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            InterpolateBars();
+            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+                InterpolateBars();
+
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+                base.Draw(gameTime);
         }
 
         /// <summary>

@@ -1,8 +1,17 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
@@ -16,6 +25,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
     public class GameplayHitObjectKeys : GameplayHitObject
     {
+        /// <summary>
+        /// </summary>
+        private GameplayRuleset Ruleset { get; }
+
+        /// <summary>
+        ///     Reference to the HitObjectManager controlling the object.
+        /// </summary>
+        private HitObjectManager HitObjectManager { get; }
+
         /// <summary>
         ///     Is determined by whether the player is holding the key that this hit object is binded to
         /// </summary>
@@ -34,7 +52,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         /// <summary>
         ///     The long note Y offset from the receptor.
-        ///     TODO: I don't think this gets updated upon scroll speed change     
+        ///     TODO: I don't think this gets updated upon scroll speed change
         /// </summary>
         public long InitialLongNoteTrackPosition { get; private set; }
 
@@ -100,7 +118,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Distance from the receptor for the current HitObjectSprite's image
         /// </summary>
-        public float SpritePositionOffset => HitPositionOffset - HitObjectSprite.Height;
+        private float SpritePositionOffset => GameplayRulesetKeys.IsDownscroll
+            ? HitPositionOffset - HitObjectSprite.Height
+            : HitPositionOffset + HitObjectSprite.Height;
 
         /// <inheritdoc />
         /// <summary>
@@ -110,6 +130,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="info"></param>
         public GameplayHitObjectKeys(HitObjectInfo info, GameplayRulesetKeys ruleset, HitObjectManagerKeys manager)
         {
+            HitObjectManager = manager;
+            Ruleset = ruleset;
+
             InitializeSprites(ruleset, info.Lane - 1);
             InitializeObject(manager, info);
         }
@@ -131,7 +154,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
                 SpriteEffect = Effects,
-                Image = GetHitObjectTexture(lane, ruleset.Mode)
+                Image = UserInterface.BlankBox,
             };
 
             // Update hit body's size to match image ratio
@@ -177,7 +200,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             Info = info;
 
+            var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+
             // Update Hit Object State
+            HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+
+            // Update hit body's size to match image ratio
+            HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            LongNoteBodyOffset = HitObjectSprite.Height / 2;
+
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = Color.White;
             IsLongNote = Info.EndTime > 0;
@@ -221,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding); 
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Updates LN size
@@ -310,10 +341,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <returns></returns>
         private Texture2D GetHitObjectTexture(int lane, GameMode mode)
         {
+            lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[lane][SnapIndex] : skin.NoteHitObjects[lane][SnapIndex];
+                return IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
 
             return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }

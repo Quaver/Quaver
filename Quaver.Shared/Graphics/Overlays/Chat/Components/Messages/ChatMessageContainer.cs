@@ -1,10 +1,20 @@
-﻿using System;
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -53,6 +63,13 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
         ///     The index at which the messages are starting to be shown.
         /// </summary>
         public int PoolStartingIndex { get; set; }
+
+        public bool PurgeInProgress { get; set; }
+
+        /// <summary>
+        ///     A queue of messages waiting to be filled into the chat.
+        /// </summary>
+        private List<ChatMessage> MessageQueue { get; set; } = new List<ChatMessage>();
 
         /// <inheritdoc />
         /// <summary>
@@ -108,7 +125,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
-
             base.Update(gameTime);
         }
 
@@ -149,7 +165,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
                 ScrollTo(-ContentContainer.Height, 800);
 
             AddContainedDrawable(msg);
-            msg.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear, msg.X, 0, 200));
+            msg.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, msg.X, 0, 400));
         }
 
         /// <summary>
@@ -206,6 +222,116 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        /// <summary>
+        ///    Purges messages from a given user.
+        /// </summary>
+        /// <param name="id"></param>
+        public void PurgeUserMessages(int id)
+        {
+            lock (DrawableChatMessages)
+            {
+                // A cached version of the muted text, so we don't have to keep creating the same one.
+                Texture2D mutedTextImage = null;
+                var mutedTextSize = new ScalableVector2(0, 0);
+
+                // Scan the previous 50 chat messages.
+                for (var i = DrawableChatMessages.Count - 1; i >= 0 && i >= DrawableChatMessages.Count - 50; i--)
+                {
+                    var msg = DrawableChatMessages[i];
+
+                    if (msg.Message.Sender.OnlineUser.Id != id)
+                        continue;
+
+                    // If a message is red, then you know it is already past muted.
+                    if (msg.TextMessageContent.Tint == Color.Crimson)
+                        break;
+
+                    if (mutedTextImage != null)
+                    {
+                        msg.TextMessageContent.Tint = Color.Crimson;
+                        msg.TextMessageContent.Image = mutedTextImage;
+                        msg.TextMessageContent.Size = mutedTextSize;
+                        continue;
+                    }
+
+                    msg.TextMessageContent.Tint = Color.Crimson;
+                    msg.TextMessageContent.Text = "This message has been removed by a moderator.";
+                    mutedTextImage = msg.TextMessageContent.Image;
+                    mutedTextSize = msg.TextMessageContent.Size;
+                }
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="userId"></param>
+        public void PurgeUserMessagesBroken(int userId)
+        {
+            lock (DrawableChatMessages)
+            lock (ContentContainer.Animations)
+            {
+                for (var i = DrawableChatMessages.Count - 1; i >= 0; i--)
+                {
+                    var msg = DrawableChatMessages[i];
+
+                    if (msg.Message.Sender.OnlineUser.Id != userId)
+                        continue;
+
+                    RemoveContainedDrawable(msg);
+                    DrawableChatMessages.Remove(msg);
+
+                    TotalMessageHeight -= msg.Height;
+                    PoolStartingIndex--;
+
+                    if (PoolStartingIndex <= 0)
+                        PoolStartingIndex = 0;
+                }
+
+                for (var i = 0; i < DrawableChatMessages.Count; i++)
+                {
+                    var msg = DrawableChatMessages[i];
+
+                    if (i == 0)
+                    {
+                        msg.Y = 0;
+                        continue;
+                    }
+
+                    msg.Y = DrawableChatMessages[i - 1].Y + DrawableChatMessages[i - 1].Height;
+                }
+
+                if (TotalMessageHeight > Overlay.MessageContainer.Height - Overlay.CurrentTopicContainer.Height)
+                    ContentContainer.Height = TotalMessageHeight;
+                else
+                    ContentContainer.Height = Overlay.MessageContainer.Height - Overlay.CurrentTopicContainer.Height;
+
+                ContentContainer.ClearAnimations();
+                ContentContainer.Y = -ContentContainer.Height;
+                PreviousContentContainerY = -ContentContainer.Height;
+                TargetY = -ContentContainer.Height;
+                PreviousTargetY = -ContentContainer.Height;
+
+                for (var i = 0; i < DrawableChatMessages.Count; i++)
+                {
+                    if (i >= DrawableChatMessages.Count)
+                        break;
+
+                    var msg = DrawableChatMessages[i];
+
+                    if (i >= PoolStartingIndex)
+                    {
+                        if (msg.Parent != ContentContainer)
+                            AddContainedDrawable(msg);
+                    }
+                    else
+                    {
+                        if (msg.Parent == ContentContainer)
+                            RemoveContainedDrawable(msg);
+                    }
+                }
             }
         }
     }

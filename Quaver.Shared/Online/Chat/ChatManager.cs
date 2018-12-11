@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -402,6 +409,13 @@ namespace Quaver.Shared.Online.Chat
                 return;
 
             OnlineManager.OnlineUsers[e.UserId].OnlineUser.MuteEndTime = e.EndTime;
+
+            // Purge the chat of a user's messages.
+            lock (Dialog.ChannelMessageContainers)
+            {
+                foreach (var container in Dialog.ChannelMessageContainers.Values)
+                    container.PurgeUserMessages(e.UserId);
+            }
 
             // If the mute is for the current user, then display a message in chat.
             if (e.UserId != OnlineManager.Self.OnlineUser.Id || Dialog.ActiveChannel == null)

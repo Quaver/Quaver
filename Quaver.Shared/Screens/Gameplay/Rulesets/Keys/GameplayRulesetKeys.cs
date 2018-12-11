@@ -1,3 +1,10 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -51,7 +58,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
-        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => TimingLineManager = CreateTimingLineManager();
+        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
+        {
+            if (ConfigManager.DisplayTimingLines.Value)
+                TimingLineManager = CreateTimingLineManager();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -60,7 +71,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused)
+            if (!Screen.Failed && !Screen.IsPaused && ConfigManager.DisplayTimingLines.Value)
                 TimingLineManager.UpdateObjectPool();
 
             base.Update(gameTime);
