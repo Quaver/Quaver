@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.API", "Quaver.API\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.DesktopGL.Core", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj", "{BDCB1605-28B6-4773-AE12-DA4285821EDA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Server.Common", "Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj", "{80FF1569-9CF5-45AB-998F-BCBBD6621E89}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Server.Client", "Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj", "{AD9BE804-0CC1-4480-BB91-95D2C6881D34}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{077E5D47-6B11-478A-B5E1-754BB23D0282}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Resources", "Wobble\Wobble.Resources\Wobble.Resources.csproj", "{3219608F-6722-4AAB-AA66-EACBDF1296F9}"
@@ -49,22 +45,6 @@ Global
 		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
 		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Test Server|Any CPU.Build.0 = Debug|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Test Server Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{80FF1569-9CF5-45AB-998F-BCBBD6621E89}.Test Server|Any CPU.Build.0 = Debug|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server Release|Any CPU.Build.0 = Release|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server|Any CPU.ActiveCfg = Test Server|Any CPU
-		{AD9BE804-0CC1-4480-BB91-95D2C6881D34}.Test Server|Any CPU.Build.0 = Test Server|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Release|Any CPU.ActiveCfg = Release|Any CPU
