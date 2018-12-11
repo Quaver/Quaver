@@ -18,7 +18,7 @@ namespace Quaver.Shared.Modifiers.Mods
         /// <summary>
         ///     Name
         /// </summary>
-        public string Name { get; set; } = "ModChill";
+        public string Name { get; set; } = "Chill";
 
         /// <inheritdoc />
         /// <summary>
