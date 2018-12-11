@@ -10,7 +10,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Modifiers.Mods.Gameplay;
+using Quaver.Shared.Modifiers.Mods;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
 
@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         /// </summary>
         /// <param name="dialog"></param>
-        public DrawableModifierSpeed(ModifiersDialog dialog) : base(dialog, new ManiaModSpeed(ModIdentifier.Speed05X))
+        public DrawableModifierSpeed(ModifiersDialog dialog) : base(dialog, new ModSpeed(ModIdentifier.Speed05X))
             => RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(200, 32), BitmapFonts.Exo2SemiBold, 13,
             UserInterface.HorizontalSelectorLeft,
             UserInterface.HorizontalSelectorRight, new ScalableVector2(32, 32), 0, OnSelected, GetSelectedIndex())

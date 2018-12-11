@@ -16,11 +16,21 @@ If you're looking for the official release of Quaver with added online connectiv
 # Compiling
 Getting started with Quaver development is super easy. 
 
+<<<<<<< HEAD
 * Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Swan/Quaver`
 * Build & Run
 
 # Contributing 
 We love and encourage people to contribute to Quaver - whether it be through code, designs, or ideas. Our mission is to provide a space where the rhythm game community's voice is able to be heard - which we feel has been neglected in the past. We aim to create the ultimate vertical scrolling rhythm game, and this isn't possible without community input.
+=======
+* Install the [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.1)
+* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Swan/Quaver`
+* Have Steam open and running
+* Build & Run
+
+# Contributing 
+We love and encourage people to contribute to Quaver - whether it be through code, designs, or ideas. Our mission is to provide a space where the rhythm game community's voice is able to be heard. We're aiming to create the ultimate vertical scrolling rhythm game, and this isn't possible without community input.
+>>>>>>> upstream/master
 
 The best place to begin contributing to Quaver is through our [Discord server](https://discord.gg/nJa8VFr), where all of our developers, community, and testers are located.
 

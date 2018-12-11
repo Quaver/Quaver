@@ -1,7 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD:Quaver.Shared/Modifiers/Mods/Gameplay/ModSpeed.cs
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master:Quaver.Shared/Modifiers/Mods/ModSpeed.cs
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -10,50 +14,24 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 
-namespace Quaver.Shared.Modifiers.Mods.Gameplay
+namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ManiaModSpeed : IGameplayModifier
+    internal class ModSpeed : IGameplayModifier
     {
-        /// <inheritdoc />
-        /// <summary>
-        ///     Name
-        /// </summary>
         public string Name { get; set; } = "Speed";
 
         /// <inheritdoc />
         /// <summary>
-        ///     Identifier (None. Speed is a ResultsScreenType and doesn't have an identifier)
+        ///     Speed can have a variable amount of mod identifiers, so this should be handled manually.
         /// </summary>
         public ModIdentifier ModIdentifier { get; set; }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     ResultsScreenType
-        /// </summary>
         public ModType Type { get; set; } = ModType.Speed;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Desc
-        /// </summary>
         public string Description { get; set; } = "Change the audio playback rate of the song.";
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Ranked
-        /// </summary>
         public bool Ranked { get; set; } = true;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Score x
-        /// </summary>
-        public float ScoreMultiplierAddition { get; set; } = 0;
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     Incompatible Mods
-        /// </summary>
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Speed05X,
@@ -74,15 +52,10 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
         };
 
         /// <summary>
-        ///     Ctor - Set speed
         /// </summary>
         /// <param name="modIdentifier"></param>
-        public ManiaModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
+        public ModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Initialize
-        /// </summary>
         public void InitializeMod()
         {
             AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);

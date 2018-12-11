@@ -1,7 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -41,6 +45,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D HorizontalSelectorLeft { get; private set; }
         public static Texture2D HorizontalSelectorRight { get; private set; }
         public static Texture2D HorizontalSelectorMiddle { get; private set; }
+        public static Texture2D QuaverLogoFull { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -75,6 +80,7 @@ namespace Quaver.Shared.Assets
             HorizontalSelectorLeft = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-left.png"));
             HorizontalSelectorRight = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-right.png"));
             HorizontalSelectorMiddle = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-middle.png"));
+            QuaverLogoFull = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-full.png"));
         }
     }
 }

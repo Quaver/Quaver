@@ -1,7 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -91,6 +95,39 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Y = 2
+            };
+
+            CreateBottomLine();
+        }
+
+        /// <summary>
+        ///     Icon
+        /// </summary>
+        /// <param name="selected"></param>
+        /// <param name="clickAction"></param>
+        /// <param name="isUpsideDown"></param>
+        /// <param name="alwaysShowLine"></param>
+        /// <param name="highlightOnHover"></param>
+        public NavbarItem(Texture2D tex, bool selected = false, EventHandler clickAction = null, bool isUpsideDown = false,
+            bool alwaysShowLine = false, bool highlightOnHover = false) : base(clickAction)
+        {
+            Selected = selected;
+            IsUpsideDown = isUpsideDown;
+            AlwaysShowLine = alwaysShowLine;
+            HighlightOnHover = highlightOnHover;
+
+            UsePreviousSpriteBatchOptions = true;
+            Size = new ScalableVector2(175, 45);
+            Tint = Color.Black;
+
+            Alpha = Selected ? 0.25f: 0;
+
+            var image = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(136, 29),
+                Image = tex
             };
 
             CreateBottomLine();

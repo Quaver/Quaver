@@ -1,18 +1,24 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Playercard;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
@@ -121,7 +127,6 @@ namespace Quaver.Shared.Screens.Menu
             CreatePanelContainer();
             CreateJukebox();
             CreateUserProfile();
-            // CreatePlayercard();
         }
 
         /// <inheritdoc />
@@ -158,10 +163,12 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         private void CreateNavbar() => Navbar = Navbar = new NavbarMain(new List<NavbarItem>
         {
+            new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", true),
         }, new List<NavbarItem>
         {
-            new NavbarItemUser(this)
+            new NavbarItemUser(this),
+            new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Swan/Quaver/issues")),
         }) { Parent = Container };
 
         /// <summary>

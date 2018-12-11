@@ -1,15 +1,23 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD:Quaver.Shared/Modifiers/Mods/Gameplay/ModNoPause.cs
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Quaver.API.Enums;
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+*/
+>>>>>>> upstream/master:Quaver.Shared/Modifiers/Mods/ModNoPause.cs
 
-namespace Quaver.Shared.Modifiers.Mods.Gameplay
+using Quaver.API.Enums;
+
+namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ManiaModNoPause : IGameplayModifier
+    internal class ModNoPause : IGameplayModifier
     {
         public string Name { get; set; } = "No Pause";
 
@@ -20,8 +28,6 @@ namespace Quaver.Shared.Modifiers.Mods.Gameplay
         public string Description { get; set; } = "A wise man once said - Pausing is Cheating™";
 
         public bool Ranked { get; set; } = true;
-
-        public float ScoreMultiplierAddition { get; set; } = 1.0f;
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {

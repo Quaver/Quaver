@@ -1,7 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -11,7 +15,7 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
-using Quaver.Shared.Modifiers.Mods.Gameplay;
+using Quaver.Shared.Modifiers.Mods;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Modifiers
@@ -73,25 +77,25 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Speed18X:
                 case ModIdentifier.Speed19X:
                 case ModIdentifier.Speed20X:
-                    gameplayModifier = new ManiaModSpeed(modIdentifier);
+                    gameplayModifier = new ModSpeed(modIdentifier);
                     break;
                 case ModIdentifier.NoSliderVelocity:
-                    gameplayModifier = new ManiaModNoSliderVelocities();
+                    gameplayModifier = new ModNoSliderVelocities();
                     break;
                 case ModIdentifier.Strict:
-                    gameplayModifier = new ManiaModStrict();
+                    gameplayModifier = new ModStrict();
                     break;
                 case ModIdentifier.Chill:
                     gameplayModifier = new ManiaModChill();
                     break;
                 case ModIdentifier.NoPause:
-                    gameplayModifier = new ManiaModNoPause();
+                    gameplayModifier = new ModNoPause();
                     break;
                 case ModIdentifier.Autoplay:
                     gameplayModifier = new ModAutoplay();
                     break;
                 case ModIdentifier.Paused:
-                    gameplayModifier = new ManiaModPaused();
+                    gameplayModifier = new ModPaused();
                     break;
                 case ModIdentifier.NoFail:
                     gameplayModifier = new ModNoFail();

@@ -1,17 +1,23 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
+<<<<<<< HEAD
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+=======
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+>>>>>>> upstream/master
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Select;
@@ -321,7 +327,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
         /// <param name="e"></param>
         private static void OnViewProfileButtonClicked(object sender, EventArgs e)
         {
-            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back soon!");
+            if (OnlineManager.Self == null)
+                return;
+
+            BrowserHelper.OpenURL($"{OnlineClient.WEBSITE_URL}/profile/{OnlineManager.Self.OnlineUser.Id}");
         }
     }
 }
