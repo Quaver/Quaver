@@ -14,40 +14,20 @@ namespace Quaver.Shared.Modifiers.Mods
 {
     internal class ModSpeed : IGameplayModifier
     {
-        /// <inheritdoc />
-        /// <summary>
-        ///     Name
-        /// </summary>
         public string Name { get; set; } = "Speed";
 
         /// <inheritdoc />
         /// <summary>
-        ///     Identifier (None. Speed is a ResultsScreenType and doesn't have an identifier)
+        ///     Speed can have a variable amount of mod identifiers, so this should be handled manually.
         /// </summary>
         public ModIdentifier ModIdentifier { get; set; }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     ResultsScreenType
-        /// </summary>
         public ModType Type { get; set; } = ModType.Speed;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Desc
-        /// </summary>
         public string Description { get; set; } = "Change the audio playback rate of the song.";
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Ranked
-        /// </summary>
         public bool Ranked { get; set; } = true;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Incompatible Mods
-        /// </summary>
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Speed05X,
@@ -68,15 +48,10 @@ namespace Quaver.Shared.Modifiers.Mods
         };
 
         /// <summary>
-        ///     Ctor - Set speed
         /// </summary>
         /// <param name="modIdentifier"></param>
         public ModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Initialize
-        /// </summary>
         public void InitializeMod()
         {
             AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);
