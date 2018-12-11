@@ -42,6 +42,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D HorizontalSelectorRight { get; private set; }
         public static Texture2D HorizontalSelectorMiddle { get; private set; }
         public static Texture2D QuaverLogoFull { get; private set; }
+        public static Texture2D MenuBackgroundBlurred { get; private set; }
+        public static Texture2D QuaverLogoStylish { get; private set; }
+        public static Texture2D QuaverLogoShadowed { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -77,6 +80,9 @@ namespace Quaver.Shared.Assets
             HorizontalSelectorRight = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-right.png"));
             HorizontalSelectorMiddle = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/horizontal-selector-middle.png"));
             QuaverLogoFull = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-full.png"));
+            MenuBackgroundBlurred = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-blurred.jpg"));
+            QuaverLogoStylish = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-stylish.png"));
+            QuaverLogoShadowed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-shadowed.png"));
         }
     }
 }
