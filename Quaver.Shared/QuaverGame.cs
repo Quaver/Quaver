@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -25,6 +25,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Skinning;
 using Steamworks;
@@ -157,7 +158,7 @@ namespace Quaver.Shared
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new AlphaScreen());
         }
 
         /// <inheritdoc />

@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -91,22 +91,13 @@ namespace Quaver.Shared.Database.Maps
                 {
                     switch (screen.Type)
                     {
-                        // Don't allow replay import on these screens
-                        case QuaverScreenType.Connecting:
-                        case QuaverScreenType.Edit:
-                        case QuaverScreenType.Gameplay:
-                        case QuaverScreenType.Loading:
-                        case QuaverScreenType.Importing:
-                        case QuaverScreenType.Splash:
-                            NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
-                            return;
-                        // Allow replay import on these screens
                         case QuaverScreenType.Menu:
                         case QuaverScreenType.Results:
                         case QuaverScreenType.Select:
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
+                            return;
                     }
 
                     var replay = new Replay(e);
