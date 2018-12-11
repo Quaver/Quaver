@@ -8,6 +8,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
@@ -40,6 +41,7 @@ using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Window;
+using Version = YamlDotNet.Core.Version;
 
 namespace Quaver.Shared
 {
@@ -59,6 +61,33 @@ namespace Quaver.Shared
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
+
+        /// <summary>
+        ///     Unique identifier of the client's assembly version.
+        /// </summary>
+        protected AssemblyName AssemblyName => Assembly.GetEntryAssembly()?.GetName() ?? new AssemblyName { Version = new System.Version() };
+
+        /// <summary>
+        ///     Determines if the build is deployed/an official release.
+        ///     By default, it's 0.0.0.0 - Anything else is considered deployed.
+        /// </summary>
+        public bool IsDeployedBuild => AssemblyName.Version.Major != 0 || AssemblyName.Version.Minor != 0 || AssemblyName.Version.Revision != 0 ||
+                                        AssemblyName.Version.Build != 0;
+
+        /// <summary>
+        ///     Stringified version name of the client.
+        /// </summary>
+        public string Version
+        {
+            get
+            {
+                if (!IsDeployedBuild)
+                    return "Local Development Build";
+
+                var assembly = AssemblyName;
+                return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}";
+            }
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -125,6 +154,9 @@ namespace Quaver.Shared
 
             IsReadyToUpdate = true;
 
+            Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
+
+            Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
             QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
@@ -207,9 +239,6 @@ namespace Quaver.Shared
                 return;
 
             base.Draw(gameTime);
-
-            GameBase.DefaultSpriteBatchOptions.Begin();
-            SpriteBatch.End();
 
             // Draw dialogs
             DialogManager.Draw(gameTime);
