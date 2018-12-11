@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -14,6 +14,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Dialogs;
+using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
@@ -77,7 +78,11 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         public override void OnFirstUpdate()
         {
+            GameBase.Game.GlobalUserInterface.Cursor.Show(1);
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+
             AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+
             base.OnFirstUpdate();
         }
 
