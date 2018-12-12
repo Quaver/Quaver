@@ -379,7 +379,7 @@ namespace Quaver.Shared.Config
             DownScroll7K = ReadValue(@"DownScroll7K", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
-            DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
+            DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);

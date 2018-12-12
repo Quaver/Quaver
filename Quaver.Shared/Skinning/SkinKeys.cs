@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -377,11 +377,11 @@ namespace Quaver.Shared.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     BgMaskPadding = 10;
-                    HitPosOffsetY = 0;
-                    NotePadding = 4;
+                    HitPosOffsetY = 110;
+                    NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
-                    ColumnSize = 95;
+                    ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = true;
@@ -405,8 +405,8 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
-                    ComboPosY = 0;
-                    JudgementBurstPosY = 105;
+                    ComboPosY = -40;
+                    JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
