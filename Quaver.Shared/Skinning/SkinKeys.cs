@@ -462,18 +462,19 @@ namespace Quaver.Shared.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     BgMaskPadding = 10;
-                    HitPosOffsetY = 0;
-                    NotePadding = 4;
+                    HitPosOffsetY = 86;
+                    NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
-                    ColumnSize = 65;
-                    ReceptorPosOffsetY = 0;
+                    ColumnSize = 85;
+                    ReceptorPosOffsetY = 10;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
                     ColumnColors = new List<Color>
                     {
+                        new Color(255, 255, 255),
                         new Color(255, 255, 255),
                         new Color(255, 255, 255),
                         new Color(255, 255, 255),
@@ -493,8 +494,8 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
-                    ComboPosY = 0;
-                    JudgementBurstPosY = 105;
+                    ComboPosY = -40;
+                    JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
@@ -554,8 +555,8 @@ namespace Quaver.Shared.Skinning
         {
             #region LIGHTING
             ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
-            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", false, 1, 8);
-            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", false, 1, 12);
+            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", true, 0, 0);
+            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", true, 0, 0);
             #endregion
 
             #region STAGE
