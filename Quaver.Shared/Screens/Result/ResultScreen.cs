@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client;
@@ -322,6 +323,11 @@ namespace Quaver.Shared.Screens.Result
                 var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
                     Gameplay.PauseCount);
 
+                if (ScoreProcessor.Failed)
+                    localScore.PerformanceRating = 0;
+                else
+                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(ScoreProcessor.Mods)).CalculateRating(ScoreProcessor.Accuracy);
+                
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
             catch (Exception e)

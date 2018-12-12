@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -9,7 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Modifiers;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
@@ -21,14 +24,26 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public List<ScoreboardUser> Users { get; }
 
+        /// <summary>
+        ///     Calculates score ratings for players.
+        /// </summary>
+        public RatingProcessorKeys RatingCalculator { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         internal Scoreboard(IEnumerable<ScoreboardUser> users)
         {
-            Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.Processor.Score).ToList();
+            RatingCalculator = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods));
+
+            Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => RatingCalculator.CalculateRating(x.Processor.Accuracy)).ToList();
             SetTargetYPositions();
-            Users.ForEach(x => x.Y = x.TargetYPosition);
+
+            Users.ForEach(x =>
+            {
+                x.Scoreboard = this;
+                x.Y = x.TargetYPosition;
+            });
         }
 
         /// <inheritdoc />
@@ -73,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTargetYPositions()
         {
-            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.Processor.Score).ToList();
+            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => RatingCalculator.CalculateRating(x.Processor.Accuracy)).ToList();
 
             for (var i = 0; i < users.Count; i++)
             {

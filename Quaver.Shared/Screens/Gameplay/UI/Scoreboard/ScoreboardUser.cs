@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -15,6 +15,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -23,6 +24,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 {
     public class ScoreboardUser : Sprite
     {
+        /// <summary>
+        ///     Parent scoreboard
+        /// </summary>
+        public Scoreboard Scoreboard { get; set; }
+
         /// <summary>
         ///     Reference to the gameplay screen.
         /// </summary>
@@ -48,7 +54,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///     The list of order judgements the user has gotten, so we can calculate their score
         ///     as the user plays the map.
         /// </summary>
-        public List<HitStat> HitStats { get; }
+        public List<Judgement> Judgements { get; }
 
         /// <summary>
         ///     The avatar for the user.
@@ -76,9 +82,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         private JudgementHitBurst HitBurst { get; }
 
         /// <summary>
-        ///     The current HitStat we're on in the list of them to calculate their score.
+        ///     The current judgement we're on in the list of them to calculate their score.
         /// </summary>
-        private int CurrentHitStat { get; set; }
+        private int CurrentJudgement { get; set; }
 
         /// <summary>
         ///     The user's raw username.
@@ -97,13 +103,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <param name="screen"></param>
         /// <param name="type"></param>
         /// <param name="username"></param>
-        /// <param name="stats"></param>
+        /// <param name="judgements"></param>
         /// <param name="avatar"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
-        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<HitStat> stats, Texture2D avatar, ModIdentifier mods)
+        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar, ModIdentifier mods)
         {
             Screen = screen;
-            HitStats = stats;
+            Judgements = judgements;
             UsernameRaw = username;
             Type = type;
             Size = new ScalableVector2(260, 50);
@@ -195,7 +201,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = Processor.Score.ToString("N0");
+                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} ({StringHelper.AccuracyToString(Processor.Accuracy)})";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
@@ -205,32 +211,20 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
 
             // If the user doesn't have any more judgements then don't update them.
-            if (HitStats.Count - 1 < CurrentHitStat)
+            if (Judgements.Count - 1 < CurrentJudgement)
                 return;
 
             var processor = (ScoreProcessorKeys) Processor;
+            processor.CalculateScore(Judgements[CurrentJudgement]);
 
-            if (HitStats[CurrentHitStat].KeyPressType == KeyPressType.None)
-                processor.CalculateScore(Judgement.Miss);
-            else
-            {
-                var judgement = processor.CalculateScore(HitStats[CurrentHitStat].HitDifference, HitStats[CurrentHitStat].KeyPressType);
-
-                if (judgement == Judgement.Ghost)
-                {
-                    judgement = Judgement.Miss;
-                    processor.CalculateScore(Judgement.Miss);
-                }
-
-                HitBurst.PerformJudgementAnimation(judgement);
-            }
+            HitBurst.PerformJudgementAnimation(Judgements[CurrentJudgement]);
 
             SetTintBasedOnHealth();
 
-            Score.Text = Processor.Score.ToString("N0");
+            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} ({StringHelper.AccuracyToString(Processor.Accuracy)})";
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
-            CurrentHitStat++;
+            CurrentJudgement++;
         }
 
         /// <summary>

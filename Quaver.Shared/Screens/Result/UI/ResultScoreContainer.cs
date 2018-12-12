@@ -1,14 +1,17 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -175,9 +178,28 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateKeyValueItems()
         {
+            double performanceRating;
+
+            switch (Screen.ResultsType)
+            {
+                case ResultScreenType.Gameplay:
+                case ResultScreenType.Replay:
+                    if (Screen.ScoreProcessor.Failed)
+                        performanceRating = 0;
+                    else
+                        performanceRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods))
+                            .CalculateRating(Screen.ScoreProcessor);
+                    break;
+                case ResultScreenType.Score:
+                    performanceRating = Screen.Score.PerformanceRating;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             ResultKeyValueItems = new List<ResultKeyValueItem>()
             {
-                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "SCORE RATING", "00.00"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "SCORE RATING", $"{performanceRating:F}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "TOTAL SCORE", $"{Screen.ScoreProcessor.Score:N0}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "ACCURACY", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "MAX COMBO", $"{Screen.ScoreProcessor.MaxCombo}x"),

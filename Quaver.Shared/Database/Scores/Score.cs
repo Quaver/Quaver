@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -9,6 +9,7 @@ using System;
 using System.Globalization;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
@@ -112,9 +113,9 @@ namespace Quaver.Shared.Database.Scores
         public int ScrollSpeed { get; set; }
 
         /// <summary>
-        ///     String that contains the hit breakdown the user received.
+        ///     String that contains the judgement breakdown
         /// </summary>
-        public string HitBreakdown { get; set; }
+        public string JudgementBreakdown { get; set; }
 
         /// <summary>
         ///     The amount of times paused during the score.
@@ -167,7 +168,7 @@ namespace Quaver.Shared.Database.Scores
                 Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 PauseCount =  pauseCount,
-                HitBreakdown = GzipHelper.Compress(processor.GetHitBreakdown())
+                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()),
             };
 
             return score;
