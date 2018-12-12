@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -15,6 +15,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
@@ -70,7 +71,8 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreen()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0 || MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value)
+            if (MapsetImporter.Queue.Count > 0 || MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
+                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
             {
                 Exit(() => new ImportingScreen());
                 return;

@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -13,6 +13,7 @@ using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
 using SQLite;
 using Wobble.Logging;
@@ -134,6 +135,7 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(file), file);
                     map.CalculateDifficulties();
+                    map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     InsertMap(map, file);
                 }
                 catch (Exception e)
@@ -147,7 +149,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Responsible for fetching all the maps from the database and returning them.
         /// </summary>
         /// <returns></returns>
-        private static List<Map> FetchAll() => new SQLiteConnection(DatabasePath).Table<Map>().ToList();
+        public static List<Map> FetchAll() => new SQLiteConnection(DatabasePath).Table<Map>().ToList();
 
         /// <summary>
         ///     Converts all backslash characters to forward slashes.

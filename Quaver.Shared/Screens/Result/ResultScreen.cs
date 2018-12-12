@@ -323,11 +323,13 @@ namespace Quaver.Shared.Screens.Result
                 var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
                     Gameplay.PauseCount);
 
+                localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
+
                 if (ScoreProcessor.Failed)
                     localScore.PerformanceRating = 0;
                 else
                     localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(ScoreProcessor.Mods)).CalculateRating(ScoreProcessor.Accuracy);
-                
+
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
             catch (Exception e)

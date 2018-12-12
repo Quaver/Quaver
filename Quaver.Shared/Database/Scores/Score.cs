@@ -128,6 +128,11 @@ namespace Quaver.Shared.Database.Scores
         public double PerformanceRating { get; set; }
 
         /// <summary>
+        ///     The version of the rating calculator that the score was played on.
+        /// </summary>
+        public string RatingProcessorVersion { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]
