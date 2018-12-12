@@ -428,7 +428,7 @@ namespace Quaver.Shared.Skinning
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
-                    ColumnSize = 75;
+                    ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
