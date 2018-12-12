@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -227,6 +228,7 @@ namespace Quaver.Shared.Database.Maps
                 foreach (var quaFile in quaFiles)
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
+                    map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map, quaFile);
                     lastImported = map;
