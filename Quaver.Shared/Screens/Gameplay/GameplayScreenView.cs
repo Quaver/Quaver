@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.API.Gameplay;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
@@ -165,7 +164,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateAccuracyDisplay();
 
             // Create judgement status display
-            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            // JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
@@ -178,7 +177,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Y = -200
             };
 
-            CreateScoreboard();
+            // CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
 
@@ -210,7 +209,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            CheckIfNewScoreboardUsers();
+            // CheckIfNewScoreboardUsers();
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
@@ -362,7 +361,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>
-        public void UpdateScoreboardUsers() => Scoreboard.CalculateScores();
+        public void UpdateScoreboardUsers() => Scoreboard?.CalculateScores();
 
         /// <summary>
         ///     Checks if there are new scoreboard users.
@@ -374,43 +373,31 @@ namespace Quaver.Shared.Screens.Gameplay
             if (mapScores == null || mapScores.Count <= 0 || Scoreboard.Users.Count != 1)
                 return;
 
-            for (var i = 0; i < 5 && i < mapScores.Count; i++)
+            for (var i = 0; i < 4 && i < mapScores.Count; i++)
             {
                 // Decompress score
-                var breakdownHits = GzipHelper.Decompress(mapScores[i].HitBreakdown).Split(',');
+                var breakdownHits = GzipHelper.Decompress(mapScores[i].JudgementBreakdown);
 
-                var stats = new List<HitStat>();
+                var judgements = new List<Judgement>();
 
                 // Get all of the hit stats for the score.
                 foreach (var hit in breakdownHits)
-                {
-                    if (string.IsNullOrEmpty(hit))
-                        continue;
-
-                    stats.Add(HitStat.FromBreakdownItem(hit));
-                }
+                    judgements.Add((Judgement)int.Parse(hit.ToString()));
 
                 var user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name} #{i + 1}",
-                    stats, UserInterface.UnknownAvatar, mapScores[i].Mods)
+                    judgements, UserInterface.UnknownAvatar, mapScores[i].Mods)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
                 };
 
+                user.Scoreboard = Scoreboard;
+
                 // Make sure the user's score is updated with the current user.
-                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < stats.Count; j++)
+                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
                 {
                     var processor = user.Processor as ScoreProcessorKeys;
-
-                    if (stats[j].KeyPressType == KeyPressType.None)
-                        processor?.CalculateScore(Judgement.Miss);
-                    else
-                    {
-                        var judgement = processor?.CalculateScore(user.HitStats[j].HitDifference, user.HitStats[j].KeyPressType);
-
-                        if (judgement == Judgement.Ghost)
-                            processor.CalculateScore(Judgement.Miss);
-                    }
+                    processor?.CalculateScore(judgements[i]);
                 }
 
                 Scoreboard.Users.Add(user);

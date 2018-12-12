@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -31,6 +31,11 @@ namespace Quaver.Shared.Screens.Importing
         ///     The loading wheel that shows we're currently importing maps.
         /// </summary>
         private Sprite LoadingWheel { get; set; }
+
+        /// <summary>
+        ///     Header sprite for what's currently going on.
+        /// </summary>
+        public SpriteText Header { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -121,7 +126,7 @@ namespace Quaver.Shared.Screens.Importing
                 Tint = Colors.MainAccent
             };
 
-            var header = new SpriteText(BitmapFonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
+            Header = new SpriteText(BitmapFonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,
