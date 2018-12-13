@@ -329,7 +329,7 @@ namespace Quaver.Shared
         private void CreateProfiler()
         {
             var profiler = new Profiler(GlobalUserInterface);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => UpdateVisiblityActivity(profiler);
+            ConfigManager.DisplayProfiler.ValueChanged += (o, e) => UpdateVisiblityActivity(profiler);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Quaver.Shared
         /// <param name="profiler"></param>
         private static void UpdateVisiblityActivity(Profiler profiler)
         {
-            if (ConfigManager.FpsCounter.Value)
+            if (ConfigManager.DisplayProfiler.Value)
                 profiler.ShowProfiler();
 
             else

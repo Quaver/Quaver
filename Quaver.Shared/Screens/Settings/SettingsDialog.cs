@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsResolution(this, "Screen Resolution"),
                     new SettingsBool(this, "Fullscreen", ConfigManager.WindowFullScreen),
                     new SettingsFpsLimiter(this),
-                    new SettingsBool(this, "Display FPS Counter", ConfigManager.FpsCounter)
+                    new SettingsBool(this, "Display In-game Profiler", ConfigManager.DisplayProfiler)
                 }),
                 // Audio
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), "Audio", new List<Drawable>

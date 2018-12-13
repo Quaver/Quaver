@@ -121,7 +121,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
-        internal static Bindable<bool> FpsCounter { get; private set; }
+        internal static Bindable<bool> DisplayProfiler { get; private set; }
 
         /// <summary>
         ///     The type of FPS limiter that is activated
@@ -370,7 +370,7 @@ namespace Quaver.Shared.Config
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
-            FpsCounter = ReadValue(@"FpsCounter", false, data);
+            DisplayProfiler = ReadValue(@"DisplayProfiler", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
@@ -439,7 +439,7 @@ namespace Quaver.Shared.Config
                     WindowHeight.ValueChanged += AutoSaveConfiguration;
                     WindowWidth.ValueChanged += AutoSaveConfiguration;
                     WindowFullScreen.ValueChanged += AutoSaveConfiguration;
-                    FpsCounter.ValueChanged += AutoSaveConfiguration;
+                    DisplayProfiler.ValueChanged += AutoSaveConfiguration;
                     FpsLimiterType.ValueChanged += AutoSaveConfiguration;
                     CustomFpsLimit.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
