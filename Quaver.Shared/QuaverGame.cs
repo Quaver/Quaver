@@ -24,6 +24,7 @@ using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Profiling;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
@@ -144,8 +145,8 @@ namespace Quaver.Shared
             // Load the user's skin
             SkinManager.Load();
 
-            // Create the global FPS counter.
-            CreateFpsCounter();
+            // Create the global Profiler
+            CreateProfiler();
             VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
             Transitioner.Initialize();
@@ -323,32 +324,26 @@ namespace Quaver.Shared
         }
 
         /// <summary>
-        ///     Creates the FPS counter to display on a global state.
+        ///     Creates the Profiler which displays system statistics such as FPS, Memory Usage and CPU Usage
         /// </summary>
-        private void CreateFpsCounter()
+        private void CreateProfiler()
         {
-            var fpsCounter = new FpsCounter(BitmapFonts.Exo2SemiBold, 16)
-            {
-                Parent = GlobalUserInterface,
-                Alignment = Alignment.BotRight,
-                Size = new ScalableVector2(70, 30),
-                TextFps =
-                {
-                    Tint = Color.LimeGreen
-                },
-                X = -10,
-                Y = -10,
-                Alpha = 0
-            };
-
-            ShowFpsCounter(fpsCounter);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(fpsCounter);
+            var profiler = new Profiler(GlobalUserInterface);
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => UpdateVisiblityActivity(profiler);
         }
 
         /// <summary>
-        ///     Shows the FPs counter based on the current config variable.
+        ///     Shows the profiler based on the current config value.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
+        /// <param name="profiler"></param>
+        private static void UpdateVisiblityActivity(Profiler profiler)
+        {
+            if (ConfigManager.FpsCounter.Value)
+                profiler.ShowProfiler();
+
+            else
+                profiler.HideProfiler();
+        }
 
         /// <summary>
         ///    Handles limiting/unlimiting FPS based on user config
