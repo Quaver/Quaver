@@ -244,12 +244,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             playfield.Stage.HitLightingObjects[lane].StopHolding();
             gameplayHitObject.StopLongNoteAnimation();
 
+            // Dequeue from pool
+            gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
+
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
-                // Dequeue from pool
-                gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
-
                 // Update stats
                 Ruleset.ScoreProcessor.Stats.Add(
                     new HitStat(
