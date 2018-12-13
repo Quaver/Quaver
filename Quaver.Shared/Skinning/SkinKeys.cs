@@ -43,144 +43,62 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int BgMaskPadding { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int HitPosOffsetY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int NotePadding { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int TimingBarPixelSize { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal float ColumnLightingScale { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int ColumnSize { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int ReceptorPosOffsetY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal byte ColumnAlignment { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal byte JudgementHitBurstScale { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal bool ReceptorsOverHitObjects { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal SortedDictionary<Judgement, Color> JudgeColors { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal List<Color> ColumnColors { get; private set; } = new List<Color>();
 
-        /// <summary>
-        ///
-        /// </summary>
         internal float BgMaskAlpha { get; private set;  }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal bool FlipNoteImagesOnUpscroll { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
+        internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
+
         internal int HitLightingY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int HitLightingWidth { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int HitLightingHeight { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int ScoreDisplayPosX { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int ScoreDisplayPosY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int AccuracyDisplayPosX { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int AccuracyDisplayPosY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int KpsDisplayPosX { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int KpsDisplayPosY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int ComboPosY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal int JudgementBurstPosY { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal HealthBarType HealthBarType { get; private set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
 #endregion
@@ -361,6 +279,7 @@ namespace Quaver.Shared.Skinning
                     };
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
+                    FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
@@ -395,7 +314,8 @@ namespace Quaver.Shared.Skinning
                         new Color(255, 255, 255)
                     };
                     BgMaskAlpha = 0.9f;
-                    FlipNoteImagesOnUpscroll = true;
+                    FlipNoteImagesOnUpscroll = false;
+                    FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
@@ -446,6 +366,7 @@ namespace Quaver.Shared.Skinning
                     };
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
+                    FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
@@ -484,7 +405,8 @@ namespace Quaver.Shared.Skinning
                         new Color(255, 255, 255)
                     };
                     BgMaskAlpha = 0.9f;
-                    FlipNoteImagesOnUpscroll = true;
+                    FlipNoteImagesOnUpscroll = false;
+                    FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
@@ -536,6 +458,7 @@ namespace Quaver.Shared.Skinning
             JudgeColors[Judgement.Miss] = ConfigHelper.ReadColor(JudgeColors[Judgement.Miss], ini["JudgeColorMiss"]);
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
+            FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);

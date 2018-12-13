@@ -33,6 +33,7 @@ This section is to manipulate the elements for the Keys game mode including 4K a
 | ReceptorsOverHitObjects | Boolean (True or False) | If true, the receptors will be over the hitobjects when they fall down and vice versa |
 | ColumnColor{1-7} | RGB Color (255,255,255) | The color in which the [Column Lighting]() is tinted in the specified lane |
 | FlipNoteImagesOnUpscroll | Boolean (True or False) | If true, the notes will be flipped upside down if upscroll is enabled |
+| FlipNoteEndImagesOnUpscroll | Boolean (True or False) | If true, the notes's ends will be flipped upside down if upscroll is enabled |
 | HitLightingY | Integer | The Y position of the hit/holdlighting relative to its default position |
 | HitLightingWidth | Integer | The width of the hit/holdlighting |
 | HitLightingHeight | Integer | The height of the hit/holdlighting |
