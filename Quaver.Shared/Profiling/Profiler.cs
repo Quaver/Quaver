@@ -7,6 +7,7 @@ using Wobble;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics;
 using System.Diagnostics;
+using Quaver.Shared.Config;
 
 namespace Quaver.Shared.Profiling
 {
@@ -73,29 +74,32 @@ namespace Quaver.Shared.Profiling
                 Alignment = Alignment.BotRight
             };
 
-            //graphs
-            GraphFps = new ProfilerGraph(100, Color.Green)
+            GraphFps = new ProfilerGraph(150, Color.LimeGreen)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.BotRight,
                 Position = new ScalableVector2(0, 0)
             };
 
-            GraphMemory = new ProfilerGraph(5, Color.Yellow)
+            GraphMemory = new ProfilerGraph(516, Color.Blue)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.BotRight,
                 Position = new ScalableVector2(-(ProfilerGraph.WIDTH + 5), 0)
             };
 
-            GraphCpu = new ProfilerGraph(10, Color.Red)
+            GraphCpu = new ProfilerGraph(30, Color.Red)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.BotRight,
                 Position = new ScalableVector2(-(ProfilerGraph.WIDTH + 5) * 2, 0)
             };
 
-            ShowProfiler();
+            if (ConfigManager.DisplayProfiler.Value)
+                ShowProfiler();
+
+            else
+                HideProfiler();
         }
 
         public void ShowProfiler()
@@ -116,28 +120,32 @@ namespace Quaver.Shared.Profiling
             if (!Visible)
                 return;
 
+            // Keep track of FPS.
             ElapsedTime += gameTime.ElapsedGameTime;
             FrameCounter++;
-            if (ElapsedTime <= TimeSpan.FromSeconds(1))
+            if (ElapsedTime <= TimeSpan.FromSeconds(0.5))
             {
                 base.Update(gameTime);
                 return;
             }
-
-            ElapsedTime -= TimeSpan.FromSeconds(1);
+            // After a fixed interval, update FPS accordingly and display data
+            ElapsedTime -= TimeSpan.FromSeconds(0.5);
             FrameRate = FrameCounter;
             FrameCounter = 0;
-
-            // After a fixed interval, update and display data
             UpdateVisuals();
             base.Update(gameTime);
         }
 
+        /// <summary>
+        ///     Update Graph Data and Visuals
+        /// </summary>
         private void UpdateVisuals()
         {
+            // Get CPU and Memory Usage
             var curMemory = Process.GetCurrentProcess().WorkingSet64 / 1000000;
             var curCpu = CpuCounter.NextValue();
 
+            // Update Graphs
             GraphFps.UpdateData(FrameRate, $"FPS: {FrameRate}");
             GraphMemory.UpdateData(curMemory, $"Memory: {curMemory}MB");
             GraphCpu.UpdateData(curCpu, $"Cpu: {string.Format("{0:0.##}", curCpu)}%");
