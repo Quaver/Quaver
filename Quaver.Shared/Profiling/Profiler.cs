@@ -22,23 +22,22 @@ namespace Quaver.Shared.Profiling
         /// <summary>
         ///     This displays current FPS.
         /// </summary>
-        public SpriteText TextFps { get; }
+        public ProfilerGraph GraphFps { get; }
 
         /// <summary>
         ///     This displays current Memory Usage.
         /// </summary>
-        public SpriteText TextMemory { get; }
+        public ProfilerGraph GraphMemory { get; }
 
         /// <summary>
-        ///     This displays current Memory Usage.
+        ///     This displays current Cpu Usage.
         /// </summary>
-        public SpriteText TextCpu { get; }
+        public ProfilerGraph GraphCpu { get; }
 
         /// <summary>
         /// 
         /// </summary>
         public PerformanceCounter CpuCounter { get; }
-
 
         /// <summary>
         ///     The current frame rate.
@@ -68,40 +67,34 @@ namespace Quaver.Shared.Profiling
             ContentContainer = new Sprite()
             {
                 Parent = this,
-                Size = new ScalableVector2(160, 60),
-                Position = new ScalableVector2(-10, -55),
+                Size = new ScalableVector2((ProfilerGraph.WIDTH + 5) * 3, 60),
                 Tint = Color.Black,
-                Alpha = 0.4f,
+                Alpha = 0,
                 Alignment = Alignment.BotRight
             };
 
-            TextFps = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            //graphs
+            GraphFps = new ProfilerGraph(100, Color.Green)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(5, 0),
-                WidthScale = 1,
-                Height = 20
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(0, 0)
             };
 
-            TextMemory = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            GraphMemory = new ProfilerGraph(5, Color.Yellow)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(5, 20),
-                WidthScale = 1,
-                Height = 20
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(-(ProfilerGraph.WIDTH + 5), 0)
             };
 
-            TextCpu = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            GraphCpu = new ProfilerGraph(10, Color.Red)
             {
                 Parent = ContentContainer,
-                Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(5, 40),
-                WidthScale = 1,
-                Height = 20,
-                Text = "TEST"
+                Alignment = Alignment.BotRight,
+                Position = new ScalableVector2(-(ProfilerGraph.WIDTH + 5) * 2, 0)
             };
+
             ShowProfiler();
         }
 
@@ -142,9 +135,12 @@ namespace Quaver.Shared.Profiling
 
         private void UpdateVisuals()
         {
-            TextFps.Text = $"FPS: {FrameRate}";
-            TextMemory.Text = $"Memory: {Process.GetCurrentProcess().WorkingSet64/1000000}MB";
-            TextCpu.Text = $"Cpu: {CpuCounter.NextValue()}%";
+            var curMemory = Process.GetCurrentProcess().WorkingSet64 / 1000000;
+            var curCpu = CpuCounter.NextValue();
+
+            GraphFps.UpdateData(FrameRate, $"FPS: {FrameRate}");
+            GraphMemory.UpdateData(curMemory, $"Memory: {curMemory}MB");
+            GraphCpu.UpdateData(curCpu, $"Cpu: {string.Format("{0:0.##}", curCpu)}%");
         }
     }
 }
