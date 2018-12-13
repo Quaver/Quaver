@@ -6,20 +6,39 @@ using System.Text;
 using Wobble;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics;
+using System.Diagnostics;
 
 namespace Quaver.Shared.Profiling
 {
-    public class Profiler : Sprite
+    public class Profiler : Container
     {
+        private Sprite ContentContainer { get; set; }
+
         /// <summary>
         ///     The amount of time elapsed so we can begin counting each second.
         /// </summary>
         private TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
 
         /// <summary>
-        ///     The SpriteText that displays the FPS value.
+        ///     This displays current FPS.
         /// </summary>
         public SpriteText TextFps { get; }
+
+        /// <summary>
+        ///     This displays current Memory Usage.
+        /// </summary>
+        public SpriteText TextMemory { get; }
+
+        /// <summary>
+        ///     This displays current Memory Usage.
+        /// </summary>
+        public SpriteText TextCpu { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public PerformanceCounter CpuCounter { get; }
+
 
         /// <summary>
         ///     The current frame rate.
@@ -36,28 +55,63 @@ namespace Quaver.Shared.Profiling
         /// </summary>
         private int LastRecordedFps { get; set; }
 
-
+        /// <inheritdoc />
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="ui"></param>
         public Profiler(GlobalUserInterface ui)
         {
             Parent = ui;
-            TextFps = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 16)
+            CpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+
+            ContentContainer = new Sprite()
             {
                 Parent = this,
-                Alignment = Alignment.MidCenter
+                Size = new ScalableVector2(160, 60),
+                Position = new ScalableVector2(-10, -55),
+                Tint = Color.Black,
+                Alpha = 0.4f,
+                Alignment = Alignment.BotRight
             };
 
+            TextFps = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(5, 0),
+                WidthScale = 1,
+                Height = 20
+            };
+
+            TextMemory = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(5, 20),
+                WidthScale = 1,
+                Height = 20
+            };
+
+            TextCpu = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            {
+                Parent = ContentContainer,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(5, 40),
+                WidthScale = 1,
+                Height = 20,
+                Text = "TEST"
+            };
             ShowProfiler();
         }
 
         public void ShowProfiler()
         {
-
+            FrameCounter = 0;
+            Visible = true;
         }
 
-        public void HideProfiler()
-        {
-
-        }
+        public void HideProfiler() => Visible = false;
 
         /// <inheritdoc />
         /// <summary>
@@ -65,8 +119,12 @@ namespace Quaver.Shared.Profiling
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ElapsedTime += gameTime.ElapsedGameTime;
+            // Profiler will only update when visible
+            if (!Visible)
+                return;
 
+            ElapsedTime += gameTime.ElapsedGameTime;
+            FrameCounter++;
             if (ElapsedTime <= TimeSpan.FromSeconds(1))
             {
                 base.Update(gameTime);
@@ -77,18 +135,16 @@ namespace Quaver.Shared.Profiling
             FrameRate = FrameCounter;
             FrameCounter = 0;
 
-            TextFps.Text = $"FPS: {FrameRate}";
+            // After a fixed interval, update and display data
+            UpdateVisuals();
             base.Update(gameTime);
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
+        private void UpdateVisuals()
         {
-            FrameCounter++;
-            base.Draw(gameTime);
+            TextFps.Text = $"FPS: {FrameRate}";
+            TextMemory.Text = $"Memory: {Process.GetCurrentProcess().WorkingSet64/1000000}MB";
+            TextCpu.Text = $"Cpu: {CpuCounter.NextValue()}%";
         }
     }
 }
