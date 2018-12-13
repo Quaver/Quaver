@@ -115,7 +115,7 @@ namespace Quaver.Shared.Profiling
             }
             DataSet[0] = current;
             if (DataSet[0] > CurrentCoefficient)
-                CurrentCoefficient += DataSet[0];
+                CurrentCoefficient = DataSet[0];
 
             // Update Coefficient (used for graph scaling)
             CurrentCoefficient += CoefficientOffset;
