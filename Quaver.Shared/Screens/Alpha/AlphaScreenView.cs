@@ -129,21 +129,21 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreateThingsWontBePerfectText() => ThingsWontBePerfectText = new SpriteText(BitmapFonts.Exo2Medium,
-            "A lot of things will break since this game is still in development!", 12)
+        private void CreateThingsWontBePerfectText() => ThingsWontBePerfectText = new SpriteText(BitmapFonts.Exo2SemiBold,
+            "Keep in mind that a lot of things will break, and not everything is complete.", 14)
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
             Y = ThanksText.Y + ThanksText.Height + 102,
-            Tint = Colors.Negative,
+            Tint = Color.Red,
             Alpha = 0,
             Animations = { new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 2400) }
         };
 
         /// <summary>
         /// </summary>
-        private void CreatePressToSkipText() => PressToSkipText = new SpriteText(BitmapFonts.Exo2Medium,
-            "Press [ ENTER ] to skip", 13)
+        private void CreatePressToSkipText() => PressToSkipText = new SpriteText(BitmapFonts.Exo2SemiBold,
+            "Press [ Enter ] to skip", 13)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
