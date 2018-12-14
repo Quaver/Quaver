@@ -340,7 +340,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
                     // - missing an LN counts as two misses
-                    if (hitObject.IsLongNote)
+                    if (hitObject.Info.IsLongNote)
                     {
                         KillPoolObject(hitObject);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);

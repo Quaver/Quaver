@@ -40,12 +40,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public bool CurrentlyBeingHeld { get; set; }
 
         /// <summary>
-        ///     If the note is a long note.
-        ///     In .qua format, long notes are defined as if the end time is greater than 0.
-        /// </summary>
-        public bool IsLongNote { get; private set; }
-
-        /// <summary>
         ///     The Y-Offset from the receptor. >0 = this object hasnt passed receptors.
         /// </summary>
         public long InitialTrackPosition { get; set; }
@@ -200,20 +194,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update Hit Object State
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.Visible = true;
+            HitObjectSprite.Tint = Color.White;
+            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
+            CurrentlyBeingHeld = false;
+            StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
-            HitObjectSprite.Visible = true;
-            HitObjectSprite.Tint = Color.White;
-            IsLongNote = Info.EndTime > 0;
-            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
-            CurrentlyBeingHeld = false;
-            StopLongNoteAnimation();
-
             // Update Hit Object State depending if its an LN or not
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
@@ -298,7 +290,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Y = SpritePosition;
 
             // Disregard the rest if it isn't a long note.
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
                 return;
 
             // It will ignore the rest of the code after this statement if long note size is equal/less than 0
@@ -341,9 +333,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
+                return Info.IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
 
-            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>
@@ -352,7 +344,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void Kill()
         {
             HitObjectSprite.Tint = Colors.DeadLongNote;
-            if (IsLongNote)
+            if (Info.IsLongNote)
             {
                 LongNoteBodySprite.Tint = Colors.DeadLongNote;
                 LongNoteEndSprite.Tint = Colors.DeadLongNote;
@@ -367,7 +359,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // HitObjectSprite.FadeOut(dt, 240);
 
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
                 return;
 
             // LongNoteBodySprite.FadeOut(dt, 240);
