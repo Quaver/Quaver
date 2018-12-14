@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = Color.White;
-            IsLongNote = Info.EndTime > 0;
+            IsLongNote = Info.EndTime > Info.StartTime;
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
