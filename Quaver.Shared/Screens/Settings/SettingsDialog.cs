@@ -326,7 +326,9 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsDefaultSkin(this, "Default Skin"),
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
-                    new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),//scroll direction here
+                    new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
+                    new SettingsScrollDirection4K(this),
+                    new SettingsScrollDirection7K(this),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
