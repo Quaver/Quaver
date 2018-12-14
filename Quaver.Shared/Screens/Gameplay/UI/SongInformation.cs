@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(BitmapFonts.Exo2Regular, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
+            Watching = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Title = new SpriteText(BitmapFonts.Exo2Regular, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
+            Title = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0,
             };
 
-            Difficulty = new SpriteText(BitmapFonts.Exo2Regular, $"[{Screen.Map.DifficultyName}]", 13)
+            Difficulty = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"[{Screen.Map.DifficultyName}]", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2Regular, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
+            Creator = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -113,7 +113,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             var difficulty = (float) MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
 
-            Rating = new SpriteText(BitmapFonts.Exo2Regular,
+            Rating = new SpriteText(BitmapFonts.SourceSansProSemiBold,
                 $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",
                 13)
             {
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Get a formatted string of the activated mods.
             var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" : "None");
-            Mods = new SpriteText(BitmapFonts.Exo2Regular, modsString, 13)
+            Mods = new SpriteText(BitmapFonts.SourceSansProSemiBold, modsString, 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
