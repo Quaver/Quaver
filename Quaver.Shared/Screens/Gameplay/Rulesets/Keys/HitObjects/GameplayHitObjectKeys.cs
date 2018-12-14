@@ -203,18 +203,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
 
             // Update Hit Object State
+            IsLongNote = Info.EndTime > Info.StartTime;
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.Visible = true;
+            HitObjectSprite.Tint = Color.White;
+            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
+            CurrentlyBeingHeld = false;
+            StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
-
-            HitObjectSprite.Visible = true;
-            HitObjectSprite.Tint = Color.White;
-            IsLongNote = Info.EndTime > Info.StartTime;
-            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
-            CurrentlyBeingHeld = false;
-            StopLongNoteAnimation();
 
             // Update Hit Object State depending if its an LN or not
             if (!IsLongNote)
