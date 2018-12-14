@@ -308,3 +308,6 @@ Quaver/Content/*
 
 Content/*
  **/Content.mgcb
+
+Quaver.Server.Client/
+Quaver.Server.Common/
