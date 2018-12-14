@@ -571,7 +571,7 @@ namespace Quaver.Shared.Screens.Result
             }
 
             var state = Gameplay.Failed ? "Fail" : "Pass";
-            var fc = ScoreProcessor.TotalJudgementCount ? "FC " : "";
+            var fc = ScoreProcessor.FullCombo ? "FC " : "";
             var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
             var grade = Gameplay.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
             var combo = $"{ScoreProcessor.MaxCombo}x";
