@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -103,14 +103,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
-        ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
-        /// </summary>
-        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value &&
-                                                SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
-            ? SpriteEffects.FlipVertically
-            : SpriteEffects.None;
-
-        /// <summary>
         ///     General Distance from the receptor. Calculated from hit body size and global offset
         /// </summary>
         public static float HitPositionOffset { get; set; } = 0;
@@ -153,7 +145,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = Effects,
+                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
+                                ? SpriteEffects.FlipVertically
+                                : SpriteEffects.None,
                 Image = UserInterface.BlankBox,
             };
 
@@ -178,7 +172,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(playfield.LaneSize, 0),
                 Parent = playfield.Stage.HitObjectContainer,
-                SpriteEffect = Effects
+                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll
+                    ? SpriteEffects.FlipVertically
+                    : SpriteEffects.None,
             };
 
             // Set long note end properties.

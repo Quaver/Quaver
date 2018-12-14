@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Screens.Menu;
@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Alpha
             if (Exiting)
                 return;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Space))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 Exit(() => new MenuScreen(), 200);
         }
 
