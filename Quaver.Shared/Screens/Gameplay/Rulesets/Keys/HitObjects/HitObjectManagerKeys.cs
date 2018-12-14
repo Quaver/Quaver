@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
                 var skin = SkinManager.Skin.Keys[Ruleset.Mode];
 
-                if (GameplayRulesetKeys.IsDownscroll)
+                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
                     return playfield.ReceptorPositionY + skin.HitPosOffsetY;
 
                 // Up Scroll

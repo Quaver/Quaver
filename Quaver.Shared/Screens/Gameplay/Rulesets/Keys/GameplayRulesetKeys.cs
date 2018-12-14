@@ -37,16 +37,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static bool IsDownscroll
+        internal static ScrollDirection ScrollDirection
         {
             get
             {
                 switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
-                        return ConfigManager.DownScroll4K.Value;
+                        return ConfigManager.ScrollDirection4K.Value;
                     case GameMode.Keys7:
-                        return ConfigManager.DownScroll7K.Value;
+                        return ConfigManager.ScrollDirection7K.Value;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

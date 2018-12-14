@@ -6,6 +6,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Window;
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
-                if (GameplayRulesetKeys.IsDownscroll)
+                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
                     return WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
 
                 return skin.ReceptorPosOffsetY;
@@ -87,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             get
             {
-                if (GameplayRulesetKeys.IsDownscroll)
+                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
                     return ReceptorPositionY;
 
                 var skin = SkinManager.Skin.Keys[Screen.Map.Mode];

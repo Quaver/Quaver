@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
-        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value &&
+        private static SpriteEffects Effects => !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) &&
                                                 SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
             ? SpriteEffects.FlipVertically
             : SpriteEffects.None;
@@ -118,7 +118,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Distance from the receptor for the current HitObjectSprite's image
         /// </summary>
-        private float SpritePositionOffset => GameplayRulesetKeys.IsDownscroll
+        private float SpritePositionOffset => GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll)
             ? HitPositionOffset - HitObjectSprite.Height
             : HitPositionOffset + HitObjectSprite.Height;
 
@@ -252,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Updates LN size
@@ -317,7 +317,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteSize;
 
-            if (GameplayRulesetKeys.IsDownscroll)
+            if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
             {
                 LongNoteBodySprite.Y = + LongNoteBodyOffset + SpritePosition - CurrentLongNoteSize;
                 LongNoteEndSprite.Y = SpritePosition - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;

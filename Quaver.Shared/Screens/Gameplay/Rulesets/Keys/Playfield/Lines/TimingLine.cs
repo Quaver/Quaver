@@ -5,6 +5,7 @@
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -59,7 +60,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateSpritePosition(long offset)
         {
             CurrentTrackPosition = offset - Info.TrackOffset;
-            Y = GlobalTrackOffset + (CurrentTrackPosition * (GameplayRulesetKeys.IsDownscroll ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+            Y = GlobalTrackOffset + (CurrentTrackPosition * (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
         }
     }
 }

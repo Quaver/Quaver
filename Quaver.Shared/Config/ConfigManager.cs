@@ -152,12 +152,12 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static Bindable<bool> DownScroll4K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection4K { get; private set; }
 
         /// <summary>
         ///     Should 7k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static Bindable<bool> DownScroll7K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection7K { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -375,8 +375,8 @@ namespace Quaver.Shared.Config
             CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
-            DownScroll4K = ReadValue(@"DownScroll4K", true, data);
-            DownScroll7K = ReadValue(@"DownScroll7K", true, data);
+            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.DownScroll, data);
+            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.DownScroll, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
@@ -445,8 +445,8 @@ namespace Quaver.Shared.Config
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll4K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll7K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection4K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
                     Skin.ValueChanged += AutoSaveConfiguration;
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
