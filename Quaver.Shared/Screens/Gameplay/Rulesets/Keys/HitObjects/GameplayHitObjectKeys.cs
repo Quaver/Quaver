@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The direction this hit object is traveling.
         /// </summary>
-        private ScrollDirection ScrollDirection { get; set; } = ScrollDirection.DownScroll;
+        private ScrollDirection ScrollDirection { get; set; } = ScrollDirection.Down;
 
         /// <summary>
         ///     The actual HitObject sprite.
@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
-        private SpriteEffects Effects => !ScrollDirection.Equals(ScrollDirection.DownScroll) &&
+        private SpriteEffects Effects => !ScrollDirection.Equals(ScrollDirection.Down) &&
                                                 SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
             ? SpriteEffects.FlipVertically
             : SpriteEffects.None;
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Distance from the receptor for the current HitObjectSprite's image
         /// </summary>
-        private float SpritePositionOffset => ScrollDirection.Equals(ScrollDirection.DownScroll)
+        private float SpritePositionOffset => ScrollDirection.Equals(ScrollDirection.Down)
             ? HitPositionOffset - HitObjectSprite.Height
             : HitPositionOffset + HitObjectSprite.Height;
 
@@ -247,7 +247,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (ScrollDirection.Equals(ScrollDirection.DownScroll) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (ScrollDirection.Equals(ScrollDirection.Down) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Updates LN size
@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteSize;
 
-            if (ScrollDirection.Equals(ScrollDirection.DownScroll))
+            if (ScrollDirection.Equals(ScrollDirection.Down))
             {
                 LongNoteBodySprite.Y = + LongNoteBodyOffset + SpritePosition - CurrentLongNoteSize;
                 LongNoteEndSprite.Y = SpritePosition - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;

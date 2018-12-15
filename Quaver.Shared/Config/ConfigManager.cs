@@ -375,8 +375,8 @@ namespace Quaver.Shared.Config
             CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
-            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.DownScroll, data);
-            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.DownScroll, data);
+            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
+            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);

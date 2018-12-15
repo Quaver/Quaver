@@ -103,11 +103,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 switch (ScrollDirections[i])
                 {
-                    case ScrollDirection.DownScroll:
+                    case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width);
                         ColumnLightingPositionY[i] = ReceptorPositionY[i];
                         break;
-                    case ScrollDirection.UpScroll:
+                    case ScrollDirection.Up:
                         // todo: reference current lane?
                         var receptor = skin.NoteReceptorsUp[i];
                         var hitObject = skin.NoteHitObjects[i][0];
@@ -177,20 +177,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 case GameMode.Keys4:
                     switch (ConfigManager.ScrollDirection4K.Value)
                     {
-                        case ScrollDirection.DownScroll:
+                        case ScrollDirection.Down:
                             ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down
                             };
                             break;
-                        case ScrollDirection.UpScroll:
+                        case ScrollDirection.Up:
                             ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
                             };
                             break;
                         default:
@@ -200,26 +200,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 case GameMode.Keys7:
                     switch (ConfigManager.ScrollDirection7K.Value)
                     {
-                        case ScrollDirection.DownScroll:
+                        case ScrollDirection.Down:
                             ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down
                             };
                             break;
-                        case ScrollDirection.UpScroll:
+                        case ScrollDirection.Up:
                             ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
                             };
                             break;
                         default:

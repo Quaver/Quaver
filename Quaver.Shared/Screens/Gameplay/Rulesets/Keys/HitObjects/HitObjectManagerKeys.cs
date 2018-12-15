@@ -225,10 +225,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 switch (playfield.ScrollDirections[i])
                 {
-                    case ScrollDirection.DownScroll:
+                    case ScrollDirection.Down:
                         HitPositionOffsets[i] = playfield.ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
-                    case ScrollDirection.UpScroll:
+                    case ScrollDirection.Up:
                         HitPositionOffsets[i] = playfield.ReceptorPositionY[i] - skin.HitPosOffsetY;
                         break;
                 }

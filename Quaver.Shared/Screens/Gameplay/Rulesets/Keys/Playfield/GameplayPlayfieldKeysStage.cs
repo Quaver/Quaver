@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Image = Skin.StageHitPositionOverlay,
                 Size = new ScalableVector2(Playfield.Width, sizeY),
                 // todo: case statement for scroll direction
-                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
+                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
                                                     : Playfield.ReceptorPositionY[0] + offsetY + sizeY - Skin.HitPosOffsetY,
             };
         }
@@ -271,7 +271,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
                     // todo: case statement for scroll direction
-                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 });
 
                 // Create the column lighting sprite.
@@ -285,9 +285,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Tint = Skin.ColumnColors[i],
                     X = posX,
                     // todo: case statement for scroll direction
-                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ColumnLightingPositionY[i] - lightingY : Playfield.ColumnLightingPositionY[i],
+                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ColumnLightingPositionY[i] - lightingY : Playfield.ColumnLightingPositionY[i],
                     // todo: case statement for scroll direction
-                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                 });
             }
@@ -324,9 +324,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Image = Skin.StageDistantOverlay,
                 Size = new ScalableVector2(Playfield.Width, sizeY),
                 // todo: case statement for scroll direction
-                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? -1 : 1,
+                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? -1 : 1,
                 // todo: case statement for scroll direction
-                Alignment = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Alignment.TopRight : Alignment.BotRight,
+                Alignment = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Alignment.TopRight : Alignment.BotRight,
                 Parent = Playfield.ForegroundContainer
             };
         }

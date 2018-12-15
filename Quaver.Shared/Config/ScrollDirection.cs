@@ -6,7 +6,8 @@ namespace Quaver.Shared.Config
 {
     public enum ScrollDirection
     {
-        DownScroll,
-        UpScroll
+        Down,
+        Up,
+        Split
     }
 }
