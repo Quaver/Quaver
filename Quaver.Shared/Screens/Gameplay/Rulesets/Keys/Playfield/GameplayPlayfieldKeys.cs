@@ -193,6 +193,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                                 ScrollDirection.Up
                             };
                             break;
+                        case ScrollDirection.Split:
+                            ScrollDirections = new ScrollDirection[4]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                            break;
                         default:
                             throw new Exception("Scroll Direction Config Value does not exist");
                     }
@@ -217,6 +225,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                                 ScrollDirection.Up,
                                 ScrollDirection.Up,
                                 ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                            break;
+                        case ScrollDirection.Split:
+                            ScrollDirections = new ScrollDirection[7]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
                                 ScrollDirection.Up,
                                 ScrollDirection.Up,
                                 ScrollDirection.Up
