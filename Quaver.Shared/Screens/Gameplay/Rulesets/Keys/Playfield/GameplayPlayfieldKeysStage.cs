@@ -149,22 +149,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitObjectContainer();
             }
 
-            // Create distant overlay last so it shows over the objects.
+            // Create Stage Elements
             CreateDistantOverlay();
-
-            // Create combo display.
             CreateComboDisplay();
-
-            // Create HitError
             CreateHitError();
-
-            // Create judgement hit burst
             CreateJudgementHitBurst();
-
-            // Create HitLighting
             CreateHitLighting();
-
-            // Create Health Bar
             CreateHealthBar();
         }
 
