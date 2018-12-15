@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             : base(dialog, name)
         {
             Selector = new HorizontalSelector(elements, new ScalableVector2(200, 26),
-                BitmapFonts.Exo2Medium, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+                BitmapFonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
                 new ScalableVector2(30, 22), 5, onChange, selectedIndex)
             {

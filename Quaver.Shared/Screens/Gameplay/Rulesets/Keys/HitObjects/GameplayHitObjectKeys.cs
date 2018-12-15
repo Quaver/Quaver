@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -38,12 +38,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Is determined by whether the player is holding the key that this hit object is binded to
         /// </summary>
         public bool CurrentlyBeingHeld { get; set; }
-
-        /// <summary>
-        ///     If the note is a long note.
-        ///     In .qua format, long notes are defined as if the end time is greater than 0.
-        /// </summary>
-        public bool IsLongNote { get; private set; }
 
         /// <summary>
         ///     The Y-Offset from the receptor. >0 = this object hasnt passed receptors.
@@ -103,14 +97,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
-        ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
-        /// </summary>
-        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value &&
-                                                SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
-            ? SpriteEffects.FlipVertically
-            : SpriteEffects.None;
-
-        /// <summary>
         ///     General Distance from the receptor. Calculated from hit body size and global offset
         /// </summary>
         public static float HitPositionOffset { get; set; } = 0;
@@ -153,7 +139,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = Effects,
+                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
+                                ? SpriteEffects.FlipVertically
+                                : SpriteEffects.None,
                 Image = UserInterface.BlankBox,
             };
 
@@ -178,7 +166,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(playfield.LaneSize, 0),
                 Parent = playfield.Stage.HitObjectContainer,
-                SpriteEffect = Effects
+                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll
+                    ? SpriteEffects.FlipVertically
+                    : SpriteEffects.None,
             };
 
             // Set long note end properties.
@@ -204,20 +194,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update Hit Object State
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.Visible = true;
+            HitObjectSprite.Tint = Color.White;
+            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
+            CurrentlyBeingHeld = false;
+            StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
-            HitObjectSprite.Visible = true;
-            HitObjectSprite.Tint = Color.White;
-            IsLongNote = Info.EndTime > 0;
-            InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
-            CurrentlyBeingHeld = false;
-            StopLongNoteAnimation();
-
             // Update Hit Object State depending if its an LN or not
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
             {
                 LongNoteEndSprite.Visible = false;
                 LongNoteBodySprite.Visible = false;
@@ -302,7 +290,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Y = SpritePosition;
 
             // Disregard the rest if it isn't a long note.
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
                 return;
 
             // It will ignore the rest of the code after this statement if long note size is equal/less than 0
@@ -345,9 +333,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
+                return Info.IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
 
-            return IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
         }
 
         /// <summary>
@@ -356,7 +344,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void Kill()
         {
             HitObjectSprite.Tint = Colors.DeadLongNote;
-            if (IsLongNote)
+            if (Info.IsLongNote)
             {
                 LongNoteBodySprite.Tint = Colors.DeadLongNote;
                 LongNoteEndSprite.Tint = Colors.DeadLongNote;
@@ -371,7 +359,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             // HitObjectSprite.FadeOut(dt, 240);
 
-            if (!IsLongNote)
+            if (!Info.IsLongNote)
                 return;
 
             // LongNoteBodySprite.FadeOut(dt, 240);

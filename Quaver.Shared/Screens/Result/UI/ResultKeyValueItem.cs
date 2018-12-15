@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTextKey(string key) => TextKey = new SpriteText(BitmapFonts.Exo2Medium, key, 13)
+        private void CreateTextKey(string key) => TextKey = new SpriteText(BitmapFonts.SourceSansProSemiBold, key, 13)
         {
             Parent = this,
             Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <param name="value"></param>
         private void CreateTextValue(string value)
         {
-            TextValue = new SpriteText(BitmapFonts.Exo2Medium, value, 13)
+            TextValue = new SpriteText(BitmapFonts.SourceSansProSemiBold, value, 13)
             {
                 Parent = this,
                 Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
