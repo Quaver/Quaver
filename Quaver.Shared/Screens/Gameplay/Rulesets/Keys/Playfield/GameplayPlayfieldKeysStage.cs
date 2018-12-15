@@ -244,8 +244,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Image = Skin.StageHitPositionOverlay,
                 Size = new ScalableVector2(Playfield.Width, sizeY),
                 // todo: case statement for scroll direction
-                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ReceptorPositionY + Skin.HitPosOffsetY
-                                                    : Playfield.ReceptorPositionY + offsetY + sizeY - Skin.HitPosOffsetY,
+                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
+                                                    : Playfield.ReceptorPositionY[0] + offsetY + sizeY - Skin.HitPosOffsetY,
             };
         }
 
@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
-                    Position = new ScalableVector2(posX, Playfield.ReceptorPositionY),
+                    Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
                     // todo: case statement for scroll direction
@@ -285,7 +285,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Tint = Skin.ColumnColors[i],
                     X = posX,
                     // todo: case statement for scroll direction
-                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
+                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) ? Playfield.ColumnLightingPositionY[i] - lightingY : Playfield.ColumnLightingPositionY[i],
                     // todo: case statement for scroll direction
                     SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,

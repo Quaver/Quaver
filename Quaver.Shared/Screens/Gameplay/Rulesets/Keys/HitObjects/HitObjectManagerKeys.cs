@@ -119,11 +119,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public double CurrentAudioPosition { get; private set; }
 
-        /// <summary>
-        ///     Determines the scroll direction of each lane
-        /// </summary>
-        public ScrollDirection[] ScrollDirections { get; private set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -205,10 +200,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var skin = SkinManager.Skin.Keys[Ruleset.Mode];
 
                 if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
-                    return playfield.ReceptorPositionY + skin.HitPosOffsetY;
+                    return playfield.ReceptorPositionY[0] + skin.HitPosOffsetY;
 
                 // Up Scroll
-                return playfield.ReceptorPositionY - skin.HitPosOffsetY;
+                return playfield.ReceptorPositionY[0] - skin.HitPosOffsetY;
             }
         }
 
@@ -229,73 +224,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             UpdateCurrentTrackPosition();
 
             // Initialize Object Pool
-            DetermineScrollDirections();
             InitializeInfoPool(map);
             InitializeObjectPool();
-        }
-
-        /// <summary>
-        ///     Determine the Scroll Directions for each Lane.
-        /// </summary>
-        private void DetermineScrollDirections()
-        {
-            switch (Ruleset.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    switch (ConfigManager.ScrollDirection4K.Value)
-                    {
-                        case ScrollDirection.DownScroll:
-                            ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll
-                            };
-                            break;
-                        case ScrollDirection.UpScroll:
-                            ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll
-                            };
-                            break;
-                        default:
-                            throw new Exception("Scroll Direction Config Value does not exist");
-                    }
-                    break;
-                case GameMode.Keys7:
-                    switch (ConfigManager.ScrollDirection4K.Value)
-                    {
-                        case ScrollDirection.DownScroll:
-                            ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll,
-                                ScrollDirection.DownScroll
-                            };
-                            break;
-                        case ScrollDirection.UpScroll:
-                            ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll,
-                                ScrollDirection.UpScroll
-                            };
-                            break;
-                        default:
-                            throw new Exception("Scroll Direction Config Value does not exist");
-                    }
-                    break;
-                default:
-                    throw new Exception("Map Mode does not exist.");
-            }
         }
 
         /// <summary>

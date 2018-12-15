@@ -111,6 +111,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         /// <summary>
         ///     General Distance from the receptor. Calculated from hit body size and global offset
+        ///     TODO: this shouldn't be static. It should be unique for each key lane.
         /// </summary>
         public static float HitPositionOffset { get; set; } = 0;
 
@@ -132,7 +133,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectManager = manager;
             Ruleset = ruleset;
 
-            InitializeSprites(ruleset, info.Lane - 1, manager.ScrollDirections[info.Lane - 1]);
+            InitializeSprites(ruleset, info.Lane - 1, ((GameplayPlayfieldKeys)(ruleset.Playfield)).ScrollDirections[info.Lane - 1]);
             InitializeObject(manager, info);
         }
 

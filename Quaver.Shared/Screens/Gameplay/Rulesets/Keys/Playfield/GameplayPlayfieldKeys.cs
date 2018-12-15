@@ -6,8 +6,11 @@
 */
 
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
+using System;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -66,6 +69,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         internal float ReceptorPadding => SkinManager.Skin.Keys[Screen.Map.Mode].NotePadding;
 
         /// <summary>
+        ///     Position for each Receptor in each lane
+        /// </summary>
+        internal float[] ReceptorPositionY { get; set; }
+
+        /// <summary>
+        ///     Position for each Column Lighting
+        /// </summary>
+        internal float[] ColumnLightingPositionY { get; set; }
+
+        /// <summary>
+        ///     Determines the scroll direction of each lane
+        /// </summary>
+        public ScrollDirection[] ScrollDirections { get; private set; }
+
+        /*
+        /// <summary>
         ///     The Y position of the receptors.
         /// </summary>
         internal float ReceptorPositionY
@@ -79,8 +98,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 return skin.ReceptorPosOffsetY;
             }
-        }
+        }*/
 
+        /*
         /// <summary>
         ///     The Y position of the column lighting
         /// </summary>
@@ -97,7 +117,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var hitObject = skin.NoteHitObjects[0][0];
                 return ReceptorPositionY + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
             }
-        }
+        }*/
 
         /// <summary>
         ///     Ctor
@@ -109,6 +129,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Screen = screen;
             Ruleset = ruleset;
             Container = new Container();
+            DetermineScrollDirections();
+
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+            ReceptorPositionY = new float[ScrollDirections.Length];
+            ColumnLightingPositionY = new float[ScrollDirections.Length];
+
+            for (var i = 0; i < ScrollDirections.Length; i++)
+            {
+                switch (ScrollDirections[i])
+                {
+                    case ScrollDirection.DownScroll:
+                        ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i];
+                        break;
+                    case ScrollDirection.UpScroll:
+                        // todo: reference current lane?
+                        var receptor = skin.NoteReceptorsUp[0];
+                        var hitObject = skin.NoteHitObjects[0][0];
+                        ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                        break;
+                    default:
+                        throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
+                }
+            }
 
             // Create background container
             BackgroundContainer = new Container
@@ -156,6 +201,70 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <param name="gameTime"></param>
         public void HandleFailure(GameTime gameTime)
         {
+        }
+
+        /// <summary>
+        ///     Determine the Scroll Directions for each Lane.
+        /// </summary>
+        private void DetermineScrollDirections()
+        {
+            switch (Ruleset.Map.Mode)
+            {
+                case GameMode.Keys4:
+                    switch (ConfigManager.ScrollDirection4K.Value)
+                    {
+                        case ScrollDirection.DownScroll:
+                            ScrollDirections = new ScrollDirection[4]{
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll
+                            };
+                            break;
+                        case ScrollDirection.UpScroll:
+                            ScrollDirections = new ScrollDirection[4]{
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll
+                            };
+                            break;
+                        default:
+                            throw new Exception("Scroll Direction Config Value does not exist");
+                    }
+                    break;
+                case GameMode.Keys7:
+                    switch (ConfigManager.ScrollDirection7K.Value)
+                    {
+                        case ScrollDirection.DownScroll:
+                            ScrollDirections = new ScrollDirection[7]{
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll,
+                                ScrollDirection.DownScroll
+                            };
+                            break;
+                        case ScrollDirection.UpScroll:
+                            ScrollDirections = new ScrollDirection[7]{
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll,
+                                ScrollDirection.UpScroll
+                            };
+                            break;
+                        default:
+                            throw new Exception("Scroll Direction Config Value does not exist");
+                    }
+                    break;
+                default:
+                    throw new Exception("Map Mode does not exist.");
+            }
         }
     }
 }
