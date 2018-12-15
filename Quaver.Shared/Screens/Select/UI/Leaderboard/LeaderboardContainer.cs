@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays that there are no scores available.
         /// </summary>
-        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
         {
             Parent = this,
             Alignment = Alignment.MidCenter,

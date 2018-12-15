@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
+            Watching = new SpriteText(Fonts.SourceSansProSemiBold, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Title = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
+            Title = new SpriteText(Fonts.SourceSansProSemiBold, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0,
             };
 
-            Difficulty = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"[{Screen.Map.DifficultyName}]", 13)
+            Difficulty = new SpriteText(Fonts.SourceSansProSemiBold, $"[{Screen.Map.DifficultyName}]", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Creator = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
+            Creator = new SpriteText(Fonts.SourceSansProSemiBold, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -113,7 +113,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             var difficulty = (float) MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
 
-            Rating = new SpriteText(BitmapFonts.SourceSansProSemiBold,
+            Rating = new SpriteText(Fonts.SourceSansProSemiBold,
                 $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",
                 13)
             {
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Get a formatted string of the activated mods.
             var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" : "None");
-            Mods = new SpriteText(BitmapFonts.SourceSansProSemiBold, modsString, 13)
+            Mods = new SpriteText(Fonts.SourceSansProSemiBold, modsString, 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

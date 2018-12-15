@@ -136,7 +136,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
                 Y = 18
             };
 
-            var header = new SpriteText(BitmapFonts.Exo2SemiBold, "Press a key to change the binding", 16)
+            var header = new SpriteText(Fonts.Exo2SemiBold, "Press a key to change the binding", 16)
             {
                 Parent = icon,
                 Alignment = Alignment.MidLeft,

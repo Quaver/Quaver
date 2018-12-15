@@ -63,20 +63,20 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
-            DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            DifficultyName = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
                 Position = new ScalableVector2(15, 12)
             };
 
-            TextDifficultyRating = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12)
+            TextDifficultyRating = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
             {
                 Parent = this,
                 Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 4),
                 Tint = ColorHelper.DifficultyToColor(19.12f)
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 10)
+            Creator = new SpriteText(Fonts.Exo2SemiBold, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

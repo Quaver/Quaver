@@ -65,21 +65,21 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
-            Title = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            Title = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(15, 12)
             };
 
-            Artist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 12, false)
+            Artist = new SpriteText(Fonts.Exo2SemiBold, " ", 12, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 3)
             };
 
-            Creator = new SpriteText(BitmapFonts.Exo2Medium, " ", 10, false)
+            Creator = new SpriteText(Fonts.Exo2Medium, " ", 10, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

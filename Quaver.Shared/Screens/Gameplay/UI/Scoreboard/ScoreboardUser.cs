@@ -157,7 +157,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create username text.
-            Username = new SpriteText(BitmapFonts.Exo2Bold, GetUsernameFormatted(), 13)
+            Username = new SpriteText(Fonts.Exo2Bold, GetUsernameFormatted(), 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -166,7 +166,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteText(BitmapFonts.Exo2Medium, Processor.Score.ToString("N0"), 12)
+            Score = new SpriteText(Fonts.Exo2Medium, Processor.Score.ToString("N0"), 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -176,7 +176,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteText(BitmapFonts.Exo2Medium, $"{Processor.Combo:N0}x", 13)
+            Combo = new SpriteText(Fonts.Exo2Medium, $"{Processor.Combo:N0}x", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

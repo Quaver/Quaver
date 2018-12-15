@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
 
-            SpriteText = new SpriteText(BitmapFonts.Exo2SemiBold, JudgementHelper.JudgementToShortName(j), 10)
+            SpriteText = new SpriteText(Fonts.Exo2SemiBold, JudgementHelper.JudgementToShortName(j), 10)
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,

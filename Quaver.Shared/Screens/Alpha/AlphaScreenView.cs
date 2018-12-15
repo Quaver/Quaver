@@ -93,7 +93,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreateWelcomeText() => WelcomeText = new SpriteText(BitmapFonts.Exo2Bold,
+        private void CreateWelcomeText() => WelcomeText = new SpriteText(Fonts.Exo2Bold,
             "Welcome to Quaver!", 36)
         {
             Parent = Container,
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreateDiscordJoinText() => DiscordJoinText = new SpriteText(BitmapFonts.Exo2Medium,
+        private void CreateDiscordJoinText() => DiscordJoinText = new SpriteText(Fonts.Exo2Medium,
             "If you are interested in developing or joining the community, check out the Offical Discord Server!", 14)
         {
             Parent = Container,
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreateThanksText() => ThanksText = new SpriteText(BitmapFonts.Exo2Medium,
+        private void CreateThanksText() => ThanksText = new SpriteText(Fonts.Exo2Medium,
             "Also be sure to report any bugs. Thank you for your time here!", 14)
         {
             Parent = Container,
@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreateThingsWontBePerfectText() => ThingsWontBePerfectText = new SpriteText(BitmapFonts.Exo2SemiBold,
+        private void CreateThingsWontBePerfectText() => ThingsWontBePerfectText = new SpriteText(Fonts.Exo2SemiBold,
             "Keep in mind that a lot of things will break, and not everything is complete.", 14)
         {
             Parent = Container,
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Alpha
 
         /// <summary>
         /// </summary>
-        private void CreatePressToSkipText() => PressToSkipText = new SpriteText(BitmapFonts.Exo2SemiBold,
+        private void CreatePressToSkipText() => PressToSkipText = new SpriteText(Fonts.Exo2SemiBold,
             "Press [ Enter ] to skip", 13)
         {
             Parent = Container,

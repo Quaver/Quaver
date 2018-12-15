@@ -283,7 +283,7 @@ namespace Quaver.Shared.Screens.Menu
                 Alpha = 0.0f
             };
 
-            MainMenuText = new SpriteText(BitmapFonts.Exo2BoldItalic, "Main Menu", 32)
+            MainMenuText = new SpriteText(Fonts.Exo2BoldItalic, "Main Menu", 32)
             {
                 Parent = mainMenuBackground,
                 Alignment = Alignment.MidCenter,

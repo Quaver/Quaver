@@ -10,7 +10,7 @@ using Wobble.Graphics.BitmapFonts;
 
 namespace Quaver.Shared.Assets
 {
-    public static class BitmapFonts
+    public static class Fonts
     {
         public static string Exo2Bold { get; } = "exo2-bold";
         public static string Exo2BoldItalic { get; } = "exo2-bolditalic";

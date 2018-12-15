@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Edit.UI
                 Alignment = Alignment.MidLeft
             };
 
-            TextProgressPercent = new SpriteText(BitmapFonts.Exo2Regular, "", 18)
+            TextProgressPercent = new SpriteText(Fonts.Exo2Regular, "", 18)
             {
                 Tint = Color.White,
                 Parent = Progress,

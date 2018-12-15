@@ -94,7 +94,11 @@ namespace Quaver.Shared
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverGame() => InitializeFpsLimiting();
+        public QuaverGame()
+        {
+            Content.RootDirectory = "Content";
+            InitializeFpsLimiting();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -135,7 +139,8 @@ namespace Quaver.Shared
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            BitmapFonts.Load();
+            FontsBitmap.Load();
+            Fonts.Load();
             FontAwesome.Load();
             UserInterface.Load();
 
@@ -327,7 +332,7 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(BitmapFonts.Exo2SemiBold, 16)
+            var fpsCounter = new FpsCounter(Fonts.Exo2SemiBold, 16)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,

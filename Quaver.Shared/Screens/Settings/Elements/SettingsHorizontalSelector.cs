@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             : base(dialog, name)
         {
             Selector = new HorizontalSelector(elements, new ScalableVector2(200, 26),
-                BitmapFonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+                Fonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
                 new ScalableVector2(30, 22), 5, onChange, selectedIndex)
             {

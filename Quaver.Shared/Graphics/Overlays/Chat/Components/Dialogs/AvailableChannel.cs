@@ -56,7 +56,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Dialogs
 
             Size = new ScalableVector2(dialog.ChannelContainer.Width, HEIGHT);
 
-            var channelName = new SpriteText(BitmapFonts.Exo2BoldItalic, chan.Name, 24)
+            var channelName = new SpriteText(Fonts.Exo2BoldItalic, chan.Name, 24)
             {
                 Parent = this,
                 X = 60,
@@ -65,7 +65,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Dialogs
 
             channelName.Size = new ScalableVector2(channelName.Width * 0.55f, channelName.Height * 0.55f);
 
-            var description = new SpriteText(BitmapFonts.Exo2Medium, chan.Description, 24)
+            var description = new SpriteText(Fonts.Exo2Medium, chan.Description, 24)
             {
                 Parent = this,
                 X =  channelName.X,

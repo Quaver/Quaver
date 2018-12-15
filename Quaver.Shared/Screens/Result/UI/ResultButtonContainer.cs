@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 Text =
                 {
                     FontSize = 14,
-                    Font = BitmapFonts.Exo2SemiBold
+                    Font = Fonts.Exo2SemiBold
                 }
             };
 

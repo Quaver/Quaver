@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 Y = 18
             };
 
-            var header = new SpriteText(BitmapFonts.Exo2SemiBold, "Downloading Replay", 16)
+            var header = new SpriteText(Fonts.Exo2SemiBold, "Downloading Replay", 16)
             {
                 Parent = icon,
                 Alignment = Alignment.MidLeft,

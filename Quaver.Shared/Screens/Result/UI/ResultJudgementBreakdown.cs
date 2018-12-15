@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
                 var color = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[j];
 
-                var judgementName = new SpriteText(BitmapFonts.SourceSansProSemiBold, j.ToString().ToUpper(), 13)
+                var judgementName = new SpriteText(Fonts.SourceSansProSemiBold, j.ToString().ToUpper(), 13)
                 {
                     Parent = this,
                     Y = i * 42 + 18,
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 if (progressBar.Width <= 1)
                     progressBar.Width = 1;
 
-                var judgementAmount = new SpriteText(BitmapFonts.SourceSansProSemiBold, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)", 13)
+                var judgementAmount = new SpriteText(Fonts.SourceSansProSemiBold, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)", 13)
                 {
                     Parent = progressBar,
                     Alignment = Alignment.MidLeft,

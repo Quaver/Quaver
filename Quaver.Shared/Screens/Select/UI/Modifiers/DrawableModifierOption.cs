@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="text"></param>
         /// <param name="clickAction"></param>
         public DrawableModifierOption(DrawableModifier modifier, string text, EventHandler clickAction)
-            : base(UserInterface.BlankBox, BitmapFonts.Exo2SemiBold, text, 13, clickAction)
+            : base(UserInterface.BlankBox, Fonts.Exo2SemiBold, text, 13, clickAction)
         {
             Modifier = modifier;
             Parent = Modifier;

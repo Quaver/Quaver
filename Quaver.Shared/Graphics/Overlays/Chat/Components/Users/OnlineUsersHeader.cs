@@ -73,7 +73,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextHeader()
         {
-            TextHeader = new SpriteText(BitmapFonts.Exo2BoldItalic, "Online Users", 13)
+            TextHeader = new SpriteText(Fonts.Exo2BoldItalic, "Online Users", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -86,7 +86,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextOnlineUserCount()
         {
-            TextOnlineCount = new SpriteText(BitmapFonts.Exo2MediumItalic, " ", 10)
+            TextOnlineCount = new SpriteText(Fonts.Exo2MediumItalic, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

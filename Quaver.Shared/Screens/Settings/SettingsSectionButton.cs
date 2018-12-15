@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Settings
                 Size = new ScalableVector2(18, 18)
             };
 
-            Text = new SpriteText(BitmapFonts.Exo2SemiBold, name, 13)
+            Text = new SpriteText(Fonts.Exo2SemiBold, name, 13)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

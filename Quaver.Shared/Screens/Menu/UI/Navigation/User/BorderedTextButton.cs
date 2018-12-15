@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
         /// <param name="color"></param>
         /// <param name="clickAction"></param>
         public BorderedTextButton(string text, Color color, EventHandler clickAction = null)
-            : base(UserInterface.BlankBox, BitmapFonts.Exo2Medium, text, 13, clickAction)
+            : base(UserInterface.BlankBox, Fonts.Exo2Medium, text, 13, clickAction)
         {
             OriginalColor = color;
             Size = new ScalableVector2(175, 35);

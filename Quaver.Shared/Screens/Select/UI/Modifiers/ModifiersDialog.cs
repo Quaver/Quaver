@@ -132,14 +132,14 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_level_up),
             };
 
-            var chatChannels = new SpriteText(BitmapFonts.Exo2SemiBold, "Modifiers", 14)
+            var chatChannels = new SpriteText(Fonts.Exo2SemiBold, "Modifiers", 14)
             {
                 Parent = icon,
                 Y = -3,
                 X = icon.Width + 15,
             };
 
-            var description = new SpriteText(BitmapFonts.Exo2SemiBold, "Switch it up for a change, and customize gameplay to your heart's desire.",
+            var description = new SpriteText(Fonts.Exo2SemiBold, "Switch it up for a change, and customize gameplay to your heart's desire.",
                 13)
             {
                 Parent = icon,

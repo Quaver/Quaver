@@ -52,7 +52,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateChannelsText()
         {
-            TextChannels = new SpriteText(BitmapFonts.Exo2Medium, "Chat Channels", 13)
+            TextChannels = new SpriteText(Fonts.Exo2Medium, "Chat Channels", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Creates the text that states the modifier's name.
         /// </summary>
-        private void CreateModifierName() => ModifierName = new SpriteText(BitmapFonts.Exo2Bold, Modifier.Name , 13)
+        private void CreateModifierName() => ModifierName = new SpriteText(Fonts.Exo2Bold, Modifier.Name , 13)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Creates the text that displays the modifier's description.
         /// </summary>
-        private void CreateModifierDescription() => ModifierDescription = new SpriteText(BitmapFonts.Exo2SemiBold, Modifier.Description, 12, false)
+        private void CreateModifierDescription() => ModifierDescription = new SpriteText(Fonts.Exo2SemiBold, Modifier.Description, 12, false)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

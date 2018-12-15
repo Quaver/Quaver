@@ -129,7 +129,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
                 ? OnlineManager.Self.OnlineUser.Username
                 : Message.SenderName;
 
-            TextUsername = new SpriteText(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}", 14)
+            TextUsername = new SpriteText(Fonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {un}", 14)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteText(BitmapFonts.Exo2Medium, Message.Message, 13, true,
+        private void CreateMessageContentText() => TextMessageContent = new SpriteText(Fonts.Exo2Medium, Message.Message, 13, true,
                 (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
             Parent = this,

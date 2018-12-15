@@ -121,7 +121,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Creates the username text
         /// </summary>
-        private void CreateUsername() => Username = new SpriteText(BitmapFonts.Exo2Bold, "Loading...", 13)
+        private void CreateUsername() => Username = new SpriteText(Fonts.Exo2Bold, "Loading...", 13)
         {
             Parent = this,
             X = Avatar.X + Avatar.Width + 5,
@@ -132,7 +132,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Creates the text for the user's status
         /// </summary>
-        private void CreateStatus() => Status = new SpriteText(BitmapFonts.Exo2SemiBold, "Idle", 12)
+        private void CreateStatus() => Status = new SpriteText(Fonts.Exo2SemiBold, "Idle", 12)
         {
             Parent = this,
             X = Username.X,

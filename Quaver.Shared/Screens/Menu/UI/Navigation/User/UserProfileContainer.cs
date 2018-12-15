@@ -173,7 +173,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 Visible = false
             };
 
-            TextConnectionStatus = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
+            TextConnectionStatus = new SpriteText(Fonts.Exo2SemiBold, " ", 14)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 Text =
                 {
                     FontSize = 14,
-                    Font = BitmapFonts.Exo2Medium
+                    Font = Fonts.Exo2Medium
                 }
             };
 
@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 Text =
                 {
                     FontSize = 14,
-                    Font = BitmapFonts.Exo2Medium
+                    Font = Fonts.Exo2Medium
                 }
             };
 

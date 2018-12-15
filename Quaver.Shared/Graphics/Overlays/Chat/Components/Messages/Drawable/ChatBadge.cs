@@ -52,7 +52,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
                 UsePreviousSpriteBatchOptions = true
             };
 
-            TextUserGroup = new SpriteText(BitmapFonts.Exo2SemiBold, GetUserGroupName(UserGroups), 11, false)
+            TextUserGroup = new SpriteText(Fonts.Exo2SemiBold, GetUserGroupName(UserGroups), 11, false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
