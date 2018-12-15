@@ -82,6 +82,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float LongNoteEndOffset { get; set; }
 
         /// <summary>
+        ///     The direction this hit object is traveling.
+        /// </summary>
+        private ScrollDirection ScrollDirection { get; set; }
+
+        /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
         private Sprite HitObjectSprite { get; set; }
@@ -127,7 +132,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectManager = manager;
             Ruleset = ruleset;
 
-            InitializeSprites(ruleset, info.Lane - 1);
+            InitializeSprites(ruleset, info.Lane - 1, manager.ScrollDirections[info.Lane - 1]);
             InitializeObject(manager, info);
         }
 
@@ -136,11 +141,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ruleset"></param>
-        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane)
+        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane, ScrollDirection direction)
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[lane].X;
+            ScrollDirection = direction;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
