@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateAccuracyDisplay();
 
             // Create judgement status display
-            // JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
