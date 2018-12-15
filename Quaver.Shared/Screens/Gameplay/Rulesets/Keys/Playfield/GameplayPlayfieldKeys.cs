@@ -99,11 +99,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Ruleset = ruleset;
             Container = new Container();
             DetermineScrollDirections();
-            ApplyHitPositionsOffset();
 
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
             ColumnLightingPositionY = new float[ScrollDirections.Length];
+            ApplyHitPositionsOffset();
 
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
@@ -149,19 +149,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void ApplyHitPositionsOffset()
         {
-            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var skin = SkinManager.Skin.Keys[Ruleset.Mode];
-            HitPositionOffsets = new float[playfield.ScrollDirections.Length];
+            HitPositionOffsets = new float[ScrollDirections.Length];
 
-            for (var i = 0; i < playfield.ScrollDirections.Length; i++)
+            for (var i = 0; i < ScrollDirections.Length; i++)
             {
-                switch (playfield.ScrollDirections[i])
+                switch (ScrollDirections[i])
                 {
                     case ScrollDirection.Down:
-                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] + skin.HitPosOffsetY;
+                        HitPositionOffsets[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
-                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] - skin.HitPosOffsetY;
+                        HitPositionOffsets[i] = ReceptorPositionY[i] - skin.HitPosOffsetY;
                         break;
                 }
             }
