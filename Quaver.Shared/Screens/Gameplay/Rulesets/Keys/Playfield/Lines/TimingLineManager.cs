@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         {
             Ruleset = (GameplayRulesetKeys)ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffset;
+            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffsets[0];
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }

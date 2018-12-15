@@ -83,42 +83,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         public ScrollDirection[] ScrollDirections { get; private set; }
 
-        /*
-        /// <summary>
-        ///     The Y position of the receptors.
-        /// </summary>
-        internal float ReceptorPositionY
-        {
-            get
-            {
-                var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
-
-                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
-                    return WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
-
-                return skin.ReceptorPosOffsetY;
-            }
-        }*/
-
-        /*
-        /// <summary>
-        ///     The Y position of the column lighting
-        /// </summary>
-        internal float ColumnLightingPositionY
-        {
-            get
-            {
-                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
-                    return ReceptorPositionY;
-
-                var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
-
-                var receptor = skin.NoteReceptorsUp[0];
-                var hitObject = skin.NoteHitObjects[0][0];
-                return ReceptorPositionY + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
-            }
-        }*/
-
         /// <summary>
         ///     Ctor
         /// </summary>
@@ -140,13 +104,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 switch (ScrollDirections[i])
                 {
                     case ScrollDirection.DownScroll:
-                        ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
+                        ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width);
                         ColumnLightingPositionY[i] = ReceptorPositionY[i];
                         break;
                     case ScrollDirection.UpScroll:
                         // todo: reference current lane?
-                        var receptor = skin.NoteReceptorsUp[0];
-                        var hitObject = skin.NoteHitObjects[0][0];
+                        var receptor = skin.NoteReceptorsUp[i];
+                        var hitObject = skin.NoteHitObjects[i][0];
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
                         break;

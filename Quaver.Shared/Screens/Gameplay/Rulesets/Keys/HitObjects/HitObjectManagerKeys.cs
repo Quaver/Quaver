@@ -192,20 +192,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The offset from the edge of the screen of the hit position.
         /// </summary>
-        public float HitPositionOffset
-        {
-            get
-            {
-                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
-                var skin = SkinManager.Skin.Keys[Ruleset.Mode];
-
-                if (GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll))
-                    return playfield.ReceptorPositionY[0] + skin.HitPosOffsetY;
-
-                // Up Scroll
-                return playfield.ReceptorPositionY[0] - skin.HitPosOffsetY;
-            }
-        }
+        public float[] HitPositionOffsets { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -215,7 +202,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
             Ruleset = ruleset;
-            GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
+            ApplyHitPositionsOffset();
 
             // Initialize SV
             UpdatePoolingPositions();
@@ -226,6 +213,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Initialize Object Pool
             InitializeInfoPool(map);
             InitializeObjectPool();
+        }
+
+        private void ApplyHitPositionsOffset()
+        {
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            var skin = SkinManager.Skin.Keys[Ruleset.Mode];
+            HitPositionOffsets = new float[playfield.ScrollDirections.Length];
+
+            for (var i = 0; i < playfield.ScrollDirections.Length; i++)
+            {
+                switch (playfield.ScrollDirections[i])
+                {
+                    case ScrollDirection.DownScroll:
+                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] + skin.HitPosOffsetY;
+                        break;
+                    case ScrollDirection.UpScroll:
+                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] - skin.HitPosOffsetY;
+                        break;
+                }
+            }
+
         }
 
         /// <summary>
