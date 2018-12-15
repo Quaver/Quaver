@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 X = icon.Width + 15,
             };
 
-            var description = new SpriteText(BitmapFonts.Exo2Medium, "Switch it up for a change, and customize gameplay to your heart's desire.",
+            var description = new SpriteText(BitmapFonts.Exo2SemiBold, "Switch it up for a change, and customize gameplay to your heart's desire.",
                 13)
             {
                 Parent = icon,
