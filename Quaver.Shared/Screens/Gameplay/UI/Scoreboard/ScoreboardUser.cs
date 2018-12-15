@@ -69,17 +69,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Text that displays the current score of the user.
         /// </summary>
-        private SpriteText Score { get; }
+        private SpriteTextBitmap Score { get; }
 
         /// <summary>
         ///     Text that displays the user's current combo.
         /// </summary>
-        private SpriteText Combo { get; }
-
-        /// <summary>
-        ///     The hit burst, whenever score is calculated again.
-        /// </summary>
-        private JudgementHitBurst HitBurst { get; }
+        private SpriteTextBitmap Combo { get; }
 
         /// <summary>
         ///     The current judgement we're on in the list of them to calculate their score.
@@ -131,7 +126,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 case ScoreboardUserType.Other:
                     Image = SkinManager.Skin.ScoreboardOther;
                     Alpha = 0.75f;
-                    textAlpha = 0.45f;
+                    textAlpha = 0.65f;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -162,36 +157,29 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                X = Avatar.Width + 10
+                X = Avatar.Width + 10,
             };
 
             // Create score text.
-            Score = new SpriteText(Fonts.Exo2Medium, Processor.Score.ToString("N0"), 12)
+            Score = new SpriteTextBitmap(FontsBitmap.AllerRegular, "0.00")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
                 Y = Username.Y + Username.Height + 2,
-                X = Username.X
+                X = Username.X,
+                FontSize = 18
             };
 
             // Create score text.
-            Combo = new SpriteText(Fonts.Exo2Medium, $"{Processor.Combo:N0}x", 13)
+            Combo = new SpriteTextBitmap(FontsBitmap.AllerRegular, $"{Processor.Combo:N0}x")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Alpha = textAlpha
+                Alpha = textAlpha,
+                FontSize = 18,
+                X = -5
             };
-
-            // Create hit burst
-            HitBurst = new JudgementHitBurst(SkinManager.Skin.Judgements[Judgement.Miss], new Vector2(50, 50), 0)
-            {
-                Parent = this,
-                Alignment = Alignment.MidCenter,
-                Alpha = textAlpha
-            };
-
-            HitBurst.X = HitBurst.Frames[0].Width / 2f - 20;
         }
 
         /// <summary>
@@ -201,11 +189,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} ({StringHelper.AccuracyToString(Processor.Accuracy)})";
+                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
-                // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
-                HitBurst.PerformJudgementAnimation(Processor.Combo == 0 ? Judgement.Miss : Processor.Stats.Last().Judgement);
                 SetTintBasedOnHealth();
                 return;
             }
@@ -217,11 +203,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             var processor = (ScoreProcessorKeys) Processor;
             processor.CalculateScore(Judgements[CurrentJudgement]);
 
-            HitBurst.PerformJudgementAnimation(Judgements[CurrentJudgement]);
-
             SetTintBasedOnHealth();
 
-            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} ({StringHelper.AccuracyToString(Processor.Accuracy)})";
+            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             CurrentJudgement++;

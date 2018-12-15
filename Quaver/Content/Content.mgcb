@@ -3,7 +3,7 @@
 
 /outputDir:bin
 /intermediateDir:obj
-/platform:DesktopGL
+/platform:Windows
 /config:
 /profile:Reach
 /compress:False
@@ -15,8 +15,8 @@
 #---------------------------------- Content ---------------------------------#
 
 #begin exo2-regular.fnt
-/importer:
-/processor:
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
 /build:exo2-regular.fnt
 
 #begin exo2-regular_0.png
@@ -30,4 +30,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:exo2-regular_0.png
+
+#begin aller-regular.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:aller-regular.fnt
+
+#begin aller-regular_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:aller-regular_0.png
 

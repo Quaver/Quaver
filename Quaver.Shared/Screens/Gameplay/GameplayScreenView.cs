@@ -177,7 +177,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Y = -200
             };
 
-            // CreateScoreboard();
+            CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
 
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // CheckIfNewScoreboardUsers();
+            CheckIfNewScoreboardUsers();
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
