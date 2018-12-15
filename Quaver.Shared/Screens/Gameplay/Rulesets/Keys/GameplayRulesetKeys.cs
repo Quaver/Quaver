@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -30,8 +31,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         ///     the playfield and the HitObjectManager.
         ///
         ///     We can't intiialize it in Playfield as that gets created first.
+        ///
+        ///     This is a list because multiple scroll directions require multiple Timing Line Managers.
+        /// 
         /// </summary>
-        public TimingLineManager TimingLineManager { get; }
+        public List<TimingLineManager> TimingLineManager { get; } = new List<TimingLineManager>();
 
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
@@ -60,8 +64,61 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="map"></param>
         public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
         {
+            // Create appropriate Timing Line Managers.
+            // - Multiple Timing Line Managers for multiple Scroll Directions
             if (ConfigManager.DisplayTimingLines.Value)
-                TimingLineManager = CreateTimingLineManager();
+            {
+                var playfield = (GameplayPlayfieldKeys)Playfield;
+                switch (MapManager.Selected.Value.Qua.Mode)
+                {
+                    case GameMode.Keys4:
+                        if (!ConfigManager.ScrollDirection4K.Value.Equals(ScrollDirection.Split))
+                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection4K.Value, playfield.Width, 0));
+                        else
+                        {
+                            var halfway = playfield.Stage.Receptors[1].X + playfield.Stage.Receptors[1].Width;
+                            TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Down,
+                                    halfway,
+                                    0
+                                ));
+                            TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Up,
+                                    playfield.Width - halfway,
+                                    playfield.Width - halfway
+                                ));
+                        }
+                        break;
+                    case GameMode.Keys7:
+                        if (!ConfigManager.ScrollDirection7K.Value.Equals(ScrollDirection.Split))
+                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection7K.Value, playfield.Width, 0));
+                        else
+                        {
+                            var halfway = playfield.Stage.Receptors[3].X + playfield.Stage.Receptors[3].Width;
+                            TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Down,
+                                    halfway,
+                                    0
+                                ));
+                            TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Up,
+                                    playfield.Width - halfway,
+                                    playfield.Width - halfway
+                                ));
+                        }
+                        break;
+                    default:
+                        throw new Exception("Game Mode does not exist");
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -71,8 +128,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused && ConfigManager.DisplayTimingLines.Value)
-                TimingLineManager.UpdateObjectPool();
+            if (!Screen.Failed && !Screen.IsPaused && TimingLineManager != null)
+                foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
 
             base.Update(gameTime);
         }
@@ -100,11 +157,5 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <returns></returns>
         protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Map.Mode);
-
-        /// <summary>
-        ///     Create the Timing Line Objects Manager
-        /// </summary>
-        /// <returns></returns>
-        private TimingLineManager CreateTimingLineManager() => new TimingLineManager(this);
     }
 }
