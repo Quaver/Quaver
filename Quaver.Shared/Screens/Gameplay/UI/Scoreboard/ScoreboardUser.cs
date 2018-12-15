@@ -189,7 +189,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();
@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             SetTintBasedOnHealth();
 
-            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.##} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             CurrentJudgement++;
