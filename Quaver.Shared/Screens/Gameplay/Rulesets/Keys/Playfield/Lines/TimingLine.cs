@@ -30,14 +30,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public float CurrentTrackPosition { get; private set; }
 
         /// <summary>
+        ///     Target position when TrackPosition = 0
+        /// </summary>
+        private float TrackOffset { get; set; }
+
+        /// <summary>
         ///     The direction this object is moving.
         /// </summary>
         private ScrollDirection ScrollDirection { get; set; }
-
-        /// <summary>
-        ///     Offset
-        /// </summary>
-        public static float GlobalTrackOffset { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -45,9 +45,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public TimingLine(GameplayRulesetKeys ruleset, TimingLineInfo info, ScrollDirection direction, float size, float offsetX)
+        public TimingLine(GameplayRulesetKeys ruleset, TimingLineInfo info, ScrollDirection direction, float targetY, float size, float offsetX)
         {
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+            TrackOffset = targetY;
             Ruleset = ruleset;
             Info = info;
             ScrollDirection = direction;
@@ -67,7 +68,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateSpritePosition(long offset)
         {
             CurrentTrackPosition = offset - Info.TrackOffset;
-            Y = GlobalTrackOffset + (CurrentTrackPosition * (ScrollDirection.Equals(ScrollDirection.Down) ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+            Y = TrackOffset + (CurrentTrackPosition * (ScrollDirection.Equals(ScrollDirection.Down) ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
         }
     }
 }

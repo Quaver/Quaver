@@ -51,6 +51,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public ScrollDirection ScrollDirection { get; }
 
         /// <summary>
+        ///     Target position when TrackPosition = 0
+        /// </summary>
+        private float TrackOffset { get; }
+
+        /// <summary>
         ///     Size of every Timing Line
         /// </summary>
         private float SizeX { get; }
@@ -65,15 +70,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
-        public TimingLineManager(GameplayRulesetKeys ruleset, ScrollDirection direction, float size, float offset)
+        public TimingLineManager(GameplayRulesetKeys ruleset, ScrollDirection direction, float targetY, float size, float offset)
         {
+            TrackOffset = targetY;
             SizeX = size;
             PositionX = offset;
             ScrollDirection = direction;
             Ruleset = ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            // todo: Implement split scroll
-            TimingLine.GlobalTrackOffset = ((GameplayPlayfieldKeys)ruleset.Playfield).HitPositionOffsets[0];
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -151,7 +155,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="info"></param>
         private void CreatePoolObject(TimingLineInfo info)
         {
-            var line = new TimingLine(Ruleset, info, ScrollDirection, SizeX, PositionX);
+            var line = new TimingLine(Ruleset, info, ScrollDirection, TrackOffset, SizeX, PositionX);
             line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
             Pool.Enqueue(line);
         }

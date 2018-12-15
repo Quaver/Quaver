@@ -19,6 +19,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
+using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 {
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                 {
                     case GameMode.Keys4:
                         if (!ConfigManager.ScrollDirection4K.Value.Equals(ScrollDirection.Split))
-                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection4K.Value, playfield.Width, 0));
+                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection4K.Value, playfield.HitPositionOffsets[0], playfield.Width, 0));
                         else
                         {
                             var halfway = playfield.Stage.Receptors[1].X + playfield.Stage.Receptors[1].Width;
@@ -81,6 +82,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
+                                    playfield.HitPositionOffsets[0],
                                     halfway,
                                     0
                                 ));
@@ -88,6 +90,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Up,
+                                    playfield.ColumnLightingPositionY[2],
                                     playfield.Width - halfway,
                                     playfield.Width - halfway
                                 ));
@@ -95,7 +98,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                         break;
                     case GameMode.Keys7:
                         if (!ConfigManager.ScrollDirection7K.Value.Equals(ScrollDirection.Split))
-                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection7K.Value, playfield.Width, 0));
+                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection7K.Value, playfield.HitPositionOffsets[0], playfield.Width, 0));
                         else
                         {
                             var halfway = playfield.Stage.Receptors[3].X + playfield.Stage.Receptors[3].Width;
@@ -103,6 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
+                                    playfield.HitPositionOffsets[0],
                                     halfway,
                                     0
                                 ));
@@ -111,6 +115,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                     this,
                                     ScrollDirection.Up,
                                     playfield.Width - halfway,
+                                    playfield.ColumnLightingPositionY[4],
                                     playfield.Width - halfway
                                 ));
                         }

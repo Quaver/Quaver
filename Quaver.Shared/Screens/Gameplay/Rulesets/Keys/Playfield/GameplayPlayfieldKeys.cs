@@ -257,7 +257,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         HitPositionOffsets[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
-                        HitPositionOffsets[i] = ReceptorPositionY[i] - skin.HitPosOffsetY;
+                        Console.WriteLine(skin.HitPosOffsetY);
+                        HitPositionOffsets[i] = (ColumnLightingPositionY[i] - skin.HitPosOffsetY); //ReceptorPositionY[i] + skin.NoteReceptorsUp[i].Height - skin.NoteHitObjects[i][0].Height - skin.HitPosOffsetY;
                         break;
                 }
             }
