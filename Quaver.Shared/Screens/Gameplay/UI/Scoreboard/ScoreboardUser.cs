@@ -15,9 +15,12 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
@@ -69,12 +72,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Text that displays the current score of the user.
         /// </summary>
-        private SpriteTextBitmap Score { get; }
+        internal SpriteTextBitmap Score { get; }
 
         /// <summary>
         ///     Text that displays the user's current combo.
         /// </summary>
-        private SpriteTextBitmap Combo { get; }
+        internal SpriteTextBitmap Combo { get; }
 
         /// <summary>
         ///     The current judgement we're on in the list of them to calculate their score.
@@ -91,6 +94,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal int Rank { get; set; }
 
+        /// <summary>
+        ///     Reference to the score
+        /// </summary>
+        private Score LocalScore { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -100,10 +108,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <param name="username"></param>
         /// <param name="judgements"></param>
         /// <param name="avatar"></param>
+        /// <param name="score"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
-        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar, ModIdentifier mods)
+        internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar, ModIdentifier mods, Score score = null)
         {
             Screen = screen;
+            LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
             Type = type;
@@ -151,6 +161,30 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
+            if (Type != ScoreboardUserType.Self)
+            {
+                if (LocalScore != null && LocalScore.IsOnline)
+                {
+                    // Check to see if we have a Steam avatar for this user cached.
+                    if (SteamManager.UserAvatars.ContainsKey((ulong)LocalScore.SteamId))
+                        Avatar.Image = SteamManager.UserAvatars[(ulong)LocalScore.SteamId];
+                    else
+                    {
+
+                        Avatar.Alpha = 0;
+                        Avatar.Image = UserInterface.UnknownAvatar;
+
+                        // Otherwise we need to request for it.
+                        SteamManager.SteamUserAvatarLoaded += OnAvatarLoaded;
+                        SteamManager.SendAvatarRetrievalRequest((ulong)LocalScore.SteamId);
+                    }
+                }
+                else
+                {
+                    Avatar.Image = UserInterface.UnknownAvatar;
+                }
+            }
+
             // Create username text.
             Username = new SpriteText(Fonts.Exo2Bold, GetUsernameFormatted(), 13)
             {
@@ -180,6 +214,17 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 FontSize = 18,
                 X = -5
             };
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            SteamManager.SteamUserAvatarLoaded -= OnAvatarLoaded;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -231,6 +276,22 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Username.Tint = Color.Orange;
             else
                 Username.Tint = Color.Red;
+        }
+
+        /// <summary>
+        ///     Called when a Steam avatar has loaded.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            if (e.SteamId != (ulong)LocalScore.SteamId)
+                return;
+
+            Avatar.Image = e.Texture;
+            Avatar.ClearAnimations();
+            Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
         }
     }
 }
