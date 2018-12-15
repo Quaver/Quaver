@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
                 {
                     "No",
                     "Yes",
-                }, new ScalableVector2(200, 26), BitmapFonts.Exo2Medium, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+                }, new ScalableVector2(200, 26), Fonts.Exo2Medium, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
                 new ScalableVector2(30, 22), 5, OnSelectorChanged, Convert.ToInt32(Bindable.Value))
             {

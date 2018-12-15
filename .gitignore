@@ -305,6 +305,3 @@ OpenCover/
 # Content 
 Quaver/Content/*
 *.mgcb
-
-Content/*
- **/Content.mgcb

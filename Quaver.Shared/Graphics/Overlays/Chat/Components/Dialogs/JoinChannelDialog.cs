@@ -126,14 +126,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Dialogs
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users),
             };
 
-            var chatChannels = new SpriteText(BitmapFonts.Exo2SemiBold, "Join Chat Channels", 14)
+            var chatChannels = new SpriteText(Fonts.Exo2SemiBold, "Join Chat Channels", 14)
             {
                 Parent = icon,
                 Y = -3,
                 X = icon.Width + 15,
             };
 
-            var description = new SpriteText(BitmapFonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
+            var description = new SpriteText(Fonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
                 13)
             {
                 Parent = icon,

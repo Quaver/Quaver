@@ -283,9 +283,6 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         private void SubmitScore()
         {
-            // Always clear cached scores after submitting
-            MapManager.Selected.Value.ClearScores();
-
             // Don't save scores if the user quit themself.
             if (Gameplay.HasQuit || Gameplay.InReplayMode)
                 return;

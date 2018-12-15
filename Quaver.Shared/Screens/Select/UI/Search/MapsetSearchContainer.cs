@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Creates the heading text that says "search"
         /// </summary>
-        private void CreateTextSearch() => TextSearch = new SpriteText(BitmapFonts.Exo2SemiBold, "Search:", 13)
+        private void CreateTextSearch() => TextSearch = new SpriteText(Fonts.Exo2SemiBold, "Search:", 13)
         {
             Parent = this,
             X = 15,
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(518, 30), BitmapFonts.Exo2Bold, 13)
+            SearchBox = new Textbox(new ScalableVector2(518, 30), Fonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 5, 0),
@@ -185,7 +185,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Creates the text that displays "Order By:"
         /// </summary>
-        private void CreateTextOrderBy() => OrderBy = new SpriteText(BitmapFonts.Exo2SemiBold, "Order By:", 13)
+        private void CreateTextOrderBy() => OrderBy = new SpriteText(Fonts.Exo2SemiBold, "Order By:", 13)
         {
             Parent = this,
             X = TextSearch.X,
@@ -204,7 +204,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 X = OrderBy.Width + 10,
                 Text =
                 {
-                    Font = BitmapFonts.Exo2SemiBold,
+                    Font = Fonts.Exo2SemiBold,
                     FontSize = 13,
                     ForceDrawAtSize = true,
                     Alignment = Alignment.TopLeft
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width,
                 Text =
                 {
-                    Font = BitmapFonts.Exo2SemiBold,
+                    Font = Fonts.Exo2SemiBold,
                     FontSize = 13,
                     Alignment = Alignment.TopLeft
                 },
@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width,
                 Text =
                 {
-                    Font = BitmapFonts.Exo2SemiBold,
+                    Font = Fonts.Exo2SemiBold,
                     FontSize = 13,
                     Alignment = Alignment.TopLeft
                 },
@@ -321,7 +321,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateTextMapsetsFound()
         {
-            TextMapsetsFound = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            TextMapsetsFound = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

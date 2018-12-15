@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.Settings
                 Alpha = 0
             };
 
-            var headerText = new SpriteText(BitmapFonts.Exo2Medium, "Options Menu", 16)
+            var headerText = new SpriteText(Fonts.Exo2Medium, "Options Menu", 16)
             {
                 Parent = HeaderContainer,
                 Alignment = Alignment.MidLeft,

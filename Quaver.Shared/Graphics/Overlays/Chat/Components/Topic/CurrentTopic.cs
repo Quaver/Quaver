@@ -57,14 +57,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Topic
             Tint = Color.Black;
             Alpha = 0.85f;
 
-            ChannelName = new SpriteText(BitmapFonts.Exo2BoldItalic, "", 14)
+            ChannelName = new SpriteText(Fonts.Exo2BoldItalic, "", 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -10
             };
 
-            ChannelDescription = new SpriteText(BitmapFonts.Exo2SemiBoldItalic, "", 12)
+            ChannelDescription = new SpriteText(Fonts.Exo2SemiBoldItalic, "", 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

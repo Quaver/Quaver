@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateScoreResultsText()
         {
-            TextScoreResults = new SpriteText(BitmapFonts.Exo2Medium, "RESULTS", 16)
+            TextScoreResults = new SpriteText(Fonts.Exo2Medium, "RESULTS", 16)
             {
                 Parent = this,
                 Y = TopHorizontalDividerLine.Y / 2f,
@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateStatisticsText()
         {
-            TextStatistics = new SpriteText(BitmapFonts.Exo2Medium, "STATISTICS", 16)
+            TextStatistics = new SpriteText(Fonts.Exo2Medium, "STATISTICS", 16)
             {
                 Parent = this,
                 Y = TopHorizontalDividerLine.Y / 2f,

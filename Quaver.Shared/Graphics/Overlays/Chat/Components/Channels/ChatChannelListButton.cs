@@ -41,7 +41,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Channels
         /// <param name="channelList"></param>
         /// <param name="channel"></param>
         public ChatChannelListButton(ChatChannelList channelList, ChatChannel channel)
-            : base(UserInterface.BlankBox, BitmapFonts.Exo2SemiBold, channel.Name, 13)
+            : base(UserInterface.BlankBox, Fonts.Exo2SemiBold, channel.Name, 13)
         {
             ChannelList = channelList;
             Channel = channel;

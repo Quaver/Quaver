@@ -84,7 +84,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteText(BitmapFonts.SourceSansProSemiBold, text, 12, true, (int) (Width - Avatar.Width - 5))
+            Content = new SpriteText(Fonts.SourceSansProSemiBold, text, 12, true, (int) (Width - Avatar.Width - 5))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

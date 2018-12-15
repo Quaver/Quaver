@@ -135,7 +135,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), BitmapFonts.Exo2Regular,
+            Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), Fonts.Exo2Regular,
                 13, "", "Type to send a message", OnTextboxSubmit)
             {
                 Parent = this,

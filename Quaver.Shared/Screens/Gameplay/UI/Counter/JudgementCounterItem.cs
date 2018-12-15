@@ -59,15 +59,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 Width = JudgementCounter.DisplayItemSize.Y - JudgementCounter.DisplayItemSize.Y / 4;
                 Height = Width;
                 X = -JudgementCounter.DisplayItemSize.Y / 16;
-
-
             }
         }
 
         /// <summary>
         ///     The sprite text for this given judgement.
         /// </summary>
-        public SpriteText SpriteText { get; }
+        public SpriteTextBitmap SpriteText { get; }
 
         /// <summary>
         ///     The inactive color for this.
@@ -89,12 +87,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
 
-            SpriteText = new SpriteText(BitmapFonts.Exo2SemiBold, JudgementHelper.JudgementToShortName(j), 10)
+            SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j))
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
                 Tint = Color.Black,
                 X = 0,
+                FontSize = 16
             };
 
             InactiveColor = color;

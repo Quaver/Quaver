@@ -100,7 +100,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextFilter()
         {
-            TextFilters = new SpriteText(BitmapFonts.Exo2SemiBold, "Filter:", 12)
+            TextFilters = new SpriteText(Fonts.Exo2SemiBold, "Filter:", 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -213,7 +213,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateTextSearch()
         {
-            TextSearch = new SpriteText(BitmapFonts.Exo2SemiBold, "Search:", 12)
+            TextSearch = new SpriteText(Fonts.Exo2SemiBold, "Search:", 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -226,7 +226,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateSearchTextbox()
         {
-            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), BitmapFonts.Exo2Regular, 8)
+            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), Fonts.Exo2Regular, 8)
             {
                 Parent = TextSearch,
                 X = TextSearch.Width + 5,

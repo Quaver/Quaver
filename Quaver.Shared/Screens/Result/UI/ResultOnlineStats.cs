@@ -127,7 +127,7 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ScoreProcessor.TotalJudgementCount == Screen.ScoreProcessor.CurrentJudgements[Judgement.Miss])
                 return;
 
-            TextSubmittingScore = new SpriteText(BitmapFonts.Exo2Medium, "SUBMITTING SCORE", 13)
+            TextSubmittingScore = new SpriteText(Fonts.Exo2Medium, "SUBMITTING SCORE", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

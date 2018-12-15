@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             Bindable = bindable;
             bindable.ValueChanged += OnValueChanged;
 
-            Value = new SpriteText(BitmapFonts.Exo2Medium, $"{bindable.Value.ToString()}", 13)
+            Value = new SpriteText(Fonts.Exo2Medium, $"{bindable.Value.ToString()}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

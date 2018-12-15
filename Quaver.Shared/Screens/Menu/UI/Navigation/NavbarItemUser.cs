@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
         {
             var username = !string.IsNullOrEmpty(ConfigManager.Username.Value) ? ConfigManager.Username.Value : "Player";
 
-            UsernameText = new SpriteText(BitmapFonts.Exo2SemiBold, username, 13)
+            UsernameText = new SpriteText(Fonts.Exo2SemiBold, username, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

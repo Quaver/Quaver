@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateMapDifficultyName()
         {
-            MapDifficultyName = new SpriteText(BitmapFonts.Exo2Bold, " ", 13)
+            MapDifficultyName = new SpriteText(Fonts.Exo2Bold, " ", 13)
             {
                 Alignment = Alignment.TopLeft,
                 X = 22,
@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateSongTitle()
         {
-            SongTitle = new SpriteText(BitmapFonts.Exo2Bold, " ", 14)
+            SongTitle = new SpriteText(Fonts.Exo2Bold, " ", 14)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -224,7 +224,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateSongArtist()
         {
-            SongArtist = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 14)
+            SongArtist = new SpriteText(Fonts.Exo2SemiBold, " ", 14)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -240,7 +240,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateMapCreator()
         {
-            MapCreator = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            MapCreator = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -276,7 +276,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     Creates the text that displays the mods.
         /// </summary>
-        private void CreateMods() => Mods = new SpriteText(BitmapFonts.Exo2Bold, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 12)
+        private void CreateMods() => Mods = new SpriteText(Fonts.Exo2Bold, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 12)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,

@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ScoreProcessor.Mods != 0)
                 text += $" + {ModHelper.GetModsString(Screen.ScoreProcessor.Mods)}";
 
-            DifficultyName = new SpriteText(BitmapFonts.Exo2SemiBold, text, 13)
+            DifficultyName = new SpriteText(Fonts.Exo2SemiBold, text, 13)
             {
                 Parent = this,
                 X = Thumbnail.X + Thumbnail.Width + 10,
@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             var title = $"{Map.Artist} - {Map.Title}";
 
-            SongTitle = new SpriteText(BitmapFonts.Exo2SemiBold, title, 13)
+            SongTitle = new SpriteText(Fonts.Exo2SemiBold, title, 13)
             {
                 Parent = this,
                 X = DifficultyName.X,
@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             var text = $"By: {Map.Creator}";
 
-            MapCreator = new SpriteText(BitmapFonts.Exo2SemiBold, text, 13)
+            MapCreator = new SpriteText(Fonts.Exo2SemiBold, text, 13)
             {
                 Parent = this,
                 X = SongTitle.X,
@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     throw new ArgumentOutOfRangeException();
             }
 
-            PlayedBy = new SpriteText(BitmapFonts.Exo2SemiBold, text, 13)
+            PlayedBy = new SpriteText(Fonts.Exo2SemiBold, text, 13)
             {
                 Parent = this,
                 X = SongTitle.X,

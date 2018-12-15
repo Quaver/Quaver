@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             AddBorder(Color.White, 2);
             Size = new ScalableVector2(54, 54);
 
-            KeyText = new SpriteText(BitmapFonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 13)
+            KeyText = new SpriteText(Fonts.Exo2Regular, XnaKeyHelper.GetStringFromKey(Key.Value), 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter

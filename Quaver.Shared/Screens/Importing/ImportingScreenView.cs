@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Importing
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(BitmapFonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
+            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,

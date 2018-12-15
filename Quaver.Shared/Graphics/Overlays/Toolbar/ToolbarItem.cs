@@ -47,7 +47,7 @@ namespace Quaver.Shared.Graphics.Overlays.Toolbar
             Initialize(onClick, selected);
 
             // Create the text in the middle of the button.
-            var text = new SpriteText(BitmapFonts.Exo2Regular, name, 14)
+            var text = new SpriteText(Fonts.Exo2Regular, name, 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

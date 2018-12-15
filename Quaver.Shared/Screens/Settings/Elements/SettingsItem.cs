@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
             Tint = Color.Black;
             Alpha = 0.65f;
 
-            Name = new SpriteText(BitmapFonts.SourceSansProSemiBold, name, 13)
+            Name = new SpriteText(Fonts.SourceSansProSemiBold, name, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

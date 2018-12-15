@@ -137,7 +137,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateAreYouSureText()
         {
-            AreYouSure = new SpriteText(BitmapFonts.Exo2Medium, "Are you sure you want to quit the game?", 24)
+            AreYouSure = new SpriteText(Fonts.Exo2Medium, "Are you sure you want to quit the game?", 24)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
@@ -172,7 +172,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Dialogs
         /// </summary>
         private void CreateQuitButton()
         {
-            QuitButton = new TextButton(UserInterface.BlankBox, BitmapFonts.Exo2Medium,
+            QuitButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Medium,
                 "Quit", 14, (o, e) =>
                 {
                     Logger.Debug($"Exiting game via QuitDialog", LogType.Runtime);
@@ -201,7 +201,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Dialogs
         private void CreateCancelButton()
         {
             CancelButton = new TextButton(UserInterface.BlankBox,
-                BitmapFonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss("Cancel Button"))
+                Fonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss("Cancel Button"))
             {
                 Parent = AreYouSure,
                 Y = DividerLine.Y + DividerLine.Height + 25,

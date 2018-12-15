@@ -80,7 +80,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             // Update the judgement counts of each one.
             foreach (var item in JudgementDisplays)
             {
-                JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
+                if (Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key] != JudgementDisplays[item.Key].JudgementCount)
+                    JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
+
                 UpdateTextAndSize(JudgementDisplays[item.Key], dt);
             }
 

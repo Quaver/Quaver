@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard.Selector
             Tint = Color.Black;
             Alpha = Selected ? 0.25f: 0;
 
-            ItemText = new SpriteText(BitmapFonts.Exo2SemiBold, text, 13)
+            ItemText = new SpriteText(Fonts.Exo2SemiBold, text, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter

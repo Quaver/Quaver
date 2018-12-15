@@ -86,7 +86,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
 
             Alpha = Selected ? 0.25f: 0;
 
-            var text = new SpriteText(BitmapFonts.Exo2SemiBold, name, 13)
+            var text = new SpriteText(Fonts.Exo2SemiBold, name, 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

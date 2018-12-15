@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateAccuracyDisplay();
 
             // Create judgement status display
-            // JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
@@ -177,7 +177,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 Y = -200
             };
 
-            // CreateScoreboard();
+            CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
 
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // CheckIfNewScoreboardUsers();
+            CheckIfNewScoreboardUsers();
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
@@ -375,29 +375,57 @@ namespace Quaver.Shared.Screens.Gameplay
 
             for (var i = 0; i < 4 && i < mapScores.Count; i++)
             {
-                // Decompress score
-                var breakdownHits = GzipHelper.Decompress(mapScores[i].JudgementBreakdown);
+                ScoreboardUser user;
 
-                var judgements = new List<Judgement>();
-
-                // Get all of the hit stats for the score.
-                foreach (var hit in breakdownHits)
-                    judgements.Add((Judgement)int.Parse(hit.ToString()));
-
-                var user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name} #{i + 1}",
-                    judgements, UserInterface.UnknownAvatar, mapScores[i].Mods)
+                // For online scores we want to just give them their score in the processor,
+                // since we don't have access to their judgement breakdown.
+                if (mapScores[i].IsOnline)
                 {
-                    Parent = Container,
-                    Alignment = Alignment.MidLeft
-                };
+                    user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
+                        new List<Judgement>(), UserInterface.UnknownAvatar, mapScores[i].Mods, mapScores[i])
+                    {
+                        Parent = Container,
+                        Alignment = Alignment.MidLeft
+                    };
 
-                user.Scoreboard = Scoreboard;
+                    user.Scoreboard = Scoreboard;
 
-                // Make sure the user's score is updated with the current user.
-                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
-                {
                     var processor = user.Processor as ScoreProcessorKeys;
-                    processor?.CalculateScore(judgements[i]);
+                    processor.Accuracy = (float) mapScores[i].Accuracy;
+                    processor.MaxCombo = mapScores[i].MaxCombo;
+                    processor.Score = mapScores[i].TotalScore;
+
+                    user.Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
+                    user.Combo.Text = $"{processor.MaxCombo}x";
+                }
+                // Allow the user to play against their own local scores.
+                else
+                {
+                    // Decompress score
+                    var breakdownHits = GzipHelper.Decompress(mapScores[i].JudgementBreakdown);
+
+                    var judgements = new List<Judgement>();
+
+                    // Get all of the hit stats for the score.
+                    foreach (var hit in breakdownHits)
+                        judgements.Add((Judgement)int.Parse(hit.ToString()));
+
+                    user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
+                        judgements, UserInterface.UnknownAvatar, mapScores[i].Mods, mapScores[i])
+                    {
+                        Parent = Container,
+                        Alignment = Alignment.MidLeft
+                    };
+
+                    user.Scoreboard = Scoreboard;
+
+                    // Make sure the user's score is updated with the current user.
+                    for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
+                    {
+                        var processor = user.Processor as ScoreProcessorKeys;
+                        processor?.CalculateScore(judgements[i]);
+                    }
+
                 }
 
                 Scoreboard.Users.Add(user);

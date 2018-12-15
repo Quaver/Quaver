@@ -1,13 +1,14 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Shared.Skinning;
@@ -119,7 +120,12 @@ namespace Quaver.Shared.Screens.Result.UI
             {
                 Height = Height,
                 Tint = Color.Black,
-                Alpha = 0.45f
+                Alpha = 0.45f,
+                Text =
+                {
+                    FontSize = 14,
+                    Font = Fonts.Exo2SemiBold
+                }
             };
 
             btn.Width++;

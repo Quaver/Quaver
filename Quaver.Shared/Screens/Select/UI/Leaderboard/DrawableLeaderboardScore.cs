@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         private void CreateNoPersonalBestScore()
         {
-            var nopbSet = new SpriteText(BitmapFonts.Exo2Bold, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score", 13)
+            var nopbSet = new SpriteText(Fonts.Exo2Bold, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the user's rank.
         /// </summary>
-        private void CreateTextRank() => TextRank = new SpriteText(BitmapFonts.Exo2Bold, $"{( Rank == -1 ? "PB" : $"{Rank}." )}", 13)
+        private void CreateTextRank() => TextRank = new SpriteText(Fonts.Exo2Bold, $"{( Rank == -1 ? "PB" : $"{Rank}." )}", 13)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays the user's username.
         /// </summary>
-        private void CreateUsername() => Username = new SpriteText(BitmapFonts.Exo2Bold, Score.Name, 13)
+        private void CreateUsername() => Username = new SpriteText(Fonts.Exo2Bold, Score.Name, 13)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
@@ -238,7 +238,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
-        private void CreateTextScoreAndCombo() => TextScore = new SpriteText(BitmapFonts.Exo2Bold,
+        private void CreateTextScoreAndCombo() => TextScore = new SpriteText(Fonts.Exo2Bold,
             $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
         {
             Parent = this,
@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteText(BitmapFonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11, false)
+        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11, false)
         {
             Parent = this,
             Alignment = Alignment.TopRight,
@@ -276,7 +276,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 timeAgo = "1 minute ago";
             }
 
-            TimeAgo = new SpriteText(BitmapFonts.Exo2Bold, timeAgo, 11, false)
+            TimeAgo = new SpriteText(Fonts.Exo2Bold, timeAgo, 11, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

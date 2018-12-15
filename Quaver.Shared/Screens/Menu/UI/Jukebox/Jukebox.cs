@@ -281,7 +281,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Creates the text that says "Now Playing"
         /// </summary>
-        private void CreateNowPlayingText() => NowPlayingText = new SpriteText(BitmapFonts.Exo2SemiBold, "Now Playing", 13)
+        private void CreateNowPlayingText() => NowPlayingText = new SpriteText(Fonts.Exo2SemiBold, "Now Playing", 13)
         {
             Parent = TitleBackground,
             Alignment = Alignment.MidCenter,
@@ -301,7 +301,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteText(BitmapFonts.Exo2SemiBold, " ", 13)
+            SongTitleText = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft

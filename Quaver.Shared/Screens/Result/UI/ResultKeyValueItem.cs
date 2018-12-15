@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTextKey(string key) => TextKey = new SpriteText(BitmapFonts.SourceSansProSemiBold, key, 13)
+        private void CreateTextKey(string key) => TextKey = new SpriteText(Fonts.SourceSansProSemiBold, key, 13)
         {
             Parent = this,
             Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <param name="value"></param>
         private void CreateTextValue(string value)
         {
-            TextValue = new SpriteText(BitmapFonts.SourceSansProSemiBold, value, 13)
+            TextValue = new SpriteText(Fonts.SourceSansProSemiBold, value, 13)
             {
                 Parent = this,
                 Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,

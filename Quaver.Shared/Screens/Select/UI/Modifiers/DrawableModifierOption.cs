@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="text"></param>
         /// <param name="clickAction"></param>
         public DrawableModifierOption(DrawableModifier modifier, string text, EventHandler clickAction)
-            : base(UserInterface.BlankBox, BitmapFonts.Exo2Regular, text, 13, clickAction)
+            : base(UserInterface.BlankBox, Fonts.Exo2SemiBold, text, 13, clickAction)
         {
             Modifier = modifier;
             Parent = Modifier;
