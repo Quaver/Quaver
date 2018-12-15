@@ -229,7 +229,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         ColumnLightingPositionY[i] = ReceptorPositionY[i];
                         break;
                     case ScrollDirection.Up:
-                        // todo: reference current lane?
                         var receptor = skin.NoteReceptorsUp[i];
                         var hitObject = skin.NoteHitObjects[i][0];
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
@@ -258,7 +257,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         break;
                     case ScrollDirection.Up:
                         Console.WriteLine(skin.HitPosOffsetY);
-                        HitPositionOffsets[i] = (ColumnLightingPositionY[i] - skin.HitPosOffsetY); //ReceptorPositionY[i] + skin.NoteReceptorsUp[i].Height - skin.NoteHitObjects[i][0].Height - skin.HitPosOffsetY;
+                        HitPositionOffsets[i] = (ColumnLightingPositionY[i] - skin.HitPosOffsetY);
                         break;
                 }
             }
