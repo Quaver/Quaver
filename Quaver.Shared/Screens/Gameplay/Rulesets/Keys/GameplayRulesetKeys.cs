@@ -63,7 +63,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
-        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
+        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => InitializeTimingLines();
+
+        /// <summary>
+        ///     Initialiize Timing Line Manager(s) depending on Scroll Direction.
+        /// </summary>
+        private void InitializeTimingLines()
         {
             // Create appropriate Timing Line Managers.
             // - Multiple Timing Line Managers for multiple Scroll Directions
@@ -73,12 +78,37 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                 switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
-                        if (!ConfigManager.ScrollDirection4K.Value.Equals(ScrollDirection.Split))
-                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection4K.Value, playfield.HitPositionOffsets[0], playfield.Width, 0));
-                        else
+                    {
+                        switch (ConfigManager.ScrollDirection4K.Value)
                         {
-                            var halfway = playfield.Stage.Receptors[1].X + playfield.Stage.Receptors[1].Width;
-                            TimingLineManager.Add(new TimingLineManager
+                            case ScrollDirection.Down:
+                            {
+                                TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Down,
+                                    playfield.HitPositionOffsets[0],
+                                    playfield.Width,
+                                    0
+                                ));
+                                break;
+                            }
+                            case ScrollDirection.Up:
+                            {
+                                TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Up,
+                                    playfield.HitPositionOffsets[0],
+                                    playfield.Width,
+                                    0
+                                ));
+                                break;
+                            }
+                            case ScrollDirection.Split:
+                            {
+                                var halfway = playfield.Stage.Receptors[1].X + playfield.Stage.Receptors[1].Width;
+                                TimingLineManager.Add(new TimingLineManager
                                 (
                                     this,
                                     ScrollDirection.Down,
@@ -86,7 +116,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                     halfway,
                                     0
                                 ));
-                            TimingLineManager.Add(new TimingLineManager
+                                TimingLineManager.Add(new TimingLineManager
                                 (
                                     this,
                                     ScrollDirection.Up,
@@ -94,15 +124,43 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                     playfield.Width - halfway,
                                     playfield.Width - halfway
                                 ));
+                                break;
+                            }
                         }
                         break;
+                    }
                     case GameMode.Keys7:
-                        if (!ConfigManager.ScrollDirection7K.Value.Equals(ScrollDirection.Split))
-                            TimingLineManager.Add(new TimingLineManager(this, ConfigManager.ScrollDirection7K.Value, playfield.HitPositionOffsets[0], playfield.Width, 0));
-                        else
+                    {
+                        switch (ConfigManager.ScrollDirection4K.Value)
                         {
-                            var halfway = playfield.Stage.Receptors[3].X + playfield.Stage.Receptors[3].Width;
-                            TimingLineManager.Add(new TimingLineManager
+                            case ScrollDirection.Down:
+                            {
+                                TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Down,
+                                    playfield.HitPositionOffsets[0],
+                                    playfield.Width,
+                                    0
+                                ));
+                                break;
+                            }
+                            case ScrollDirection.Up:
+                            {
+                                TimingLineManager.Add(new TimingLineManager
+                                (
+                                    this,
+                                    ScrollDirection.Up,
+                                    playfield.HitPositionOffsets[0],
+                                    playfield.Width,
+                                    0
+                                ));
+                                break;
+                            }
+                            case ScrollDirection.Split:
+                            {
+                                var halfway = playfield.Stage.Receptors[2].X + playfield.Stage.Receptors[2].Width;
+                                TimingLineManager.Add(new TimingLineManager
                                 (
                                     this,
                                     ScrollDirection.Down,
@@ -110,16 +168,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                     halfway,
                                     0
                                 ));
-                            TimingLineManager.Add(new TimingLineManager
+                                TimingLineManager.Add(new TimingLineManager
                                 (
                                     this,
                                     ScrollDirection.Up,
+                                    playfield.ColumnLightingPositionY[3],
                                     playfield.Width - halfway,
-                                    playfield.ColumnLightingPositionY[4],
                                     playfield.Width - halfway
                                 ));
+                                break;
+                            }
                         }
                         break;
+                    }
                     default:
                         throw new Exception("Game Mode does not exist");
                 }
