@@ -147,7 +147,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
+                SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
                                 ? SpriteEffects.FlipVertically
                                 : SpriteEffects.None,
                 Image = UserInterface.BlankBox,
@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(playfield.LaneSize, 0),
                 Parent = playfield.Stage.HitObjectContainer,
-                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll
+                SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.DownScroll) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll
                     ? SpriteEffects.FlipVertically
                     : SpriteEffects.None,
             };
