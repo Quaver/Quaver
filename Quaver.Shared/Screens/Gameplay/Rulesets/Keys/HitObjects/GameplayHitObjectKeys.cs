@@ -132,9 +132,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectManager = manager;
             Ruleset = ruleset;
             var lane = info.Lane - 1;
+            var playfield = ((GameplayPlayfieldKeys)ruleset.Playfield);
 
-            HitPositionOffset = manager.HitPositionOffsets[lane];
-            InitializeSprites(ruleset, lane, ((GameplayPlayfieldKeys)(ruleset.Playfield)).ScrollDirections[lane]);
+            HitPositionOffset = playfield.HitPositionOffsets[lane];
+            InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
 

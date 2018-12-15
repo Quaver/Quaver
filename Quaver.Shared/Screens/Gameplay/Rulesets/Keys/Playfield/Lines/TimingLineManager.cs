@@ -49,11 +49,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
-        public TimingLineManager(GameplayRuleset ruleset)
+        public TimingLineManager(GameplayRulesetKeys ruleset)
         {
-            Ruleset = (GameplayRulesetKeys)ruleset;
+            Ruleset = ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffsets[0];
+            // todo: Implement split scroll
+            TimingLine.GlobalTrackOffset = ((GameplayPlayfieldKeys)ruleset.Playfield).HitPositionOffsets[0];
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }

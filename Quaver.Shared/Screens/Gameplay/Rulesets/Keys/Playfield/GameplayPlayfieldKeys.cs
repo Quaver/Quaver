@@ -84,6 +84,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public ScrollDirection[] ScrollDirections { get; private set; }
 
         /// <summary>
+        ///     The offset from the edge of the screen of the hit position.
+        /// </summary>
+        public float[] HitPositionOffsets { get; private set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -94,6 +99,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Ruleset = ruleset;
             Container = new Container();
             DetermineScrollDirections();
+            ApplyHitPositionsOffset();
 
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
@@ -136,6 +142,29 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);
+        }
+
+        /// <summary>
+        ///     Set Hit Position Variables to every lane that each Hit Object will reference. 
+        /// </summary>
+        private void ApplyHitPositionsOffset()
+        {
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            var skin = SkinManager.Skin.Keys[Ruleset.Mode];
+            HitPositionOffsets = new float[playfield.ScrollDirections.Length];
+
+            for (var i = 0; i < playfield.ScrollDirections.Length; i++)
+            {
+                switch (playfield.ScrollDirections[i])
+                {
+                    case ScrollDirection.Down:
+                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] + skin.HitPosOffsetY;
+                        break;
+                    case ScrollDirection.Up:
+                        HitPositionOffsets[i] = playfield.ReceptorPositionY[i] - skin.HitPosOffsetY;
+                        break;
+                }
+            }
         }
 
         /// <inheritdoc />
