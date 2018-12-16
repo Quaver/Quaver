@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Dialogs
                 X = icon.Width + 15,
             };
 
-            var description = new SpriteText(Fonts.Exo2Medium, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
+            var description = new SpriteText(Fonts.Exo2SemiBold, "Channels are divided into individual chat topics. Join one! What are you waiting for?",
                 13)
             {
                 Parent = icon,

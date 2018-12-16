@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -57,14 +57,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Topic
             Tint = Color.Black;
             Alpha = 0.85f;
 
-            ChannelName = new SpriteText(Fonts.Exo2BoldItalic, "", 14)
+            ChannelName = new SpriteText(Fonts.Exo2Bold, "", 14)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -10
             };
 
-            ChannelDescription = new SpriteText(Fonts.Exo2SemiBoldItalic, "", 12)
+            ChannelDescription = new SpriteText(Fonts.SourceSansProSemiBold, "", 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -79,7 +79,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Topic
                 X = -15,
                 Text =
                 {
-                    FontSize = 13
+                    FontSize = 13,
+                    Font = Fonts.SourceSansProSemiBold
                 }
             };
         }

@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteText(Fonts.Exo2Medium, Message.Message, 13, true,
+        private void CreateMessageContentText() => TextMessageContent = new SpriteText(Fonts.SourceSansProSemiBold, Message.Message, 13, true,
                 (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
             Parent = this,
@@ -165,7 +165,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
                 UsePreviousSpriteBatchOptions = true,
                 X = TextUsername.X + TextUsername.Width + 5,
                 Y = TextUsername.Y,
-
             };
         }
 

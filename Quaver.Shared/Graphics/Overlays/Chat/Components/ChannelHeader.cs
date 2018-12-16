@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -52,7 +52,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateChannelsText()
         {
-            TextChannels = new SpriteText(Fonts.Exo2Medium, "Chat Channels", 13)
+            TextChannels = new SpriteText(Fonts.Exo2SemiBold, "Chat Channels", 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -73,7 +73,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
             Size = new ScalableVector2(75, 30),
             Text =
             {
-                FontSize = 13
+                FontSize = 13,
+                Font = Fonts.SourceSansProSemiBold
             }
         };
     }
