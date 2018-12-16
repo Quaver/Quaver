@@ -30,11 +30,6 @@
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JDG.Monogame.Content.Builder" Version="1.0.1" />
-    <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.9" />
     <PackageReference Include="NSubsys" Version="0.7.0-build20180604-0047" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\" />
   </ItemGroup>
 </Project>
