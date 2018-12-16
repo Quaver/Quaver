@@ -16,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
@@ -89,9 +90,10 @@ namespace Quaver.Shared.Screens.Select
 
             Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.", LogType.Runtime);
 
-            DiscordManager.Client.CurrentPresence.Details = "Selecting a song";
-            DiscordManager.Client.CurrentPresence.State = "In the Menus";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            DiscordHelper.Presence.Details = "Selecting a song";
+            DiscordHelper.Presence.State = "In the menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
 
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             View = new SelectScreenView(this);

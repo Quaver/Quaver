@@ -22,6 +22,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Packets.Server;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
 using Quaver.Shared.Online.Chat;
@@ -249,9 +250,14 @@ namespace Quaver.Shared.Online
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
 
-            var presence = DiscordManager.Client.CurrentPresence;
-            presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
-            DiscordManager.Client.SetPresence(presence);
+            DiscordHelper.Presence = new DiscordRpc.RichPresence
+            {
+                LargeImageKey = "quaver",
+                LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4),
+                EndTimestamp = 0
+            };
+
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Send client status update packet.
             var game = (QuaverGame) GameBase.Game;
@@ -393,11 +399,14 @@ namespace Quaver.Shared.Online
 
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
 
-            // Update rich presence.
-            var presence = DiscordManager.Client.CurrentPresence;
-            presence.Assets.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
+            DiscordHelper.Presence = new DiscordRpc.RichPresence
+            {
+                LargeImageKey = "quaver",
+                LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode),
+                EndTimestamp = 0
+            };
 
-            DiscordManager.Client.SetPresence(presence);
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
         /// <summary>
@@ -407,22 +416,21 @@ namespace Quaver.Shared.Online
         /// <returns></returns>
         public static string GetRichPresenceLargeKeyText(GameMode mode)
         {
-            var presence = DiscordManager.Client.CurrentPresence;
-            presence.Assets.LargeImageText = ConfigManager.Username.Value;
+            DiscordHelper.Presence.LargeImageText = ConfigManager.Username.Value;
 
             // Don't continue if not connected online. Only set to username.
             if (!Connected)
-                return presence.Assets.LargeImageText;
+                return DiscordHelper.Presence.LargeImageText;
 
             if (Self.Stats.ContainsKey(mode))
             {
                 var stats = Self.Stats[mode];
 
                 if (stats.Rank != -1 && stats.CountryRank != -1)
-                    presence.Assets.LargeImageText += $" - Global: #{stats.Rank} | {Self.OnlineUser.CountryFlag}: #{stats.CountryRank}";
+                    DiscordHelper.Presence.LargeImageText += $" - Global: #{stats.Rank} | {Self.OnlineUser.CountryFlag}: #{stats.CountryRank}";
             }
 
-            return presence.Assets.LargeImageText;
+            return DiscordHelper.Presence.LargeImageText;
         }
 
         /// <summary>
