@@ -16,6 +16,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -93,9 +94,9 @@ namespace Quaver.Shared.Screens.Edit
                     throw new ArgumentOutOfRangeException();
             }
 
-            DiscordManager.Client.CurrentPresence.State = "Editing Map";
-            DiscordManager.Client.CurrentPresence.Details = Map.ToString();
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            DiscordHelper.Presence.Details = Map.ToString();
+            DiscordHelper.Presence.State = "Editing Map";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             View = new EditorScreenView(this);
         }

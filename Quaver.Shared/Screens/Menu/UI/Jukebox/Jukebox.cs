@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
@@ -546,9 +547,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private static void ChangeDiscordPresenceToSongTitle()
         {
-            DiscordManager.Client.CurrentPresence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
-            DiscordManager.Client.CurrentPresence.State = "In the Menus - Listening ♫";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
+            DiscordHelper.Presence.State = "In the Menus - Listening";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
         /// <summary>
@@ -556,9 +557,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private static void ChangeDiscordPresenceToIdle()
         {
-            DiscordManager.Client.CurrentPresence.Details = $"Idle";
-            DiscordManager.Client.CurrentPresence.State = "In the Menus";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            DiscordHelper.Presence.Details = $"Idle";
+            DiscordHelper.Presence.State = "In the Menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
     }
 }

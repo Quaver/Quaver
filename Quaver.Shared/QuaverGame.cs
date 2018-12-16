@@ -17,6 +17,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Volume;
@@ -176,6 +177,7 @@ namespace Quaver.Shared
         {
             OnlineManager.Client?.Disconnect();
             Transitioner.Dispose();
+            DiscordHelper.Shutdown();
             base.UnloadContent();
         }
 
@@ -289,16 +291,15 @@ namespace Quaver.Shared
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
 
             // Handle discord rich presence.
-            DiscordManager.CreateClient("376180410490552320");
-            DiscordManager.Client.SetPresence(new RichPresence
+            DiscordHelper.Initialize("376180410490552320");
+            DiscordHelper.Presence = new DiscordRpc.RichPresence()
             {
-                Assets = new Wobble.Discord.RPC.Assets()
-                {
-                    LargeImageKey = "quaver",
-                    LargeImageText = ConfigManager.Username.Value
-                },
-                Timestamps = new Timestamps()
-            });
+                LargeImageKey = "quaver",
+                LargeImageText = ConfigManager.Username.Value,
+                EndTimestamp = 0
+            };
+
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Create bindable for selected map.
             if (MapManager.Mapsets.Count != 0)

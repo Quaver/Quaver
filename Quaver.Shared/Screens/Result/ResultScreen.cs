@@ -25,6 +25,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -556,14 +557,14 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         private void ChangeDiscordPresence()
         {
-            DiscordManager.Client.CurrentPresence.Timestamps = null;
+            DiscordHelper.Presence.EndTimestamp = 0;
 
             // Don't change if we're loading in from a replay file.
             if (ResultsType == ResultScreenType.Replay || Gameplay.InReplayMode)
             {
-                DiscordManager.Client.CurrentPresence.Details = "Idle";
-                DiscordManager.Client.CurrentPresence.State = "In the Menus";
-                DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                DiscordHelper.Presence.Details = "Idle";
+                DiscordHelper.Presence.State = "In the Menus";
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
                 return;
             }
 
@@ -573,8 +574,8 @@ namespace Quaver.Shared.Screens.Result
             var grade = Gameplay.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
             var combo = $"{ScoreProcessor.MaxCombo}x";
 
-            DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {score} {acc} {combo}";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            DiscordHelper.Presence.State = $"{state}: {grade} {score} {acc} {combo}";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
     }
 }

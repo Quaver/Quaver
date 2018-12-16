@@ -21,6 +21,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -457,9 +458,10 @@ namespace Quaver.Shared.Screens.Gameplay
                     // ignored
                 }
 
-                DiscordManager.Client.CurrentPresence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time.";
-                DiscordManager.Client.CurrentPresence.Timestamps = null;
-                DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                DiscordHelper.Presence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time";
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
                 OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
 
                 // Fade in the transitioner.
@@ -681,22 +683,19 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SetRichPresence()
         {
-            var presence = DiscordManager.Client.CurrentPresence;
-
-            presence.Details = Map.ToString();
+            DiscordHelper.Presence.Details = Map.ToString();
 
             if (InReplayMode)
-                presence.State = $"Watching {LoadedReplay.PlayerName}";
+                DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
-                presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
+                DiscordHelper.Presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
 
-            presence.Timestamps = new Timestamps
-            {
-                End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate)
-            };
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var time = Convert.ToInt64((DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate) - epoch).TotalSeconds);
 
-            presence.Assets.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
-            DiscordManager.Client.SetPresence(presence);
+            DiscordHelper.Presence.EndTimestamp = time;
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
         /// <inheritdoc />
