@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -69,8 +69,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
                 width += 1;
 
             Size = new ScalableVector2(width, TextUserGroup.Height + 3);
-            AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 2);
+            AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 3);
             Border.Alpha = 0.85f;
+            Border.Y = -1;
         }
 
         /// <summary>
