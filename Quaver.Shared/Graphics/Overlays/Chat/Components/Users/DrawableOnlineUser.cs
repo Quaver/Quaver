@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -132,7 +132,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Creates the text for the user's status
         /// </summary>
-        private void CreateStatus() => Status = new SpriteText(Fonts.Exo2SemiBold, "Idle", 12)
+        private void CreateStatus() => Status = new SpriteText(Fonts.SourceSansProSemiBold, "Idle", 12)
         {
             Parent = this,
             X = Username.X,
@@ -181,10 +181,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                     statusText = "Idle";
                     break;
                 case ClientStatus.Selecting:
-                    statusText = "Selecting a song";
+                    statusText = "Selecting a Song";
                     break;
                 case ClientStatus.Playing:
-                    statusText = $"Playing {User.CurrentStatus.Content}";
+                    statusText = $"Playing";
                     break;
                 case ClientStatus.Paused:
                     statusText = $"Paused";
@@ -193,7 +193,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                     statusText = $"Watching {User.CurrentStatus.Content}";
                     break;
                 case ClientStatus.Editing:
-                    statusText = $"Editing: {User.CurrentStatus.Content}";
+                    statusText = $"Editing a Map";
                     break;
             }
 

@@ -190,8 +190,8 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 X = 100,
                 Text =
                 {
-                    FontSize = 14,
-                    Font = Fonts.Exo2Medium
+                    FontSize = 13,
+                    Font = Fonts.SourceSansProSemiBold
                 }
             };
 
@@ -204,8 +204,8 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
                 SetChildrenVisibility = true,
                 Text =
                 {
-                    FontSize = 14,
-                    Font = Fonts.Exo2Medium
+                    FontSize = 13,
+                    Font = Fonts.SourceSansProSemiBold
                 }
             };
 
