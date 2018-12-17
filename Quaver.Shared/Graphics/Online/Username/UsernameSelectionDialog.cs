@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -69,14 +69,14 @@ namespace Quaver.Shared.Graphics.Online.Username
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(Fonts.Exo2SemiBoldItalic, "Create Username", 20)
+            Header = new SpriteText(Fonts.Exo2Bold, "Create Username", 20)
             {
                 Parent = ContainingBox,
                 Alignment = Alignment.TopCenter,
                 Y = 25
             };
 
-            TextContent = new SpriteText(Fonts.Exo2Medium,
+            TextContent = new SpriteText(Fonts.Exo2SemiBold,
                 "Usernames must be between 3 to 15 characters and may only contain", 13)
             {
                 Parent = ContainingBox,
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Graphics.Online.Username
             };
 
 
-            TextContent2 = new SpriteText(Fonts.Exo2Medium,
+            TextContent2 = new SpriteText(Fonts.Exo2SemiBold,
                 "letters (A-Z), numbers (0-9), hyphens (-), and spaces.", 13)
             {
                 Parent = ContainingBox,
