@@ -338,7 +338,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
-                    // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
+                    // If HitObject is an LN, kill it and count it as another miss because of the tail.
                     // - missing an LN counts as two misses
                     if (hitObject.Info.IsLongNote)
                     {
