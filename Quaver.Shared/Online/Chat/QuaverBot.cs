@@ -160,9 +160,9 @@ namespace Quaver.Shared.Online.Chat
         {
             var chatMessage = new ChatMessage(channel.Name, message)
             {
-                // QuaverBot is ID = 0;
-                SenderId = 0,
-                Sender = OnlineManager.OnlineUsers[0],
+                // QuaverBot is id #2
+                SenderId = 2,
+                Sender = OnlineManager.OnlineUsers[2],
                 SenderName = "QuaverBot",
                 Time = TimeHelper.GetUnixTimestampMilliseconds()
             };
