@@ -82,7 +82,7 @@ namespace Quaver.Shared.Modifiers
                     gameplayModifier = new ModStrict();
                     break;
                 case ModIdentifier.Chill:
-                    gameplayModifier = new ManiaModChill();
+                    gameplayModifier = new ModChill();
                     break;
                 case ModIdentifier.NoPause:
                     gameplayModifier = new ModNoPause();

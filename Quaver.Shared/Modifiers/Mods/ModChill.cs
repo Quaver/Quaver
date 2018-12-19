@@ -13,7 +13,7 @@ namespace Quaver.Shared.Modifiers.Mods
     /// <summary>
     ///     Chill gameplayModifier. Makes the hit timing windows
     /// </summary>
-    internal class ManiaModChill : IGameplayModifier
+    internal class ModChill : IGameplayModifier
     {
         public string Name { get; set; } = "Chill";
 
