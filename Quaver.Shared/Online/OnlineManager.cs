@@ -142,7 +142,6 @@ namespace Quaver.Shared.Online
             Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
             Client.OnScoreSubmitted += OnScoreSubmitted;
             Client.OnUserConnected += ChatManager.Dialog.OnlineUsersHeader.OnUserConnected;
-            Client.OnUserDisconnected += ChatManager.Dialog.OnlineUsersHeader.OnUserDisconnected;
             Client.OnUsersOnline += OnUsersOnline;
             Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
@@ -294,10 +293,16 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUserDisconnected(object sender, UserDisconnectedEventArgs e)
         {
-            if (OnlineUsers.ContainsKey(e.UserId))
-                OnlineUsers.Remove(e.UserId);
+            if (!OnlineUsers.ContainsKey(e.UserId) || e.UserId == Self.OnlineUser.Id)
+                return;
 
+            OnlineUsers.Remove(e.UserId);
+
+            Console.WriteLine(Self.OnlineUser.Id);
+
+            Console.WriteLine("User disconnected: " + e.UserId);
             ChatManager.Dialog.OnlineUserList.HandleDisconnectingUser(e.UserId);
+            ChatManager.Dialog.OnlineUsersHeader.UpdateOnlineUserCount();
 
             Trace.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");

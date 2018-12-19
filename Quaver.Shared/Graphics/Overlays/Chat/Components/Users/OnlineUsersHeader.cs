@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -61,7 +61,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             if (OnlineManager.Client != null)
             {
                 OnlineManager.Client.OnUserConnected -= OnUserConnected;
-                OnlineManager.Client.OnUserDisconnected -= OnUserDisconnected;
                 OnlineManager.Client.OnUsersOnline -= OnUsersOnline;
             }
 
@@ -100,7 +99,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <summary>
         ///     Makes sure the online user count is up to date.
         /// </summary>
-        private void UpdateOnlineUserCount()
+        public void UpdateOnlineUserCount()
         {
             var count = OnlineManager.Connected ? OnlineManager.OnlineUsers.Count : 0;
             TextOnlineCount.Text = $"Total Online: {count:n0}";
@@ -119,6 +118,5 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
         public void OnUsersOnline(object sender, UsersOnlineEventArgs e) => UpdateOnlineUserCount();
         public void OnUserConnected(object sender, UserConnectedEventArgs e) => UpdateOnlineUserCount();
-        public void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) => UpdateOnlineUserCount();
     }
 }
