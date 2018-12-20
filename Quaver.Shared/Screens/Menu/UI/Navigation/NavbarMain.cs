@@ -1,13 +1,14 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using System.Collections.Generic;
 using Quaver.Server.Client;
+using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Wobble.Bindables;
@@ -44,9 +45,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
             }
 
             OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnLoginSuccess += OnLoginSuccess;
         }
-
-
 
         /// <inheritdoc />
         /// <summary>
@@ -55,6 +57,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
         {
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnOnlineStatusChanged;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnLoginSuccess -= OnLoginSuccess;
+
             base.Destroy();
         }
 
@@ -97,6 +103,17 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
                 Logger.Error(ex, LogType.Runtime);
 
             }
+        }
+
+        /// <summary>
+        ///     Realign the nav items upon login success
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLoginSuccess(object sender, LoginReplyEventArgs e)
+        {
+            AlignLeftItems();
+            AlignRightItems();
         }
     }
 }
