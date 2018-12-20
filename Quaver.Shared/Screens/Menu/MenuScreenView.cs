@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Menu
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
-            new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Swan/Quaver/issues")),
+            new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
         }) { Parent = Container };
 
         /// <summary>
