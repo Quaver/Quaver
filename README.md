@@ -17,7 +17,7 @@ If you're looking for the official release of Quaver with added online connectiv
 Getting started with Quaver development is super easy. 
 
 * Install the [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.1)
-* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Swan/Quaver`
+* Clone the Quaver repository and its submodules `git clone --recurse-submodules https://github.com/Quaver/Quaver`
 * Have Steam open and running
 * Build & Run
 
