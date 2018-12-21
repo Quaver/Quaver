@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -153,7 +154,8 @@ namespace Quaver.Shared.Database.Maps
                 "bpm",
                 "diff",
                 "length",
-                "keys"
+                "keys",
+                "status"
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -169,10 +171,10 @@ namespace Quaver.Shared.Database.Maps
                 // Get the search option alone.
                 var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase))
                     .Split(' ').Last();
-                float.TryParse(
-                    term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
-                        .First(), out var val);
 
+                var val = term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
+                         .First();
+             
                 if (options.Contains(searchOption))
                     foundSearchQueries.Add(new SearchQuery
                     {
@@ -191,30 +193,71 @@ namespace Quaver.Shared.Database.Maps
 
                     foreach (var searchQuery in foundSearchQueries)
                     {
-
                         switch (searchQuery.Option)
                         {
                             case "bpm":
-                                if (!CompareValues(map.Bpm, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valBpm))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.Bpm, valBpm, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "diff":
-                                if (!CompareValues(map.Difficulty10X, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valDiff))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.Difficulty10X, valDiff, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "length":
-                                if (!CompareValues(map.SongLength, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valLength))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.SongLength, valLength, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "keys":
                                 switch (map.Mode)
                                 {
                                     case GameMode.Keys4:
-                                        if (!CompareValues(4, searchQuery.Value, searchQuery.Operator))
+                                        if (!float.TryParse(searchQuery.Value, out var val4k))
+                                            exitLoop = true;
+                                    
+                                        if (!CompareValues(4, val4k, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case GameMode.Keys7:
-                                        if (!CompareValues(7, searchQuery.Value, searchQuery.Operator))
+                                        if (!float.TryParse(searchQuery.Value, out var val7k))
+                                            exitLoop = true;
+
+                                        if (!CompareValues(7, val7k, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+                                break;
+                            case "status":
+                                if (!(searchQuery.Operator.Equals(operators[2]) ||
+                                    searchQuery.Operator.Equals(operators[6])))
+                                    exitLoop = true;
+
+                                switch (map.RankedStatus)
+                                {
+                                    case RankedStatus.DanCourse:
+                                        if (!CompareValues("dan", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.NotSubmitted:
+                                        if (!CompareValues("notsubmitted", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.Ranked:
+                                        if (!CompareValues("ranked", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.Unranked:
+                                        if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     default:
@@ -304,7 +347,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The value the user is searching
         /// </summary>
-        public float Value;
+        public string Value;
 
         /// <summary>
         ///     The operator the user gave
