@@ -343,7 +343,7 @@ namespace Quaver.Shared
                     Tint = Color.LimeGreen
                 },
                 X = -10,
-                Y = -10,
+                Y = -25,
                 Alpha = 0
             };
 
