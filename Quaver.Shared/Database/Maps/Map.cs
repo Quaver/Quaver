@@ -147,7 +147,11 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public DateTime LastFileWrite { get; set; }
 
+        /// <summary>
+        ///     The date the map was added.
+        /// </summary>
         public DateTime DateAdded { get; set; }
+
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
         public double Difficulty06X { get; set; }
@@ -230,7 +234,7 @@ namespace Quaver.Shared.Database.Maps
             };
 
             map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
-            map.DateAdded = File.GetCreationTimeUtc(map.Path);
+            map.DateAdded = DateTime.Now;
             return map;
         }
 

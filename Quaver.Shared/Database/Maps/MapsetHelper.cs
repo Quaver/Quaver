@@ -120,10 +120,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets)
-        {
-            return mapsets.OrderBy(x => x.Maps[0].DateAdded).ToList();
-        }
+        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets) => mapsets.OrderByDescending(x => x.Maps[0].DateAdded).ToList();
 
         /// <summary>
         ///     Orders the map's mapsets by difficulty.

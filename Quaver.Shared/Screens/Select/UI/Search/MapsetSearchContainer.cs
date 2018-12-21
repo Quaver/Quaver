@@ -62,6 +62,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         ///     The button to order mapsets by the date added.
         /// </summary>
         private SelectableBorderedTextButton ButtonOrderByDateAdded { get; set; }
+
         /// <summary>
         ///     The amount of mapsets that are found.
         /// </summary>
@@ -206,7 +207,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Artist)
             {
                 Parent = OrderBy,
-                X = OrderBy.Width + 10,
+                X = OrderBy.Width + 8,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -321,6 +322,9 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             ButtonOrderByCreator.Size = new ScalableVector2(ButtonOrderByCreator.Text.Width + 20, ButtonOrderByCreator.Text.Height + 8);
         }
 
+        /// <summary>
+        ///     Creates the button to order mapsets by date added.
+        /// </summary>
         private void CreateOrderByDateAddedButton()
         {
             ButtonOrderByDateAdded = new SelectableBorderedTextButton("Date added", ColorHelper.HexToColor("#75e475"),
@@ -340,7 +344,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 }
             };
 
-            ButtonOrderByDateAdded.Clicked += (o, e) =>
+            ButtonOrderByDateAdded.Clicked += (sender, args) =>
             {
                 if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
                     return;
