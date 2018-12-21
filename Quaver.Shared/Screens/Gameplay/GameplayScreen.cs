@@ -357,20 +357,21 @@ namespace Quaver.Shared.Screens.Gameplay
             // User has the `No Pause` mod on, and they're requesting to exit.
             // OR
             // they have pressed the QuickExit key.
-            if (ModManager.IsActivated(ModIdentifier.NoPause) &&
-                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)) ||
-                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
-            {
-                HandleNoPauseExit();
-            }
+            //if (ModManager.IsActivated(ModIdentifier.NoPause) &&
+            //    (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)) ||
+            //    KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
+            //{
+            //    HandleNoPauseExit();
+            //}
             // `No Pause` isn't activated, so handle pausing normally.
-            else if (!IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
+            //else
+            if (!IsPaused && /*!ModManager.IsActivated(ModIdentifier.NoPause) &&*/
                      (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
             {
                 Pause(gameTime);
             }
             // The user wants to resume their play.
-            else if (IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
+            else if (IsPaused && /*!ModManager.IsActivated(ModIdentifier.NoPause) &&*/
                      (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
                 Pause();
@@ -497,7 +498,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Handles exiting the screen if the user has no pause on.
         /// </summary>
-        private void HandleNoPauseExit()
+        /*private void HandleNoPauseExit()
         {
             if (InReplayMode && !Failed && !IsPlayComplete)
                 return;
@@ -518,7 +519,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     view.Transitioner.Animations.Clear();
                     break;
             }
-        }
+        }*/
 
         /// <summary>
         ///     Plays a combo break sound if we've

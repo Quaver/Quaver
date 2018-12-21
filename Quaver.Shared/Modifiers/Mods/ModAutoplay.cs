@@ -23,7 +23,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
-            ModIdentifier.NoPause,
+            //ModIdentifier.NoPause,
             ModIdentifier.NoFail
         };
 

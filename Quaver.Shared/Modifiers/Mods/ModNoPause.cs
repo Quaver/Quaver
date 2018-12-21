@@ -9,7 +9,7 @@ using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
-    internal class ModNoPause : IGameplayModifier
+    /**internal class ModNoPause : IGameplayModifier
     {
         public string Name { get; set; } = "No Pause";
 
@@ -30,5 +30,5 @@ namespace Quaver.Shared.Modifiers.Mods
         public void InitializeMod()
         {
         }
-    }
+    }*/
 }
