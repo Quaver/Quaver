@@ -354,24 +354,15 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
-            // User has the `No Pause` mod on, and they're requesting to exit.
-            // OR
-            // they have pressed the QuickExit key.
-            if (ModManager.IsActivated(ModIdentifier.NoPause) &&
-                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)) ||
-                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
-            {
-                HandleNoPauseExit();
-            }
-            // `No Pause` isn't activated, so handle pausing normally.
-            else if (!IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
-                     (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
+            // handle pausing normally.
+            if (!IsPaused &&
+                (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
             {
                 Pause(gameTime);
             }
             // The user wants to resume their play.
-            else if (IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
-                     (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            else if (IsPaused &&
+                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
                 Pause();
                 TimePauseKeyHeld = 0;
