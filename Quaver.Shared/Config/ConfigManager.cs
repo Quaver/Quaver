@@ -27,7 +27,7 @@ namespace Quaver.Shared.Config
     public static class ConfigManager
     {
         /// <summary>
-        ///     These are all values that should never ben
+        ///     These are all values that should never been
         /// </summary>
         private static string _gameDirectory;
         internal static Bindable<string> GameDirectory { get; private set; }
@@ -379,7 +379,7 @@ namespace Quaver.Shared.Config
             DownScroll7K = ReadValue(@"DownScroll7K", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
-            SkinStyle = ReadValue(@"DefaultSkin", SkinStyles.Bar, data);
+            SkinStyle = ReadValue(@"SkinStyle", SkinStyles.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
@@ -704,7 +704,7 @@ namespace Quaver.Shared.Config
     }
 
     /// <summary>
-    ///     Enum containing a number representation of the default skins we have available
+    ///     Enum containing a number representation of the skin styles we have available
     /// </summary>
     public enum SkinStyles
     {

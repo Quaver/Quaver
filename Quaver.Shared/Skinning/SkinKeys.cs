@@ -223,7 +223,7 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///     Sets config values based on the selected default skin.
+        ///     Sets config values based on the selected skin style.
         /// </summary>
         private void SetGenericConfig()
         {
@@ -430,7 +430,7 @@ namespace Quaver.Shared.Skinning
         ///     Reads config file for skin.ini elements.
         ///
         ///     REMEMBER TO SET YOUR DEFAULTS FOR BOTH 4K AND 7K
-        ///     AND ALL DEFAULT SKINS (BARS/ARROWS)
+        ///     AND ALL SKIN STYLES (BARS/ARROWS)
         /// </summary>
         private void ReadConfig()
         {

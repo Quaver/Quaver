@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Settings
         public string NewQueuedSkin { get; set; }
 
         /// <summary>
-        ///     A newly queued default skin, if the user chooses to change it.
+        ///     A newly queued skin style, if the user chooses to change it.
         /// </summary>
         public SkinStyles NewQueuedSkinStyle { get; set; }
 

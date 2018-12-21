@@ -227,13 +227,13 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Reads a DefaultSkin
         /// </summary>
-        /// <param name="defaultSkins"></param>
+        /// <param name="defaultStyle"></param>
         /// <param name="s"></param>
         /// <param name="newVal"></param>
         /// <returns></returns>
-        internal static SkinStyles ReadSkinStyle(SkinStyles defaultSkins, string newVal)
+        internal static SkinStyles ReadSkinStyle(SkinStyles defaultStyle, string newVal)
         {
-            return Enum.TryParse(newVal, out SkinStyles newDefault) ? newDefault : defaultSkins;
+            return Enum.TryParse(newVal, out SkinStyles newDefault) ? newDefault : defaultStyle;
         }
 
         /// <summary>
