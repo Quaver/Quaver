@@ -174,10 +174,7 @@ namespace Quaver.Shared.Database.Maps
 
                 var val = term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
                          .First();
-                //float.TryParse(
-                //    term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
-                //        .First(), out var val);
-
+             
                 if (options.Contains(searchOption))
                     foundSearchQueries.Add(new SearchQuery
                     {
