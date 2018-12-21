@@ -59,6 +59,10 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         private SelectableBorderedTextButton ButtonOrderByCreator { get; set; }
 
         /// <summary>
+        ///     The button to order mapsets by the date added.
+        /// </summary>
+        private SelectableBorderedTextButton ButtonOrderByDateAdded { get; set; }
+        /// <summary>
         ///     The amount of mapsets that are found.
         /// </summary>
         private SpriteText TextMapsetsFound { get; set; }
@@ -80,6 +84,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             CreateOrderByArtistButton();
             CreateOrderByTitleButton();
             CreateOrderByCreatorButton();
+            CreateOrderByDateAddedButton();
             CreateTextMapsetsFound();
 
             var leftLine = new Sprite()
@@ -280,7 +285,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateOrderByCreatorButton()
         {
-            ButtonOrderByCreator= new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#75e475"),
+            ButtonOrderByCreator = new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Creator)
             {
                 Parent = OrderBy,
@@ -314,6 +319,44 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             };
 
             ButtonOrderByCreator.Size = new ScalableVector2(ButtonOrderByCreator.Text.Width + 20, ButtonOrderByCreator.Text.Height + 8);
+        }
+
+        private void CreateOrderByDateAddedButton()
+        {
+            ButtonOrderByDateAdded = new SelectableBorderedTextButton("Date added", ColorHelper.HexToColor("#75e475"),
+                ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
+            {
+                Parent = OrderBy,
+                X = ButtonOrderByCreator.X + ButtonOrderByCreator.Width,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13,
+                    Alignment = Alignment.TopLeft
+                },
+                Border =
+                {
+                    Visible = false
+                }
+            };
+
+            ButtonOrderByDateAdded.Clicked += (o, e) =>
+            {
+                if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
+                    return;
+
+                ConfigManager.SelectOrderMapsetsBy.Value = OrderMapsetsBy.DateAdded;
+
+                var selectScreen = View.Screen as SelectScreen;
+
+                lock (selectScreen.AvailableMapsets)
+                {
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(selectScreen.AvailableMapsets);
+                    View.MapsetScrollContainer.InitializeWithNewSets();
+                }
+            };
+
+            ButtonOrderByDateAdded.Size = new ScalableVector2(ButtonOrderByDateAdded.Text.Width + 20, ButtonOrderByDateAdded.Text.Height + 8);
         }
 
         /// <summary>

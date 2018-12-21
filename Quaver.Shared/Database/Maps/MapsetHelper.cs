@@ -109,9 +109,20 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByTitle(mapsets);
                 case OrderMapsetsBy.Creator:
                     return OrderMapsetsByCreator(mapsets);
+                case OrderMapsetsBy.DateAdded:
+                    return OrderMapsetsByDateAdded(mapsets);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        /// <summary>
+        ///     Orders the map's mapsets by date added
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps[0].DateAdded).ToList();
         }
 
         /// <summary>
