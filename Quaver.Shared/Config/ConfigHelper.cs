@@ -231,9 +231,9 @@ namespace Quaver.Shared.Config
         /// <param name="s"></param>
         /// <param name="newVal"></param>
         /// <returns></returns>
-        internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkins, string newVal)
+        internal static SkinStyles ReadSkinStyle(SkinStyles defaultSkins, string newVal)
         {
-            return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkins;
+            return Enum.TryParse(newVal, out SkinStyles newDefault) ? newDefault : defaultSkins;
         }
 
         /// <summary>

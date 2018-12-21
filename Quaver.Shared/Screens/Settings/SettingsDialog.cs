@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     A newly queued default skin, if the user chooses to change it.
         /// </summary>
-        public DefaultSkins NewQueuedDefaultSkin { get; set; }
+        public SkinStyles NewQueuedSkinStyle { get; set; }
 
         /// <summary>
         ///     If the user has changed their resolution and it needs to change when they press OK.
@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Settings
         {
             // Important. Make sure sure the default values that are sent in config if the values
             // are non nullable.
-            NewQueuedDefaultSkin = ConfigManager.DefaultSkin.Value;
+            NewQueuedSkinStyle = ConfigManager.SkinStyle.Value;
             NewQueuedScreenResolution = new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Alpha, 0.65f, 300));
@@ -245,10 +245,10 @@ namespace Quaver.Shared.Screens.Settings
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                if (NewQueuedSkin != null || NewQueuedSkinStyle != ConfigManager.SkinStyle.Value)
                 {
                     ConfigManager.Skin.Value = NewQueuedSkin;
-                    ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
+                    ConfigManager.SkinStyle.Value = NewQueuedSkinStyle;
 
                     Transitioner.FadeIn();
                     TimeSkinReloadRequested = GameBase.Game.TimeRunning;
@@ -323,7 +323,7 @@ namespace Quaver.Shared.Screens.Settings
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
                     new SettingsCustomSkin(this, "Custom Skin"),
-                    new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsSkinStyle(this, "Skin Style"),
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),

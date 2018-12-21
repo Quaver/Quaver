@@ -21,7 +21,7 @@ namespace Quaver.Shared.Skinning
 {
     public class SkinKeys
     {
-                /// <summary>
+        /// <summary>
         ///     Reference to the
         /// </summary>
         private SkinStore Store { get; }
@@ -41,7 +41,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private string ResourceFilePrepender { get; set; }
 
-#region SKIN.INI VALUES
+        #region SKIN.INI VALUES
 
         internal int BgMaskPadding { get; private set; }
 
@@ -69,7 +69,7 @@ namespace Quaver.Shared.Skinning
 
         internal List<Color> ColumnColors { get; private set; } = new List<Color>();
 
-        internal float BgMaskAlpha { get; private set;  }
+        internal float BgMaskAlpha { get; private set; }
 
         internal bool FlipNoteImagesOnUpscroll { get; private set; }
 
@@ -101,9 +101,9 @@ namespace Quaver.Shared.Skinning
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
-#endregion
+        #endregion
 
-#region TEXTURES
+        #region TEXTURES
 
         // ----- Column ----- //
         /// <summary>
@@ -158,7 +158,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteHoldBodies { get;} = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldBodies { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         ///
@@ -189,7 +189,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
 
-#endregion
+        #endregion
 
         /// <summary>
         ///     Ctor -
@@ -227,12 +227,12 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void SetGenericConfig()
         {
-            switch (ConfigManager.DefaultSkin.Value)
+            switch (ConfigManager.SkinStyle.Value)
             {
-                case DefaultSkins.Arrow:
+                case SkinStyles.Arrow:
                     ResourceFilePrepender = "arrow";
                     break;
-                case DefaultSkins.Bar:
+                case SkinStyles.Bar:
                     ResourceFilePrepender = "bar";
                     break;
                 default:
@@ -256,9 +256,9 @@ namespace Quaver.Shared.Skinning
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void SetDefault4KConfig()
         {
-            switch (ConfigManager.DefaultSkin.Value)
+            switch (ConfigManager.SkinStyle.Value)
             {
-                case DefaultSkins.Bar:
+                case SkinStyles.Bar:
                     BgMaskPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
@@ -294,7 +294,7 @@ namespace Quaver.Shared.Skinning
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
-                case DefaultSkins.Arrow:
+                case SkinStyles.Arrow:
                     BgMaskPadding = 10;
                     HitPosOffsetY = 110;
                     NotePadding = 8;
@@ -340,9 +340,9 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void SetDefault7KConfig()
         {
-            switch (ConfigManager.DefaultSkin.Value)
+            switch (ConfigManager.SkinStyle.Value)
             {
-                case DefaultSkins.Bar:
+                case SkinStyles.Bar:
                     BgMaskPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
@@ -381,7 +381,7 @@ namespace Quaver.Shared.Skinning
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
-                case DefaultSkins.Arrow:
+                case SkinStyles.Arrow:
                     BgMaskPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
@@ -513,7 +513,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.SkinStyle.Value.ToString()}/{folder.ToString()}" +
                                $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
             }
 
@@ -540,7 +540,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.SkinStyle.Value.ToString()}/{folder.ToString()}" +
                            $"/{Mode.ToString()}/{GetResourcePath(element)}";
             }
 
@@ -575,7 +575,7 @@ namespace Quaver.Shared.Skinning
         private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index)
         {
             // First load the beginning HitObject element that doesn't require snapping.
-            var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};
+            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, false) };
 
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColorObjectsBySnapDistance)
@@ -587,7 +587,7 @@ namespace Quaver.Shared.Skinning
             // For each snap we load the separate image for it.
             // It HAS to be loaded in an incremental fashion.
             // So you can't have 1/48, but not have 1/3, etc.
-            var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
+            var snaps = new[] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
 
             // If it can find the appropriate files, load them.

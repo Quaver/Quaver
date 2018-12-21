@@ -12,14 +12,14 @@ using Quaver.Shared.Config;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
-    public class SettingsDefaultSkin : SettingsHorizontalSelector
+    public class SettingsSkinStyle : SettingsHorizontalSelector
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="dialog"></param>
         /// <param name="name"></param>
-        public SettingsDefaultSkin(SettingsDialog dialog, string name)
+        public SettingsSkinStyle(SettingsDialog dialog, string name)
             : base(dialog, name, GetSelectorElements(), (val, i) => OnChange(dialog, val, i), GetSelectedIndex())
         {
         }
@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetSelectorElements() => Enum.GetNames(typeof(DefaultSkins)).ToList();
+        private static List<string> GetSelectorElements() => Enum.GetNames(typeof(SkinStyles)).ToList();
 
         /// <summary>
         /// </summary>
@@ -35,12 +35,12 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <param name="val"></param>
         /// <param name="index"></param>
         private static void OnChange(SettingsDialog dialog, string val, int index)
-            => dialog.NewQueuedDefaultSkin = (DefaultSkins) Enum.Parse(typeof(DefaultSkins), val);
+            => dialog.NewQueuedSkinStyle = (SkinStyles)Enum.Parse(typeof(SkinStyles), val);
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         private static int GetSelectedIndex()
-            => GetSelectorElements().FindIndex(x => x.ToString() == ConfigManager.DefaultSkin.Value.ToString());
+            => GetSelectorElements().FindIndex(x => x.ToString() == ConfigManager.SkinStyle.Value.ToString());
     }
 }

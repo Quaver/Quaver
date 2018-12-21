@@ -81,7 +81,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The default skin that will be loaded if the skin property is blank
         /// </summary>
-        internal static Bindable<DefaultSkins> DefaultSkin { get; private set; }
+        internal static Bindable<SkinStyles> SkinStyle { get; private set; }
 
         /// <summary>
         ///     The master volume of the game.
@@ -379,7 +379,7 @@ namespace Quaver.Shared.Config
             DownScroll7K = ReadValue(@"DownScroll7K", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
-            DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
+            SkinStyle = ReadValue(@"DefaultSkin", SkinStyles.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
@@ -449,7 +449,7 @@ namespace Quaver.Shared.Config
                     DownScroll7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
                     Skin.ValueChanged += AutoSaveConfiguration;
-                    DefaultSkin.ValueChanged += AutoSaveConfiguration;
+                    SkinStyle.ValueChanged += AutoSaveConfiguration;
                     Pitched.ValueChanged += AutoSaveConfiguration;
                     ScoreboardVisible.ValueChanged += AutoSaveConfiguration;
                     AutoLoginToServer.ValueChanged += AutoSaveConfiguration;
@@ -494,7 +494,7 @@ namespace Quaver.Shared.Config
             // Attempt to parse the value and default it if it can't.
             try
             {
-                binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
+                binded.Value = (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
             }
             catch (Exception e)
             {
@@ -683,7 +683,7 @@ namespace Quaver.Shared.Config
             try
             {
                 using (var inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
-                    return ( inputStream.Length > 0 );
+                    return (inputStream.Length > 0);
             }
             catch (Exception)
             {
@@ -706,7 +706,7 @@ namespace Quaver.Shared.Config
     /// <summary>
     ///     Enum containing a number representation of the default skins we have available
     /// </summary>
-    public enum DefaultSkins
+    public enum SkinStyles
     {
         Bar,
         Arrow
