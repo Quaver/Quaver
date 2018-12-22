@@ -251,6 +251,19 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         }
 
         /// <summary>
+        ///     Selects mapset at specific index.
+        /// </summary>
+        /// <param name="mapsetIndex"></param>
+        public void SelectMapset(int mapsetIndex)
+        {
+            if (Screen.AvailableMapsets.ElementAtOrDefault(mapsetIndex) == null)
+                return;
+
+            SelectMap(mapsetIndex, Screen.AvailableMapsets[mapsetIndex].PreferredMap
+                                  ?? Screen.AvailableMapsets[mapsetIndex].Maps.First());
+        }
+
+        /// <summary>
         ///     Initializes the container with new mapsets.
         /// </summary>
         public void InitializeWithNewSets()
