@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -114,7 +114,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.TopCenter,
+                X = SkinManager.Skin.Keys[screen.Map.Mode].ColumnAlignment
             };
 
             // Create the foreground container.
@@ -122,7 +123,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.TopCenter,
+                X = BackgroundContainer.X
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);

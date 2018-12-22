@@ -25,10 +25,8 @@ using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
-using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Bindables;
-using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
@@ -136,7 +134,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Selecting,
-            -1, "", (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
+            -1, "", (byte)ConfigManager.SelectedGameMode.Value, "", (long)ModManager.Mods);
 
         /// <summary>
         ///     Handles all input for the screen.
@@ -153,7 +151,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
             HandleKeyPressF1();
-            HandleMousePressRight();
+            HandleKeyPressF2();
         }
 
         /// <summary>
@@ -229,19 +227,22 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                return;
+
+            switch (view.ActiveContainer)
             {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case SelectContainerStatus.Mapsets:
+                    view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -252,6 +253,9 @@ namespace Quaver.Shared.Screens.Select
         private void HandleKeyPressLeft()
         {
             var view = View as SelectScreenView;
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 return;
@@ -279,11 +283,11 @@ namespace Quaver.Shared.Screens.Select
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+                ModManager.AddSpeedMods((float)Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
 
             // Decrease Rate
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+                ModManager.AddSpeedMods((float)Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
@@ -318,19 +322,15 @@ namespace Quaver.Shared.Screens.Select
             DialogManager.Show(new ModifiersDialog());
         }
 
-        private void HandleMousePressRight()
+        /// <summary>
+        ///     Handles when the user presses the F2 key
+        /// </summary>
+        private void HandleKeyPressF2()
         {
-            var view = View as SelectScreenView;
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                return;
 
-            switch (view.ActiveContainer)
-            {
-                case SelectContainerStatus.Difficulty:
-                    if (MouseManager.IsUniqueClick(MouseButton.Right))
-                    {
-                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
-                    }
-                    break;
-            }
+            SelectRandomMap();
         }
 
         /// <summary>
@@ -409,6 +409,51 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             Exit(() => new ImportingScreen());
+        }
+
+        /// <summary>
+        ///     Used to select a random mapset (or map if inside a mapset).
+        /// </summary>
+        public void SelectRandomMap()
+        {
+            var view = View as SelectScreenView;
+            var rnd = new Random(DateTime.Now.Millisecond);
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Mapsets:
+                    var randomMapsetIndex = selectedMapsetIndex;
+
+                    if (AvailableMapsets.Count <= 1)
+                        return;
+
+                    // To avoid selecting the mapset already selected.
+                    do
+                    {
+                        randomMapsetIndex = rnd.Next(AvailableMapsets.Count);
+                    }
+                    while (randomMapsetIndex == selectedMapsetIndex);
+
+                    view.MapsetScrollContainer.SelectMapset(randomMapsetIndex);
+                    break;
+
+                case SelectContainerStatus.Difficulty:
+                    var mapset = AvailableMapsets[selectedMapsetIndex];
+                    var randomMapIndex = selectedDifficultyIndex;
+
+                    if (mapset.Maps.Count <= 1)
+                        return;
+
+                    // To avoid selecting the mapset already selected.
+                    do
+                        randomMapIndex = new Random(DateTime.Now.Millisecond).Next(mapset.Maps.Count);
+                    while (randomMapIndex == selectedDifficultyIndex);
+
+                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, mapset.Maps[randomMapIndex], true);
+                    break;
+            }
         }
     }
 }

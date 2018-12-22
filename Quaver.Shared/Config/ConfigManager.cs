@@ -230,6 +230,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableHitsounds { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user's background will be blurred in gameplay.
+        /// </summary>
+        internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -274,6 +279,12 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseScrollSpeed { get; private set; }
         internal static Bindable<Keys> KeyDecreaseScrollSpeed { get; private set; }
+        
+        /// <summary>
+        ///     The keys to increase/decrease map offset.
+        /// </summary>
+        internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
+        internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
 
         /// <summary>
         ///     The key to hide the scoreboard in-game.
@@ -409,8 +420,11 @@ namespace Quaver.Shared.Config
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
+            KeyDecreaseMapOffset = ReadValue(@"KeyDecreaseMapOffset", Keys.OemMinus, data);
+            KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -473,12 +487,15 @@ namespace Quaver.Shared.Config
                     KeyRestartMap.ValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.ValueChanged += AutoSaveConfiguration;
+                    KeyIncreaseMapOffset.ValueChanged += AutoSaveConfiguration;
+                    KeyDecreaseMapOffset.ValueChanged += AutoSaveConfiguration;
                     KeyScoreboardVisible.ValueChanged += AutoSaveConfiguration;
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
+                    BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     Tint = color
                 };
 
-                var percentage = Processor.TotalJudgementCount == 0 ? 1 : (float)Processor.CurrentJudgements[j] / Processor.TotalJudgementCount;
+                var percentage = Processor.CurrentJudgements[j] == 0 ? 0 : (float)Processor.CurrentJudgements[j] / Processor.TotalJudgementCount;
 
                 var progressBar = new Sprite
                 {
