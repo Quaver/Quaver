@@ -360,6 +360,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Restart Map", ConfigManager.KeyRestartMap),
                     new SettingsKeybind(this, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
                     new SettingsKeybind(this, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
+                    new SettingsKeybind(this, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
+                    new SettingsKeybind(this, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
                     new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
                     new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
                     new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
