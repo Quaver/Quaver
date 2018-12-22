@@ -326,8 +326,14 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
             // it becomes the one above. (If first in the list, it becomes the last.)
             if (KeyboardManager.IsUniqueKeyPress(Keys.Up) && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)))
             {
-                // Play hover sound effect
-                SkinManager.Skin.SoundHover.CreateChannel().Play();
+                if (MasterVolumeSlider.BindedValue.Value > MasterVolumeSlider.BindedValue.MinValue)
+                {
+                    if (EffectVolumeSlider.BindedValue.Value > EffectVolumeSlider.BindedValue.MinValue)
+                    {
+                        // Play hover sound effect
+                        SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    }
+                }
 
                 // Reset inactive timer.
                 TimeInactive = 0;
@@ -348,9 +354,15 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
             // If the user presses the down key, we switch the focused slider to the
             if (KeyboardManager.IsUniqueKeyPress(Keys.Down) && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)))
             {
-                // Play hover sound effect
-                SkinManager.Skin.SoundHover.CreateChannel().Play();
-
+                if (MasterVolumeSlider.BindedValue.Value > MasterVolumeSlider.BindedValue.MinValue)
+                {
+                    if (EffectVolumeSlider.BindedValue.Value > EffectVolumeSlider.BindedValue.MinValue)
+                    {
+                        // Play hover sound effect
+                        SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    }
+                }
+                
                 // Reset inactive timer.
                 TimeInactive = 0;
 
