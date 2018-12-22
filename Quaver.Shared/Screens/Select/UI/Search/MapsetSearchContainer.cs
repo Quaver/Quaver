@@ -158,11 +158,14 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 AllowSubmission = false,
                 InputText =
                 {
-                    Tint = Color.White
+                    Tint = Color.White,
+                    Text = SelectScreen.PreviousSearchTerm
                 },
                 StoppedTypingActionCalltime = 300,
                 OnStoppedTyping = (text) =>
                 {
+                    SelectScreen.PreviousSearchTerm = text;
+
                     var selectScreen = View.Screen as SelectScreen;
 
                     lock (selectScreen.AvailableMapsets)
