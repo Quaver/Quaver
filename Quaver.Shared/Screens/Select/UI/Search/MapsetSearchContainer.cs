@@ -411,6 +411,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             ButtonOrderByArtist.Selected = e.Value == OrderMapsetsBy.Artist;
             ButtonOrderByTitle.Selected = e.Value == OrderMapsetsBy.Title;
             ButtonOrderByCreator.Selected = e.Value == OrderMapsetsBy.Creator;
+            ButtonOrderByDateAdded.Selected = e.Value == OrderMapsetsBy.DateAdded;
         }
     }
 }
