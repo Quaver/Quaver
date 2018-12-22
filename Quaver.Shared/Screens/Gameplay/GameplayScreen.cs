@@ -290,7 +290,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
                     // Handle offset +
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                    if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                     {
                         MapManager.Selected.Value.LocalOffset += 5;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
@@ -298,7 +298,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
 
                     // Handle offset -
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                    if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                     {
                         MapManager.Selected.Value.LocalOffset -= 5;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
