@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Padding of the playfield.
         /// </summary>
-        public float Padding => SkinManager.Skin.Keys[Screen.Map.Mode].BgMaskPadding;
+        public float Padding => SkinManager.Skin.Keys[Screen.Map.Mode].StageReceptorPadding;
 
         /// <summary>
         ///     The size of the each ane.
