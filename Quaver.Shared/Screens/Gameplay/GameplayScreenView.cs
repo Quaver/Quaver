@@ -30,7 +30,6 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.UI;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -44,9 +43,9 @@ namespace Quaver.Shared.Screens.Gameplay
         public new GameplayScreen Screen { get; }
 
         /// <summary>
-        ///     The map's background.
+        ///     The container that will be used for displaying objects in the background.
         /// </summary>
-        public BackgroundImage Background { get; private set; }
+        public Container BackgroundContainer { get; }
 
         /// <summary>
         ///     The progress bar that displays the current song time.
@@ -77,6 +76,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Displays the user's current grade.
         /// </summary>
         private GradeDisplay GradeDisplay { get; set; }
+
+        /// <summary>
+        ///     Song information displayed at the beginning of the map.
+        /// </summary>
+        private SongInformation SongInfo { get; set; }
 
         /// <summary>
         ///     The x position of the grade display
@@ -147,8 +151,14 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
+            BackgroundContainer = new Container();
 
-            CreateBackground();
+            BackgroundHelper.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
+
+            BackgroundManager.PermittedToFadeIn = false;
+            FadeBackgroundToDim();
+            BackgroundManager.Loaded += OnBackgroundLoaded;
+
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
@@ -158,6 +168,15 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
+
+            // Song Information Display
+            SongInfo = new SongInformation(Screen)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                Y = -200
+            };
+
             CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
@@ -206,7 +225,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            Background.Draw(gameTime);
+            BackgroundHelper.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
@@ -216,20 +235,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public override void Destroy()
         {
+            BackgroundContainer.Destroy();
             Screen.Ruleset?.Destroy();
             Container?.Destroy();
-        }
-
-        /// <summary>
-        ///     Creates the background sprite for the screen.
-        /// </summary>
-        private void CreateBackground()
-        {
-            var background = ConfigManager.BlurBackgroundInGameplay.Value ? BackgroundHelper.BlurredTexture : BackgroundHelper.RawTexture;
-
-            // We don't set a parent here because we have to manually call draw on the background, as the
-            // ScreenView's container is drawn after the ruleset.
-            Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false);
+            BackgroundManager.Loaded -= OnBackgroundLoaded;
         }
 
         /// <summary>
@@ -386,7 +395,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
 
-                    user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
+                    user.Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
                     user.Combo.Text = $"{processor.MaxCombo}x";
                 }
                 // Allow the user to play against their own local scores.

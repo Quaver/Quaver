@@ -1,13 +1,12 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -196,36 +195,15 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     Creates the grade of the score
         /// </summary>
-        private void CreateGrade()
+        private void CreateGrade() => Grade = new Sprite()
         {
-            Texture2D image;
-
-            switch (Screen.ResultsType)
-            {
-                case ResultScreenType.Replay:
-                case ResultScreenType.Gameplay:
-                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                    if (Screen.ScoreProcessor.Failed)
-                        image = SkinManager.Skin.Grades[API.Enums.Grade.F];
-                    else
-                        image = SkinManager.Skin.Grades[GradeHelper.GetGradeFromAccuracy(Screen.ScoreProcessor.Accuracy)];
-                    break;
-                case ResultScreenType.Score:
-                    image = SkinManager.Skin.Grades[Screen.Score.Grade];
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            Grade = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                X = -50,
-                Size = new ScalableVector2(100, 100),
-                Image = image
-            };
-        }
+            Parent = this,
+            Alignment = Alignment.MidRight,
+            X = -50,
+            Size = new ScalableVector2(100, 100),
+            Image = Screen.ScoreProcessor.Failed ? SkinManager.Skin.Grades[API.Enums.Grade.F] :
+                SkinManager.Skin.Grades[GradeHelper.GetGradeFromAccuracy(Screen.ScoreProcessor.Accuracy)]
+        };
 
         /// <summary>
         ///     Called when the background of the map has been loaded
