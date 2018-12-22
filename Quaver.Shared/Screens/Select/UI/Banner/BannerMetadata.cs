@@ -98,9 +98,11 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <param name="map"></param>
         public void UpdateAndAlignMetadata(Map map)
         {
+            var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
+
             Mode.UpdateValue(ModeHelper.ToShortHand(map.Mode));
             Bpm.UpdateValue(((int)(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))).ToString(CultureInfo.InvariantCulture));
-            Length.UpdateValue(TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods)).ToString(@"mm\:ss"));
+            Length.UpdateValue(length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss"));
             Difficulty.UpdateValue(StringHelper.AccuracyToString((float) map.DifficultyFromMods(ModManager.Mods)).Replace("%", ""));
 
             for (var i = 0; i < Items.Count; i++)
