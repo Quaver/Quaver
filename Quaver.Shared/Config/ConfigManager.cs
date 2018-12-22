@@ -175,6 +175,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> OsuDbPath { get; private set; }
 
         /// <summary>
+        ///     The directory containing osu songs
+        /// </summary>
+        internal static Bindable<string> OsuSongsDirectory { get; private set; }
+
+        /// <summary>
         ///     Dictates where or not we should load osu! maps from osu!.db on game start
         /// </summary>
         internal static Bindable<bool> AutoLoadOsuBeatmaps { get; private set; }
@@ -386,7 +391,8 @@ namespace Quaver.Shared.Config
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
-            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
+            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!\\osu!.db", data);
+            OsuSongsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"OsuSongsDirectory", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!\\Songs", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
@@ -430,6 +436,7 @@ namespace Quaver.Shared.Config
                     DataDirectory.ValueChanged += AutoSaveConfiguration;
                     SongDirectory.ValueChanged += AutoSaveConfiguration;
                     OsuDbPath.ValueChanged += AutoSaveConfiguration;
+                    OsuSongsDirectory.ValueChanged += AutoSaveConfiguration;
                     AutoLoadOsuBeatmaps.ValueChanged += AutoSaveConfiguration;
                     Username.ValueChanged += AutoSaveConfiguration;
                     VolumeGlobal.ValueChanged += AutoSaveConfiguration;

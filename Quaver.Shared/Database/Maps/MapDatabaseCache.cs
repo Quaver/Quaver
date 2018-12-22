@@ -199,8 +199,22 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         private static IEnumerable<Map> LoadOsuBeatmapDatabase()
         {
-            var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
-            MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
+            var dbpath = ConfigManager.OsuDbPath.Value;
+
+            Logger.Debug($"Osu database file {dbpath}", LogType.Runtime);
+
+            if (!File.Exists(dbpath))
+            {
+                Logger.Warning("Osu db path does not exist, returning empty list", LogType.Runtime);
+                return (new List<Map>());
+            }
+
+            var db = OsuDb.Read(dbpath);
+
+            // you need the trailing \ or something in map manager shits the bed and you can't play
+            MapManager.OsuSongsFolder = ConfigManager.OsuSongsDirectory.Value.EndsWith("\\") ? ConfigManager.OsuSongsDirectory.Value : ConfigManager.OsuSongsDirectory.Value + "\\";
+
+            Logger.Debug($"Osu songs folder {MapManager.OsuSongsFolder}", LogType.Runtime);
 
             // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
             var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7 )).ToList();
