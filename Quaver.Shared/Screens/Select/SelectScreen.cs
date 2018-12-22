@@ -107,7 +107,6 @@ namespace Quaver.Shared.Screens.Select
         {
             KeepPlayingAudioTrackAtPreview();
             HandleInput();
-            HandleMousePressRight();
 
             base.Update(gameTime);
         }
@@ -154,6 +153,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
             HandleKeyPressF1();
+            HandleMousePressRight();
         }
 
         /// <summary>
