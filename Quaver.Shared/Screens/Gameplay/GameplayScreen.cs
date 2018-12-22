@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -283,6 +283,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                     SkipToNextObject();
 
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
+                    HandleQuickExit();
+
                 // Only allow offset changes if the map hasn't started or if we're on a break
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
@@ -354,15 +357,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
-            // handle pausing normally.
-            if (!IsPaused &&
-                (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
-            {
+            if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
                 Pause(gameTime);
-            }
             // The user wants to resume their play.
-            else if (IsPaused &&
-                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
                 Pause();
                 TimePauseKeyHeld = 0;
@@ -488,7 +486,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Handles exiting the screen if the user has no pause on.
         /// </summary>
-        private void HandleNoPauseExit()
+        private void HandleQuickExit()
         {
             if (InReplayMode && !Failed && !IsPlayComplete)
                 return;
