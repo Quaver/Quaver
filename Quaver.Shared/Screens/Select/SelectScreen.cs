@@ -152,6 +152,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressTab();
             HandleKeyPressF1();
             HandleKeyPressF2();
+            HandleMousePressRight();
         }
 
         /// <summary>
@@ -331,6 +332,24 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             SelectRandomMap();
+        }
+        
+        /// <summary>
+        ///     Handles when the user presses the right mouse button
+        /// </summary>
+        private void HandleMousePressRight()
+        {
+            var view = View as SelectScreenView;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Difficulty:
+                    if (MouseManager.IsUniqueClick(MouseButton.Right))
+                    {
+                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
+                    }
+                    break;
+            }
         }
 
         /// <summary>
