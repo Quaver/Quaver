@@ -6,12 +6,16 @@
 */
 
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Window;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
 {
@@ -111,7 +115,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Screen.HasQuit = true;
 
                 // Make sure the screen transitioner isn't faded out at all
-                var screenView = (GameplayScreenView)Screen.View;
+                var screenView = (GameplayScreenView) Screen.View;
                 screenView.Transitioner.Alpha = 0;
             })
             {
@@ -135,7 +139,32 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed)
                 Visible = false;
 
+            HandleInput();
+
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Handles all input for the screen.
+        /// </summary>
+        private void HandleInput()
+        {
+            HandleKeyPressEsc();
+        }
+        
+        /// <summary>
+        ///     Handles when the user presses ESC.
+        /// </summary>
+        private void HandleKeyPressEsc()
+        {
+            if (!Screen.IsPaused)
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+            
+            if (ChatManager.IsActive)
+                ChatManager.ToggleChatOverlay();
         }
 
         /// <summary>
@@ -146,9 +175,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             ClearTransformations();
 
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 400));
-            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Continue.Width, GetActivePosX(Continue),  400));
-            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Retry.Width, GetActivePosX(Retry), 400));
-            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Quit.Width, GetActivePosX(Quit), 400));
+            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Continue.Width,
+                GetActivePosX(Continue), 400));
+            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Retry.Width, GetActivePosX(Retry),
+                400));
+            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, -Quit.Width, GetActivePosX(Quit),
+                400));
         }
 
         /// <summary>
@@ -159,9 +191,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             ClearTransformations();
 
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 400));
-            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Continue), -Continue.Width, 800));
-            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Retry), -Retry.Width, 800));
-            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Quit), -Quit.Width, 800));
+            Continue.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Continue),
+                -Continue.Width, 800));
+            Retry.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Retry), -Retry.Width,
+                800));
+            Quit.Animations.Add(new Animation(AnimationProperty.X, Easing.OutExpo, GetActivePosX(Quit), -Quit.Width,
+                800));
         }
 
         /// <summary>
