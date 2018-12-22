@@ -13,7 +13,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.API.Maps.Processors.Rating;
+using Quaver.API.Maps.Processors.Difficulty;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client;
@@ -321,12 +322,12 @@ namespace Quaver.Shared.Screens.Result
                 var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
                     Gameplay.PauseCount);
 
-                localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
+                localScore.RatingProcessorVersion = DifficultyProcessorKeys.Version;
 
                 if (ScoreProcessor.Failed)
                     localScore.PerformanceRating = 0;
                 else
-                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(ScoreProcessor.Mods)).CalculateRating(ScoreProcessor.Accuracy);
+                    localScore.PerformanceRating = DifficultyProcessorKeys.CalculatePlayRating(Map.DifficultyFromMods(ScoreProcessor.Mods), ScoreProcessor.Accuracy);
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }

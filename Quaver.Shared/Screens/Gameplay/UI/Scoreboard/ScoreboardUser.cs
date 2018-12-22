@@ -8,13 +8,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
-using Quaver.API.Maps.Processors.Rating;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -53,7 +51,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Handles calculating rating for this individual user.
         /// </summary>
-        internal RatingProcessorKeys RatingProcessor { get; }
+        internal DifficultyProcessorKeys DifficultyProcessor { get; }
 
         /// <summary>
         ///    The user's target Y position based on their current rank.
@@ -106,6 +104,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         private Score LocalScore { get; }
 
+        /// <summary>
+        ///     Reference to current Map Difficulty
+        /// </summary>
+        private double MapDifficulty { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -124,9 +127,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
-            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(260, 50);
+            MapDifficulty = MapManager.Selected.Value.DifficultyFromMods(mods);
 
             // Set position initially to offscreen
             X = -Width - 10;
@@ -243,7 +246,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Score.Text = $"{DifficultyProcessorKeys.CalculatePlayRating(MapDifficulty, Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();
@@ -259,7 +262,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             SetTintBasedOnHealth();
 
-            Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+            Score.Text = $"{DifficultyProcessorKeys.CalculatePlayRating(MapDifficulty, Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             CurrentJudgement++;

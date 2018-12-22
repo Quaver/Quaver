@@ -9,7 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.API.Maps.Processors.Rating;
+using Quaver.API.Maps.Processors.Difficulty;
+using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -187,8 +188,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     if (Screen.ScoreProcessor.Failed)
                         performanceRating = 0;
                     else
-                        performanceRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods))
-                            .CalculateRating(Screen.ScoreProcessor);
+                        performanceRating = DifficultyProcessorKeys.CalculatePlayRating(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods), Screen.ScoreProcessor.Accuracy);
                     break;
                 case ResultScreenType.Score:
                     performanceRating = Screen.Score.PerformanceRating;

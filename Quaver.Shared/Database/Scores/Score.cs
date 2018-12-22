@@ -9,7 +9,6 @@ using System;
 using System.Globalization;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
-using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;

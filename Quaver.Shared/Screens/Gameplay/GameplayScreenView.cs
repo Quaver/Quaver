@@ -6,11 +6,10 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -386,7 +385,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
 
-                    user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
+                    user.Score.Text = $"{DifficultyProcessor.CalculatePlayRating(user.DifficultyProcessor.OverallDifficulty, processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
                     user.Combo.Text = $"{processor.MaxCombo}x";
                 }
                 // Allow the user to play against their own local scores.
