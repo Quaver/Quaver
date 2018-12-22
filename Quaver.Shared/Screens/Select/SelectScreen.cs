@@ -107,6 +107,7 @@ namespace Quaver.Shared.Screens.Select
         {
             KeepPlayingAudioTrackAtPreview();
             HandleInput();
+            HandleMousePressRight();
 
             base.Update(gameTime);
         }
@@ -315,6 +316,21 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             DialogManager.Show(new ModifiersDialog());
+        }
+
+        private void HandleMousePressRight()
+        {
+            var view = View as SelectScreenView;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Difficulty:
+                    if (MouseManager.IsUniqueClick(MouseButton.Right))
+                    {
+                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
+                    }
+                    break;
+            }
         }
 
         /// <summary>
