@@ -230,6 +230,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableHitsounds { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user's background will be blurred in gameplay.
+        /// </summary>
+        internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -411,6 +416,7 @@ namespace Quaver.Shared.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -479,6 +485,7 @@ namespace Quaver.Shared.Config
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
+                    BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
