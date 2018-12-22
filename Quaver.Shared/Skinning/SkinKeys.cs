@@ -57,7 +57,7 @@ namespace Quaver.Shared.Skinning
 
         internal int ReceptorPosOffsetY { get; private set; }
 
-        internal byte ColumnAlignment { get; private set; }
+        internal int ColumnAlignment { get; private set; }
 
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
@@ -266,7 +266,7 @@ namespace Quaver.Shared.Skinning
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
@@ -302,7 +302,7 @@ namespace Quaver.Shared.Skinning
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
@@ -350,7 +350,7 @@ namespace Quaver.Shared.Skinning
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
@@ -389,7 +389,7 @@ namespace Quaver.Shared.Skinning
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
@@ -446,7 +446,7 @@ namespace Quaver.Shared.Skinning
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
             ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
-            ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, ini["ColumnAlignment"]);
+            ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
             JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);

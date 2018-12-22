@@ -78,11 +78,6 @@ namespace Quaver.Shared.Screens.Gameplay
         private GradeDisplay GradeDisplay { get; set; }
 
         /// <summary>
-        ///     Song information displayed at the beginning of the map.
-        /// </summary>
-        private SongInformation SongInfo { get; set; }
-
-        /// <summary>
         ///     The x position of the grade display
         /// </summary>
         private float GradeDisplayX => AccuracyDisplay.X - 8;
@@ -168,15 +163,6 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
-
-            // Song Information Display
-            SongInfo = new SongInformation(Screen)
-            {
-                Parent = Container,
-                Alignment = Alignment.MidCenter,
-                Y = -200
-            };
-
             CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
