@@ -73,7 +73,7 @@ namespace Quaver.Shared.Database.Maps
         internal static List<Mapset> OrderMapsetsByArtist(IEnumerable<Mapset> mapsets)
         {
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            return mapsets.OrderBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+            return mapsets.OrderBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps[0].Title).ToList();
+        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders mapsets by creator.
@@ -90,7 +90,7 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> OrderMapsetsByCreator(IEnumerable<Mapset> mapsets)
         {
-            return mapsets.OrderBy(x => x.Maps[0].Creator).ThenBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+            return mapsets.OrderBy(x => x.Maps.First().Creator).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -120,7 +120,8 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets) => mapsets.OrderByDescending(x => x.Maps[0].DateAdded).ToList();
+        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets)
+            => mapsets.OrderByDescending(x => x.Maps.First().DateAdded).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders the map's mapsets by difficulty.

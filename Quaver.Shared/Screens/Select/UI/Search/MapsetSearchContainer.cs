@@ -207,7 +207,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Artist)
             {
                 Parent = OrderBy,
-                X = OrderBy.Width + 8,
+                X = OrderBy.Width + 3,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Title)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width,
+                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width - 5,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -290,7 +290,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Creator)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width,
+                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width - 5,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -327,11 +327,11 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateOrderByDateAddedButton()
         {
-            ButtonOrderByDateAdded = new SelectableBorderedTextButton("Date added", ColorHelper.HexToColor("#75e475"),
+            ButtonOrderByDateAdded = new SelectableBorderedTextButton("Date Added", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByCreator.X + ButtonOrderByCreator.Width,
+                X = ButtonOrderByCreator.X + ButtonOrderByCreator.Width - 5,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
