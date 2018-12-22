@@ -25,10 +25,8 @@ using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
-using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Bindables;
-using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
@@ -228,19 +226,22 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                return;
+
+            switch (view.ActiveContainer)
             {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case SelectContainerStatus.Mapsets:
+                    view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -251,6 +252,9 @@ namespace Quaver.Shared.Screens.Select
         private void HandleKeyPressLeft()
         {
             var view = View as SelectScreenView;
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 return;
