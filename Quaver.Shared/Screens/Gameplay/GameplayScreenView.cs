@@ -30,6 +30,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -43,9 +44,9 @@ namespace Quaver.Shared.Screens.Gameplay
         public new GameplayScreen Screen { get; }
 
         /// <summary>
-        ///     The container that will be used for displaying objects in the background.
+        ///     The map's background.
         /// </summary>
-        public Container BackgroundContainer { get; }
+        public BackgroundImage Background { get; private set; }
 
         /// <summary>
         ///     The progress bar that displays the current song time.
@@ -151,14 +152,8 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
-            BackgroundContainer = new Container();
 
-            BackgroundHelper.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
-
-            BackgroundManager.PermittedToFadeIn = false;
-            FadeBackgroundToDim();
-            BackgroundManager.Loaded += OnBackgroundLoaded;
-
+            CreateBackground();
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
@@ -225,7 +220,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            BackgroundHelper.Draw(gameTime);
+            Background.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
@@ -235,10 +230,20 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public override void Destroy()
         {
-            BackgroundContainer.Destroy();
             Screen.Ruleset?.Destroy();
             Container?.Destroy();
-            BackgroundManager.Loaded -= OnBackgroundLoaded;
+        }
+
+        /// <summary>
+        ///     Creates the background sprite for the screen.
+        /// </summary>
+        private void CreateBackground()
+        {
+            var background = ConfigManager.BlurBackgroundInGameplay.Value ? BackgroundHelper.BlurredTexture : BackgroundHelper.RawTexture;
+
+            // We don't set a parent here because we have to manually call draw on the background, as the
+            // ScreenView's container is drawn after the ruleset.
+            Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false);
         }
 
         /// <summary>
