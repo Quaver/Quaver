@@ -139,32 +139,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed)
                 Visible = false;
 
-            HandleInput();
-
             base.Update(gameTime);
-        }
-
-        /// <summary>
-        ///     Handles all input for the screen.
-        /// </summary>
-        private void HandleInput()
-        {
-            HandleKeyPressEsc();
-        }
-        
-        /// <summary>
-        ///     Handles when the user presses ESC.
-        /// </summary>
-        private void HandleKeyPressEsc()
-        {
-            if (!Screen.IsPaused)
-                return;
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                return;
-            
-            if (ChatManager.IsActive)
-                ChatManager.ToggleChatOverlay();
         }
 
         /// <summary>
