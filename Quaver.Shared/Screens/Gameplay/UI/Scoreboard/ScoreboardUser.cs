@@ -49,11 +49,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         internal ScoreProcessor Processor { get; }
 
         /// <summary>
-        ///     Handles calculating rating for this individual user.
-        /// </summary>
-        internal DifficultyProcessorKeys DifficultyProcessor { get; }
-
-        /// <summary>
         ///    The user's target Y position based on their current rank.
         /// </summary>
         internal float TargetYPosition { get; set; }
@@ -105,9 +100,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         private Score LocalScore { get; }
 
         /// <summary>
-        ///     Reference to current Map Difficulty
+        ///     Reference to Difficulty of Map that user played/is playing.
         /// </summary>
-        private double MapDifficulty { get; }
+        internal double MapDifficulty { get; }
 
         /// <inheritdoc />
         /// <summary>

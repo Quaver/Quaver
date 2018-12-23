@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal Scoreboard(IEnumerable<ScoreboardUser> users)
         {
-            Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => DifficultyProcessor.CalculatePlayRating(x.DifficultyProcessor.OverallDifficulty, x.Processor.Accuracy)).ToList();
+            Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => DifficultyProcessor.CalculatePlayRating(x.MapDifficulty, x.Processor.Accuracy)).ToList();
             SetTargetYPositions();
 
             Users.ForEach(x =>
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTargetYPositions()
         {
-            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => DifficultyProcessor.CalculatePlayRating(x.DifficultyProcessor.OverallDifficulty, x.Processor.Accuracy)).ToList();
+            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => DifficultyProcessor.CalculatePlayRating(x.MapDifficulty, x.Processor.Accuracy)).ToList();
 
             for (var i = 0; i < users.Count; i++)
             {

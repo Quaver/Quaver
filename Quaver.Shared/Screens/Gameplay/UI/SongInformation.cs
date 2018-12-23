@@ -7,7 +7,10 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using osu.Shared;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -79,7 +82,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(Fonts.SourceSansProSemiBold, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
+            Watching = new SpriteText(Fonts.SourceSansProSemiBold,
+                $"Watching {( screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "" )}", 13)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -121,11 +125,23 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alignment = Alignment.TopCenter,
                 Y = Creator.Y + TextYSpacing + TextYSpacing * 0.75f,
                 Alpha = 0,
-                Tint = ColorHelper.DifficultyToColor(difficulty)
+                Tint = ColorHelper.SystemToXnaColor(DifficultyColors.GetRatingColor(difficulty))
             };
 
             // Get a formatted string of the activated mods.
-            var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" : "None");
+            // TODO: remove try/catch when mod identifiers get fixed
+            var modsString = "";
+            try
+            {
+                modsString = "Mods: " + ( ModManager.CurrentModifiersList.Count > 0
+                                 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}"
+                                 : "None" );
+            }
+            catch
+            {
+                modsString = "error.";
+            }
+
             Mods = new SpriteText(Fonts.SourceSansProSemiBold, modsString, 13)
             {
                 Parent = this,

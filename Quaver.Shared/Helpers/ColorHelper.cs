@@ -13,24 +13,6 @@ namespace Quaver.Shared.Helpers
     public static class ColorHelper
     {
         /// <summary>
-        ///     Converts a difficulty rating to a color.
-        /// </summary>
-        /// <param name="rating"></param>
-        /// <returns></returns>
-        internal static Color DifficultyToColor(float rating)
-        {
-            // Easy
-            if (rating < 15)
-                return Color.Green;
-            // Medium
-            if (rating < 30)
-                return new Color(255, 255, 0);
-
-            // Hard
-            return new Color(255, 0, 0);
-        }
-
-        /// <summary>
         ///     Converts a hex color code into an XNA color.
         /// </summary>
         /// <param name="hexColor"></param>
@@ -63,5 +45,12 @@ namespace Quaver.Shared.Helpers
 
             return new Color(red, green, blue);
         }
+
+        /// <summary>
+        ///     Convert System.Drawing Color to Microsoft.Xna Color
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Color SystemToXnaColor(System.Drawing.Color color) => new Color(color.R, color.G, color.B);
     }
 }

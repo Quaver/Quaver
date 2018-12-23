@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             {
                 Parent = this,
                 Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 4),
-                Tint = ColorHelper.DifficultyToColor(19.12f)
+                Tint = ColorHelper.SystemToXnaColor(DifficultyColors.GetRatingColor(0))
             };
 
             Creator = new SpriteText(Fonts.Exo2SemiBold, " ", 10)
@@ -107,7 +108,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             var difficulty = (float) map.DifficultyFromMods(ModManager.Mods);
 
             TextDifficultyRating.Text = StringHelper.AccuracyToString(difficulty).Replace("%", "");
-            TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(difficulty);
+            TextDifficultyRating.Tint = ColorHelper.SystemToXnaColor(DifficultyColors.GetRatingColor(difficulty));
             Creator.Text = $"By: {map.Creator}";
         }
 
@@ -197,7 +198,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
                 return;
 
             TextDifficultyRating.Text = value;
-            TextDifficultyRating.Tint = ColorHelper.DifficultyToColor(difficulty);
+            TextDifficultyRating.Tint = ColorHelper.SystemToXnaColor(DifficultyColors.GetRatingColor(difficulty));
         }
     }
 }
