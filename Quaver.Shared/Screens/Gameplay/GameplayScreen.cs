@@ -26,6 +26,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
@@ -34,8 +35,6 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
@@ -362,6 +361,12 @@ namespace Quaver.Shared.Screens.Gameplay
             // The user wants to resume their play.
             else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
+                if (ChatManager.IsActive)
+                {
+                    ChatManager.ToggleChatOverlay();
+                    return;
+                }
+
                 Pause();
                 TimePauseKeyHeld = 0;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
