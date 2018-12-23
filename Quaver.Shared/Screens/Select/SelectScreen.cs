@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
+using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -70,7 +71,8 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreen()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0 || MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
+            if (MapsetImporter.Queue.Count > 0 ||
+                MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
                 QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
             {
                 Exit(() => new ImportingScreen());
@@ -86,7 +88,8 @@ namespace Quaver.Shared.Screens.Select
 
             AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
 
-            Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.", LogType.Runtime);
+            Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.",
+                LogType.Runtime);
 
             DiscordHelper.Presence.Details = "Selecting a song";
             DiscordHelper.Presence.State = "In the menus";
@@ -134,7 +137,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Selecting,
-            -1, "", (byte)ConfigManager.SelectedGameMode.Value, "", (long)ModManager.Mods);
+            -1, "", (byte) ConfigManager.SelectedGameMode.Value, "", (long) ModManager.Mods);
 
         /// <summary>
         ///     Handles all input for the screen.
@@ -228,7 +231,8 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
@@ -255,7 +259,8 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
@@ -279,22 +284,24 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private static void HandleKeyPressControlRateChange()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ModManager.AddSpeedMods((float)Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
 
             // Decrease Rate
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ModManager.AddSpeedMods((float)Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
             {
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-                Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}", LogType.Runtime);
+                Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}",
+                    LogType.Runtime);
             }
         }
 
@@ -333,7 +340,7 @@ namespace Quaver.Shared.Screens.Select
 
             SelectRandomMap();
         }
-        
+
         /// <summary>
         ///     Handles when the user presses the right mouse button
         /// </summary>
@@ -348,6 +355,7 @@ namespace Quaver.Shared.Screens.Select
                     {
                         view.SwitchToContainer(SelectContainerStatus.Mapsets);
                     }
+
                     break;
             }
         }
@@ -452,8 +460,7 @@ namespace Quaver.Shared.Screens.Select
                     do
                     {
                         randomMapsetIndex = rnd.Next(AvailableMapsets.Count);
-                    }
-                    while (randomMapsetIndex == selectedMapsetIndex);
+                    } while (randomMapsetIndex == selectedMapsetIndex);
 
                     view.MapsetScrollContainer.SelectMapset(randomMapsetIndex);
                     break;
