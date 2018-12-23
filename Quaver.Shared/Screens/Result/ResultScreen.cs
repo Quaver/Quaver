@@ -300,7 +300,7 @@ namespace Quaver.Shared.Screens.Result
                 return;
 
             // Don't submit scores if they aren't ranked, there is no point.
-            if (Map.RankedStatus != RankedStatus.Ranked)
+            if (Map.RankedStatus != RankedStatus.Ranked || Map.RankedStatus != RankedStatus.DanCourse)
                 return;
             
             ThreadScheduler.Run(() =>
