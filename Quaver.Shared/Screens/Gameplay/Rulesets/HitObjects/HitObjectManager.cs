@@ -110,10 +110,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             // Return Color of snap index
             for (var i = 0; i < 8; i++)
             {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (index % BeatSnaps[i] == 0)
-                {
                     return i;
-                }
             }
 
             // If it's not snapped to 1/16 or less, return 1/48 snap color
