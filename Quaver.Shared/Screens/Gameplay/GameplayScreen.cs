@@ -35,10 +35,7 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Graphics.Animations;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -364,12 +361,11 @@ namespace Quaver.Shared.Screens.Gameplay
             // The user wants to resume their play.
             else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
-                if (DialogManager.Dialogs.Count != 0)
+                if (ChatManager.IsActive)
                 {
-                    DialogManager.Dismiss();
+                    ChatManager.ToggleChatOverlay();
                     return;
                 }
-
 
                 Pause();
                 TimePauseKeyHeld = 0;
