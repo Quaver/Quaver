@@ -299,6 +299,10 @@ namespace Quaver.Shared.Screens.Result
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
                 return;
 
+            // Don't submit scores if they aren't ranked, there is no point.
+            if (Map.RankedStatus != RankedStatus.Ranked)
+                return;
+            
             ThreadScheduler.Run(() =>
             {
                 Logger.Important($"Beginning to submit score on map: {Gameplay.MapHash}", LogType.Network);
