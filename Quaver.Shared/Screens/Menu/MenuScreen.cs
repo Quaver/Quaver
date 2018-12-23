@@ -93,15 +93,6 @@ namespace Quaver.Shared.Screens.Menu
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
-            HandleKeyPressEsc();
-            HandleKeyPressCTRLO();
-        }
-
-        /// <summary>
-        ///     Handles when the user presses the escape button
-        /// </summary>
-        private void HandleKeyPressEsc()
-        {
             if (DialogManager.Dialogs.Count > 0 || Exiting)
                 return;
 
@@ -109,21 +100,6 @@ namespace Quaver.Shared.Screens.Menu
                 DialogManager.Show(new QuitDialog());
         }
         
-        /// <summary>
-        ///     Handles when the user is holding either Control button and presses O
-        /// </summary>
-        private void HandleKeyPressCTRLO()
-        {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
-                return;
-
-            DialogManager.Show(new SettingsDialog());
-        }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>

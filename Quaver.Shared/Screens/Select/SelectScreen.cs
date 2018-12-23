@@ -155,7 +155,6 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressTab();
             HandleKeyPressF1();
             HandleKeyPressF2();
-            HandleKeyPressCTRLO();
             HandleMousePressRight();
         }
 
@@ -359,21 +358,6 @@ namespace Quaver.Shared.Screens.Select
 
                     break;
             }
-        }
-
-        /// <summary>
-        ///     Handles when the user is holding either Control button and presses O
-        /// </summary>
-        private void HandleKeyPressCTRLO()
-        {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
-                return;
-
-            DialogManager.Show(new SettingsDialog());
         }
 
         /// <summary>
