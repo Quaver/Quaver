@@ -43,7 +43,7 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
-        internal int BgMaskPadding { get; private set; }
+        internal int StageReceptorPadding { get; private set; }
 
         internal int HitPosOffsetY { get; private set; }
 
@@ -259,7 +259,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    BgMaskPadding = 0;
+                    StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
@@ -295,7 +295,7 @@ namespace Quaver.Shared.Skinning
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
                 case DefaultSkins.Arrow:
-                    BgMaskPadding = 10;
+                    StageReceptorPadding = 10;
                     HitPosOffsetY = 110;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
@@ -343,7 +343,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    BgMaskPadding = 0;
+                    StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
@@ -382,7 +382,7 @@ namespace Quaver.Shared.Skinning
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
                 case DefaultSkins.Arrow:
-                    BgMaskPadding = 10;
+                    StageReceptorPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
@@ -439,7 +439,7 @@ namespace Quaver.Shared.Skinning
 
             var ini = Store.Config[ShortName.ToUpper()];
 
-            BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, ini["BgMaskPadding"]);
+            StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
