@@ -391,8 +391,14 @@ namespace Quaver.Shared.Config
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
-            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!\\osu!.db", data);
-            OsuSongsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"OsuSongsDirectory", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\osu!\\Songs", data);
+
+            // in future, we could read this from the registry like Sublimity suggested
+            // HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall
+            var DefaultOsuPathWindows = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\osu!\";
+            
+            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", DefaultOsuPathWindows + "osu!.db", data);
+            OsuSongsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"OsuSongsDirectory", "", data);
+
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);

@@ -209,10 +209,54 @@ namespace Quaver.Shared.Database.Maps
                 return (new List<Map>());
             }
 
-            var db = OsuDb.Read(dbpath);
+            var OsuBeatmapDirectory = ConfigManager.OsuSongsDirectory.Value;
+            
+            if (string.IsNullOrEmpty(OsuBeatmapDirectory))
+            {
+                var OsuDbPathDirectory = Path.GetDirectoryName(dbpath);
+                var OsuUserCfgPath = Path.Combine(OsuDbPathDirectory, "osu!.user.cfg");
+                if (File.Exists(OsuUserCfgPath))
+                {
+                    foreach (var s in File.ReadLines(OsuUserCfgPath))
+                    {
+                        if (s.StartsWith("BeatmapDirectory = "))
+                        {
+                            var BeatmapDirectory = s.Substring("BeatmapDirectory = ".Length);
+                            Logger.Debug($"Read BeatmapDirectory from osu!.user.cfg as '{BeatmapDirectory}'", LogType.Runtime);
+                            if (!Path.IsPathFullyQualified(BeatmapDirectory))
+                            {
+                                BeatmapDirectory = Path.Combine(OsuDbPathDirectory, BeatmapDirectory);
+                            }
+                            if (Directory.Exists(BeatmapDirectory))
+                            {
+                                OsuBeatmapDirectory = BeatmapDirectory;
+                                Logger.Debug($"OsuBeatmapDirectory '{OsuBeatmapDirectory}'", LogType.Runtime);
+                            }
+                            else
+                            {
+                                Logger.Debug($"BeatmapDirectory '{BeatmapDirectory}' does not exist", LogType.Runtime);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Logger.Debug("Osu installation has no user config", LogType.Runtime);
+                }
+            }
 
+            if(string.IsNullOrEmpty(OsuBeatmapDirectory))
+            {
+                // best to do this, the game bugs out hard if you load up songs with no corresponding maps
+                Logger.Warning("Osu beatmap directory still not detected after searching, please set it manually in your quaver.cfg", LogType.Runtime);
+                return (new List<Map>());
+            }
+
+            var db = OsuDb.Read(dbpath);
+            
             // you need the trailing \ or something in map manager shits the bed and you can't play
-            MapManager.OsuSongsFolder = ConfigManager.OsuSongsDirectory.Value.EndsWith("\\") ? ConfigManager.OsuSongsDirectory.Value : ConfigManager.OsuSongsDirectory.Value + "\\";
+            MapManager.OsuSongsFolder = OsuBeatmapDirectory.EndsWith(@"\") ? OsuBeatmapDirectory : OsuBeatmapDirectory + @"\";
 
             Logger.Debug($"Osu songs folder {MapManager.OsuSongsFolder}", LogType.Runtime);
 
