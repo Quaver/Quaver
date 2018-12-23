@@ -97,6 +97,14 @@ namespace Quaver.Shared.Skinning
 
         internal int JudgementBurstPosY { get; private set; }
 
+        internal int HitErrorPosX { get; private set; }
+
+        internal int HitErrorPosY { get; private set; }
+
+        internal int HitErrorHeight { get; private set; }
+
+        internal int HitErrorChevronSize { get; private set; }
+
         internal HealthBarType HealthBarType { get; private set; }
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
@@ -293,6 +301,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -329,6 +341,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -380,6 +396,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -420,6 +440,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -469,6 +493,10 @@ namespace Quaver.Shared.Skinning
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
+            HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
+            HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
+            HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
         }
 
         /// <summary>
