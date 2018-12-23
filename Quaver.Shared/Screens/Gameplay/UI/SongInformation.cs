@@ -129,19 +129,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             // Get a formatted string of the activated mods.
-            // TODO: remove try/catch when mod identifiers get fixed
-            var modsString = "";
-            try
-            {
-                modsString = "Mods: " + ( ModManager.CurrentModifiersList.Count > 0
-                                 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}"
-                                 : "None" );
-            }
-            catch
-            {
-                modsString = "error.";
-            }
-
+            var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(ModManager.Mods)}" : "None");
             Mods = new SpriteText(Fonts.SourceSansProSemiBold, modsString, 13)
             {
                 Parent = this,
