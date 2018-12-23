@@ -101,18 +101,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = info.StartTime - timingPoint.StartTime + 2;
+            var pos = info.StartTime - timingPoint.StartTime + 0;
             var beatlength = 60000 / timingPoint.Bpm;
 
-            // subtract pos until it's less than beat length. multiple loops for efficiency
-            while (pos >= beatlength * ( 1 << 16 )) pos -= beatlength * ( 1 << 16 );
-            while (pos >= beatlength * ( 1 << 12 )) pos -= beatlength * ( 1 << 12 );
-            while (pos >= beatlength * ( 1 << 8 )) pos -= beatlength * ( 1 << 8 );
-            while (pos >= beatlength * ( 1 << 4 )) pos -= beatlength * ( 1 << 4 );
-            while (pos >= beatlength) pos -= beatlength;
-
             // Calculate Note's snap index
-            var index = (int) ( Math.Floor(48 * pos / beatlength) );
+            var index = (int)(48 * pos / beatlength) + 1;
 
             // Return Color of snap index
             for (var i = 0; i < 8; i++)
