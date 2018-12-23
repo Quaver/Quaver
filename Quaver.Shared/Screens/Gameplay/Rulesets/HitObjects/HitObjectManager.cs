@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             var beatlength = 60000 / timingPoint.Bpm;
 
             // Calculate Note's snap index
-            var index = (int)(48 * pos / beatlength) + 1;
+            var index = Math.Round(48 * pos / beatlength, MidpointRounding.AwayFromZero);
 
             // Return Color of snap index
             for (var i = 0; i < 8; i++)
