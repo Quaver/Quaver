@@ -405,7 +405,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     const string log = "Cannot pause if GameTime is null";
                     Logger.Error(log, LogType.Runtime);
-
                     throw new InvalidOperationException(log);
                 }
 
@@ -442,7 +441,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     AudioEngine.Track.Pause();
                 }
-                catch (AudioEngineException)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -544,7 +543,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (HasStarted)
                         AudioEngine.Track.Play();
                 }
-                catch (AudioEngineException)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -566,7 +565,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 AudioEngine.Track.Pause();
             }
             // No need to handle this exception.
-            catch (AudioEngineException)
+            catch (Exception)
             {
                 // ignored
             }
@@ -648,17 +647,17 @@ namespace Quaver.Shared.Screens.Gameplay
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
-                AudioEngine.Track.Seek(skipTime);
+                AudioEngine.Track?.Seek(skipTime);
+                Timing.Time = AudioEngine.Track.Time;
             }
-            catch (AudioEngineException e)
+            catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
                 Logger.Warning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+                Timing.Time = skipTime;
             }
             finally
             {
-                Timing.Time = AudioEngine.Track.Time;
-
                 if (InReplayMode)
                 {
                     var inputManager = (KeysInputManager)Ruleset.InputManager;
