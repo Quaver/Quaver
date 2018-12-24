@@ -389,11 +389,11 @@ namespace Quaver.Shared.Screens.Select
             }, true, false, true),
 
             // Select a random map
-            new NavbarItem("Random", false, (o, e) =>
-            {
-                var screen = Screen as SelectScreen;
-                screen.SelectRandomMap();
-            }, true, false, true)
+            // new NavbarItem("Random", false, (o, e) =>
+            // {
+            //     var screen = Screen as SelectScreen;
+            //     screen.SelectRandomMap();
+            // }, true, false, true)
         }, new List<NavbarItem>()
         {
             // Play
