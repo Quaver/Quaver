@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -17,6 +17,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
     public class SongTimeProgressBar : ProgressBar
     {
         /// <summary>
+        ///     Reference to the parent gameplay screen.
+        /// </summary>
+        private GameplayScreen Screen { get; }
+
+        /// <summary>
         ///     The display for the current time.
         /// </summary>
         public NumberDisplay CurrentTime { get; }
@@ -29,15 +34,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="size"></param>
         /// <param name="minValue"></param>
         /// <param name="maxValue"></param>
         /// <param name="defaultValue"></param>
         /// <param name="inactiveColor"></param>
         /// <param name="activeColor"></param>
-        public SongTimeProgressBar(Vector2 size, double minValue, double maxValue, double defaultValue, Color inactiveColor, Color activeColor)
+        public SongTimeProgressBar(GameplayScreen screen, Vector2 size, double minValue, double maxValue, double defaultValue, Color inactiveColor, Color activeColor)
             : base(size, minValue, maxValue, defaultValue, inactiveColor, activeColor)
         {
+            Screen = screen;
+
             CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(0.6f, 0.6f))
             {
                 Parent = this,
@@ -62,7 +70,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Bindable.Value = AudioEngine.Track.Time;
+            Bindable.Value = Screen.Timing.Time;
 
             // Set the time of the current time
             if (Bindable.Value > 0)
