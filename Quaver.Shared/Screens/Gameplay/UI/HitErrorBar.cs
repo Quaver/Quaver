@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -78,6 +78,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             }
 
             // Create the hit chevron.
+            var chevronSize = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitErrorChevronSize;
+
             LastHitCheveron = new Sprite()
             {
                 Parent = this,
@@ -85,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 1,
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_caret_down),
                 Y = -Height - 3,
-                Size = new ScalableVector2(8, 8)
+                Size = new ScalableVector2(chevronSize, chevronSize)
             };
         }
 

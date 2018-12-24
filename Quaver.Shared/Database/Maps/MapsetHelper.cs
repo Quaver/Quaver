@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -73,7 +74,7 @@ namespace Quaver.Shared.Database.Maps
         internal static List<Mapset> OrderMapsetsByArtist(IEnumerable<Mapset> mapsets)
         {
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            return mapsets.OrderBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+            return mapsets.OrderBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps[0].Title).ToList();
+        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders mapsets by creator.
@@ -90,7 +91,7 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> OrderMapsetsByCreator(IEnumerable<Mapset> mapsets)
         {
-            return mapsets.OrderBy(x => x.Maps[0].Creator).ThenBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+            return mapsets.OrderBy(x => x.Maps.First().Creator).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -109,10 +110,19 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByTitle(mapsets);
                 case OrderMapsetsBy.Creator:
                     return OrderMapsetsByCreator(mapsets);
+                case OrderMapsetsBy.DateAdded:
+                    return OrderMapsetsByDateAdded(mapsets);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+        /// <summary>
+        ///     Orders the map's mapsets by date added
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets)
+            => mapsets.OrderByDescending(x => x.Maps.First().DateAdded).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders the map's mapsets by difficulty.
@@ -153,7 +163,8 @@ namespace Quaver.Shared.Database.Maps
                 "bpm",
                 "diff",
                 "length",
-                "keys"
+                "keys",
+                "status"
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -169,10 +180,10 @@ namespace Quaver.Shared.Database.Maps
                 // Get the search option alone.
                 var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase))
                     .Split(' ').Last();
-                float.TryParse(
-                    term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
-                        .First(), out var val);
 
+                var val = term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
+                         .First();
+             
                 if (options.Contains(searchOption))
                     foundSearchQueries.Add(new SearchQuery
                     {
@@ -191,30 +202,71 @@ namespace Quaver.Shared.Database.Maps
 
                     foreach (var searchQuery in foundSearchQueries)
                     {
-
                         switch (searchQuery.Option)
                         {
                             case "bpm":
-                                if (!CompareValues(map.Bpm, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valBpm))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.Bpm, valBpm, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "diff":
-                                if (!CompareValues(map.Difficulty10X, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valDiff))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.Difficulty10X, valDiff, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "length":
-                                if (!CompareValues(map.SongLength, searchQuery.Value, searchQuery.Operator))
+                                if (!float.TryParse(searchQuery.Value, out var valLength))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.SongLength, valLength, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case "keys":
                                 switch (map.Mode)
                                 {
                                     case GameMode.Keys4:
-                                        if (!CompareValues(4, searchQuery.Value, searchQuery.Operator))
+                                        if (!float.TryParse(searchQuery.Value, out var val4k))
+                                            exitLoop = true;
+                                    
+                                        if (!CompareValues(4, val4k, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case GameMode.Keys7:
-                                        if (!CompareValues(7, searchQuery.Value, searchQuery.Operator))
+                                        if (!float.TryParse(searchQuery.Value, out var val7k))
+                                            exitLoop = true;
+
+                                        if (!CompareValues(7, val7k, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+                                break;
+                            case "status":
+                                if (!(searchQuery.Operator.Equals(operators[2]) ||
+                                    searchQuery.Operator.Equals(operators[6])))
+                                    exitLoop = true;
+
+                                switch (map.RankedStatus)
+                                {
+                                    case RankedStatus.DanCourse:
+                                        if (!CompareValues("dan", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.NotSubmitted:
+                                        if (!CompareValues("notsubmitted", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.Ranked:
+                                        if (!CompareValues("ranked", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case RankedStatus.Unranked:
+                                        if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     default:
@@ -304,7 +356,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The value the user is searching
         /// </summary>
-        public float Value;
+        public string Value;
 
         /// <summary>
         ///     The operator the user gave

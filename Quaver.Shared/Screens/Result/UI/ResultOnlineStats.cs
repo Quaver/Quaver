@@ -196,7 +196,7 @@ namespace Quaver.Shared.Screens.Result.UI
             {
                 new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "MAP RANK:", score.Score.Rank == -1 ? "N/A" : $"#{score.Score.Rank:n0}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "GLOBAL RANK:", $"#{score.Stats.NewGlobalRank:n0}"),
-                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "COUNTRY RANK:", $"#{score.Stats.NewGlobalRank:n0}"),
+                new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "COUNTRY RANK:", $"#{score.Stats.NewCountryRank:n0}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "OVL. RATING:",
                     $"{score.Stats.OverallPerformanceRating:0.00}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Horizontal, "OVL. ACCURACY:",

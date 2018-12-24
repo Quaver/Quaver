@@ -11,6 +11,7 @@ namespace Quaver.Shared.Config
     {
         Artist,
         Title,
-        Creator
+        Creator,
+        DateAdded
     }
 }
