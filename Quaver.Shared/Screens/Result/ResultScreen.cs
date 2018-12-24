@@ -496,7 +496,11 @@ namespace Quaver.Shared.Screens.Result
         /// <summary>
         ///     Exits the screen to retry the map
         /// </summary>
-        public void ExitToRetryMap() => Exit(() => new MapLoadingScreen(new List<Score>()));
+        public void ExitToRetryMap()
+        {
+            Exit(() => new MapLoadingScreen(new List<Score>()));
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+        }
 
         /// <summary>
         ///     Exits to watch a replay online.

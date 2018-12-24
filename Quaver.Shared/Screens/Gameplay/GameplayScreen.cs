@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             SetRuleset();
             SetRichPresence();
-
+            
             AudioTrack.AllowPlayback = true;
             View = new GameplayScreenView(this);
         }
