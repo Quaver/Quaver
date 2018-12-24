@@ -28,7 +28,6 @@ using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Bindables;
-using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
@@ -72,7 +71,8 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreen()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0 || MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
+            if (MapsetImporter.Queue.Count > 0 ||
+                MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
                 QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
             {
                 Exit(() => new ImportingScreen());
@@ -88,7 +88,8 @@ namespace Quaver.Shared.Screens.Select
 
             AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
 
-            Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.", LogType.Runtime);
+            Logger.Debug($"There are currently: {AvailableMapsets.Count} available mapsets to play in select.",
+                LogType.Runtime);
 
             DiscordHelper.Presence.Details = "Selecting a song";
             DiscordHelper.Presence.State = "In the menus";
@@ -153,6 +154,8 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
             HandleKeyPressF1();
+            // HandleKeyPressF2(); // disabled for now, till the container issue is resolved.
+            HandleMousePressRight();
         }
 
         /// <summary>
@@ -228,19 +231,23 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                return;
+
+            switch (view.ActiveContainer)
             {
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case SelectContainerStatus.Mapsets:
+                    view?.MapsetScrollContainer.SelectNextMapset(Direction.Forward);
+                    break;
+                case SelectContainerStatus.Difficulty:
+                    view.DifficultyScrollContainer.SelectNextDifficulty(Direction.Forward);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -251,6 +258,10 @@ namespace Quaver.Shared.Screens.Select
         private void HandleKeyPressLeft()
         {
             var view = View as SelectScreenView;
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 return;
@@ -273,7 +284,8 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private static void HandleKeyPressControlRateChange()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
             // Increase rate.
@@ -288,7 +300,8 @@ namespace Quaver.Shared.Screens.Select
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
             {
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-                Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}", LogType.Runtime);
+                Logger.Debug($"Audio Rate Pitching is {(ConfigManager.Pitched.Value ? "Enabled" : "Disabled")}",
+                    LogType.Runtime);
             }
         }
 
@@ -315,6 +328,36 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             DialogManager.Show(new ModifiersDialog());
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the F2 key
+        /// </summary>
+        private void HandleKeyPressF2()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                return;
+
+            SelectRandomMap();
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the right mouse button
+        /// </summary>
+        private void HandleMousePressRight()
+        {
+            var view = View as SelectScreenView;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Difficulty:
+                    if (MouseManager.IsUniqueClick(MouseButton.Right))
+                    {
+                        view.SwitchToContainer(SelectContainerStatus.Mapsets);
+                    }
+
+                    break;
+            }
         }
 
         /// <summary>
@@ -393,6 +436,50 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             Exit(() => new ImportingScreen());
+        }
+
+        /// <summary>
+        ///     Used to select a random mapset (or map if inside a mapset).
+        /// </summary>
+        public void SelectRandomMap()
+        {
+            var view = View as SelectScreenView;
+            var rnd = new Random(DateTime.Now.Millisecond);
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+
+            switch (view.ActiveContainer)
+            {
+                case SelectContainerStatus.Mapsets:
+                    var randomMapsetIndex = selectedMapsetIndex;
+
+                    if (AvailableMapsets.Count <= 1)
+                        return;
+
+                    // To avoid selecting the mapset already selected.
+                    do
+                    {
+                        randomMapsetIndex = rnd.Next(AvailableMapsets.Count);
+                    } while (randomMapsetIndex == selectedMapsetIndex);
+
+                    view.MapsetScrollContainer.SelectMapset(randomMapsetIndex);
+                    break;
+
+                case SelectContainerStatus.Difficulty:
+                    var mapset = AvailableMapsets[selectedMapsetIndex];
+                    var randomMapIndex = selectedDifficultyIndex;
+
+                    if (mapset.Maps.Count <= 1)
+                        return;
+
+                    // To avoid selecting the mapset already selected.
+                    do
+                        randomMapIndex = new Random(DateTime.Now.Millisecond).Next(mapset.Maps.Count);
+                    while (randomMapIndex == selectedDifficultyIndex);
+
+                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, mapset.Maps[randomMapIndex], true);
+                    break;
+            }
         }
     }
 }

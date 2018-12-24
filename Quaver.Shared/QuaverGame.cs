@@ -29,6 +29,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -205,34 +206,7 @@ namespace Quaver.Shared
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
-            // Handles FPS limiter changes
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F7))
-            {
-                var index = (int) ConfigManager.FpsLimiterType.Value;
-
-                if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
-                    ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
-                else
-                    ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
-
-                switch (ConfigManager.FpsLimiterType.Value)
-                {
-                    case FpsLimitType.Unlimited:
-                        NotificationManager.Show(NotificationLevel.Info, "FPS is now unlimited.");
-                        break;
-                    case FpsLimitType.Limited:
-                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
-                        break;
-                    case FpsLimitType.Vsync:
-                        NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
-                        break;
-                    case FpsLimitType.Custom:
-                        NotificationManager.Show(NotificationLevel.Info, $"FPS is now custom limited to: {ConfigManager.CustomFpsLimit.Value}");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            HandleGlobalInput(gameTime);
 
             QuaverScreenManager.Update(gameTime);
             Transitioner.Update(gameTime);
@@ -343,7 +317,7 @@ namespace Quaver.Shared
                     Tint = Color.LimeGreen
                 },
                 X = -10,
-                Y = -10,
+                Y = -25,
                 Alpha = 0
             };
 
@@ -386,6 +360,78 @@ namespace Quaver.Shared
             }
 
             Graphics.ApplyChanges();
+        }
+        
+        /// <summary>
+        ///     Handles input's that can be executed everywhere.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandleGlobalInput(GameTime gameTime)
+        {
+            HandleKeyPressF7();
+            HandleKeyPressCtrlO();
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the F7 button
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void HandleKeyPressF7()
+        {
+            // Handles FPS limiter changes
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
+                return;
+            
+            var index = (int) ConfigManager.FpsLimiterType.Value;
+
+            if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
+                ConfigManager.FpsLimiterType.Value = (FpsLimitType) index + 1;
+            else
+                ConfigManager.FpsLimiterType.Value = FpsLimitType.Unlimited;
+
+            switch (ConfigManager.FpsLimiterType.Value)
+            {
+                case FpsLimitType.Unlimited:
+                    NotificationManager.Show(NotificationLevel.Info, "FPS is now unlimited.");
+                    break;
+                case FpsLimitType.Limited:
+                    NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
+                    break;
+                case FpsLimitType.Vsync:
+                    NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                    break;
+                case FpsLimitType.Custom:
+                    NotificationManager.Show(NotificationLevel.Info,
+                        $"FPS is now custom limited to: {ConfigManager.CustomFpsLimit.Value}");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Handles when the user holds either Control (CTRL) button and presses O
+        /// </summary>
+        private void HandleKeyPressCtrlO()
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
+                return;
+
+            if (DialogManager.Dialogs.Count > 0)
+                return;
+            
+            switch (CurrentScreen.Type)
+            {
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Edit:
+                    DialogManager.Show(new SettingsDialog());
+                    break;
+            }
         }
     }
 }

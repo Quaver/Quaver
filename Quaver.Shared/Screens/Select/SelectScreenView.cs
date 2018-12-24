@@ -170,7 +170,8 @@ namespace Quaver.Shared.Screens.Select
         {
             new NavbarItemUser(this),
             new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
-        }) { Parent = Container };
+        })
+        { Parent = Container };
 
         /// <summary>
         ///     Called when the home button is clicked in the navbar.
@@ -202,7 +203,7 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Creates the audio visaulizer container for the screen
         /// </summary>12
-        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
+        private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int)WindowManager.Width, 400, 150, 5)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft
@@ -385,7 +386,14 @@ namespace Quaver.Shared.Screens.Select
                     MapManager.Selected.Value.Mapset.ExportToZip();
                     NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
                 });
-            }, true, false, true)
+            }, true, false, true),
+
+            // Select a random map
+            // new NavbarItem("Random", false, (o, e) =>
+            // {
+            //     var screen = Screen as SelectScreen;
+            //     screen.SelectRandomMap();
+            // }, true, false, true)
         }, new List<NavbarItem>()
         {
             // Play

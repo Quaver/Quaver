@@ -84,9 +84,6 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Chill:
                     gameplayModifier = new ModChill();
                     break;
-                case ModIdentifier.NoPause:
-                    gameplayModifier = new ModNoPause();
-                    break;
                 case ModIdentifier.Autoplay:
                     gameplayModifier = new ModAutoplay();
                     break;

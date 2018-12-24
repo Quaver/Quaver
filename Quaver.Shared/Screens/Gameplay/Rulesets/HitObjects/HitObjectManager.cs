@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -101,26 +101,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         public static int GetBeatSnap(HitObjectInfo info, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = info.StartTime - timingPoint.StartTime + 2;
+            var pos = info.StartTime - timingPoint.StartTime + 0;
             var beatlength = 60000 / timingPoint.Bpm;
 
-            // subtract pos until it's less than beat length. multiple loops for efficiency
-            while (pos >= beatlength * ( 1 << 16 )) pos -= beatlength * ( 1 << 16 );
-            while (pos >= beatlength * ( 1 << 12 )) pos -= beatlength * ( 1 << 12 );
-            while (pos >= beatlength * ( 1 << 8 )) pos -= beatlength * ( 1 << 8 );
-            while (pos >= beatlength * ( 1 << 4 )) pos -= beatlength * ( 1 << 4 );
-            while (pos >= beatlength) pos -= beatlength;
-
             // Calculate Note's snap index
-            var index = (int) ( Math.Floor(48 * pos / beatlength) );
+            var index = Math.Round(48 * pos / beatlength, MidpointRounding.AwayFromZero);
 
             // Return Color of snap index
             for (var i = 0; i < 8; i++)
             {
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (index % BeatSnaps[i] == 0)
-                {
                     return i;
-                }
             }
 
             // If it's not snapped to 1/16 or less, return 1/48 snap color

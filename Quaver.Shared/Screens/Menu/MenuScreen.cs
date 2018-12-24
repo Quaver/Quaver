@@ -14,6 +14,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Dialogs;
+using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -98,7 +99,7 @@ namespace Quaver.Shared.Screens.Menu
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 DialogManager.Show(new QuitDialog());
         }
-
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>

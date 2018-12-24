@@ -43,7 +43,7 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
-        internal int BgMaskPadding { get; private set; }
+        internal int StageReceptorPadding { get; private set; }
 
         internal int HitPosOffsetY { get; private set; }
 
@@ -57,7 +57,7 @@ namespace Quaver.Shared.Skinning
 
         internal int ReceptorPosOffsetY { get; private set; }
 
-        internal byte ColumnAlignment { get; private set; }
+        internal int ColumnAlignment { get; private set; }
 
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
@@ -96,6 +96,14 @@ namespace Quaver.Shared.Skinning
         internal int ComboPosY { get; private set; }
 
         internal int JudgementBurstPosY { get; private set; }
+
+        internal int HitErrorPosX { get; private set; }
+
+        internal int HitErrorPosY { get; private set; }
+
+        internal int HitErrorHeight { get; private set; }
+
+        internal int HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
 
@@ -259,14 +267,14 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    BgMaskPadding = 0;
+                    StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
@@ -293,16 +301,20 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    BgMaskPadding = 10;
+                    StageReceptorPadding = 10;
                     HitPosOffsetY = 110;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
@@ -329,6 +341,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -343,14 +359,14 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    BgMaskPadding = 0;
+                    StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
@@ -380,16 +396,20 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    BgMaskPadding = 10;
+                    StageReceptorPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 50;
+                    ColumnAlignment = 0;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
@@ -420,6 +440,10 @@ namespace Quaver.Shared.Skinning
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
+                    HitErrorPosX = 0;
+                    HitErrorPosY = 55;
+                    HitErrorHeight = 10;
+                    HitErrorChevronSize = 8;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -439,14 +463,14 @@ namespace Quaver.Shared.Skinning
 
             var ini = Store.Config[ShortName.ToUpper()];
 
-            BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, ini["BgMaskPadding"]);
+            StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
             ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
-            ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, ini["ColumnAlignment"]);
+            ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
             JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);
@@ -469,6 +493,10 @@ namespace Quaver.Shared.Skinning
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
+            HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
+            HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
+            HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
         }
 
         /// <summary>
@@ -478,8 +506,8 @@ namespace Quaver.Shared.Skinning
         {
             #region LIGHTING
             ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
-            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", true, 0, 0);
-            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", true, 0, 0);
+            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", false, 0, 0);
+            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", false, 0, 0);
             #endregion
 
             #region STAGE

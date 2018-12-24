@@ -12,9 +12,11 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -47,6 +49,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///    So we can calculate score on the fly.
         /// </summary>
         internal ScoreProcessor Processor { get; }
+
+        /// <summary>
+        ///     Handles calculating rating for this individual user.
+        /// </summary>
+        internal RatingProcessorKeys RatingProcessor { get; }
 
         /// <summary>
         ///    The user's target Y position based on their current rank.
@@ -108,6 +115,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <param name="username"></param>
         /// <param name="judgements"></param>
         /// <param name="avatar"></param>
+        /// <param name="mods"></param>
         /// <param name="score"></param>
         /// <exception cref="T:System.ComponentModel.InvalidEnumArgumentException"></exception>
         internal ScoreboardUser(GameplayScreen screen, ScoreboardUserType type, string username, List<Judgement> judgements, Texture2D avatar, ModIdentifier mods, Score score = null)
@@ -116,6 +124,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             LocalScore = score;
             Judgements = judgements;
             UsernameRaw = username;
+            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(mods));
             Type = type;
             Size = new ScalableVector2(260, 50);
 
@@ -234,7 +243,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();
@@ -250,7 +259,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             SetTintBasedOnHealth();
 
-            Score.Text = $"{Scoreboard.RatingCalculator.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+            Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             CurrentJudgement++;

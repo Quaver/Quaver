@@ -59,6 +59,11 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         private SelectableBorderedTextButton ButtonOrderByCreator { get; set; }
 
         /// <summary>
+        ///     The button to order mapsets by the date added.
+        /// </summary>
+        private SelectableBorderedTextButton ButtonOrderByDateAdded { get; set; }
+
+        /// <summary>
         ///     The amount of mapsets that are found.
         /// </summary>
         private SpriteText TextMapsetsFound { get; set; }
@@ -80,6 +85,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             CreateOrderByArtistButton();
             CreateOrderByTitleButton();
             CreateOrderByCreatorButton();
+            CreateOrderByDateAddedButton();
             CreateTextMapsetsFound();
 
             var leftLine = new Sprite()
@@ -152,11 +158,14 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 AllowSubmission = false,
                 InputText =
                 {
-                    Tint = Color.White
+                    Tint = Color.White,
+                    Text = SelectScreen.PreviousSearchTerm
                 },
                 StoppedTypingActionCalltime = 300,
                 OnStoppedTyping = (text) =>
                 {
+                    SelectScreen.PreviousSearchTerm = text;
+
                     var selectScreen = View.Screen as SelectScreen;
 
                     lock (selectScreen.AvailableMapsets)
@@ -201,7 +210,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Artist)
             {
                 Parent = OrderBy,
-                X = OrderBy.Width + 10,
+                X = OrderBy.Width + 3,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -243,7 +252,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Title)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width,
+                X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width - 5,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -280,11 +289,11 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateOrderByCreatorButton()
         {
-            ButtonOrderByCreator= new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#75e475"),
+            ButtonOrderByCreator = new SelectableBorderedTextButton("Creator", ColorHelper.HexToColor("#75e475"),
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Creator)
             {
                 Parent = OrderBy,
-                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width,
+                X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width - 5,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -314,6 +323,47 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             };
 
             ButtonOrderByCreator.Size = new ScalableVector2(ButtonOrderByCreator.Text.Width + 20, ButtonOrderByCreator.Text.Height + 8);
+        }
+
+        /// <summary>
+        ///     Creates the button to order mapsets by date added.
+        /// </summary>
+        private void CreateOrderByDateAddedButton()
+        {
+            ButtonOrderByDateAdded = new SelectableBorderedTextButton("Date Added", ColorHelper.HexToColor("#75e475"),
+                ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
+            {
+                Parent = OrderBy,
+                X = ButtonOrderByCreator.X + ButtonOrderByCreator.Width - 5,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13,
+                    Alignment = Alignment.TopLeft
+                },
+                Border =
+                {
+                    Visible = false
+                }
+            };
+
+            ButtonOrderByDateAdded.Clicked += (sender, args) =>
+            {
+                if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.DateAdded)
+                    return;
+
+                ConfigManager.SelectOrderMapsetsBy.Value = OrderMapsetsBy.DateAdded;
+
+                var selectScreen = View.Screen as SelectScreen;
+
+                lock (selectScreen.AvailableMapsets)
+                {
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(selectScreen.AvailableMapsets);
+                    View.MapsetScrollContainer.InitializeWithNewSets();
+                }
+            };
+
+            ButtonOrderByDateAdded.Size = new ScalableVector2(ButtonOrderByDateAdded.Text.Width + 20, ButtonOrderByDateAdded.Text.Height + 8);
         }
 
         /// <summary>
@@ -364,6 +414,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             ButtonOrderByArtist.Selected = e.Value == OrderMapsetsBy.Artist;
             ButtonOrderByTitle.Selected = e.Value == OrderMapsetsBy.Title;
             ButtonOrderByCreator.Selected = e.Value == OrderMapsetsBy.Creator;
+            ButtonOrderByDateAdded.Selected = e.Value == OrderMapsetsBy.DateAdded;
         }
     }
 }
