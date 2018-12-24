@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
             HandleKeyPressF1();
-            HandleKeyPressF2();
+            // HandleKeyPressF2(); // disabled for now, till the container issue is resolved.
             HandleMousePressRight();
         }
 
