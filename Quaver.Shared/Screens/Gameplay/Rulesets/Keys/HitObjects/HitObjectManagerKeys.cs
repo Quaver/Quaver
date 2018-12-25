@@ -189,24 +189,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
         }
 
-        /// <summary>
-        ///     The offset from the edge of the screen of the hit position.
-        /// </summary>
-        public float HitPositionOffset
-        {
-            get
-            {
-                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
-                var skin = SkinManager.Skin.Keys[Ruleset.Mode];
-
-                if (GameplayRulesetKeys.IsDownscroll)
-                    return playfield.ReceptorPositionY + skin.HitPosOffsetY;
-
-                // Up Scroll
-                return playfield.ReceptorPositionY - skin.HitPosOffsetY;
-            }
-        }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -215,7 +197,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
             Ruleset = ruleset;
-            GameplayHitObjectKeys.HitPositionOffset = HitPositionOffset;
 
             // Initialize SV
             UpdatePoolingPositions();
@@ -338,7 +319,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     playfield.Stage.ComboDisplay.MakeVisible();
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
-                    // If HitObject is an LN, kill it and count it as another miss because of the tail.
+                    // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
                     // - missing an LN counts as two misses
                     if (hitObject.Info.IsLongNote)
                     {
