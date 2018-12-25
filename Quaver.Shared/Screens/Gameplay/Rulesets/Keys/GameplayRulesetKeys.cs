@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                         }
                     case GameMode.Keys7:
                         {
-                            switch (ConfigManager.ScrollDirection4K.Value)
+                            switch (ConfigManager.ScrollDirection7K.Value)
                             {
                                 case ScrollDirection.Down:
                                     {
