@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The direction this hit object is traveling.
         /// </summary>
-        private ScrollDirection ScrollDirection { get; set; } = ScrollDirection.Down;
+        private ScrollDirection ScrollDirection { get; set; }
 
         /// <summary>
         ///     The actual HitObject sprite.
@@ -100,14 +100,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     The hold end sprite for long notes.
         /// </summary>
         private Sprite LongNoteEndSprite { get; set; }
-
-        /// <summary>
-        ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
-        /// </summary>
-        private SpriteEffects Effects => ScrollDirection.Equals(ScrollDirection.Up) &&
-                                                SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
-            ? SpriteEffects.FlipVertically
-            : SpriteEffects.None;
 
         /// <summary>
         ///     General Distance from the receptor. Calculated from hit body size and global offset
@@ -132,7 +124,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectManager = manager;
             Ruleset = ruleset;
             var lane = info.Lane - 1;
-            var playfield = ((GameplayPlayfieldKeys)ruleset.Playfield);
+            var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
 
             HitPositionOffset = playfield.HitPositionOffsets[lane];
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
@@ -149,6 +141,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[lane].X;
+            var flipNoteBody = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
+            var flipNoteEnd = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
+
             ScrollDirection = direction;
 
             // Create the base HitObjectSprite
@@ -156,7 +151,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = Effects
+                SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
             // Create Hold Body
@@ -176,7 +171,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(playfield.LaneSize, 0),
                 Parent = playfield.Stage.HitObjectContainer,
-                SpriteEffect = Effects
+                SpriteEffect = flipNoteEnd ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
             // Set long note end properties.
