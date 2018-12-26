@@ -6,6 +6,7 @@
 */
 
 using System.Collections.Generic;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
@@ -31,7 +32,15 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 new DrawableModifierOption(this, "ON", (o, e) =>
                 {
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                    {
                         ModManager.AddMod(Modifier.ModIdentifier);
+                        if (Modifier.Name == "No Slider Velocities"
+                            || Modifier.Name == "No Fail"
+                            || Modifier.Name == "Autoplay")
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
+                        }
+                    }
                 })
             };
 
