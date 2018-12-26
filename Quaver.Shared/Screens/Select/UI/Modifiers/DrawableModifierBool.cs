@@ -32,7 +32,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 new DrawableModifierOption(this, "ON", (o, e) =>
                 {
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
-                    {
                         ModManager.AddMod(Modifier.ModIdentifier);
                         switch (Modifier.Name)
                         {
@@ -42,7 +41,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                                 NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
                                 break;
                         }
-                    }
                 })
             };
 
