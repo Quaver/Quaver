@@ -308,7 +308,7 @@ namespace Quaver.Shared.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
-                    HitPosOffsetY = 110;
+                    HitPosOffsetY = 105;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
