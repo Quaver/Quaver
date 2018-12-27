@@ -13,15 +13,22 @@ using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
-    public class SettingsScrollDirection7K : SettingsHorizontalSelector
+    public class SettingsScrollDirection : SettingsHorizontalSelector
     {
-        /// <inheritdoc />
+        private Bindable<ScrollDirection> BoundScrollDirection { get; }
+
         /// <summary>
+        /// 
         /// </summary>
         /// <param name="dialog"></param>
-        public SettingsScrollDirection7K(SettingsDialog dialog)
-            : base(dialog, "Scroll Direction 7K", ScrollDirectionToStringList(), OnChange, (int)ConfigManager.ScrollDirection7K.Value)
-            => ConfigManager.ScrollDirection7K.ValueChanged += OnBindableValueChanged;
+        /// <param name="name"></param>
+        /// <param name="binded"></param>
+        public SettingsScrollDirection(SettingsDialog dialog, string name, Bindable<ScrollDirection> binded)
+            : base(dialog, name, ScrollDirectionToStringList(), (val, index) => binded.Value = (ScrollDirection)Enum.Parse(typeof(ScrollDirection), val), (int)binded.Value)
+        {
+            BoundScrollDirection = binded;
+            BoundScrollDirection.ValueChanged += OnBindableValueChanged;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -29,15 +36,9 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            ConfigManager.ScrollDirection7K.ValueChanged -= OnBindableValueChanged;
+            BoundScrollDirection.ValueChanged -= OnBindableValueChanged;
             base.Destroy();
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="val"></param>
-        /// <param name="index"></param>
-        private static void OnChange(string val, int index) => ConfigManager.ScrollDirection7K.Value = (ScrollDirection)Enum.Parse(typeof(ScrollDirection), val);
 
         /// <summary>
         /// </summary>
