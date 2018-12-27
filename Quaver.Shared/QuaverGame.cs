@@ -449,12 +449,10 @@ namespace Quaver.Shared
         private void HandleKeyPressCtrlShiftAltR()
         {
             // Check for modifier keys
-            if (!((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)) &&
-                  (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift)) &&
-                  (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))))
+            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
                 return;
             
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.R))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
                 return;
 
             // Handle skin reloading
