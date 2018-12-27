@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -70,7 +71,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             {
                 if (!Screen.IsPaused)
                     return;
-
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                 Screen.Pause();
             })
             {
@@ -89,7 +90,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             {
                 if (!Screen.IsPaused)
                     return;
-
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                 SkinManager.Skin.SoundRetry.CreateChannel().Play();
                 QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             })
@@ -161,7 +162,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         public void Deactivate()
         {
             ClearTransformations();
-
+            
             Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 400));
             Continue.MoveToX(-Continue.Width, Easing.OutExpo, 400);
             Retry.MoveToX(-Retry.Width, Easing.OutExpo, 400);

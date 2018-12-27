@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             SetRuleset();
             SetRichPresence();
-
+            
             AudioTrack.AllowPlayback = true;
             View = new GameplayScreenView(this);
         }
@@ -419,8 +419,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 1,
                     (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
 
-                // Make the user hold the pause key down before pausing.
-                if (TimePauseKeyHeld < TimeToHoldPause)
+                // Make the user hold the pause key down before pausing if tap to pause is disabled.
+                if (!ConfigManager.TapToPause.Value && TimePauseKeyHeld < TimeToHoldPause)
                     return;
 
                 IsPaused = true;
