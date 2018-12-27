@@ -126,11 +126,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 {
                     Parent = this,
                     Alignment = Alignment.MidLeft,
-                    Y = ModifierName.Height - 6,
-                    X = ModifierName.X - 50,
+                    Y = ModifierName.Height - 20,
+                    X = ModifierName.X - 43,
                     UsePreviousSpriteBatchOptions = true,
-                    Height = 100,
-                    Width = 100,
+                    Height = 30,
+                    Width = 30,
                     Image = UserInterface.NotificationWarning
                 };
             }
