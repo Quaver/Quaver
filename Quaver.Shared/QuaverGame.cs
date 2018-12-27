@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
@@ -92,6 +93,11 @@ namespace Quaver.Shared
                 return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}";
             }
         }
+        
+        /// <summary>
+        ///     The time that the user has requested their skin be reloaded.
+        /// </summary>
+        private long TimeSkinReloadRequested { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -210,6 +216,8 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             Transitioner.Update(gameTime);
+
+            HandleSkinReloading();
         }
 
         /// <inheritdoc />
@@ -370,6 +378,7 @@ namespace Quaver.Shared
         {
             HandleKeyPressF7();
             HandleKeyPressCtrlO();
+            HandleKeyPressCtrlShiftAltR();
         }
 
         /// <summary>
@@ -431,6 +440,52 @@ namespace Quaver.Shared
                 case QuaverScreenType.Edit:
                     DialogManager.Show(new SettingsDialog());
                     break;
+            }
+        }
+
+        /// <summary>
+        ///    Handles when the user holds Control, Shift and Alt, and presses R
+        /// </summary>
+        private void HandleKeyPressCtrlShiftAltR()
+        {
+            // Check for modifier keys
+            if (!((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)) &&
+                  (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift)) &&
+                  (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))))
+                return;
+            
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.R))
+                return;
+
+            // Handle skin reloading
+            switch (CurrentScreen.Type)
+            {
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Edit:
+                    Transitioner.FadeIn();
+
+                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Used to handle reloading the skin when applicable.
+        /// </summary>
+        private void HandleSkinReloading()
+        {
+            // Reload skin when applicable
+            if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
+            {
+                SkinManager.Load();
+                TimeSkinReloadRequested = 0;
+
+                ThreadScheduler.RunAfter(() =>
+                {
+                    Transitioner.FadeOut();
+                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
+                }, 200);
             }
         }
     }
