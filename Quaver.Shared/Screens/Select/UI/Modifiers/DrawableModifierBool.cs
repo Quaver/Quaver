@@ -33,13 +33,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 {
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
                         ModManager.AddMod(Modifier.ModIdentifier);
-                        switch (Modifier.Name)
+                        if (Modifier.Name == "No Slider Velocities"
+                            || Modifier.Name == "No Fail"
+                            || Modifier.Name == "Autoplay")
                         {
-                            case "No Slider Velocities":
-                            case "No Fail":
-                            case "Autoplay":
-                                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
-                                break;
+                            NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
                         }
                 })
             };
