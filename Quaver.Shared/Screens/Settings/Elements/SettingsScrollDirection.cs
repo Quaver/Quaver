@@ -24,11 +24,24 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <param name="name"></param>
         /// <param name="binded"></param>
         public SettingsScrollDirection(SettingsDialog dialog, string name, Bindable<ScrollDirection> binded)
-            : base(dialog, name, ScrollDirectionToStringList(), (val, index) => binded.Value = (ScrollDirection)Enum.Parse(typeof(ScrollDirection), val), (int)binded.Value)
+            : base(dialog, name, ScrollDirectionToStringList(), (val, index) => OnChange(val, binded), (int)binded.Value)
         {
             BoundScrollDirection = binded;
             BoundScrollDirection.ValueChanged += OnBindableValueChanged;
         }
+
+        /// <summary>
+        ///     Is called when the UI is changed.
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="index"></param>
+        /// <param name="binded"></param>
+        private static void OnChange(string val, Bindable<ScrollDirection> binded) => binded.Value = (ScrollDirection)Enum.Parse(typeof(ScrollDirection), val);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private static List<string> ScrollDirectionToStringList() => Enum.GetNames(typeof(ScrollDirection)).ToList();
 
         /// <inheritdoc />
         /// <summary>
@@ -39,11 +52,6 @@ namespace Quaver.Shared.Screens.Settings.Elements
             BoundScrollDirection.ValueChanged -= OnBindableValueChanged;
             base.Destroy();
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        private static List<string> ScrollDirectionToStringList() => Enum.GetNames(typeof(ScrollDirection)).ToList();
 
         /// <summary>
         /// </summary>
