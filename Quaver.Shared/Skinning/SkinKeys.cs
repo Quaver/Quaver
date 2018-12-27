@@ -308,7 +308,7 @@ namespace Quaver.Shared.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
-                    HitPosOffsetY = 110;
+                    HitPosOffsetY = 105;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
@@ -506,8 +506,8 @@ namespace Quaver.Shared.Skinning
         {
             #region LIGHTING
             ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
-            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", true, 0, 0);
-            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", true, 0, 0);
+            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", false, 0, 0);
+            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", false, 0, 0);
             #endregion
 
             #region STAGE

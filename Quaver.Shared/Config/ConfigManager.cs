@@ -235,6 +235,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
+        /// </summary>
+        internal static Bindable<bool> TapToPause { get; private set; }
+        
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -425,6 +430,7 @@ namespace Quaver.Shared.Config
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
+            TapToPause = ReadValue(@"TapToPause", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -496,6 +502,7 @@ namespace Quaver.Shared.Config
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
+                    TapToPause.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

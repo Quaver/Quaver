@@ -15,7 +15,9 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using SQLite;
+using Wobble;
 using Wobble.Logging;
 using GameMode = osu.Shared.GameMode;
 
@@ -199,58 +201,73 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         private static IEnumerable<Map> LoadOsuBeatmapDatabase()
         {
-            var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
-            MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
-
-            // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
-            var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7 )).ToList();
-            osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
-
-            var osuToQuaverMaps = new List<Map>();
-
-            foreach (var map in osuBeatmaps)
+            try
             {
-                var newMap = new Map
-                {
-                    Md5Checksum = map.BeatmapChecksum,
-                    Directory = map.FolderName,
-                    Path = map.BeatmapFileName,
-                    Artist = map.Artist,
-                    Title = map.Title,
-                    MapSetId = -1,
-                    MapId = -1,
-                    DifficultyName = map.Version,
-                    RankedStatus = RankedStatus.NotSubmitted,
-                    Creator = map.Creator,
-                    AudioPath = map.AudioFileName,
-                    AudioPreviewTime = map.AudioPreviewTime,
-                    Description = $"",
-                    Source = map.SongSource,
-                    Tags = map.SongTags,
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
-                    SongLength = map.TotalTime,
-                    Game = MapGame.Osu,
-                    BackgroundPath = "",
-                };
+                var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
+                MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
 
-                // Get the BPM of the osu! maps
-                if (map.TimingPoints != null)
+                // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
+                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7 )).ToList();
+                osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
+
+                var osuToQuaverMaps = new List<Map>();
+
+                foreach (var map in osuBeatmaps)
                 {
-                    try
+                    var newMap = new Map
                     {
-                        newMap.Bpm = Math.Round(60000 / map.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
-                    }
-                    catch (Exception e)
+                        Md5Checksum = map.BeatmapChecksum,
+                        Directory = map.FolderName,
+                        Path = map.BeatmapFileName,
+                        Artist = map.Artist,
+                        Title = map.Title,
+                        MapSetId = -1,
+                        MapId = -1,
+                        DifficultyName = map.Version,
+                        RankedStatus = RankedStatus.NotSubmitted,
+                        Creator = map.Creator,
+                        AudioPath = map.AudioFileName,
+                        AudioPreviewTime = map.AudioPreviewTime,
+                        Description = $"",
+                        Source = map.SongSource,
+                        Tags = map.SongTags,
+                        // ReSharper disable once CompareOfFloatsByEqualityOperator
+                        Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
+                        SongLength = map.TotalTime,
+                        Game = MapGame.Osu,
+                        BackgroundPath = "",
+                    };
+
+                    // Get the BPM of the osu! maps
+                    if (map.TimingPoints != null)
                     {
-                        newMap.Bpm = 0;
+                        try
+                        {
+                            newMap.Bpm = Math.Round(60000 / map.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
+                        }
+                        catch (Exception e)
+                        {
+                            newMap.Bpm = 0;
+                        }
                     }
+
+                    osuToQuaverMaps.Add(newMap);
                 }
 
-                osuToQuaverMaps.Add(newMap);
+                return osuToQuaverMaps;
             }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
 
-            return osuToQuaverMaps;
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen;
+
+                if (screen != null)
+                    NotificationManager.Show(NotificationLevel.Error, "Failed to load maps from other games. Is your db path correct in config?");
+
+                return new List<Map>();
+            }
         }
 
         /// <summary>

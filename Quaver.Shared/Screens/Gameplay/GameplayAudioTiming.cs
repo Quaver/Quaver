@@ -1,10 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Audio;
 using Wobble.Audio;
@@ -75,9 +76,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 try
                 {
                     Screen.HasStarted = true;
-                    AudioEngine.Track.Play();
+                    AudioEngine.Track?.Play();
                 }
-                catch (AudioEngineException)
+                catch (Exception e)
                 {
                     // ignored
                 }

@@ -26,6 +26,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
@@ -34,8 +35,6 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
-using Wobble.Discord;
-using Wobble.Discord.RPC;
 using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
@@ -229,7 +228,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             SetRuleset();
             SetRichPresence();
-
+            
             AudioTrack.AllowPlayback = true;
             View = new GameplayScreenView(this);
         }
@@ -362,6 +361,12 @@ namespace Quaver.Shared.Screens.Gameplay
             // The user wants to resume their play.
             else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
+                if (ChatManager.IsActive)
+                {
+                    ChatManager.ToggleChatOverlay();
+                    return;
+                }
+
                 Pause();
                 TimePauseKeyHeld = 0;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
@@ -405,7 +410,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     const string log = "Cannot pause if GameTime is null";
                     Logger.Error(log, LogType.Runtime);
-
                     throw new InvalidOperationException(log);
                 }
 
@@ -415,8 +419,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 1,
                     (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
 
-                // Make the user hold the pause key down before pausing.
-                if (TimePauseKeyHeld < TimeToHoldPause)
+                // Make the user hold the pause key down before pausing if tap to pause is disabled.
+                if (!ConfigManager.TapToPause.Value && TimePauseKeyHeld < TimeToHoldPause)
                     return;
 
                 IsPaused = true;
@@ -442,7 +446,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     AudioEngine.Track.Pause();
                 }
-                catch (AudioEngineException)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -544,7 +548,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (HasStarted)
                         AudioEngine.Track.Play();
                 }
-                catch (AudioEngineException)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -566,7 +570,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 AudioEngine.Track.Pause();
             }
             // No need to handle this exception.
-            catch (AudioEngineException)
+            catch (Exception)
             {
                 // ignored
             }
@@ -648,17 +652,17 @@ namespace Quaver.Shared.Screens.Gameplay
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
-                AudioEngine.Track.Seek(skipTime);
+                AudioEngine.Track?.Seek(skipTime);
+                Timing.Time = AudioEngine.Track.Time;
             }
-            catch (AudioEngineException e)
+            catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
                 Logger.Warning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+                Timing.Time = skipTime;
             }
             finally
             {
-                Timing.Time = AudioEngine.Track.Time;
-
                 if (InReplayMode)
                 {
                     var inputManager = (KeysInputManager)Ruleset.InputManager;
