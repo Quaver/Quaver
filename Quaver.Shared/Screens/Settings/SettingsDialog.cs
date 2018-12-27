@@ -335,6 +335,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
+                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
