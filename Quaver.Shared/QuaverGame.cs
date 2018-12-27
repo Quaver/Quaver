@@ -93,11 +93,6 @@ namespace Quaver.Shared
                 return $@"{assembly.Version.Major}.{assembly.Version.Minor}.{assembly.Version.Build}";
             }
         }
-        
-        /// <summary>
-        ///     The time that the user has requested their skin be reloaded.
-        /// </summary>
-        private long TimeSkinReloadRequested { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -217,7 +212,7 @@ namespace Quaver.Shared
             QuaverScreenManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
-            HandleSkinReloading();
+            SkinManager.HandleSkinReloading();
         }
 
         /// <inheritdoc />
@@ -463,27 +458,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Edit:
                     Transitioner.FadeIn();
 
-                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                    SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
-            }
-        }
-
-        /// <summary>
-        ///     Used to handle reloading the skin when applicable.
-        /// </summary>
-        private void HandleSkinReloading()
-        {
-            // Reload skin when applicable
-            if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
-            {
-                SkinManager.Load();
-                TimeSkinReloadRequested = 0;
-
-                ThreadScheduler.RunAfter(() =>
-                {
-                    Transitioner.FadeOut();
-                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
-                }, 200);
             }
         }
     }
