@@ -32,6 +32,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 new DrawableModifierOption(this, "ON", (o, e) =>
                 {
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                    {
                         ModManager.AddMod(Modifier.ModIdentifier);
                         if (Modifier.Name == "No Slider Velocities"
                             || Modifier.Name == "No Fail"
@@ -39,6 +40,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
                         }
+                    }
                 })
             };
 
