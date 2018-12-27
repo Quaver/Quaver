@@ -31,28 +31,9 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 new DrawableModifierOption(this, "ON", (o, e) =>
                 {
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
-                    {
                         ModManager.AddMod(Modifier.ModIdentifier);
-<<<<<<< Updated upstream
-                        if (Modifier.Name == "No Slider Velocities"
-                            || Modifier.Name == "No Fail"
-                            || Modifier.Name == "Autoplay")
-=======
-<<<<<<< HEAD
-                        switch (Modifier.Name)
->>>>>>> Stashed changes
-                        {
-                            NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
-                        }
-<<<<<<< Updated upstream
-                    }
-=======
-=======
->>>>>>> parent of e8f6ea79... Added warnings to unranked modifiers
->>>>>>> Stashed changes
                 })
             };
-
             return options;
         }
 
