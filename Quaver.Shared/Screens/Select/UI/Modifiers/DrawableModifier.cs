@@ -7,9 +7,12 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
@@ -58,7 +61,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
 
             CreateModifierName();
             CreateModifierDescription();
-
+            RankedStatusIcon();
             // ReSharper disable once VirtualMemberCallInConstructor
             Options = CreateModsDialogOptions();
 
@@ -114,6 +117,26 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             X = ModifierName.X,
             UsePreviousSpriteBatchOptions = true
         };
+
+        private void RankedStatusIcon()
+        {
+            if (!Modifier.Ranked)
+            {
+                Modifier.UnrankedSprite = new Sprite()
+                {
+                    Parent = this,
+                    Alignment = Alignment.MidLeft,
+                    Y = ModifierName.Height - 6,
+                    X = ModifierName.X - 50,
+                    UsePreviousSpriteBatchOptions = true,
+                    Height = 100,
+                    Width = 100,
+                    Image = UserInterface.NotificationWarning
+                };
+            }
+        }
+
+        
 
         /// <summary>
         ///    Creates the dialog options for the mods.

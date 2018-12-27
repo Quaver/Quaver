@@ -5,7 +5,9 @@
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+
 using Quaver.API.Enums;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -20,6 +22,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Take a break and watch something magical.";
 
         public bool Ranked { get; set; } = false;
+
+        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
