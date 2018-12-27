@@ -6,7 +6,6 @@
 */
 
 using System.Collections.Generic;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
@@ -34,13 +33,23 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
                     {
                         ModManager.AddMod(Modifier.ModIdentifier);
+<<<<<<< Updated upstream
                         if (Modifier.Name == "No Slider Velocities"
                             || Modifier.Name == "No Fail"
                             || Modifier.Name == "Autoplay")
+=======
+<<<<<<< HEAD
+                        switch (Modifier.Name)
+>>>>>>> Stashed changes
                         {
                             NotificationManager.Show(NotificationLevel.Warning, "WARNING! Using this mod combination will not submit your score for ranked!");
                         }
+<<<<<<< Updated upstream
                     }
+=======
+=======
+>>>>>>> parent of e8f6ea79... Added warnings to unranked modifiers
+>>>>>>> Stashed changes
                 })
             };
 
