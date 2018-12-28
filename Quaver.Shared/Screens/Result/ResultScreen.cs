@@ -488,7 +488,7 @@ namespace Quaver.Shared.Screens.Result
                 // Load up the .qua file again
                 var qua = MapManager.Selected.Value.LoadQua();
                 MapManager.Selected.Value.Qua = qua;
-
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                 return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
             });
         }
@@ -496,7 +496,11 @@ namespace Quaver.Shared.Screens.Result
         /// <summary>
         ///     Exits the screen to retry the map
         /// </summary>
-        public void ExitToRetryMap() => Exit(() => new MapLoadingScreen(new List<Score>()));
+        public void ExitToRetryMap()
+        {
+            Exit(() => new MapLoadingScreen(new List<Score>()));
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+        }
 
         /// <summary>
         ///     Exits to watch a replay online.
@@ -534,7 +538,7 @@ namespace Quaver.Shared.Screens.Result
                             lock (AudioEngine.Track)
                                 AudioEngine.Track.Fade(10, 300);
                         }
-
+                        GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                         return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
                     });
                 }
