@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -421,7 +423,22 @@ namespace Quaver.Shared.Screens.Result
                     Replay.Write(path);
 
                     // Open containing folder
-                    Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        try
+                        {
+                            Process.Start("xdg-open", ConfigManager.ReplayDirectory.Value);
+                        }
+                        catch (Win32Exception)
+                        {
+                            // No xdg-open? Oh well.
+                        }
+                    }
                     NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
                 });
             }

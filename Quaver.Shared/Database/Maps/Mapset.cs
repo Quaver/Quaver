@@ -7,9 +7,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
@@ -49,7 +51,8 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void ExportToZip()
         {
-            System.IO.Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Exports/");
+            var exportsDir = $"{ConfigManager.DataDirectory}/Exports/";
+            System.IO.Directory.CreateDirectory(exportsDir);
 
             var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
             System.IO.Directory.CreateDirectory(tempFolder);
@@ -98,12 +101,26 @@ namespace Quaver.Shared.Database.Maps
 
                 archive.AddAllFromDirectory(tempFolder);
 
-                var outputPath = $"{ConfigManager.DataDirectory}/Exports/" +
+                var outputPath = exportsDir +
                                  $"{StringHelper.FileNameSafeString(Artist + " - " + Title + " - " + GameBase.Game.TimeRunning)}.qp";
 
                 archive.SaveTo(outputPath, CompressionType.Deflate);
 
-                Process.Start("explorer.exe", "/select, \"" + outputPath.Replace("/", "\\") + "\"");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start("explorer.exe", "/select, \"" + outputPath.Replace("/", "\\") + "\"");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    try
+                    {
+                        Process.Start("xdg-open", exportsDir);
+                    }
+                    catch (Win32Exception)
+                    {
+                        // No xdg-open? Oh well.
+                    }
+                }
             }
 
             System.IO.Directory.Delete(tempFolder, true);
