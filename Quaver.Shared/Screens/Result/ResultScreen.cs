@@ -44,6 +44,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Result
@@ -423,22 +424,7 @@ namespace Quaver.Shared.Screens.Result
                     Replay.Write(path);
 
                     // Open containing folder
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
-
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        try
-                        {
-                            Process.Start("xdg-open", ConfigManager.ReplayDirectory.Value);
-                        }
-                        catch (Win32Exception)
-                        {
-                            // No xdg-open? Oh well.
-                        }
-                    }
+                    Utils.NativeUtils.HighlightInFileManager(path);
                     NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
                 });
             }

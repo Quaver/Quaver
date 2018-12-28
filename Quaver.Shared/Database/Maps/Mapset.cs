@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -20,6 +20,7 @@ using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform;
 using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.Database.Maps
@@ -106,21 +107,7 @@ namespace Quaver.Shared.Database.Maps
 
                 archive.SaveTo(outputPath, CompressionType.Deflate);
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Process.Start("explorer.exe", "/select, \"" + outputPath.Replace("/", "\\") + "\"");
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    try
-                    {
-                        Process.Start("xdg-open", exportsDir);
-                    }
-                    catch (Win32Exception)
-                    {
-                        // No xdg-open? Oh well.
-                    }
-                }
+                Utils.NativeUtils.HighlightInFileManager(outputPath);
             }
 
             System.IO.Directory.Delete(tempFolder, true);
