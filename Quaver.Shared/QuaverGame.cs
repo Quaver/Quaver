@@ -373,7 +373,7 @@ namespace Quaver.Shared
         {
             HandleKeyPressF7();
             HandleKeyPressCtrlO();
-            HandleKeyPressCtrlShiftAltR();
+            HandleKeyPressCtrlS();
         }
 
         /// <summary>
@@ -441,7 +441,7 @@ namespace Quaver.Shared
         /// <summary>
         ///    Handles when the user holds Control, Shift and Alt, and presses R
         /// </summary>
-        private void HandleKeyPressCtrlShiftAltR()
+        private void HandleKeyPressCtrlS()
         {
             // Check for modifier keys
             if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
