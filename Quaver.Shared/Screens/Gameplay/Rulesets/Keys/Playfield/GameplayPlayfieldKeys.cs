@@ -90,12 +90,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
                 if (GameplayRulesetKeys.IsDownscroll)
-                    return ReceptorPositionY + skin.ColumnLightingOffsetY;
+                    return WindowManager.Height - skin.ColumnLightingOffsetY;
 
-
-                var receptor = skin.NoteReceptorsUp[0];
-                var hitObject = skin.NoteHitObjects[0][0];
-                return ReceptorPositionY - skin.ColumnLightingOffsetY + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                return skin.ColumnLightingOffsetY;
             }
         }
 
