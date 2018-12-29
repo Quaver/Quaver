@@ -273,7 +273,7 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
                     ColumnLightingOffsetY = 0;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
@@ -367,7 +367,7 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
                     ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
