@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -42,6 +44,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Result
@@ -421,7 +424,7 @@ namespace Quaver.Shared.Screens.Result
                     Replay.Write(path);
 
                     // Open containing folder
-                    Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+                    Utils.NativeUtils.HighlightInFileManager(path);
                     NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
                 });
             }
