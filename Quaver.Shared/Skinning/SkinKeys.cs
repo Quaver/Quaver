@@ -632,6 +632,8 @@ namespace Quaver.Shared.Skinning
 
         private void LoadHitObjects(IList<List<Texture2D>> hitObjects)
         {
+            //hitObjects = new List<List<Texture2D>>();
+            Console.WriteLine(hitObjects.Count);
             try
             {
                 var snapcount = 8;
@@ -642,21 +644,23 @@ namespace Quaver.Shared.Skinning
                 var sprites =
                     LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject", false, 0, 0); //temp
 
-                for (var i = 0; i < 4; i++)
+                for (var i = 0; i < snapcount; i++)
                 {
                     var snapImages = new List<Texture2D>();
                     for (var j = 0; j < columns; j++)
                     {
-                        if (i * columns + j > sprites.Count)
-                            Console.WriteLine(i * columns + j +", "+sprites.Count);
-                        //snapImages.Add(sprites[i * columns + j]);
-                        else
-                        snapImages.Add(sprites[j]);
+                        Console.WriteLine(i * columns);
+                        //Console.WriteLine(sprites.Count + ", " + (i * columns + j));
+                        snapImages.Add(sprites[i * columns + j]);
                     }
 
-                    hitObjects.Insert(i, snapImages);
-                    //hitObjects.Add(snapImages);
+                    hitObjects.Add(snapImages);
+                    //hitObjects.Insert(i, snapImages);
+                    //Console.WriteLine(snapImages.Count);
+                    //hitObjects[i] = snapImages;
                 }
+
+                //Console.WriteLine(hitObjects.Count);
             }
             catch (Exception e)
             {
@@ -695,6 +699,7 @@ namespace Quaver.Shared.Skinning
         private void LoadLaneSpecificElements()
         {
             LoadHitObjects(NoteHitObjects);
+            LoadHitObjects(NoteHoldHitObjects);
             for (var i = 0; i < 7; i++)
             {
                 if (i == 4 && Mode == GameMode.Keys4)
@@ -706,7 +711,7 @@ namespace Quaver.Shared.Skinning
 
                 // HitObjects
                 //LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                //LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));

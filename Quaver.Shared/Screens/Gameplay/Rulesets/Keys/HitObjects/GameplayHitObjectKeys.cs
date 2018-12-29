@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -89,7 +90,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        private Sprite HitObjectSprite { get; set; }
+        private AnimatableSprite HitObjectSprite { get; set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
@@ -105,6 +106,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     General Distance from the receptor. Calculated from hit body size and global offset
         /// </summary>
         private float HitPositionOffset { get; set; }
+
+        /// <summary>
+        ///     Determines Hit Object Rotation for a specific GameMode if UseArrowsOrientation is toggled on for that GameMode.
+        /// </summary>
+        private Dictionary<GameMode, int[]> HitObjectRotations { get; } = new Dictionary<GameMode, int[]>()
+        {
+            {GameMode.Keys4, new int[]{90, 0, 180, -90}},
+            {GameMode.Keys7, new int[]{90, 135, 180, 0, 180, -135, -90}}
+        };
 
         /// <summary>
         ///     Distance from the receptor for the current HitObjectSprite's image
@@ -147,10 +157,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             ScrollDirection = direction;
 
             // Create the base HitObjectSprite
-            HitObjectSprite = new Sprite()
+            HitObjectSprite = new AnimatableSprite(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].NoteHitObjects[0])
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
+                Rotation = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseArrowsOrientation ? HitObjectRotations[MapManager.Selected.Value.Mode][lane] : 0,
                 SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
@@ -196,7 +207,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
             // Update Hit Object State
-            HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.ReplaceFrames(GetHitObjectFrames(info.Lane, manager.Ruleset.Mode));
+            HitObjectSprite.StartLoop(Direction.Forward, 60);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = Color.White;
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
@@ -321,24 +333,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     Gets the correct HitObject texture also based on if we have note snapping and if
-        ///     the note is a long note or note.
-        ///
-        ///     If the user has ColourObjectsBySnapDistance enabled in their skin, we load the one with their
-        ///     specified color.
-        ///
-        ///     If not, we default it to the first beat snap in the list.
+        ///     Gets the correct textures for the Hit Object.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
+        private List<Texture2D> GetHitObjectFrames(int lane, GameMode mode)
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return Info.IsLongNote ? skin.NoteHoldHitObjects[lane][HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[lane][HitObjectManager.SnapIndices[Info]];
+                return Info.IsLongNote ? skin.NoteHoldHitObjects[HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[HitObjectManager.SnapIndices[Info]];
 
-            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
         }
 
         /// <summary>
