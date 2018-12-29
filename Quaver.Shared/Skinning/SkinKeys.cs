@@ -43,6 +43,8 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
+        internal bool UseArrowsOrientation { get; private set; }
+
         internal int StageReceptorPadding { get; private set; }
 
         internal int HitPosOffsetY { get; private set; }
@@ -267,6 +269,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    UseArrowsOrientation = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
@@ -307,6 +310,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    UseArrowsOrientation = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 105;
                     NotePadding = 8;
@@ -359,6 +363,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    UseArrowsOrientation = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
@@ -402,6 +407,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    UseArrowsOrientation = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
@@ -463,6 +469,7 @@ namespace Quaver.Shared.Skinning
 
             var ini = Store.Config[ShortName.ToUpper()];
 
+            UseArrowsOrientation = ConfigHelper.ReadBool(UseArrowsOrientation, ini["UseArrowsOrientation"]);
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
@@ -615,13 +622,48 @@ namespace Quaver.Shared.Skinning
             // For each snap we load the separate image for it.
             // It HAS to be loaded in an incremental fashion.
             // So you can't have 1/48, but not have 1/3, etc.
-            var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
-
+            //var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
+            var snaps = new[] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
             // If it can find the appropriate files, load them.
             objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
-
             hitObjects.Insert(index, objectsList);
+        }
+
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects)
+        {
+            try
+            {
+                var snapcount = 8;
+                var columns = 12;
+
+
+                // If it can find the appropriate files, load them.
+                var sprites =
+                    LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject", false, 0, 0); //temp
+
+                for (var i = 0; i < 4; i++)
+                {
+                    var snapImages = new List<Texture2D>();
+                    for (var j = 0; j < columns; j++)
+                    {
+                        if (i * columns + j > sprites.Count)
+                            Console.WriteLine(i * columns + j +", "+sprites.Count);
+                        //snapImages.Add(sprites[i * columns + j]);
+                        else
+                        snapImages.Add(sprites[j]);
+                    }
+
+                    hitObjects.Insert(i, snapImages);
+                    //hitObjects.Add(snapImages);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
         /// <summary>
@@ -652,6 +694,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
+            LoadHitObjects(NoteHitObjects);
             for (var i = 0; i < 7; i++)
             {
                 if (i == 4 && Mode == GameMode.Keys4)
@@ -662,7 +705,7 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                //LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
                 LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
 
                 // LNS
