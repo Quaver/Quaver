@@ -405,8 +405,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void CreateHitLighting()
         {
             HitLightingObjects = new List<HitLighting>();
-            //GraphicsHelper.Align(0.5f, objectRect.Width, boundary.X, boundary.X + boundary.Width, objectRect.X)
-            //0.5, objectRect.Width, boundary.X, boundary.X + boundary.Width, objectRect.X
 
             for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
@@ -414,17 +412,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
                 var reference = skin.HitLighting[0];
                 var scale = reference.Width / Receptors[i].Width * skin.HitLightingScale;
-                var height = Playfield.LaneSize * reference.Height / reference.Width;
+                var height = Playfield.LaneSize * scale * reference.Height / reference.Width;
 
                 posX = GraphicsHelper.Align(0.5f, Playfield.LaneSize * scale, posX, posX + Playfield.LaneSize);
-                var posY = GraphicsHelper.Align(0.5f, height * scale, Playfield.ReceptorPositionY[i], Playfield.ReceptorPositionY[i] + Receptors[i].Height);
+                var posY = GraphicsHelper.Align(0.5f, height, Playfield.ReceptorPositionY[i], Playfield.ReceptorPositionY[i] + Receptors[i].Height);
 
                 var hl = new HitLighting()
                 {
                     Parent = Playfield.ForegroundContainer,
                     Alignment = Alignment.TopLeft,
                     Width = Playfield.LaneSize * scale,
-                    Height = height * scale,
+                    Height = height,
                     X = posX,
                     Y = posY + (MapManager.Selected.Value.Mode.Equals(ScrollDirection.Down) ? -skin.HitLightingY * scale: skin.HitLightingY * scale),
                     Rotation = skin.UseArrowsHitLighting ? HitObjectManagerKeys.HitObjectRotations[Playfield.Ruleset.Mode][i] : 0,
