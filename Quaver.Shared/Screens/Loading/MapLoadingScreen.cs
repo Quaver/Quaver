@@ -95,6 +95,12 @@ namespace Quaver.Shared.Screens.Loading
                     AddModsFromReplay(Replay);
                 }
 
+                // If the No Long Notes mod is active, remove the long notes.
+                if (ModManager.IsActivated(ModIdentifier.NoLongNotes))
+                {
+                    MapManager.Selected.Value.Qua.ReplaceLongNotesWithRegularNotes();
+                }
+
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
                     writer.Write($"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}");
