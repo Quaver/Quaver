@@ -10,11 +10,14 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
@@ -166,6 +169,7 @@ namespace Quaver.Shared.Screens.Select
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", false, OnHomeButtonClicked),
             new NavbarItem("Select Song", true),
+            new NavbarItem("Download Maps", false, (o, e) => OnDownloadMapsButtonClicked())
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
@@ -420,5 +424,19 @@ namespace Quaver.Shared.Screens.Select
             Parent = Container,
             Alignment = Alignment.TopLeft,
         };
+
+        /// <summary>
+        ///     Called when the user wants to go and download maps.
+        /// </summary>
+        private void OnDownloadMapsButtonClicked()
+        {
+            var screen = Screen as SelectScreen;
+
+            screen?.Exit(() =>
+            {
+                AudioEngine.Track?.Fade(10, 300);
+                return new DownloadScreen();
+            });
+        }
     }
 }
