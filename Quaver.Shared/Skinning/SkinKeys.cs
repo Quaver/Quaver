@@ -45,7 +45,9 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
-        internal bool UseArrowsOrientation { get; private set; }
+        internal bool UseArrowsHitLighting { get; private set; }
+
+        internal bool UseArrowsHitObject { get; private set; }
 
         internal int StageReceptorPadding { get; private set; }
 
@@ -81,9 +83,7 @@ namespace Quaver.Shared.Skinning
 
         internal int HitLightingY { get; private set; }
 
-        internal int HitLightingWidth { get; private set; }
-
-        internal int HitLightingHeight { get; private set; }
+        internal int HitLightingScale { get; private set; }
 
         internal int ScoreDisplayPosX { get; private set; }
 
@@ -271,12 +271,13 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    UseArrowsOrientation = false;
+                    UseArrowsHitObject = false;
+                    UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -294,8 +295,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -312,7 +312,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    UseArrowsOrientation = true;
+                    UseArrowsHitObject = true;
+                    UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 105;
                     NotePadding = 8;
@@ -335,8 +336,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -365,12 +365,13 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    UseArrowsOrientation = false;
+                    UseArrowsHitObject = false;
+                    UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -391,8 +392,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -409,7 +409,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    UseArrowsOrientation = true;
+                    UseArrowsHitObject = true;
+                    UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
@@ -436,8 +437,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -470,8 +470,10 @@ namespace Quaver.Shared.Skinning
                 return;
 
             var ini = Store.Config[ShortName.ToUpper()];
-
-            UseArrowsOrientation = ConfigHelper.ReadBool(UseArrowsOrientation, ini["UseArrowsOrientation"]);
+            HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
+            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
+            UseArrowsHitLighting = ConfigHelper.ReadBool(UseArrowsHitLighting, ini["UseArrowsHitLighting"]);
+            UseArrowsHitObject = ConfigHelper.ReadBool(UseArrowsHitObject, ini["UseArrowsHitObject"]);
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);

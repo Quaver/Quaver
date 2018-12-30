@@ -31,6 +31,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
+        ///     Determines Hit Object Rotation for a specific GameMode if UseArrowsOrientation is toggled on for that GameMode.
+        /// </summary>
+        public static Dictionary<GameMode, int[]> HitObjectRotations { get; } = new Dictionary<GameMode, int[]>()
+        {
+            {GameMode.Keys4, new int[]{90, 0, 180, -90}},
+            {GameMode.Keys7, new int[]{90, 135, 180, 0, 180, -135, -90}}
+        };
+
+        /// <summary>
         ///     This value will be used to find Beat Snap Images if no such image index above this value exists.
         /// </summary>
         public int MaxNoteSnapIndex { get; }

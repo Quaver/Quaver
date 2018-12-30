@@ -108,15 +108,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float HitPositionOffset { get; set; }
 
         /// <summary>
-        ///     Determines Hit Object Rotation for a specific GameMode if UseArrowsOrientation is toggled on for that GameMode.
-        /// </summary>
-        private Dictionary<GameMode, int[]> HitObjectRotations { get; } = new Dictionary<GameMode, int[]>()
-        {
-            {GameMode.Keys4, new int[]{90, 0, 180, -90}},
-            {GameMode.Keys7, new int[]{90, 135, 180, 0, 180, -135, -90}}
-        };
-
-        /// <summary>
         ///     Distance from the receptor for the current HitObjectSprite's image
         /// </summary>
         private float SpritePositionOffset => ScrollDirection.Equals(ScrollDirection.Down)
@@ -161,7 +152,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                Rotation = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseArrowsOrientation ? HitObjectRotations[MapManager.Selected.Value.Mode][lane] : 0,
+                Rotation = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseArrowsHitObject ? HitObjectManagerKeys.HitObjectRotations[MapManager.Selected.Value.Mode][lane] : 0,
                 SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 

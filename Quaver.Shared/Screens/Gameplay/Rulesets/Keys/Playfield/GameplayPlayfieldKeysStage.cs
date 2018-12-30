@@ -8,12 +8,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
@@ -405,9 +408,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
+                var reference = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting[0];
+                var scale = reference.Width / Receptors[i].Width * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLightingScale;
+                var height = Playfield.LaneSize * reference.Height / reference.Width;
+                //ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
                 var hl = new HitLighting()
                 {
-                    Parent = Playfield.ForegroundContainer,
+                    Parent = Receptors[i],
+                    Alignment = Alignment.MidCenter,
+                    Width = Playfield.LaneSize * scale,
+                    Height = height * scale,
+                    Rotation = HitObjectManagerKeys.HitObjectRotations[Playfield.Ruleset.Mode][i],
                     Visible = false
                 };
 
@@ -419,13 +430,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 else
                     hl.UsePreviousSpriteBatchOptions = true;
 
-                // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
-                // otherwise we'll use the one from their skin config.
-                hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
-
-                hl.Position = new ScalableVector2(Receptors[i].X - Playfield.LaneSize / 2f - Playfield.ReceptorPadding,
-                    HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
-
+                Console.WriteLine(hl.Size.X +", "+hl.Size.Y);
                 HitLightingObjects.Add(hl);
             }
         }
