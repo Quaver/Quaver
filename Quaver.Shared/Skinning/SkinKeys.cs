@@ -175,7 +175,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
+        internal List<List<Texture2D>> NoteHoldEnds { get; } = new List<List<Texture2D>>();
 
         // ----- Receptors ----- //
 
@@ -534,7 +534,7 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///     Get Resource Path for a specific element.
+        ///     Get Rsource Path for a specific element.
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
@@ -679,7 +679,7 @@ namespace Quaver.Shared.Skinning
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
-                NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false));
+                NoteHoldEnds.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false, 0, 0));
 
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));
