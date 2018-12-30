@@ -553,9 +553,7 @@ namespace Quaver.Shared.Skinning
         private string GetResourcePath(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
             if (shared)
-            {
                 return $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}{extension}";
-            }
 
             return $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
                        $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
