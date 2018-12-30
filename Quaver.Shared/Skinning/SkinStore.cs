@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
@@ -258,7 +260,7 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///
+        ///     Load SpriteSheet with all the images in a single list.
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
@@ -268,6 +270,29 @@ namespace Quaver.Shared.Skinning
         /// <param name="extension"></param>
         /// <returns></returns>
         internal static List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, string extension = ".png")
+        {
+            var sprites = LoadSpritesheetRows(folder, element, resource, rows, columns, extension);
+            var output = new List<Texture2D>();
+
+            foreach (var i in sprites)
+            foreach (var s in i)
+                    output.Add(s);
+
+            //todo: should this be referenced from a static variable instead? it feels kinda weird creating a method to do this
+            return output;
+        }
+
+        /// <summary>
+        ///     Load SpriteSheet that is separated into rows.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="resource"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        internal static List<List<Texture2D>> LoadSpritesheetRows(string folder, string element, string resource, int rows, int columns, string extension = ".png")
         {
             var dir = $"{Dir}/{folder}";
 
@@ -285,23 +310,49 @@ namespace Quaver.Shared.Skinning
                     {
                         // Load it up if so.
                         var texture = AssetLoader.LoadTexture2DFromFile(f);
-                        return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        rows = int.Parse(match.Groups[1].Value);
+                        columns = int.Parse(match.Groups[2].Value);
+                        return SplitSpritesIntoLists(AssetLoader.LoadSpritesheetFromTexture(texture, rows, columns), rows, columns);
                     }
 
                     // Otherwise check to see if that base element (without animations) actually exists.
                     // if so, load it singularly into a list.
                     if (Path.GetFileNameWithoutExtension(f) == element)
-                        return new List<Texture2D> { AssetLoader.LoadTexture2DFromFile(f) };
+                        return new List<List<Texture2D>> { new List<Texture2D>{AssetLoader.LoadTexture2DFromFile(f)} };
                 }
             }
 
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
-                return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
-;
-            return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
-                GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
+                return new List<List<Texture2D>> { new List<Texture2D>{LoadSingleTexture($"{dir}/{element}", resource + ".png")} };
+            ;
+            return SplitSpritesIntoLists(AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
+                GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns), rows, columns);
+        }
+
+        /// <summary>
+        ///     This method will separate each row into lists in the SpriteSheet.
+        /// </summary>
+        /// <param name="sprites"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        internal static List<List<Texture2D>> SplitSpritesIntoLists(List<Texture2D> sprites, int rows, int columns)
+        {
+            var output = new List<List<Texture2D>>();
+            for (var i = 0; i < rows; i++)
+            {
+                var layer = new List<Texture2D>();
+                for (var j = 0; j < columns; j++)
+                {
+                    layer.Add(sprites[i * columns + j]);
+                }
+
+                output.Add(layer);
+            }
+
+            return output;
         }
 
         /// <summary>

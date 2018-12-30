@@ -16,6 +16,8 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
+using Wobble;
+using Wobble.Assets;
 
 namespace Quaver.Shared.Skinning
 {
@@ -557,11 +559,38 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///     Loads a spritesheet
+        ///     Loads a spritesheet and split each rows into separate lists
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
         /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private List<List<Texture2D>> LoadSpritesheetRows(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        {
+            string resource;
+            if (shared)
+            {
+                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
+            }
+            else
+            {
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
+            }
+
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+            return SkinStore.LoadSpritesheetRows(folderName, element, resource, rows, columns, extension);
+        }
+
+        /// <summary>
+        ///     Loads a spritesheet
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared"></param>
         /// <param name="rows"></param>
         /// <param name="columns"></param>
         /// <param name="extension"></param>
@@ -607,68 +636,23 @@ namespace Quaver.Shared.Skinning
         /// <param name="element"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index)
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index = 0)
         {
             // First load the beginning HitObject element that doesn't require snapping.
             var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};
-
-            // Don't bother looking for snap objects if the skin config doesn't permit it.
-            if (!ColorObjectsBySnapDistance)
-            {
-                hitObjects.Insert(index, objectsList);
-                return;
-            }
-
-            // For each snap we load the separate image for it.
-            // It HAS to be loaded in an incremental fashion.
-            // So you can't have 1/48, but not have 1/3, etc.
-            //var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
-            var snaps = new[] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
-
-            // If it can find the appropriate files, load them.
-            objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
             hitObjects.Insert(index, objectsList);
         }
 
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects)
+        private void LoadBeatSnapHitObjects(IList<List<Texture2D>> hitObjects, string element)
         {
-            //hitObjects = new List<List<Texture2D>>();
-            Console.WriteLine(hitObjects.Count);
-            try
+            var sprites = LoadSpritesheetRows(SkinKeysFolder.HitObjects, element, false, 0, 0);
+            foreach (var s in sprites)
             {
-                var snapcount = 8;
-                var columns = 12;
-
-
-                // If it can find the appropriate files, load them.
-                var sprites =
-                    LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject", false, 0, 0); //temp
-
-                for (var i = 0; i < snapcount; i++)
-                {
-                    var snapImages = new List<Texture2D>();
-                    for (var j = 0; j < columns; j++)
-                    {
-                        Console.WriteLine(i * columns);
-                        //Console.WriteLine(sprites.Count + ", " + (i * columns + j));
-                        snapImages.Add(sprites[i * columns + j]);
-                    }
-
-                    hitObjects.Add(snapImages);
-                    //hitObjects.Insert(i, snapImages);
-                    //Console.WriteLine(snapImages.Count);
-                    //hitObjects[i] = snapImages;
-                }
-
-                //Console.WriteLine(hitObjects.Count);
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                hitObjects.Add(s);
             }
         }
+
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element) => hitObjects = LoadSpritesheetRows(SkinKeysFolder.HitObjects, element, false, 0, 0);
 
         /// <summary>
         ///     Gets a skin element's path.
@@ -698,8 +682,12 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
-            LoadHitObjects(NoteHitObjects);
-            LoadHitObjects(NoteHoldHitObjects);
+            if (ColorObjectsBySnapDistance)
+            {
+                LoadBeatSnapHitObjects(NoteHitObjects, "note-hitobject");
+                LoadBeatSnapHitObjects(NoteHoldHitObjects, "note-holdhitobject");
+            }
+
             for (var i = 0; i < 7; i++)
             {
                 if (i == 4 && Mode == GameMode.Keys4)
@@ -710,8 +698,11 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                //LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                //LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                if (!ColorObjectsBySnapDistance)
+                {
+                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
