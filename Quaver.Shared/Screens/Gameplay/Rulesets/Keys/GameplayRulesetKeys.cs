@@ -75,6 +75,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             if (ConfigManager.DisplayTimingLines.Value)
             {
                 var playfield = (GameplayPlayfieldKeys)Playfield;
+                var img = SkinManager.Skin.Keys[Mode].NoteHitObjects[0][0];
+                var offsetY = playfield.LaneSize * img.Height / img.Width / 2f;
                 switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
@@ -85,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] - offsetY,
                                     playfield.Width,
                                     0
                                 ));
@@ -95,7 +97,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Up,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] + offsetY,
                                     playfield.Width,
                                     0
                                 ));
@@ -106,7 +108,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] - offsetY,
                                     halfway,
                                     0
                                 ));
@@ -114,7 +116,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Up,
-                                    playfield.ColumnLightingPositionY[2],
+                                    playfield.ColumnLightingPositionY[2] + offsetY,
                                     playfield.Width - halfway,
                                     halfway
                                 ));
