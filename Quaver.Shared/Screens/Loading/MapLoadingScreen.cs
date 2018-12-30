@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Loading
                     writer.Write($"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}");
 
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/map.txt"))
-                    writer.Write($"{MapManager.Selected.Value.Qua.Artist} - {MapManager.Selected.Value.Qua.Title} [{MapManager.Selected.Value.Qua.DifficultyName}]");
+                    writer.Write($"{MapManager.Selected.Value.Qua.Artist} - {MapManager.Selected.Value.Qua.Title} [{MapManager.Selected.Value.Qua.DifficultyName}] ");
             }
             catch (Exception e)
             {

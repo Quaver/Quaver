@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
@@ -210,6 +211,8 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             Transitioner.Update(gameTime);
+
+            SkinManager.HandleSkinReloading();
         }
 
         /// <inheritdoc />
@@ -370,6 +373,7 @@ namespace Quaver.Shared
         {
             HandleKeyPressF7();
             HandleKeyPressCtrlO();
+            HandleKeyPressCtrlS();
         }
 
         /// <summary>
@@ -430,6 +434,31 @@ namespace Quaver.Shared
                 case QuaverScreenType.Select:
                 case QuaverScreenType.Edit:
                     DialogManager.Show(new SettingsDialog());
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///    Handles when the user holds Control, Shift and Alt, and presses R
+        /// </summary>
+        private void HandleKeyPressCtrlS()
+        {
+            // Check for modifier keys
+            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+                return;
+            
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
+                return;
+
+            // Handle skin reloading
+            switch (CurrentScreen.Type)
+            {
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Edit:
+                    Transitioner.FadeIn();
+
+                    SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
             }
         }

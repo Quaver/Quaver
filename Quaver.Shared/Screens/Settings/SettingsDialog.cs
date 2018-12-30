@@ -74,11 +74,6 @@ namespace Quaver.Shared.Screens.Settings
         public SettingsSection SelectedSection { get; private set; }
 
         /// <summary>
-        ///     If non-null, we require a skin reload.
-        /// </summary>
-        public string NewQueuedSkin { get; set; }
-
-        /// <summary>
         ///     A newly queued default skin, if the user chooses to change it.
         /// </summary>
         public DefaultSkins NewQueuedDefaultSkin { get; set; }
@@ -87,11 +82,6 @@ namespace Quaver.Shared.Screens.Settings
         ///     If the user has changed their resolution and it needs to change when they press OK.
         /// </summary>
         public Point NewQueuedScreenResolution { get; set; }
-
-        /// <summary>
-        ///     The time that the user has requested their skin be reloaded.
-        /// </summary>
-        private long TimeSkinReloadRequested { get; set; }
 
         /// <summary>
         ///     If true, the dialog won't close if the user presses escape.
@@ -131,7 +121,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            HandleSkinReloading();
+            SkinManager.HandleSkinReloading();
             base.Update(gameTime);
         }
 
@@ -141,7 +131,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (TimeSkinReloadRequested != 0 || PreventExitOnEscapeKeybindPress)
+            if (SkinManager.TimeSkinReloadRequested != 0 || PreventExitOnEscapeKeybindPress)
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
@@ -245,14 +235,14 @@ namespace Quaver.Shared.Screens.Settings
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                if (SkinManager.NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
-                    ConfigManager.Skin.Value = NewQueuedSkin;
+                    ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
                     ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
                     Transitioner.FadeIn();
-                    TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-                    IsGloballyClickable = false;
+                    SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+//                    IsGloballyClickable = false;
                     dismissDalog = false;
                 }
 
@@ -335,6 +325,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
+                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
@@ -420,27 +411,6 @@ namespace Quaver.Shared.Screens.Settings
             SelectedSection.Container.Parent = ContentContainer;
 
             Logger.Debug($"Switched to options section: {section.Name}", LogType.Runtime);
-        }
-
-        /// <summary>
-        ///     Called every frame. Waits for a skin reload to be queued up.
-        /// </summary>
-        private void HandleSkinReloading()
-        {
-            // Reload skin when applicable
-            if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
-            {
-                SkinManager.Load();
-                NewQueuedSkin = null;
-                TimeSkinReloadRequested = 0;
-                IsGloballyClickable = true;
-
-                ThreadScheduler.RunAfter(() =>
-                {
-                    Transitioner.FadeOut();
-                    NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!");
-                }, 200);
-            }
         }
     }
 }
