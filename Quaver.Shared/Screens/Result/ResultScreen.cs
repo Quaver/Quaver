@@ -488,11 +488,8 @@ namespace Quaver.Shared.Screens.Result
                         AudioEngine.Track.Fade(10, 300);
                 }
 
-                // Load up the .qua file again
-                var qua = MapManager.Selected.Value.LoadQua();
-                MapManager.Selected.Value.Qua = qua;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-                return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
+                return new MapLoadingScreen(new List<Score>(), replay);
             });
         }
 
@@ -530,10 +527,6 @@ namespace Quaver.Shared.Screens.Result
                     OnlineManager.Client?.DownloadReplay(Score.Id, path);
                     var replay = new Replay(path);
 
-                    // Load up the .qua file again
-                    var qua = MapManager.Selected.Value.LoadQua();
-                    MapManager.Selected.Value.Qua = qua;
-
                     Exit(() =>
                     {
                         if (AudioEngine.Track != null)
@@ -542,7 +535,7 @@ namespace Quaver.Shared.Screens.Result
                                 AudioEngine.Track.Fade(10, 300);
                         }
                         GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-                        return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
+                        return new MapLoadingScreen(new List<Score>(), replay);
                     });
                 }
                 catch (Exception e)
