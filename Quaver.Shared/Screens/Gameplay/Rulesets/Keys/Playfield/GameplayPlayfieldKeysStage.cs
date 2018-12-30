@@ -419,7 +419,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Width = Playfield.LaneSize * scale,
                     Height = height * scale,
                     Y = MapManager.Selected.Value.Mode.Equals(ScrollDirection.Down) ? - (skin.HitLightingY + height) * scale / 4 : (skin.HitLightingY - height) * scale / 4,
-                    Rotation = HitObjectManagerKeys.HitObjectRotations[Playfield.Ruleset.Mode][i],
+                    Rotation = skin.UseArrowsHitLighting ? HitObjectManagerKeys.HitObjectRotations[Playfield.Ruleset.Mode][i] : 0,
                     Visible = false
                 };
 
