@@ -42,7 +42,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     The list of possible beat snaps.
         /// </summary>
-        private static int[] BeatSnaps { get; } = { 48, 24, 16, 12, 8, 6, 4, 3 };
+        private static int[] BeatSnaps { get; } = { 96, 48, 32, 24, 16, 12, 8, 6, 4, 3 };
+        //private static int[] BeatSnaps { get; } = { 48, 24, 16, 12, 8, 6, 4, 3 };
 
         /// <summary>
         ///     The beat snap index of each object in the map.
@@ -105,7 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             var beatlength = 60000 / timingPoint.Bpm;
 
             // Calculate Note's snap index
-            var index = Math.Round(48 * pos / beatlength, MidpointRounding.AwayFromZero);
+            var index = Math.Round(BeatSnaps[0] * pos / beatlength, MidpointRounding.AwayFromZero);
 
             // Return Color of snap index
             for (var i = 0; i < 8; i++)
