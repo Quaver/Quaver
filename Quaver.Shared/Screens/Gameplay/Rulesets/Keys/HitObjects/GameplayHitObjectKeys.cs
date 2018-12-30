@@ -28,12 +28,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
     {
         /// <summary>
         /// </summary>
-        private GameplayRuleset Ruleset { get; }
+        private GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Reference to the HitObjectManager controlling the object.
         /// </summary>
-        private HitObjectManager HitObjectManager { get; }
+        private HitObjectManagerKeys HitObjectManager { get; }
 
         /// <summary>
         ///     Is determined by whether the player is holding the key that this hit object is binded to
@@ -342,7 +342,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var skin = SkinManager.Skin.Keys[mode];
 
             if (skin.ColorObjectsBySnapDistance)
-                return Info.IsLongNote ? skin.NoteHoldHitObjects[HitObjectManager.SnapIndices[Info]] : skin.NoteHitObjects[HitObjectManager.SnapIndices[Info]];
+            {
+                var snap = Math.Min(HitObjectManager.SnapIndices[Info], HitObjectManager.MaxNoteSnapIndex);
+                return Info.IsLongNote ? skin.NoteHoldHitObjects[snap] : skin.NoteHitObjects[snap];
+            }
 
             return Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
         }

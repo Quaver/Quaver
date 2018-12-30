@@ -31,6 +31,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public static float TrackRounding { get; } = 100;
 
         /// <summary>
+        ///     This value will be used to find Beat Snap Images if no such image index above this value exists.
+        /// </summary>
+        public int MaxNoteSnapIndex { get; }
+
+        /// <summary>
         ///     The speed at which objects fall down from the screen.
         /// </summary>
         public static float ScrollSpeed
@@ -197,6 +202,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
             Ruleset = ruleset;
+            MaxNoteSnapIndex = Math.Min(SkinManager.Skin.Keys[ruleset.Mode].NoteHitObjects.Count, SkinManager.Skin.Keys[ruleset.Mode].NoteHoldHitObjects.Count) - 1;
 
             // Initialize SV
             UpdatePoolingPositions();
