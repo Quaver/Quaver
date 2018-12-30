@@ -534,6 +534,26 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Get Resource Path for a specific element.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private string GetResourcePath(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
+        {
+            if (shared)
+            {
+                return $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}{extension}";
+            }
+
+            return $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                       $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
+        }
+
+
+        /// <summary>
         ///     Loads an individual skin element.
         /// </summary>
         /// <param name="folder"></param>
@@ -543,46 +563,9 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
-            string resource;
-            if (shared)
-            {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}.png";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                               $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
-            }
-
+            var resource = GetResourcePath(folder, element, shared, extension);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
             return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
-        }
-
-        /// <summary>
-        ///     Loads a spritesheet and split each rows into separate lists
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <param name="element"></param>
-        /// <param name="shared">If the resource is shared between key modes.</param>
-        /// <param name="rows"></param>
-        /// <param name="columns"></param>
-        /// <param name="extension"></param>
-        /// <returns></returns>
-        private List<List<Texture2D>> LoadSpritesheetRows(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
-        {
-            string resource;
-            if (shared)
-            {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
-            }
-
-            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
-            return SkinStore.LoadSpritesheetRows(folderName, element, resource, rows, columns, extension);
         }
 
         /// <summary>
@@ -597,62 +580,50 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
-            string resource;
-            if (shared)
-            {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
-            }
-
+            var resource = GetResourcePath(folder, element, shared, extension);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
 
         /// <summary>
-        ///     Loads the HitObjects w/ note snapping
-        ///     Each hitobject lane, gets to have more images for each snap distance.
-        ///
-        ///     Example:
-        ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
-        ///         That being said, note-hitobject3-16th, would be the object in lane 3, with 16th snap.
-        ///
-        ///         NOTE: For 1/1, objects, there is no concept of y. So the ManiaHitObject in lane 4, with 1/1 snap
-        ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
-        ///         even though the user may not use snapping.
-        ///
-        ///         - note-hitobject-1 (Lane 1 Default which is also 1/1 snap.)
-        ///         - note-hitobject-1-2nd (Lane 1, 1/2 Snap)
-        ///         - note-hitobject-1-3rd (Lane 1, 1/3 Snap)
-        ///         - note-hitobject-1-4th (Lane 1, 1/4 Snap)
-        ///         //
-        ///         - note-hitobject-2 (Lane 2 Default which is also 1/1 snap.)
-        ///         - note-hitobject-2-2nd (Lane 2, 1/2 Snap)
+        ///     Loads a spritesheet and split each rows into separate lists
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private List<List<Texture2D>> LoadSpritesheetRows(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        {
+            var resource = GetResourcePath(folder, element, shared, extension);
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+            return SkinStore.LoadSpritesheetRows(folderName, element, resource, rows, columns, extension);
+        }
+
+        /// <summary>
+        ///     Load an images for HitObjects for a lane individually.
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <param name="element"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index = 0)
-        {
-            // First load the beginning HitObject element that doesn't require snapping.
-            var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};
-            hitObjects.Insert(index, objectsList);
-        }
+        private void LoadHitObjectsForLane(IList<List<Texture2D>> hitObjects, string element, int index) =>
+            hitObjects.Insert(index, new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, false) });
 
-        private void LoadBeatSnapHitObjects(IList<List<Texture2D>> hitObjects, string element)
+        /// <summary>
+        ///     Loads the images for HitObjects w/ note snapping
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <param name="element"></param>
+        private void LoadBeatHitObjectsForSnap(IList<List<Texture2D>> hitObjects, string element)
         {
             var sprites = LoadSpritesheetRows(SkinKeysFolder.HitObjects, element, false, 0, 0);
-            foreach (var s in sprites)
-            {
-                hitObjects.Add(s);
-            }
-        }
 
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element) => hitObjects = LoadSpritesheetRows(SkinKeysFolder.HitObjects, element, false, 0, 0);
+            foreach (var s in sprites)
+                hitObjects.Add(s);
+        }
 
         /// <summary>
         ///     Gets a skin element's path.
@@ -682,27 +653,29 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
+            // Load Hit Object Images with BeatSnap Images if ColorObjectsBySnapDistance is toggled on.
             if (ColorObjectsBySnapDistance)
             {
-                LoadBeatSnapHitObjects(NoteHitObjects, "note-hitobject");
-                LoadBeatSnapHitObjects(NoteHoldHitObjects, "note-holdhitobject");
+                LoadBeatHitObjectsForSnap(NoteHitObjects, "note-hitobject-snapped");
+                LoadBeatHitObjectsForSnap(NoteHoldHitObjects, "note-holdhitobject-snapped");
             }
 
+            // Load Elements for each lane.
             for (var i = 0; i < 7; i++)
             {
                 if (i == 4 && Mode == GameMode.Keys4)
                     break;
 
+                // HitObjects (if ColorObjectsBySnapDistance is toggled off.)
+                if (!ColorObjectsBySnapDistance)
+                {
+                    LoadHitObjectsForLane(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjectsForLane(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
+
                 // Column Colors
                 if (Store.Config != null)
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
-
-                // HitObjects
-                if (!ColorObjectsBySnapDistance)
-                {
-                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
-                }
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
