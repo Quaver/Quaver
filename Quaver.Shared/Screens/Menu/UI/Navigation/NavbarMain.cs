@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
                     case ConnectionStatus.Disconnected:
                         if (LeftAlignedItems.Contains(DownloadMapsButton))
                         {
-                            OpenChatButton.Parent = null;
+                            DownloadMapsButton.Parent = null;
                             LeftAlignedItems.Remove(DownloadMapsButton);
                         }
 
