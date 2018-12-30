@@ -408,7 +408,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
-                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * (i) + Playfield.Padding;
+                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
                 var reference = skin.HitLighting[0];
                 var scale = reference.Width / Receptors[i].Width * skin.HitLightingScale;
