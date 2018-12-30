@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] - offsetY,
                                     playfield.Width,
                                     0
                                 ));
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Up,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] + offsetY,
                                     playfield.Width,
                                     0
                                 ));
@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
+                                    playfield.HitPositionOffsets[0] - offsetY,
                                     halfway,
                                     0
                                 ));
@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                                 (
                                     this,
                                     ScrollDirection.Up,
-                                    playfield.ColumnLightingPositionY[3],
+                                    playfield.ColumnLightingPositionY[3] + offsetY,
                                     playfield.Width - halfway,
                                     halfway
                                 ));
