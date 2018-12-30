@@ -408,16 +408,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
-                var reference = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting[0];
-                var scale = reference.Width / Receptors[i].Width * SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLightingScale;
+                var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
+                var reference = skin.HitLighting[0];
+                var scale = reference.Width / Receptors[i].Width * skin.HitLightingScale;
                 var height = Playfield.LaneSize * reference.Height / reference.Width;
-                //ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
                 var hl = new HitLighting()
                 {
                     Parent = Receptors[i],
-                    Alignment = Alignment.MidCenter,
+                    Alignment = Alignment.TopCenter,
                     Width = Playfield.LaneSize * scale,
                     Height = height * scale,
+                    Y = MapManager.Selected.Value.Mode.Equals(ScrollDirection.Down) ? - (skin.HitLightingY + height) * scale / 4 : (skin.HitLightingY - height) * scale / 4,
                     Rotation = HitObjectManagerKeys.HitObjectRotations[Playfield.Ruleset.Mode][i],
                     Visible = false
                 };
