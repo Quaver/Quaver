@@ -169,7 +169,6 @@ namespace Quaver.Shared.Screens.Select
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", false, OnHomeButtonClicked),
             new NavbarItem("Select Song", true),
-            new NavbarItem("Download Maps", false, (o, e) => OnDownloadMapsButtonClicked())
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
@@ -424,19 +423,5 @@ namespace Quaver.Shared.Screens.Select
             Parent = Container,
             Alignment = Alignment.TopLeft,
         };
-
-        /// <summary>
-        ///     Called when the user wants to go and download maps.
-        /// </summary>
-        private void OnDownloadMapsButtonClicked()
-        {
-            var screen = Screen as SelectScreen;
-
-            screen?.Exit(() =>
-            {
-                AudioEngine.Track?.Fade(10, 300);
-                return new DownloadScreen();
-            });
-        }
     }
 }

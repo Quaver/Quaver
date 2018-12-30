@@ -162,7 +162,6 @@ namespace Quaver.Shared.Screens.Menu
         {
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", true),
-            new NavbarItem("Download Maps", false, (o, e) => OnDownloadMapsButtonClicked())
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
@@ -402,20 +401,6 @@ namespace Quaver.Shared.Screens.Menu
         {
             // ReSharper disable once ArrangeMethodOrOperatorBody
             NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
-        }
-
-        /// <summary>
-        ///     Called when the user wants to go and download maps.
-        /// </summary>
-        private void OnDownloadMapsButtonClicked()
-        {
-            var screen = Screen as MenuScreen;
-
-            screen?.Exit(() =>
-            {
-                AudioEngine.Track?.Fade(10, 300);
-                return new DownloadScreen();
-            });
         }
     }
 }
