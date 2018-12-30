@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
@@ -18,8 +19,10 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
@@ -329,119 +332,18 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0)
                 return;
 
-            if (DialogManager.Dialogs.Count > 0)
-                return;
-
-            try
+            switch (view?.ActiveContainer)
             {
-                var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
-                var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
-                var selectedMapset = AvailableMapsets[selectedMapsetIndex];
-                var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
-                var selectedMapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
-                var selectedDifficultyPath = Path.Combine(selectedMapsetPath, selectedDifficulty.Path);
+                case SelectContainerStatus.Mapsets:
+                    DeleteSelected(DeletionType.Mapset);
+                    break;
 
-                ConfirmDialog confirmDelete = null;
-
-                switch (view.ActiveContainer)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        confirmDelete = new ConfirmDialog("Are you sure you want to delete this mapset?");
-
-                        confirmDelete.Confirmation += (sender, confirm) =>
-                        {
-                            if (confirm)
-                            {
-                                if (AvailableMapsets.Count == 0)
-                                    return;
-
-                                Logger.Log($"Deleting Mapset \"{selectedMapset.Artist} - {selectedMapset.Title}\"",
-                                    LogLevel.Important, LogType.Runtime);
-
-                                // Dispose of the currently playing track, to release the resource from it's stream.
-                                AudioEngine.Track.Dispose();
-
-                                // Delete directory
-                                Directory.Delete(selectedMapsetPath, true);
-
-                                // Reload cache, reload avaliable mapsets & reinitialize mapset container
-                                MapDatabaseCache.Load(false);
-                                MapDatabaseCache.OrderAndSetMapsets();
-                                AvailableMapsets = MapManager.Mapsets;
-                                view.MapsetScrollContainer.InitializeWithNewSets();
-
-                                // Finally show confirmation notification
-                                NotificationManager.Show(NotificationLevel.Success,
-                                    "Mapset successfully deleted from Quaver!");
-
-                                // If the deleted mapset was the last one, then exit back to menu.
-                                if (AvailableMapsets.Count == 0)
-                                    ExitToMenu();
-                            }
-                        };
-
-                        break;
-
-                    case SelectContainerStatus.Difficulty:
-                        confirmDelete = new ConfirmDialog("Are you sure you want to delete this difficulty?");
-
-                        confirmDelete.Confirmation += (sender, confirm) =>
-                        {
-                            if (confirm)
-                            {
-                                if (AvailableMapsets.Count == 0)
-                                    return;
-
-                                Logger.Log(
-                                    $"Deleting difficulty \"{selectedDifficulty.DifficultyName}\" from Mapset \"{selectedMapset.Artist} - {selectedMapset.Title}\"",
-                                    LogLevel.Important, LogType.Runtime);
-
-                                // Dispose of the currently playing track, to release the resource from it's stream.
-                                AudioEngine.Track.Dispose();
-
-                                // If difficulty count is above one, then delete the single file.
-                                if (selectedMapset.Maps.Count > 1)
-                                {
-                                    // Delete difficulty file
-                                    File.Delete(selectedDifficultyPath);
-                                }
-                                else // Else, Delete the entire directory, to get rid of the leftover files.
-                                {
-                                    // Delete directory
-                                    Directory.Delete(selectedMapsetPath, true);
-                                }
-
-
-
-                                // Reload cache, reload avaliable mapsets & reinitialize mapset container
-                                MapDatabaseCache.Load(false);
-                                MapDatabaseCache.OrderAndSetMapsets();
-                                AvailableMapsets = MapManager.Mapsets;
-                                view.MapsetScrollContainer.InitializeWithNewSets();
-
-                                // Finally show confirmation notification
-                                NotificationManager.Show(NotificationLevel.Success,
-                                    "Difficulty successfully deleted from Quaver!");
-
-                                // If the deleted mapset was the last one, then exit back to menu.
-                                if (AvailableMapsets.Count == 0)
-                                    ExitToMenu();
-                            }
-                        };
-
-                        break;
-                }
-
-                // Finally show the confirmation dialog.
-                DialogManager.Show(confirmDelete);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                NotificationManager.Show(NotificationLevel.Error,
-                    "An error has occured! Please check runtime.log");
+                case SelectContainerStatus.Difficulty:
+                    DeleteSelected(DeletionType.Difficulty);
+                    break;
             }
         }
 
@@ -606,6 +508,186 @@ namespace Quaver.Shared.Screens.Select
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, mapset.Maps[randomMapIndex], true);
                     break;
             }
+        }
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="type"></param>
+        private void DeleteSelected(DeletionType type)
+        {
+            var view = View as SelectScreenView;
+
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+            
+            if (AvailableMapsets.Count == 0)
+                return;
+
+            Logger.Debug($"SelectedMapIndex: {selectedMapsetIndex}", LogType.Runtime);
+            Logger.Debug($"SelectedDiffIndex: {selectedDifficultyIndex}", LogType.Runtime);
+            
+
+            var selectedMapset = AvailableMapsets[selectedMapsetIndex];
+            var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
+
+            var selectedMapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+            var selectedDifficultyPath = Path.Combine(selectedMapsetPath, selectedDifficulty.Path);
+
+            var finalPath = string.Empty;
+
+            ConfirmDialog confirmDelete = new ConfirmDialog($"Are you sure you want to delete this {type.ToString()}?");
+
+            confirmDelete.Confirmation += (sender, confirm) =>
+            {
+                if (confirm)
+                {
+                    // Selects the first/previously selected difficulty of each mapset and determines if it is loaded from osu! or not.
+                    //
+                    // This was used seeming osu! beatmaps won't get mismatched with quaver map's, and if there
+                    // are duplicates mapsets, then they will be separate.
+                    if (selectedDifficulty.Game == MapGame.Osu)
+                    {
+                        // Display error message
+                        NotificationManager.Show(NotificationLevel.Error,
+                            $"The selected {type.ToString().ToLower()} cannot be deleted due to it being loaded directly from osu!");
+                        return;
+                    }
+
+                    if (type == DeletionType.Mapset)
+                    {
+                        Logger.Log($"Deleting mapset \"{selectedMapset.Artist} - {selectedMapset.Title}\"",
+                            LogLevel.Important, LogType.Runtime);
+
+                        finalPath = selectedMapsetPath;
+                    }
+                    else if (type == DeletionType.Difficulty)
+                    {
+                        Logger.Log(
+                            $"Deleting difficulty \"{selectedDifficulty.DifficultyName}\" from Mapset \"{selectedMapset.Artist} - {selectedMapset.Title}\"",
+                            LogLevel.Important, LogType.Runtime);
+
+                        if (selectedMapset.Maps.Count > 1)
+                            finalPath = selectedDifficultyPath;
+                        else
+                            finalPath = selectedMapsetPath;
+                    }
+
+                    try
+                    {
+                        lock (this)
+                        {
+                            // Dispose of the background for the currently selected map.
+//                            view.Background?.Destroy();
+
+                            // Dispose of the currently playing track, to release the resource from it's stream.
+                            AudioEngine.Track?.Dispose();
+
+                            // Run deletion & Reload in the background.
+                            ThreadScheduler.Run(() => DeleteAndReloadMaps(type, finalPath));
+                        }
+
+                        // Finally show confirmation notification
+                        NotificationManager.Show(NotificationLevel.Success,
+                            $"{type.ToString()} successfully deleted from Quaver!");
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        // Handle error
+                        NotificationManager.Show(NotificationLevel.Error,
+                            "An error has occured. Please check runtime.log!");
+                    }
+                }
+            };
+
+            // Finally show the confirmation dialog.
+            DialogManager.Show(confirmDelete);
+        }
+
+        /// <summary>
+        ///     Used by DeleteAndReloadMaps for determining and deleting mapsets or difficulty files.
+        /// </summary>
+        /// <param name="path"></param>
+        private void Delete(string path)
+        {
+            FileAttributes attributes = File.GetAttributes(@path);
+
+            if (attributes.HasFlag(FileAttributes.Directory))
+                // its a directory!
+                Directory.Delete(@path, true);
+            else
+                // its a file...
+                File.Delete(@path);
+        }
+
+        /// <summary>
+        ///     Used to delete a mapset or difficulty, then reload the avaliable maps.
+        /// </summary>
+        /// <param name="path"></param>
+        private void DeleteAndReloadMaps(DeletionType type, string path)
+        {
+            var view = View as SelectScreenView;
+
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+
+            if (selectedMapsetIndex < 0)
+                return;
+            
+            var selectedMapset = AvailableMapsets[selectedMapsetIndex];
+            
+            // Preserve index
+            var preservedMapsetIndex = selectedMapsetIndex;
+            var preservedDifficultyIndex = selectedDifficultyIndex;
+
+            // Will delete based on File type
+            // if it's a file, its a difficulty, if its a directory its the mapset.
+            Delete(path);
+
+            // Reload cache, reload avaliable mapsets & reinitialize mapset container
+            MapDatabaseCache.Load(false);
+            MapDatabaseCache.OrderAndSetMapsets();
+
+            if (PreviousSearchTerm.Length > 0)
+            {
+                // Grab the mapsets available to the user according to their previous search term.
+                AvailableMapsets = MapsetHelper.SearchMapsets(MapManager.Mapsets, PreviousSearchTerm);
+                AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
+            }
+            else
+                AvailableMapsets = MapManager.Mapsets;
+
+            view?.MapsetScrollContainer.InitializeWithNewSets();
+
+            // Restore index
+            switch (type)
+            {
+                case DeletionType.Mapset:
+                    // if at the end
+                    if (selectedMapsetIndex == AvailableMapsets.Count)
+                        view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
+                    else
+                        view.MapsetScrollContainer.SelectMapset(preservedMapsetIndex);
+
+                    break;
+
+                case DeletionType.Difficulty:
+                    view.MapsetScrollContainer.SelectMap(preservedMapsetIndex, selectedMapset.Maps[preservedDifficultyIndex], true);
+                    break;
+            }
+
+            // If the deleted mapset was the last one, then exit back to menu.
+            if (AvailableMapsets.Count == 0)
+                ExitToMenu();
+        }
+
+        /// <summary>
+        ///     Used to determine what type of deletion is occuring.
+        /// </summary>
+        private enum DeletionType
+        {
+            Mapset,
+            Difficulty
         }
     }
 }

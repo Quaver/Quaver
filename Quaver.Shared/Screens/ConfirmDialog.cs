@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -58,16 +59,21 @@ namespace Quaver.Shared.Screens
         /// </summary>
         public event EventHandler<bool> Confirmation;
 
+        /// <summary>
+        ///     Placeholder text which is displayed at the top of the confirmation dialog box.
+        /// </summary>
         private string AreYouSureText { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ConfirmDialog(string areYouSureText) : base(0.75f)
+        public ConfirmDialog(string areYouSureText) : base(0)
         {
             Logger.Debug($"Opened ConfirmDialog", LogType.Runtime);
 
             AreYouSureText = areYouSureText;
+
+            Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Alpha, 0.65f, 300));
 
             CreateContent();
         }
@@ -107,7 +113,7 @@ namespace Quaver.Shared.Screens
         public override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Dismiss("KeyboardManager (ESC Button)");
+                Dismiss();
 
             if(KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 Confirm("Keyboard Manager (Enter Button)");
@@ -115,7 +121,7 @@ namespace Quaver.Shared.Screens
 
         private void Confirm(string via = "")
         {
-            Logger.Debug($"Confirmed ConfirmDialog - {via}", LogType.Runtime);
+            Logger.Debug($"Confirmed ConfirmDialog", LogType.Runtime);
             Confirmation?.Invoke(this, true);
             DialogManager.Dismiss(this);
         }
@@ -123,9 +129,9 @@ namespace Quaver.Shared.Screens
         /// <summary>
         ///     Dismisses the dialog.
         /// </summary>
-        private void Dismiss(string via = "")
+        private void Dismiss()
         {
-            Logger.Debug($"Dismissed ConfirmDialog - {via}", LogType.Runtime);
+            Logger.Debug($"Dismissed ConfirmDialog", LogType.Runtime);
             Confirmation?.Invoke(this, false);
             DialogManager.Dismiss(this);
         }
@@ -216,7 +222,7 @@ namespace Quaver.Shared.Screens
         private void CreateCancelButton()
         {
             CancelButton = new TextButton(UserInterface.BlankBox,
-                Fonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss("Cancel Button"))
+                Fonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss())
             {
                 Parent = AreYouSure,
                 Y = DividerLine.Y + DividerLine.Height + 25,
