@@ -30,6 +30,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
@@ -250,6 +251,7 @@ namespace Quaver.Shared.Screens.Result
             // Set the replay that the user has generated
             Replay = Gameplay.ReplayCapturer.Replay;
             Replay.PauseCount = Gameplay.PauseCount;
+            Replay.RandomizeModifierSeed = Gameplay.Map.RandomizeModifierSeed;
             ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
             Replay.FromScoreProcessor(ScoreProcessor);
 
@@ -319,7 +321,7 @@ namespace Quaver.Shared.Screens.Result
             try
             {
                 var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
-                    Gameplay.PauseCount);
+                    Gameplay.PauseCount, Gameplay.Map.RandomizeModifierSeed);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
 
@@ -487,6 +489,8 @@ namespace Quaver.Shared.Screens.Result
 
                 // Load up the .qua file again
                 var qua = MapManager.Selected.Value.LoadQua();
+                qua.RandomizeLanes(replay.RandomizeModifierSeed);
+                
                 MapManager.Selected.Value.Qua = qua;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                 return new GameplayScreen(MapManager.Selected.Value.Qua, MapManager.Selected.Value.Md5Checksum, new List<Score>(), replay);
