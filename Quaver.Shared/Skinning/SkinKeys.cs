@@ -45,6 +45,8 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
+        internal int SkinFrameRate { get; private set; }
+
         internal bool UseArrowsHitLighting { get; private set; }
 
         internal bool UseArrowsHitObject { get; private set; }
@@ -271,6 +273,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    SkinFrameRate = 60;
                     UseArrowsHitObject = false;
                     UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
@@ -312,6 +315,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    SkinFrameRate = 60;
                     UseArrowsHitObject = true;
                     UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
@@ -365,6 +369,7 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    SkinFrameRate = 60;
                     UseArrowsHitObject = false;
                     UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
@@ -409,6 +414,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    SkinFrameRate = 60;
                     UseArrowsHitObject = true;
                     UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
@@ -470,6 +476,7 @@ namespace Quaver.Shared.Skinning
                 return;
 
             var ini = Store.Config[ShortName.ToUpper()];
+            SkinFrameRate = ConfigHelper.ReadInt32(SkinFrameRate, ini["SkinFrameRate"]);
             HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
             UseArrowsHitLighting = ConfigHelper.ReadBool(UseArrowsHitLighting, ini["UseArrowsHitLighting"]);

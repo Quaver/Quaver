@@ -196,8 +196,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
 
             // Update Hit Object State
-            HitObjectSprite.ReplaceFrames(GetHitObjectFrames(info.Lane, manager.Ruleset.Mode));
-            HitObjectSprite.StartLoop(Direction.Forward, 60);
+            HitObjectSprite.ReplaceFrames(GetHitObjectFrames(info.Lane, Ruleset.Mode));
+            HitObjectSprite.StartLoop(Direction.Forward, SkinManager.Skin.Keys[Ruleset.Mode].SkinFrameRate);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = Color.White;
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
@@ -375,8 +375,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void StartLongNoteAnimation()
         {
-            LongNoteBodySprite.StartLoop(Direction.Forward, 60);
-            LongNoteEndSprite.StartLoop(Direction.Forward, 60);
+            LongNoteBodySprite.StartLoop(Direction.Forward, SkinManager.Skin.Keys[Ruleset.Mode].SkinFrameRate);
+            LongNoteEndSprite.StartLoop(Direction.Forward, SkinManager.Skin.Keys[Ruleset.Mode].SkinFrameRate);
         }
 
         /// <summary>

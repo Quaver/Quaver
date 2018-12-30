@@ -76,9 +76,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Standard looping animations.
             if (!IsHoldingLongNote)
-                StartLoop(Direction.Forward, 60, 1);
+                StartLoop(Direction.Forward, skin.SkinFrameRate, 1);
             else
-                StartLoop(Direction.Forward, 60);
+                StartLoop(Direction.Forward, skin.SkinFrameRate);
         }
 
         /// <summary>
@@ -149,6 +149,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        private static float AlphaChangePerFrame(double dt) => (float)(dt / (60 * AudioEngine.Track.Rate));
+        private static float AlphaChangePerFrame(double dt) => (float)(dt / SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].SkinFrameRate);
     }
 }
