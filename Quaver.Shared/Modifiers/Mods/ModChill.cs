@@ -7,6 +7,7 @@
 
 using System;
 using Quaver.API.Enums;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -24,6 +25,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Make it easier on yourself.";
 
         public bool Ranked { get; set; } = true;
+
+        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Strict };
 
