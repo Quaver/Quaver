@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Menu
         /// <summary>
         ///     Creates the navbar.
         /// </summary>
-        private void CreateNavbar() => Navbar = Navbar = new NavbarMain(new List<NavbarItem>
+        private void CreateNavbar() => Navbar = Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
         {
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", true),
