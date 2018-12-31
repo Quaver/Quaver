@@ -93,6 +93,9 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.NoFail:
                     gameplayModifier = new ModNoFail();
                     break;
+                case ModIdentifier.NoLongNotes:
+                    gameplayModifier = new ModNoLongNotes();
+                    break;
                 default:
                     return;
             }
