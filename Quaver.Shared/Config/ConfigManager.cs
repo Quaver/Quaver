@@ -238,7 +238,7 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
-        
+
         /// <summary>
         ///     Keybindings for 4K
         /// </summary>
@@ -284,7 +284,7 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseScrollSpeed { get; private set; }
         internal static Bindable<Keys> KeyDecreaseScrollSpeed { get; private set; }
-        
+
         /// <summary>
         ///     The keys to increase/decrease map offset.
         /// </summary>
@@ -388,7 +388,7 @@ namespace Quaver.Shared.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
-            CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
+            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
