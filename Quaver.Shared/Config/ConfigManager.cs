@@ -238,6 +238,11 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
+        
+        /// <summary>
+        ///     If enabled, failed scores will not show in local scores.
+        /// </summary>
+        internal static Bindable<bool> DisplayFailedScores { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -431,6 +436,7 @@ namespace Quaver.Shared.Config
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
+            DisplayFailedScores = ReadValue(@"DisplayFailedScores", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -503,6 +509,7 @@ namespace Quaver.Shared.Config
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
+                    DisplayFailedScores.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
