@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Quaver.API.Enums;
 using Quaver.API.Replays;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -19,6 +20,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         ///     Reference to the actual gameplay screen.
         /// </summary>
         private GameplayScreen Screen { get; }
+
+        /// <summary>
+        ///     Reference to the hitobject manager.
+        /// </summary>
+        private HitObjectManagerKeys Manager => Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
 
         /// <summary>
         ///     The replay that is currently loaded.
@@ -62,7 +68,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         internal void HandleInput()
         {
-            if (CurrentFrame >= Replay.Frames.Count || !(Screen.Timing.Time >= Replay.Frames[CurrentFrame].Time))
+            if (CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time))
                 return;
 
             var previousActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame - 1].Keys);
@@ -85,7 +91,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
         internal void HandleSkip()
         {
-            var frame = Replay.Frames.FindLastIndex(x => x.Time <= Screen.Timing.Time);
+            var frame = Replay.Frames.FindLastIndex(x => x.Time <= Manager.CurrentAudioPosition);
 
             if (frame == -1)
                 return;
