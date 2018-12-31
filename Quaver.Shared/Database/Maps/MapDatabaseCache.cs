@@ -197,6 +197,24 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Map FindSet(int id)
+        {
+            try
+            {
+
+                return new SQLiteConnection(DatabasePath).Find<Map>(x => x.MapSetId == id);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return null;
+            }
+        }
+
+        /// <summary>
         ///     Reads the osu!.db file defined in config and loads all of those maps into the cache.
         /// </summary>
         private static IEnumerable<Map> LoadOsuBeatmapDatabase()
