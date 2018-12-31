@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Dialogs;
