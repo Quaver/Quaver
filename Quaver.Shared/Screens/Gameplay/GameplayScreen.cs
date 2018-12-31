@@ -220,7 +220,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (LoadedReplay != null)
             {
                 InReplayMode = true;
-                AddModsFromReplay();
             }
 
             // Create the current replay that will be captured.
@@ -228,7 +227,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             SetRuleset();
             SetRichPresence();
-            
+
             AudioTrack.AllowPlayback = true;
             View = new GameplayScreenView(this);
         }
@@ -323,30 +322,6 @@ namespace Quaver.Shared.Screens.Gameplay
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
-            }
-        }
-
-        /// <summary>
-        ///     Adds all modifiers that were present in the loaded replay (if there is one.)
-        /// </summary>
-        private void AddModsFromReplay()
-        {
-            // Add the correct mods on if we're in replay mode.
-            if (!InReplayMode)
-                return;
-
-            // Remove all the current mods that we have on.
-            ModManager.RemoveAllMods();
-
-            // Put on the mods from the replay.);
-            for (var i = 0; i <= Math.Log((int)LoadedReplay.Mods, 2); i++)
-            {
-                var mod = (ModIdentifier)Math.Pow(2, i);
-
-                if (!LoadedReplay.Mods.HasFlag(mod))
-                    continue;
-
-                ModManager.AddMod(mod);
             }
         }
 
