@@ -88,8 +88,6 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             CreateOrderByDateAddedButton();
             CreateTextMapsetsFound();
 
-            SearchBox.RawText = SelectScreen.PreviousSearchTerm;
-            
             var leftLine = new Sprite()
             {
                 Parent = this,
@@ -158,6 +156,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 Tint = Colors.DarkGray,
                 Alpha = 0.75f,
                 AllowSubmission = false,
+                RawText = SelectScreen.PreviousSearchTerm,
                 InputText =
                 {
                     Tint = Color.White,
