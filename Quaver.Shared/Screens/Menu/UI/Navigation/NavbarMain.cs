@@ -35,14 +35,15 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="leftAlignedItems"></param>
         /// <param name="rightAlignedItems"></param>
         /// <param name="isUpsideDown"></param>
-        public NavbarMain(List<NavbarItem> leftAlignedItems, List<NavbarItem> rightAlignedItems, bool isUpsideDown = false)
+        public NavbarMain(QuaverScreen screen, List<NavbarItem> leftAlignedItems, List<NavbarItem> rightAlignedItems, bool isUpsideDown = false)
             : base(leftAlignedItems, rightAlignedItems, isUpsideDown)
         {
             // Add community chat button
-            DownloadMapsButton = new NavbarItem("Download Maps") { DestroyIfParentIsNull = false };
+            DownloadMapsButton = new NavbarItem("Download", screen.Type == QuaverScreenType.Download) { DestroyIfParentIsNull = false };
             DownloadMapsButton.Clicked += (o, e) => OnDownloadMapsButtonClicked();
 
             // Add community chat button
