@@ -220,7 +220,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (LoadedReplay != null)
             {
                 InReplayMode = true;
-                AddModsFromReplay();
             }
 
             // Create the current replay that will be captured.
@@ -327,30 +326,6 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Adds all modifiers that were present in the loaded replay (if there is one.)
-        /// </summary>
-        private void AddModsFromReplay()
-        {
-            // Add the correct mods on if we're in replay mode.
-            if (!InReplayMode)
-                return;
-
-            // Remove all the current mods that we have on.
-            ModManager.RemoveAllMods();
-
-            // Put on the mods from the replay.);
-            for (var i = 0; i <= Math.Log((int)LoadedReplay.Mods, 2); i++)
-            {
-                var mod = (ModIdentifier)Math.Pow(2, i);
-
-                if (!LoadedReplay.Mods.HasFlag(mod))
-                    continue;
-
-                ModManager.AddMod(mod);
-            }
-        }
-
-        /// <summary>
         ///     Handles the input for all pause input.
         /// </summary>
         /// <param name="gameTime"></param>
@@ -419,8 +394,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 1,
                     (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
 
-                // Make the user hold the pause key down before pausing.
-                if (TimePauseKeyHeld < TimeToHoldPause)
+                // Make the user hold the pause key down before pausing if tap to pause is disabled.
+                if (!ConfigManager.TapToPause.Value && TimePauseKeyHeld < TimeToHoldPause)
                     return;
 
                 IsPaused = true;

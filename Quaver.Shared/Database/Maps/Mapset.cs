@@ -1,15 +1,17 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
@@ -18,6 +20,7 @@ using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform;
 using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.Database.Maps
@@ -49,7 +52,8 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void ExportToZip()
         {
-            System.IO.Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Exports/");
+            var exportsDir = $"{ConfigManager.DataDirectory}/Exports/";
+            System.IO.Directory.CreateDirectory(exportsDir);
 
             var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
             System.IO.Directory.CreateDirectory(tempFolder);
@@ -98,12 +102,12 @@ namespace Quaver.Shared.Database.Maps
 
                 archive.AddAllFromDirectory(tempFolder);
 
-                var outputPath = $"{ConfigManager.DataDirectory}/Exports/" +
+                var outputPath = exportsDir +
                                  $"{StringHelper.FileNameSafeString(Artist + " - " + Title + " - " + GameBase.Game.TimeRunning)}.qp";
 
                 archive.SaveTo(outputPath, CompressionType.Deflate);
 
-                Process.Start("explorer.exe", "/select, \"" + outputPath.Replace("/", "\\") + "\"");
+                Utils.NativeUtils.HighlightInFileManager(outputPath);
             }
 
             System.IO.Directory.Delete(tempFolder, true);
