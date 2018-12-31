@@ -1,12 +1,15 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.API.Replays;
+using Quaver.Shared.Modifiers;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -62,7 +65,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (CurrentFrame >= Replay.Frames.Count || !(Screen.Timing.Time >= Replay.Frames[CurrentFrame].Time))
                 return;
 
-            // Get active keys in both the current and previous frames.
             var previousActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame - 1].Keys);
             var currentActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame].Keys);
 
@@ -83,11 +85,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
         internal void HandleSkip()
         {
-            // Find the next frame 
             var frame = Replay.Frames.FindLastIndex(x => x.Time <= Screen.Timing.Time);
 
-            if (frame != -1)
-                CurrentFrame = frame;
+            if (frame == -1)
+                return;
+
+            CurrentFrame = ModManager.IsActivated(ModIdentifier.Autoplay) ? frame + 1 : frame;
         }
     }
 }
