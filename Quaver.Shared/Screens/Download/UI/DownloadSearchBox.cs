@@ -24,6 +24,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Logging;
 using Wobble.Window;
@@ -87,7 +88,7 @@ namespace Quaver.Shared.Screens.Download.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            SearchBox.AlwaysFocused = !IsSearching.Value;
+            SearchBox.AlwaysFocused = !IsSearching.Value && DialogManager.Dialogs.Count == 0;
             base.Update(gameTime);
         }
 
