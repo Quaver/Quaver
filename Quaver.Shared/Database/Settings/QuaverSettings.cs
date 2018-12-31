@@ -25,5 +25,7 @@ namespace Quaver.Shared.Database.Settings
         public string VersionRatingProcessorKeys { get; set; }
 
         public string VersionScoreProcessorKeys { get; set; }
+
+        public string VersionReplay { get; set; }
     }
 }

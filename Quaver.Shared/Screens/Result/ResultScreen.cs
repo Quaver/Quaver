@@ -252,6 +252,7 @@ namespace Quaver.Shared.Screens.Result
 
             // Set the replay that the user has generated
             Replay = Gameplay.ReplayCapturer.Replay;
+            Replay.ReplayVersion = Replay.Version;
             Replay.PauseCount = Gameplay.PauseCount;
             ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
             Replay.FromScoreProcessor(ScoreProcessor);
@@ -325,6 +326,7 @@ namespace Quaver.Shared.Screens.Result
                     Gameplay.PauseCount);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
+                localScore.ReplayVersion = Replay.Version;
 
                 if (ScoreProcessor.Failed)
                     localScore.PerformanceRating = 0;

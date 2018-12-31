@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -56,7 +57,8 @@ namespace Quaver.Shared.Database.Settings
                     {
                         VersionDifficultyProcessorKeys = DifficultyProcessorKeys.Version,
                         VersionScoreProcessorKeys = ScoreProcessorKeys.Version,
-                        VersionRatingProcessorKeys = RatingProcessorKeys.Version
+                        VersionRatingProcessorKeys = RatingProcessorKeys.Version,
+                        VersionReplay = Replay.Version
                     };
 
                     conn.Insert(settings);

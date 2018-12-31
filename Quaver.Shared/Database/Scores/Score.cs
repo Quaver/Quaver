@@ -133,6 +133,11 @@ namespace Quaver.Shared.Database.Scores
         public string RatingProcessorVersion { get; set; }
 
         /// <summary>
+        ///     The version of the replay.
+        /// </summary>
+        public string ReplayVersion { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]
