@@ -1,4 +1,5 @@
 using Quaver.API.Enums;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -13,6 +14,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "I have a variety of taste preferences, but noodles aren't included.";
 
         public bool Ranked { get; set; } = false;
+
+        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
 
