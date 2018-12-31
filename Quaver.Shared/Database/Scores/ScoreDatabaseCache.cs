@@ -58,7 +58,7 @@ namespace Quaver.Shared.Database.Scores
                 conn.Close();
 
                 // Remove all scores that have F grade if "Display Failed Scores" setting is set to yes.
-                if (!ConfigManager.DisplayFailedScores.Value)
+                if (!ConfigManager.DisplayFailedLocalScores.Value)
                     scores.RemoveAll(x => x.Grade == Grade.F);
                 
                 return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.PerformanceRating).ThenByDescending(x => x.Accuracy).ToList();

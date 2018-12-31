@@ -97,7 +97,7 @@ namespace Quaver.Shared.Screens.Select
 
 
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
-            ConfigManager.DisplayFailedScores.ValueChanged += OnDisplayFailedScoresChanged;
+            ConfigManager.DisplayFailedLocalScores.ValueChanged += OnDisplayFailedScoresChanged;
             View = new SelectScreenView(this);
         }
 
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Select
         {
             // ReSharper disable twice DelegateSubtraction
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
-            ConfigManager.DisplayFailedScores.ValueChanged -= OnDisplayFailedScoresChanged;
+            ConfigManager.DisplayFailedLocalScores.ValueChanged -= OnDisplayFailedScoresChanged;
                 
             base.Destroy();
         }

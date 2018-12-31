@@ -325,8 +325,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
-                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
-                    new SettingsBool(this, "Display Failed Scores", ConfigManager.DisplayFailedScores)
+                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
@@ -364,7 +363,8 @@ namespace Quaver.Shared.Screens.Settings
                 {
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
                     new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
-                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer)
+                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
+                    new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
                 })
             };
 
