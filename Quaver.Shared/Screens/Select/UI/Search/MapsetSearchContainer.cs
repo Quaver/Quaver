@@ -88,6 +88,8 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             CreateOrderByDateAddedButton();
             CreateTextMapsetsFound();
 
+            SearchBox.RawText = SelectScreen.PreviousSearchTerm;
+            
             var leftLine = new Sprite()
             {
                 Parent = this,
