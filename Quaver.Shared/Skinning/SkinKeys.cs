@@ -53,6 +53,8 @@ namespace Quaver.Shared.Skinning
 
         internal float ColumnLightingScale { get; private set; }
 
+        internal int ColumnLightingOffsetY { get; private set; }
+
         internal int ColumnSize { get; private set; }
 
         internal int ReceptorPosOffsetY { get; private set; }
@@ -271,7 +273,8 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -312,6 +315,7 @@ namespace Quaver.Shared.Skinning
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -363,7 +367,8 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -407,6 +412,7 @@ namespace Quaver.Shared.Skinning
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -468,6 +474,7 @@ namespace Quaver.Shared.Skinning
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
+            ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
             ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
