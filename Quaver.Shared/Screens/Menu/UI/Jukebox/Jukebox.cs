@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -335,10 +335,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             if (SongTitleText.Animations.Count != 0)
                 return;
 
-            SongTitleText.X = SongTitleText.Width + 200;
+            SongTitleText.X = SongTitleContainer.Width;
 
             SongTitleText.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
-                SongTitleText.X, -SongTitleText.Width, 6000));
+                SongTitleText.X, -SongTitleContainer.Width -(SongTitleText.Width - SongTitleContainer.Width), 6000));
         }
 
         /// <summary>
@@ -474,6 +474,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 {
                     AudioEngine.LoadCurrentTrack();
                     AudioEngine.Track?.Play();
+                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
                 }
                 catch (Exception)
                 {
