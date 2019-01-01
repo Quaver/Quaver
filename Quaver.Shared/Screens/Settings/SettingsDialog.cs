@@ -312,8 +312,6 @@ namespace Quaver.Shared.Screens.Settings
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
-                    new SettingsCustomSkin(this, "Custom Skin"),
-                    new SettingsDefaultSkin(this, "Default Skin"),
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
@@ -326,6 +324,13 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
+                }),
+                // Skinning
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
+                {
+                    new SettingsCustomSkin(this, "Custom Skin"),
+                    new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsExportSkin(this, "Export Custom Skin")
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
