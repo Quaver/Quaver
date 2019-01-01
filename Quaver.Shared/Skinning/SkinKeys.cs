@@ -81,6 +81,10 @@ namespace Quaver.Shared.Skinning
 
         internal int HitLightingY { get; private set; }
 
+        internal int HitLightingFps { get; private set; }
+
+        internal int HoldLightingFps { get; private set; }
+
         internal int HitLightingWidth { get; private set; }
 
         internal int HitLightingHeight { get; private set; }
@@ -295,6 +299,8 @@ namespace Quaver.Shared.Skinning
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -337,6 +343,8 @@ namespace Quaver.Shared.Skinning
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -394,6 +402,8 @@ namespace Quaver.Shared.Skinning
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -440,6 +450,8 @@ namespace Quaver.Shared.Skinning
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
                     HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -498,6 +510,8 @@ namespace Quaver.Shared.Skinning
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
             HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
+            HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
+            HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
             HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
             HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
