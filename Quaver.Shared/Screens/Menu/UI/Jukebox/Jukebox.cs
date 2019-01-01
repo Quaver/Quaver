@@ -226,7 +226,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                     try
                     {
                         AudioEngine.LoadCurrentTrack();
-                        AudioEngine.Track.Play();
+
+                        if (AudioEngine.Track != null)
+                        {
+                            lock (AudioEngine.Track)
+                                AudioEngine.Track.Play();
+                        }
                     }
                     catch (Exception e)
                     {
@@ -368,7 +373,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                     var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
 
                     Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
-                    AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
                 }
                 catch (Exception ex)
                 {
@@ -438,17 +445,20 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                     return;
 
-                if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
+                lock (AudioEngine.Track)
                 {
-                    AudioEngine.Track.Play();
-                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
-                    ChangeDiscordPresenceToSongTitle();
-                }
-                else
-                {
-                    AudioEngine.Track.Pause();
-                    PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_play_button);
-                    ChangeDiscordPresenceToIdle();
+                    if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
+                    {
+                        AudioEngine.Track.Play();
+                        PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
+                        ChangeDiscordPresenceToSongTitle();
+                    }
+                    else
+                    {
+                        AudioEngine.Track.Pause();
+                        PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_play_button);
+                        ChangeDiscordPresenceToIdle();
+                    }
                 }
             };
         }
@@ -473,7 +483,13 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 try
                 {
                     AudioEngine.LoadCurrentTrack();
-                    AudioEngine.Track?.Play();
+
+                    if (AudioEngine.Track != null)
+                    {
+                        lock (AudioEngine.Track)
+                            AudioEngine.Track?.Play();
+                    }
+
                     PauseResumeButton.Image = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
                 }
                 catch (Exception)
