@@ -260,7 +260,12 @@ namespace Quaver.Shared
             AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
             AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value;
 
-            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = e.Value;;
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
+            {
+                AudioTrack.GlobalVolume = e.Value;
+                AudioSample.GlobalVolume = e.Value;
+            };;
+
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => { if (AudioEngine.Track != null) AudioEngine.Track.Volume = e.Value;  };
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
@@ -364,7 +369,7 @@ namespace Quaver.Shared
 
             Graphics.ApplyChanges();
         }
-        
+
         /// <summary>
         ///     Handles input's that can be executed everywhere.
         /// </summary>
@@ -385,7 +390,7 @@ namespace Quaver.Shared
             // Handles FPS limiter changes
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
                 return;
-            
+
             var index = (int) ConfigManager.FpsLimiterType.Value;
 
             if (index + 1 < Enum.GetNames(typeof(FpsLimitType)).Length)
@@ -427,7 +432,7 @@ namespace Quaver.Shared
 
             if (DialogManager.Dialogs.Count > 0)
                 return;
-            
+
             switch (CurrentScreen.Type)
             {
                 case QuaverScreenType.Menu:
@@ -446,7 +451,7 @@ namespace Quaver.Shared
             // Check for modifier keys
             if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
                 return;
-            
+
             if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
                 return;
 
