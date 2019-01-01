@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Select
             // ReSharper disable twice DelegateSubtraction
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
             ConfigManager.DisplayFailedLocalScores.ValueChanged -= OnDisplayFailedScoresChanged;
-                
+
             base.Destroy();
         }
 
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter) || AvailableMapsets.Count == 0)
                 return;
 
             switch (view.ActiveContainer)
