@@ -77,6 +77,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
+        internal int HitLightingX { get; private set; }
+
         internal int HitLightingY { get; private set; }
 
         internal int HitLightingWidth { get; private set; }
@@ -292,6 +294,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -333,6 +336,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -389,6 +393,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -434,6 +439,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -491,6 +497,7 @@ namespace Quaver.Shared.Skinning
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
+            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
             HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
             HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);

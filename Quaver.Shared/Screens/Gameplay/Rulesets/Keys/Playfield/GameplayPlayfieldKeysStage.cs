@@ -423,7 +423,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // otherwise we'll use the one from their skin config.
                 hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
 
-                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f  - hl.Width / 2f,
+                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f  - hl.Width / 2f + Skin.HitLightingX,
                     HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
 
                 HitLightingObjects.Add(hl);
