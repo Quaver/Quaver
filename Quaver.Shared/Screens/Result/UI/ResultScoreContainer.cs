@@ -52,6 +52,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private SpriteText TextStatistics { get; set; }
 
         /// <summary>
+        ///     The hit difference graph.
+        /// </summary>
+        private ResultHitDifferenceGraph HitDifferenceGraph { get; set; }
+
+        /// <summary>
         ///     Table header background
         /// </summary>
         public Sprite HeaderBackground { get; private set; }
@@ -93,6 +98,7 @@ namespace Quaver.Shared.Screens.Result.UI
             CreateVerticalDividerLine();
             CreateScoreResultsText();
             CreateStatisticsText();
+            CreateHitDifferenceGraph();
             CreateKeyValueItems();
             CreateJudgementBreakdown();
             CreateOnlineStats();
@@ -172,6 +178,17 @@ namespace Quaver.Shared.Screens.Result.UI
             TextStatistics.Y -= TextStatistics.Height / 2f;
             TextStatistics.X -= TextStatistics.Width / 2f;
         }
+
+        /// <summary>
+        ///     Creates the hit difference graph.
+        /// </summary>
+        private void CreateHitDifferenceGraph() => HitDifferenceGraph =
+            new ResultHitDifferenceGraph(new ScalableVector2(Width - VerticalDividerLine.X - 30, 200), Screen)
+            {
+                Parent = this,
+                X = VerticalDividerLine.X + 15,
+                Y = BottomHorizontalDividerLine.Y - 15 - 200,
+            };
 
         /// <summary>
         ///     Creates all of the main ite
