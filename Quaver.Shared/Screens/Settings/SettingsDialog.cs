@@ -235,14 +235,14 @@ namespace Quaver.Shared.Screens.Settings
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (SkinManager.NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value
+                    || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
                     ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
                     ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
                     Transitioner.FadeIn();
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-//                    IsGloballyClickable = false;
                     dismissDalog = false;
                 }
 

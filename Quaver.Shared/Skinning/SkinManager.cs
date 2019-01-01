@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -18,12 +18,12 @@ namespace Quaver.Shared.Skinning
         ///     The time that the user has requested their skin be reloaded.
         /// </summary>
         public static long TimeSkinReloadRequested { get; set; }
-        
+
         /// <summary>
         ///     If non-null, we require a skin reload.
         /// </summary>
         public static string NewQueuedSkin { get; set; }
-        
+
         /// <summary>
         ///     The currently selected skin
         /// </summary>
@@ -33,7 +33,7 @@ namespace Quaver.Shared.Skinning
         ///     Loads the currently selected skin
         /// </summary>
         public static void Load() => Skin = new SkinStore();
-        
+
         /// <summary>
         ///     Called every frame. Waits for a skin reload to be queued up.
         /// </summary>
@@ -43,7 +43,6 @@ namespace Quaver.Shared.Skinning
             if (TimeSkinReloadRequested != 0 && GameBase.Game.TimeRunning - TimeSkinReloadRequested >= 400)
             {
                 Load();
-                NewQueuedSkin = null;
                 TimeSkinReloadRequested = 0;
 
                 ThreadScheduler.RunAfter(() =>
