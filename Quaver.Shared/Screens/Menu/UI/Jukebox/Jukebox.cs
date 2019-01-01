@@ -335,10 +335,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             if (SongTitleText.Animations.Count != 0)
                 return;
 
-            SongTitleText.X = SongTitleText.Width + 200;
+            SongTitleText.X = SongTitleContainer.Width;
 
             SongTitleText.Animations.Add(new Animation(AnimationProperty.X, Easing.Linear,
-                SongTitleText.X, -SongTitleText.Width, 6000));
+                SongTitleText.X, -SongTitleContainer.Width -(SongTitleText.Width - SongTitleContainer.Width), 6000));
         }
 
         /// <summary>
