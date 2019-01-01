@@ -491,6 +491,8 @@ namespace Quaver.Shared.Skinning
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
+            HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
+            HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
