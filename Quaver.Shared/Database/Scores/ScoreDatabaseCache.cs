@@ -57,6 +57,10 @@ namespace Quaver.Shared.Database.Scores
                 var scores = conn.Query<Score>(sql, md5);
                 conn.Close();
 
+                // Remove all scores that have F grade if "Display Failed Scores" setting is set to yes.
+                if (!ConfigManager.DisplayFailedLocalScores.Value)
+                    scores.RemoveAll(x => x.Grade == Grade.F);
+                
                 return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.PerformanceRating).ThenByDescending(x => x.Accuracy).ToList();
             }
             catch (Exception e)

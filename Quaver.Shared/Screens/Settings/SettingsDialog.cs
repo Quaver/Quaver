@@ -235,14 +235,14 @@ namespace Quaver.Shared.Screens.Settings
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (SkinManager.NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value
+                    || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
                     ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
                     ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
                     Transitioner.FadeIn();
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-//                    IsGloballyClickable = false;
                     dismissDalog = false;
                 }
 
@@ -312,8 +312,6 @@ namespace Quaver.Shared.Screens.Settings
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
-                    new SettingsCustomSkin(this, "Custom Skin"),
-                    new SettingsDefaultSkin(this, "Default Skin"),
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
@@ -326,6 +324,13 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
+                }),
+                // Skinning
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
+                {
+                    new SettingsCustomSkin(this, "Custom Skin"),
+                    new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsExportSkin(this, "Export Custom Skin")
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
@@ -363,7 +368,8 @@ namespace Quaver.Shared.Screens.Settings
                 {
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
                     new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
-                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer)
+                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
+                    new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
                 })
             };
 
