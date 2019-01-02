@@ -99,7 +99,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             var playfield = (GameplayPlayfieldKeys)Playfield;
             if (direction.Equals(ScrollDirection.Split))
             {
-                var halfIndex = keys / 2;
+                var halfIndex = keys / 2 - 1;
                 var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
                 TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.HitPositionOffsets[0], halfPos, 0));
                 TimingLineManager.Add(new Keys.Playfield.Lines.TimingLineManager(this, ScrollDirection.Up, playfield.ColumnLightingPositionY[halfIndex], playfield.Width - halfPos, halfPos));
