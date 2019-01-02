@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Screen = screen;
             Ruleset = ruleset;
             Container = new Container();
-            DetermineScrollDirections();
+            SetLaneScrollDirections();
             SetReceptorPositions();
             ApplyHitPositionsOffset();
             CreateElementContainers();
@@ -131,83 +131,97 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Determine the Scroll Directions for each Lane.
         /// </summary>
-        private void DetermineScrollDirections()
+        private void SetLaneScrollDirections()
         {
             switch (Ruleset.Map.Mode)
             {
                 case GameMode.Keys4:
-                    switch (ConfigManager.ScrollDirection4K.Value)
-                    {
-                        case ScrollDirection.Down:
-                            ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down
-                            };
-                            break;
-                        case ScrollDirection.Up:
-                            ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                            break;
-                        case ScrollDirection.Split:
-                            ScrollDirections = new ScrollDirection[4]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                            break;
-                        default:
-                            throw new Exception("Scroll Direction Config Value does not exist");
-                    }
+                    ScrollDirections = DetermineScrollDirections4K(ConfigManager.ScrollDirection4K.Value);
                     break;
                 case GameMode.Keys7:
-                    switch (ConfigManager.ScrollDirection7K.Value)
-                    {
-                        case ScrollDirection.Down:
-                            ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down
-                            };
-                            break;
-                        case ScrollDirection.Up:
-                            ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                            break;
-                        case ScrollDirection.Split:
-                            ScrollDirections = new ScrollDirection[7]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                            break;
-                        default:
-                            throw new Exception("Scroll Direction Config Value does not exist");
-                    }
+                    ScrollDirections = DetermineScrollDirections7K(ConfigManager.ScrollDirection7K.Value);
                     break;
                 default:
                     throw new Exception("Map Mode does not exist.");
+            }
+        }
+
+        /// <summary>
+        ///     Returns Array of Scroll Direction for each specific lane in 4K GameMode.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        private ScrollDirection[] DetermineScrollDirections4K(ScrollDirection direction)
+        {
+            switch (direction)
+            {
+                case ScrollDirection.Down:
+                    return new ScrollDirection[4]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down
+                            };
+                case ScrollDirection.Up:
+                    return new ScrollDirection[4]{
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                case ScrollDirection.Split:
+                    return new ScrollDirection[4]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                default:
+                    throw new Exception("Scroll Direction Config Value does not exist");
+            }
+        }
+
+        /// <summary>
+        ///     Returns Array of Direction for each specific lane in 7K GameMode.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        private ScrollDirection[] DetermineScrollDirections7K(ScrollDirection direction)
+        {
+            switch (direction)
+            {
+                case ScrollDirection.Down:
+                    return new ScrollDirection[7]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down
+                            };
+                case ScrollDirection.Up:
+                    return new ScrollDirection[7]{
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                case ScrollDirection.Split:
+                    return new ScrollDirection[7]{
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Down,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up,
+                                ScrollDirection.Up
+                            };
+                default:
+                    throw new Exception("Scroll Direction Config Value does not exist");
             }
         }
 
@@ -256,7 +270,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         HitPositionOffsets[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
-                        Console.WriteLine(skin.HitPosOffsetY);
                         HitPositionOffsets[i] = (ColumnLightingPositionY[i] - skin.HitPosOffsetY);
                         break;
                 }
