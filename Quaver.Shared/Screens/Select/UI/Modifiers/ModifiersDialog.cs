@@ -195,6 +195,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 {
                     Alignment = Alignment.TopLeft,
                 },
+
+                new DrawableModifierBool(this, new ModNoLongNotes())
+                {
+                    Alignment = Alignment.TopLeft,
+                },
             };
 
             for (var i = 0; i < ModsList.Count; i++)

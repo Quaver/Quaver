@@ -70,6 +70,9 @@ namespace Quaver.Shared.Screens.Importing
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
+            if (SelectScreen.PreviousSearchTerm != "")
+                SelectScreen.PreviousSearchTerm = "";
+
             Exit(() =>
             {
                 AudioEngine.Track?.Fade(10, 300);

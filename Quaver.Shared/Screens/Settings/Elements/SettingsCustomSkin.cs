@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Quaver.Shared.Config;
+using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
@@ -54,15 +55,15 @@ namespace Quaver.Shared.Screens.Settings.Elements
                 // Check if the user already has the default skin enabled and switched back to it.
                 // User wants to choose the default skin
                 case "Default Skin" when string.IsNullOrEmpty(skin):
-                    dialog.NewQueuedSkin = null;
+                    SkinManager.NewQueuedSkin = null;
                     break;
                 // User is selecting a custom skin
                 case "Default Skin" when !string.IsNullOrEmpty(skin):
-                    dialog.NewQueuedSkin = "";
+                    SkinManager.NewQueuedSkin = "";
                     break;
                 default:
                     if (val != skin)
-                        dialog.NewQueuedSkin = val;
+                        SkinManager.NewQueuedSkin = val;
                     break;
             }
         }

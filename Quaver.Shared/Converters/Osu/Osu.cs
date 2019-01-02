@@ -69,8 +69,8 @@ namespace Quaver.Shared.Converters.Osu
                 {
                     var fileName = $"{extractDirectory}/{Path.GetFileName(tempFile)}";
 
-                    // Make sure the path to the file is less than 200 characters
-                    while (fileName.Length > 200)
+                    // Make sure the path to the file is less than 260 characters
+                    while (fileName.Length > 260)
                         fileName = fileName.Remove(fileName.Length - 1);
 
                     // Go through each file and move it.

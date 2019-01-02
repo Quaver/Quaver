@@ -53,6 +53,8 @@ namespace Quaver.Shared.Skinning
 
         internal float ColumnLightingScale { get; private set; }
 
+        internal int ColumnLightingOffsetY { get; private set; }
+
         internal int ColumnSize { get; private set; }
 
         internal int ReceptorPosOffsetY { get; private set; }
@@ -75,7 +77,13 @@ namespace Quaver.Shared.Skinning
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
+        internal int HitLightingX { get; private set; }
+
         internal int HitLightingY { get; private set; }
+
+        internal int HitLightingFps { get; private set; }
+
+        internal int HoldLightingFps { get; private set; }
 
         internal int HitLightingWidth { get; private set; }
 
@@ -271,7 +279,8 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -289,6 +298,9 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -308,10 +320,11 @@ namespace Quaver.Shared.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
-                    HitPosOffsetY = 110;
+                    HitPosOffsetY = 105;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -329,6 +342,9 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -363,7 +379,8 @@ namespace Quaver.Shared.Skinning
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.5f;
+                    ColumnLightingScale = 1f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -384,6 +401,9 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -407,6 +427,7 @@ namespace Quaver.Shared.Skinning
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
+                    ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -428,6 +449,9 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
+                    HitLightingX = 0;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
@@ -468,6 +492,7 @@ namespace Quaver.Shared.Skinning
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
+            ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
             ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
@@ -483,6 +508,12 @@ namespace Quaver.Shared.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
+            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
+            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
+            HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
+            HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
+            HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
+            HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);

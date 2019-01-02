@@ -15,8 +15,8 @@ namespace Quaver.Shared.Screens
         Menu,
         Results,
         Select,
-        Splash,
         Importing,
-        Alpha
+        Alpha,
+        Download
     }
 }

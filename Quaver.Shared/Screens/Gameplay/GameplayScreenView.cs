@@ -239,7 +239,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
-            ProgressBar = new SongTimeProgressBar(new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length, 0,
+            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length, 0,
                 Colors.MainAccentInactive, Colors.MainAccent)
             {
                 Parent = Container,

@@ -1,15 +1,18 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
@@ -58,7 +61,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
 
             CreateModifierName();
             CreateModifierDescription();
-
+            RankedStatusIcon();
             // ReSharper disable once VirtualMemberCallInConstructor
             Options = CreateModsDialogOptions();
 
@@ -114,6 +117,27 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             X = ModifierName.X,
             UsePreviousSpriteBatchOptions = true
         };
+
+        private void RankedStatusIcon()
+        {
+            if (!Modifier.Ranked)
+            {
+                Modifier.UnrankedSprite = new Sprite()
+                {
+                    Parent = this,
+                    Alignment = Alignment.MidLeft,
+                    Y = ModifierName.Height - 20,
+                    X = ModifierName.X / 2f,
+                    UsePreviousSpriteBatchOptions = true,
+                    Height = 30,
+                    Width = 30,
+                    Image = UserInterface.NotificationWarning
+                };
+                Modifier.UnrankedSprite.X -= Modifier.UnrankedSprite.X / 2f;
+            }
+        }
+
+
 
         /// <summary>
         ///    Creates the dialog options for the mods.

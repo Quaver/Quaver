@@ -235,6 +235,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
 
         /// <summary>
+        ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
+        /// </summary>
+        internal static Bindable<bool> TapToPause { get; private set; }
+        
+        /// <summary>
+        ///     If enabled, failed scores will not show in local scores.
+        /// </summary>
+        internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -279,7 +289,7 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<Keys> KeyIncreaseScrollSpeed { get; private set; }
         internal static Bindable<Keys> KeyDecreaseScrollSpeed { get; private set; }
-        
+
         /// <summary>
         ///     The keys to increase/decrease map offset.
         /// </summary>
@@ -383,7 +393,7 @@ namespace Quaver.Shared.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
-            CustomFpsLimit = ReadInt(@"CustomFPSLimit", 240, 60, int.MaxValue, data);
+            CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
@@ -425,6 +435,8 @@ namespace Quaver.Shared.Config
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
+            TapToPause = ReadValue(@"TapToPause", false, data);
+            DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -496,6 +508,8 @@ namespace Quaver.Shared.Config
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
                     SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
+                    TapToPause.ValueChanged += AutoSaveConfiguration;
+                    DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
