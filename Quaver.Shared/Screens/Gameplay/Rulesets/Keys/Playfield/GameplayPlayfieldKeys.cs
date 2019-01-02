@@ -226,13 +226,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width);
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i];
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY;
                         break;
                     case ScrollDirection.Up:
                         var receptor = skin.NoteReceptorsUp[i];
                         var hitObject = skin.NoteHitObjects[i][0];
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
