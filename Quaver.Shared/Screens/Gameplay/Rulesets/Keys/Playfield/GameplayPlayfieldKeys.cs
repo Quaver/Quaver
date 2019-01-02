@@ -11,6 +11,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
+using System.Linq;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -136,10 +137,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             switch (Ruleset.Map.Mode)
             {
                 case GameMode.Keys4:
-                    ScrollDirections = DetermineScrollDirections4K(ConfigManager.ScrollDirection4K.Value);
+                    ScrollDirections = DetermineScrollDirections(4, ConfigManager.ScrollDirection4K.Value);
                     break;
                 case GameMode.Keys7:
-                    ScrollDirections = DetermineScrollDirections7K(ConfigManager.ScrollDirection7K.Value);
+                    ScrollDirections = DetermineScrollDirections(7, ConfigManager.ScrollDirection7K.Value);
                     break;
                 default:
                     throw new Exception("Map Mode does not exist.");
@@ -147,82 +148,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     Returns Array of Scroll Direction for each specific lane in 4K GameMode.
+        ///     Returns Array of Scroll Directions for each specific lane for a specific GameMode.
         /// </summary>
+        /// <param name="keys"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        private ScrollDirection[] DetermineScrollDirections4K(ScrollDirection direction)
+        private ScrollDirection[] DetermineScrollDirections(int keys, ScrollDirection direction)
         {
-            switch (direction)
+            // Case: Config = Split Scroll
+            if (direction.Equals(ScrollDirection.Split))
             {
-                case ScrollDirection.Down:
-                    return new ScrollDirection[4]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down
-                            };
-                case ScrollDirection.Up:
-                    return new ScrollDirection[4]{
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                case ScrollDirection.Split:
-                    return new ScrollDirection[4]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                default:
-                    throw new Exception("Scroll Direction Config Value does not exist");
-            }
-        }
+                var halfIndedx = keys / 2;
+                var output = new ScrollDirection[keys];
+                for (var i = 0; i < keys; i++)
+                {
+                    if (i >= halfIndedx)
+                        output[i] = ScrollDirection.Up;
+                    else
+                        output[i] = ScrollDirection.Down;
+                }
 
-        /// <summary>
-        ///     Returns Array of Direction for each specific lane in 7K GameMode.
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        private ScrollDirection[] DetermineScrollDirections7K(ScrollDirection direction)
-        {
-            switch (direction)
-            {
-                case ScrollDirection.Down:
-                    return new ScrollDirection[7]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down
-                            };
-                case ScrollDirection.Up:
-                    return new ScrollDirection[7]{
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                case ScrollDirection.Split:
-                    return new ScrollDirection[7]{
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Down,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up,
-                                ScrollDirection.Up
-                            };
-                default:
-                    throw new Exception("Scroll Direction Config Value does not exist");
+                return output;
             }
+
+            // Case: Config = Down/Up Scroll
+            return Enumerable.Repeat(direction, keys).ToArray();
         }
 
         /// <summary>
