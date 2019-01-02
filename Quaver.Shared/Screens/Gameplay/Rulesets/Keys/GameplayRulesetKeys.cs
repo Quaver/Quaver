@@ -78,97 +78,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
                 switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
-                        switch (ConfigManager.ScrollDirection4K.Value)
-                        {
-                            case ScrollDirection.Down:
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
-                                    playfield.Width,
-                                    0
-                                ));
-                                break;
-                            case ScrollDirection.Up:
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Up,
-                                    playfield.HitPositionOffsets[0],
-                                    playfield.Width,
-                                    0
-                                ));
-                                break;
-                            case ScrollDirection.Split:
-                                var halfway = playfield.Stage.Receptors[1].X + playfield.Stage.Receptors[1].Width;
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
-                                    halfway,
-                                    0
-                                ));
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Up,
-                                    playfield.ColumnLightingPositionY[2],
-                                    playfield.Width - halfway,
-                                    halfway
-                                ));
-                                break;
-                        }
+                        CreateTimingLineManagers(4, ConfigManager.ScrollDirection4K.Value);
                         break;
                     case GameMode.Keys7:
-                        switch (ConfigManager.ScrollDirection7K.Value)
-                        {
-                            case ScrollDirection.Down:
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
-                                    playfield.Width,
-                                    0
-                                ));
-                                break;
-                            case ScrollDirection.Up:
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Up,
-                                    playfield.HitPositionOffsets[0],
-                                    playfield.Width,
-                                    0
-                                ));
-                                break;
-                            case ScrollDirection.Split:
-                                var halfway = playfield.Stage.Receptors[3].X + playfield.Stage.Receptors[3].Width;
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Down,
-                                    playfield.HitPositionOffsets[0],
-                                    halfway,
-                                    0
-                                ));
-                                TimingLineManager.Add(new TimingLineManager
-                                (
-                                    this,
-                                    ScrollDirection.Up,
-                                    playfield.ColumnLightingPositionY[3],
-                                    playfield.Width - halfway,
-                                    halfway
-                                ));
-                                break;
-                        }
+                        CreateTimingLineManagers(7, ConfigManager.ScrollDirection7K.Value);
                         break;
                     default:
                         throw new Exception("Game Mode does not exist");
                 }
             }
+        }
+
+        /// <summary>
+        ///     Generate Timing Line Managers for scroll direction. Will create multiple managers if  multiple scroll directions exist.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="direction"></param>
+        private void CreateTimingLineManagers(int keys, ScrollDirection direction)
+        {
+            var playfield = (GameplayPlayfieldKeys)Playfield;
+            if (direction.Equals(ScrollDirection.Split))
+            {
+                var halfIndex = keys / 2;
+                var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
+                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.HitPositionOffsets[0], halfPos, 0));
+                TimingLineManager.Add(new Keys.Playfield.Lines.TimingLineManager(this, ScrollDirection.Up, playfield.ColumnLightingPositionY[halfIndex], playfield.Width - halfPos, halfPos));
+                return;
+            }
+            TimingLineManager.Add(new Keys.Playfield.Lines.TimingLineManager(this, direction, playfield.HitPositionOffsets[0], playfield.Width, 0));
         }
 
         /// <inheritdoc />
