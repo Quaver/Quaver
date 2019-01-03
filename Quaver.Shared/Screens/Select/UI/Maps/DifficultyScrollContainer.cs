@@ -102,9 +102,9 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
-            ScrollSpeed = 150;
+            ScrollSpeed = 320;
             EasingType = Easing.OutQuint;
-            TimeToCompleteScroll = 1500;
+            TimeToCompleteScroll = 1200;
 
             ContentContainer.SetChildrenVisibility = true;
 
