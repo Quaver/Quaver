@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -37,6 +38,9 @@ namespace Quaver
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
+
+            using (var p = Process.GetCurrentProcess())
+                p.PriorityClass = ProcessPriorityClass.High;
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

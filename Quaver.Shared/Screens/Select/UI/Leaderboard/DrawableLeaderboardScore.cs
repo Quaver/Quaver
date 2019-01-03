@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -293,7 +293,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Parent.ScreenRectangle.ToRectangle());
+            var newRect = Rectangle.Intersect(ScreenRectangle, Parent.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 

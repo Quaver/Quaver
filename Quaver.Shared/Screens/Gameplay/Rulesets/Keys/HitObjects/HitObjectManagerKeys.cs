@@ -314,6 +314,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     Ruleset.ScoreProcessor.Stats.Add(stat);
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
+                    var view = (GameplayScreenView) Ruleset.Screen.View;
+                    view.UpdateScoreAndAccuracyDisplays();
+
                     // Perform Playfield animations
                     var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
@@ -325,6 +328,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     {
                         KillPoolObject(hitObject);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                        view.UpdateScoreAndAccuracyDisplays();
                         Ruleset.ScoreProcessor.Stats.Add(stat);
                         screenView.UpdateScoreboardUsers();
                     }
@@ -372,6 +377,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
                     screenView.UpdateScoreboardUsers();
+                    screenView.UpdateScoreAndAccuracyDisplays();
 
                     // Perform Playfield animations
                     var stage = ((GameplayPlayfieldKeys)Ruleset.Playfield).Stage;

@@ -191,7 +191,6 @@ namespace Quaver.Shared.Screens.Gameplay
         public override void Update(GameTime gameTime)
         {
             CheckIfNewScoreboardUsers();
-            UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
             Screen.Ruleset?.Update(gameTime);
@@ -279,7 +278,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Updates the values and positions of the score and accuracy displays.
         /// </summary>
-        private void UpdateScoreAndAccuracyDisplays()
+        public void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
             ScoreDisplay.Value = StringHelper.ScoreToString(Screen.Ruleset.ScoreProcessor.Score);
@@ -508,9 +507,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
 
             BackgroundManager.Background.BrightnessSprite.Animations.Add(t);
-
-            // Blur background strength
-            // BackgroundManager.Background.Strength = ConfigManager.BackgroundBlur.Value;
         }
     }
 }
