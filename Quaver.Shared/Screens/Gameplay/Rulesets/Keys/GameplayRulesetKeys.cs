@@ -65,47 +65,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="map"></param>
         public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => InitializeTimingLines();
 
-        /// <summary>
-        ///     Initialiize Timing Line Manager(s) depending on Scroll Direction.
-        /// </summary>
-        private void InitializeTimingLines()
-        {
-            // Create appropriate Timing Line Managers.
-            // - Multiple Timing Line Managers for multiple Scroll Directions
             if (ConfigManager.DisplayTimingLines.Value)
-            {
-                var playfield = (GameplayPlayfieldKeys)Playfield;
-                switch (MapManager.Selected.Value.Qua.Mode)
-                {
-                    case GameMode.Keys4:
-                        CreateTimingLineManagers(4, ConfigManager.ScrollDirection4K.Value);
-                        break;
-                    case GameMode.Keys7:
-                        CreateTimingLineManagers(7, ConfigManager.ScrollDirection7K.Value);
-                        break;
-                    default:
-                        throw new Exception("Game Mode does not exist");
-                }
-            }
-        }
-
         /// <summary>
         ///     Generate Timing Line Managers for scroll direction. Will create multiple managers if  multiple scroll directions exist.
         /// </summary>
         /// <param name="keys"></param>
         /// <param name="direction"></param>
-        private void CreateTimingLineManagers(int keys, ScrollDirection direction)
+        private void InitializeTimingLines()
         {
+            // Do not create timing lines if DisplayTiminbgLines config is turned off.
+            if (!ConfigManager.DisplayTimingLines.Value)
+                return;
+
+            var direction = ScrollDirection;
             var playfield = (GameplayPlayfieldKeys)Playfield;
+            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+
             if (direction.Equals(ScrollDirection.Split))
             {
-                var halfIndex = keys / 2 - 1;
+                var halfIndex = (int)Math.Ceiling(keys / 2.0) - 1;
                 var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
                 TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.HitPositionOffsets[0], halfPos, 0));
-                TimingLineManager.Add(new Keys.Playfield.Lines.TimingLineManager(this, ScrollDirection.Up, playfield.ColumnLightingPositionY[halfIndex], playfield.Width - halfPos, halfPos));
+                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.ColumnLightingPositionY[halfIndex], playfield.Width - halfPos, halfPos));
                 return;
             }
-            TimingLineManager.Add(new Keys.Playfield.Lines.TimingLineManager(this, direction, playfield.HitPositionOffsets[0], playfield.Width, 0));
+            TimingLineManager.Add(new TimingLineManager(this, direction, playfield.HitPositionOffsets[0], playfield.Width, 0));
         }
 
         /// <inheritdoc />

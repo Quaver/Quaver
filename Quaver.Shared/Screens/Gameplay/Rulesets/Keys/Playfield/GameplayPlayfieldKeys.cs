@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
@@ -130,49 +131,44 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     Determine the Scroll Directions for each Lane.
-        /// </summary>
-        private void SetLaneScrollDirections()
-        {
-            switch (Ruleset.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    ScrollDirections = DetermineScrollDirections(4, ConfigManager.ScrollDirection4K.Value);
-                    break;
-                case GameMode.Keys7:
-                    ScrollDirections = DetermineScrollDirections(7, ConfigManager.ScrollDirection7K.Value);
-                    break;
-                default:
-                    throw new Exception("Map Mode does not exist.");
-            }
-        }
-
-        /// <summary>
         ///     Returns Array of Scroll Directions for each specific lane for a specific GameMode.
         /// </summary>
         /// <param name="keys"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        private ScrollDirection[] DetermineScrollDirections(int keys, ScrollDirection direction)
+        private void SetLaneScrollDirections()
         {
+            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+            ScrollDirection direction;
+            switch (Ruleset.Map.Mode)
+            {
+                case GameMode.Keys4:
+                    direction = ConfigManager.ScrollDirection4K.Value;
+                    break;
+                case GameMode.Keys7:
+                    direction = ConfigManager.ScrollDirection7K.Value;
+                    break;
+                default:
+                    throw new Exception("Map Mode does not exist.");
+            }
+
             // Case: Config = Split Scroll
             if (direction.Equals(ScrollDirection.Split))
             {
-                var halfIndedx = keys / 2;
-                var output = new ScrollDirection[keys];
+                var halfIndex = (int)Math.Ceiling(keys / 2.0);
+                ScrollDirections = new ScrollDirection[keys];
                 for (var i = 0; i < keys; i++)
                 {
-                    if (i >= halfIndedx)
-                        output[i] = ScrollDirection.Up;
+                    if (i >= halfIndex)
+                        ScrollDirections[i] = ScrollDirection.Up;
                     else
-                        output[i] = ScrollDirection.Down;
+                        ScrollDirections[i] = ScrollDirection.Down;
                 }
-
-                return output;
+                return;
             }
 
             // Case: Config = Down/Up Scroll
-            return Enumerable.Repeat(direction, keys).ToArray();
+            ScrollDirections = Enumerable.Repeat(direction, keys).ToArray();
         }
 
         /// <summary>
