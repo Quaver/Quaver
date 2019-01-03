@@ -87,6 +87,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public NumberDisplay ComboDisplay { get; private set; }
 
         /// <summary>
+        ///     The combo in the previous frame. Used to determine if we should update it.
+        /// </summary>
+        private int OldCombo { get; set; }
+
+        /// <summary>
         ///     The original value for the combo display's Y position,
         ///     so we can use this to set it back after it's done with its animation.
         /// </summary>
@@ -345,22 +350,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <param name="gameTime"></param>
         private void UpdateComboDisplay(GameTime gameTime)
         {
-            // Grab the old value
-            var oldCombo = ComboDisplay.Value;
+            // Gradually tween the position back to what it was originally.
+            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
+
+            if (OldCombo == Screen.Ruleset.ScoreProcessor.Combo)
+                return;
 
             // Set the new one
             ComboDisplay.Value = Screen.Ruleset.ScoreProcessor.Combo.ToString();
 
             // If the combo needs repositioning, do so accordingly.
-            if (oldCombo.Length != ComboDisplay.Value.Length)
+            if ((int) Math.Floor(Math.Log10(OldCombo) + 1) != (int) Math.Floor(Math.Log10(Screen.Ruleset.ScoreProcessor.Combo) + 1))
                 ComboDisplay.X = -ComboDisplay.TotalWidth / 2f;
 
             // Set the position and scale  of the combo display, so that we can perform some animations.
-            if (oldCombo != ComboDisplay.Value && ComboDisplay.Visible)
-                ComboDisplay.Y = OriginalComboDisplayY - 5;
+             ComboDisplay.Y = OriginalComboDisplayY - 5;
 
-            // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
+            OldCombo = Screen.Ruleset.ScoreProcessor.Combo;
         }
 
         /// <summary>

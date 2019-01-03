@@ -31,6 +31,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public NumberDisplay TimeLeft { get; }
 
+        /// <summary>
+        ///    The time the number display was last updated.
+        /// </summary>
+        private double TimeLastProgressChange { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -71,6 +76,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         public override void Update(GameTime gameTime)
         {
             Bindable.Value = Screen.Timing.Time;
+
+            // Only update time each second.
+            if (Screen.Timing.Time - TimeLastProgressChange < 1000)
+            {
+                base.Update(gameTime);
+                return;
+            }
+
+            TimeLastProgressChange = Screen.Timing.Time;
 
             // Set the time of the current time
             if (Bindable.Value > 0)

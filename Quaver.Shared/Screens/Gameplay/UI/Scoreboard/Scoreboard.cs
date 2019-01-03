@@ -87,7 +87,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 // Set new username and rank.
                 users[i].Rank = i + 1;
-                users[i].Username.Text = users[i].GetUsernameFormatted();
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)

@@ -126,7 +126,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle.ToRectangle(), NotificationManager.Container.ScreenRectangle.ToRectangle()).IsEmpty)
+            if (Rectangle.Intersect(ScreenRectangle, NotificationManager.Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);
