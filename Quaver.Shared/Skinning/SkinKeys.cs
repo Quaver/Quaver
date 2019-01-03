@@ -16,12 +16,14 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
+using Wobble;
+using Wobble.Assets;
 
 namespace Quaver.Shared.Skinning
 {
     public class SkinKeys
     {
-                /// <summary>
+        /// <summary>
         ///     Reference to the
         /// </summary>
         private SkinStore Store { get; }
@@ -41,7 +43,13 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private string ResourceFilePrepender { get; set; }
 
-#region SKIN.INI VALUES
+        #region SKIN.INI VALUES
+
+        internal int SkinFrameRate { get; private set; }
+
+        internal bool UseArrowsHitLighting { get; private set; }
+
+        internal bool UseArrowsHitObject { get; private set; }
 
         internal int StageReceptorPadding { get; private set; }
 
@@ -52,8 +60,6 @@ namespace Quaver.Shared.Skinning
         internal int TimingBarPixelSize { get; private set; }
 
         internal float ColumnLightingScale { get; private set; }
-
-        internal int ColumnLightingOffsetY { get; private set; }
 
         internal int ColumnSize { get; private set; }
 
@@ -71,23 +77,15 @@ namespace Quaver.Shared.Skinning
 
         internal List<Color> ColumnColors { get; private set; } = new List<Color>();
 
-        internal float BgMaskAlpha { get; private set;  }
+        internal float BgMaskAlpha { get; private set; }
 
         internal bool FlipNoteImagesOnUpscroll { get; private set; }
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
-        internal int HitLightingX { get; private set; }
-
         internal int HitLightingY { get; private set; }
 
-        internal int HitLightingFps { get; private set; }
-
-        internal int HoldLightingFps { get; private set; }
-
-        internal int HitLightingWidth { get; private set; }
-
-        internal int HitLightingHeight { get; private set; }
+        internal int HitLightingScale { get; private set; }
 
         internal int ScoreDisplayPosX { get; private set; }
 
@@ -117,9 +115,9 @@ namespace Quaver.Shared.Skinning
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
-#endregion
+        #endregion
 
-#region TEXTURES
+        #region TEXTURES
 
         // ----- Column ----- //
         /// <summary>
@@ -174,12 +172,12 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteHoldBodies { get;} = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldBodies { get; } = new List<List<Texture2D>>();
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
+        internal List<List<Texture2D>> NoteHoldEnds { get; } = new List<List<Texture2D>>();
 
         // ----- Receptors ----- //
 
@@ -205,7 +203,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
 
-#endregion
+        #endregion
 
         /// <summary>
         ///     Ctor -
@@ -275,12 +273,14 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    SkinFrameRate = 60;
+                    UseArrowsHitObject = false;
+                    UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1f;
-                    ColumnLightingOffsetY = 0;
+                    ColumnLightingScale = 1;
                     ColumnSize = 110;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -298,11 +298,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -319,12 +315,14 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    SkinFrameRate = 60;
+                    UseArrowsHitObject = true;
+                    UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 105;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
-                    ColumnLightingOffsetY = 0;
                     ColumnSize = 105;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -342,11 +340,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -375,12 +369,14 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
+                    SkinFrameRate = 60;
+                    UseArrowsHitObject = false;
+                    UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
                     HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1f;
-                    ColumnLightingOffsetY = 0;
+                    ColumnLightingScale = 1;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 0;
                     ColumnAlignment = 0;
@@ -401,11 +397,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -422,12 +414,14 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
+                    SkinFrameRate = 60;
+                    UseArrowsHitObject = true;
+                    UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
                     HitPosOffsetY = 86;
                     NotePadding = 8;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
-                    ColumnLightingOffsetY = 0;
                     ColumnSize = 85;
                     ReceptorPosOffsetY = 10;
                     ColumnAlignment = 0;
@@ -449,11 +443,7 @@ namespace Quaver.Shared.Skinning
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
                     HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
+                    HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
@@ -486,13 +476,16 @@ namespace Quaver.Shared.Skinning
                 return;
 
             var ini = Store.Config[ShortName.ToUpper()];
-
+            SkinFrameRate = ConfigHelper.ReadInt32(SkinFrameRate, ini["SkinFrameRate"]);
+            HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
+            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
+            UseArrowsHitLighting = ConfigHelper.ReadBool(UseArrowsHitLighting, ini["UseArrowsHitLighting"]);
+            UseArrowsHitObject = ConfigHelper.ReadBool(UseArrowsHitObject, ini["UseArrowsHitObject"]);
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
-            ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
             ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
@@ -508,12 +501,6 @@ namespace Quaver.Shared.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
-            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
-            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
-            HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
-            HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
-            HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
-            HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
             AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
@@ -556,6 +543,24 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Get Rsource Path for a specific element.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private string GetResourcePath(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
+        {
+            if (shared)
+                return $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}{extension}";
+
+            return $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
+                       $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
+        }
+
+
+        /// <summary>
         ///     Loads an individual skin element.
         /// </summary>
         /// <param name="folder"></param>
@@ -565,17 +570,7 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
-            string resource;
-            if (shared)
-            {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}.png";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                               $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
-            }
-
+            var resource = GetResourcePath(folder, element, shared, extension);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
             return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
@@ -585,74 +580,56 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
-        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="shared"></param>
         /// <param name="rows"></param>
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
         private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
-            string resource;
-            if (shared)
-            {
-                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
-            }
-            else
-            {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
-            }
-
+            var resource = GetResourcePath(folder, element, shared, extension);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
 
         /// <summary>
-        ///     Loads the HitObjects w/ note snapping
-        ///     Each hitobject lane, gets to have more images for each snap distance.
-        ///
-        ///     Example:
-        ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
-        ///         That being said, note-hitobject3-16th, would be the object in lane 3, with 16th snap.
-        ///
-        ///         NOTE: For 1/1, objects, there is no concept of y. So the ManiaHitObject in lane 4, with 1/1 snap
-        ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
-        ///         even though the user may not use snapping.
-        ///
-        ///         - note-hitobject-1 (Lane 1 Default which is also 1/1 snap.)
-        ///         - note-hitobject-1-2nd (Lane 1, 1/2 Snap)
-        ///         - note-hitobject-1-3rd (Lane 1, 1/3 Snap)
-        ///         - note-hitobject-1-4th (Lane 1, 1/4 Snap)
-        ///         //
-        ///         - note-hitobject-2 (Lane 2 Default which is also 1/1 snap.)
-        ///         - note-hitobject-2-2nd (Lane 2, 1/2 Snap)
+        ///     Loads a spritesheet and split each rows into separate lists
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private List<List<Texture2D>> LoadSpritesheetRows(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        {
+            var resource = GetResourcePath(folder, element, shared, extension);
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+            return SkinStore.LoadSpritesheetRows(folderName, element, resource, rows, columns, extension);
+        }
+
+        /// <summary>
+        ///     Load an images for HitObjects for a lane individually.
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <param name="element"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index)
+        private void LoadHitObjectsForLane(IList<List<Texture2D>> hitObjects, string element, int index) =>
+            hitObjects.Insert(index, new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, false) });
+
+        /// <summary>
+        ///     Loads the images for HitObjects w/ note snapping
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <param name="element"></param>
+        private void LoadBeatHitObjectsForSnap(IList<List<Texture2D>> hitObjects, string element)
         {
-            // First load the beginning HitObject element that doesn't require snapping.
-            var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};
+            var sprites = LoadSpritesheetRows(SkinKeysFolder.HitObjects, element, false, 0, 0);
 
-            // Don't bother looking for snap objects if the skin config doesn't permit it.
-            if (!ColorObjectsBySnapDistance)
-            {
-                hitObjects.Insert(index, objectsList);
-                return;
-            }
-
-            // For each snap we load the separate image for it.
-            // It HAS to be loaded in an incremental fashion.
-            // So you can't have 1/48, but not have 1/3, etc.
-            var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
-
-
-            // If it can find the appropriate files, load them.
-            objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
-
-            hitObjects.Insert(index, objectsList);
+            foreach (var s in sprites)
+                hitObjects.Add(s);
         }
 
         /// <summary>
@@ -683,22 +660,33 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
+            // Load Hit Object Images with BeatSnap Images if ColorObjectsBySnapDistance is toggled on.
+            if (ColorObjectsBySnapDistance)
+            {
+                LoadBeatHitObjectsForSnap(NoteHitObjects, "note-hitobject-snapped");
+                LoadBeatHitObjectsForSnap(NoteHoldHitObjects, "note-holdhitobject-snapped");
+            }
+
+            // Load Elements for each lane.
             for (var i = 0; i < 7; i++)
             {
                 if (i == 4 && Mode == GameMode.Keys4)
                     break;
 
+                // HitObjects (if ColorObjectsBySnapDistance is toggled off.)
+                if (!ColorObjectsBySnapDistance)
+                {
+                    LoadHitObjectsForLane(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjectsForLane(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
+
                 // Column Colors
                 if (Store.Config != null)
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
 
-                // HitObjects
-                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
-
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
-                NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false));
+                NoteHoldEnds.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false, 0, 0));
 
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));
