@@ -96,9 +96,9 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
-            ScrollSpeed = 150;
+            ScrollSpeed = 320;
             EasingType = Easing.OutQuint;
-            TimeToCompleteScroll = 1500;
+            TimeToCompleteScroll = 1200;
 
             // Find the index of the selected map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
