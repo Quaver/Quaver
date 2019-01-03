@@ -65,7 +65,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="map"></param>
         public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => InitializeTimingLines();
 
-            if (ConfigManager.DisplayTimingLines.Value)
         /// <summary>
         ///     Generate Timing Line Managers for scroll direction. Will create multiple managers if  multiple scroll directions exist.
         /// </summary>
