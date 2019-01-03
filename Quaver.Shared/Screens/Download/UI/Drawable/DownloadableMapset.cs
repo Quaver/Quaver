@@ -261,7 +261,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle.ToRectangle(), Container.ScreenRectangle.ToRectangle()).IsEmpty)
+            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);
@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Container.ScreenRectangle.ToRectangle());
+            var newRect = Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 
