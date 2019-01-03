@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private int Kps => Clicks.Count;
 
         /// <summary>
-        ///     The amount of time 
+        ///     The amount of time
         /// </summary>
         private double Time { get; set; }
 
@@ -45,7 +45,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Time += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             CalculateKeysPerSecond();
-            Value = Kps.ToString();
             X = -TotalWidth + SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].KpsDisplayPosX;
 
             base.Update(gameTime);
@@ -59,7 +58,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             for (var i = 0; i < Clicks.Count; i++)
             {
                 if (Clicks[i] <= Time - 1000)
+                {
                     Clicks.RemoveAt(i);
+                    Value = Kps.ToString();
+                }
             }
         }
 
