@@ -213,16 +213,16 @@ namespace Quaver.Shared.Screens.Settings
                 Y = 1
             };
 
-            CreateOkButton();
-            CreateCancelButton();
+            CreateApplyButton();
+            CreateCloseButton();
         }
 
         /// <summary>
         ///     Creates the button to save changes
         /// </summary>
-        private void CreateOkButton()
+        private void CreateApplyButton()
         {
-            ApplyButton = new BorderedTextButton("OK", Color.LimeGreen)
+            ApplyButton = new BorderedTextButton("Apply", Color.LimeGreen)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
@@ -265,9 +265,9 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     Creates the button to cancel all changes
         /// </summary>
-        private void CreateCancelButton()
+        private void CreateCloseButton()
         {
-            CloseButton = new BorderedTextButton("Cancel", Color.Crimson)
+            CloseButton = new BorderedTextButton("Close", Color.Crimson)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
