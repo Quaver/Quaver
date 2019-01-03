@@ -97,7 +97,6 @@ namespace Quaver.Shared.Online
                 return;
 
             Logger.Important($"Attempting to log into the Quaver server...", LogType.Network);
-            NotificationManager.Show(NotificationLevel.Error, "You can only log into the server on the official Steam build.");
 
             if (!SteamManager.AuthSessionTicketValidated)
             {

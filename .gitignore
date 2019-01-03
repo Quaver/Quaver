@@ -302,5 +302,6 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 
-Quaver.Server.Client/
-Quaver.Server.Common/
+# Content 
+Quaver/Content/*
+*.mgcb
