@@ -16,6 +16,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
 {
