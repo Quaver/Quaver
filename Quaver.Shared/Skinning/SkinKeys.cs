@@ -570,20 +570,19 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///     Get Rsource Path for a specific element.
+        ///     Get Rsource Path for a specific element
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
         /// <param name="shared"></param>
-        /// <param name="extension"></param>
         /// <returns></returns>
-        private string GetResourcePath(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
+        private string GetResourcePath(SkinKeysFolder folder, string element, bool shared)
         {
             if (shared)
-                return $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}{extension}";
+                return $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}";
 
             return $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                       $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
+                       $"/{Mode.ToString()}/{GetResourcePath(element)}";
         }
 
 
@@ -597,7 +596,7 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
-            var resource = GetResourcePath(folder, element, shared, extension);
+            var resource = GetResourcePath(folder, element, shared);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
             return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
@@ -614,7 +613,7 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
-            var resource = GetResourcePath(folder, element, shared, extension);
+            var resource = GetResourcePath(folder, element, shared);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
@@ -631,7 +630,7 @@ namespace Quaver.Shared.Skinning
         /// <returns></returns>
         private List<List<Texture2D>> LoadSpritesheetRows(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
-            var resource = GetResourcePath(folder, element, shared, extension);
+            var resource = GetResourcePath(folder, element, shared);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheetRows(folderName, element, resource, rows, columns, extension);
         }
