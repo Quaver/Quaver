@@ -56,12 +56,12 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     The button to save changes.
         /// </summary>
-        private BorderedTextButton ApplyButton { get; set; }
+        private BorderedTextButton OkButton { get; set; }
 
         /// <summary>
         ///     The button to cancel existing changes
         /// </summary>
-        private BorderedTextButton CloseButton { get; set; }
+        private BorderedTextButton CancelButton { get; set; }
 
         /// <summary>
         ///     The list of available settings sections.
@@ -213,23 +213,23 @@ namespace Quaver.Shared.Screens.Settings
                 Y = 1
             };
 
-            CreateApplyButton();
-            CreateCloseButton();
+            CreateOkButton();
+            CreateCancelButton();
         }
 
         /// <summary>
         ///     Creates the button to save changes
         /// </summary>
-        private void CreateApplyButton()
+        private void CreateOkButton()
         {
-            ApplyButton = new BorderedTextButton("Apply", Color.LimeGreen)
+            OkButton = new BorderedTextButton("Ok", Color.LimeGreen)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
                 X = -20
             };
 
-            ApplyButton.Clicked += (o, e) =>
+            OkButton.Clicked += (o, e) =>
             {
                 // Determines whether we'll be dismissing the dialog if no changes have been made.
                 var dismissDalog = true;
@@ -265,16 +265,16 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     Creates the button to cancel all changes
         /// </summary>
-        private void CreateCloseButton()
+        private void CreateCancelButton()
         {
-            CloseButton = new BorderedTextButton("Close", Color.Crimson)
+            CancelButton = new BorderedTextButton("Cancel", Color.Crimson)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
-                X = ApplyButton.X - ApplyButton.Width - 20
+                X = OkButton.X - OkButton.Width - 20
             };
 
-            CloseButton.Clicked += (o, e) => DialogManager.Dismiss(this);
+            CancelButton.Clicked += (o, e) => DialogManager.Dismiss(this);
         }
         /// <summary>
         /// </summary>
