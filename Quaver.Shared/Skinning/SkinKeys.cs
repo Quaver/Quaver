@@ -45,7 +45,13 @@ namespace Quaver.Shared.Skinning
 
         #region SKIN.INI VALUES
 
-        internal int SkinFrameRate { get; private set; }
+        internal int HitObjectFps { get; private set; }
+
+        internal int HeldHitObjectFps { get; private set; }
+
+        internal int HitLightingFps { get; private set; }
+
+        internal int HoldLightingFps { get; private set; }
 
         internal bool UseArrowsHitLighting { get; private set; }
 
@@ -82,6 +88,8 @@ namespace Quaver.Shared.Skinning
         internal bool FlipNoteImagesOnUpscroll { get; private set; }
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
+
+        internal int HitLightingX { get; private set; }
 
         internal int HitLightingY { get; private set; }
 
@@ -273,7 +281,10 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    SkinFrameRate = 60;
+                    HitObjectFps = 60;
+                    HeldHitObjectFps = 60;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     UseArrowsHitObject = false;
                     UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
@@ -297,6 +308,7 @@ namespace Quaver.Shared.Skinning
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
                     FlipNoteEndImagesOnUpscroll = true;
+                    HitLightingX = 0;
                     HitLightingY = 0;
                     HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
@@ -315,7 +327,10 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    SkinFrameRate = 60;
+                    HitObjectFps = 60;
+                    HeldHitObjectFps = 60;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     UseArrowsHitObject = true;
                     UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
@@ -339,6 +354,7 @@ namespace Quaver.Shared.Skinning
                     BgMaskAlpha = 0.9f;
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
+                    HitLightingX = 0;
                     HitLightingY = 0;
                     HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
@@ -369,7 +385,10 @@ namespace Quaver.Shared.Skinning
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
-                    SkinFrameRate = 60;
+                    HitObjectFps = 60;
+                    HeldHitObjectFps = 60;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     UseArrowsHitObject = false;
                     UseArrowsHitLighting = false;
                     StageReceptorPadding = 0;
@@ -395,7 +414,7 @@ namespace Quaver.Shared.Skinning
                     };
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
-                    FlipNoteEndImagesOnUpscroll = true;
+                    HitLightingX = 0;
                     HitLightingY = 0;
                     HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
@@ -414,7 +433,10 @@ namespace Quaver.Shared.Skinning
                     HitErrorChevronSize = 8;
                     break;
                 case DefaultSkins.Arrow:
-                    SkinFrameRate = 60;
+                    HitObjectFps = 60;
+                    HeldHitObjectFps = 60;
+                    HitLightingFps = 60;
+                    HoldLightingFps = 60;
                     UseArrowsHitObject = true;
                     UseArrowsHitLighting = true;
                     StageReceptorPadding = 10;
@@ -442,6 +464,7 @@ namespace Quaver.Shared.Skinning
                     BgMaskAlpha = 0.9f;
                     FlipNoteImagesOnUpscroll = false;
                     FlipNoteEndImagesOnUpscroll = true;
+                    HitLightingX = 0;
                     HitLightingY = 0;
                     HitLightingScale = 1;
                     ScoreDisplayPosX = 10;
@@ -476,8 +499,12 @@ namespace Quaver.Shared.Skinning
                 return;
 
             var ini = Store.Config[ShortName.ToUpper()];
-            SkinFrameRate = ConfigHelper.ReadInt32(SkinFrameRate, ini["SkinFrameRate"]);
+            HitObjectFps = ConfigHelper.ReadInt32(HitObjectFps, ini["HitObjectFps"]);
+            HeldHitObjectFps = ConfigHelper.ReadInt32(HeldHitObjectFps, ini["HeldHitObjectFps"]);
+            HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
+            HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
             HitLightingScale = ConfigHelper.ReadInt32(HitLightingScale, ini["HitLightingScale"]);
+            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
             UseArrowsHitLighting = ConfigHelper.ReadBool(UseArrowsHitLighting, ini["UseArrowsHitLighting"]);
             UseArrowsHitObject = ConfigHelper.ReadBool(UseArrowsHitObject, ini["UseArrowsHitObject"]);

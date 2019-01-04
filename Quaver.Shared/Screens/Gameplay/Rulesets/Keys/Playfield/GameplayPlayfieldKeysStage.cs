@@ -429,8 +429,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
                 // otherwise we'll use the one from their skin config.
-                hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
-
+                // todo: this will be reimplemented properly later.
+                //hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
                 hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f  - hl.Width / 2f + Skin.HitLightingX,
                     HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
 
