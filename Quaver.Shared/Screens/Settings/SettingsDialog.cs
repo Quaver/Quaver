@@ -56,12 +56,12 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     The button to save changes.
         /// </summary>
-        private BorderedTextButton OkButton { get; set; }
+        private BorderedTextButton ApplyButton { get; set; }
 
         /// <summary>
         ///     The button to cancel existing changes
         /// </summary>
-        private BorderedTextButton CancelButton { get; set; }
+        private BorderedTextButton CloseButton { get; set; }
 
         /// <summary>
         ///     The list of available settings sections.
@@ -213,23 +213,23 @@ namespace Quaver.Shared.Screens.Settings
                 Y = 1
             };
 
-            CreateOkButton();
-            CreateCancelButton();
+            CreateApplyButton();
+            CreateCloseButton();
         }
 
         /// <summary>
         ///     Creates the button to save changes
         /// </summary>
-        private void CreateOkButton()
+        private void CreateApplyButton()
         {
-            OkButton = new BorderedTextButton("OK", Color.LimeGreen)
+            ApplyButton = new BorderedTextButton("Apply", Color.LimeGreen)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
                 X = -20
             };
 
-            OkButton.Clicked += (o, e) =>
+            ApplyButton.Clicked += (o, e) =>
             {
                 // Determines whether we'll be dismissing the dialog if no changes have been made.
                 var dismissDalog = true;
@@ -265,16 +265,16 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     Creates the button to cancel all changes
         /// </summary>
-        private void CreateCancelButton()
+        private void CreateCloseButton()
         {
-            CancelButton = new BorderedTextButton("Cancel", Color.Crimson)
+            CloseButton = new BorderedTextButton("Close", Color.Crimson)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
-                X = OkButton.X - OkButton.Width - 20
+                X = ApplyButton.X - ApplyButton.Width - 20
             };
 
-            CancelButton.Clicked += (o, e) => DialogManager.Dismiss(this);
+            CloseButton.Clicked += (o, e) => DialogManager.Dismiss(this);
         }
         /// <summary>
         /// </summary>
@@ -315,8 +315,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
-                    new SettingsBool(this, "Notes Fall Downwards (4 Keys)", ConfigManager.DownScroll4K),
-                    new SettingsBool(this, "Notes Fall Downwards (7 Keys)", ConfigManager.DownScroll7K),
+                    new SettingsScrollDirection(this, "Scroll Direction 4K", ConfigManager.ScrollDirection4K),
+                    new SettingsScrollDirection(this, "Scroll Direction 7K", ConfigManager.ScrollDirection7K),
                     new SettingsBool(this, "Blur Background In Gameplay", ConfigManager.BlurBackgroundInGameplay),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),

@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using Quaver.API.Maps;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
@@ -45,15 +46,38 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public float BpmToMeasureLengthMs { get; } = 240000;
 
         /// <summary>
+        ///     The Scroll Direction of every Timing Line
+        /// </summary>
+        public ScrollDirection ScrollDirection { get; }
+
+        /// <summary>
+        ///     Target position when TrackPosition = 0
+        /// </summary>
+        private float TrackOffset { get; }
+
+        /// <summary>
+        ///     Size of every Timing Line
+        /// </summary>
+        private float SizeX { get; }
+
+        /// <summary>
+        ///     Position of every Timing Line
+        /// </summary>
+        private float PositionX { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
-        public TimingLineManager(GameplayRuleset ruleset)
+        public TimingLineManager(GameplayRulesetKeys ruleset, ScrollDirection direction, float targetY, float size, float offset)
         {
-            Ruleset = (GameplayRulesetKeys)ruleset;
+            TrackOffset = targetY;
+            SizeX = size;
+            PositionX = offset;
+            ScrollDirection = direction;
+            Ruleset = ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffset;
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -69,7 +93,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             {
                 // Get target position and increment
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
-                var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1: map.Length;
+                var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;
                 var increment = BpmToMeasureLengthMs / map.TimingPoints[i].Bpm;
 
                 // Initialize timing lines between current timing point and target position
@@ -131,7 +155,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="info"></param>
         private void CreatePoolObject(TimingLineInfo info)
         {
-            var line = new TimingLine(Ruleset, info);
+            var line = new TimingLine(Ruleset, info, ScrollDirection, TrackOffset, SizeX, PositionX);
             line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
             Pool.Enqueue(line);
         }
