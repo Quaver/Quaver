@@ -36,6 +36,24 @@ namespace Quaver.Shared.Converters.StepMania
                 for (var i = 0; i < quaFiles.Count; i++)
                 {
                     var qua = quaFiles[i];
+
+                    // Apparently sm can have backgrounds defaulted to files that end in -bg or just bg.
+                    // this handles the case of if the background file is initially null in the .sm file
+                    // and sets the appropriate background file to use.
+                    if (string.IsNullOrEmpty(qua.BackgroundFile))
+                    {
+                        foreach (var f in Directory.GetFiles(Path.GetDirectoryName(file)))
+                        {
+                            var fileName = f.ToLower();
+
+                            if (!fileName.EndsWith("bg.jpg") && !fileName.EndsWith("bg.jpeg") && !fileName.EndsWith("bg.png"))
+                                continue;
+
+                            qua.BackgroundFile = Path.GetFileName(f);
+                            break;
+                        }
+                    }
+
                     qua.Save($"{extractDirectory}/{i}.qua");
                 }
 
