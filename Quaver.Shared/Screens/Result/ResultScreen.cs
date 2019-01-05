@@ -492,10 +492,7 @@ namespace Quaver.Shared.Screens.Result
 
                 // Load up the .qua file again
                 var qua = MapManager.Selected.Value.LoadQua();
-                qua.RandomizeLanes(replay.RandomizeModifierSeed);
-
                 MapManager.Selected.Value.Qua = qua;
-
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                 return new MapLoadingScreen(new List<Score>(), replay);
             });

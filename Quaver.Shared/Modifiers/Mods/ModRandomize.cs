@@ -1,7 +1,6 @@
 using System;
+using Wobble.Graphics.Sprites;
 using Quaver.API.Enums;
-using Wobble;
-using Wobble.Logging;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -28,6 +27,8 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool Ranked { get; set; } = false;
 
+        public Sprite UnrankedSprite { get; set; }
+        
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
 
         public void InitializeMod()

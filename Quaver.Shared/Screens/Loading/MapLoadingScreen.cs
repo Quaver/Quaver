@@ -105,10 +105,20 @@ namespace Quaver.Shared.Screens.Loading
                 // Generate seed and randomize lanes if Randomize modifier is active.
                 if (ModManager.IsActivated(ModIdentifier.Randomize))
                 {
-                    ModRandomize randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
-                    randomizeModifier.GenerateSeed();
+                    int seed;
+                    
+                    // If loading from a replay.
+                    if (Replay != null)
+                        seed = Replay.RandomizeModifierSeed;
+                    else
+                    {// If loading gameplay.
+                        ModRandomize randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
+                        randomizeModifier.GenerateSeed();
 
-                    MapManager.Selected.Value.Qua.RandomizeLanes(randomizeModifier.Seed);
+                        seed = randomizeModifier.Seed;
+                    }
+                    
+                    MapManager.Selected.Value.Qua.RandomizeLanes(seed);
                 }
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
