@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -196,7 +196,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             // Update Scoreboard
-            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
+            var view = (GameplayScreenView) Ruleset.Screen.View;
+            view.UpdateScoreboardUsers();
+            view.UpdateScoreAndAccuracyDisplays();
 
             // Update Playfield
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
@@ -300,7 +302,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
-            ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
+            var view = (GameplayScreenView) Ruleset.Screen.View;
+            view.UpdateScoreboardUsers();
+            view.UpdateScoreAndAccuracyDisplays();
 
             // Perform hit burst animation
             playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);

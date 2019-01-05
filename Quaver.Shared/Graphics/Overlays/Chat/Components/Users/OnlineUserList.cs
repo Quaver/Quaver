@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -184,7 +184,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(firstUser.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
+                    if (!Rectangle.Intersect(firstUser.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     // Update the user's information and y position.
@@ -209,7 +209,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(lastUser.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
+                    if (!Rectangle.Intersect(lastUser.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     lastUser.Y = (PoolStartingIndex - 1) * DrawableOnlineUser.HEIGHT;

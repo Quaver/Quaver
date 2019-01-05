@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -12,6 +12,7 @@ using Quaver.API.Replays;
 using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
 namespace Quaver.Shared.Screens.Gameplay.Replays
 {
@@ -58,8 +59,6 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
                 TimePlayed = Screen.TimePlayed
             };
 
-            Console.WriteLine(Screen.MapHash);
-
             // Add sample first frame.
             Replay.AddFrame(-10000, 0);
         }
@@ -101,7 +100,11 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
         /// <summary>
         ///     Adds a replay frame with the correct key press state.
         /// </summary>
-        private void AddFrame(ReplayKeyPressState state) => Replay.AddFrame((int)Screen.Timing.Time, state);
+        private void AddFrame(ReplayKeyPressState state)
+        {
+            var manager = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
+            Replay.AddFrame((int)manager.CurrentAudioPosition, state);
+        }
 
         /// <summary>
         ///     Gets the current key press state from the binding store.

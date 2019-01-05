@@ -34,7 +34,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                         ModManager.AddMod(Modifier.ModIdentifier);
                 })
             };
-
             return options;
         }
 

@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -21,7 +21,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         ///     The sprite container for our notifications.
         /// </summary>
-        private static Container Container { get; } = new Container();
+        public static Container Container { get; } = new Container();
 
         /// <summary>
         ///     All of the notifications in our queue.
@@ -74,19 +74,19 @@ namespace Quaver.Shared.Graphics.Notifications
                     break;
                 case NotificationLevel.Info:
                     color = ColorHelper.HexToColor("#5BC0DE");
-                    image = UserInterface.NotificationInfo;
+                    image = UserInterface.NotificationInfoBg;
                     break;
                 case NotificationLevel.Error:
                     color = ColorHelper.HexToColor("#D9534F");
-                    image = UserInterface.NotificationError;
+                    image = UserInterface.NotificationErrorBg;
                     break;
                 case NotificationLevel.Warning:
                     color = Color.Yellow;
-                    image = UserInterface.NotificationWarning;
+                    image = UserInterface.NotificationWarningBg;
                     break;
                 case NotificationLevel.Success:
                     color = ColorHelper.HexToColor("#5CB85C");
-                    image = UserInterface.NotificationSuccess;
+                    image = UserInterface.NotificationSuccessBg;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);

@@ -6,12 +6,14 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using Quaver.Shared;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
+using Wobble;
 using Wobble.Logging;
 
 namespace Quaver
@@ -19,14 +21,9 @@ namespace Quaver
     public static class Program
     {
         /// <summary>
-        ///     The path of the current executable.
-        /// </summary>
-        public static string ExecutablePath => System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace(@"file:///", "");
-
-        /// <summary>
         ///     The current working directory of the executable.
         /// </summary>
-        public static string WorkingDirectory => Path.GetDirectoryName(ExecutablePath).Replace(@"file:\", "");
+        public static string WorkingDirectory => WobbleGame.WorkingDirectory;
 
         [STAThread]
         public static void Main()
@@ -41,6 +38,9 @@ namespace Quaver
             // Change the working directory to where the executable is.
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
+
+            using (var p = Process.GetCurrentProcess())
+                p.PriorityClass = ProcessPriorityClass.High;
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

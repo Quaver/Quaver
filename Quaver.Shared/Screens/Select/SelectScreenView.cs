@@ -10,11 +10,14 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
@@ -161,7 +164,7 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Creates the navbar for this screen.
         /// </summary>
-        private void CreateNavbar() => Navbar = new NavbarMain(new List<NavbarItem>
+        private void CreateNavbar() => Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
         {
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
             new NavbarItem("Home", false, OnHomeButtonClicked),

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Quaver.API.Enums;
+using Quaver.API.Replays;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -43,10 +44,16 @@ namespace Quaver.Shared.Screens.Loading
         private List<Score> Scores { get; }
 
         /// <summary>
+        ///     The replay to play back.
         /// </summary>
-        public MapLoadingScreen(List<Score> scores)
+        private Replay Replay { get; }
+
+        /// <summary>
+        /// </summary>
+        public MapLoadingScreen(List<Score> scores, Replay replay = null)
         {
             Scores = scores;
+            Replay = replay;
             View = new MapLoadingScreenView(this);
             AudioTrack.AllowPlayback = false;
         }
@@ -74,7 +81,7 @@ namespace Quaver.Shared.Screens.Loading
         /// <summary>
         ///     Loads the currently selected map asynchronously.
         /// </summary>
-        private static void ParseAndLoadMap()
+        private void ParseAndLoadMap()
         {
             try
             {
@@ -84,15 +91,26 @@ namespace Quaver.Shared.Screens.Loading
 
                 MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
 
+                if (Replay != null)
+                {
+                    AddModsFromReplay(Replay);
+                }
+
+                // If the No Long Notes mod is active, remove the long notes.
+                if (ModManager.IsActivated(ModIdentifier.NoLongNotes))
+                {
+                    MapManager.Selected.Value.Qua.ReplaceLongNotesWithRegularNotes();
+                }
+
                 // Generate seed and randomize lanes if Randomize modifier is active.
                 if (ModManager.IsActivated(ModIdentifier.Randomize))
                 {
                     ModRandomize randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
                     randomizeModifier.GenerateSeed();
-                    
+
                     MapManager.Selected.Value.Qua.RandomizeLanes(randomizeModifier.Seed);
                 }
-                
+
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
                     writer.Write($"{MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods):0.00}");
@@ -141,11 +159,31 @@ namespace Quaver.Shared.Screens.Loading
                         throw new ArgumentOutOfRangeException();
                 }
 
-                Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>()));
+                Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>(), Replay));
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Adds all modifiers that were present in the replay.
+        /// </summary>
+        private static void AddModsFromReplay(Replay replay)
+        {
+            // Remove all the current mods that we have on.
+            ModManager.RemoveAllMods();
+
+            // Put on the mods from the replay.);
+            for (var i = 0; i <= Math.Log((int)replay.Mods, 2); i++)
+            {
+                var mod = (ModIdentifier)Math.Pow(2, i);
+
+                if (!replay.Mods.HasFlag(mod))
+                    continue;
+
+                ModManager.AddMod(mod);
             }
         }
     }
