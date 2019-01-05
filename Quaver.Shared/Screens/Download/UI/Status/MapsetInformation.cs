@@ -23,7 +23,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Download.UI.Status
 {
-    public class DownloadStatus : ScrollContainer
+    public class MapsetInformation : ScrollContainer
     {
         /// <summary>
         /// </summary>
@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
         /// <summary>
         /// </summary>
         /// <param name="view"></param>
-        public DownloadStatus(DownloadScreenView view) : base(new ScalableVector2(400, 334), new ScalableVector2(400, 334))
+        public MapsetInformation(DownloadScreenView view) : base(new ScalableVector2(400, 334), new ScalableVector2(400, 334))
         {
             View = view;
             Size = new ScalableVector2(400, 334);
@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
 
         /// <summary>
         /// </summary>
-        private void CreateTextDownloadStatus() => Status = new SpriteText(Fonts.Exo2Bold, "Download Status", 14)
+        private void CreateTextDownloadStatus() => Status = new SpriteText(Fonts.Exo2Bold, "Mapset Information", 14)
         {
             Parent = this,
             Y = 15,
