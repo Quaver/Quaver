@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -64,14 +64,18 @@ namespace Quaver.Shared.Graphics
         /// <returns></returns>
         public static Color GetUserChatColor(UserGroups userGroups)
         {
-            if (userGroups.HasFlag(UserGroups.Developer))
+            if (userGroups.HasFlag(UserGroups.Swan))
                 return Swan;
+            if (userGroups.HasFlag(UserGroups.Developer))
+                return ColorHelper.HexToColor("#bb79e5");
             if (userGroups.HasFlag(UserGroups.Bot))
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
-                return MainAccent;
+                return ColorHelper.HexToColor($"#708df9");
             if (userGroups.HasFlag(UserGroups.Moderator))
-                return ColorHelper.HexToColor($"#9d84ec");
+                return ColorHelper.HexToColor($"#4cb0f7");
+            if (userGroups.HasFlag(UserGroups.RankingSupervisor))
+                return ColorHelper.HexToColor($"#49e6ef");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

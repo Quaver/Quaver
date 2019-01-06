@@ -39,6 +39,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {

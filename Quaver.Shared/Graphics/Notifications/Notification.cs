@@ -119,5 +119,17 @@ namespace Quaver.Shared.Graphics.Notifications
 
             base.Update(gameTime);
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (Rectangle.Intersect(ScreenRectangle, NotificationManager.Container.ScreenRectangle).IsEmpty)
+                return;
+
+            base.Draw(gameTime);
+        }
     }
 }

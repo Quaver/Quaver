@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -102,9 +102,9 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
-            ScrollSpeed = 150;
+            ScrollSpeed = 320;
             EasingType = Easing.OutQuint;
-            TimeToCompleteScroll = 1500;
+            TimeToCompleteScroll = 1200;
 
             ContentContainer.SetChildrenVisibility = true;
 
@@ -241,7 +241,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(firstDifficulty.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
+                    if (!Rectangle.Intersect(firstDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     // Update the mapset's information and y position.
@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(lastDifficulty.ScreenRectangle.ToRectangle(), ScreenRectangle.ToRectangle()).IsEmpty)
+                    if (!Rectangle.Intersect(lastDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     lastDifficulty.Y = (PoolStartingIndex - 1) * DrawableDifficulty.HEIGHT + (PoolStartingIndex - 1)

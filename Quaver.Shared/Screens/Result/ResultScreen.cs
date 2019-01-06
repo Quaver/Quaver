@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         private void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0)
+            if (DialogManager.Dialogs.Count != 0 || Exiting)
                 return;
 
             var view = View as ResultScreenView;

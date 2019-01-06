@@ -20,6 +20,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Skinning;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using Wobble;
@@ -129,6 +130,20 @@ namespace Quaver.Shared.Database.Maps
                 {
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
+                }
+            // Skins
+            } else if (e.EndsWith(".qs"))
+            {
+                switch (screen.Type)
+                {
+                    case QuaverScreenType.Menu:
+                    case QuaverScreenType.Results:
+                    case QuaverScreenType.Select:
+                        SkinManager.Import(e);
+                        break;
+                    default:
+                        NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before importing a skin");
+                        return;
                 }
             }
         }

@@ -1,10 +1,11 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -16,6 +17,22 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 {
     public class GradeDisplay : Sprite
     {
+        /// <summary>
+        ///     The current grade the player has.
+        /// </summary>
+        private Grade _grade;
+        public Grade Grade
+        {
+            get => _grade;
+            set
+            {
+                if (_grade == value)
+                    return;
+
+                _grade = value;
+                Image = Scoring.Failed ? SkinManager.Skin.Grades[Grade.F] : SkinManager.Skin.Grades[value];
+            }
+        }
         /// <summary>
         ///
         /// </summary>
@@ -34,7 +51,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         public override void Update(GameTime gameTime)
         {
             ChangeGradeImage();
-
             base.Update(gameTime);
         }
 
@@ -44,9 +60,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private void ChangeGradeImage()
         {
             Visible = Scoring.Score > 0;
-
-            var grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
-            Image = Scoring.Failed ? SkinManager.Skin.Grades[Grade.F] : SkinManager.Skin.Grades[grade];
+            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
         }
     }
 }

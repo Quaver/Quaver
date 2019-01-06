@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
@@ -95,11 +96,7 @@ namespace Quaver.Shared.Screens.Loading
                     AddModsFromReplay(Replay);
                 }
 
-                // If the No Long Notes mod is active, remove the long notes.
-                if (ModManager.IsActivated(ModIdentifier.NoLongNotes))
-                {
-                    MapManager.Selected.Value.Qua.ReplaceLongNotesWithRegularNotes();
-                }
+                MapManager.Selected.Value.Qua.ApplyMods(ModManager.Mods);
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))

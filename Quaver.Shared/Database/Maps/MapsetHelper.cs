@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -183,7 +183,7 @@ namespace Quaver.Shared.Database.Maps
 
                 var val = term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
                          .First();
-             
+
                 if (options.Contains(searchOption))
                     foundSearchQueries.Add(new SearchQuery
                     {
@@ -231,7 +231,7 @@ namespace Quaver.Shared.Database.Maps
                                     case GameMode.Keys4:
                                         if (!float.TryParse(searchQuery.Value, out var val4k))
                                             exitLoop = true;
-                                    
+
                                         if (!CompareValues(4, val4k, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
@@ -289,11 +289,19 @@ namespace Quaver.Shared.Database.Maps
                         (current, query) => current.Replace(query.Option + query.Operator + query.Value, "")).Trim();
 
                     // Check if the term exist in any of the following properties
-                    if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
-                        !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
-                        !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                        !map.DifficultyName.ToLower().Contains(term))
+                    try
+                    {
+                        if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
+                            !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
+                            !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
+                            !map.DifficultyName.ToLower().Contains(term))
+                            continue;
+                    }
+                    catch (Exception)
+                    {
+                        // Some values can be null and they break the game.
                         continue;
+                    }
 
                     // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
@@ -320,6 +328,9 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         private static bool CompareValues<T>(T val1, T val2, string operation) where T : IComparable<T>
         {
+            if (val1 == null || val2 == null)
+                return false;
+
             var compared = val1.CompareTo(val2);
 
             switch (operation)

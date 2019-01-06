@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         /// </summary>
-        public DownloadStatus DownloadStatusBox { get; private set; }
+        public MapsetInformation MapsetInformationBox { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -231,14 +231,14 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         private void CreateDownloadStatusBox()
         {
-            DownloadStatusBox = new DownloadStatus(this)
+            MapsetInformationBox = new MapsetInformation(this)
             {
                 Parent = Container,
                 Y = Filters.Y + Filters.Height + 20
             };
 
-            DownloadStatusBox.X = -DownloadStatusBox.Width;
-            DownloadStatusBox.MoveToX(Navbar.Line.X, Easing.OutQuint, 1000);
+            MapsetInformationBox.X = -MapsetInformationBox.Width;
+            MapsetInformationBox.MoveToX(Navbar.Line.X, Easing.OutQuint, 1000);
         }
     }
 }
