@@ -6,13 +6,17 @@
 */
 
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Screens.Download.UI.Drawable;
+using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Input;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Download
@@ -75,6 +79,27 @@ namespace Quaver.Shared.Screens.Download
             base.OnFirstUpdate();
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleInput(gameTime);
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandleInput(GameTime gameTime)
+        {
+            if (Exiting)
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                Exit(() => new MenuScreen());
+        }
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
