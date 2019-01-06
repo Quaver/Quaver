@@ -56,12 +56,12 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     The button to save changes.
         /// </summary>
-        private BorderedTextButton OkButton { get; set; }
+        private BorderedTextButton ApplyButton { get; set; }
 
         /// <summary>
         ///     The button to cancel existing changes
         /// </summary>
-        private BorderedTextButton CancelButton { get; set; }
+        private BorderedTextButton CloseButton { get; set; }
 
         /// <summary>
         ///     The list of available settings sections.
@@ -213,36 +213,36 @@ namespace Quaver.Shared.Screens.Settings
                 Y = 1
             };
 
-            CreateOkButton();
-            CreateCancelButton();
+            CreateApplyButton();
+            CreateCloseButton();
         }
 
         /// <summary>
         ///     Creates the button to save changes
         /// </summary>
-        private void CreateOkButton()
+        private void CreateApplyButton()
         {
-            OkButton = new BorderedTextButton("OK", Color.LimeGreen)
+            ApplyButton = new BorderedTextButton("Apply", Color.LimeGreen)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
                 X = -20
             };
 
-            OkButton.Clicked += (o, e) =>
+            ApplyButton.Clicked += (o, e) =>
             {
                 // Determines whether we'll be dismissing the dialog if no changes have been made.
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (SkinManager.NewQueuedSkin != null || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
+                if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value
+                    || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
                     ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
                     ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
                     Transitioner.FadeIn();
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-//                    IsGloballyClickable = false;
                     dismissDalog = false;
                 }
 
@@ -265,16 +265,16 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     Creates the button to cancel all changes
         /// </summary>
-        private void CreateCancelButton()
+        private void CreateCloseButton()
         {
-            CancelButton = new BorderedTextButton("Cancel", Color.Crimson)
+            CloseButton = new BorderedTextButton("Close", Color.Crimson)
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
-                X = OkButton.X - OkButton.Width - 20
+                X = ApplyButton.X - ApplyButton.Width - 20
             };
 
-            CancelButton.Clicked += (o, e) => DialogManager.Dismiss(this);
+            CloseButton.Clicked += (o, e) => DialogManager.Dismiss(this);
         }
         /// <summary>
         /// </summary>
@@ -312,8 +312,6 @@ namespace Quaver.Shared.Screens.Settings
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
-                    new SettingsCustomSkin(this, "Custom Skin"),
-                    new SettingsDefaultSkin(this, "Default Skin"),
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
@@ -326,6 +324,13 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
+                }),
+                // Skinning
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
+                {
+                    new SettingsCustomSkin(this, "Custom Skin"),
+                    new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsExportSkin(this, "Export Custom Skin")
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
@@ -363,7 +368,8 @@ namespace Quaver.Shared.Screens.Settings
                 {
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
                     new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
-                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer)
+                    new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
+                    new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
                 })
             };
 

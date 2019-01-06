@@ -81,6 +81,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <returns></returns>
         public static Texture2D GetIcon(UserGroups groups)
         {
+            if (groups.HasFlag(UserGroups.Swan))
+                return FontAwesome.Get(FontAwesomeIcon.fa_anchor_shape);
+
             if (groups.HasFlag(UserGroups.Developer))
                 return FontAwesome.Get(FontAwesomeIcon.fa_code);
 
@@ -95,6 +98,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (groups.HasFlag(UserGroups.Moderator))
                 return FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
 
+            if (groups.HasFlag(UserGroups.RankingSupervisor))
+                return FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol);
+
             return null;
         }
 
@@ -105,6 +111,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <returns></returns>
         public static string GetUserGroupName(UserGroups groups)
         {
+            if (groups.HasFlag(UserGroups.Swan))
+                return "Swan";
+
             if (groups.HasFlag(UserGroups.Developer))
                 return "Developer";
 
@@ -119,6 +128,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             // Mod
             if (groups.HasFlag(UserGroups.Moderator))
                 return "Moderator";
+
+            if (groups.HasFlag(UserGroups.RankingSupervisor))
+                return "Ranking Supervisor";
 
             return null;
         }

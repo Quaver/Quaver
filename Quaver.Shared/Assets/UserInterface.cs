@@ -21,6 +21,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D NotificationWarning { get; private set; }
         public static Texture2D NotificationInfo { get; private set; }
         public static Texture2D NotificationSuccess { get; private set; }
+        public static Texture2D NotificationErrorBg { get; private set; }
+        public static Texture2D NotificationWarningBg { get; private set; }
+        public static Texture2D NotificationInfoBg { get; private set; }
+        public static Texture2D NotificationSuccessBg { get; private set; }
         public static Texture2D LeftButtonSquare { get; private set; }
         public static Texture2D RightButtonSquare { get; private set; }
         public static Texture2D RoundedSquare { get; private set; }
@@ -59,6 +63,10 @@ namespace Quaver.Shared.Assets
             NotificationWarning = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-warning.png"));
             NotificationInfo = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-info.png"));
             NotificationSuccess = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-success.png"));
+            NotificationErrorBg = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-error-bg.png"));
+            NotificationWarningBg = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-warning-bg.png"));
+            NotificationInfoBg = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-info-bg.png"));
+            NotificationSuccessBg = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Notifications/notif-success-bg.png"));
             LeftButtonSquare = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/left-button-square.png"));
             RightButtonSquare = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/right-button-square.png"));
             RoundedSquare = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/rounded-square.png"));

@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void Update(GameTime gameTime)
         {
             FadeToColor(GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                    ? ColorHelper.HexToColor("#7e7e7e") : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
+                    ? ColorHelper.HexToColor("#cacaca") : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
 
             base.Update(gameTime);
         }

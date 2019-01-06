@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -76,6 +78,17 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private ResultOnlineStats OnlineStats { get; set; }
 
+        /// <summary>
+        ///     The sprite containing the cached texture of the hit difference.
+        /// </summary>
+        private Sprite HitDifferenceGraph { get; set; }
+
+        /// <summary>
+        ///     Raw hit difference graph. Used to draw it to a RenderTarget2D
+        ///     <see cref="CacheHitDifferenceGraph"/>
+        /// </summary>
+        private ResultHitDifferenceGraph HitDifferenceGraphRaw { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -96,6 +109,19 @@ namespace Quaver.Shared.Screens.Result.UI
             CreateKeyValueItems();
             CreateJudgementBreakdown();
             CreateOnlineStats();
+
+            // Create the graph but don't set a constructor, as we need to draw it to a RenderTarget2D
+            HitDifferenceGraphRaw = new ResultHitDifferenceGraph(new ScalableVector2(Width - VerticalDividerLine.X - 30, 200), Screen);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            CacheHitDifferenceGraph(gameTime);
+            base.Draw(gameTime);
         }
 
         /// <summary>
@@ -242,5 +268,49 @@ namespace Quaver.Shared.Screens.Result.UI
             Y = BottomHorizontalDividerLine.Y,
             X = Border.Thickness
         };
+
+        /// <summary>
+        ///     Draws the hit difference graph to a RenderTarget2D
+        /// </summary>
+        private void CacheHitDifferenceGraph(GameTime gameTime)
+        {
+            if (HitDifferenceGraph != null)
+                return;
+
+            try
+            {
+                GameBase.Game.SpriteBatch.End();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            var (pixelWidth, pixelHeight) = HitDifferenceGraphRaw.AbsoluteSize * WindowManager.ScreenScale;
+
+            var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth, (int) pixelHeight, false,
+                GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+            GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
+            HitDifferenceGraphRaw.SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.Opaque};
+            HitDifferenceGraphRaw.Draw(gameTime);
+            GameBase.Game.SpriteBatch.End();
+
+            Texture2D outputTexture = renderTarget;
+
+            GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+
+            HitDifferenceGraphRaw.Destroy();
+
+            HitDifferenceGraph = new Sprite
+            {
+                Parent = this,
+                Image = outputTexture,
+                Size = HitDifferenceGraphRaw.Size,
+                X = VerticalDividerLine.X + (Width - VerticalDividerLine.X) / 2f - HitDifferenceGraphRaw.Width / 2f,
+                Y = BottomHorizontalDividerLine.Y - 15 - 200,
+                SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.AlphaBlend},
+            };
+        }
     }
 }
