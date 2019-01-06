@@ -16,6 +16,7 @@ using Quaver.Shared.Screens.Download.UI.Drawable;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 
@@ -93,13 +94,13 @@ namespace Quaver.Shared.Screens.Download
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
-            if (Exiting)
+            if (Exiting || DialogManager.Dialogs.Count != 0)
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 Exit(() => new MenuScreen());
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
