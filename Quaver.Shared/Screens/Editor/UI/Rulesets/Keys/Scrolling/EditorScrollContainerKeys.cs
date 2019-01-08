@@ -281,9 +281,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         private void SetHitSoundObjectIndex()
         {
             HitSoundObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime <= AudioEngine.Track.Time);
-
-            if (HitSoundObjectIndex == -1)
-                HitSoundObjectIndex = 0;
+            HitSoundObjectIndex++;
         }
 
         /// <summary>
