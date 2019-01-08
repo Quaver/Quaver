@@ -278,7 +278,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         ///     Sets the hitsounds object index, so we know which object to play sounds for.
         ///     This is generally used when seeking through the map.
         /// </summary>
-        private void SetHitSoundObjectIndex() => HitSoundObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime <= AudioEngine.Track.Time);
+        private void SetHitSoundObjectIndex()
+        {
+            HitSoundObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime <= AudioEngine.Track.Time);
+
+            if (HitSoundObjectIndex == -1)
+                HitSoundObjectIndex = 0;
+        }
 
         /// <summary>
         ///     Called when the user changes the scroll speed of the map.

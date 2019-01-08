@@ -164,8 +164,11 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Plays the audio track at the preview time if it has stopped
         /// </summary>
-        private static void KeepPlayingAudioTrackAtPreview()
+        private void KeepPlayingAudioTrackAtPreview()
         {
+            if (Exiting)
+                return;
+
             if (AudioEngine.Track == null)
             {
                 AudioEngine.PlaySelectedTrackAtPreview();

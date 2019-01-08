@@ -59,15 +59,6 @@ namespace Quaver.Shared.Screens.Editor
             View = new EditorScreenView(this);
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void OnFirstUpdate()
-        {
-
-            base.OnFirstUpdate();
-        }
-
         /// <summary>
         ///
         /// </summary>
