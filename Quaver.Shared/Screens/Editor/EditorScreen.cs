@@ -52,6 +52,9 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.State = "Editing a map";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
+            if (!LoadAudioTrack())
+                return;
+
             CreateRuleset();
             View = new EditorScreenView(this);
         }
@@ -61,8 +64,6 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public override void OnFirstUpdate()
         {
-            if (!LoadAudioTrack())
-                return;
 
             base.OnFirstUpdate();
         }
