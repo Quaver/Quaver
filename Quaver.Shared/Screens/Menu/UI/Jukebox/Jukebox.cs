@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
@@ -135,6 +136,13 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 
             CreateControlButtons();
             AddBorder(Color.White, 2);
+
+            // Make sure the audio is playing and add a fade effect.
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPaused)
+            {
+                AudioEngine.Track.Play();
+                AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 300);
+            }
         }
 
         /// <inheritdoc />

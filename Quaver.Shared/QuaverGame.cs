@@ -437,7 +437,7 @@ namespace Quaver.Shared
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
-                case QuaverScreenType.Edit:
+                case QuaverScreenType.Editor:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }
@@ -460,7 +460,7 @@ namespace Quaver.Shared
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
-                case QuaverScreenType.Edit:
+                case QuaverScreenType.Editor:
                     Transitioner.FadeIn();
 
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
