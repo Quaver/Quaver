@@ -430,12 +430,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         public void ExitToEditor() => Exit(() =>
         {
-            if (AudioEngine.Track != null)
-            {
-                lock (AudioEngine.Track)
-                    AudioEngine.Track?.Fade(10, 300);
-            }
-
+            AudioEngine.Track?.Pause();
             return new EditorScreen(MapManager.Selected.Value.LoadQua());
         });
 
