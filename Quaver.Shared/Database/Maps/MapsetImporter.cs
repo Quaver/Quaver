@@ -33,7 +33,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     List of file paths that are ready to be imported to the game.
         /// </summary>
-        public static List<string> Queue { get; } = new List<string>();
+        public static Queue<string> Queue { get; } = new Queue<string>();
 
         /// <summary>
         /// Watches the songs directory for any changes.
@@ -75,7 +75,7 @@ namespace Quaver.Shared.Database.Maps
             // Mapset files
             if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
             {
-                Queue.Add(e);
+                Queue.Enqueue(e);
 
                 var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
@@ -158,9 +158,10 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            foreach (var file in Queue)
+            while (Queue.Count != 0)
             {
-                var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
+                var file = Queue.Dequeue();
+                var time = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
 
                 try

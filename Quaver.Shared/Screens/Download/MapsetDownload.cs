@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Download
             OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
             {
                 Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
-                MapsetImporter.Queue.Add(path);
+                MapsetImporter.Queue.Enqueue(path);
 
                 Completed.Value = e;
                 MapsetDownloadManager.CurrentDownloads.Remove(this);

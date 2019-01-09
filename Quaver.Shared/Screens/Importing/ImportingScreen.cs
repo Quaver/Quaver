@@ -5,6 +5,7 @@
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -36,6 +37,16 @@ namespace Quaver.Shared.Screens.Importing
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => null;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private int PreviousQueueCount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int CurrentQueueCount => MapsetImporter.Queue.Count + QuaverSettingsDatabaseCache.OutdatedMaps.Count + 1;
+
 
         /// <summary>
         /// </summary>
@@ -53,7 +64,8 @@ namespace Quaver.Shared.Screens.Importing
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
                     var view = View as ImportingScreenView;
-                    view.Header.Text = "Please wait while we're recalculating map difficulties";
+                    PreviousQueueCount = CurrentQueueCount;
+                    view.Header.Text = $"Please wait while maps are being processed. Mapsets in queue: {CurrentQueueCount}";
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();;
                 }
 
@@ -61,6 +73,21 @@ namespace Quaver.Shared.Screens.Importing
             });
 
             base.OnFirstUpdate();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Update(GameTime gameTime)
+        {
+            var view = View as ImportingScreenView;
+            if (view.Header != null && CurrentQueueCount != PreviousQueueCount)
+            {
+                view.Header.Text = $"Please wait while maps are being processed. Mapsets in queue: {CurrentQueueCount}";
+                PreviousQueueCount = CurrentQueueCount;
+            }
+
+            base.Update(gameTime);
         }
 
         /// <summary>

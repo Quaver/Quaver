@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -29,7 +29,7 @@ namespace Quaver.Shared.Database.Settings
         /// <summary>
         ///     Current maps with outdated difficulties
         /// </summary>
-        public static List<Map> OutdatedMaps { get; private set; }
+        public static Queue<Map> OutdatedMaps { get; private set; }
 
         /// <summary>
         ///     Current scores with outdated ratings.
@@ -62,7 +62,7 @@ namespace Quaver.Shared.Database.Settings
                     conn.Insert(settings);
                 }
 
-                OutdatedMaps = MapDatabaseCache.FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version);
+                OutdatedMaps = new Queue<Map>(MapDatabaseCache.FetchAll().FindAll(x => x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version));
                 Logger.Important($"Found {OutdatedMaps.Count} maps that have outdated difficulty ratings. Scheduling recalculation upon entering" +
                                  $"select.", LogType.Runtime);
             }
@@ -91,8 +91,9 @@ namespace Quaver.Shared.Database.Settings
         /// </summary>
         public static void RecalculateDifficultiesForOutdatedMaps()
         {
-            foreach (var map in OutdatedMaps)
+            while (OutdatedMaps.Count != 0)
             {
+                var map = OutdatedMaps.Dequeue();
                 map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
 
                 try
@@ -105,8 +106,6 @@ namespace Quaver.Shared.Database.Settings
                     new SQLiteConnection(DatabasePath).Delete(map);
                 }
             }
-
-            OutdatedMaps.Clear();
         }
     }
 }
