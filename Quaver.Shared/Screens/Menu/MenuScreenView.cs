@@ -410,7 +410,9 @@ namespace Quaver.Shared.Screens.Menu
 
             screen?.Exit(() =>
             {
-                AudioEngine.Track?.Pause();
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track?.Pause();
+                
                 return new EditorScreen(MapManager.Selected.Value.LoadQua());
             });
         }
