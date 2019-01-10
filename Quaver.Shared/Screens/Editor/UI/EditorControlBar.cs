@@ -14,23 +14,23 @@ namespace Quaver.Shared.Screens.Editor.UI
     {
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonPlayTest { get; set; }
+        private EditorControlButton ButtonPlayTest { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonPlaybackRate { get; set; }
+        private EditorControlButton ButtonPlaybackRate { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonBeatSnap { get; set; }
+        private EditorControlButton ButtonBeatSnap { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonStopTrack { get; set; }
+        private EditorControlButton ButtonStopTrack { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonPlayPauseTrack { get; set; }
+        private EditorControlButton ButtonPlayPauseTrack { get; set; }
 
         /// <summary>
         /// </summary>
