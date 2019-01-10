@@ -32,11 +32,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonPauseTrack { get; set; }
+        private JukeboxButton ButtonPlayPauseTrack { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ButtonPlayTrack { get; set; }
+        private EditorControlButton ButtonRestartTrack { get; set; }
 
         /// <summary>
         /// </summary>
@@ -64,7 +64,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // TextAudioTime.Text = TimeSpan.FromMilliseconds(AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
+            ButtonPlayPauseTrack.Image =  FontAwesome.Get(AudioEngine.Track.IsPlaying ? FontAwesomeIcon.fa_pause_symbol : FontAwesomeIcon.fa_play_button);
             base.Update(gameTime);
         }
 
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
         private void CreateAudioControlButtons()
         {
-            ButtonPlayTest = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_play_sign))
+            ButtonPlayTest = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_play_sign), "Test Play", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
             ButtonPlayTest.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Play Testing is not implemented yet!");
 
-            ButtonPlaybackRate = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_time))
+            ButtonPlaybackRate = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Change Playback Rate", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
             ButtonPlaybackRate.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
 
-            ButtonBeatSnap = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify))
+            ButtonBeatSnap = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify), "Change Beat Snap", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
             ButtonBeatSnap.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
 
-            ButtonStopTrack = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_square_shape_shadow))
+            ButtonStopTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_square_shape_shadow), "Stop Track", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -121,7 +121,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
             ButtonStopTrack.Clicked += (o, e) => EditorScreen.StopTrack();
 
-            ButtonPauseTrack = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
+            ButtonPlayPauseTrack = new EditorControlButton(FontAwesome.Get(AudioEngine.Track.IsPlaying
+                ? FontAwesomeIcon.fa_pause_symbol : FontAwesomeIcon.fa_play_button), "Play/Pause Track", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -129,17 +130,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
                 Y = ButtonStopTrack.Y - ButtonStopTrack.Height - 20
             };
 
-            ButtonPauseTrack.Clicked += (o, e) => EditorScreen.PauseTrack();
+            ButtonPlayPauseTrack.Clicked += (o, e) => EditorScreen.PlayPauseTrack();
 
-            ButtonPlayTrack = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_play_button))
+            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", 60)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
                 Size = new ScalableVector2(30, 30),
-                Y = ButtonPauseTrack.Y - ButtonPauseTrack.Height - 20
+                Y = ButtonPlayPauseTrack.Y - ButtonPlayPauseTrack.Height - 20,
             };
 
-            ButtonPlayTrack.Clicked += (o, e) => EditorScreen.PlayOrReplayTrack();
+            ButtonRestartTrack.Clicked += (o, e) => EditorScreen.RestartTrack();
         }
     }
 }

@@ -134,7 +134,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private static void HandleKeyPressSpace() => PauseTrack();
+        private static void HandleKeyPressSpace() => PlayPauseTrack();
 
         /// <summary>
         ///     Completely stops the AudioTrack.
@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Pauses/Plays the AudioTrack.
         /// </summary>
-        public static void PauseTrack()
+        public static void PlayPauseTrack()
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
@@ -168,20 +168,23 @@ namespace Quaver.Shared.Screens.Editor
         }
 
         /// <summary>
-        ///     Plays the track if paused, or restarts it completely.
+        ///     Restarts the audio track from the beginning
         /// </summary>
-        public static void PlayOrReplayTrack()
+        public static void RestartTrack()
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
                 AudioEngine.LoadCurrentTrack();
                 AudioEngine.Track.Play();
             }
-            else if (AudioEngine.Track.IsPaused)
-                AudioEngine.Track.Play();
             else if (AudioEngine.Track.IsPlaying)
             {
                 AudioEngine.Track.Pause();
+                AudioEngine.Track.Seek(0);
+                AudioEngine.Track.Play();
+            }
+            else if (AudioEngine.Track.IsPaused)
+            {
                 AudioEngine.Track.Seek(0);
                 AudioEngine.Track.Play();
             }
