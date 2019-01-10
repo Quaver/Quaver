@@ -205,6 +205,9 @@ namespace Quaver.Shared.Screens.Editor
         {
             for (var i = HitSoundObjectIndex; i < WorkingMap.HitObjects.Count; i++)
             {
+                if (Exiting)
+                    return;
+
                 var obj = WorkingMap.HitObjects[i];
 
                 if (AudioEngine.Track.Time >= obj.StartTime)
