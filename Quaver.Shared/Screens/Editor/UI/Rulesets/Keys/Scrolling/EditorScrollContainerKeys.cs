@@ -81,11 +81,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         protected List<DrawableEditorHitObject> HitObjects { get; private set; }
 
-        /// <summary>
-        ///     The index of the object who had its hitsounds played.
-        /// </summary>
-        private int HitSoundObjectIndex { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -103,18 +98,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             GenerateNotes();
             CheckIfObjectsOnScreen();
 
-            SetHitSoundObjectIndex();
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            PlayHitsounds();
-            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -254,35 +238,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 Thread.Sleep(30);
             }
         });
-
-        /// <summary>
-        ///     Keeps track of and plays object hitsounds.
-        /// </summary>
-        private void PlayHitsounds()
-        {
-            for (var i = HitSoundObjectIndex; i < HitObjects.Count; i++)
-            {
-                var obj = HitObjects[i];
-
-                if (AudioEngine.Track.Time >= obj.Info.StartTime)
-                {
-                    HitObjectManager.PlayObjectHitSounds(obj.Info);
-                    HitSoundObjectIndex = i + 1;
-                }
-                else
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     Sets the hitsounds object index, so we know which object to play sounds for.
-        ///     This is generally used when seeking through the map.
-        /// </summary>
-        private void SetHitSoundObjectIndex()
-        {
-            HitSoundObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime <= AudioEngine.Track.Time);
-            HitSoundObjectIndex++;
-        }
 
         /// <summary>
         ///     Called when the user changes the scroll speed of the map.

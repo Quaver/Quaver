@@ -13,6 +13,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -42,6 +43,11 @@ namespace Quaver.Shared.Screens.Editor
         public EditorRuleset Ruleset { get; private set; }
 
         /// <summary>
+        ///     The index of the object who had its hitsounds played.
+        /// </summary>
+        private int HitSoundObjectIndex { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -55,16 +61,18 @@ namespace Quaver.Shared.Screens.Editor
             if (!LoadAudioTrack())
                 return;
 
+            SetHitSoundObjectIndex();
             CreateRuleset();
             View = new EditorScreenView(this);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="gameTime"></param>
+        /// <inheritdoc />
+        ///  <summary>
+        ///  </summary>
+        ///  <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            PlayHitsounds();
             HandleInput(gameTime);
             base.Update(gameTime);
         }
@@ -188,6 +196,35 @@ namespace Quaver.Shared.Screens.Editor
                 AudioEngine.Track.Seek(0);
                 AudioEngine.Track.Play();
             }
+        }
+
+        /// <summary>
+        ///     Keeps track of and plays object hitsounds.
+        /// </summary>
+        private void PlayHitsounds()
+        {
+            for (var i = HitSoundObjectIndex; i < WorkingMap.HitObjects.Count; i++)
+            {
+                var obj = WorkingMap.HitObjects[i];
+
+                if (AudioEngine.Track.Time >= obj.StartTime)
+                {
+                    HitObjectManager.PlayObjectHitSounds(obj);
+                    HitSoundObjectIndex = i + 1;
+                }
+                else
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Sets the hitsounds object index, so we know which object to play sounds for.
+        ///     This is generally used when seeking through the map.
+        /// </summary>
+        private void SetHitSoundObjectIndex()
+        {
+            HitSoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= AudioEngine.Track.Time);
+            HitSoundObjectIndex++;
         }
 
         /// <inheritdoc />
