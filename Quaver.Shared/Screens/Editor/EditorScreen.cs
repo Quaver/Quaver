@@ -74,6 +74,10 @@ namespace Quaver.Shared.Screens.Editor
         public override void Update(GameTime gameTime)
         {
             PlayHitsounds();
+
+            if (AudioEngine.Track.IsDisposed)
+                AudioEngine.LoadCurrentTrack();
+
             HandleInput(gameTime);
             base.Update(gameTime);
         }

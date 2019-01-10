@@ -72,10 +72,15 @@ namespace Quaver.Shared.Screens.Editor.UI
         public override void Update(GameTime gameTime)
         {
             TextAudioTime.Text = TimeSpan.FromMilliseconds(AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
-            TextAudioTimeLeft.Text = "-" + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
+
+            if (!AudioEngine.Track.IsDisposed)
+                TextAudioTimeLeft.Text = "-" + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
+            else
+                TextAudioTimeLeft.Text = "00:00.000";
+
             TimeProgressBar.Bindable.Value = AudioEngine.Track.Time;
 
-            if (DraggableProgressButton.IsHeld)
+            if (DraggableProgressButton.IsHeld && !AudioEngine.Track.IsDisposed)
             {
                 var percentage = (MouseManager.CurrentState.X - DraggableProgressButton.AbsolutePosition.X) / DraggableProgressButton.AbsoluteSize.X;
 
@@ -96,7 +101,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             }
             else if (DraggingInLastFrame)
             {
-                if (AudioEngine.Track.IsPaused)
+                if (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
                     AudioEngine.Track.Play();
 
                 DraggingInLastFrame = false;
