@@ -36,10 +36,6 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// </summary>
         private EditorControlButton ButtonRestartTrack { get; set; }
 
-        /// <summary>
-        /// </summary>
-        private SpriteTextBitmap TextAudioTime { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -67,16 +63,8 @@ namespace Quaver.Shared.Screens.Editor.UI
         }
 
         /// <summary>
+        ///     Creates generic buttons used to control audio/misc.
         /// </summary>
-        private void CreateTextAudioTime() => TextAudioTime = new SpriteTextBitmap(FontsBitmap.AllerRegular, "00:00.000")
-        {
-            Parent = this,
-            Alignment = Alignment.MidLeft,
-            X = 15,
-            Y = 2,
-            FontSize = 20
-        };
-
         private void CreateAudioControlButtons()
         {
             ButtonPlayTest = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_play_sign), "Test Play", 60)
