@@ -15,6 +15,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
+using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -91,9 +92,11 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Space))
                 HandleKeyPressSpace();
+
+            HandleAudioSeeking();
         }
 
-         /// <summary>
+        /// <summary>
         ///
         /// </summary>
         private void CreateRuleset()
@@ -143,6 +146,32 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         /// </summary>
         private void HandleKeyPressSpace() => PlayPauseTrack();
+
+        /// <summary>
+        ///     Handles seeking through the audio whether with the scroll wheel or
+        ///     arrow keys
+        /// </summary>
+        private void HandleAudioSeeking()
+        {
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+                return;
+
+            // Seek backwards
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
+                MouseManager.PreviousState.ScrollWheelValue)
+            {
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, 4);
+                SetHitSoundObjectIndex();
+            }
+            // Seek Forwards
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
+                MouseManager.PreviousState.ScrollWheelValue)
+            {
+
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, 4);
+                SetHitSoundObjectIndex();
+            }
+        }
 
         /// <summary>
         ///     Completely stops the AudioTrack.
