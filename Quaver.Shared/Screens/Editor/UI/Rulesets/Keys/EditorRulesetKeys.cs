@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Wobble.Graphics;
 using Wobble.Input;
@@ -30,10 +31,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         protected override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.PageUp))
-                ScrollContainer.ScrollSpeed.Value++;
+                ConfigManager.EditorScrollSpeedKeys.Value++;
 
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.PageDown))
-                ScrollContainer.ScrollSpeed.Value--;
+                ConfigManager.EditorScrollSpeedKeys.Value--;
         }
 
         /// <summary>

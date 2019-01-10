@@ -28,14 +28,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         public EditorRulesetKeys Ruleset { get; }
 
         /// <summary>
-        ///     The raw value speed at which the container scrolls.
-        /// </summary>
-        public BindableInt ScrollSpeed { get; } = new BindableInt(22, 1, 100);
-
-        /// <summary>
         ///     The *actual* speed at which the container scrolls at.
         /// </summary>
-        public float TrackSpeed => ScrollSpeed.Value / (20 * AudioEngine.Track.Rate);
+        public float TrackSpeed => ConfigManager.EditorScrollSpeedKeys.Value / (20 * AudioEngine.Track.Rate);
 
         /// <summary>
         ///     The y positon of the track.
@@ -98,7 +93,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             GenerateNotes();
             CheckIfObjectsOnScreen();
 
-            ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
+            ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
         }
 
         /// <inheritdoc />
@@ -136,7 +131,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
+            ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
 
             HitObjects.ForEach(x => x.Destroy());
             base.Destroy();
