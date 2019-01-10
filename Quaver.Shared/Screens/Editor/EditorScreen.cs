@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private static void HandleKeyPressSpace() => PlayPauseTrack();
+        private void HandleKeyPressSpace() => PlayPauseTrack();
 
         /// <summary>
         ///     Completely stops the AudioTrack.
@@ -162,11 +162,13 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Pauses/Plays the AudioTrack.
         /// </summary>
-        public static void PlayPauseTrack()
+        public void PlayPauseTrack()
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
                 AudioEngine.LoadCurrentTrack();
+                SetHitSoundObjectIndex();
+
                 AudioEngine.Track.Play();
             }
             else if (AudioEngine.Track.IsPlaying)
@@ -178,22 +180,28 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Restarts the audio track from the beginning
         /// </summary>
-        public static void RestartTrack()
+        public void RestartTrack()
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
                 AudioEngine.LoadCurrentTrack();
+                SetHitSoundObjectIndex();
+
                 AudioEngine.Track.Play();
             }
             else if (AudioEngine.Track.IsPlaying)
             {
                 AudioEngine.Track.Pause();
                 AudioEngine.Track.Seek(0);
+                SetHitSoundObjectIndex();
+
                 AudioEngine.Track.Play();
             }
             else if (AudioEngine.Track.IsPaused)
             {
                 AudioEngine.Track.Seek(0);
+                SetHitSoundObjectIndex();
+
                 AudioEngine.Track.Play();
             }
         }

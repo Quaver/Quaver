@@ -4,6 +4,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -116,7 +117,12 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Y = ButtonStopTrack.Y - ButtonStopTrack.Height - 20
             };
 
-            ButtonPlayPauseTrack.Clicked += (o, e) => EditorScreen.PlayPauseTrack();
+            ButtonPlayPauseTrack.Clicked += (o, e) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+                screen?.PlayPauseTrack();
+            };
 
             ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", 60)
             {
@@ -126,7 +132,12 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Y = ButtonPlayPauseTrack.Y - ButtonPlayPauseTrack.Height - 20,
             };
 
-            ButtonRestartTrack.Clicked += (o, e) => EditorScreen.RestartTrack();
+            ButtonRestartTrack.Clicked += (o, e) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+                screen?.RestartTrack();
+            };
         }
     }
 }
