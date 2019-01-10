@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
@@ -56,7 +57,8 @@ namespace Quaver.Shared.Screens.Editor
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
 
             DiscordHelper.Presence.Details = WorkingMap.ToString();
-            DiscordHelper.Presence.State = "Editing a map";
+            DiscordHelper.Presence.State = "Editing";
+            DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             if (!LoadAudioTrack())
@@ -143,6 +145,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void HandleKeyPressEscape() => Exit(() =>
         {
+            DiscordHelper.Presence.StartTimestamp = 0;
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
             AudioEngine.Track?.Fade(0, 100);
             return new MenuScreen();
         });
