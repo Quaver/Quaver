@@ -94,6 +94,6 @@ namespace Quaver.Shared.Screens.Editor
         ///     Fades the background in upon load.
         /// </summary>
         private void FadeBackgroundIn() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, 1, 0.30f, 200));
+            Easing.Linear, 1, 0.70f, 200));
     }
 }
