@@ -2,14 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Editor.UI.Rulesets
+namespace Quaver.Shared.Screens.Editor.UI
 {
     public class EditorControlButton : JukeboxButton
     {

@@ -2,6 +2,7 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Screens.Editor.UI;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Wobble;
 using Wobble.Graphics;
