@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     The y position of the hit position.
         /// </summary>
-        public int HitPositionY { get; } = 600;
+        public int HitPositionY { get; } = 580;
 
         /// <summary>
         ///     The line that defines where the hit position is.
