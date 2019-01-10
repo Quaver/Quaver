@@ -134,9 +134,45 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressSpace()
+        private static void HandleKeyPressSpace() => PauseTrack();
+
+        /// <summary>
+        ///     Completely stops the AudioTrack.
+        /// </summary>
+        public static void StopTrack()
         {
-            if (AudioEngine.Track.IsDisposed || AudioEngine.Track.IsStopped)
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+                return;
+
+            if (AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Pause();
+
+            AudioEngine.Track.Seek(0);
+            AudioEngine.Track.Stop();
+        }
+
+        /// <summary>
+        ///     Pauses/Plays the AudioTrack.
+        /// </summary>
+        public static void PauseTrack()
+        {
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+            {
+                AudioEngine.LoadCurrentTrack();
+                AudioEngine.Track.Play();
+            }
+            else if (AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Pause();
+            else if (AudioEngine.Track.IsPaused)
+                AudioEngine.Track.Play();
+        }
+
+        /// <summary>
+        ///     Plays the track if paused, or restarts it completely.
+        /// </summary>
+        public static void PlayOrReplayTrack()
+        {
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
                 AudioEngine.LoadCurrentTrack();
                 AudioEngine.Track.Play();
@@ -144,7 +180,11 @@ namespace Quaver.Shared.Screens.Editor
             else if (AudioEngine.Track.IsPaused)
                 AudioEngine.Track.Play();
             else if (AudioEngine.Track.IsPlaying)
+            {
                 AudioEngine.Track.Pause();
+                AudioEngine.Track.Seek(0);
+                AudioEngine.Track.Play();
+            }
         }
 
         /// <inheritdoc />
