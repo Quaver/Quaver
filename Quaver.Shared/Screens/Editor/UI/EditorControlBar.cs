@@ -44,13 +44,9 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             Size = new ScalableVector2(70, WindowManager.Height);
             Tint = Color.Black;
-            Alpha = 0.70f;
+            Alpha = 0.75f;
 
             CreateAudioControlButtons();
-
-            // Top Border Line
-            // ReSharper disable once ObjectCreationAsStatement
-            AddBorder(Color.White, 1);
         }
 
         /// <inheritdoc />

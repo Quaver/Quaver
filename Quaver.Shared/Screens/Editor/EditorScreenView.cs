@@ -2,8 +2,10 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -20,7 +22,11 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private EditorControlBar ControlBar { get; set; }
+        public EditorControlBar ControlBar { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private EditorTimeProgress TimeProgress { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -30,6 +36,11 @@ namespace Quaver.Shared.Screens.Editor
         {
             CreateBackground();
             CreateControlBar();
+            CreateTimeProgress();
+
+            // Make the toolbar appear over the song progress, because of the tooltips.
+            ListHelper.Swap(Container.Children, Container.Children.FindIndex(x => x == ControlBar),
+                Container.Children.FindIndex(x => x == TimeProgress));
         }
 
         /// <inheritdoc />
@@ -105,7 +116,7 @@ namespace Quaver.Shared.Screens.Editor
         ///     Fades the background in upon load.
         /// </summary>
         private void FadeBackgroundIn() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, 1, 0.20f, 200));
+            Easing.Linear, 1, 0.25f, 200));
 
         /// <summary>
         /// </summary>
@@ -119,6 +130,24 @@ namespace Quaver.Shared.Screens.Editor
 
             ControlBar.X = -ControlBar.Width;
             ControlBar.MoveToX(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateTimeProgress()
+        {
+            var screen = (EditorScreen) Screen;
+
+            TimeProgress = new EditorTimeProgress(this, screen.WorkingMap)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft,
+                X = ControlBar.Width
+            };
+
+            TimeProgress.Y = TimeProgress.Height;
+
+            TimeProgress.MoveToY(1, Easing.OutQuint, 800);
         }
     }
 }

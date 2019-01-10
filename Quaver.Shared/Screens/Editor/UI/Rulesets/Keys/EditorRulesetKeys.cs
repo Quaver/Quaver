@@ -13,6 +13,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private EditorScrollContainerKeys ScrollContainer { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private EditorTimeProgress TimeProgress { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

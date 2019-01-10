@@ -261,7 +261,7 @@ namespace Quaver.Shared.Screens.Editor
         ///     Sets the hitsounds object index, so we know which object to play sounds for.
         ///     This is generally used when seeking through the map.
         /// </summary>
-        private void SetHitSoundObjectIndex()
+        public void SetHitSoundObjectIndex()
         {
             HitSoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= AudioEngine.Track.Time);
             HitSoundObjectIndex++;
