@@ -16,6 +16,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Select;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -149,7 +150,7 @@ namespace Quaver.Shared.Screens.Editor
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             AudioEngine.Track?.Fade(0, 100);
-            return new MenuScreen();
+            return new SelectScreen();
         });
 
         /// <summary>
