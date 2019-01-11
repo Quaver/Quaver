@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private EditorTimeProgress TimeProgress { get; set; }
+        public EditorTimeProgress TimeProgress { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -35,12 +35,8 @@ namespace Quaver.Shared.Screens.Editor
         public EditorScreenView(Screen screen) : base(screen)
         {
             CreateBackground();
-            CreateControlBar();
             CreateTimeProgress();
-
-            // Make the toolbar appear over the song progress, because of the tooltips.
-            ListHelper.Swap(Container.Children, Container.Children.FindIndex(x => x == ControlBar),
-                Container.Children.FindIndex(x => x == TimeProgress));
+            CreateControlBar();
         }
 
         /// <inheritdoc />
@@ -122,7 +118,7 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void CreateControlBar()
         {
-            ControlBar = new EditorControlBar
+            ControlBar = new EditorControlBar(this)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft
@@ -142,7 +138,6 @@ namespace Quaver.Shared.Screens.Editor
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
-                X = ControlBar.Width
             };
 
             TimeProgress.Y = TimeProgress.Height;

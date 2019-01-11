@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             View = view;
             Map = map;
-            Size = new ScalableVector2(WindowManager.Width - View.ControlBar.Width, 50);
+            Size = new ScalableVector2(WindowManager.Width, 52);
             Tint = Color.Black;
             Alpha = 0.75f;
 

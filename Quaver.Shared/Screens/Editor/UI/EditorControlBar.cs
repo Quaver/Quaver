@@ -40,9 +40,9 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorControlBar()
+        public EditorControlBar(EditorScreenView view)
         {
-            Size = new ScalableVector2(70, WindowManager.Height);
+            Size = new ScalableVector2(70, WindowManager.Height - view.TimeProgress.Height + 3);
             Tint = Color.Black;
             Alpha = 0.75f;
 
