@@ -223,15 +223,23 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             {
                 DrawableEditorHitObject hitObject;
 
+                var index = SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].ColorObjectsBySnapDistance
+                    ? HitObjectManager.GetBeatSnap(h, h.GetTimingPoint(Ruleset.WorkingMap.TimingPoints))
+                    : 0;
+
                 if (h.IsLongNote)
-                    hitObject = new DrawableEditorHitObjectLong(this, h, SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldHitObjects[h.Lane - 1].First(),
+                {
+                    hitObject = new DrawableEditorHitObjectLong(this, h,
+                        SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldHitObjects[h.Lane - 1][index],
                         SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldBodies[h.Lane - 1].First(),
                         SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldEnds[h.Lane - 1]);
+                }
                 else
-                    hitObject = new DrawableEditorHitObject(this, h, SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHitObjects[h.Lane - 1].First());
+                {
+                    hitObject = new DrawableEditorHitObject(this, h, SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHitObjects[h.Lane - 1][index]);
+                }
 
                 hitObject.Alignment = Alignment.TopLeft;
-
                 hitObject.X = ScreenRectangle.X + LaneSize * (h.Lane - 1) + DividerLineWidth * 2;
                 hitObject.Width = LaneSize - DividerLineWidth;
 
