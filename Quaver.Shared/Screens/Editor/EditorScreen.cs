@@ -200,7 +200,11 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.StartTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
+            if (AudioEngine.Track != null)
+                AudioEngine.Track.Rate = 1.0f;
+
             AudioEngine.Track?.Fade(0, 100);
+
             return new SelectScreen();
         });
 
