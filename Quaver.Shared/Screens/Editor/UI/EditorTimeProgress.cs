@@ -47,6 +47,10 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// </summary>
         private bool DraggingInLastFrame { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private Sprite ProgressBall { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -117,15 +121,28 @@ namespace Quaver.Shared.Screens.Editor.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTimeProgressBar() => TimeProgressBar = new ProgressBar(
-            new Vector2(TextAudioTimeLeft.X - TextAudioTime.X - TextAudioTimeLeft.Width - 20, 3), 0, AudioEngine.Track.Length,
-            0, Color.LightGray, Colors.MainAccent)
+        private void CreateTimeProgressBar()
         {
-            Parent = this,
-            X = TextAudioTime.X + TextAudioTime.Width + 15,
-            Alignment = Alignment.MidLeft,
-            Y = 2
-        };
+            TimeProgressBar = new ProgressBar(
+                new Vector2(TextAudioTimeLeft.X - TextAudioTime.X - TextAudioTimeLeft.Width - 20, 3), 0,
+                AudioEngine.Track.Length,
+                0, Color.LightGray, Colors.MainAccent)
+            {
+                Parent = this,
+                X = TextAudioTime.X + TextAudioTime.Width + 15,
+                Alignment = Alignment.MidLeft,
+                Y = 2
+            };
+
+            ProgressBall = new Sprite()
+            {
+                Parent = TimeProgressBar.ActiveBar,
+                Size = new ScalableVector2(10, 10),
+                Alignment = Alignment.MidRight,
+                Tint = Color.White,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_circle)
+            };
+        }
 
         /// <summary>
         /// </summary>
