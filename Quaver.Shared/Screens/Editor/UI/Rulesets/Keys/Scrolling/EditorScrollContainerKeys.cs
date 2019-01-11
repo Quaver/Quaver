@@ -204,9 +204,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             Parent = this,
             Alignment = Alignment.TopCenter,
-            Size = new ScalableVector2(Width, 4),
+            Size = new ScalableVector2(Width, 6),
             Y = HitPositionY,
-            Tint = Colors.MainAccent
+            Tint = Colors.SecondaryAccent
         };
 
         /// <summary>
