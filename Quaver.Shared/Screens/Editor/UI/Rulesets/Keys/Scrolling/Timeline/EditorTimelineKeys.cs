@@ -98,9 +98,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 case 2:
                     switch (val)
                     {
-
+                        case 0:
+                            return Color.White;
+                        default:
+                            return Color.Red;
                     }
-                    break;
                 // 1/4th
                 case 4:
                     switch (val)
@@ -118,11 +120,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 case 3:
                 case 6:
                 case 12:
-                    switch (val)
-                    {
-
-                    }
-                    break;
+                    if (val % 3 == 0)
+                        return Color.Red;
+                    else if (val == 0)
+                        return Color.White;
+                    else
+                        return Color.Purple;
                 // 1/8th, 1//16th
                 case 8:
                 case 16:
