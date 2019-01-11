@@ -106,18 +106,18 @@ namespace Quaver.Shared.Screens.Loading
                 if (ModManager.IsActivated(ModIdentifier.Randomize))
                 {
                     int seed;
-                    
+
                     // If loading from a replay.
                     if (Replay != null)
                         seed = Replay.RandomizeModifierSeed;
+                    // If loading gameplay.
                     else
-                    {// If loading gameplay.
+                    {
                         ModRandomize randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
                         randomizeModifier.GenerateSeed();
-
                         seed = randomizeModifier.Seed;
                     }
-                    
+
                     MapManager.Selected.Value.Qua.RandomizeLanes(seed);
                 }
 

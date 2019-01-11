@@ -9,7 +9,6 @@ namespace Quaver.Shared.Modifiers.Mods
     /// </summary>
     internal class ModRandomize : IGameplayModifier
     {
-
         /// <summary>
         ///     Integer based seed for use with the Shuffle(Random) function.
         ///
