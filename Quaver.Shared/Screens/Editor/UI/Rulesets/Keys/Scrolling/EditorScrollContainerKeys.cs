@@ -67,6 +67,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         public int HitPositionY { get; } = 580;
 
         /// <summary>
+        ///     The audio playback rate in the last frame. Used to know
+        ///     when we should be updating object positions.
+        /// </summary>
+        private float PreviousAudioRate { get; set; } = 1.0f;
+
+        /// <summary>
         ///     The line that defines where the hit position is.
         /// </summary>
         private Sprite HitPositionLine { get; set; }
@@ -94,6 +100,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             RunObjectScreenCheckThread();
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (PreviousAudioRate != AudioEngine.Track.Rate)
+                ResetObjectPositions();
+
+            PreviousAudioRate = AudioEngine.Track.Rate;
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -240,6 +255,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             foreach (var obj in HitObjects)
                 obj.IsInView = obj.CheckIfOnScreen();
         }
+
+        /// <summary>
+        /// </summary>
+        public void ResetObjectPositions() => HitObjects.ForEach(x => x.SetPositionY());
 
         /// <summary>
         ///     Called when the user changes the scroll speed of the map.

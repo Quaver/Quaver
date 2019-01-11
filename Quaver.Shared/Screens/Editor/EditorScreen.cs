@@ -100,11 +100,61 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(Keys.Space))
                 HandleKeyPressSpace();
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                ChangeAudioPlaybackRate(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                ChangeAudioPlaybackRate(Direction.Forward);
+
             HandleAudioSeeking();
         }
 
         /// <summary>
-        ///
+        ///     Changes the audio playback rate either up or down.
+        /// </summary>
+        /// <param name="direction"></param>
+        private void ChangeAudioPlaybackRate(Direction direction)
+        {
+            float targetRate;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    targetRate = AudioEngine.Track.Rate + 0.25f;
+                    break;
+                case Direction.Backward:
+                    targetRate = AudioEngine.Track.Rate - 0.25f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            if (targetRate <= 0 || targetRate > 2.0f)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot change the audio rate this way any further!");
+                return;
+            }
+
+            var playAfterRateChange = false;
+
+            if (AudioEngine.Track.IsPlaying)
+            {
+                AudioEngine.Track.Pause();
+                playAfterRateChange = true;
+            }
+
+            AudioEngine.Track.Rate = targetRate;
+
+            if (Ruleset is EditorRulesetKeys ruleset)
+                ruleset.ScrollContainer.ResetObjectPositions();
+
+            if (AudioEngine.Track.IsPaused && playAfterRateChange)
+                AudioEngine.Track.Play();
+
+            NotificationManager.Show(NotificationLevel.Info, $"Audio playback rate changed to: {targetRate * 100}%");
+        }
+
+        /// <summary>
         /// </summary>
         private void CreateRuleset()
         {
