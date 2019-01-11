@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
@@ -37,6 +38,11 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public SpriteText Header { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public SpriteText InformationText { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -46,6 +52,7 @@ namespace Quaver.Shared.Screens.Importing
             CreateBackground();
             CreateBanner();
             CreateLoadingWheel();
+            MapsetImporter.MapsetImported += OnFinishedImporting;
         }
 
         /// <inheritdoc />
@@ -71,7 +78,11 @@ namespace Quaver.Shared.Screens.Importing
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            MapsetImporter.MapsetImported -= OnFinishedImporting;
+            Container?.Destroy();
+        }
 
         /// <summary>
         /// </summary>
@@ -106,6 +117,13 @@ namespace Quaver.Shared.Screens.Importing
         }
 
         /// <summary>
+        ///     This method will update the screen when a mapset is finished being imported.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnFinishedImporting(object sender, MapsetImportedEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index}/{e.Queue.Count}";
+
+        /// <summary>
         ///     Creates the banner at the top of the screen
         /// </summary>
         private void CreateBanner()
@@ -126,11 +144,18 @@ namespace Quaver.Shared.Screens.Importing
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
+            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait while your maps are being processed.", 16)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,
-                Y = 22
+                Y = 10
+            };
+
+            InformationText = new SpriteText(Fonts.Exo2Regular, "", 16)
+            {
+                Parent = background,
+                Alignment = Alignment.TopCenter,
+                Y = Header.Y + 24
             };
         }
     }

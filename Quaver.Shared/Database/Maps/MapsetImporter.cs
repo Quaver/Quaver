@@ -36,6 +36,11 @@ namespace Quaver.Shared.Database.Maps
         public static List<string> Queue { get; } = new List<string>();
 
         /// <summary>
+        /// 
+        /// </summary>
+        public static event EventHandler<MapsetImportedEventArgs> MapsetImported;
+
+        /// <summary>
         /// Watches the songs directory for any changes.
         /// </summary>
         internal static void WatchForChanges()
@@ -158,10 +163,12 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            foreach (var file in Queue)
+            for (var i = 0; i < Queue.Count; i++)
             {
+                var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
+                MapsetImported.Invoke(null, new MapsetImportedEventArgs(Queue, file, i + 1));
 
                 try
                 {

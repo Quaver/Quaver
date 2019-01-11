@@ -52,8 +52,6 @@ namespace Quaver.Shared.Screens.Importing
 
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
-                    var view = View as ImportingScreenView;
-                    view.Header.Text = "Please wait while we're recalculating map difficulties";
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();;
                 }
 
