@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             View = view;
             Map = map;
-            Size = new ScalableVector2(WindowManager.Width, 52);
+            Size = new ScalableVector2(WindowManager.Width, 44);
             Tint = Color.Black;
             Alpha = 0.75f;
 
@@ -86,7 +86,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             TextAudioTime = new SpriteTextBitmap(FontsBitmap.AllerRegular, "00:00.000")
             {
                 Parent = this,
-                X = 16,
+                X = 10,
                 FontSize = 20,
                 Alignment = Alignment.MidLeft
             };
