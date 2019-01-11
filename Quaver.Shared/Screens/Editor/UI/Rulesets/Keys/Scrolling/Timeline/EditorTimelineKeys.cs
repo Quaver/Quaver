@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                         X = Container.AbsolutePosition.X + 2,
                         Y = Container.HitPositionY - time * Container.TrackSpeed,
                         Tint = GetLineColor(i % Ruleset.Screen.BeatSnap.Value, i),
-                        Height = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0 ? 6: 2
+                        Height = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0 ? 4: 1
                     });
                 }
             }
