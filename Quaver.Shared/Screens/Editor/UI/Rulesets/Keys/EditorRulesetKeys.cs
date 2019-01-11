@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     Used for scrolling hitobjects & timing lines.
         /// </summary>
-        private EditorScrollContainerKeys ScrollContainer { get; set; }
+        public EditorScrollContainerKeys ScrollContainer { get; private set; }
 
         /// <summary>
         /// </summary>

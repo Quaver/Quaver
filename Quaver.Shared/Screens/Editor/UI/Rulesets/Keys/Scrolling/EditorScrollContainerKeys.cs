@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             CreateBorderLines();
             CreateHitPositionLine();
             GenerateNotes();
-            CheckIfObjectsOnScreen();
+            RunObjectScreenCheckThread();
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
         }
@@ -220,19 +220,26 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         }
 
         /// <summary>
-        ///     - Makes sure only notes that are on-screen are marked as in view.
-        ///       These objects are the ones that actually get drawn on-screen.
+        ///     Ran on a separate thread to
         /// </summary>
-        private void CheckIfObjectsOnScreen() => ThreadScheduler.Run(() =>
+        private void RunObjectScreenCheckThread() => ThreadScheduler.Run(() =>
         {
             while (!Ruleset.Screen.Exiting)
             {
-                foreach (var obj in HitObjects)
-                    obj.IsInView = obj.CheckIfOnScreen();
-
+                CheckIfObjectsOnScreen();
                 Thread.Sleep(30);
             }
         });
+
+        /// <summary>
+        ///     - Makes sure only notes that are on-screen are marked as in view.
+        ///       These objects are the ones that actually get drawn on-screen.
+        /// </summary>
+        public void CheckIfObjectsOnScreen()
+        {
+            foreach (var obj in HitObjects)
+                obj.IsInView = obj.CheckIfOnScreen();
+        }
 
         /// <summary>
         ///     Called when the user changes the scroll speed of the map.

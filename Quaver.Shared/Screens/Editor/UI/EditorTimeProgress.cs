@@ -4,6 +4,7 @@ using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -71,41 +72,9 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            TextAudioTime.Text = TimeSpan.FromMilliseconds(AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
-
-            if (!AudioEngine.Track.IsDisposed)
-                TextAudioTimeLeft.Text = "-" + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
-            else
-                TextAudioTimeLeft.Text = "00:00.000";
-
+            UpdateAudioTimeText();
             TimeProgressBar.Bindable.Value = AudioEngine.Track.Time;
-
-            if (DraggableProgressButton.IsHeld && !AudioEngine.Track.IsDisposed)
-            {
-                var percentage = (MouseManager.CurrentState.X - DraggableProgressButton.AbsolutePosition.X) / DraggableProgressButton.AbsoluteSize.X;
-
-                var targetPos = percentage * AudioEngine.Track.Length;
-
-                if ((int) targetPos != (int) AudioEngine.Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
-                {
-                    if (AudioEngine.Track.IsPlaying)
-                        AudioEngine.Track.Pause();
-
-                    AudioEngine.Track.Seek(targetPos);
-
-                    var screen = (EditorScreen) View.Screen;
-                    screen.SetHitSoundObjectIndex();
-                }
-
-                DraggingInLastFrame = true;
-            }
-            else if (DraggingInLastFrame)
-            {
-                if (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
-                    AudioEngine.Track.Play();
-
-                DraggingInLastFrame = false;
-            }
+            HandleProgressBarDragging();
 
             base.Update(gameTime);
         }
@@ -135,6 +104,19 @@ namespace Quaver.Shared.Screens.Editor.UI
 
         /// <summary>
         /// </summary>
+        private void UpdateAudioTimeText()
+        {
+            TextAudioTime.Text = TimeSpan.FromMilliseconds(AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
+
+            if (!AudioEngine.Track.IsDisposed)
+                TextAudioTimeLeft.Text = "-" + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Time).ToString(@"mm\:ss\.fff");
+            else
+                TextAudioTimeLeft.Text = "00:00.000";
+        }
+
+
+        /// <summary>
+        /// </summary>
         private void CreateTimeProgressBar() => TimeProgressBar = new ProgressBar(
             new Vector2(TextAudioTimeLeft.X - TextAudioTime.X - TextAudioTimeLeft.Width - 20, 3), 0, AudioEngine.Track.Length,
             0, Color.LightGray, Colors.MainAccent)
@@ -154,5 +136,41 @@ namespace Quaver.Shared.Screens.Editor.UI
             X = TimeProgressBar.X,
             Alpha = 0
         };
+
+        /// <summary>
+        ///     Handles logic for when the user is dragging with the progress seek bar.
+        /// </summary>
+        private void HandleProgressBarDragging()
+        {
+            if (DraggableProgressButton.IsHeld && !AudioEngine.Track.IsDisposed)
+            {
+                var percentage = (MouseManager.CurrentState.X - DraggableProgressButton.AbsolutePosition.X) / DraggableProgressButton.AbsoluteSize.X;
+
+                var targetPos = percentage * AudioEngine.Track.Length;
+
+                if ((int) targetPos != (int) AudioEngine.Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
+                {
+                    if (AudioEngine.Track.IsPlaying)
+                        AudioEngine.Track.Pause();
+
+                    AudioEngine.Track.Seek(targetPos);
+
+                    var screen = (EditorScreen) View.Screen;
+                    screen.SetHitSoundObjectIndex();
+
+                    if (screen.Ruleset is EditorRulesetKeys ruleset)
+                        ruleset.ScrollContainer.CheckIfObjectsOnScreen();
+                }
+
+                DraggingInLastFrame = true;
+            }
+            else if (DraggingInLastFrame)
+            {
+                if (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
+                    AudioEngine.Track.Play();
+
+                DraggingInLastFrame = false;
+            }
+        }
     }
 }
