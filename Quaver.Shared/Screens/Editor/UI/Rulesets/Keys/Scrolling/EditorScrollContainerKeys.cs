@@ -138,7 +138,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale);
 
             foreach (var line in Timeline.Lines)
-                line.Draw(gameTime);
+            {
+                if (line.IsInView)
+                    line.Draw(gameTime);
+            }
 
             foreach (var obj in HitObjects)
             {
@@ -263,6 +266,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             foreach (var obj in HitObjects)
                 obj.IsInView = obj.CheckIfOnScreen();
+
+            foreach (var line in Timeline.Lines)
+                line.IsInView = line.CheckIfOnScreen();
         }
 
         /// <summary>

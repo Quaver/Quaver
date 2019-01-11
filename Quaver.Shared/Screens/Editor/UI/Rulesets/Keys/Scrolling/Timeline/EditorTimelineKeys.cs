@@ -16,6 +16,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// </summary>
         private EditorRulesetKeys Ruleset { get; }
 
+        /// <summary>
+        /// </summary>
         private EditorScrollContainerKeys Container { get; }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 {
                     var time = tp.StartTime + tp.MillisecondsPerBeat / Ruleset.Screen.BeatSnap.Value * i;
 
-                    Lines.Add(new TimelineSnapLine(tp, i)
+                    Lines.Add(new TimelineSnapLine(Container,tp, time, i)
                     {
                         Image = UserInterface.BlankBox,
                         Size = new ScalableVector2(Container.Width - 4, 0),
