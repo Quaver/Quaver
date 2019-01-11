@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                             return Color.White;
                         case 1:
                         case 3:
-                            return Colors.MainAccent;
+                            return Color.CadetBlue;
                         default:
                             return Color.Red;
                     }
@@ -137,9 +137,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                         return Color.Red;
                     else
                         return Colors.MainAccent;
+                default:
+                    return Color.White;
             }
-
-            return Color.White;
         }
     }
 }
