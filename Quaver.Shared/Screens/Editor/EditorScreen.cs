@@ -63,6 +63,7 @@ namespace Quaver.Shared.Screens.Editor
             OriginalMap = map;
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
 
+            MapManager.Selected.Value.Qua = WorkingMap;
             DiscordHelper.Presence.Details = WorkingMap.ToString();
             DiscordHelper.Presence.State = "Editing";
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);

@@ -13,6 +13,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Bindables;
@@ -134,8 +135,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 // ignored
             }
 
-            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null,
-                Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale);
+            var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
+
+            // Handle upscroll by flipping/rotating the matrix.
+            if (!GameplayRulesetKeys.IsDownscroll)
+            {
+                transformMatrix = transformMatrix * Matrix.CreateTranslation(-WindowManager.Width / 2, -WindowManager.Height / 2, 0f)
+                                                  * Matrix.CreateRotationZ(MathHelper.ToRadians(180)) *
+                                                  Matrix.CreateTranslation(WindowManager.Width / 2, WindowManager.Height / 2, 0f);
+            }
+
+            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
 
             foreach (var line in Timeline.Lines)
             {
@@ -203,14 +213,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     Creates the sprite where the hit position line is.
         /// </summary>
-        private void CreateHitPositionLine() => HitPositionLine = new Sprite
+        private void CreateHitPositionLine()
         {
-            Parent = this,
-            Alignment = Alignment.TopCenter,
-            Size = new ScalableVector2(Width, 6),
-            Y = HitPositionY,
-            Tint = Colors.SecondaryAccent
-        };
+            var y = HitPositionY;
+
+            if (!GameplayRulesetKeys.IsDownscroll)
+                y = (int) WindowManager.Height - HitPositionY;
+
+            HitPositionLine = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Size = new ScalableVector2(Width, 6),
+                Y = y,
+                Tint = Colors.SecondaryAccent
+            };
+        }
 
         /// <summary>
         ///     Creates all of the HitObject sprites and sets their initial positions.
