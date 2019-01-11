@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             Map = map;
             Size = new ScalableVector2(WindowManager.Width, 44);
             Tint = Color.Black;
-            Alpha = 0.75f;
+            Alpha = 0.90f;
 
             // CreateBorderLines();
             CreateTextAudioTime();

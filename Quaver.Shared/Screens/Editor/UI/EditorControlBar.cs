@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             Size = new ScalableVector2(60, WindowManager.Height - view.TimeProgress.Height + 2);
             Tint = Color.Black;
-            Alpha = 0.75f;
+            Alpha = 0.90f;
 
             CreateAudioControlButtons();
         }
