@@ -18,6 +18,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -45,6 +46,10 @@ namespace Quaver.Shared.Screens.Editor
         ///     The game mode/ruleset used for the editor.
         /// </summary>
         public EditorRuleset Ruleset { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public BindableInt BeatSnap { get; } = new BindableInt(4, 1, 16);
 
         /// <summary>
         ///     The index of the object who had its hitsounds played.
@@ -225,7 +230,7 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
                 MouseManager.PreviousState.ScrollWheelValue)
             {
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, 4);
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, BeatSnap.Value);
                 SetHitSoundObjectIndex();
             }
             // Seek Forwards
@@ -233,7 +238,7 @@ namespace Quaver.Shared.Screens.Editor
                 MouseManager.PreviousState.ScrollWheelValue)
             {
 
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, 4);
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
                 SetHitSoundObjectIndex();
             }
         }

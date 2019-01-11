@@ -11,6 +11,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -82,6 +83,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         protected List<DrawableEditorHitObject> HitObjects { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        private EditorTimelineKeys Timeline { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -97,6 +102,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             CreateBorderLines();
             CreateHitPositionLine();
             GenerateNotes();
+            Timeline = new EditorTimelineKeys(Ruleset, this);
             RunObjectScreenCheckThread();
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
@@ -130,6 +136,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null,
                 Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale);
+
+            foreach (var line in Timeline.Lines)
+                line.Draw(gameTime);
 
             foreach (var obj in HitObjects)
             {
