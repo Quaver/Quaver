@@ -60,7 +60,9 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// </summary>
         private void CreateAudioControlButtons()
         {
-            ButtonPlayTest = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_play_sign), "Test Play", 60)
+            const int padding = 54;
+
+            ButtonPlayTest = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_play_sign), "Test Play", padding)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -70,7 +72,7 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             ButtonPlayTest.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Play Testing is not implemented yet!");
 
-            ButtonBeatSnap = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify), "Change Beat Snap", 60)
+            ButtonBeatSnap = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify), "Change Beat Snap", padding)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -80,7 +82,7 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             ButtonBeatSnap.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
 
-            ButtonStopTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_square_shape_shadow), "Stop Track", 60)
+            ButtonStopTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_square_shape_shadow), "Stop Track", padding)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -91,7 +93,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             ButtonStopTrack.Clicked += (o, e) => EditorScreen.StopTrack();
 
             ButtonPlayPauseTrack = new EditorControlButton(FontAwesome.Get(AudioEngine.Track.IsPlaying
-                ? FontAwesomeIcon.fa_pause_symbol : FontAwesomeIcon.fa_play_button), "Play/Pause Track", 60)
+                ? FontAwesomeIcon.fa_pause_symbol : FontAwesomeIcon.fa_play_button), "Play/Pause Track", padding)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
@@ -106,7 +108,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 screen?.PlayPauseTrack();
             };
 
-            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", 60)
+            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", padding)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
