@@ -8,6 +8,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
@@ -97,13 +98,13 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 HandleKeyPressEscape();
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Space))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value))
                 HandleKeyPressSpace();
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Backward);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Forward);
 
             HandleAudioSeeking();
