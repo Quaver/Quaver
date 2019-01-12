@@ -49,9 +49,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 switch (Ruleset.WorkingMap.Mode)
                 {
                     case GameMode.Keys4:
-                        return 55;
+                        return 60;
                     case GameMode.Keys7:
-                        return 45;
+                        return 50;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             Alignment = Alignment.MidCenter;
             Size = new ScalableVector2(LaneSize * ruleset.WorkingMap.GetKeyCount(), WindowManager.Height);
             Tint = Color.Black;
-            Alpha = 1f;
+            Alpha = 0.45f;
 
             CreateBorderLines();
             CreateHitPositionLine();

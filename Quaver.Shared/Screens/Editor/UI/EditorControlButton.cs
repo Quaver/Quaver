@@ -21,6 +21,10 @@ namespace Quaver.Shared.Screens.Editor.UI
         private SpriteText TooltipText { get; set; }
 
         /// <summary>
+        /// </summary>
+        private Alignment TooltipAlignment { get; set; }
+
+        /// <summary>
         ///     The amount of space between the control button and the tooltip.
         /// </summary>
         private int Padding { get; }
@@ -38,11 +42,14 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// <param name="image"></param>
         /// <param name="name"></param>
         /// <param name="padding"></param>
+        /// <param name="tooltipAlignment"></param>
         /// <param name="clickAction"></param>
-        public EditorControlButton(Texture2D image, string name, int padding, EventHandler clickAction = null) : base(image, clickAction)
+        public EditorControlButton(Texture2D image, string name, int padding, Alignment tooltipAlignment = Alignment.MidLeft,
+            EventHandler clickAction = null) : base(image, clickAction)
         {
             Name = name;
             Padding = padding;
+            TooltipAlignment = tooltipAlignment;
 
             CreateTooltip();
         }
@@ -58,7 +65,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Tooltip.ClearAnimations();
                 TooltipText.ClearAnimations();
                 Tooltip.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Tooltip.Alpha, 1f, 200));
-                Tooltip.MoveToX(Padding, Easing.OutQuint, 600);
+                Tooltip.MoveToY(-Padding, Easing.OutQuint, 600);
                 HoverAnimationAdded = true;
             }
 
@@ -68,7 +75,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 TooltipText.ClearAnimations();
 
                 Tooltip.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Tooltip.Alpha, 0f, 100));
-                Tooltip.MoveToX(Padding - 20, Easing.OutQuint, 600);
+                Tooltip.MoveToY(-Padding + 20, Easing.OutQuint, 600);
                 HoverAnimationAdded = false;
             }
 
@@ -87,10 +94,10 @@ namespace Quaver.Shared.Screens.Editor.UI
             Tooltip = new Sprite()
             {
                 Parent = this,
-                X = Padding - 20,
+                Y = Padding - 20,
                 Size = new ScalableVector2(TooltipText.Width + 10, TooltipText.Height + 10),
                 Tint = Color.Black,
-                Alignment = Alignment.MidLeft,
+                Alignment = TooltipAlignment,
                 Alpha = 0,
                 SetChildrenAlpha = true
             };

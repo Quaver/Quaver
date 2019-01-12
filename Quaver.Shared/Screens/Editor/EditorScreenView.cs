@@ -24,10 +24,6 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorControlBar ControlBar { get; private set; }
 
-        /// <summary>
-        /// </summary>
-        public EditorTimeProgress TimeProgress { get; private set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -35,7 +31,6 @@ namespace Quaver.Shared.Screens.Editor
         public EditorScreenView(Screen screen) : base(screen)
         {
             CreateBackground();
-            CreateTimeProgress();
             CreateControlBar();
         }
 
@@ -112,37 +107,23 @@ namespace Quaver.Shared.Screens.Editor
         ///     Fades the background in upon load.
         /// </summary>
         private void FadeBackgroundIn() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, 1, 0.25f, 200));
+            Easing.Linear, 1, 0.65f, 200));
 
         /// <summary>
         /// </summary>
         private void CreateControlBar()
         {
-            ControlBar = new EditorControlBar(this)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopLeft
-            };
-
-            ControlBar.X = -ControlBar.Width;
-            ControlBar.MoveToX(0, Easing.OutQuint, 800);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateTimeProgress()
-        {
             var screen = (EditorScreen) Screen;
 
-            TimeProgress = new EditorTimeProgress(this, screen.WorkingMap)
+            ControlBar = new EditorControlBar(this, screen.WorkingMap)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
             };
 
-            TimeProgress.Y = TimeProgress.Height;
+            ControlBar.Y = ControlBar.Height;
 
-            TimeProgress.MoveToY(1, Easing.OutQuint, 800);
+            ControlBar.MoveToY(1, Easing.OutQuint, 800);
         }
     }
 }
