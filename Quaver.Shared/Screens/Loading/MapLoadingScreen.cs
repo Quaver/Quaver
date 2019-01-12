@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Loading
                     // If loading gameplay.
                     else
                     {
-                        ModRandomize randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
+                        var randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
                         randomizeModifier.GenerateSeed();
                         seed = randomizeModifier.Seed;
                     }
