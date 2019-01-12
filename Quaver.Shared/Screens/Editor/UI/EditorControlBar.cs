@@ -5,6 +5,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Wobble;
@@ -87,10 +88,9 @@ namespace Quaver.Shared.Screens.Editor.UI
             View = view;
             Map = map;
             Size = new ScalableVector2(WindowManager.Width, 44);
-            Tint = Color.Black;
-            Alpha = 0.90f;
+            Tint = ColorHelper.HexToColor("#161616");
+            Alpha = 1;
 
-            // CreateBorderLines();
             CreateLeftSideButtons();
             CreateRightSideButtons();
             CreateTextAudioTime();

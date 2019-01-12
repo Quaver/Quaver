@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI
 {
@@ -96,7 +98,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Parent = this,
                 Y = Padding - 20,
                 Size = new ScalableVector2(TooltipText.Width + 10, TooltipText.Height + 10),
-                Tint = Color.Black,
+                Tint = ColorHelper.HexToColor("#161616"),
                 Alignment = TooltipAlignment,
                 Alpha = 0,
                 SetChildrenAlpha = true
