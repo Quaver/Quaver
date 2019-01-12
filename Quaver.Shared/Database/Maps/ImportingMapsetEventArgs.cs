@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Quaver.Shared.Database.Maps
 {
-    public class MapsetImportedEventArgs : EventArgs
+    public class ImportingMapsetEventArgs : EventArgs
     {
         /// <summary>
         ///     The queue that the was imported along with the mapset.
@@ -35,7 +35,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="success"></param>
         /// <param name="name"></param>
         /// <param name="index"></param>
-        public MapsetImportedEventArgs(List<string> queue, string name, int index)
+        public ImportingMapsetEventArgs(List<string> queue, string name, int index)
         {
             Queue = queue;
             FileName = name;

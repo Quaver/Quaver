@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Importing
         public SpriteText Header { get; private set; }
 
         /// <summary>
-        /// 
+        ///     Information on what maps are being imported
         /// </summary>
         public SpriteText InformationText { get; private set; }
 
@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Importing
             CreateBackground();
             CreateBanner();
             CreateLoadingWheel();
-            MapsetImporter.MapsetImported += OnFinishedImporting;
+            MapsetImporter.ImportingMapset += OnFinishedImporting;
         }
 
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void Destroy()
         {
-            MapsetImporter.MapsetImported -= OnFinishedImporting;
+            MapsetImporter.ImportingMapset -= OnFinishedImporting;
             Container?.Destroy();
         }
 
@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFinishedImporting(object sender, MapsetImportedEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index}/{e.Queue.Count}";
+        private void OnFinishedImporting(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index}/{e.Queue.Count}";
 
         /// <summary>
         ///     Creates the banner at the top of the screen
