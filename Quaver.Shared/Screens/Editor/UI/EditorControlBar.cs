@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             View = view;
             Map = map;
-            Size = new ScalableVector2(WindowManager.Width, 44);
+            Size = new ScalableVector2(WindowManager.Width, 48);
             Tint = ColorHelper.HexToColor("#161616");
             Alpha = 1;
 
