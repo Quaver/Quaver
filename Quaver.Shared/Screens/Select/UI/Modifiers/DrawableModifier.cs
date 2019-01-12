@@ -42,6 +42,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         public SpriteText ModifierDescription { get; private set; }
 
         /// <summary>
+        ///     Displays the ranked status of the modifier.
+        /// </summary>
+        public Sprite RankedStatusIcon { get; private set; }
+
+        /// <summary>
         ///     The list of options
         /// </summary>
         public List<DrawableModifierOption> Options { get; }
@@ -61,7 +66,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
 
             CreateModifierName();
             CreateModifierDescription();
-            RankedStatusIcon();
+            CreateRankedStatusIcon();
             // ReSharper disable once VirtualMemberCallInConstructor
             Options = CreateModsDialogOptions();
 
@@ -118,26 +123,25 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             UsePreviousSpriteBatchOptions = true
         };
 
-        private void RankedStatusIcon()
+        /// <summary>
+        ///     Creates the sprite that displays the ranked status of the mod.
+        /// </summary>
+        private void CreateRankedStatusIcon()
         {
-            if (!Modifier.Ranked)
+            RankedStatusIcon = new Sprite()
             {
-                Modifier.UnrankedSprite = new Sprite()
-                {
-                    Parent = this,
-                    Alignment = Alignment.MidLeft,
-                    Y = ModifierName.Height - 20,
-                    X = ModifierName.X / 2f,
-                    UsePreviousSpriteBatchOptions = true,
-                    Height = 30,
-                    Width = 30,
-                    Image = UserInterface.NotificationWarning
-                };
-                Modifier.UnrankedSprite.X -= Modifier.UnrankedSprite.X / 2f;
-            }
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                Y = ModifierName.Height - 20,
+                X = ModifierName.X / 2f,
+                UsePreviousSpriteBatchOptions = true,
+                Height = 30,
+                Width = 30,
+                Image = Modifier.Ranked ? UserInterface.NotificationSuccess : UserInterface.NotificationWarning
+            };
+
+            RankedStatusIcon.X -= RankedStatusIcon.X / 2f;
         }
-
-
 
         /// <summary>
         ///    Creates the dialog options for the mods.

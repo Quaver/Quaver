@@ -6,7 +6,6 @@
 */
 
 using Quaver.API.Enums;
-using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers
 {
@@ -36,11 +35,6 @@ namespace Quaver.Shared.Modifiers
         ///     Is the gameplayModifier ranked?
         /// </summary>
         bool Ranked { get; set; }
-
-        /// <summary>
-        ///     The sprite if the modifier is unranked.
-        /// </summary>
-        Sprite UnrankedSprite { get; set; }
 
         /// <summary>
         ///     The identifier of mods that are incompatible with this one.
