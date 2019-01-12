@@ -1,8 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Wobble.Graphics;
 using Wobble.Input;
+using Wobble.Window;
 using Keys = Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
@@ -36,5 +40,30 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         /// </summary>
         private void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
+
+        /// <summary>
+        ///     Toggles the scroll direction for the editor.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public void ToggleScrollDirection()
+        {
+            switch (Screen.Ruleset.WorkingMap.Mode)
+            {
+                case GameMode.Keys4:
+                    ConfigManager.DownScroll4K.Value = !GameplayRulesetKeys.IsDownscroll;
+                    break;
+                case GameMode.Keys7:
+                    ConfigManager.DownScroll7K.Value = !GameplayRulesetKeys.IsDownscroll;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // Change hit pos line Y
+            if (!GameplayRulesetKeys.IsDownscroll)
+                ScrollContainer.HitPositionLine.Y = (int) WindowManager.Height - ScrollContainer.HitPositionY;
+            else
+                ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
+        }
     }
 }

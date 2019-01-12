@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     The line that defines where the hit position is.
         /// </summary>
-        private Sprite HitPositionLine { get; set; }
+        public Sprite HitPositionLine { get; private set; }
 
         /// <summary>
         ///     All of the available HitObject sprites in the map.

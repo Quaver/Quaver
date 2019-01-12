@@ -200,7 +200,13 @@ namespace Quaver.Shared.Screens.Editor.UI
                 X = ButtonBeatSnap.X - ButtonBeatSnap.Width - 20
             };
 
-            ButtonScrollDirection.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+            ButtonScrollDirection.Clicked += (o, e) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+                var ruleset = screen?.Ruleset as EditorRulesetKeys;
+                ruleset?.ToggleScrollDirection();
+            };
         }
 
         /// <summary>
