@@ -50,20 +50,30 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             switch (Screen.Ruleset.WorkingMap.Mode)
             {
                 case GameMode.Keys4:
-                    ConfigManager.DownScroll4K.Value = !GameplayRulesetKeys.IsDownscroll;
+                    ConfigManager.ScrollDirection4K.Value = ConfigManager.ScrollDirection4K.Value != ScrollDirection.Down
+                        ? ScrollDirection.Down : ScrollDirection.Up;
                     break;
                 case GameMode.Keys7:
-                    ConfigManager.DownScroll7K.Value = !GameplayRulesetKeys.IsDownscroll;
+                    ConfigManager.ScrollDirection7K.Value = ConfigManager.ScrollDirection7K.Value != ScrollDirection.Down
+                        ? ScrollDirection.Down : ScrollDirection.Up;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             // Change hit pos line Y
-            if (!GameplayRulesetKeys.IsDownscroll)
-                ScrollContainer.HitPositionLine.Y = (int) WindowManager.Height - ScrollContainer.HitPositionY;
-            else
-                ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
+            switch (GameplayRulesetKeys.ScrollDirection)
+            {
+                case ScrollDirection.Split:
+                case ScrollDirection.Down:
+                    ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
+                    break;
+                case ScrollDirection.Up:
+                    ScrollContainer.HitPositionLine.Y = (int) WindowManager.Height - ScrollContainer.HitPositionY;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

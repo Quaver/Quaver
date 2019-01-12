@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
             // Handle upscroll by flipping/rotating the matrix.
-            if (!GameplayRulesetKeys.IsDownscroll)
+            if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
             {
                 transformMatrix = transformMatrix * Matrix.CreateTranslation(-WindowManager.Width / 2, -WindowManager.Height / 2, 0f)
                                                   * Matrix.CreateRotationZ(MathHelper.ToRadians(180)) *
@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             var y = HitPositionY;
 
-            if (!GameplayRulesetKeys.IsDownscroll)
+            if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
                 y = (int) WindowManager.Height - HitPositionY;
 
             HitPositionLine = new Sprite
