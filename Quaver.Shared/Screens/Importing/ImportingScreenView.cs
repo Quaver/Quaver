@@ -97,10 +97,10 @@ namespace Quaver.Shared.Screens.Importing
         {
             Parent = Container,
             Alignment = Alignment.MidCenter,
-            Size = new ScalableVector2(60, 60),
+            Size = new ScalableVector2(40, 40),
             Image = UserInterface.LoadingWheel,
             Tint = Color.Yellow,
-            Y = 20
+            Y = 25
         };
 
         /// <summary>
