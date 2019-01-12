@@ -299,7 +299,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
         /// <summary>
         /// </summary>
-        public void ResetObjectPositions() => HitObjects.ForEach(x => x.SetPositionY());
+        public void ResetObjectPositions()
+        {
+            HitObjects.ForEach(x => x.SetPositionY());
+            Timeline.RepositionLines();
+        }
 
         /// <summary>
         ///     Called when the user changes the scroll speed of the map.
@@ -309,7 +313,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
         {
             NotificationManager.Show(NotificationLevel.Info, $"Scroll Speed Changed to: {e.Value}");
-            HitObjects.ForEach(x => x.SetPositionY());
+            ResetObjectPositions();
         }
     }
 }

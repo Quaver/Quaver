@@ -78,18 +78,24 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                     if (measureBeat)
                         measureCount++;
 
-                    Lines.Add(new TimelineSnapLine(Container,tp, time, i, measureCount)
+                    var height = measureBeat ? 4 : 1;
+                    Lines.Add(new TimelineSnapLine(Container, tp, time, i, measureCount)
                     {
                         Image = UserInterface.BlankBox,
                         Size = new ScalableVector2(Container.Width - 4, 0),
                         X = Container.AbsolutePosition.X + 2,
-                        Y = Container.HitPositionY - time * Container.TrackSpeed,
+                        Y = Container.HitPositionY - time * Container.TrackSpeed - height,
                         Tint = GetLineColor(i % Ruleset.Screen.BeatSnap.Value, i),
-                        Height = measureBeat ? 4 : 1
+                        Height = height
                     });
                 }
             }
         }
+
+        /// <summary>
+        ///     Repositions the lines, usually used when the user changes zoom/audio rate.
+        /// </summary>
+        public void RepositionLines() => Lines.ForEach(x => x.Y = Container.HitPositionY - x.Time * Container.TrackSpeed - x.Height);
 
         /// <summary>
         ///     Gets an individual lioe color for the snap line.
