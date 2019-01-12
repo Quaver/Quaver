@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Assets;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
@@ -28,6 +30,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// </summary>
         public bool IsInView { get; set; }
 
+        /// <summary>
+        ///     The text that displays the measure in the song.
+        /// </summary>
+        private SpriteTextBitmap TextMeasure { get; set; }
+
+        /// <summary>
+        ///     Determines if this line is for a measure.
+        /// </summary>
+        private bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0 && Index % Container.Ruleset.Screen.BeatSnap.Value == 0;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -35,19 +47,39 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <param name="tp"></param>
         /// <param name="time"></param>
         /// <param name="index"></param>
-        public TimelineSnapLine(EditorScrollContainerKeys container, TimingPointInfo tp, float time, int index)
+        /// <param name="measureCount"></param>
+        public TimelineSnapLine(EditorScrollContainerKeys container, TimingPointInfo tp, float time, int index, int measureCount)
         {
             Container = container;
             TimingPoint = tp;
             Index = index;
             Time = time;
+
+            if (!IsMeasureLine)
+                return;
+
+            TextMeasure = new SpriteTextBitmap(FontsBitmap.MuliBold, measureCount.ToString())
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                FontSize = 28
+            };
+
+            TextMeasure.X = -TextMeasure.Width - 15;
+            Y = -2;
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime) =>  DrawToSpriteBatch();
+        public override void Draw(GameTime gameTime)
+        {
+            DrawToSpriteBatch();
+
+            if (IsMeasureLine)
+                TextMeasure.DrawToSpriteBatch();
+        }
 
         /// <summary>
         ///     Checks if the timing line is on-screen.

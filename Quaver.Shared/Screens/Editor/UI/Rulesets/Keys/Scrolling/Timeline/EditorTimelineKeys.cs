@@ -65,20 +65,27 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             Lines = new List<TimelineSnapLine>();
 
             // Make lines starting at the very first ti
+            var measureCount = 0;
+
             foreach (var tp in Ruleset.WorkingMap.TimingPoints)
             {
                 for (var i = 0; i < Ruleset.WorkingMap.GetTimingPointLength(tp) / tp.MillisecondsPerBeat * Ruleset.Screen.BeatSnap.Value; i++)
                 {
                     var time = tp.StartTime + tp.MillisecondsPerBeat / Ruleset.Screen.BeatSnap.Value * i;
 
-                    Lines.Add(new TimelineSnapLine(Container,tp, time, i)
+                    var measureBeat = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0;
+
+                    if (measureBeat)
+                        measureCount++;
+
+                    Lines.Add(new TimelineSnapLine(Container,tp, time, i, measureCount)
                     {
                         Image = UserInterface.BlankBox,
                         Size = new ScalableVector2(Container.Width - 4, 0),
                         X = Container.AbsolutePosition.X + 2,
                         Y = Container.HitPositionY - time * Container.TrackSpeed,
                         Tint = GetLineColor(i % Ruleset.Screen.BeatSnap.Value, i),
-                        Height = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0 ? 4: 1
+                        Height = measureBeat ? 4 : 1
                     });
                 }
             }
