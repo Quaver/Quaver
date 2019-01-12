@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -69,9 +71,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
             foreach (var tp in Ruleset.WorkingMap.TimingPoints)
             {
-                for (var i = 0; i < Ruleset.WorkingMap.GetTimingPointLength(tp) / tp.MillisecondsPerBeat * Ruleset.Screen.BeatSnap.Value; i++)
+                var pointLength = Ruleset.WorkingMap.GetTimingPointLength(tp);
+                var startTime = tp.StartTime;
+
+                // First point, so we need to make sure that the lines begin from the beginning of the track.
+                if (tp == Ruleset.WorkingMap.TimingPoints.First() && startTime > 0)
                 {
-                    var time = tp.StartTime + tp.MillisecondsPerBeat / Ruleset.Screen.BeatSnap.Value * i;
+                }
+
+                // Last point, so the lines have to extend to the end of the song + more,
+                if (tp == Ruleset.WorkingMap.TimingPoints[Ruleset.WorkingMap.TimingPoints.Count - 1])
+                    pointLength = AudioEngine.Track.Length + 10000;
+
+                // Create all lines.
+                for (var i = 0; i < pointLength / tp.MillisecondsPerBeat * Ruleset.Screen.BeatSnap.Value; i++)
+                {
+                    var time = startTime + tp.MillisecondsPerBeat / Ruleset.Screen.BeatSnap.Value * i;
 
                     var measureBeat = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0;
 
