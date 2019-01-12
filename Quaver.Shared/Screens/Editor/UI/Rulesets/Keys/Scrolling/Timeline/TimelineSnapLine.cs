@@ -58,6 +58,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             if (!IsMeasureLine)
                 return;
 
+            if (Time < TimingPoint.StartTime)
+                return;
+
             TextMeasure = new SpriteTextBitmap(FontsBitmap.MuliBold, measureCount.ToString())
             {
                 Parent = this,
@@ -77,7 +80,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         {
             DrawToSpriteBatch();
 
-            if (IsMeasureLine)
+            if (IsMeasureLine && Time >= TimingPoint.StartTime)
                 TextMeasure.DrawToSpriteBatch();
         }
 

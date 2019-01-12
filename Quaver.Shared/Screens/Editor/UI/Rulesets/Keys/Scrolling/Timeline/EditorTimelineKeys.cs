@@ -74,14 +74,24 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 var pointLength = Ruleset.WorkingMap.GetTimingPointLength(tp);
                 var startTime = tp.StartTime;
 
-                // First point, so we need to make sure that the lines begin from the beginning of the track.
+                // First point, so we need to make sure that the lines begin from the beginning of the track minus some.
                 if (tp == Ruleset.WorkingMap.TimingPoints.First() && startTime > 0)
                 {
+                    var beatsBack = 0;
+
+                    while (true)
+                    {
+                        if (beatsBack / Ruleset.Screen.BeatSnap.Value % 4 == 0 && beatsBack % Ruleset.Screen.BeatSnap.Value == 0 && startTime <= -2000)
+                            break;
+
+                        startTime -= tp.MillisecondsPerBeat;
+                        beatsBack++;
+                    }
                 }
 
                 // Last point, so the lines have to extend to the end of the song + more,
                 if (tp == Ruleset.WorkingMap.TimingPoints[Ruleset.WorkingMap.TimingPoints.Count - 1])
-                    pointLength = AudioEngine.Track.Length + 10000;
+                    pointLength = AudioEngine.Track.Length + 2000;
 
                 // Create all lines.
                 for (var i = 0; i < pointLength / tp.MillisecondsPerBeat * Ruleset.Screen.BeatSnap.Value; i++)
@@ -90,10 +100,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
                     var measureBeat = i / Ruleset.Screen.BeatSnap.Value % 4 == 0 && i % Ruleset.Screen.BeatSnap.Value == 0;
 
-                    if (measureBeat)
+                    if (measureBeat && time >= tp.StartTime)
                         measureCount++;
 
                     var height = measureBeat ? 4 : 1;
+
                     Lines.Add(new TimelineSnapLine(Container, tp, time, i, measureCount)
                     {
                         Image = UserInterface.BlankBox,
