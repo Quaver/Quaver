@@ -38,7 +38,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         ///     Determines if this line is for a measure.
         /// </summary>
-        private bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0 && Index % Container.Ruleset.Screen.BeatSnap.Value == 0;
+        private bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
+                                      && Index % Container.Ruleset.Screen.BeatSnap.Value == 0 && Time >= TimingPoint.StartTime;
 
         /// <inheritdoc />
         /// <summary>
@@ -56,9 +57,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             Time = time;
 
             if (!IsMeasureLine)
-                return;
-
-            if (Time < TimingPoint.StartTime)
                 return;
 
             TextMeasure = new SpriteTextBitmap(FontsBitmap.MuliBold, measureCount.ToString())
@@ -80,7 +78,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         {
             DrawToSpriteBatch();
 
-            if (IsMeasureLine && Time >= TimingPoint.StartTime)
+            if (IsMeasureLine)
                 TextMeasure.DrawToSpriteBatch();
         }
 
