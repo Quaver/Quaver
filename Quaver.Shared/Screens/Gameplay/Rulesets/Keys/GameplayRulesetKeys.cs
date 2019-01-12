@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -18,6 +19,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
+using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 {
@@ -30,23 +32,26 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         ///     the playfield and the HitObjectManager.
         ///
         ///     We can't intiialize it in Playfield as that gets created first.
+        ///
+        ///     This is a list because multiple scroll directions require multiple Timing Line Managers.
+        /// 
         /// </summary>
-        public TimingLineManager TimingLineManager { get; }
+        public List<TimingLineManager> TimingLineManager { get; } = new List<TimingLineManager>();
 
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static bool IsDownscroll
+        internal static ScrollDirection ScrollDirection
         {
             get
             {
                 switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
-                        return ConfigManager.DownScroll4K.Value;
+                        return ConfigManager.ScrollDirection4K.Value;
                     case GameMode.Keys7:
-                        return ConfigManager.DownScroll7K.Value;
+                        return ConfigManager.ScrollDirection7K.Value;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -58,10 +63,32 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="map"></param>
-        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map)
+        public GameplayRulesetKeys(GameplayScreen screen, Qua map) : base(screen, map) => InitializeTimingLines();
+
+        /// <summary>
+        ///     Generate Timing Line Managers for scroll direction. Will create multiple managers if  multiple scroll directions exist.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="direction"></param>
+        private void InitializeTimingLines()
         {
-            if (ConfigManager.DisplayTimingLines.Value)
-                TimingLineManager = CreateTimingLineManager();
+            // Do not create timing lines if DisplayTiminbgLines config is turned off.
+            if (!ConfigManager.DisplayTimingLines.Value)
+                return;
+
+            var direction = ScrollDirection;
+            var playfield = (GameplayPlayfieldKeys)Playfield;
+            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+
+            if (direction.Equals(ScrollDirection.Split))
+            {
+                var halfIndex = (int)Math.Ceiling(keys / 2.0) - 1;
+                var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
+                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.HitPositionOffsets[0], halfPos, 0));
+                TimingLineManager.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.ColumnLightingPositionY[halfIndex], playfield.Width - halfPos, halfPos));
+                return;
+            }
+            TimingLineManager.Add(new TimingLineManager(this, direction, playfield.HitPositionOffsets[0], playfield.Width, 0));
         }
 
         /// <inheritdoc />
@@ -71,8 +98,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused && ConfigManager.DisplayTimingLines.Value)
-                TimingLineManager.UpdateObjectPool();
+            if (!Screen.Failed && !Screen.IsPaused && TimingLineManager != null)
+                foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
 
             base.Update(gameTime);
         }
@@ -100,11 +127,5 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <returns></returns>
         protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Map.Mode);
-
-        /// <summary>
-        ///     Create the Timing Line Objects Manager
-        /// </summary>
-        /// <returns></returns>
-        private TimingLineManager CreateTimingLineManager() => new TimingLineManager(this);
     }
 }
