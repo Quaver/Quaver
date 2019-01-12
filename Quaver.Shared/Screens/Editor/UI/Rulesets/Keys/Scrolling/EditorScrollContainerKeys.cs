@@ -171,6 +171,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
 
             HitObjects.ForEach(x => x.Destroy());
+            Timeline.Destroy();
             base.Destroy();
         }
 

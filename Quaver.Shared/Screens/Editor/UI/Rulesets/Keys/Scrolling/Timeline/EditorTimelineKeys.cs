@@ -56,9 +56,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Destroy()
-        {
-        }
+        public void Destroy() => Lines.ForEach(x => x.Destroy());
 
         /// <summary>
         /// </summary>
