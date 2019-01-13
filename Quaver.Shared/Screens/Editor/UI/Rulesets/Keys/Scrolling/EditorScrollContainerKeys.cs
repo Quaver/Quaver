@@ -254,7 +254,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 }
 
                 hitObject.Alignment = Alignment.TopLeft;
-                hitObject.X = ScreenRectangle.X + LaneSize * (h.Lane - 1) + DividerLineWidth * 2;
+                hitObject.X = ScreenRectangle.X + LaneSize * (h.Lane - 1) + DividerLineWidth;
                 hitObject.Width = LaneSize - DividerLineWidth;
 
                 // Make sure the width of the long note is updated if this object is indeed an LN.
