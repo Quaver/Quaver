@@ -71,25 +71,31 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             {
                 var pointLength = Ruleset.WorkingMap.GetTimingPointLength(tp);
                 var startTime = tp.StartTime;
-
-                var beatsBack = 0;
+                var numBeatsOffsetted = 0;
 
                 // First point, so we need to make sure that the lines begin from the beginning of the track minus some.
                 if (tp == Ruleset.WorkingMap.TimingPoints.First() && startTime > 0)
                 {
                     while (true)
                     {
-                        if (beatsBack / Ruleset.Screen.BeatSnap.Value % 4 == 0 && beatsBack % Ruleset.Screen.BeatSnap.Value == 0 && startTime <= -2000)
+                        if (numBeatsOffsetted / Ruleset.Screen.BeatSnap.Value % 4 == 0
+                            && numBeatsOffsetted % Ruleset.Screen.BeatSnap.Value == 0 && startTime <= -2000)
                             break;
 
+                        numBeatsOffsetted++;
+
+                        // Move the start time back a beat.
                         startTime -= tp.MillisecondsPerBeat;
-                        beatsBack++;
+
+                        // Since we're moving back a beat, we still want the point to end at the same position,
+                        // so we need to compensate for this.
+                        pointLength += tp.MillisecondsPerBeat;
                     }
                 }
 
                 // Last point, so the lines have to extend to the end of the song + more,
                 if (tp == Ruleset.WorkingMap.TimingPoints[Ruleset.WorkingMap.TimingPoints.Count - 1])
-                    pointLength = AudioEngine.Track.Length + tp.MillisecondsPerBeat * beatsBack + 2000;
+                    pointLength = AudioEngine.Track.Length + tp.MillisecondsPerBeat * numBeatsOffsetted + 2000;
 
                 // Create all lines.
                 for (var i = 0; i < pointLength / tp.MillisecondsPerBeat * Ruleset.Screen.BeatSnap.Value; i++)
