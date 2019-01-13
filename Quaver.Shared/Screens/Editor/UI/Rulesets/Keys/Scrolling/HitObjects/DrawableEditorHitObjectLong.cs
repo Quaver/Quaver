@@ -115,10 +115,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool CheckIfOnScreen()
-        {
-            var headOnScreen = base.CheckIfOnScreen() || AudioEngine.Track.Time >= Info.StartTime && AudioEngine.Track.Time <= Info.EndTime;
-            return headOnScreen;
-        }
+        public override bool CheckIfOnScreen() => base.CheckIfOnScreen() ||
+                                                  AudioEngine.Track.Time >= Info.StartTime && AudioEngine.Track.Time <= Info.EndTime + 1000;
     }
 }

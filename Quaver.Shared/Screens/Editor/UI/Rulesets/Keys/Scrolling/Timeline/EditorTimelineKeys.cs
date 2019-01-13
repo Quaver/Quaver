@@ -6,6 +6,7 @@ using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -154,11 +155,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         ///     Repositions the lines, usually used when the user changes zoom/audio rate.
         /// </summary>
-        public void RepositionLines()
+        public void RepositionLines() => ThreadScheduler.Run(() =>
         {
             foreach (var item in CachedLines)
                 item.Value.ForEach(x => x.Y = Container.HitPositionY - x.Time * Container.TrackSpeed - x.Height);
-        }
+        });
 
         /// <summary>
         ///     Gets an individual lioe color for the snap line.
