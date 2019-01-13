@@ -245,6 +245,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
 
         /// <summary>
+        ///     The scroll speed used in the editor.
+        /// </summary>
+        internal static BindableInt EditorScrollSpeedKeys { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -305,6 +310,21 @@ namespace Quaver.Shared.Config
         ///     The key to quickly exit the map.
         /// </summary>
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
+
+        /// <summary>
+        ///     The key to pause/play the track in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorPausePlay { get; private set; }
+
+        /// <summary>
+        ///     The key to lower the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorDecreaseAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -437,6 +457,10 @@ namespace Quaver.Shared.Config
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
+            EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
+            KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
+            KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
+            KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -510,6 +534,10 @@ namespace Quaver.Shared.Config
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
+                    EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

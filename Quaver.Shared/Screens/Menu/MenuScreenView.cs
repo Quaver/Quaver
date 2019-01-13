@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Dialogs;
@@ -397,10 +398,31 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnEditorPanelClicked(object sender, EventArgs e)
+        private void OnEditorPanelClicked(object sender, EventArgs e)
         {
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+            if (MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot edit without a map selected.");
+                return;
+            }
+
+            var screen = Screen as MenuScreen;
+
+            screen?.Exit(() =>
+            {
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track?.Pause();
+
+                try
+                {
+                    return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                }
+                catch (Exception)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                    return new MenuScreen();
+                }
+            });
         }
     }
 }
