@@ -92,6 +92,15 @@ namespace Quaver.Shared.Screens.Editor
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BeatSnap.Dispose();
+            base.Destroy();
+        }
+
         /// <summary>
         ///
         /// </summary>
