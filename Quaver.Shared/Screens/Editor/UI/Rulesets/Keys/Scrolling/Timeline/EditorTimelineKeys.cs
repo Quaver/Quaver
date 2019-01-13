@@ -154,7 +154,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         ///     Repositions the lines, usually used when the user changes zoom/audio rate.
         /// </summary>
-        public void RepositionLines() => Lines.ForEach(x => x.Y = Container.HitPositionY - x.Time * Container.TrackSpeed - x.Height);
+        public void RepositionLines()
+        {
+            foreach (var item in CachedLines)
+                item.Value.ForEach(x => x.Y = Container.HitPositionY - x.Time * Container.TrackSpeed - x.Height);
+        }
 
         /// <summary>
         ///     Gets an individual lioe color for the snap line.
