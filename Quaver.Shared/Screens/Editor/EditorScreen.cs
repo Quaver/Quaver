@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -81,6 +82,10 @@ namespace Quaver.Shared.Screens.Editor
 
             SetHitSoundObjectIndex();
             CreateRuleset();
+
+            GameBase.Game.IsMouseVisible = true;
+            GameBase.Game.GlobalUserInterface.Cursor.Visible = false;
+
             View = new EditorScreenView(this);
         }
 
@@ -219,6 +224,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void HandleKeyPressEscape() => Exit(() =>
         {
+            GameBase.Game.IsMouseVisible = false;
+            GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
+
             DiscordHelper.Presence.StartTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
