@@ -109,6 +109,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             if (PreviousAudioRate != AudioEngine.Track.Rate)
@@ -147,17 +151,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
 
-            foreach (var line in Timeline.Lines)
-            {
-                if (line.IsInView)
-                    line.Draw(gameTime);
-            }
-
-            foreach (var obj in HitObjects)
-            {
-                if (obj.IsInView)
-                    obj.Draw(gameTime);
-            }
+            Timeline.Draw(gameTime);
+            DrawHitObjects(gameTime);
 
             GameBase.Game.SpriteBatch.End();
         }
@@ -270,6 +265,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 }
 
                 HitObjects.Add(hitObject);
+            }
+        }
+
+        /// <summary>
+        ///     Draws all of the currently available hitobjects.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void DrawHitObjects(GameTime gameTime)
+        {
+            foreach (var obj in HitObjects)
+            {
+                if (obj.IsInView)
+                    obj.Draw(gameTime);
             }
         }
 

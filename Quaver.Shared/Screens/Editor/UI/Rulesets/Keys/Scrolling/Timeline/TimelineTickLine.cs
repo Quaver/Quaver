@@ -9,7 +9,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 {
-    public class TimelineSnapLine : Sprite
+    public class TimelineTickLine : Sprite
     {
         private EditorScrollContainerKeys Container { get; }
 
@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <param name="time"></param>
         /// <param name="index"></param>
         /// <param name="measureCount"></param>
-        public TimelineSnapLine(EditorScrollContainerKeys container, TimingPointInfo tp, float time, int index, int measureCount)
+        public TimelineTickLine(EditorScrollContainerKeys container, TimingPointInfo tp, float time, int index, int measureCount)
         {
             Container = container;
             TimingPoint = tp;

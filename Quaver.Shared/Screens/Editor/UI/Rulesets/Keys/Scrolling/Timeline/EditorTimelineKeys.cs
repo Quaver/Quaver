@@ -6,6 +6,7 @@ using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using IDrawable = Wobble.Graphics.IDrawable;
@@ -24,7 +25,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
         /// <summary>
         /// </summary>
-        public List<TimelineSnapLine> Lines { get; private set; }
+        public List<TimelineTickLine> Lines { get; private set; }
+
+        /// <summary>
+        ///     Contains cached timeline tick lines for each beat snap.
+        /// </summary>
+        private Dictionary<int, List<TimelineTickLine>> CachedLines { get; } = new Dictionary<int, List<TimelineTickLine>>();
 
         /// <summary>
         /// </summary>
@@ -34,7 +40,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         {
             Ruleset = ruleset;
             Container = container;
+
             InitializeLines();
+            Ruleset.Screen.BeatSnap.ValueChanged += OnBeatSnapChanged;
         }
 
         /// <inheritdoc />
@@ -51,20 +59,38 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
+            foreach (var line in Lines)
+            {
+                if (line.IsInView)
+                    line.Draw(gameTime);
+            }
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Destroy() => Lines.ForEach(x => x.Destroy());
+        public void Destroy()
+        {
+            foreach (var item in CachedLines)
+                item.Value.ForEach(x => x.Destroy());
+
+            // ReSharper disable once DelegateSubtraction
+            Ruleset.Screen.BeatSnap.ValueChanged -= OnBeatSnapChanged;
+        }
 
         /// <summary>
         /// </summary>
-        private void InitializeLines()
+        private void InitializeLines(bool forceRefresh = false)
         {
-            Lines = new List<TimelineSnapLine>();
+            if (CachedLines.ContainsKey(Ruleset.Screen.BeatSnap.Value) && !forceRefresh)
+            {
+                Lines = CachedLines[Ruleset.Screen.BeatSnap.Value];
+                return;
+            }
 
-            // Make lines starting at the very first ti
+            var lines = new List<TimelineTickLine>();
+
+            // Keeps track of the total amount of measures in the song.
             var measureCount = 0;
 
             foreach (var tp in Ruleset.WorkingMap.TimingPoints)
@@ -109,7 +135,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
                     var height = measureBeat ? 4 : 1;
 
-                    Lines.Add(new TimelineSnapLine(Container, tp, time, i, measureCount)
+                    lines.Add(new TimelineTickLine(Container, tp, time, i, measureCount)
                     {
                         Image = UserInterface.BlankBox,
                         Size = new ScalableVector2(Container.Width - 4, 0),
@@ -120,6 +146,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                     });
                 }
             }
+
+            CachedLines[Ruleset.Screen.BeatSnap.Value] = lines;
+            Lines = lines;
         }
 
         /// <summary>
@@ -186,5 +215,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                     return Color.White;
             }
         }
+
+        /// <summary>
+        ///     Called when the user wants to change their selected beat snap.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => InitializeLines();
     }
 }
