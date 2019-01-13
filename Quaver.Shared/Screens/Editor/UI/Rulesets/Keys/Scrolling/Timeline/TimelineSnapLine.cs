@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -78,8 +81,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         {
             DrawToSpriteBatch();
 
-            if (IsMeasureLine)
-                TextMeasure.DrawToSpriteBatch();
+            if (!IsMeasureLine)
+                return;
+
+            TextMeasure.DrawToSpriteBatch();
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public BindableInt BeatSnap { get; } = new BindableInt(16, 1, 16);
+        public BindableInt BeatSnap { get; } = new BindableInt(4, 1, 16);
 
         /// <summary>
         ///     The index of the object who had its hitsounds played.
