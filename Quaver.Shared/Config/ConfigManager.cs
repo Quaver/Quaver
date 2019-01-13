@@ -150,14 +150,14 @@ namespace Quaver.Shared.Config
         internal static BindableInt ScrollSpeed7K { get; private set; }
 
         /// <summary>
-        ///     Should 4k be played with DownScroll? If false, it's UpScroll
+        ///     Direction in which hit objects will be moving for 4K gamemode
         /// </summary>
-        internal static Bindable<bool> DownScroll4K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection4K { get; private set; }
 
         /// <summary>
-        ///     Should 7k be played with DownScroll? If false, it's UpScroll
+        ///     Direction in which hit objects will be moving for 7K gamemode
         /// </summary>
-        internal static Bindable<bool> DownScroll7K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection7K { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -238,11 +238,16 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
-        
+
         /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+
+        /// <summary>
+        ///     The scroll speed used in the editor.
+        /// </summary>
+        internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -305,6 +310,21 @@ namespace Quaver.Shared.Config
         ///     The key to quickly exit the map.
         /// </summary>
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
+
+        /// <summary>
+        ///     The key to pause/play the track in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorPausePlay { get; private set; }
+
+        /// <summary>
+        ///     The key to lower the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorDecreaseAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -396,8 +416,8 @@ namespace Quaver.Shared.Config
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
-            DownScroll4K = ReadValue(@"DownScroll4K", true, data);
-            DownScroll7K = ReadValue(@"DownScroll7K", true, data);
+            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
+            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
@@ -437,6 +457,10 @@ namespace Quaver.Shared.Config
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
+            EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
+            KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
+            KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
+            KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -471,8 +495,8 @@ namespace Quaver.Shared.Config
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll4K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll7K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection4K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
                     Skin.ValueChanged += AutoSaveConfiguration;
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
@@ -510,6 +534,10 @@ namespace Quaver.Shared.Config
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
+                    EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
@@ -525,7 +553,7 @@ namespace Quaver.Shared.Config
             // Attempt to parse the value and default it if it can't.
             try
             {
-                binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
+                binded.Value = (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
             }
             catch (Exception e)
             {
@@ -714,7 +742,7 @@ namespace Quaver.Shared.Config
             try
             {
                 using (var inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
-                    return ( inputStream.Length > 0 );
+                    return (inputStream.Length > 0);
             }
             catch (Exception)
             {

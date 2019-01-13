@@ -96,6 +96,9 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.NoLongNotes:
                     gameplayModifier = new ModNoLongNotes();
                     break;
+                case ModIdentifier.Randomize:
+                    gameplayModifier = new ModRandomize();
+                    break;
                 default:
                     return;
             }
