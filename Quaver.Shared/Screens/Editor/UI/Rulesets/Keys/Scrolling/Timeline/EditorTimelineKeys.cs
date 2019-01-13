@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         {
             try
             {
-                foreach (var line in Lines)
+                foreach (var line in new List<TimelineTickLine>(Lines))
                 {
                     if (line.IsInView)
                         line.Draw(gameTime);

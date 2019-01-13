@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <param name="gameTime"></param>
         private void DrawHitObjects(GameTime gameTime)
         {
-            foreach (var obj in HitObjects)
+            foreach (var obj in new List<DrawableEditorHitObject>(HitObjects))
             {
                 if (obj.IsInView)
                     obj.Draw(gameTime);
@@ -299,10 +299,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         public void CheckIfObjectsOnScreen()
         {
-            foreach (var obj in HitObjects)
+            foreach (var obj in new List<DrawableEditorHitObject>(HitObjects))
                 obj.IsInView = obj.CheckIfOnScreen();
 
-            foreach (var line in Timeline.Lines)
+            foreach (var line in new List<TimelineTickLine>(Timeline.Lines))
                 line.IsInView = line.CheckIfOnScreen();
         }
 
@@ -319,10 +319,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
-        {
-            NotificationManager.Show(NotificationLevel.Info, $"Scroll Speed Changed to: {e.Value}");
-            ResetObjectPositions();
-        }
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ResetObjectPositions();
     }
 }
