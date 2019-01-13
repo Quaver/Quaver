@@ -60,10 +60,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
-            foreach (var line in Lines)
+            try
             {
-                if (line.IsInView)
-                    line.Draw(gameTime);
+                foreach (var line in Lines)
+                {
+                    if (line.IsInView)
+                        line.Draw(gameTime);
+                }
+            }
+            catch (Exception)
+            {
+                // ignored. Usually happens when initializing lines on a new thread.
             }
         }
 
@@ -226,6 +233,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => InitializeLines();
+        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => ThreadScheduler.Run(() => InitializeLines());
     }
 }
