@@ -413,7 +413,15 @@ namespace Quaver.Shared.Screens.Menu
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track?.Pause();
 
-                return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                try
+                {
+                    return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                }
+                catch (Exception)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                    return new MenuScreen();
+                }
             });
         }
     }

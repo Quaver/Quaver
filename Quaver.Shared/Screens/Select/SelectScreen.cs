@@ -17,6 +17,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
@@ -431,7 +432,16 @@ namespace Quaver.Shared.Screens.Select
         public void ExitToEditor() => Exit(() =>
         {
             AudioEngine.Track?.Pause();
-            return new EditorScreen(MapManager.Selected.Value.LoadQua());
+
+            try
+            {
+                return new EditorScreen(MapManager.Selected.Value.LoadQua());
+            }
+            catch (Exception)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                return new SelectScreen();
+            }
         });
 
         /// <summary>
