@@ -98,18 +98,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
                 Size = new ScalableVector2(Width, (float) Container.LaneSize * TextureTail.Height / TextureTail.Width),
             };
 
-            Tail.Y = -Body.Height + Tail.Height;
-
-            // Need to resize the body and update the Y to account for the tail again.
-            Body.Height -= Tail.Height;
             Body.Y = -Body.Height + Height / 2f;
+            Tail.Y = -Body.Height;
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         private float GetLongNoteHeight()
-            => Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed - TextureTail.Height - Y);
+            => Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed -
+                        (float) Container.LaneSize * TextureTail.Height / TextureTail.Width / 2f - Height / 2f - Y);
 
         /// <inheritdoc />
         /// <summary>
