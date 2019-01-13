@@ -19,11 +19,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
     {
         /// <summary>
         /// </summary>
-        private EditorControlButton ZoomIn { get; }
+        private EditorControlButton ZoomIn { get; set; }
 
         /// <summary>
         /// </summary>
-        private EditorControlButton ZoomOut { get; }
+        private EditorControlButton ZoomOut { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -34,7 +34,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
             Tint = Color.Black;
             Alpha = 0.75f;
 
-            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_in), "Zoom Timeline In", 50, Alignment.TopLeft)
+            CreateZoomButtons();
+            CreateBorderLines();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateZoomButtons()
+        {
+            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_in), "Zoom Timeline In", 50, Alignment.TopLeft,
+                (o, e) => ConfigManager.EditorScrollSpeedKeys.Value++)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -42,18 +51,20 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Size = new ScalableVector2(Width / 2, Width / 2)
             };
 
-            ZoomIn.Clicked += (o, e) => ConfigManager.EditorScrollSpeedKeys.Value++;
-
-            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_out), "Zoom Timeline Out", -50, Alignment.BotLeft)
+            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_out), "Zoom Timeline Out", -50, Alignment.BotLeft,
+                (o, e) => ConfigManager.EditorScrollSpeedKeys.Value--)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
                 Y = -ZoomIn.Y,
                 Size = ZoomIn.Size
             };
+        }
 
-            ZoomOut.Clicked += (o, e) => ConfigManager.EditorScrollSpeedKeys.Value--;
-
+        /// <summary>
+        /// </summary>
+        private void CreateBorderLines()
+        {
             // ReSharper disable once ObjectCreationAsStatement
             new Sprite
             {
