@@ -96,8 +96,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
                 Parent = this,
                 Image = TextureTail,
                 Size = new ScalableVector2(Width, (float) Container.LaneSize * TextureTail.Height / TextureTail.Width),
+                Y = -Body.Height,
             };
 
+        }
+
+        /// <summary>
+        ///     Resizes the long note to the correct height.
+        ///     Usually used for when the zoom/playback rate has changed.
+        /// </summary>
+        public void ResizeLongNote()
+        {
+            Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
         }

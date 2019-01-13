@@ -310,7 +310,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         public void ResetObjectPositions()
         {
-            HitObjects.ForEach(x => x.SetPositionY());
+            HitObjects.ForEach(x =>
+            {
+                x.SetPositionY();
+
+                if (x is DrawableEditorHitObjectLong obj)
+                    obj.ResizeLongNote();
+            });
+
             Timeline.RepositionLines();
         }
 
