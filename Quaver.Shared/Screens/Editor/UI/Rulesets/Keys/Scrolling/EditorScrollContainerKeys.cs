@@ -10,6 +10,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -88,6 +89,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         private EditorTimelineKeys Timeline { get; }
 
+        /// <summary>
+        /// </summary>
+        private TimelineZoomer Zoomer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -103,7 +108,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             CreateBorderLines();
             CreateHitPositionLine();
             GenerateNotes();
+
             Timeline = new EditorTimelineKeys(Ruleset, this);
+
+            Zoomer = new TimelineZoomer
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Position = new ScalableVector2(Width, 60),
+            };
+
             RunObjectScreenCheckThread();
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
