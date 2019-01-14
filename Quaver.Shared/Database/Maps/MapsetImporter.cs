@@ -188,11 +188,11 @@ namespace Quaver.Shared.Database.Maps
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Success, $"Successfully imported file: {Path.GetFileName(file)}");
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
                 }
             }
 
