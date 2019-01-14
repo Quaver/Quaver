@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Importing
         {
             CreateBackground();
             CreateBanner();
-            MapsetImporter.ImportingMapset += OnFinishedImporting;
+            MapsetImporter.ImportingMapset += OnImportingMapset;
         }
 
         /// <inheritdoc />
@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void Destroy()
         {
-            MapsetImporter.ImportingMapset -= OnFinishedImporting;
+            MapsetImporter.ImportingMapset -= OnImportingMapset;
             Container?.Destroy();
         }
 
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFinishedImporting(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index + 1}/{e.Queue.Count}";
+        private void OnImportingMapset(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index + 1}/{e.Queue.Count}";
 
         /// <summary>
         ///     Creates the banner at the top of the screen
