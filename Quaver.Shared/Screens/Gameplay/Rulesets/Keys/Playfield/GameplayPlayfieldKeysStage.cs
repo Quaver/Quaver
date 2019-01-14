@@ -120,6 +120,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public HealthBar HealthBar { get; private set; }
 
         /// <summary>
+        ///     Displays the name of the song.
+        /// </summary>
+        private SongInformation SongInfo { get; set; }
+
+        /// <summary>
         ///     Make a quicker and shorter reference to the game skin
         /// </summary>
         private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
@@ -161,6 +166,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             CreateJudgementHitBurst();
             CreateHitLighting();
             CreateHealthBar();
+            CreateSongInfo();
         }
 
         /// <summary>
@@ -463,6 +469,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>
+        ///     Creates the sprite that displays the song information.
+        /// </summary>
+        private void CreateSongInfo() => SongInfo = new SongInformation(Screen)
+        {
+            Parent = Playfield.ForegroundContainer,
+            Alignment = Alignment.MidCenter,
+            Y = -200
+        };
 
         /// <summary>
         ///     Updates the given receptor and column lighting activity

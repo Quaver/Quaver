@@ -6,7 +6,6 @@
 */
 
 using Quaver.API.Enums;
-using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -21,8 +20,6 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Failure is not an option.";
 
         public bool Ranked { get; set; } = false;
-
-        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {

@@ -369,7 +369,8 @@ namespace Quaver.Shared.Screens.Select
             // Edit
             new NavbarItem("Edit", false, (o, e) =>
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back soon!");
+                var screen = Screen as SelectScreen;
+                screen?.ExitToEditor();
             }, true, false, true),
 
             // Export Mapset

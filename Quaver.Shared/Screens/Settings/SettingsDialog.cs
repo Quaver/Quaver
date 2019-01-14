@@ -362,6 +362,9 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
                     new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
                     new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
+                    new SettingsKeybind(this, "Editor - Pause/Play Track", ConfigManager.KeyEditorPausePlay),
+                    new SettingsKeybind(this, "Editor - Decrease Audio Plaback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
+                    new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
                 }),
                 // Misc
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>

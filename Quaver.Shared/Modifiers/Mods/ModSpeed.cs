@@ -9,7 +9,6 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
-using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -28,8 +27,6 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Change the audio playback rate of the song.";
 
         public bool Ranked { get; set; } = true;
-
-        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {

@@ -10,11 +10,15 @@ namespace Quaver.Shared.Assets
     {
         public static BitmapFont Exo2Regular { get; private set; }
         public static BitmapFont AllerRegular { get; private set; }
+        public static BitmapFont MuliRegular { get; private set; }
+        public static BitmapFont MuliBold { get; private set; }
 
         public static void Load()
         {
             Exo2Regular = GameBase.Game.Content.Load<BitmapFont>("exo2-regular");
             AllerRegular = GameBase.Game.Content.Load<BitmapFont>("aller-regular");
+            MuliRegular = GameBase.Game.Content.Load<BitmapFont>("muli");
+            MuliBold = GameBase.Game.Content.Load<BitmapFont>("muli-bold");
         }
     }
 }
