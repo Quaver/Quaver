@@ -168,7 +168,7 @@ namespace Quaver.Shared.Database.Maps
                 var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
-                ImportingMapset.Invoke(null, new ImportingMapsetEventArgs(Queue, file, i + 1));
+                ImportingMapset.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), i));
 
                 try
                 {

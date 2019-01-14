@@ -51,7 +51,6 @@ namespace Quaver.Shared.Screens.Importing
         {
             CreateBackground();
             CreateBanner();
-            CreateLoadingWheel();
             MapsetImporter.ImportingMapset += OnFinishedImporting;
         }
 
@@ -93,14 +92,14 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        private void CreateLoadingWheel() => LoadingWheel = new Sprite
+        private void CreateLoadingWheel(Sprite parent) => LoadingWheel = new Sprite
         {
-            Parent = Container,
-            Alignment = Alignment.MidCenter,
-            Size = new ScalableVector2(40, 40),
+            Parent = parent,
+            Alignment = Alignment.BotCenter,
+            Size = new ScalableVector2(60, 60),
             Image = UserInterface.LoadingWheel,
             Tint = Color.Yellow,
-            Y = 25
+            Y = -10
         };
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFinishedImporting(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index}/{e.Queue.Count}";
+        private void OnFinishedImporting(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index + 1}/{e.Queue.Count}";
 
         /// <summary>
         ///     Creates the banner at the top of the screen
@@ -144,19 +143,21 @@ namespace Quaver.Shared.Screens.Importing
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait while your maps are being processed.", 16)
+            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait. Maps are being imported.", 16)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,
                 Y = 10
             };
 
-            InformationText = new SpriteText(Fonts.Exo2Regular, "", 16)
+            InformationText = new SpriteText(Fonts.Exo2SemiBold, "", 14)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,
-                Y = Header.Y + 24
+                Y = Header.Y + Header.Height + 5
             };
+
+            CreateLoadingWheel(background);
         }
     }
 }
