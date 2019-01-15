@@ -202,35 +202,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 var screen = game?.CurrentScreen as EditorScreen;
 
                 // ReSharper disable once SwitchStatementMissingSomeCases
-                switch (screen?.BeatSnap.Value)
-                {
-                    case 1:
-                        screen.BeatSnap.Value = 2;
-                        break;
-                    case 2:
-                        screen.BeatSnap.Value = 3;
-                        break;
-                    case 3:
-                        screen.BeatSnap.Value = 4;
-                        break;
-                    case 4:
-                        screen.BeatSnap.Value = 6;
-                        break;
-                    case 6:
-                        screen.BeatSnap.Value = 8;
-                        break;
-                    case 8:
-                        screen.BeatSnap.Value = 12;
-                        break;
-                    case 12:
-                        screen.BeatSnap.Value = 16;
-                        break;
-                    case 16:
-                        screen.BeatSnap.Value = 1;
-                        break;
-                }
-
-                NotificationManager.Show(NotificationLevel.Info, $"Beat Snap changed to: 1/{StringHelper.AddOrdinal(screen.BeatSnap.Value)}");
+                screen?.ChangeBeatSnap(Direction.Forward);
             };
 
             ButtonScrollDirection = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_exchange_arrows), "Change Scroll Direction",
