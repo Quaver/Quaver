@@ -55,8 +55,6 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets
         /// <inheritdoc />
         ///  <summary>
         ///  </summary>
-        public void Undo()
-        {
-        }
+        public void Undo() => new EditorActionDeleteHitObjectKeys(Container, HitObject).Perform();
     }
 }

@@ -280,6 +280,12 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.S))
                 Save();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
+                Ruleset.ActionManager.Undo();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
+                Ruleset.ActionManager.Redo();
         }
 
         /// <summary>
