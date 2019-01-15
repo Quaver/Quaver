@@ -134,6 +134,11 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Forward);
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.S))
+            {
+                WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
+                NotificationManager.Show(NotificationLevel.Success, "Saved");
+            }
             HandleAudioSeeking();
         }
 
@@ -266,6 +271,7 @@ namespace Quaver.Shared.Screens.Editor
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
                 SetHitSoundObjectIndex();
             }
+
         }
 
         /// <summary>

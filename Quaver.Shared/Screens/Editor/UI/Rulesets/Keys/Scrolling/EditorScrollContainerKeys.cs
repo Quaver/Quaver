@@ -12,6 +12,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
@@ -27,6 +28,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Input;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
@@ -140,6 +142,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 ResetObjectPositions();
 
             PreviousAudioRate = AudioEngine.Track.Rate;
+
             base.Update(gameTime);
         }
 
@@ -255,38 +258,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             HitObjects = new List<DrawableEditorHitObject>();
 
             foreach (var h in Ruleset.WorkingMap.HitObjects)
-            {
-                DrawableEditorHitObject hitObject;
-
-                var index = SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].ColorObjectsBySnapDistance
-                    ? HitObjectManager.GetBeatSnap(h, h.GetTimingPoint(Ruleset.WorkingMap.TimingPoints))
-                    : 0;
-
-                if (h.IsLongNote)
-                {
-                    hitObject = new DrawableEditorHitObjectLong(this, h,
-                        SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldHitObjects[h.Lane - 1][index],
-                        SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldBodies[h.Lane - 1].First(),
-                        SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHoldEnds[h.Lane - 1]);
-                }
-                else
-                {
-                    hitObject = new DrawableEditorHitObject(this, h, SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode].NoteHitObjects[h.Lane - 1][index]);
-                }
-
-                hitObject.Alignment = Alignment.TopLeft;
-                hitObject.X = ScreenRectangle.X + LaneSize * (h.Lane - 1) + DividerLineWidth;
-                hitObject.Width = LaneSize - DividerLineWidth;
-
-                // Make sure the width of the long note is updated if this object is indeed an LN.
-                if (hitObject is DrawableEditorHitObjectLong longNote)
-                {
-                    longNote.Body.Width = hitObject.Width;
-                    longNote.Tail.Width = hitObject.Width;
-                }
-
-                HitObjects.Add(hitObject);
-            }
+                AddHitObjectSprite(h);
         }
 
         /// <summary>
@@ -340,6 +312,61 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             });
 
             Timeline.RepositionLines();
+        }
+
+        /// <summary>
+        ///     Adds a HitObject sprite to the container.
+        /// </summary>
+        public void AddHitObjectSprite(HitObjectInfo h)
+        {
+            DrawableEditorHitObject hitObject;
+
+            var skin = SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode];
+            var index =skin.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(h, h.GetTimingPoint(Ruleset.WorkingMap.TimingPoints)) : 0;
+
+            if (h.IsLongNote)
+            {
+                hitObject = new DrawableEditorHitObjectLong(this, h,
+                    skin.NoteHoldHitObjects[h.Lane - 1][index],
+                    skin.NoteHoldBodies[h.Lane - 1].First(),
+                    skin.NoteHoldEnds[h.Lane - 1]);
+            }
+            else
+            {
+                hitObject = new DrawableEditorHitObject(this, h, skin.NoteHitObjects[h.Lane - 1][index]);
+            }
+
+            hitObject.Alignment = Alignment.TopLeft;
+            hitObject.X = ScreenRectangle.X + LaneSize * (h.Lane - 1) + DividerLineWidth;
+            hitObject.Width = LaneSize - DividerLineWidth;
+
+            // Make sure the width of the long note is updated if this object is indeed an LN.
+            if (hitObject is DrawableEditorHitObjectLong longNote)
+            {
+                longNote.Body.Width = hitObject.Width;
+                longNote.Tail.Width = hitObject.Width;
+            }
+
+            lock (HitObjects)
+                HitObjects.Add(hitObject);
+        }
+
+        /// <summary>
+        ///     Removes a HitObject sprite at a given index.
+        /// </summary>
+        public void RemoveHitObjectSprite(HitObjectInfo h)
+        {
+            lock (HitObjects)
+            {
+                var ho = HitObjects.Find(x => x.Info == h);
+
+                HitObjects.Remove(ho);
+
+                ho.IsInView = false;
+                ho.Destroy();
+
+                HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
+            }
         }
 
         /// <summary>

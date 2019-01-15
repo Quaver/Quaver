@@ -5,8 +5,11 @@
  * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Shared.Screens.Editor.Actions;
 using Wobble.Graphics;
 using IDrawable = Wobble.Graphics.IDrawable;
 
@@ -23,14 +26,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         public Qua WorkingMap => Screen.WorkingMap;
 
         /// <summary>
-        /// </summary>
-        /// <param name="screen"></param>
-        public EditorRuleset(EditorScreen screen) => Screen = screen;
-
-        /// <summary>
         ///     The container for the ruleset used to draw things.
         /// </summary>
         public Container Container { get; } = new Container();
+
+        /// <summary>
+        ///     Manages all user actions for this editor session.
+        /// </summary>
+        public EditorActionManager ActionManager { get; protected set; }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="screen"></param>
+        public EditorRuleset(EditorScreen screen) => Screen = screen;
 
         /// <inheritdoc />
         /// <summary>
@@ -57,5 +65,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// </summary>
         /// <param name="gameTime"></param>
         protected abstract void HandleInput(GameTime gameTime);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected abstract EditorActionManager CreateActionManager();
     }
 }
