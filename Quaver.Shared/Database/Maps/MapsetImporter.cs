@@ -36,6 +36,11 @@ namespace Quaver.Shared.Database.Maps
         public static List<string> Queue { get; } = new List<string>();
 
         /// <summary>
+        ///     Invoked when a map gets initialized for importing
+        /// </summary>
+        public static event EventHandler<ImportingMapsetEventArgs> ImportingMapset;
+
+        /// <summary>
         /// Watches the songs directory for any changes.
         /// </summary>
         internal static void WatchForChanges()
@@ -158,10 +163,12 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            foreach (var file in Queue)
+            for (var i = 0; i < Queue.Count; i++)
             {
+                var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
+                ImportingMapset.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), i));
 
                 try
                 {
@@ -181,11 +188,11 @@ namespace Quaver.Shared.Database.Maps
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Success, $"Successfully imported file: {Path.GetFileName(file)}");
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
                 }
             }
 
