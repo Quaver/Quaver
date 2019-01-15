@@ -460,9 +460,7 @@ namespace Quaver.Shared
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
-                case QuaverScreenType.Editor:
                     Transitioner.FadeIn();
-
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
             }
