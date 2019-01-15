@@ -165,9 +165,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             // Handle upscroll by flipping/rotating the matrix.
             if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
             {
-                transformMatrix = transformMatrix * Matrix.CreateTranslation(-WindowManager.Width / 2, -WindowManager.Height / 2, 0f)
+                transformMatrix = transformMatrix * Matrix.CreateTranslation(-ConfigManager.WindowWidth.Value / 2f, -ConfigManager.WindowHeight.Value / 2f, 0f)
                                                   * Matrix.CreateRotationZ(MathHelper.ToRadians(180)) *
-                                                  Matrix.CreateTranslation(WindowManager.Width / 2, WindowManager.Height / 2, 0f);
+                                                  Matrix.CreateTranslation(ConfigManager.WindowWidth.Value / 2f, ConfigManager.WindowWidth.Value / 2f, 0f);
             }
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);

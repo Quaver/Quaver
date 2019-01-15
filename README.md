@@ -6,8 +6,6 @@
 
 >🎶 The ultimate, community-driven, and open-source competitive rhythm game.
 
-If you're looking for the official release of Quaver with added online connectivity and rankings, sign up for the Steam alpha on our [website](https://quavergame.com)! 
-
 ### Table of Contents ###
 * [Requirements](https://github.com/Quaver/Quaver#requirements)
 * [Compiling](https://github.com/Quaver/Quaver#compiling)
