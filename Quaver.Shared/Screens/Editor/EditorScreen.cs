@@ -6,7 +6,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -58,6 +60,15 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         /// </summary>
         public BindableInt BeatSnap { get; } = new BindableInt(4, 1, 16);
+
+        /// <summary>
+        ///     All of the available beat snaps to use in the editor.
+        /// </summary>
+        private List<int> AvailableBeatSnaps { get; } = new List<int> {1, 2, 3, 4, 6, 8, 12, 16};
+
+        /// <summary>
+        /// </summary>
+        private int BeatSnapIndex => AvailableBeatSnaps.FindIndex(x => x == BeatSnap.Value);
 
         /// <summary>
         ///     The index of the object who had its hitsounds played.
@@ -135,6 +146,7 @@ namespace Quaver.Shared.Screens.Editor
                 ChangeAudioPlaybackRate(Direction.Forward);
 
             HandleAudioSeeking();
+            HandleBeatSnapChanges();
         }
 
         /// <summary>
@@ -243,12 +255,33 @@ namespace Quaver.Shared.Screens.Editor
         private void HandleKeyPressSpace() => PlayPauseTrack();
 
         /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        public void ChangeBeatSnap(Direction direction)
+        {
+            var index = BeatSnapIndex;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    BeatSnap.Value = index + 1 < AvailableBeatSnaps.Count ? AvailableBeatSnaps[index + 1] : AvailableBeatSnaps.First();
+                    break;
+                case Direction.Backward:
+                    BeatSnap.Value = index - 1 >= 0 ? AvailableBeatSnaps[index - 1] : AvailableBeatSnaps.Last();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        /// <summary>
         ///     Handles seeking through the audio whether with the scroll wheel or
         ///     arrow keys
         /// </summary>
         private void HandleAudioSeeking()
         {
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift)
+                || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                 return;
 
             // Seek backwards
@@ -262,9 +295,32 @@ namespace Quaver.Shared.Screens.Editor
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
                 MouseManager.PreviousState.ScrollWheelValue)
             {
-
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
                 SetHitSoundObjectIndex();
+            }
+        }
+
+        /// <summary>
+        ///     Handles changing the beat snap with the scroll wheel + shift
+        ///     and arrow keys + shift.
+        /// </summary>
+        private void HandleBeatSnapChanges()
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                return;
+
+            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue ||
+                KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            {
+                ChangeBeatSnap(Direction.Forward);
+                NotificationManager.Show(NotificationLevel.Info, $"Beat Snap changed to: 1/{StringHelper.AddOrdinal(BeatSnap.Value)}");
+            }
+
+            if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue ||
+                KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            {
+                ChangeBeatSnap(Direction.Backward);
+                NotificationManager.Show(NotificationLevel.Info, $"Beat Snap changed to: 1/{StringHelper.AddOrdinal(BeatSnap.Value)}");
             }
         }
 
