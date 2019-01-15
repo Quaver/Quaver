@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
@@ -239,7 +240,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
-            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length, 0,
+            ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
                 Colors.MainAccentInactive, Colors.MainAccent)
             {
                 Parent = Container,
