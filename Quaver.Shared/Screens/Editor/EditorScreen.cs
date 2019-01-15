@@ -134,12 +134,8 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Forward);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.S))
-            {
-                WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
-                NotificationManager.Show(NotificationLevel.Success, "Saved");
-            }
             HandleAudioSeeking();
+            HandleCtrlInput(gameTime);
         }
 
         /// <summary>
@@ -271,7 +267,19 @@ namespace Quaver.Shared.Screens.Editor
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
                 SetHitSoundObjectIndex();
             }
+        }
 
+        /// <summary>
+        ///     Handles all input when the user is holding down CTRL
+        /// </summary>
+        private void HandleCtrlInput(GameTime gameTime)
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.S))
+                Save();
         }
 
         /// <summary>
@@ -366,6 +374,21 @@ namespace Quaver.Shared.Screens.Editor
         {
             HitSoundObjectIndex = WorkingMap.HitObjects.FindLastIndex(x => x.StartTime <= AudioEngine.Track.Time);
             HitSoundObjectIndex++;
+        }
+
+        /// <summary>
+        ///     Saves the map
+        /// </summary>
+        private void Save()
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot save a map loaded from another game.");
+                return;
+            }
+
+            WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
+            NotificationManager.Show(NotificationLevel.Success, "Saved");
         }
 
         /// <inheritdoc />
