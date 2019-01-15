@@ -200,7 +200,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
-                //var offset = skin.ColumnSize * skin.NoteHitObjects[i][0].Height / (float)skin.NoteHitObjects[i][0].Width;
                 var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
                 var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
