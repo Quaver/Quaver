@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
@@ -158,6 +159,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitObjectContainer();
             }
 
+            // Create Stage Elements
             CreateDistantOverlay();
             CreateComboDisplay();
             CreateHitError();
@@ -242,8 +244,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Parent = Playfield.ForegroundContainer,
                 Image = Skin.StageHitPositionOverlay,
                 Size = new ScalableVector2(Playfield.Width, sizeY),
-                Y = GameplayRulesetKeys.IsDownscroll ? Playfield.ReceptorPositionY + Skin.HitPosOffsetY
-                                                    : Playfield.ReceptorPositionY + offsetY + sizeY - Skin.HitPosOffsetY,
+                // todo: case statement for scroll direction
+                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
+                                                    : Playfield.ReceptorPositionY[0] + offsetY + sizeY - Skin.HitPosOffsetY,
             };
         }
 
@@ -265,10 +268,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     Parent = Playfield.ForegroundContainer,
                     Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
-                    Position = new ScalableVector2(posX, Playfield.ReceptorPositionY),
+                    Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
-                    SpriteEffect = !GameplayRulesetKeys.IsDownscroll && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    // todo: case statement for scroll direction
+                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 });
 
                 // Create the column lighting sprite.
@@ -281,8 +285,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Size = new ScalableVector2(Playfield.LaneSize, lightingY),
                     Tint = Skin.ColumnColors[i],
                     X = posX,
-                    Y = GameplayRulesetKeys.IsDownscroll ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
-                    SpriteEffect = !GameplayRulesetKeys.IsDownscroll && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    // todo: case statement for scroll direction
+                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ColumnLightingPositionY[i] - lightingY : Playfield.ColumnLightingPositionY[i],
+                    // todo: case statement for scroll direction
+                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                 });
             }
@@ -318,8 +324,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Image = Skin.StageDistantOverlay,
                 Size = new ScalableVector2(Playfield.Width, sizeY),
-                Y = GameplayRulesetKeys.IsDownscroll ? -1 : 1,
-                Alignment = GameplayRulesetKeys.IsDownscroll ? Alignment.TopRight : Alignment.BotRight,
+                // todo: case statement for scroll direction
+                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? -1 : 1,
+                // todo: case statement for scroll direction
+                Alignment = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Alignment.TopRight : Alignment.BotRight,
                 Parent = Playfield.ForegroundContainer
             };
         }
@@ -351,7 +359,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void UpdateComboDisplay(GameTime gameTime)
         {
             // Gradually tween the position back to what it was originally.
-            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
+            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
 
             if (OldCombo == Screen.Ruleset.ScoreProcessor.Combo)
                 return;
@@ -360,27 +368,27 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             ComboDisplay.Value = Screen.Ruleset.ScoreProcessor.Combo.ToString();
 
             // If the combo needs repositioning, do so accordingly.
-            if ((int) Math.Floor(Math.Log10(OldCombo) + 1) != (int) Math.Floor(Math.Log10(Screen.Ruleset.ScoreProcessor.Combo) + 1))
+            if ((int)Math.Floor(Math.Log10(OldCombo) + 1) != (int)Math.Floor(Math.Log10(Screen.Ruleset.ScoreProcessor.Combo) + 1))
                 ComboDisplay.X = -ComboDisplay.TotalWidth / 2f;
 
             // Set the position and scale  of the combo display, so that we can perform some animations.
-             ComboDisplay.Y = OriginalComboDisplayY - 5;
+            ComboDisplay.Y = OriginalComboDisplayY - 5;
 
+            // Gradually tween the position back to what it was originally.
+            ComboDisplay.Y = MathHelper.Lerp(ComboDisplay.Y, OriginalComboDisplayY, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 30, 1) / 2);
             OldCombo = Screen.Ruleset.ScoreProcessor.Combo;
         }
 
         /// <summary>
         ///     Creates the HitError Sprite.
         /// </summary>
-        private void CreateHitError()
+        private void CreateHitError() => HitError = new HitErrorBar(new ScalableVector2(50, 10))
         {
-            HitError = new HitErrorBar(new ScalableVector2(50, Skin.HitErrorHeight))
-            {
-                Parent = Playfield.ForegroundContainer,
-                Alignment = Alignment.MidCenter,
-                Position = new ScalableVector2(Skin.HitErrorPosX, Skin.HitErrorPosY),
-            };
-        }
+            Parent = Playfield.ForegroundContainer,
+            Alignment = Alignment.MidCenter,
+            Position = new ScalableVector2(0, 55)
+        };
+
         /// <summary>
         ///     Creates the JudgementHitBurst sprite.
         /// </summary>
@@ -420,7 +428,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // Set the spritebatch options for the hitlighting in this case
                 // if it's the first object.
                 if (i == 0)
-                    hl.SpriteBatchOptions = new SpriteBatchOptions() {BlendState = BlendState.Additive};
+                    hl.SpriteBatchOptions = new SpriteBatchOptions() { BlendState = BlendState.Additive };
                 // Use the previous object's spritebatch options so all of them use the same batch.
                 else
                     hl.UsePreviousSpriteBatchOptions = true;
@@ -429,7 +437,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // otherwise we'll use the one from their skin config.
                 hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
 
-                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f  - hl.Width / 2f + Skin.HitLightingX,
+                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f - hl.Width / 2f + Skin.HitLightingX,
                     HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
 
                 HitLightingObjects.Add(hl);

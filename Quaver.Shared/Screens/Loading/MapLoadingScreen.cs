@@ -16,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Wobble.Audio;
@@ -97,6 +98,25 @@ namespace Quaver.Shared.Screens.Loading
                 }
 
                 MapManager.Selected.Value.Qua.ApplyMods(ModManager.Mods);
+
+                // Generate seed and randomize lanes if Randomize modifier is active.
+                if (ModManager.IsActivated(ModIdentifier.Randomize))
+                {
+                    int seed;
+
+                    // If loading from a replay.
+                    if (Replay != null)
+                        seed = Replay.RandomizeModifierSeed;
+                    // If loading gameplay.
+                    else
+                    {
+                        var randomizeModifier = (ModRandomize) ModManager.CurrentModifiersList.Find(x => x.ModIdentifier.Equals(ModIdentifier.Randomize));
+                        randomizeModifier.GenerateSeed();
+                        seed = randomizeModifier.Seed;
+                    }
+
+                    MapManager.Selected.Value.Qua.RandomizeLanes(seed);
+                }
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))

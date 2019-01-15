@@ -17,7 +17,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
@@ -163,8 +165,11 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Plays the audio track at the preview time if it has stopped
         /// </summary>
-        private static void KeepPlayingAudioTrackAtPreview()
+        private void KeepPlayingAudioTrackAtPreview()
         {
+            if (Exiting)
+                return;
+
             if (AudioEngine.Track == null)
             {
                 AudioEngine.PlaySelectedTrackAtPreview();
@@ -419,6 +424,24 @@ namespace Quaver.Shared.Screens.Select
             }
 
             return new MenuScreen();
+        });
+
+        /// <summary>
+        ///     Exits the screen to the editor
+        /// </summary>
+        public void ExitToEditor() => Exit(() =>
+        {
+            AudioEngine.Track?.Pause();
+
+            try
+            {
+                return new EditorScreen(MapManager.Selected.Value.LoadQua());
+            }
+            catch (Exception)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                return new SelectScreen();
+            }
         });
 
         /// <summary>

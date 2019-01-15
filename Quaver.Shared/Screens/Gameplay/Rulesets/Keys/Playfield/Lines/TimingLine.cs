@@ -5,6 +5,7 @@
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -29,9 +30,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public float CurrentTrackPosition { get; private set; }
 
         /// <summary>
-        ///     Offset
+        ///     Target position when TrackPosition = 0
         /// </summary>
-        public static float GlobalTrackOffset { get; set; }
+        private float TrackOffset { get; set; }
+
+        /// <summary>
+        ///     The direction this object is moving.
+        /// </summary>
+        private ScrollDirection ScrollDirection { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -39,15 +45,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public TimingLine(GameplayRulesetKeys ruleset, TimingLineInfo info)
+        public TimingLine(GameplayRulesetKeys ruleset, TimingLineInfo info, ScrollDirection direction, float targetY, float size, float offsetX)
         {
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+            TrackOffset = targetY;
             Ruleset = ruleset;
             Info = info;
+            ScrollDirection = direction;
 
             // Initialize Sprite
             Alignment = Alignment.TopLeft;
-            Width = playfield.Width;
+            Width = size;
+            X = offsetX;
             Height = 2;
             Parent = playfield.Stage.TimingLineContainer;
         }
@@ -59,7 +68,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         public void UpdateSpritePosition(long offset)
         {
             CurrentTrackPosition = offset - Info.TrackOffset;
-            Y = GlobalTrackOffset + (CurrentTrackPosition * (GameplayRulesetKeys.IsDownscroll ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+            Y = TrackOffset + (CurrentTrackPosition * (ScrollDirection.Equals(ScrollDirection.Down) ? HitObjectManagerKeys.ScrollSpeed : -HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
         }
     }
 }

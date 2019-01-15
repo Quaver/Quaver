@@ -104,6 +104,10 @@ namespace Quaver.Shared.Audio
 
             // Snap the value and seek to it.
             var seekTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
+
+            if (seekTime < 0 || seekTime > Track.Length)
+                return;
+
             Track.Seek(seekTime);
         }
     }

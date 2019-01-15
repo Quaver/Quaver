@@ -315,8 +315,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
-                    new SettingsBool(this, "Notes Fall Downwards (4 Keys)", ConfigManager.DownScroll4K),
-                    new SettingsBool(this, "Notes Fall Downwards (7 Keys)", ConfigManager.DownScroll7K),
+                    new SettingsScrollDirection(this, "Scroll Direction 4K", ConfigManager.ScrollDirection4K),
+                    new SettingsScrollDirection(this, "Scroll Direction 7K", ConfigManager.ScrollDirection7K),
                     new SettingsBool(this, "Blur Background In Gameplay", ConfigManager.BlurBackgroundInGameplay),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
@@ -362,6 +362,9 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
                     new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
                     new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
+                    new SettingsKeybind(this, "Editor - Pause/Play Track", ConfigManager.KeyEditorPausePlay),
+                    new SettingsKeybind(this, "Editor - Decrease Audio Plaback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
+                    new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
                 }),
                 // Misc
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_question_sign), "Miscellaneous", new List<Drawable>
