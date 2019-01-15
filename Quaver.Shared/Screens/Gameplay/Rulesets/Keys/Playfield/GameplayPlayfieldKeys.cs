@@ -202,6 +202,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 //var offset = skin.ColumnSize * skin.NoteHitObjects[i][0].Height / (float)skin.NoteHitObjects[i][0].Width;
                 var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
+                var centeringOffset = ConfigManager.CenterTimingLines.Value ? hitObOffset / 2f + 1: 0;
                 var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
                 LongNoteSizeAdjustment[i] = (holdHitObOffset - hitObOffset) / 2;
@@ -213,14 +214,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;;
                         HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
                         HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
-                        TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
+                        TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - centeringOffset;
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
                         HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + hitObOffset;
                         HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + holdHitObOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.HitLightingY;
-                        TimingLinePositionY[i] = HitPositionY[i];
+                        TimingLinePositionY[i] = HitPositionY[i] + centeringOffset;
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");

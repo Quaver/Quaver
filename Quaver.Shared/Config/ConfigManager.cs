@@ -220,6 +220,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayTimingLines { get; private set; }
 
         /// <summary>
+        ///     If true, timing lines will be snapped to the middle of HitObjects
+        /// </summary>
+        internal static Bindable<bool> CenterTimingLines { get; private set; }
+
+        /// <summary>
         ///     If true, the audio visualizer in the menus will be displayed.
         /// </summary>
         internal static Bindable<bool> DisplayMenuAudioVisualizer { get; private set; }
@@ -431,6 +436,7 @@ namespace Quaver.Shared.Config
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             AutoLoginToServer = ReadValue(@"AutoLoginToServer", true, data);
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
+            CenterTimingLines = ReadValue(@"CenterTimingLines", false, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
