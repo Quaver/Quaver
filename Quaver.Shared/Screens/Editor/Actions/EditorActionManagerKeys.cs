@@ -26,9 +26,15 @@ namespace Quaver.Shared.Screens.Editor.Actions
 
         /// <summary>
         /// </summary>
-        public void PlaceHitObject(int lane) => Perform(new EditorActionPlaceHitObjectKeys(Ruleset.ScrollContainer, new HitObjectInfo
+        public void PlaceHitObject(int lane) => PlaceHitObject(lane, AudioEngine.Track.Time);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        public void PlaceHitObject(int lane, double time) => Perform(new EditorActionPlaceHitObjectKeys(Ruleset.ScrollContainer, new HitObjectInfo
         {
-            StartTime = (int) AudioEngine.Track.Time,
+            StartTime = (int) time,
             Lane = lane
         }));
 

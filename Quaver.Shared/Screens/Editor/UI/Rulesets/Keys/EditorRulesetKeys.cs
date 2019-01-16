@@ -6,14 +6,17 @@
 */
 
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Wobble.Graphics;
 using Wobble.Input;
@@ -74,11 +77,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D7))
                     PlaceObject(7);
             }
-        }
 
-        /// <summary>
-        /// </summary>
-        private void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
+            HandleHitObjectMouseInput();
+        }
 
         /// <summary>
         ///     Toggles the scroll direction for the editor.
@@ -116,6 +117,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         }
 
         /// <summary>
+        ///     Handles performing actions w/ the mouse
+        /// </summary>
+        private void HandleHitObjectMouseInput()
+        {
+            // Left click/place object
+            if (MouseManager.IsUniqueClick(MouseButton.Left))
+            {
+            }
+
+            // Right click/delete object.
+            if (MouseManager.IsUniqueClick(MouseButton.Right))
+            {
+            }
+        }
+
+        /// <summary>
         ///     Places a HitObject at a given lane.
         /// </summary>
         /// <param name="lane"></param>
@@ -132,6 +149,26 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             else
                 am?.DeleteHitObject(existingObject);
         }
+
+        /// <summary>
+        ///     Places an object at a specific time.
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        private void PlaceObject(int lane, double time)
+        {
+            var am = ActionManager as EditorActionManagerKeys;
+
+            var existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) time && x.Lane == lane);
+
+            // There's no object currently at this position, so add it.
+            if (existingObject == null)
+                am?.PlaceHitObject(lane, time);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
 
         /// <inheritdoc />
         /// <summary>

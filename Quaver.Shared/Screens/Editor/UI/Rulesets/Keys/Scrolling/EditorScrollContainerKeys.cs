@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
         /// <summary>
         /// </summary>
-        private EditorTimelineKeys Timeline { get; }
+        public EditorTimelineKeys Timeline { get; }
 
         /// <summary>
         /// </summary>
@@ -367,6 +367,28 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
                 HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
             }
+        }
+
+        /// <summary>
+        ///     Gets the audio time from a y position.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public double GetTimeFromY(float y) => (int) AudioEngine.Track.Time - HitPositionY + y;
+
+        /// <summary>
+        ///     Gets the lane the mouse is in based on the mouse's x position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int GetLaneFromX(float x)
+        {
+            var lane = (int) (( x / (ScreenRectangle.X - Width + LaneSize * Ruleset.WorkingMap.GetKeyCount()) - 1) * 10 + 1);
+
+            if (lane <= 0 || lane > Ruleset.WorkingMap.GetKeyCount())
+                lane = -1;
+
+            return lane;
         }
 
         /// <summary>

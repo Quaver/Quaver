@@ -75,6 +75,27 @@ namespace Quaver.Shared.Audio
         /// <param name="snap"></param>
         public static void SeekTrackToNearestSnap(Qua map, Direction direction, int snap)
         {
+            var seekTime = GetNearestSnapTimeFromTime(map, direction, snap, Track.Time);
+
+            if (seekTime < 0 || seekTime > Track.Length)
+                return;
+
+            Track.Seek(seekTime);
+        }
+
+        /// <summary>
+        ///     Gets the nearest snap time at a given direction.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="direction"></param>
+        /// <param name="snap"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        /// <exception cref="AudioEngineException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, int snap, double time)
+        {
             if (Track == null || Track.IsDisposed || Track.IsStopped)
                 throw new AudioEngineException("Cannot seek to nearest snap if a track isn't loaded");
 
@@ -82,7 +103,7 @@ namespace Quaver.Shared.Audio
                 throw new ArgumentNullException(nameof(map));
 
             // Get the current timing point
-            var point = map.GetTimingPointAt(Track.Time);
+            var point = map.GetTimingPointAt(time);
 
             // Get the amount of milliseconds that each snap takes in the beat.
             var snapTimePerBeat = 60000 / point.Bpm / snap;
@@ -93,22 +114,24 @@ namespace Quaver.Shared.Audio
             switch (direction)
             {
                 case Direction.Forward:
-                    pointToSnap = Track.Time + snapTimePerBeat;
+                    pointToSnap = time + snapTimePerBeat;
                     break;
                 case Direction.Backward:
-                    pointToSnap = Track.Time - snapTimePerBeat;
+                    pointToSnap = time - snapTimePerBeat;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            // Snap the value and seek to it.
-            var seekTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
+            var nearestTick = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
 
-            if (seekTime < 0 || seekTime > Track.Length)
-                return;
+            if ((int) Math.Abs(nearestTick - time) <= (int) snapTimePerBeat)
+                return nearestTick;
 
-            Track.Seek(seekTime);
+            if (direction == Direction.Backward)
+                return (Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) + 1) * snapTimePerBeat + point.StartTime;
+
+            return (Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) - 1) * snapTimePerBeat + point.StartTime;
         }
     }
 }

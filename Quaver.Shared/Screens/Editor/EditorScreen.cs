@@ -111,7 +111,9 @@ namespace Quaver.Shared.Screens.Editor
             if (AudioEngine.Track.IsDisposed)
                 AudioEngine.LoadCurrentTrack();
 
-            HandleInput(gameTime);
+            if (DialogManager.Dialogs.Count == 0)
+                HandleInput(gameTime);
+
             base.Update(gameTime);
         }
 
