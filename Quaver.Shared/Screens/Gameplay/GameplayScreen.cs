@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -622,7 +622,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             // Get the skip time of the next object.
-            var nextObject = Ruleset.HitObjectManager.NextHitObject.StartTime;
+            var nextObject = Ruleset.HitObjectManager.NextHitObject.Value.StartTime;
             var skipTime = nextObject - GameplayAudioTiming.StartDelay * ModHelper.GetRateFromMods(ModManager.Mods);
 
             try
