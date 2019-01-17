@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -18,6 +19,7 @@ using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Input;
 using Wobble.Window;
@@ -32,12 +34,28 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         public EditorScrollContainerKeys ScrollContainer { get; private set; }
 
+        /// <summary>
+        ///     The selected tool the user has when compositing the map
+        /// </summary>
+        public Bindable<EditorCompositionTool> CompositionTool { get; }
+
+        /// <summary>
+        ///     Keeps track if we're currently pending a long note release specification for that
+        ///     given lane.
+        /// </summary>
+        public List<HitObjectInfo> PendingLongNoteReleases { get; } = new List<HitObjectInfo>(new HitObjectInfo[7]);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public EditorRulesetKeys(EditorScreen screen) : base(screen)
         {
+            CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.LongNote)
+            {
+                Value = EditorCompositionTool.LongNote
+            };
+
             CreateScrollContainer();
             ActionManager = CreateActionManager();
         }
@@ -77,6 +95,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D7))
                     PlaceObject(7);
             }
+
+            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Up))
+                CompositionTool.Value = EditorCompositionTool.Note;
+
+            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Down))
+                CompositionTool.Value = EditorCompositionTool.LongNote;
 
             HandleHitObjectMouseInput();
         }
@@ -140,11 +164,42 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             var am = ActionManager as EditorActionManagerKeys;
 
+            // User has a pending long note release for this lane, so that needs to be taken care of.
+            if (PendingLongNoteReleases[lane - 1] != null)
+            {
+                var pendingObject = PendingLongNoteReleases[lane - 1];
+
+                if (AudioEngine.Track.Time <= pendingObject.StartTime)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
+                    return;
+                }
+
+                pendingObject.EndTime = (int) AudioEngine.Track.Time;
+                PendingLongNoteReleases[lane - 1] = null;
+                ScrollContainer.ResizeLongNote(pendingObject);
+                return;
+            }
+
             var existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
 
             // There's no object currently at this position, so add it.
             if (existingObject == null)
-                am?.PlaceHitObject(lane);
+            {
+                switch (CompositionTool.Value)
+                {
+                    case EditorCompositionTool.Note:
+                        am?.PlaceHitObject(lane);
+                        break;
+                    case EditorCompositionTool.LongNote:
+                        am?.PlaceLongNote(lane);
+                        PendingLongNoteReleases[lane - 1] = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
+                        NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
             // An object exists, so delete it.
             else
                 am?.DeleteHitObject(existingObject);

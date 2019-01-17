@@ -40,6 +40,21 @@ namespace Quaver.Shared.Screens.Editor.Actions
 
         /// <summary>
         /// </summary>
+        public void PlaceLongNote(int lane) => PlaceLongNote(lane, AudioEngine.Track.Time);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <param name="time"></param>
+        public void PlaceLongNote(int lane, double time) => Perform(new EditorActionPlaceHitObjectKeys(Ruleset.ScrollContainer, new HitObjectInfo
+        {
+            StartTime = (int) time,
+            EndTime = (int) time + 1,
+            Lane = lane
+        }));
+
+        /// <summary>
+        /// </summary>
         public void DeleteHitObject(HitObjectInfo h) => Perform(new EditorActionDeleteHitObjectKeys(Ruleset.ScrollContainer, h));
     }
 }

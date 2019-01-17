@@ -98,7 +98,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
                 Size = new ScalableVector2(Width, (float) Container.LaneSize * TextureTail.Height / TextureTail.Width),
                 Y = -Body.Height,
             };
-
         }
 
         /// <summary>

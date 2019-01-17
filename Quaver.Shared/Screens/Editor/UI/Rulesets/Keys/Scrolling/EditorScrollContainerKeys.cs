@@ -370,6 +370,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         }
 
         /// <summary>
+        ///     Resizes a long note with that given hitobject info.
+        /// </summary>
+        /// <param name="h"></param>
+        public void ResizeLongNote(HitObjectInfo h)
+        {
+            var note = HitObjects.Find(x => x.Info == h);
+
+            if (note is DrawableEditorHitObjectLong n)
+                n.ResizeLongNote();
+        }
+
+        /// <summary>
         ///     Gets the audio time from a y position.
         /// </summary>
         /// <param name="y"></param>
