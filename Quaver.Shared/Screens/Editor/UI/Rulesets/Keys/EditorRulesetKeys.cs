@@ -13,10 +13,12 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Wobble.Bindables;
@@ -164,23 +166,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             var am = ActionManager as EditorActionManagerKeys;
 
-            // User has a pending long note release for this lane, so that needs to be taken care of.
-            if (PendingLongNoteReleases[lane - 1] != null)
-            {
-                var pendingObject = PendingLongNoteReleases[lane - 1];
-
-                if (AudioEngine.Track.Time <= pendingObject.StartTime)
-                {
-                    NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
-                    return;
-                }
-
-                pendingObject.EndTime = (int) AudioEngine.Track.Time;
-                PendingLongNoteReleases[lane - 1] = null;
-                ScrollContainer.ResizeLongNote(pendingObject);
+            if (HandlePendingLongNoteReleases(lane))
                 return;
-            }
 
+            // Find an existing object in the current lane at the same time, so we can determine if
+            // the object should be placed or deleted accordingly.
             var existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
 
             // There's no object currently at this position, so add it.
@@ -193,7 +183,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                         break;
                     case EditorCompositionTool.LongNote:
                         am?.PlaceLongNote(lane);
-                        PendingLongNoteReleases[lane - 1] = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
+
+                        // Makes sure the long note is marked as pending, so any future objects placed in this lane
+                        // will be awarded to this LN's end.
+                        var workingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
+                        PendingLongNoteReleases[lane - 1] = workingObject;
+
+                        // Make the long note appear as inactive/dead. Gives a visual effect to the user that
+                        // they need to do something with the note.
+                        var drawable = (DrawableEditorHitObjectLong) ScrollContainer.HitObjects.Find(x => x.Info == workingObject);
+                        drawable.AppearAsInactive();
+
                         NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
                         break;
                     default:
@@ -219,6 +219,36 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // There's no object currently at this position, so add it.
             if (existingObject == null)
                 am?.PlaceHitObject(lane, time);
+        }
+
+        /// <summary>
+        ///     Handles any long note releases that are currently pending.
+        ///     If returned false, nothing has been handled/needs to be handled.
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <returns></returns>
+        private bool HandlePendingLongNoteReleases(int lane)
+        {
+            // User has a pending long note release for this lane, so that needs to be taken care of.
+            if (PendingLongNoteReleases[lane - 1] == null)
+                return false;
+
+            var pendingObject = PendingLongNoteReleases[lane - 1];
+
+            if ((int) AudioEngine.Track.Time <= pendingObject.StartTime)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
+                return true;
+            }
+
+            // Long note is no longer pending given that the user has entered a correct position.
+            PendingLongNoteReleases[lane - 1] = null;
+
+            // Resize the long note and then reset the color of it.
+            pendingObject.EndTime = (int) AudioEngine.Track.Time;
+            ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
+            return true;
+
         }
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     All of the available HitObject sprites in the map.
         /// </summary>
-        protected List<DrawableEditorHitObject> HitObjects { get; private set; }
+        public List<DrawableEditorHitObject> HitObjects { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -373,12 +373,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         ///     Resizes a long note with that given hitobject info.
         /// </summary>
         /// <param name="h"></param>
-        public void ResizeLongNote(HitObjectInfo h)
+        public DrawableEditorHitObjectLong ResizeLongNote(HitObjectInfo h)
         {
             var note = HitObjects.Find(x => x.Info == h);
 
             if (note is DrawableEditorHitObjectLong n)
                 n.ResizeLongNote();
+
+            return note as DrawableEditorHitObjectLong;
         }
 
         /// <summary>

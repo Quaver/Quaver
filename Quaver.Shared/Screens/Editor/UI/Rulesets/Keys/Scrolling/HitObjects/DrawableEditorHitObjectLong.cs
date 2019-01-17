@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -124,5 +125,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <returns></returns>
         public override bool CheckIfOnScreen() => base.CheckIfOnScreen() ||
                                                   AudioEngine.Track.Time >= Info.StartTime && AudioEngine.Track.Time <= Info.EndTime + 1000;
+
+        /// <summary>
+        ///     Resets the tint of the long note and makes it appear as if it is active.
+        /// </summary>
+        public void AppearAsActive()
+        {
+            Tint = Color.White;
+            Body.Tint = Color.White;
+            Tail.Tint = Color.White;
+        }
+        
+        /// <summary>
+        ///     Makes the long note appear as if it is dead/inactive.
+        /// </summary>
+        public void AppearAsInactive()
+        {
+            Tint = Colors.DeadLongNote;
+            Body.Tint = Colors.DeadLongNote;
+            Tail.Tint = Colors.DeadLongNote;
+        }
     }
 }
