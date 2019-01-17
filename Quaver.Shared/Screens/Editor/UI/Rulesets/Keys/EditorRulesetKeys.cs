@@ -235,10 +235,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             var pendingObject = PendingLongNoteReleases[lane - 1];
 
-            if ((int) AudioEngine.Track.Time <= pendingObject.StartTime)
+            if ((int) AudioEngine.Track.Time < pendingObject.StartTime)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
                 return true;
+            }
+
+            // Returning false here because the user should be able to delete the note if they're
+            // still on the starting area.
+            if ((int) AudioEngine.Track.Time == pendingObject.StartTime)
+            {
+                PendingLongNoteReleases[lane - 1] = null;
+                return false;
             }
 
             // Long note is no longer pending given that the user has entered a correct position.

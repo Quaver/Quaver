@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Body.Tint = Color.White;
             Tail.Tint = Color.White;
         }
-        
+
         /// <summary>
         ///     Makes the long note appear as if it is dead/inactive.
         /// </summary>
