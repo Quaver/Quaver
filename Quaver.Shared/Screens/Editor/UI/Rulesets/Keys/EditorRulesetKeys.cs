@@ -98,11 +98,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     PlaceObject(7);
             }
 
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Up))
-                CompositionTool.Value = EditorCompositionTool.Note;
+            // Change between composition tools (only when shift isn't held down).
+            // if shift is held down, then it'll change the beat snap.
+            if (KeyboardManager.CurrentState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.LeftShift)
+                || KeyboardManager.CurrentState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.RightShift))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Up))
+                    CompositionTool.Value = EditorCompositionTool.Note;
 
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Down))
-                CompositionTool.Value = EditorCompositionTool.LongNote;
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Down))
+                    CompositionTool.Value = EditorCompositionTool.LongNote;
+            }
 
             HandleHitObjectMouseInput();
         }
