@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -63,12 +64,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public BackgroundConfirmationDialog(EditorScreen screen, string file) : base(0.75f)
+        public BackgroundConfirmationDialog(EditorScreen screen, string file) : base(0)
         {
             Screen = screen;
             Screen.InBackgroundConfirmationDialog = true;
             File = file;
 
+            Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 100));
             CreateContent();
         }
 
