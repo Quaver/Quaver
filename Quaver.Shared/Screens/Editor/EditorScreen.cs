@@ -23,6 +23,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -77,6 +78,12 @@ namespace Quaver.Shared.Screens.Editor
         private int HitSoundObjectIndex { get; set; }
 
         /// <summary>
+        ///     If we're currently in a background change dialog.
+        ///     Prevents the user from dragging in multiple files.
+        /// </summary>
+        public bool InBackgroundConfirmationDialog { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -97,6 +104,8 @@ namespace Quaver.Shared.Screens.Editor
 
             GameBase.Game.IsMouseVisible = true;
             GameBase.Game.GlobalUserInterface.Cursor.Visible = false;
+
+            GameBase.Game.Window.FileDropped += OnFileDropped;
 
             View = new EditorScreenView(this);
         }
@@ -123,6 +132,7 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public override void Destroy()
         {
+            GameBase.Game.Window.FileDropped -= OnFileDropped;
             BeatSnap.Dispose();
             base.Destroy();
         }
@@ -456,12 +466,6 @@ namespace Quaver.Shared.Screens.Editor
                 var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
                 WorkingMap.Save(path);
 
-                /*var map = Map.FromQua(WorkingMap, path);
-                map.Qua = WorkingMap;
-                MapManager.Selected.Value = map;
-
-                MapDatabaseCache.UpdateMap(MapManager.Selected.Value);*/
-
                 NotificationManager.Show(NotificationLevel.Success, "Successfully saved the map.");
             });
         }
@@ -470,6 +474,33 @@ namespace Quaver.Shared.Screens.Editor
         ///    Changes the audio preview time of the map.
         /// </summary>
         public void ChangePreviewTime(int time) => Ruleset.ActionManager.SetPreviewTime(WorkingMap, time);
+
+        /// <summary>
+        ///     Called when a file is dropped into the window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="file"></param>
+        private void OnFileDropped(object sender, string file)
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot change the background for a map loaded from another game.");
+                return;
+            }
+            
+            if (InBackgroundConfirmationDialog)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before importing another background!");
+                return;
+            }
+
+            var fileLower = file.ToLower();
+
+            if (!fileLower.EndsWith(".png") && !fileLower.EndsWith(".jpg") && !fileLower.EndsWith(".jpeg"))
+                return;
+
+            DialogManager.Show(new BackgroundConfirmationDialog(this, file));
+        }
 
         /// <inheritdoc />
         /// <summary>
