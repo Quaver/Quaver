@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Width, 60),
+                Position = new ScalableVector2(Width, 90),
             };
 
             RunObjectScreenCheckThread();
