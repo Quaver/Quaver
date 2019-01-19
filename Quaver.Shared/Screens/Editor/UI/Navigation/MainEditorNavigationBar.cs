@@ -6,7 +6,9 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Editor.UI.Navigation
@@ -22,7 +24,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
                 (o, e) => screen.HandleKeyPressEscape()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata", -48, Alignment.BotLeft,
-                (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
+                (o, e) => DialogManager.Show(new EditorMetadataDialog())),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Timing Setup", -48, Alignment.BotLeft,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),

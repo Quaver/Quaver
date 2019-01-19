@@ -13,6 +13,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -37,6 +38,10 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         /// </summary>
         public EditorNavigationBar NavigationBar { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private EditorMetadataChanger MetadataChanger { get; set; }
 
         /// <inheritdoc />
         /// <summary>
