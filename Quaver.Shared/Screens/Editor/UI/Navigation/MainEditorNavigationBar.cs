@@ -20,39 +20,39 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
         /// </summary>
         public MainEditorNavigationBar(EditorScreen screen) : base(new List<EditorControlButton>
         {
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left), "Back To Menu", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left), "Back To Menu (ESC)", -48, Alignment.BotLeft,
                 (o, e) => screen.HandleKeyPressEscape()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata (F1)", -48, Alignment.BotLeft,
                 (o, e) => DialogManager.Show(new EditorMetadataDialog())),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Timing Setup", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Timing Setup (F2)", -48, Alignment.BotLeft,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_dashboard), "Edit Scroll Velocities", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_dashboard), "Edit Scroll Velocities (F3)", -48, Alignment.BotLeft,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time (F4)", -48, Alignment.BotLeft,
                 (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),
 
         }, new List<EditorControlButton>
         {
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "Visit Mapset Page", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "Visit Mapset Page (CTRL+T)", -48, Alignment.BotRight,
                 (o, e) => MapManager.Selected.Value.VisitMapsetPage()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_cloud_storage_uploading_option), "Upload Mapset", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_cloud_storage_uploading_option), "Upload Mapset (CTRL+U)", -48, Alignment.BotRight,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_archive_black_box), "Export Mapset", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_archive_black_box), "Export Mapset (CTRL+E)", -48, Alignment.BotRight,
                 (o, e) => ExportToZip()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_save_file_option), "Save File", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_save_file_option), "Save File (CTRL+S)", -48, Alignment.BotRight,
                 (o, e) => screen.Save()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_file), "Edit .qua File", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_file), "Edit .qua File (CTRL+Q)", -48, Alignment.BotRight,
                 (o, e) => MapManager.Selected.Value.OpenFile()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_open_folder), "Open Mapset Folder", -48, Alignment.BotRight,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_open_folder), "Open Mapset Folder (CTRL+W)", -48, Alignment.BotRight,
                 (o, e) => MapManager.Selected.Value.OpenFolder()),
         })
         {
