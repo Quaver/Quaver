@@ -5,12 +5,14 @@
  * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
+using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;
@@ -31,6 +33,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorControlBar ControlBar { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorNavigationBar NavigationBar { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -39,6 +45,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             CreateBackground();
             CreateControlBar();
+            CreateNavigationBar();
         }
 
         /// <inheritdoc />
@@ -114,7 +121,7 @@ namespace Quaver.Shared.Screens.Editor
         ///     Fades the background in upon load.
         /// </summary>
         private void FadeBackgroundIn() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, 1, 0.60f, 200));
+            Easing.Linear, 1, 0.40f, 200));
 
         /// <summary>
         /// </summary>
@@ -131,6 +138,16 @@ namespace Quaver.Shared.Screens.Editor
             ControlBar.Y = ControlBar.Height;
 
             ControlBar.MoveToY(1, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateNavigationBar()
+        {
+            NavigationBar = new MainEditorNavigationBar(Screen as EditorScreen) {Parent = Container};
+            NavigationBar.Y = -NavigationBar.Height;
+
+            NavigationBar.MoveToY(0, Easing.OutQuint, 800);
         }
     }
 }

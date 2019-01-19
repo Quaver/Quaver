@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -237,7 +238,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressEscape() => Exit(() =>
+        public void HandleKeyPressEscape() => Exit(() =>
         {
             GameBase.Game.IsMouseVisible = false;
             GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
@@ -442,7 +443,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Saves the map
         /// </summary>
-        private void Save()
+        public void Save()
         {
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
@@ -450,8 +451,11 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
-            WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
-            NotificationManager.Show(NotificationLevel.Success, "Saved");
+            ThreadScheduler.Run(() =>
+            {
+                WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
+                NotificationManager.Show(NotificationLevel.Success, "Saved");
+            });
         }
 
         /// <inheritdoc />
