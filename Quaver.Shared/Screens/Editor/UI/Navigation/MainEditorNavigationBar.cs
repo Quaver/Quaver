@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
         /// </summary>
         public MainEditorNavigationBar(EditorScreen screen) : base(new List<EditorControlButton>
         {
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_home), "Back To Menu", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left), "Back To Menu", -48, Alignment.BotLeft,
                 (o, e) => screen.HandleKeyPressEscape()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata", -48, Alignment.BotLeft,
