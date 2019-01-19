@@ -114,7 +114,6 @@ namespace Quaver.Shared.Screens.Editor
         /// <param name="e"></param>
         private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
         {
-            Console.WriteLine("HELLO?");
             Background.Image = e.Texture;
             FadeBackgroundIn();
         }
@@ -122,13 +121,23 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Fades the background in upon load.
         /// </summary>
-        private void FadeBackgroundIn() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, 1, 0.40f, 200));
+        private void FadeBackgroundIn()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 0.40f, 200));
+        }
 
         /// <summary>
         /// </summary>
-        public void FadeBackgroundOut() => Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-            Easing.Linear, Background.BrightnessSprite.Alpha, 0f, 200));
+        public void FadeBackgroundOut()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 1f, 200));
+        }
 
         /// <summary>
         /// </summary>

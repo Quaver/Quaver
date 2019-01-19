@@ -487,7 +487,7 @@ namespace Quaver.Shared.Screens.Editor
                 NotificationManager.Show(NotificationLevel.Error, "You cannot change the background for a map loaded from another game.");
                 return;
             }
-            
+
             if (InBackgroundConfirmationDialog)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before importing another background!");

@@ -185,6 +185,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
             SureButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Medium,
                 "Sure", 14, (o, e) =>
                 {
+                    var view = Screen.View as EditorScreenView;
+                    view?.FadeBackgroundOut();
+
                     var fileName = Path.GetFileName(File);
 
                     try
