@@ -8,15 +8,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.Server.Client;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using SQLite;
 using Wobble.Bindables;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -355,6 +360,56 @@ namespace Quaver.Shared.Database.Maps
                 return Difficulty20X;
 
             return Difficulty10X;
+        }
+
+        /// <summary>
+        ///     Opens the browser to visit the mapset's page.
+        /// </summary>
+        public void VisitMapsetPage()
+        {
+            if (MapSetId == -1)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "This mapset is not uploaded to the Quaver servers.");
+                return;
+            }
+
+            BrowserHelper.OpenURL(MapId != -1 ? $"{OnlineClient.WEBSITE_URL}/mapsets/map/{MapId}" : $"{OnlineClient.WEBSITE_URL}/mapsets/{MapSetId}");
+        }
+
+        /// <summary>
+        ///     Opens the folder to the mapset while highlighting the file.
+        /// </summary>
+        public void OpenFolder()
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot open a folder for a map loaded from another game.");
+                return;
+            }
+
+            var path = $"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}";
+            Utils.NativeUtils.HighlightInFileManager(path);
+        }
+
+        /// <summary>
+        ///     Opens the .qua file
+        /// </summary>
+        public void OpenFile()
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot open a .qua loaded from another game.");
+                return;
+            }
+
+            try
+            {
+                Process.Start("notepad.exe", "\"" + $"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}".Replace("/", "\\") + "\"");
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the file.");
+            }
         }
     }
 
