@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
         /// </summary>
         private void CreateZoomButtons()
         {
-            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_in), "Zoom Timeline In", 50, Alignment.TopLeft,
+            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_sign_in_a_black_circle), "Zoom Timeline In", 50, Alignment.TopLeft,
                 (o, e) => ConfigManager.EditorScrollSpeedKeys.Value++)
             {
                 Parent = this,
@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Size = new ScalableVector2(Width / 2, Width / 2)
             };
 
-            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_out), "Zoom Timeline Out", -50, Alignment.BotLeft,
+            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_minus_sign_inside_a_black_circle), "Zoom Timeline Out", -50, Alignment.BotLeft,
                 (o, e) => ConfigManager.EditorScrollSpeedKeys.Value--)
             {
                 Parent = this,
