@@ -7,11 +7,9 @@
 
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
-using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
-using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Editor.Actions
+namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 {
     public class EditorActionManagerKeys : EditorActionManager
     {

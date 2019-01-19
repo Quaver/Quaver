@@ -453,10 +453,23 @@ namespace Quaver.Shared.Screens.Editor
 
             ThreadScheduler.Run(() =>
             {
-                WorkingMap.Save($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
-                NotificationManager.Show(NotificationLevel.Success, "Saved");
+                var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
+                WorkingMap.Save(path);
+
+                /*var map = Map.FromQua(WorkingMap, path);
+                map.Qua = WorkingMap;
+                MapManager.Selected.Value = map;
+
+                MapDatabaseCache.UpdateMap(MapManager.Selected.Value);*/
+
+                NotificationManager.Show(NotificationLevel.Success, "Successfully saved the map.");
             });
         }
+
+        /// <summary>
+        ///    Changes the audio preview time of the map.
+        /// </summary>
+        public void ChangePreviewTime(int time) => Ruleset.ActionManager.SetPreviewTime(WorkingMap, time);
 
         /// <inheritdoc />
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time", -48, Alignment.BotLeft,
-                (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
+                (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),
 
         }, new List<EditorControlButton>
         {

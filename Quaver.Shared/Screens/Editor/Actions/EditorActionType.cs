@@ -10,6 +10,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
     public enum EditorActionType
     {
         PlaceHitObject,
-        DeleteHitObject
+        DeleteHitObject,
+        SetPreviewTime
     }
 }

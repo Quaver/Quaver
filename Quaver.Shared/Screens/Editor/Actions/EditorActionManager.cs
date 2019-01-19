@@ -6,6 +6,8 @@
 */
 
 using System.Collections.Generic;
+using Quaver.API.Maps;
+using Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal;
 
 namespace Quaver.Shared.Screens.Editor.Actions
 {
@@ -59,5 +61,12 @@ namespace Quaver.Shared.Screens.Editor.Actions
 
             UndoStack.Push(action);
         }
+
+        /// <summary>
+        ///     Sets the time in the track for the audio preview.
+        /// </summary>
+        /// <param name="workingMap"></param>
+        /// <param name="time"></param>
+        public void SetPreviewTime(Qua workingMap, int time) => Perform(new EditorActionSetPreviewTime(workingMap, time));
     }
 }

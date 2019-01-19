@@ -5,40 +5,35 @@
  * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
 */
 
-using System;
-using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Audio;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
-using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Editor.Actions.Rulesets
+namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 {
-    public class EditorActionDeleteHitObjectKeys : IEditorAction
+    public class EditorActionPlaceHitObjectKeys : IEditorAction
     {
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public EditorActionType Type { get; } = EditorActionType.DeleteHitObject;
-
         /// <summary>
         /// </summary>
         private EditorScrollContainerKeys Container { get; }
 
         /// <summary>
-        /// </summary>
-        private Qua WorkingMap => Container.Ruleset.WorkingMap;
-
-        /// <summary>
+        ///     The HitObject to place.
         /// </summary>
         private HitObjectInfo HitObject { get; }
 
         /// <summary>
         /// </summary>
-        /// <param name="container"></param>
-        /// <param name="hitObject"></param>
-        public EditorActionDeleteHitObjectKeys(EditorScrollContainerKeys container, HitObjectInfo hitObject)
+        private Qua WorkingMap => Container.Ruleset.WorkingMap;
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public EditorActionType Type { get; } = EditorActionType.PlaceHitObject;
+
+        /// <summary>
+        /// </summary>
+        public EditorActionPlaceHitObjectKeys(EditorScrollContainerKeys container, HitObjectInfo hitObject)
         {
             Container = container;
             HitObject = hitObject;
@@ -49,15 +44,15 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets
         /// </summary>
         public void Perform()
         {
-            WorkingMap.HitObjects.Remove(HitObject);
+            WorkingMap.HitObjects.Add(HitObject);
             WorkingMap.Sort();
-            Container.RemoveHitObjectSprite(HitObject);
+            Container.AddHitObjectSprite(HitObject);
             Container.Ruleset.Screen.SetHitSoundObjectIndex();
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public void Undo() => new EditorActionPlaceHitObjectKeys(Container, HitObject).Perform();
+        ///  <summary>
+        ///  </summary>
+        public void Undo() => new EditorActionDeleteHitObjectKeys(Container, HitObject).Perform();
     }
 }

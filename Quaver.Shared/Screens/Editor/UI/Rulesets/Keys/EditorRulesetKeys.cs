@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
+using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
