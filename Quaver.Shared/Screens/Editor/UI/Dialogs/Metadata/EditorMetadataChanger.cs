@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -158,6 +160,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             if (!changesMade)
             {
                 Dialog.Close();
+                return;
+            }
+
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot change the metadata from maps loaded from other games.");
                 return;
             }
 
