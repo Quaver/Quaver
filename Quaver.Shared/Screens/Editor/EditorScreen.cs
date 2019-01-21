@@ -270,21 +270,30 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public void HandleKeyPressEscape() => Exit(() =>
+        public void HandleKeyPressEscape()
         {
-            GameBase.Game.IsMouseVisible = false;
-            GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
+            if (SaveInProgress)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Please wait until your map has finished saving before exiting!");
+                return;
+            }
 
-            DiscordHelper.Presence.StartTimestamp = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            Exit(() =>
+            {
+                GameBase.Game.IsMouseVisible = false;
+                GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
 
-            if (AudioEngine.Track != null)
-                AudioEngine.Track.Rate = 1.0f;
+                DiscordHelper.Presence.StartTimestamp = 0;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-            AudioEngine.Track?.Fade(0, 100);
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Rate = 1.0f;
 
-            return new SelectScreen();
-        });
+                AudioEngine.Track?.Fade(0, 100);
+
+                return new SelectScreen();
+            });
+        }
 
         /// <summary>
         /// </summary>
@@ -480,6 +489,12 @@ namespace Quaver.Shared.Screens.Editor
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot save a map loaded from another game.");
+                return;
+            }
+
+            if (SaveInProgress)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Slow down! We're already saving your map.");
                 return;
             }
 
