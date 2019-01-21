@@ -34,10 +34,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             Action<string> saveValue)
             : base(parent, name, elements[selectedIndex], saveValue)
         {
-            Selector = new HorizontalSelector(elements, new ScalableVector2(150, 26),
+            Selector = new HorizontalSelector(elements, new ScalableVector2(196, 26),
                 Fonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
-                new ScalableVector2(26, 18), 5, onChange, selectedIndex)
+                new ScalableVector2(18, 18), 5, onChange, selectedIndex)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
                 ButtonSelectRight = { UsePreviousSpriteBatchOptions = true }
             };
 
-            Selector.X -= 44;
+            Selector.X -= 34;
         }
 
         public override string GetValue() => Selector.Options[Selector.SelectedIndex];
