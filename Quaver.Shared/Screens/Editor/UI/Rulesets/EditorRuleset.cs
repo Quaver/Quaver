@@ -11,6 +11,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Editor.Actions;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using IDrawable = Wobble.Graphics.IDrawable;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets
@@ -46,7 +47,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            HandleInput(gameTime);
+            if (DialogManager.Dialogs.Count == 0)
+                HandleInput(gameTime);
+
             Container.Update(gameTime);
         }
 
