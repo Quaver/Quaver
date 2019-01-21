@@ -279,7 +279,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         private void RunObjectScreenCheckThread() => ThreadScheduler.Run(() =>
         {
-            while (!Ruleset.Screen.Exiting)
+            while (!Ruleset.Screen.Exiting && Parent != null)
             {
                 CheckIfObjectsOnScreen();
                 Thread.Sleep(30);
