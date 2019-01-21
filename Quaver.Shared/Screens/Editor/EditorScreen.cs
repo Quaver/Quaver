@@ -506,10 +506,11 @@ namespace Quaver.Shared.Screens.Editor
             DialogManager.Show(new BackgroundConfirmationDialog(this, file));
         }
 
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, -1, "", (byte) GameMode.Keys4, "", 0);
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, -1, "", (byte) GameMode.Keys4, WorkingMap.ToString(), 0);
     }
 }
