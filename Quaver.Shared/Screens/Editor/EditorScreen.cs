@@ -461,6 +461,10 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
+            if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
+                MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+
+            Console.WriteLine(MapDatabaseCache.MapsToUpdate.Count);
             ThreadScheduler.Run(() =>
             {
                 var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";

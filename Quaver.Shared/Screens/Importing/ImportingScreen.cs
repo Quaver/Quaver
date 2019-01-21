@@ -50,6 +50,9 @@ namespace Quaver.Shared.Screens.Importing
             {
                 MapsetImporter.ImportMapsetsInQueue();
 
+                if (MapDatabaseCache.MapsToUpdate.Count != 0)
+                    MapDatabaseCache.ForceUpdateMaps();
+
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
                     var view = View as ImportingScreenView;

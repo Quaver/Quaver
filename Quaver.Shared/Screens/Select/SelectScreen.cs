@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Select
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 ||
                 MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
-                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
+                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
                 Exit(() => new ImportingScreen());
                 return;

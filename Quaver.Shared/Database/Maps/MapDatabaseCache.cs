@@ -36,6 +36,11 @@ namespace Quaver.Shared.Database.Maps
         public static bool LoadedMapsFromOtherGames { get; private set; }
 
         /// <summary>
+        ///     List of maps to force update after editing them.
+        /// </summary>
+        public static List<Map> MapsToUpdate { get; } = new List<Map>();
+
+        /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
@@ -307,6 +312,39 @@ namespace Quaver.Shared.Database.Maps
 
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void ForceUpdateMaps()
+        {
+            for (var i = 0; i < MapsToUpdate.Count; i++)
+            {
+                try
+                {
+                    var path = $"{ConfigManager.SongDirectory}/{MapsToUpdate[i].Directory}/{MapsToUpdate[i].Path}";
+
+                    var map = Map.FromQua(Qua.Parse(path), path);
+                    map.CalculateDifficulties();
+                    map.Id = MapsToUpdate[i].Id;
+
+                    UpdateMap(map);
+
+                    MapsToUpdate[i] = map;
+                    MapManager.Selected.Value = map;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+
+                MapsToUpdate.Clear();
+            }
+
+            OrderAndSetMapsets();
+
+            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
+            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
         }
     }
 }
