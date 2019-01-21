@@ -735,7 +735,7 @@ namespace Quaver.Shared.Config
         /// </summary>
         /// <param name="sFilename"></param>
         /// <returns></returns>
-        private static bool IsFileReady(string sFilename)
+        public static bool IsFileReady(string sFilename)
         {
             // If the file can be opened for exclusive access it means that the file
             // is no longer locked by another process.

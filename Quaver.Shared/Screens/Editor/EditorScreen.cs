@@ -8,10 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
@@ -34,6 +38,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using YamlDotNet.Serialization;
 
 namespace Quaver.Shared.Screens.Editor
 {
@@ -84,6 +89,21 @@ namespace Quaver.Shared.Screens.Editor
         public bool InBackgroundConfirmationDialog { get; set; }
 
         /// <summary>
+        ///     Watches the .qua file to detect any outside changes made to it.
+        /// </summary>
+        private FileSystemWatcher FileWatcher { get; set; }
+
+        /// <summary>
+        ///     Detects if a save is currently happening.
+        /// </summary>
+        private bool SaveInProgress { get; set; }
+
+        /// <summary>
+        ///     The time the file was last saved.
+        /// </summary>
+        private long LastSaveTime { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -106,6 +126,7 @@ namespace Quaver.Shared.Screens.Editor
             GameBase.Game.GlobalUserInterface.Cursor.Visible = false;
 
             GameBase.Game.Window.FileDropped += OnFileDropped;
+            BeginWatchingFiles();
 
             View = new EditorScreenView(this);
         }
@@ -133,6 +154,7 @@ namespace Quaver.Shared.Screens.Editor
         public override void Destroy()
         {
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            FileWatcher.Dispose();
             BeatSnap.Dispose();
             base.Destroy();
         }
@@ -464,11 +486,14 @@ namespace Quaver.Shared.Screens.Editor
             if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                 MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
-            Console.WriteLine(MapDatabaseCache.MapsToUpdate.Count);
             ThreadScheduler.Run(() =>
             {
                 var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
+
+                SaveInProgress = true;
                 WorkingMap.Save(path);
+                SaveInProgress = false;
+                LastSaveTime = GameBase.Game.TimeRunning;
 
                 NotificationManager.Show(NotificationLevel.Success, "Successfully saved the map.");
             });
@@ -506,6 +531,50 @@ namespace Quaver.Shared.Screens.Editor
             DialogManager.Show(new BackgroundConfirmationDialog(this, file));
         }
 
+        /// <summary>
+        /// </summary>
+        private void BeginWatchingFiles()
+        {
+            FileWatcher = new FileSystemWatcher($"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}")
+            {
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "*.qua"
+            };
+
+            var lastRead = DateTime.MinValue;
+
+            FileWatcher.Changed += async (sender, args) =>
+            {
+                var path = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
+
+                var lastWriteTime = File.GetLastWriteTime(path);
+
+                if (!ConfigManager.IsFileReady(path) || lastWriteTime == lastRead)
+                    return;
+
+                if (args.FullPath.Replace("\\", "/") != path.Replace("\\", "/"))
+                    return;
+
+                if (lastWriteTime == lastRead)
+                    return;
+
+                lastRead = lastWriteTime;
+
+                if (SaveInProgress)
+                    return;
+
+                await Task.Delay(500);
+
+                if (GameBase.Game.TimeRunning - LastSaveTime < 600)
+                    return;
+
+                // Only make a new dialog if one isn't already up.
+                if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.First().GetType() != typeof(ChangesDetectedConfirmationDialog))
+                    DialogManager.Show(new ChangesDetectedConfirmationDialog(this, args.FullPath));
+            };
+
+            FileWatcher.EnableRaisingEvents = true;
+        }
 
         /// <inheritdoc />
         /// <summary>
