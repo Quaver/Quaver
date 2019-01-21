@@ -103,7 +103,6 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             // Find the index of the selected map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-            Console.WriteLine(SelectedMapsetIndex);
             if (SelectedMapsetIndex == -1)
                 SelectedMapsetIndex = 0;
 
