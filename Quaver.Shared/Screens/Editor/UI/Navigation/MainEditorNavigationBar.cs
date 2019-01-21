@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
                 (o, e) => screen.HandleKeyPressEscape()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata (F1)", -48, Alignment.BotLeft,
-                (o, e) => DialogManager.Show(new EditorMetadataDialog())),
+                (o, e) => DialogManager.Show(new EditorMetadataDialog(screen))),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Timing Setup (F2)", -48, Alignment.BotLeft,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),

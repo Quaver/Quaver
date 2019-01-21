@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Settings;
+using Wobble.Graphics;
+using Wobble.Graphics.UI.Form;
+
+namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
+{
+    public class EditorMetadataHorizontalSelector : EditorMetadataItem
+    {
+        /// <summary>
+        /// </summary>
+        protected HorizontalSelector Selector { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="name"></param>
+        /// <param name="elements"></param>
+        /// <param name="onChange"></param>
+        /// <param name="selectedIndex"></param>
+        /// <param name="saveValue"></param>
+        protected EditorMetadataHorizontalSelector(Drawable parent, string name, List<string> elements, Action<string, int> onChange, int selectedIndex,
+            Action<string> saveValue)
+            : base(parent, name, elements[selectedIndex], saveValue)
+        {
+            Selector = new HorizontalSelector(elements, new ScalableVector2(150, 26),
+                Fonts.SourceSansProSemiBold, 13, FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+                FontAwesome.Get(FontAwesomeIcon.fa_right_chevron),
+                new ScalableVector2(26, 18), 5, onChange, selectedIndex)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                Tint = Color.Transparent,
+                SelectedItemText =
+                {
+                    Tint = Color.White,
+                    UsePreviousSpriteBatchOptions = true
+                },
+                ButtonSelectLeft = { UsePreviousSpriteBatchOptions = true },
+                ButtonSelectRight = { UsePreviousSpriteBatchOptions = true }
+            };
+
+            Selector.X -= 44;
+        }
+
+        public override string GetValue() => Selector.Options[Selector.SelectedIndex];
+
+        public override bool HasChanged() => InitialValue != Selector.Options[Selector.SelectedIndex];
+    }
+}

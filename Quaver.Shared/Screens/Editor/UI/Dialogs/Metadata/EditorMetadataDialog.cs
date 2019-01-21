@@ -12,6 +12,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
     {
         /// <summary>
         /// </summary>
+        public EditorScreen Screen { get; }
+
+        /// <summary>
+        /// </summary>
         private EditorMetadataChanger MetadataChanger { get; set; }
 
         /// <summary>
@@ -20,8 +24,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
 
         /// <summary>
         /// </summary>
-        public EditorMetadataDialog() : base(0)
+        public EditorMetadataDialog(EditorScreen screen) : base(0)
         {
+            Screen = screen;
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 200));
             CreateContent();
 
@@ -56,7 +61,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         /// </summary>
         private void CreateMetadataChanger()
         {
-            MetadataChanger = new EditorMetadataChanger()
+            MetadataChanger = new EditorMetadataChanger(this)
             {
                 Parent = Container,
                 Alignment = Alignment.MidLeft
@@ -70,7 +75,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         /// <summary>
         ///     Closes the dialog.
         /// </summary>
-        private void Close()
+        public void Close()
         {
             if (IsClosing)
                 return;

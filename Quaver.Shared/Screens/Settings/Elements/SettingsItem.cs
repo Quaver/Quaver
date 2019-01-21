@@ -39,6 +39,24 @@ namespace Quaver.Shared.Screens.Settings.Elements
             };
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="name"></param>
+        public SettingsItem(Drawable sprite, string name)
+        {
+            Size = new ScalableVector2(sprite.Width - 10, 40);
+            Tint = Color.Black;
+            Alpha = 0.65f;
+
+            Name = new SpriteText(Fonts.Exo2SemiBold, name, 13)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = 15
+            };
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

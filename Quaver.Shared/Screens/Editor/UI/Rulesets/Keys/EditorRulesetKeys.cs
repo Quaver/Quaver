@@ -268,7 +268,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        private void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
+        public void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
 
         /// <inheritdoc />
         /// <summary>
