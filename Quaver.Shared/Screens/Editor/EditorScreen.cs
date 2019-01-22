@@ -803,6 +803,8 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
+            AudioEngine.Track.Rate = 1.0f;
+
             Exit(() =>
             {
                 Save();
