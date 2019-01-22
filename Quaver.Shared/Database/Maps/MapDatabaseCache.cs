@@ -343,10 +343,9 @@ namespace Quaver.Shared.Database.Maps
                 {
                     Logger.Error(e, LogType.Runtime);
                 }
-
-                MapsToUpdate.Clear();
             }
 
+            MapsToUpdate.Clear();
             OrderAndSetMapsets();
 
             var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));

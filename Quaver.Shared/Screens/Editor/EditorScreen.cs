@@ -612,6 +612,45 @@ namespace Quaver.Shared.Screens.Editor
         }
 
         /// <summary>
+        ///     Asks the user if they'd like to create a new difficulty for the mapset,
+        ///     and does so.
+        /// </summary>
+        public void CreateNewDifficulty() => ThreadScheduler.Run(() =>
+        {
+            Button.IsGloballyClickable = false;
+
+            // Save the already existing map.
+            Save();
+
+            var qua = ObjectHelper.DeepClone(WorkingMap);
+            qua.DifficultyName = "";
+
+            var dir = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}";
+            var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+            qua.Save(path);
+
+            // Add the new map to the db.
+            var map = Map.FromQua(qua, path);
+            map.Id = MapDatabaseCache.InsertMap(map, path);
+
+            // Reload the mapsets
+            MapDatabaseCache.OrderAndSetMapsets();
+
+            // Set the selected one to the new one.
+            MapManager.Selected.Value = map;
+            MapManager.Selected.Value.Qua = qua;
+
+            // Find the mapset and get the *new* object w/ the selected map.
+            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
+            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
+            MapManager.Selected.Value.Qua = qua;
+            MapManager.Selected.Value.NewlyCreated = true;
+
+            // Reload editor w/ new one.
+            Exit(() => new EditorScreen(qua));
+        });
+
+        /// <summary>
         ///     Creates a new mapset with an audio file.
         /// </summary>
         /// <param name="audioFile"></param>
@@ -621,11 +660,14 @@ namespace Quaver.Shared.Screens.Editor
             {
                 var game = GameBase.Game as QuaverGame;
 
+                // Add a fade effect and make butotns not clickable
+                // so the user can't perform any actions during this time.
                 Transitioner.FadeIn();
                 Button.IsGloballyClickable = false;
 
                 var tagFile = TagLib.File.Create(audioFile);
 
+                // Create a fresh .qua with the available metadata from the file
                 var qua = new Qua()
                 {
                     AudioFile = Path.GetFileName(audioFile),
@@ -657,16 +699,20 @@ namespace Quaver.Shared.Screens.Editor
                     }
                 };
 
+                // Create a new directory to house the map.
                 var dir = $"{ConfigManager.SongDirectory.Value}/{TimeHelper.GetUnixTimestampMilliseconds()}";
                 Directory.CreateDirectory(dir);
 
+                // Copy over the audio file into the directory
                 File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
+
+                // Save the new .qua file into the directory
                 var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
                 qua.Save(path);
 
+                // Place the new map inside of the database and make sure all the loaded maps are correct
                 var map = Map.FromQua(qua, path);
                 map.Id = MapDatabaseCache.InsertMap(map, path);
-
                 MapDatabaseCache.OrderAndSetMapsets();
 
                 MapManager.Selected.Value = map;
@@ -674,6 +720,7 @@ namespace Quaver.Shared.Screens.Editor
 
                 var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
 
+                // Find the new object from the loaded maps that contains the same id.
                 MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
                 MapManager.Selected.Value.Qua = qua;
                 MapManager.Selected.Value.NewlyCreated = true;
