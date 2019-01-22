@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
+using System.Collections.Generic;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -26,6 +27,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         ///     Reference to the gameplay screen itself
         /// </summary>
         private GameplayScreen Screen { get; }
+
+        /// <summary>
+        ///     Reference to the container used for buttons
+        /// </summary>
+        private Container Container { get; }
 
         /// <summary>
         ///     The pause overlay's background
@@ -48,6 +54,36 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private ImageButton Quit { get; }
 
+        /// <summary>
+        ///     Current Button selected
+        /// </summary>
+        private ImageButton Selected { get; set; }
+
+        /// <summary>
+        ///     List of Buttons in the Pause Screen
+        /// </summary>
+        private List<ImageButton> Buttons { get; } = new List<ImageButton>();
+
+        /// <summary>
+        ///     Color used for tinted buttons (when they aren't hovered over)
+        /// </summary>
+        private Color TintColor { get; } = Color.DarkGray;
+
+        /// <summary>
+        ///     Animation Time for Tint when hovering over button
+        /// </summary>
+        private const int ANIMATION_TIME = 400;
+
+        /// <summary>
+        ///     Position of Button Container when Pause Screen is inactive
+        /// </summary>
+        private const int INACTIVE_X_POSITION = -100;
+
+        /// <summary>
+        ///     Position of active button when it is hovered over
+        /// </summary>
+        private const int HOVER_X_OFFSET = -10;
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -66,44 +102,84 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Image = SkinManager.Skin.PauseBackground,
             };
 
+            // Container
+            Container = new Container()
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
+                X = INACTIVE_X_POSITION
+            };
+
             // Continue Button
             Continue = new ImageButton(SkinManager.Skin.PauseContinue, (o, e) => InitiateContinue())
             {
-                Parent = this,
+                Parent = Container,
                 Alignment = Alignment.MidLeft,
                 Y = -150,
-                X = -SkinManager.Skin.PauseContinue.Width,
-                Alpha = 1,
+                Alpha = 0,
                 UsePreviousSpriteBatchOptions = true
             };
-
+            Buttons.Add(Continue);
             Continue.Size = new ScalableVector2(Continue.Image.Width, Continue.Image.Height);
+            Continue.Hovered += (o, e) => HoverButton(Continue);
 
             // Retry Button
             Retry = new ImageButton(SkinManager.Skin.PauseRetry, (o, e) => InitiateRetry())
             {
-                Parent = this,
+                Parent = Container,
                 Alignment = Alignment.MidLeft,
                 Y = 20,
-                X = -SkinManager.Skin.PauseRetry.Width,
-                Alpha = 1,
+                Alpha = 0,
+                Tint = TintColor,
                 UsePreviousSpriteBatchOptions = true
             };
-
+            Buttons.Add(Retry);
             Retry.Size = new ScalableVector2(Retry.Image.Width, Retry.Image.Height);
+            Retry.Hovered += (o, e) => HoverButton(Retry);
 
             // Quit Button
             Quit = new ImageButton(SkinManager.Skin.PauseBack, (o, e) => InitiateQuit())
             {
-                Parent = this,
+                Parent = Container,
                 Alignment = Alignment.MidLeft,
                 Y = 190,
-                X = -SkinManager.Skin.PauseBack.Width,
-                Alpha = 1,
+                Alpha = 0,
+                Tint = TintColor,
                 UsePreviousSpriteBatchOptions = true
             };
-
+            Buttons.Add(Quit);
             Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
+            Quit.Hovered += (o, e) => HoverButton(Quit);
+
+            // Select continue button on initialization
+            Selected = Continue;
+            HoverButton(Selected);
+        }
+
+        /// <summary>
+        ///     Called when a button gets hovered over
+        /// </summary>
+        /// <param name="button"></param>
+        private void HoverButton(ImageButton button)
+        {
+            Selected = button;
+            Buttons.ForEach(x => ClearNonAlphaAnimations(x));
+
+            foreach (var x in Buttons)
+            {
+                if (x.Equals(button))
+                {
+                    x.Animations.Add(new Animation(Easing.OutQuint, x.Tint, Color.White, ANIMATION_TIME));
+                    x.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, x.X, GetActivePosX(x) + HOVER_X_OFFSET, ANIMATION_TIME));
+                }
+
+                else
+                {
+                    x.Animations.Add(new Animation(Easing.OutQuint, x.Tint, TintColor, ANIMATION_TIME));
+                    x.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, x.X, GetActivePosX(x), ANIMATION_TIME));
+                }
+            }
         }
 
         /// <summary>
@@ -113,6 +189,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             if (!Screen.IsPaused)
                 return;
+
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             Screen.Pause();
         }
@@ -124,6 +201,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             if (!Screen.IsPaused)
                 return;
+
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
             QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
@@ -163,12 +241,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public void Activate()
         {
-            ClearTransformations();
-
-            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 400));
-            Continue.MoveToX(GetActivePosX(Continue), Easing.OutExpo, 400);
-            Retry.MoveToX(GetActivePosX(Retry), Easing.OutExpo, 400);
-            Quit.MoveToX(GetActivePosX(Quit), Easing.OutExpo, 400);
+            Background.ClearAnimations();
+            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.Alpha, 1, ANIMATION_TIME));
+            Container.ClearAnimations();
+            Container.MoveToX(0, Easing.OutQuint, ANIMATION_TIME);
+            Buttons.ForEach(x => x.ClearAnimations());
+            Buttons.ForEach(x => x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, x.Alpha, 1, ANIMATION_TIME)));
         }
 
         /// <summary>
@@ -176,12 +254,28 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public void Deactivate()
         {
-            ClearTransformations();
-            
-            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 400));
-            Continue.MoveToX(-Continue.Width, Easing.OutExpo, 400);
-            Retry.MoveToX(-Retry.Width, Easing.OutExpo, 400);
-            Quit.MoveToX(-Quit.Width, Easing.OutExpo, 400);
+            Background.ClearAnimations();
+            Background.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.Alpha, 0, ANIMATION_TIME));
+            Container.ClearAnimations();
+            Container.MoveToX(INACTIVE_X_POSITION, Easing.OutQuint, ANIMATION_TIME);
+            Buttons.ForEach(x => x.ClearAnimations());
+            Buttons.ForEach(x => x.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, x.Alpha, 0, ANIMATION_TIME)));
+        }
+
+        /// <summary>
+        ///     Clears Non-Alpha Animations for a specific Drawable
+        /// </summary>
+        /// <param name="drawable"></param>
+        private void ClearNonAlphaAnimations(Drawable drawable)
+        {
+            for (var i = 0; i < drawable.Animations.Count; i++)
+            {
+                if (!drawable.Animations[i].Properties.Equals(AnimationProperty.Alpha))
+                {
+                    drawable.Animations.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         /// <summary>
@@ -192,16 +286,5 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="button"></param>
         /// <returns></returns>
         public static float GetActivePosX(ImageButton button) => WindowManager.Width / 2f - button.Width / 2f;
-
-        /// <summary>
-        ///     Clears all Animations for the pause overlay.
-        /// </summary>
-        private void ClearTransformations()
-        {
-            Background.Animations.Clear();
-            Continue.Animations.Clear();
-            Retry.Animations.Clear();
-            Quit.Animations.Clear();
-        }
     }
 }
