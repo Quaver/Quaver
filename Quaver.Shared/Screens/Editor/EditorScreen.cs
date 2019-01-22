@@ -24,6 +24,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs;
@@ -35,6 +36,7 @@ using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
@@ -788,6 +790,24 @@ namespace Quaver.Shared.Screens.Editor
                     return new SelectScreen();
                 });
             }
+        }
+
+        /// <summary>
+        ///     Goes to the gameplay screen to play test.
+        /// </summary>
+        public void GoPlayTest()
+        {
+            if (WorkingMap.HitObjects.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot play test a map with no HitObjects!");
+                return;
+            }
+
+            Exit(() =>
+            {
+                Save();
+                return new GameplayScreen(WorkingMap, "", new List<Score>(), null, true, AudioEngine.Track.Time);
+            });
         }
 
         /// <summary>

@@ -38,10 +38,15 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             Screen = screen;
 
-            // Reload the audio stream.
             try
             {
                 AudioEngine.LoadCurrentTrack();
+
+                if (Screen.IsPlayTesting)
+                {
+                    AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    return;
+                }
             }
             catch (AudioEngineException e)
             {

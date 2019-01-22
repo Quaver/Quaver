@@ -12,6 +12,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
@@ -20,6 +21,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
@@ -450,9 +452,21 @@ namespace Quaver.Shared.Screens.Gameplay
                 ScreenChangedToRedOnFailure = true;
             }
 
-            // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
+                if (Screen.IsPlayTesting)
+                {
+                    if (AudioEngine.Track.IsPlaying)
+                    {
+                        AudioEngine.Track.Pause();
+                        AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    }
+
+                    Screen.Exit(() => new EditorScreen(Screen.Map));
+                    ResultsScreenLoadInitiated = true;
+                    return;
+                }
+
                 Screen.Exit(() => new ResultScreen(Screen), 500);
                 ResultsScreenLoadInitiated = true;
             }

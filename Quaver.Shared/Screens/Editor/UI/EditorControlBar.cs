@@ -186,7 +186,14 @@ namespace Quaver.Shared.Screens.Editor.UI
                 X = -ButtonPlayPauseTrack.X,
             };
 
-            ButtonPlayTest.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Play Testing is not implemented yet!");
+            ButtonPlayTest.Clicked += (o, e) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+
+                // ReSharper disable once SwitchStatementMissingSomeCases
+                screen?.GoPlayTest();
+            };
 
             ButtonBeatSnap = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify), "Change Beat Snap", padding, Alignment.MidRight)
             {

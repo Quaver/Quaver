@@ -27,6 +27,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
@@ -91,6 +92,17 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool InReplayMode { get; }
 
         /// <summary>
+        ///     If we're currently in play test mode.
+        /// </summary>
+        public bool IsPlayTesting { get; }
+
+        /// <summary>
+        ///     The time in the audio the play test began.
+        ///     Used for retries
+        /// </summary>
+        public double PlayTestAudioTime { get; }
+
+        /// <summary>
         ///     Determines if the gameplay has actually started.
         /// </summary>
         public bool HasStarted { get; set; }
@@ -128,7 +140,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed => (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
+        public bool Failed => !IsPlayTesting && (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
@@ -198,7 +210,8 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="md5"></param>
         /// <param name="scores"></param>
         /// <param name="replay"></param>
-        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null)
+        /// <param name="isPlayTesting"></param>
+        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
@@ -206,6 +219,8 @@ namespace Quaver.Shared.Screens.Gameplay
             LocalScores = scores;
             MapHash = md5;
             LoadedReplay = replay;
+            IsPlayTesting = isPlayTesting;
+            PlayTestAudioTime = playTestTime;
 
             Timing = new GameplayAudioTiming(this);
 
@@ -260,6 +275,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
+            if (Exiting)
+                return;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Handle pausing
@@ -332,6 +350,18 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                Exit(() => new EditorScreen(Map));
+            }
+
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
                 Pause(gameTime);
             // The user wants to resume their play.
@@ -529,7 +559,6 @@ namespace Quaver.Shared.Screens.Gameplay
                     // ignored
                 }
             }
-
         }
 
         /// <summary>
@@ -590,7 +619,9 @@ namespace Quaver.Shared.Screens.Gameplay
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
                     // Use ChangeScreen here to give instant feedback. Can't be threaded
-                    if (InReplayMode)
+                    if (IsPlayTesting)
+                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay, true, PlayTestAudioTime));
+                    else if (InReplayMode)
                         QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
                     else
                         QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
