@@ -67,13 +67,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             // Continue Button
-            Continue = new ImageButton(SkinManager.Skin.PauseContinue, (o, e) =>
-            {
-                if (!Screen.IsPaused)
-                    return;
-                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-                Screen.Pause();
-            })
+            Continue = new ImageButton(SkinManager.Skin.PauseContinue, (o, e) => InitiateContinue())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -86,14 +80,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Continue.Size = new ScalableVector2(Continue.Image.Width, Continue.Image.Height);
 
             // Retry Button
-            Retry = new ImageButton(SkinManager.Skin.PauseRetry, (o, e) =>
-            {
-                if (!Screen.IsPaused)
-                    return;
-                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-                SkinManager.Skin.SoundRetry.CreateChannel().Play();
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
-            })
+            Retry = new ImageButton(SkinManager.Skin.PauseRetry, (o, e) => InitiateRetry())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -106,19 +93,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Retry.Size = new ScalableVector2(Retry.Image.Width, Retry.Image.Height);
 
             // Quit Button
-            Quit = new ImageButton(SkinManager.Skin.PauseBack, (o, e) =>
-            {
-                if (!Screen.IsPaused)
-                    return;
-
-                Screen.IsPaused = false;
-                Screen.ForceFail = true;
-                Screen.HasQuit = true;
-
-                // Make sure the screen transitioner isn't faded out at all
-                var screenView = (GameplayScreenView) Screen.View;
-                screenView.Transitioner.Alpha = 0;
-            })
+            Quit = new ImageButton(SkinManager.Skin.PauseBack, (o, e) => InitiateQuit())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -129,6 +104,46 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
+        }
+
+        /// <summary>
+        ///     Called when Continue Button gets selected
+        /// </summary>
+        private void InitiateContinue()
+        {
+            if (!Screen.IsPaused)
+                return;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            Screen.Pause();
+        }
+
+        /// <summary>
+        ///     Called when Retry Button gets selected
+        /// </summary>
+        private void InitiateRetry()
+        {
+            if (!Screen.IsPaused)
+                return;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            SkinManager.Skin.SoundRetry.CreateChannel().Play();
+            QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
+        }
+
+        /// <summary>
+        ///     Called when Quit Buttons gets selected
+        /// </summary>
+        private void InitiateQuit()
+        {
+            if (!Screen.IsPaused)
+                return;
+
+            Screen.IsPaused = false;
+            Screen.ForceFail = true;
+            Screen.HasQuit = true;
+
+            // Make sure the screen transitioner isn't faded out at all
+            var screenView = (GameplayScreenView)Screen.View;
+            screenView.Transitioner.Alpha = 0;
         }
 
         /// <inheritdoc />
