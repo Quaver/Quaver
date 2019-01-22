@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -16,12 +18,17 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Editor.UI.Navigation
 {
     public class MainEditorNavigationBar : EditorNavigationBar
     {
+        /// <summary>
+        /// </summary>
+        private EditorScreen Screen { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -54,7 +61,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_archive_black_box), "Export Mapset (CTRL+E)", -48, Alignment.BotRight,
-                (o, e) => ExportToZip()),
+                (o, e) => EditorScreen.ExportToZip()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_save_file_option), "Save File (CTRL+S)", -48, Alignment.BotRight,
                 (o, e) => screen.Save()),
@@ -64,16 +71,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_open_folder), "Open Mapset Folder (CTRL+W)", -48, Alignment.BotRight,
                 (o, e) => MapManager.Selected.Value.OpenFolder()),
-        })
-        {
-        }
-
-        /// <summary>
-        /// </summary>
-        private static void ExportToZip()
-        {
-            MapManager.Selected.Value.Mapset.ExportToZip();
-            ThreadScheduler.RunAfter(() => NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!"), 100);
-        }
+        }) => Screen = screen;
     }
 }

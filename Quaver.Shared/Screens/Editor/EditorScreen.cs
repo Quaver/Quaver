@@ -218,6 +218,20 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Forward);
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                DialogManager.Show(new EditorMetadataDialog(this));
+
+            // Timing Setup
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet.");
+
+            // Scroll Velocities
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet.");
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
+                ChangePreviewTime((int) AudioEngine.Track.Time);
+
             HandleAudioSeeking();
             HandleCtrlInput(gameTime);
             HandleBeatSnapChanges();
@@ -400,6 +414,21 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
                 Ruleset.ActionManager.Redo();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.T))
+                MapManager.Selected.Value.VisitMapsetPage();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.U))
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.E))
+                ExportToZip();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Q))
+                MapManager.Selected.Value.OpenFile();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.W))
+                MapManager.Selected.Value.OpenFolder();
         }
 
         ///     Handles changing the beat snap with the scroll wheel + shift
@@ -759,6 +788,14 @@ namespace Quaver.Shared.Screens.Editor
                     return new SelectScreen();
                 });
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void ExportToZip()
+        {
+            MapManager.Selected.Value.Mapset.ExportToZip();
+            ThreadScheduler.RunAfter(() => NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!"), 100);
         }
 
         /// <inheritdoc />
