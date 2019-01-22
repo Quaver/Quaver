@@ -205,6 +205,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
 
                     DialogManager.Update(new GameTime());
 
+                    if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
+                        MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+
                     try
                     {
                         Screen.Exit(() => new EditorScreen(Qua.Parse(File)));
