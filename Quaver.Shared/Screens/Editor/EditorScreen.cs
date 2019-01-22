@@ -797,9 +797,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void GoPlayTest()
         {
-            if (WorkingMap.HitObjects.Count == 0)
+            if (WorkingMap.HitObjects.Count(x => x.StartTime >= AudioEngine.Track.Time) == 0)
             {
-                NotificationManager.Show(NotificationLevel.Error, "You cannot play test a map with no HitObjects!");
+                NotificationManager.Show(NotificationLevel.Error, "There aren't any hitobjects to play test past this point!");
                 return;
             }
 
