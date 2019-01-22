@@ -162,6 +162,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             HoverButton(0, true);
         }
 
+        /// <summary>
+        ///     Handle Up Navigation Button
+        /// </summary>
         private void HandleKeyPressUp()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
@@ -171,6 +174,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             HoverButton(index);
         }
 
+        /// <summary>
+        ///     Handle Down Navigation Button
+        /// </summary>
         private void HandleKeyPressDown()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
@@ -180,6 +186,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             HoverButton(index);
         }
 
+        /// <summary>
+        ///     Handle Select Button
+        /// </summary>
         private void HandleKeyPressSelect()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
@@ -202,16 +211,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="button"></param>
         private void HoverButton(int index, bool dontPlayAudio = false)
         {
+            // Update indexing
             SelectedIndex = index;
             Selected = Buttons[index];
-            Buttons.ForEach(x => ClearNonAlphaAnimations(x));
 
             // Play sfx
             // if (!dontPlayAudio)
             // Todo: not implemented
 
-
-            // Update positions
+            // Update Animations
+            Buttons.ForEach(x => ClearNonAlphaAnimations(x));
             foreach (var x in Buttons)
             {
                 if (x.Equals(Buttons[index]))
