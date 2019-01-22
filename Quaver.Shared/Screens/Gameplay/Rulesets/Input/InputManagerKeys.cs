@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     The replay input manager.
         /// </summary>
-        internal ReplayInputManagerKeys ReplayInputManager { get; }
+        internal ReplayInputManagerKeys ReplayInputManager { get; set; }
 
         /// <summary>
         ///     Ctor -
@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Handle Replay Input Manager if necessary.
             // - Grab the previous replay frame that we're on and update the replay's input manager to see if we have any updated frames.
             // - If the current and previous frames are the same, we don't have to do anything.
-            if (ReplayInputManager != null)
+            if (Ruleset.Screen.InReplayMode)
             {
                 var previousReplayFrame = ReplayInputManager.CurrentFrame;
                 ReplayInputManager?.HandleInput();
@@ -108,11 +108,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 var needsUpdating = false;
 
                 // A key was uniquely pressed.
-                if (!BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyPress(BindingStore[lane].Key.Value) && ReplayInputManager == null
-                                                || ReplayInputManager != null && ReplayInputManager.UniquePresses[lane]))
+                if (!BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyPress(BindingStore[lane].Key.Value) &&
+                                                    !Ruleset.Screen.InReplayMode || Ruleset.Screen.InReplayMode && ReplayInputManager.UniquePresses[lane]))
                 {
                     // Update Replay Manager. Reset UniquePresses value for this lane.
-                    if (ReplayInputManager != null)
+                    if (Ruleset.Screen.InReplayMode)
                         ReplayInputManager.UniquePresses[lane] = false;
 
                     // Toggle this key on from BindingStore and enable needsUpdating value to handle key press
@@ -123,11 +123,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     screenView.KpsDisplay.AddClick();
                 }
                 // A key was uniquely released.
-                else if (BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyRelease(BindingStore[lane].Key.Value) && ReplayInputManager == null
-                                                    || ReplayInputManager != null && ReplayInputManager.UniqueReleases[lane]))
+                else if (BindingStore[lane].Pressed && (KeyboardManager.IsUniqueKeyRelease(BindingStore[lane].Key.Value) &&
+                                                        !Ruleset.Screen.InReplayMode
+                                                    || Ruleset.Screen.InReplayMode && ReplayInputManager.UniqueReleases[lane]))
                 {
                     // Update Replay Manager. Reset UniquePresses value for this lane.
-                    if (ReplayInputManager != null)
+                    if (Ruleset.Screen.InReplayMode)
                         ReplayInputManager.UniqueReleases[lane] = false;
 
                     // Toggle this key on from BindingStore and enable needsUpdating value to handle key release

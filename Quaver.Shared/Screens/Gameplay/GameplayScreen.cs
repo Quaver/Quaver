@@ -32,6 +32,7 @@ using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -84,12 +85,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The current replay being watched (if there is one.)
         /// </summary>
-        public Replay LoadedReplay { get; }
+        public Replay LoadedReplay { get; private set; }
 
         /// <summary>
         ///     If we are currently viewing a replay.
         /// </summary>
-        public bool InReplayMode { get; }
+        public bool InReplayMode { get; set; }
 
         /// <summary>
         ///     If we're currently in play test mode.
@@ -303,6 +304,42 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
                     HandleQuickExit();
 
+                // Handle play test autoplay input.
+                if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                {
+                    var inputManager = (KeysInputManager) Ruleset.InputManager;
+
+                    if (LoadedReplay == null)
+                    {
+                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                        inputManager.ReplayInputManager = new ReplayInputManagerKeys(this);
+                        inputManager.ReplayInputManager.HandleSkip();
+                        inputManager.ReplayInputManager.CurrentFrame++;
+                    }
+
+                    InReplayMode = !InReplayMode;
+                    inputManager.ReplayInputManager.HandleSkip();
+                    inputManager.ReplayInputManager.CurrentFrame++;
+
+                    if (!InReplayMode)
+                    {
+                        for (var i = 0; i < Map.GetKeyCount(); i++)
+                        {
+                            inputManager.ReplayInputManager.UniquePresses[i] = false;
+                            inputManager.ReplayInputManager.UniqueReleases[i] = true;
+                            inputManager.BindingStore[i].Pressed = false;
+
+                            var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                            playfield.Stage.HitLightingObjects[i].StopHolding();
+                            playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
+                        }
+
+                        inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
+                    }
+
+                    NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}");
+                }
+
                 // Only allow offset changes if the map hasn't started or if we're on a break
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
@@ -351,7 +388,7 @@ namespace Quaver.Shared.Screens.Gameplay
         private void HandlePauseInput(GameTime gameTime)
         {
             // Go back to editor if we're currently play testing.
-            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+            if (IsPlayTesting && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
             {
                 if (AudioEngine.Track.IsPlaying)
                 {
