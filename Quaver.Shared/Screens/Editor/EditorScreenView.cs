@@ -39,10 +39,6 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorNavigationBar NavigationBar { get; private set; }
 
-        /// <summary>
-        /// </summary>
-        private EditorMetadataChanger MetadataChanger { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>

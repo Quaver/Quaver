@@ -30,6 +30,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left), "Back To Menu (ESC)", -48, Alignment.BotLeft,
                 (o, e) => screen.HandleKeyPressEscape()),
 
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), "Add New Difficulty", -48, Alignment.BotLeft,
+                (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),
+
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata (F1)", -48, Alignment.BotLeft,
                 (o, e) => DialogManager.Show(new EditorMetadataDialog(screen))),
 

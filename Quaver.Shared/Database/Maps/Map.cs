@@ -207,6 +207,12 @@ namespace Quaver.Shared.Database.Maps
         public bool NeedsOnlineUpdate { get; set; }
 
         /// <summary>
+        ///     Determines if the map is newly created and should open the metadata screen in the editor.
+        /// </summary>
+        [Ignore]
+        public bool NewlyCreated { get; set; }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>

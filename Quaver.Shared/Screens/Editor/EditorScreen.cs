@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
@@ -24,10 +25,13 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -36,8 +40,10 @@ using Quaver.Shared.Screens.Select;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 using YamlDotNet.Serialization;
 
 namespace Quaver.Shared.Screens.Editor
@@ -146,6 +152,20 @@ namespace Quaver.Shared.Screens.Editor
                 HandleInput(gameTime);
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            // In the event that the map the user created is new, show them the metadata dialog.
+            if (MapManager.Selected.Value.NewlyCreated)
+            {
+                DialogManager.Show(new EditorMetadataDialog(this));
+                MapManager.Selected.Value.NewlyCreated = false;
+            }
+
+            base.OnFirstUpdate();
         }
 
         /// <inheritdoc />
@@ -589,6 +609,89 @@ namespace Quaver.Shared.Screens.Editor
             };
 
             FileWatcher.EnableRaisingEvents = true;
+        }
+
+        /// <summary>
+        ///     Creates a new mapset with an audio file.
+        /// </summary>
+        /// <param name="audioFile"></param>
+        public static void HandleNewMapsetCreation(string audioFile)
+        {
+            try
+            {
+                var game = GameBase.Game as QuaverGame;
+
+                Transitioner.FadeIn();
+                Button.IsGloballyClickable = false;
+
+                var tagFile = TagLib.File.Create(audioFile);
+
+                var qua = new Qua()
+                {
+                    AudioFile = Path.GetFileName(audioFile),
+                    Artist = tagFile.Tag.FirstPerformer ?? "",
+                    Title = tagFile.Tag.Title ?? "",
+                    Source = tagFile.Tag.Album ?? "",
+                    Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Creator = ConfigManager.Username.Value,
+                    DifficultyName = "",
+                    // Makes the file different to prevent exception thrown in the DB for same md5 checksum
+                    Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
+                    BackgroundFile = "",
+                    Mode = GameMode.Keys4,
+                    TimingPoints =
+                    {
+                        new TimingPointInfo()
+                        {
+                            Bpm = 0,
+                            StartTime = 0
+                        }
+                    },
+                    HitObjects =
+                    {
+                        new HitObjectInfo()
+                        {
+                            StartTime = 0,
+                            Lane = 1
+                        }
+                    }
+                };
+
+                var dir = $"{ConfigManager.SongDirectory.Value}/{TimeHelper.GetUnixTimestampMilliseconds()}";
+                Directory.CreateDirectory(dir);
+
+                File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
+                var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+                qua.Save(path);
+
+                var map = Map.FromQua(qua, path);
+                map.Id = MapDatabaseCache.InsertMap(map, path);
+
+                MapDatabaseCache.OrderAndSetMapsets();
+
+                MapManager.Selected.Value = map;
+                MapManager.Selected.Value.Qua = qua;
+
+                var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
+
+                MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
+                MapManager.Selected.Value.Qua = qua;
+                MapManager.Selected.Value.NewlyCreated = true;
+
+                game?.CurrentScreen.Exit(() => new EditorScreen(qua));
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+
+                var game = GameBase.Game as QuaverGame;
+
+                game?.CurrentScreen.Exit(() =>
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Could not create new mapset with that audio file.");
+                    return new SelectScreen();
+                });
+            }
         }
 
         /// <inheritdoc />

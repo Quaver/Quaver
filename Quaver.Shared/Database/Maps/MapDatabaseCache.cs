@@ -171,16 +171,19 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="map"></param>
         /// <param name="file"></param>
-        public static void InsertMap(Map map, string file)
+        public static int InsertMap(Map map, string file)
         {
             try
             {
                 new SQLiteConnection(DatabasePath).Insert(map);
+
+                return new SQLiteConnection(DatabasePath).Get<Map>(x => x.Md5Checksum == map.Md5Checksum).Id;
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
                 File.Delete(file);
+                return -1;
             }
         }
 
@@ -328,7 +331,10 @@ namespace Quaver.Shared.Database.Maps
                     map.CalculateDifficulties();
                     map.Id = MapsToUpdate[i].Id;
 
-                    UpdateMap(map);
+                    if (map.Id == 0)
+                        map.Id = InsertMap(map, path);
+                    else
+                        UpdateMap(map);
 
                     MapsToUpdate[i] = map;
                     MapManager.Selected.Value = map;
