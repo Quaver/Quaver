@@ -496,13 +496,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Kills a hold pool object.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="destroy"></param>
+        /// <param name="gameplayHitObject"></param>
         public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject)
         {
             // Change start time and LN size.
             gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentAudioPosition);
-            gameplayHitObject.Info.StartTime = (int)CurrentAudioPosition;
             gameplayHitObject.CurrentlyBeingHeld = false;
             gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
             gameplayHitObject.Kill();
