@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
+using System;
 using System.Collections.Generic;
 using Wobble;
 using Wobble.Graphics;
@@ -58,6 +59,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         ///     Current Button selected
         /// </summary>
         private ImageButton Selected { get; set; }
+
+        /// <summary>
+        ///     Current Selected index for selected button
+        /// </summary>
+        private int SelectedIndex { get; set; }
 
         /// <summary>
         ///     List of Buttons in the Pause Screen
@@ -122,7 +128,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
             Buttons.Add(Continue);
             Continue.Size = new ScalableVector2(Continue.Image.Width, Continue.Image.Height);
-            Continue.Hovered += (o, e) => HoverButton(Continue);
+            Continue.Hovered += (o, e) => HoverButton(0);
 
             // Retry Button
             Retry = new ImageButton(SkinManager.Skin.PauseRetry, (o, e) => InitiateRetry())
@@ -136,7 +142,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
             Buttons.Add(Retry);
             Retry.Size = new ScalableVector2(Retry.Image.Width, Retry.Image.Height);
-            Retry.Hovered += (o, e) => HoverButton(Retry);
+            Retry.Hovered += (o, e) => HoverButton(1);
 
             // Quit Button
             Quit = new ImageButton(SkinManager.Skin.PauseBack, (o, e) => InitiateQuit())
@@ -150,25 +156,65 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
             Buttons.Add(Quit);
             Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
-            Quit.Hovered += (o, e) => HoverButton(Quit);
+            Quit.Hovered += (o, e) => HoverButton(2);
 
             // Select continue button on initialization
-            Selected = Continue;
-            HoverButton(Selected);
+            HoverButton(0, true);
+        }
+
+        private void HandleKeyPressUp()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                return;
+
+            var index = SelectedIndex == 0 ? Buttons.Count - 1 : SelectedIndex - 1;
+            HoverButton(index);
+        }
+
+        private void HandleKeyPressDown()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                return;
+
+            var index = SelectedIndex == Buttons.Count - 1 ? 0 : SelectedIndex + 1;
+            HoverButton(index);
+        }
+
+        private void HandleKeyPressSelect()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            // Call specific method for button selected
+            if (Selected.Equals(Continue))
+                InitiateContinue();
+
+            else if (Selected.Equals(Retry))
+                InitiateRetry();
+
+            else if (Selected.Equals(Quit))
+                InitiateQuit();
         }
 
         /// <summary>
-        ///     Called when a button gets hovered over
+        ///     Hover over a specific button via given index.
         /// </summary>
         /// <param name="button"></param>
-        private void HoverButton(ImageButton button)
+        private void HoverButton(int index, bool dontPlayAudio = false)
         {
-            Selected = button;
+            SelectedIndex = index;
+            Selected = Buttons[index];
             Buttons.ForEach(x => ClearNonAlphaAnimations(x));
 
+            // Play sfx
+            // if (!dontPlayAudio)
+            // Todo: not implemented
+
+
+            // Update positions
             foreach (var x in Buttons)
             {
-                if (x.Equals(button))
+                if (x.Equals(Buttons[index]))
                 {
                     x.Animations.Add(new Animation(Easing.OutQuint, x.Tint, Color.White, ANIMATION_TIME));
                     x.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, x.X, GetActivePosX(x) + HOVER_X_OFFSET, ANIMATION_TIME));
@@ -232,6 +278,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             if (Screen.Failed)
                 Visible = false;
+
+            if (Screen.IsPaused)
+            {
+                HandleKeyPressDown();
+                HandleKeyPressUp();
+                HandleKeyPressSelect();
+            }
 
             base.Update(gameTime);
         }
