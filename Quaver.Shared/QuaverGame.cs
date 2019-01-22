@@ -263,7 +263,6 @@ namespace Quaver.Shared
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
             {
                 AudioTrack.GlobalVolume = e.Value;
-                AudioSample.GlobalVolume = e.Value;
             };;
 
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => { if (AudioEngine.Track != null) AudioEngine.Track.Volume = e.Value;  };

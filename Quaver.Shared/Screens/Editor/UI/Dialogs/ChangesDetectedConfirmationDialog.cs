@@ -197,6 +197,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                 {
                     Dismiss();
 
+                    for (var i = DialogManager.Dialogs.Count - 1; i >= 0; i--)
+                    {
+                        DialogManager.Dialogs[i].Destroy();
+                        DialogManager.Dialogs.Remove(DialogManager.Dialogs[i]);
+                    }
+
+                    DialogManager.Update(new GameTime());
+
                     try
                     {
                         Screen.Exit(() => new EditorScreen(Qua.Parse(File)));
