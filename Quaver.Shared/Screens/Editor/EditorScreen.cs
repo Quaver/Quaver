@@ -26,6 +26,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
@@ -163,6 +164,23 @@ namespace Quaver.Shared.Screens.Editor
             {
                 DialogManager.Show(new EditorMetadataDialog(this));
                 MapManager.Selected.Value.NewlyCreated = false;
+            }
+
+            // User created a new difficulty, so prompt them if they would like to delete all objects.
+            if (MapManager.Selected.Value.AskToRemoveHitObjects)
+            {
+                DialogManager.Show(new ConfirmCancelDialog("Do you want to remove all HitObjects?", (o, e) =>
+                {
+                    WorkingMap.HitObjects.Clear();
+
+                    var ruleset = Ruleset as EditorRulesetKeys;
+                    ruleset?.ScrollContainer.HitObjects.ForEach(x => x.Destroy());
+                    ruleset?.ScrollContainer.HitObjects.Clear();
+                    DialogManager.Dismiss();
+                }));
+
+                MapManager.Selected.Value.AskToRemoveHitObjects = false;
+
             }
 
             base.OnFirstUpdate();
@@ -624,6 +642,7 @@ namespace Quaver.Shared.Screens.Editor
 
             var qua = ObjectHelper.DeepClone(WorkingMap);
             qua.DifficultyName = "";
+            qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
 
             var dir = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}";
             var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
@@ -645,6 +664,7 @@ namespace Quaver.Shared.Screens.Editor
             MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
             MapManager.Selected.Value.Qua = qua;
             MapManager.Selected.Value.NewlyCreated = true;
+            MapManager.Selected.Value.AskToRemoveHitObjects = true;
 
             // Reload editor w/ new one.
             Exit(() => new EditorScreen(qua));

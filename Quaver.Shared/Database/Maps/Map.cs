@@ -213,6 +213,13 @@ namespace Quaver.Shared.Database.Maps
         public bool NewlyCreated { get; set; }
 
         /// <summary>
+        ///     If set to true, when the user loads the map up in the editor, it
+        ///     will prompt the user if they would like to remove all HitObjects from the map.
+        /// </summary>
+        [Ignore]
+        public bool AskToRemoveHitObjects { get; set; }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>

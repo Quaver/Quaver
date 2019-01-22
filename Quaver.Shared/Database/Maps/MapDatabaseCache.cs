@@ -105,7 +105,21 @@ namespace Quaver.Shared.Database.Maps
                         if (map.Md5Checksum == MapsetHelper.GetMd5Checksum(filePath))
                             continue;
 
-                        var newMap = Map.FromQua(map.LoadQua(), filePath);
+                        Map newMap;
+
+                        try
+                        {
+                            newMap = Map.FromQua(map.LoadQua(), filePath);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Error(e, LogType.Runtime);
+                            File.Delete(filePath);
+                            new SQLiteConnection(DatabasePath).Delete(map);
+                            Logger.Important($"Removed {filePath} from the cache, as the file could not be parsed.", LogType.Runtime);
+                            continue;
+                        }
+
                         newMap.CalculateDifficulties();
 
                         newMap.Id = map.Id;
