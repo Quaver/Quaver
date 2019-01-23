@@ -16,6 +16,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
+using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -54,6 +55,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
 
         }, new List<EditorControlButton>
         {
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), "Open Options Menu (CTRL+O)", -48, Alignment.BotRight,
+                (o, e) =>
+                {
+                    if (DialogManager.Dialogs.Count > 0)
+                        return;
+
+                    DialogManager.Show(new SettingsDialog());
+                }),
+
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "Visit Mapset Page (CTRL+T)", -48, Alignment.BotRight,
                 (o, e) => MapManager.Selected.Value.VisitMapsetPage()),
 

@@ -29,6 +29,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         public bool IsInView { get; set; }
 
+        /// <summary>
+        ///     The color when the object is shown as selected.
+        /// </summary>
+        protected Color SelectedColor { get; } = Color.LimeGreen;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -71,5 +76,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <param name="mousePos"></param>
         /// <returns></returns>
         public virtual bool IsHovered(Vector2 mousePos) => ScreenRectangle.Contains(mousePos);
+
+        /// <summary>
+        ///    Resets the tint of the long note and makes it appear as if it is active.
+        /// </summary>
+        public virtual void AppearAsActive() => Tint = Color.White;
+
+        /// <summary>
+        ///     Displays the object as selected.
+        /// </summary>
+        public virtual void AppearAsSelected() => Tint = SelectedColor;
     }
 }

@@ -126,8 +126,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             {
                 case ScrollDirection.Split:
                 case ScrollDirection.Down:
-                    ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
-                    break;
+                    // ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
+                    // break;
                 case ScrollDirection.Up:
                     ScrollContainer.HitPositionLine.Y = (int) WindowManager.Height - ScrollContainer.HitPositionY;
                     break;
@@ -190,6 +190,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // Find an existing object in the current lane at the same time, so we can determine if
             // the object should be placed or deleted accordingly.
             HitObjectInfo existingObject = null;
+            DrawableEditorHitObject hoveredObject = null;
 
             switch (inputDevice)
             {
@@ -197,10 +198,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) time && x.Lane == lane);
                     break;
                 case CompositionInputDevice.Mouse:
-                    var hoveredObj = ScrollContainer.GetHoveredHitObject();
+                    hoveredObject = ScrollContainer.GetHoveredHitObject();
 
-                    if (hoveredObj != null)
-                        existingObject = hoveredObj.Info;
+                    if (hoveredObject != null)
+                        existingObject = hoveredObject.Info;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(inputDevice), inputDevice, null);
@@ -246,6 +247,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                         am?.DeleteHitObject(existingObject);
                         break;
                     case CompositionInputDevice.Mouse:
+                        // hoveredObject?.AppearAsSelected();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(inputDevice), inputDevice, null);

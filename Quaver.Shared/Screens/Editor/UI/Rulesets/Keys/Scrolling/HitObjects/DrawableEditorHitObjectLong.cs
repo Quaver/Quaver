@@ -126,12 +126,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         public override bool CheckIfOnScreen() => base.CheckIfOnScreen() ||
                                                   AudioEngine.Track.Time >= Info.StartTime && AudioEngine.Track.Time <= Info.EndTime + 1000;
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Resets the tint of the long note and makes it appear as if it is active.
         /// </summary>
-        public void AppearAsActive()
+        public override void AppearAsActive()
         {
-            Tint = Color.White;
+            base.AppearAsActive();
             Body.Tint = Color.White;
             Tail.Tint = Color.White;
         }
@@ -141,9 +141,20 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         public void AppearAsInactive()
         {
-            Tint = Colors.DeadLongNote;
-            Body.Tint = Colors.DeadLongNote;
-            Tail.Tint = Colors.DeadLongNote;
+            var col = new Color(130, 130, 130);
+            Tint = col;
+            Body.Tint = col;
+            Tail.Tint = col;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void AppearAsSelected()
+        {
+            base.AppearAsSelected();
+            Body.Tint = SelectedColor;
+            Tail.Tint = SelectedColor;
         }
 
         /// <inheritdoc />
