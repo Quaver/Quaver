@@ -48,6 +48,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         public List<HitObjectInfo> PendingLongNoteReleases { get; } = new List<HitObjectInfo>(new HitObjectInfo[7]);
 
+        /// <summary>
+        /// </summary>
+        private EditorScreenView View => Screen.View as EditorScreenView;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -137,6 +141,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private void HandleHitObjectMouseInput()
         {
+            // Prevent clicking if in range of the nav/control bars.
+            if (View.NavigationBar.ScreenRectangle.Contains(MouseManager.CurrentState.Position) ||
+                View.ControlBar.ScreenRectangle.Contains(MouseManager.CurrentState.Position))
+                return;
+
             // Left click/place object
             if (MouseManager.IsUniqueClick(MouseButton.Left))
             {
@@ -156,8 +165,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     time = timeFwd;
                 else if (bwdDiff < fwdDiff)
                     time = timeBwd;
-                else
-                    time = time;
+
                 PlaceObject(CompositionInputDevice.Mouse, lane, time);
             }
 
@@ -216,7 +224,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                         // Make the long note appear as inactive/dead. Gives a visual effect to the user that
                         // they need to do something with the note.
-                        var drawable = (DrawableEditorHitObjectLong) ScrollContainer.HitObjects.Find(x => x.Info == workingObject);
+                        var drawable = ScrollContainer.HitObjects.Find(x => x.Info == workingObject) as DrawableEditorHitObjectLong;
 
                         if (drawable == null)
                             return;
@@ -231,7 +239,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             }
             // An object exists, so delete it.
             else
-                am?.DeleteHitObject(existingObject);
+            {
+                switch (inputDevice)
+                {
+                    case CompositionInputDevice.Keyboard:
+                        am?.DeleteHitObject(existingObject);
+                        break;
+                    case CompositionInputDevice.Mouse:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(inputDevice), inputDevice, null);
+                }
+            }
         }
 
         /// <summary>
