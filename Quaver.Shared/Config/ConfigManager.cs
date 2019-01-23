@@ -250,6 +250,11 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
         /// <summary>
+        ///     Whether or not to play hitsounds in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorEnableHitsounds { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -461,6 +466,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))

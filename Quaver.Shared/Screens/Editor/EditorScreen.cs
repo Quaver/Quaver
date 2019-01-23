@@ -533,7 +533,9 @@ namespace Quaver.Shared.Screens.Editor
 
                 if (AudioEngine.Track.Time >= obj.StartTime)
                 {
-                    HitObjectManager.PlayObjectHitSounds(obj);
+                    if (ConfigManager.EditorEnableHitsounds.Value)
+                        HitObjectManager.PlayObjectHitSounds(obj);
+
                     HitSoundObjectIndex = i + 1;
                 }
                 else

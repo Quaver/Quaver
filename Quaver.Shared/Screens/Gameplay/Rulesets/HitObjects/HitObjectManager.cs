@@ -72,9 +72,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// </summary>
         public static void PlayObjectHitSounds(HitObjectInfo hitObject)
         {
-            if (!ConfigManager.EnableHitsounds.Value)
-                return;
-
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
                 SkinManager.Skin.SoundHit.CreateChannel().Play();

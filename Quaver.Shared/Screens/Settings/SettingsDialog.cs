@@ -337,6 +337,11 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
                 }),
+                // Editor
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()
+                {
+                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds)
+                }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
                 {
