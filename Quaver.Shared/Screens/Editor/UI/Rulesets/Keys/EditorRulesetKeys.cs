@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D1 + i))
-                    PlaceObject(i + 1);
+                    PlaceObject(CompositionInputDevice.Keyboard, i + 1, AudioEngine.Track.Time);
             }
 
             // Change between composition tools (only when shift isn't held down).
@@ -140,6 +140,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // Left click/place object
             if (MouseManager.IsUniqueClick(MouseButton.Left))
             {
+                var lane = ScrollContainer.GetLaneFromX(MouseManager.CurrentState.X);
+
+                if (lane == -1)
+                    return;
+
+                var time = (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y) / ScrollContainer.TrackSpeed;
+                var timeFwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Forward, Screen.BeatSnap.Value, time);
+                var timeBwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Backward, Screen.BeatSnap.Value, time);
+
+                var fwdDiff = Math.Abs(time - timeFwd);
+                var bwdDiff = Math.Abs(time - timeBwd);
+
+                if (fwdDiff < bwdDiff)
+                    time = timeFwd;
+                else if (bwdDiff < fwdDiff)
+                    time = timeBwd;
+                else
+                    time = time;
+                PlaceObject(CompositionInputDevice.Mouse, lane, time);
             }
 
             // Right click/delete object.
@@ -150,17 +169,34 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     Places a HitObject at a given lane.
         /// </summary>
+        /// <param name="inputDevice"></param>
         /// <param name="lane"></param>
-        private void PlaceObject(int lane)
+        /// <param name="time"></param>
+        private void PlaceObject(CompositionInputDevice inputDevice, int lane, double time)
         {
             var am = ActionManager as EditorActionManagerKeys;
 
-            if (HandlePendingLongNoteReleases(lane))
+            if (HandlePendingLongNoteReleases(lane, time))
                 return;
 
             // Find an existing object in the current lane at the same time, so we can determine if
             // the object should be placed or deleted accordingly.
-            var existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
+            HitObjectInfo existingObject = null;
+
+            switch (inputDevice)
+            {
+                case CompositionInputDevice.Keyboard:
+                    existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) time && x.Lane == lane);
+                    break;
+                case CompositionInputDevice.Mouse:
+                    var hoveredObj = ScrollContainer.GetHoveredHitObject();
+
+                    if (hoveredObj != null)
+                        existingObject = hoveredObj.Info;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(inputDevice), inputDevice, null);
+            }
 
             // There's no object currently at this position, so add it.
             if (existingObject == null)
@@ -168,19 +204,23 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 switch (CompositionTool.Value)
                 {
                     case EditorCompositionTool.Note:
-                        am?.PlaceHitObject(lane);
+                        am?.PlaceHitObject(lane, time);
                         break;
                     case EditorCompositionTool.LongNote:
-                        am?.PlaceLongNote(lane);
+                        am?.PlaceLongNote(lane, time);
 
                         // Makes sure the long note is marked as pending, so any future objects placed in this lane
                         // will be awarded to this LN's end.
-                        var workingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) AudioEngine.Track.Time && x.Lane == lane);
+                        var workingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) time && x.Lane == lane);
                         PendingLongNoteReleases[lane - 1] = workingObject;
 
                         // Make the long note appear as inactive/dead. Gives a visual effect to the user that
                         // they need to do something with the note.
                         var drawable = (DrawableEditorHitObjectLong) ScrollContainer.HitObjects.Find(x => x.Info == workingObject);
+
+                        if (drawable == null)
+                            return;
+
                         drawable.AppearAsInactive();
 
                         NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
@@ -192,22 +232,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // An object exists, so delete it.
             else
                 am?.DeleteHitObject(existingObject);
-        }
-
-        /// <summary>
-        ///     Places an object at a specific time.
-        /// </summary>
-        /// <param name="lane"></param>
-        /// <param name="time"></param>
-        private void PlaceObject(int lane, double time)
-        {
-            var am = ActionManager as EditorActionManagerKeys;
-
-            var existingObject = WorkingMap.HitObjects.Find(x => x.StartTime == (int) time && x.Lane == lane);
-
-            // There's no object currently at this position, so add it.
-            if (existingObject == null)
-                am?.PlaceHitObject(lane, time);
         }
 
         /// <summary>
@@ -231,8 +255,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         ///     If returned false, nothing has been handled/needs to be handled.
         /// </summary>
         /// <param name="lane"></param>
+        /// <param name="time"></param>
         /// <returns></returns>
-        private bool HandlePendingLongNoteReleases(int lane)
+        private bool HandlePendingLongNoteReleases(int lane, double time)
         {
             // User has a pending long note release for this lane, so that needs to be taken care of.
             if (PendingLongNoteReleases[lane - 1] == null)
@@ -240,7 +265,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             var pendingObject = PendingLongNoteReleases[lane - 1];
 
-            if ((int) AudioEngine.Track.Time < pendingObject.StartTime)
+            if ((int) time < pendingObject.StartTime)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
                 return true;
@@ -248,7 +273,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             // Returning false here because the user should be able to delete the note if they're
             // still on the starting area.
-            if ((int) AudioEngine.Track.Time == pendingObject.StartTime)
+            if ((int) time == pendingObject.StartTime)
             {
                 PendingLongNoteReleases[lane - 1] = null;
                 return false;
@@ -258,7 +283,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             PendingLongNoteReleases[lane - 1] = null;
 
             // Resize the long note and then reset the color of it.
-            pendingObject.EndTime = (int) AudioEngine.Track.Time;
+            pendingObject.EndTime = (int) time;
             ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
             return true;
 

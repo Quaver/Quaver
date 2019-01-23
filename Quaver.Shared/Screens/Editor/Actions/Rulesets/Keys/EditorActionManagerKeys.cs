@@ -24,10 +24,6 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        public void PlaceHitObject(int lane) => PlaceHitObject(lane, AudioEngine.Track.Time);
-
-        /// <summary>
-        /// </summary>
         /// <param name="lane"></param>
         /// <param name="time"></param>
         public void PlaceHitObject(int lane, double time) => Perform(new EditorActionPlaceHitObjectKeys(Ruleset.ScrollContainer, new HitObjectInfo
@@ -35,10 +31,6 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
             StartTime = (int) time,
             Lane = lane
         }));
-
-        /// <summary>
-        /// </summary>
-        public void PlaceLongNote(int lane) => PlaceLongNote(lane, AudioEngine.Track.Time);
 
         /// <summary>
         /// </summary>
