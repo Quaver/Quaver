@@ -723,7 +723,7 @@ namespace Quaver.Shared.Screens.Gameplay
             DiscordHelper.Presence.Details = Map.ToString();
 
             if (IsPlayTesting)
-                DiscordHelper.Presence.State = "Testing";
+                DiscordHelper.Presence.State = "Play Testing";
             else if (InReplayMode)
                 DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else

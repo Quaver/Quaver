@@ -123,6 +123,7 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.Details = WorkingMap.ToString();
             DiscordHelper.Presence.State = "Editing";
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             if (!LoadAudioTrack())
