@@ -722,7 +722,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             DiscordHelper.Presence.Details = Map.ToString();
 
-            if (InReplayMode)
+            if (IsPlayTesting)
+                DiscordHelper.Presence.State = "Testing";
+            else if (InReplayMode)
                 DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
                 DiscordHelper.Presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
@@ -745,7 +747,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
             string content;
 
-            if (InReplayMode)
+            if (IsPlayTesting)
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+            else if (InReplayMode)
             {
                 status = ClientStatus.Watching;
                 content = LoadedReplay.PlayerName;
