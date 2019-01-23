@@ -188,7 +188,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
         }
 
         /// <summary>
-        ///     Creates the button to quit the game.
         /// </summary>
         private void CreateSureButton()
         {
@@ -208,16 +207,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                     if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                         MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
-                    try
+                    Screen.Exit(() =>
                     {
-                        Screen.Exit(() => new EditorScreen(Qua.Parse(File)));
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, LogType.Runtime);
-                        Screen.Exit(() => new SelectScreen());
-                        NotificationManager.Show(NotificationLevel.Error, "Failed to reload editor screen.");
-                    }
+                        try
+                        {
+                            return new EditorScreen(Qua.Parse(File));
+                        }
+                        catch (Exception exception)
+                        {
+                            Logger.Error(exception, LogType.Runtime);
+                            NotificationManager.Show(NotificationLevel.Error, "Failed to reload editor. Is your .qua file invalid?");
+                            return new SelectScreen();
+                        }
+                    });
                 })
             {
                 Parent = AreYouSure,
