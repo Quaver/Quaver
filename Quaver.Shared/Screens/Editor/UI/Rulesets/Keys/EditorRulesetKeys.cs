@@ -22,6 +22,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Input;
@@ -65,6 +66,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             CreateScrollContainer();
             ActionManager = CreateActionManager();
+            SkinManager.SkinLoaded += OnSkinLoaded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            SkinManager.SkinLoaded -= OnSkinLoaded;
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -308,6 +319,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
             return true;
 
+        }
+
+        /// <summary>
+        ///     Called when the user's skin has loaded (from the options menu),
+        ///     so we can do a reload of it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            ScrollContainer.Destroy();
+            ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
         }
 
         /// <summary>

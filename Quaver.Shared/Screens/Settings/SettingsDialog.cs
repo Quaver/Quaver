@@ -238,24 +238,12 @@ namespace Quaver.Shared.Screens.Settings
                 if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value
                     || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
-                    var game = GameBase.Game as QuaverGame;
+                    ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
+                    ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
-                    if (game.CurrentScreen.Type != QuaverScreenType.Editor)
-                    {
-                        ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
-                        ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
-
-                        Transitioner.FadeIn();
-                        SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
-                        dismissDalog = false;
-                    }
-                    else
-                    {
-                        NotificationManager.Show(NotificationLevel.Error, "You cannot change your skin while in the editor.");
-                        SkinManager.NewQueuedSkin = null;
-                        NewQueuedDefaultSkin = ConfigManager.DefaultSkin.Value;
-                        dismissDalog = false;
-                    }
+                    Transitioner.FadeIn();
+                    SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
+                    dismissDalog = false;
                 }
 
                 // Handle screen resolution changes.
