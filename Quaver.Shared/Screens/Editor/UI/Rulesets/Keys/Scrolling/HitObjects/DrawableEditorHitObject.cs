@@ -64,5 +64,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <returns></returns>
         public virtual bool CheckIfOnScreen() => Info.StartTime * Container.TrackSpeed >= Container.TrackPositionY - Container.Height &&
                                                 Info.StartTime * Container.TrackSpeed <= Container.TrackPositionY + Container.Height;
+
+        /// <summary>
+        ///     Determines if the HitObject is hovered.
+        /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public virtual bool IsHovered(Vector2 mousePos) => ScreenRectangle.Contains(mousePos);
     }
 }

@@ -145,5 +145,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Body.Tint = Colors.DeadLongNote;
             Tail.Tint = Colors.DeadLongNote;
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public override bool IsHovered(Vector2 mousePos) => base.IsHovered(mousePos) || Body.ScreenRectangle.Contains(mousePos) ||
+                                                            Tail.ScreenRectangle.Contains(mousePos);
     }
 }

@@ -75,28 +75,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.PageDown))
                 ConfigManager.EditorScrollSpeedKeys.Value--;
 
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D1))
-                PlaceObject(1);
-
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D2))
-                PlaceObject(2);
-
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D3))
-                PlaceObject(3);
-
-            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D4))
-                PlaceObject(4);
-
-            if (Screen.WorkingMap.Mode == GameMode.Keys7)
+            // Clever way of handing key input with num keys since the enum values are 1 after each other.
+            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
-                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D5))
-                    PlaceObject(5);
-
-                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D6))
-                    PlaceObject(6);
-
-                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D7))
-                    PlaceObject(7);
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.D1 + i))
+                    PlaceObject(i + 1);
             }
 
             // Change between composition tools (only when shift isn't held down).
@@ -161,8 +144,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             // Right click/delete object.
             if (MouseManager.IsUniqueClick(MouseButton.Right))
-            {
-            }
+                DeleteHoveredHitObject();
         }
 
         /// <summary>
@@ -226,6 +208,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // There's no object currently at this position, so add it.
             if (existingObject == null)
                 am?.PlaceHitObject(lane, time);
+        }
+
+        /// <summary>
+        ///     Deletes the HitObject that is currently hovered over.
+        /// </summary>
+        private void DeleteHoveredHitObject()
+        {
+            var obj = ScrollContainer.GetHoveredHitObject();
+
+            if (obj == null)
+                return;
+
+            var am = ActionManager as EditorActionManagerKeys;
+
+            PendingLongNoteReleases[obj.Info.Lane - 1] = null;
+            am?.DeleteHitObject(obj.Info);
         }
 
         /// <summary>

@@ -388,7 +388,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         /// <param name="y"></param>
         /// <returns></returns>
-        public double GetTimeFromY(float y) => (int) AudioEngine.Track.Time - HitPositionY + y;
+        public double GetTimeFromY(float y) => TrackPositionY + (HitPositionY - y);
 
         /// <summary>
         ///     Gets the lane the mouse is in based on the mouse's x position.
@@ -403,6 +403,24 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 lane = -1;
 
             return lane;
+        }
+
+        /// <summary>
+        ///     Gets an object that is currently hovered
+        /// </summary>
+        /// <returns></returns>
+        public DrawableEditorHitObject GetHoveredHitObject()
+        {
+            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+            var relativeMousePos = new Vector2(MouseManager.CurrentState.X, relativeY);
+
+            foreach (var h in HitObjects)
+            {
+                if (h.IsHovered(relativeMousePos))
+                    return h;
+            }
+
+            return null;
         }
 
         /// <summary>
