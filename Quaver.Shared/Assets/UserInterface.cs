@@ -49,6 +49,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D MenuBackgroundBlurred { get; private set; }
         public static Texture2D QuaverLogoStylish { get; private set; }
         public static Texture2D QuaverLogoShadowed { get; private set; }
+        public static Texture2D EditorToolSelect { get; private set; }
+        public static Texture2D EditorToolMine { get; private set; }
+        public static Texture2D EditorToolLongNote { get; private set; }
+        public static Texture2D EditorToolNote { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -91,6 +95,10 @@ namespace Quaver.Shared.Assets
             MenuBackgroundBlurred = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-blurred.jpg"));
             QuaverLogoStylish = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-stylish.png"));
             QuaverLogoShadowed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-shadowed.png"));
+            EditorToolSelect = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/select.png"));
+            EditorToolNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/note.png"));
+            EditorToolLongNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/long-note.png"));
+            EditorToolMine = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/mine.png"));
         }
     }
 }
