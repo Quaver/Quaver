@@ -270,6 +270,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorShowLaneDividerLines { get; private set; }
 
         /// <summary>
+        ///     Anchors HitObjects to the middle, so the snap lines are in the middle of the object.
+        /// </summary>
+        internal static Bindable<bool> EditorHitObjectsMidpointAnchored { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -485,6 +490,7 @@ namespace Quaver.Shared.Config
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
             EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
+            EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -564,6 +570,7 @@ namespace Quaver.Shared.Config
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     EditorBeatSnapColorType.ValueChanged += AutoSaveConfiguration;
                     EditorShowLaneDividerLines.ValueChanged += AutoSaveConfiguration;
+                    EditorHitObjectsMidpointAnchored.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

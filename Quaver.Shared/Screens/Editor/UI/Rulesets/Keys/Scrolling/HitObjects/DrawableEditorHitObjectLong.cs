@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -116,8 +117,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         /// <returns></returns>
         private float GetLongNoteHeight()
-            => Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed -
-                        (float) Container.LaneSize * TextureTail.Height / TextureTail.Width / 2f - Height / 2f - Y);
+        {
+            var height = Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed -
+                            (float) Container.LaneSize * TextureTail.Height / TextureTail.Width / 2 - Height / 2f - Y);
+
+            if (ConfigManager.EditorHitObjectsMidpointAnchored.Value)
+                height -= Height / 2f;
+
+            return height;
+        }
 
         /// <inheritdoc />
         /// <summary>

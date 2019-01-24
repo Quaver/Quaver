@@ -136,6 +136,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged += OnShowDividerLinesChanged;
+            ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged += OnHitObjectMidpointAnchoredChanged;
         }
 
         /// <inheritdoc />
@@ -195,6 +196,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             // ReSharper disable twice DelegateSubtraction
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged -= OnShowDividerLinesChanged;
+            ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged -= OnHitObjectMidpointAnchoredChanged;
 
             HitObjects.ForEach(x => x.Destroy());
             Timeline.Destroy();
@@ -308,7 +310,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
         /// <summary>
         /// </summary>
-        public void ResetObjectPositions()
+        public void ResetObjectPositions(bool positionSnapLines = true)
         {
             HitObjects.ForEach(x =>
             {
@@ -318,7 +320,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                     obj.ResizeLongNote();
             });
 
-            Timeline.RepositionLines();
+            if (positionSnapLines)
+                Timeline.RepositionLines();
         }
 
         /// <summary>
@@ -443,5 +446,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnShowDividerLinesChanged(object sender, BindableValueChangedEventArgs<bool> e) => LaneDividerLines.ForEach(x => x.Visible = e.Value);
+
+        /// <summary>
+        ///     Called when the user wants to anchor the objects y position to their midpoint.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectMidpointAnchoredChanged(object sender, BindableValueChangedEventArgs<bool> e) => ResetObjectPositions(false);
     }
 }

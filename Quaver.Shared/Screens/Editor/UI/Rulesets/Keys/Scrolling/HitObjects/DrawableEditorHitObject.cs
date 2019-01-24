@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Config;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
@@ -61,7 +62,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         ///     Sets the Y position of the HitObject in accordance to the track
         /// </summary>
-        public void SetPositionY() => Y = Container.HitPositionY - Info.StartTime * Container.TrackSpeed - Height;
+        public void SetPositionY()
+        {
+            Y = Container.HitPositionY - Info.StartTime * Container.TrackSpeed - Height;
+
+            if (ConfigManager.EditorHitObjectsMidpointAnchored.Value)
+                Y += Height / 2;
+        }
 
         /// <summary>
         ///     Checks if the object is indeed on-screen and should be drawn.
