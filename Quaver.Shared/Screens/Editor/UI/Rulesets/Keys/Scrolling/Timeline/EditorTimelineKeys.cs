@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
@@ -51,6 +52,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
             InitializeLines();
             Ruleset.Screen.BeatSnap.ValueChanged += OnBeatSnapChanged;
+            ConfigManager.EditorOnlyShowMeasureLines.ValueChanged += OnOnlyShowMeasureLinesChanged;
+            ConfigManager.EditorBeatSnapColorType.ValueChanged += OnBeatSnapColorTypeChanged;
         }
 
         /// <inheritdoc />
@@ -89,8 +92,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             foreach (var item in CachedLines)
                 item.Value.ForEach(x => x.Destroy());
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             Ruleset.Screen.BeatSnap.ValueChanged -= OnBeatSnapChanged;
+            ConfigManager.EditorOnlyShowMeasureLines.ValueChanged -= OnOnlyShowMeasureLinesChanged;
+            ConfigManager.EditorBeatSnapColorType.ValueChanged -= OnBeatSnapColorTypeChanged;
         }
 
         /// <summary>
@@ -157,6 +162,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                         X = Container.AbsolutePosition.X + 2,
                         Y = Container.HitPositionY - time * Container.TrackSpeed - height,
                         Tint = GetLineColor(i % Ruleset.Screen.BeatSnap.Value, i),
+                        Visible = ConfigManager.EditorOnlyShowMeasureLines.Value && measureBeat || !ConfigManager.EditorOnlyShowMeasureLines.Value,
                         Height = height
                     });
                 }
@@ -179,8 +185,30 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         ///     Gets an individual lioe color for the snap line.
         /// </summary>
         /// <param name="val"></param>
+        /// <param name="i"></param>
         /// <returns></returns>
         private Color GetLineColor(int val, int i)
+        {
+            switch (ConfigManager.EditorBeatSnapColorType.Value)
+            {
+                case EditorBeatSnapColor.Default:
+                    return Color.White;
+                case EditorBeatSnapColor.Legacy:
+                    return GetLegacyLineColor(val, i);
+                case EditorBeatSnapColor.White:
+                    return Color.White;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Gets the "legacy" line colors (osu! basically).
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Color GetLegacyLineColor(int val, int i)
         {
             switch (Ruleset.Screen.BeatSnap.Value)
             {
@@ -240,6 +268,36 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => ThreadScheduler.Run(() => InitializeLines());
+        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => ThreadScheduler.Run(() =>
+        {
+            InitializeLines();
+            RecolorLines();
+            ShowMeasureLineIfApplicable();
+        });
+
+        /// <summary>
+        ///     Called when the user wants to display/not display measure lines
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOnlyShowMeasureLinesChanged(object sender, BindableValueChangedEventArgs<bool> e) => ShowMeasureLineIfApplicable();
+
+        /// <summary>
+        ///     Recolors the beat snap lines to the appropriate config color
+        /// </summary>
+        private void RecolorLines() => Lines.ForEach(x => x.Tint = GetLineColor(x.Index % Ruleset.Screen.BeatSnap.Value, x.Index));
+
+        /// <summary>
+        ///     Shows ONLY measure lines if the user wants it in config
+        /// </summary>
+        private void ShowMeasureLineIfApplicable() => Lines.ForEach(x => x.Visible = ConfigManager.EditorOnlyShowMeasureLines.Value && x.IsMeasureLine
+                                                                                 || !ConfigManager.EditorOnlyShowMeasureLines.Value);
+
+        /// <summary>
+        ///     Called when the user changes their snap colors in config.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBeatSnapColorTypeChanged(object sender, BindableValueChangedEventArgs<EditorBeatSnapColor> e) => RecolorLines();
     }
 }

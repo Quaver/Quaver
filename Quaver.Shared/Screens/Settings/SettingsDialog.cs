@@ -328,6 +328,9 @@ namespace Quaver.Shared.Screens.Settings
                 // Editor
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()
                 {
+                    new SettingsEditorSnapColors(this),
+                    new SettingsBool(this, "Show Lane Divider Lines", ConfigManager.EditorShowLaneDividerLines),
+                    new SettingsBool(this, "Only Show Measure Lines", ConfigManager.EditorOnlyShowMeasureLines),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds)
                 }),
                 // Skinning

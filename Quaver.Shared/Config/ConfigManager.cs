@@ -255,6 +255,21 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorEnableHitsounds { get; private set; }
 
         /// <summary>
+        ///     The type of beat snap colors that'll be displayed in the editor.
+        /// </summary>
+        internal static Bindable<EditorBeatSnapColor> EditorBeatSnapColorType { get; private set; }
+
+        /// <summary>
+        ///     Whether or not the user only wants to display measure lines while editing.
+        /// </summary>
+        internal static Bindable<bool> EditorOnlyShowMeasureLines { get; private set; }
+
+        /// <summary>
+        ///     Whether or not the user would like to display the lines that divide the lanes.
+        /// </summary>
+        internal static Bindable<bool> EditorShowLaneDividerLines { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -467,6 +482,9 @@ namespace Quaver.Shared.Config
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
+            EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
+            EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
+            EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -544,6 +562,8 @@ namespace Quaver.Shared.Config
                     KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    EditorBeatSnapColorType.ValueChanged += AutoSaveConfiguration;
+                    EditorShowLaneDividerLines.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

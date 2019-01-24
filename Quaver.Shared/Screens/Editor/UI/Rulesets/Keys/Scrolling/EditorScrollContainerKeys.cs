@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 switch (Ruleset.WorkingMap.Mode)
                 {
                     case GameMode.Keys4:
-                        return 60;
+                        return 70;
                     case GameMode.Keys7:
                         return 50;
                     default:
@@ -102,6 +102,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         private TimelineZoomer Zoomer { get; set; }
 
+        /// <summary>
+        ///     The lines that divide the lanes
+        /// </summary>
+        private List<Sprite> LaneDividerLines { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -130,6 +135,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             RunObjectScreenCheckThread();
 
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
+            ConfigManager.EditorShowLaneDividerLines.ValueChanged += OnShowDividerLinesChanged;
         }
 
         /// <inheritdoc />
@@ -186,8 +192,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
+            ConfigManager.EditorShowLaneDividerLines.ValueChanged -= OnShowDividerLinesChanged;
 
             HitObjects.ForEach(x => x.Destroy());
             Timeline.Destroy();
@@ -199,34 +206,34 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         private void CreateBorderLines()
         {
-            // Left Line
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
+            LaneDividerLines = new List<Sprite>
             {
-                Parent = this,
-                Alignment = Alignment.TopLeft,
-                Size = new ScalableVector2(DividerLineWidth, Height)
-            };
-
-            // Right Line
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
-            {
-                Parent = this,
-                Alignment = Alignment.TopRight,
-                Size = new ScalableVector2(DividerLineWidth, Height)
-            };
-
-            for (var i = 0; i < Ruleset.WorkingMap.GetKeyCount() - 1; i++)
-            {
-                // ReSharper disable once ObjectCreationAsStatement
                 new Sprite
                 {
                     Parent = this,
                     Alignment = Alignment.TopLeft,
                     Size = new ScalableVector2(DividerLineWidth, Height),
-                    X = LaneSize * (i + 1)
-                };
+                    Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                },
+                new Sprite
+                {
+                    Parent = this,
+                    Alignment = Alignment.TopRight,
+                    Size = new ScalableVector2(DividerLineWidth, Height),
+                    Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                }
+            };
+
+            for (var i = 0; i < Ruleset.WorkingMap.GetKeyCount() - 1; i++)
+            {
+                LaneDividerLines.Add(new Sprite
+                {
+                    Parent = this,
+                    Alignment = Alignment.TopLeft,
+                    Size = new ScalableVector2(DividerLineWidth, Height),
+                    X = LaneSize * (i + 1),
+                    Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                });
             }
         }
 
@@ -429,5 +436,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ResetObjectPositions();
+
+        /// <summary>
+        ///     Called when the user changes if they want to show lane divider lines.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnShowDividerLinesChanged(object sender, BindableValueChangedEventArgs<bool> e) => LaneDividerLines.ForEach(x => x.Visible = e.Value);
     }
 }

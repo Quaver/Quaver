@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         ///     Determines if this line is for a measure.
         /// </summary>
-        private bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
+        public bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
                                       && Index % Container.Ruleset.Screen.BeatSnap.Value == 0 && Time >= TimingPoint.StartTime;
 
         /// <inheritdoc />
