@@ -60,9 +60,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <param name="screen"></param>
         public EditorRulesetKeys(EditorScreen screen) : base(screen)
         {
-            CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.LongNote)
+            CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select)
             {
-                Value = EditorCompositionTool.LongNote
+                Value = EditorCompositionTool.Select
             };
 
             CreateScrollContainer();
@@ -101,13 +101,21 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // Change between composition tools (only when shift isn't held down).
             // if shift is held down, then it'll change the beat snap.
             if (KeyboardManager.CurrentState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.LeftShift)
-                || KeyboardManager.CurrentState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.RightShift))
+                && KeyboardManager.CurrentState.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.RightShift))
             {
+                var index = (int) CompositionTool.Value;
+
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Up))
-                    CompositionTool.Value = EditorCompositionTool.Note;
+                {
+                    if (index - 1 >= 0)
+                        CompositionTool.Value = (EditorCompositionTool) index - 1;
+                }
 
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Down))
-                    CompositionTool.Value = EditorCompositionTool.LongNote;
+                {
+                    if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length)
+                        CompositionTool.Value = (EditorCompositionTool) index + 1;
+                }
             }
 
             HandleHitObjectMouseInput();
