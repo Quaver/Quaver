@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                     if (measureBeat && time >= tp.StartTime)
                         measureCount++;
 
-                    var height = measureBeat ? 4 : 1;
+                    var height = measureBeat ? 5 : 2;
 
                     lines.Add(new TimelineTickLine(Container, tp, time, i, measureCount)
                     {
