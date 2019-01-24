@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
                 var btn = CompositionToolButtons[i];
                 btn.Parent = Container;
 
-                btn.Y = 50 * i + 220;
+                btn.Y = 50 * i + 260;
                 btn.X = -btn.Width;
 
                 btn.MoveToX(0, Easing.OutQuint, 450 + 50 * i);
