@@ -247,7 +247,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                         NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        NotificationManager.Show(NotificationLevel.Error, "This tool isn't implemented yet. Choose another!");
+                        break;
                 }
             }
             // An object exists, so delete it.
