@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 switch (Ruleset.WorkingMap.Mode)
                 {
                     case GameMode.Keys4:
-                        return 70;
+                        return 60;
                     case GameMode.Keys7:
                         return 50;
                     default:
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     The y position of the hit position.
         /// </summary>
-        public int HitPositionY { get; } = 580;
+        public int HitPositionY { get; } = 620;
 
         /// <summary>
         ///     The audio playback rate in the last frame. Used to know
@@ -216,6 +216,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                     Alignment = Alignment.TopLeft,
                     Size = new ScalableVector2(DividerLineWidth, Height),
                     Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                    Alpha = 0.45f
                 },
                 new Sprite
                 {
@@ -223,6 +224,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                     Alignment = Alignment.TopRight,
                     Size = new ScalableVector2(DividerLineWidth, Height),
                     Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                    Alpha = 0.45f
                 }
             };
 
@@ -235,6 +237,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                     Size = new ScalableVector2(DividerLineWidth, Height),
                     X = LaneSize * (i + 1),
                     Visible = ConfigManager.EditorShowLaneDividerLines.Value,
+                    Alpha = 0.45f
                 });
             }
         }

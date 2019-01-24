@@ -71,6 +71,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(Width, 2),
+                Alpha = 0.45f
             };
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -79,6 +80,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(2, Height),
+                Alpha = 0.45f
             };
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -87,6 +89,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(Width, 2),
+                Alpha = 0.45f
             };
         }
     }

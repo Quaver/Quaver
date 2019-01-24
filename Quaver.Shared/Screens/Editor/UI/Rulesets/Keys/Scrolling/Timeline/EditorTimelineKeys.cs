@@ -14,6 +14,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -192,13 +193,74 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             switch (ConfigManager.EditorBeatSnapColorType.Value)
             {
                 case EditorBeatSnapColor.Default:
-                    return Color.White;
+                    return GetDefaultLineColor(val, i);
                 case EditorBeatSnapColor.Legacy:
                     return GetLegacyLineColor(val, i);
                 case EditorBeatSnapColor.White:
                     return Color.White;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+         /// <summary>
+        ///     Gets the "legacy" line colors (osu! basically).
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Color GetDefaultLineColor(int val, int i)
+        {
+            switch (Ruleset.Screen.BeatSnap.Value)
+            {
+                // 1/1th
+                case 1:
+                    return Color.White;
+                // 1/2nd
+                case 2:
+                    switch (val)
+                    {
+                        case 0:
+                            return Color.White;
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/4th
+                case 4:
+                    switch (val)
+                    {
+                        case 0:
+                        case 4:
+                            return Color.White;
+                        case 1:
+                        case 3:
+                            return ColorHelper.HexToColor("#af4fb8");
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/3rd, 1/6th, 1/12th,
+                case 3:
+                case 6:
+                case 12:
+                    if (val % 3 == 0)
+                        return Color.White;
+                    else if (val == 0)
+                        return Color.White;
+                    else
+                        return ColorHelper.HexToColor("#4e94b7");
+                // 1/8th, 1//16th
+                case 8:
+                case 16:
+                    if (val == 0)
+                        return Color.White;
+                    else if (( i - 1 ) % 2 == 0)
+                        return ColorHelper.HexToColor("#af4fb8");
+                    else if (i % 4 == 0)
+                        return ColorHelper.HexToColor("#4e94b7");
+                    else
+                        return Colors.MainAccent;
+                default:
+                    return Color.White;
             }
         }
 
