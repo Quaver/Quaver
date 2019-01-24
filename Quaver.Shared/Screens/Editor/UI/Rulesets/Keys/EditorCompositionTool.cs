@@ -9,7 +9,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 {
     public enum EditorCompositionTool
     {
+        Select,
         Note,
-        LongNote
+        LongNote,
+        Mine
     }
 }

@@ -6,11 +6,14 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Editor.Actions;
+using Quaver.Shared.Screens.Editor.UI.Toolkit;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using IDrawable = Wobble.Graphics.IDrawable;
 
@@ -38,8 +41,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
         /// <summary>
         /// </summary>
+        public List<EditorCompositionToolButton> CompositionToolButtons { get; protected set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="screen"></param>
-        public EditorRuleset(EditorScreen screen) => Screen = screen;
+        public EditorRuleset(EditorScreen screen)
+        {
+            Screen = screen;
+
+            // ReSharper disable once VirtualMemberCallInConstructor
+            CompositionToolButtons = CreateCompositionToolButtons();
+            AlignCompositionToolButtons();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -73,5 +87,26 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// </summary>
         /// <returns></returns>
         protected abstract EditorActionManager CreateActionManager();
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected abstract List<EditorCompositionToolButton> CreateCompositionToolButtons();
+
+        /// <summary>
+        /// </summary>
+        private void AlignCompositionToolButtons()
+        {
+            for (var i = 0; i < CompositionToolButtons.Count; i++)
+            {
+                var btn = CompositionToolButtons[i];
+                btn.Parent = Container;
+
+                btn.Y = 50 * i + 220;
+                btn.X = -btn.Width;
+
+                btn.MoveToX(0, Easing.OutQuint, 450 + 50 * i);
+            }
+        }
     }
 }

@@ -434,6 +434,7 @@ namespace Quaver.Shared.Screens.Editor
                 MapManager.Selected.Value.OpenFolder();
         }
 
+        /// <summary>
         ///     Handles changing the beat snap with the scroll wheel + shift
         ///     and arrow keys + shift.
         /// </summary>
@@ -442,19 +443,11 @@ namespace Quaver.Shared.Screens.Editor
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                 return;
 
-            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue ||
-                KeyboardManager.IsUniqueKeyPress(Keys.Up))
-            {
+            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue || KeyboardManager.IsUniqueKeyPress(Keys.Up))
                 ChangeBeatSnap(Direction.Forward);
-                NotificationManager.Show(NotificationLevel.Info, $"Beat Snap changed to: 1/{StringHelper.AddOrdinal(BeatSnap.Value)}");
-            }
 
-            if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue ||
-                KeyboardManager.IsUniqueKeyPress(Keys.Down))
-            {
+            if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue || KeyboardManager.IsUniqueKeyPress(Keys.Down))
                 ChangeBeatSnap(Direction.Backward);
-                NotificationManager.Show(NotificationLevel.Info, $"Beat Snap changed to: 1/{StringHelper.AddOrdinal(BeatSnap.Value)}");
-            }
         }
 
         /// <summary>

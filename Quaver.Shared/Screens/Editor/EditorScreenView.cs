@@ -18,8 +18,10 @@ using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 
@@ -48,6 +50,42 @@ namespace Quaver.Shared.Screens.Editor
             CreateBackground();
             CreateControlBar();
             CreateNavigationBar();
+
+            /*new Sprite()
+            {
+                Parent = Container,
+                Y = 120,
+                Size = new ScalableVector2(170, 38),
+                Image = AssetLoader.LoadTexture2DFromFile($@"C:\users\admin\desktop\aaas.png"),
+                Alpha = 0.65f
+            };
+
+            new Sprite()
+            {
+                Parent = Container,
+                Y = 170,
+                Size = new ScalableVector2(170, 38),
+                Image = AssetLoader.LoadTexture2DFromFile($@"C:\users\admin\desktop\aaad.png"),
+                Alpha = 0.65f
+            };
+
+            new Sprite()
+            {
+                Parent = Container,
+                Y = 220,
+                Size = new ScalableVector2(170, 38),
+                Image = AssetLoader.LoadTexture2DFromFile($@"C:\users\admin\desktop\aaab.png"),
+                Alpha = 1
+            };
+
+            new Sprite()
+            {
+                Parent = Container,
+                Y = 270,
+                Size = new ScalableVector2(170, 38),
+                Image = AssetLoader.LoadTexture2DFromFile($@"C:\users\admin\desktop\aaam.png"),
+                Alpha = 0.65f
+            };*/
         }
 
         /// <inheritdoc />

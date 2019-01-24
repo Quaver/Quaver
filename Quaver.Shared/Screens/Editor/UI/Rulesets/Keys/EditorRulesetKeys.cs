@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
+using Quaver.Shared.Screens.Editor.UI.Toolkit;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Skinning;
 using Wobble.Bindables;
@@ -342,5 +343,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         /// <returns></returns>
         protected sealed override EditorActionManager CreateActionManager() => new EditorActionManagerKeys(this);
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected override List<EditorCompositionToolButton> CreateCompositionToolButtons() => new List<EditorCompositionToolButton>
+        {
+            new EditorCompositionToolButton(EditorCompositionTool.Select),
+            new EditorCompositionToolButton(EditorCompositionTool.Note),
+            new EditorCompositionToolButton(EditorCompositionTool.LongNote),
+            new EditorCompositionToolButton(EditorCompositionTool.Mine)
+        };
     }
 }
