@@ -174,11 +174,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (lane == -1)
                     return;
 
-                var y = GameplayRulesetKeys.ScrollDirection == ScrollDirection.Down
-                    ? MouseManager.CurrentState.Y
-                    : WindowManager.Height - MouseManager.CurrentState.Y;
-
-                var time = (int) ScrollContainer.GetTimeFromY(y) / ScrollContainer.TrackSpeed;
+                var time = (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y) / ScrollContainer.TrackSpeed;
                 var timeFwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Forward, Screen.BeatSnap.Value, time);
                 var timeBwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Backward, Screen.BeatSnap.Value, time);
 

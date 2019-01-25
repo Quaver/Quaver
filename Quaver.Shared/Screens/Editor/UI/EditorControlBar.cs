@@ -226,7 +226,8 @@ namespace Quaver.Shared.Screens.Editor.UI
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as EditorScreen;
                 var ruleset = screen?.Ruleset as EditorRulesetKeys;
-                ruleset?.ToggleScrollDirection();
+                //cruleset?.ToggleScrollDirection();
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
             };
         }
 
