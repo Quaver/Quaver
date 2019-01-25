@@ -31,6 +31,7 @@ using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
@@ -130,6 +131,8 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            ModManager.RemoveSpeedMods();
 
             if (!LoadAudioTrack())
                 return;
