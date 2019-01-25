@@ -53,6 +53,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time (F4)", -48, Alignment.BotLeft,
                 (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),
 
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Undo (CTRL+Z)", -48, Alignment.BotLeft,
+                (o, e) => screen.Ruleset.ActionManager.Undo()),
+
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow), "Redo (CTRL+Y)", -48, Alignment.BotLeft,
+                (o, e) => screen.Ruleset.ActionManager.Redo()),
+
         }, new List<EditorControlButton>
         {
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), "Open Options Menu (CTRL+O)", -48, Alignment.BotRight,

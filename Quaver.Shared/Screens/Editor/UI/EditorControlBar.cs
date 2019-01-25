@@ -156,7 +156,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             ButtonStopTrack.Clicked += (o, e) => EditorScreen.StopTrack();
 
             // Restart
-            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", padding)
+            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_page_option), "Restart Track", padding)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
