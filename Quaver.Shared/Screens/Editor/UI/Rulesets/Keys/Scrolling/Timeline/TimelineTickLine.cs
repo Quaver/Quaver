@@ -41,11 +41,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         public bool IsInView { get; set; }
 
         /// <summary>
-        ///     The text that displays the measure in the song.
-        /// </summary>
-        private SpriteTextBitmap TextMeasure { get; set; }
-
-        /// <summary>
         ///     Determines if this line is for a measure.
         /// </summary>
         public bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
@@ -69,14 +64,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             if (!IsMeasureLine)
                 return;
 
-            TextMeasure = new SpriteTextBitmap(FontsBitmap.MuliBold, measureCount.ToString())
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                FontSize = 28
-            };
-
-            TextMeasure.X = -TextMeasure.Width - 15;
             Y = -2;
         }
 
@@ -84,15 +71,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            DrawToSpriteBatch();
-
-            if (!IsMeasureLine)
-                return;
-
-            TextMeasure.DrawToSpriteBatch();
-        }
+        public override void Draw(GameTime gameTime) => DrawToSpriteBatch();
 
         /// <summary>
         ///     Checks if the timing line is on-screen.

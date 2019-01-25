@@ -325,7 +325,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             try
             {
-                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused)
+                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused && !AudioEngine.Track.IsPreview)
                     return true;
 
                 AudioEngine.LoadCurrentTrack();

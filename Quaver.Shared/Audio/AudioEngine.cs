@@ -33,14 +33,14 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     Loads the track for the currently selected map.
         /// </summary>
-        public static void LoadCurrentTrack()
+        public static void LoadCurrentTrack(bool preview = false)
         {
             Map = MapManager.Selected.Value;
 
             if (Track != null && !Track.IsDisposed)
                 Track.Dispose();
 
-            Track = new AudioTrack(MapManager.CurrentAudioPath)
+            Track = new AudioTrack(MapManager.CurrentAudioPath, preview)
             {
                 Volume = ConfigManager.VolumeMusic.Value,
                 Rate = ModHelper.GetRateFromMods(ModManager.Mods),
