@@ -275,6 +275,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorHitObjectsMidpointAnchored { get; private set; }
 
         /// <summary>
+        ///     Whether or jot the user wants to play the metronome in the editor
+        /// </summary>
+        internal static Bindable<bool> EditorPlayMetronome { get; private set; }
+
+        /// <summary>
+        ///     If the metronome in the editor will play half beats.
+        /// </summary>
+        internal static Bindable<bool> EditorMetronomePlayHalfBeats { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -491,6 +501,8 @@ namespace Quaver.Shared.Config
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
             EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
             EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
+            EditorPlayMetronome = ReadValue(@"EditorPlayMetronome", true, data);
+            EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -571,6 +583,8 @@ namespace Quaver.Shared.Config
                     EditorBeatSnapColorType.ValueChanged += AutoSaveConfiguration;
                     EditorShowLaneDividerLines.ValueChanged += AutoSaveConfiguration;
                     EditorHitObjectsMidpointAnchored.ValueChanged += AutoSaveConfiguration;
+                    EditorPlayMetronome.ValueChanged += AutoSaveConfiguration;
+                    EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

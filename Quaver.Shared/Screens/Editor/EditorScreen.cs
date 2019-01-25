@@ -32,6 +32,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
@@ -114,6 +115,10 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
+        private Metronome Metronome { get; }
+
+        /// <summary>
+        /// </summary>
         public EditorScreen(Qua map)
         {
             OriginalMap = map;
@@ -138,6 +143,7 @@ namespace Quaver.Shared.Screens.Editor
             GameBase.Game.Window.FileDropped += OnFileDropped;
             BeginWatchingFiles();
 
+            Metronome = new Metronome(WorkingMap);
             View = new EditorScreenView(this);
         }
 
@@ -147,13 +153,19 @@ namespace Quaver.Shared.Screens.Editor
         ///  <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            PlayHitsounds();
+            if (!Exiting)
+            {
+                PlayHitsounds();
 
-            if (AudioEngine.Track.IsDisposed)
-                AudioEngine.LoadCurrentTrack();
+                if (ConfigManager.EditorPlayMetronome.Value)
+                    Metronome.Update(gameTime);
 
-            if (DialogManager.Dialogs.Count == 0)
-                HandleInput(gameTime);
+                if (AudioEngine.Track.IsDisposed)
+                    AudioEngine.LoadCurrentTrack();
+
+                if (DialogManager.Dialogs.Count == 0)
+                    HandleInput(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -197,6 +209,7 @@ namespace Quaver.Shared.Screens.Editor
             GameBase.Game.Window.FileDropped -= OnFileDropped;
             FileWatcher.Dispose();
             BeatSnap.Dispose();
+            Metronome.Dispose();
             base.Destroy();
         }
 

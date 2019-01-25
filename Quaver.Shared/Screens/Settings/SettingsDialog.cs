@@ -329,10 +329,12 @@ namespace Quaver.Shared.Screens.Settings
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()
                 {
                     new SettingsEditorSnapColors(this),
+                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds),
+                    new SettingsBool(this, "Enable Metronome", ConfigManager.EditorPlayMetronome),
+                    new SettingsBool(this, "Play Metronome Half-Beats", ConfigManager.EditorMetronomePlayHalfBeats),
                     new SettingsBool(this, "Show Lane Divider Lines", ConfigManager.EditorShowLaneDividerLines),
                     new SettingsBool(this, "Only Show Measure Lines", ConfigManager.EditorOnlyShowMeasureLines),
                     new SettingsBool(this, "Anchor HitObjects At Midpoint", ConfigManager.EditorHitObjectsMidpointAnchored),
-                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds)
                 }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
