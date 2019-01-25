@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.API.Maps;
@@ -64,9 +71,6 @@ namespace Quaver.Shared.Screens.Editor.Timing
                 return;
 
             var point = Qua.GetTimingPointAt(AudioEngine.Track.Time);
-
-            if (AudioEngine.Track.Time < point.StartTime)
-                return;
 
             // Get the total amount of beats that'll be played for the timing point.
             // This can depend on if the user wants 8 beats or 4.
