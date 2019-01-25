@@ -223,11 +223,10 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             ButtonScrollDirection.Clicked += (o, e) =>
             {
-                /*var game = GameBase.Game as QuaverGame;
+                var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as EditorScreen;
                 var ruleset = screen?.Ruleset as EditorRulesetKeys;
-                ruleset?.ToggleScrollDirection();*/
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                ruleset?.ToggleScrollDirection();
             };
         }
 

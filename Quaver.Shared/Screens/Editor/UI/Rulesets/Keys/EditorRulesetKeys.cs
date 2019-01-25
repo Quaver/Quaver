@@ -146,8 +146,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             {
                 case ScrollDirection.Split:
                 case ScrollDirection.Down:
-                    // ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
-                    // break;
+                    ScrollContainer.HitPositionLine.Y = ScrollContainer.HitPositionY;
+                    break;
                 case ScrollDirection.Up:
                     ScrollContainer.HitPositionLine.Y = (int) WindowManager.Height - ScrollContainer.HitPositionY;
                     break;
@@ -174,7 +174,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (lane == -1)
                     return;
 
-                var time = (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y) / ScrollContainer.TrackSpeed;
+                var y = GameplayRulesetKeys.ScrollDirection == ScrollDirection.Down
+                    ? MouseManager.CurrentState.Y
+                    : WindowManager.Height - MouseManager.CurrentState.Y;
+
+                var time = (int) ScrollContainer.GetTimeFromY(y) / ScrollContainer.TrackSpeed;
                 var timeFwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Forward, Screen.BeatSnap.Value, time);
                 var timeBwd = (int) AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Backward, Screen.BeatSnap.Value, time);
 

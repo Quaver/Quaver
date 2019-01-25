@@ -173,12 +173,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
             // Handle upscroll by flipping/rotating the matrix.
-           /* if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
+           if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
             {
                 transformMatrix = transformMatrix * Matrix.CreateTranslation(-ConfigManager.WindowWidth.Value / 2f, -ConfigManager.WindowHeight.Value / 2f, 0f)
                                                   * Matrix.CreateRotationZ(MathHelper.ToRadians(180)) *
                                                   Matrix.CreateTranslation(ConfigManager.WindowWidth.Value / 2f, ConfigManager.WindowHeight.Value / 2f, 0f);
-            }*/
+            }
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
 
@@ -249,8 +249,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             var y = HitPositionY;
 
-            /*if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
-                y = (int) WindowManager.Height - HitPositionY;*/
+            if (GameplayRulesetKeys.ScrollDirection == ScrollDirection.Up)
+                y = (int) WindowManager.Height - HitPositionY;
 
             HitPositionLine = new Sprite
             {
@@ -424,7 +424,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <returns></returns>
         public DrawableEditorHitObject GetHoveredHitObject()
         {
-            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+            var y = GameplayRulesetKeys.ScrollDirection == ScrollDirection.Down
+                ? MouseManager.CurrentState.Y
+                : WindowManager.Height - MouseManager.CurrentState.Y;
+
+            var relativeY = HitPositionY - (int) GetTimeFromY(y);
             var relativeMousePos = new Vector2(MouseManager.CurrentState.X, relativeY);
 
             foreach (var h in HitObjects)
