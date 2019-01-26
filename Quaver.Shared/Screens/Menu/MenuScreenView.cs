@@ -37,6 +37,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -417,8 +418,9 @@ namespace Quaver.Shared.Screens.Menu
                 {
                     return new EditorScreen(MapManager.Selected.Value.LoadQua());
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
                     return new MenuScreen();
                 }

@@ -119,6 +119,12 @@ namespace Quaver.Shared.Screens.Editor
         private Metronome Metronome { get; }
 
         /// <summary>
+        ///     If we're in the process of opening the metadata dialog,
+        ///     doing it under a task, to prevent freezing due to unoptimized text...
+        /// </summary>
+        private bool IsOpeningMetadataDialog { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -144,7 +150,9 @@ namespace Quaver.Shared.Screens.Editor
             GameBase.Game.GlobalUserInterface.Cursor.Visible = false;
 
             GameBase.Game.Window.FileDropped += OnFileDropped;
-            BeginWatchingFiles();
+
+            if (MapManager.Selected.Value.Game == MapGame.Quaver)
+                BeginWatchingFiles();
 
             Metronome = new Metronome(WorkingMap);
             View = new EditorScreenView(this);
@@ -210,7 +218,10 @@ namespace Quaver.Shared.Screens.Editor
         public override void Destroy()
         {
             GameBase.Game.Window.FileDropped -= OnFileDropped;
-            FileWatcher.Dispose();
+
+            if (MapManager.Selected.Value.Game == MapGame.Quaver)
+                FileWatcher.Dispose();
+
             BeatSnap.Dispose();
             Metronome.Dispose();
             base.Destroy();
@@ -238,7 +249,7 @@ namespace Quaver.Shared.Screens.Editor
                 ChangeAudioPlaybackRate(Direction.Forward);
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
-                DialogManager.Show(new EditorMetadataDialog(this));
+                OpenMetadataDialog();
 
             // Timing Setup
             if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
@@ -678,6 +689,12 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void CreateNewDifficulty() => ThreadScheduler.Run(() =>
         {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot create new difficulties for maps from other games. Create a new set!");
+                return;
+            }
+
             Button.IsGloballyClickable = false;
 
             // Save the already existing map.
@@ -821,6 +838,23 @@ namespace Quaver.Shared.Screens.Editor
             {
                 Save();
                 return new GameplayScreen(WorkingMap, "", new List<Score>(), null, true, AudioEngine.Track.Time);
+            });
+        }
+
+        /// <summary>
+        ///    Opens the dialog to change the metadata.
+        /// </summary>
+        public void OpenMetadataDialog()
+        {
+            if (IsOpeningMetadataDialog)
+                return;
+
+            IsOpeningMetadataDialog = true;
+
+            Task.Run(() =>
+            {
+                DialogManager.Show(new EditorMetadataDialog(this));
+                IsOpeningMetadataDialog = false;
             });
         }
 

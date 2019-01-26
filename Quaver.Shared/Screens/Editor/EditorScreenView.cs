@@ -50,7 +50,6 @@ namespace Quaver.Shared.Screens.Editor
             CreateBackground();
             CreateControlBar();
             CreateNavigationBar();
-
         }
 
         /// <inheritdoc />

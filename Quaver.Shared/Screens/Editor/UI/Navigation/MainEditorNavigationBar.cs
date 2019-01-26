@@ -38,11 +38,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left), "Back To Menu (ESC)", -48, Alignment.BotLeft,
                 (o, e) => screen.HandleKeyPressEscape()),
 
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), "Save & Add New Difficulty", -48, Alignment.BotLeft,
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), "New", -48, Alignment.BotLeft,
                 (o, e) => screen.CreateNewDifficulty()),
 
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Undo (CTRL+Z)", -48, Alignment.BotLeft,
+                (o, e) => screen.Ruleset.ActionManager.Undo()),
+
+            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow), "Redo (CTRL+Y)", -48, Alignment.BotLeft,
+                (o, e) => screen.Ruleset.ActionManager.Redo()),
+
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_text_file), "Edit Metadata (F1)", -48, Alignment.BotLeft,
-                (o, e) => DialogManager.Show(new EditorMetadataDialog(screen))),
+                (o, e) => screen.OpenMetadataDialog()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_time), "Timing Setup (F2)", -48, Alignment.BotLeft,
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
@@ -52,12 +58,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time (F4)", -48, Alignment.BotLeft,
                 (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),
-
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Undo (CTRL+Z)", -48, Alignment.BotLeft,
-                (o, e) => screen.Ruleset.ActionManager.Undo()),
-
-            new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow), "Redo (CTRL+Y)", -48, Alignment.BotLeft,
-                (o, e) => screen.Ruleset.ActionManager.Redo()),
 
         }, new List<EditorControlButton>
         {
