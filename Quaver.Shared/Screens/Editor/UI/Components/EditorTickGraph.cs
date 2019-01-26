@@ -96,7 +96,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
         private Sprite CreateTimingPointLine(TimingPointInfo tp) => new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width - 2, 2),
+            Alignment = Alignment.TopCenter,
+            Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.Crimson,
             Y = Height * (float) (tp.StartTime / (AudioEngine.Track.Length)),
             Image = Pixel,
@@ -110,7 +111,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
         private Sprite CreateSliderVelocityLine(SliderVelocityInfo sv) => new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width - 2, 2),
+            Alignment = Alignment.TopCenter,
+            Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.LimeGreen,
             Y = Height * (float) (sv.StartTime / (AudioEngine.Track.Length)),
             Image = Pixel,
@@ -124,7 +126,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
         private Sprite CreatePreviewPointLine(int time) => new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width - 2, 2),
+            Alignment = Alignment.TopCenter,
+            Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.Gold,
             Y = Height * (float) (time/ AudioEngine.Track.Length),
             Image = Pixel,
