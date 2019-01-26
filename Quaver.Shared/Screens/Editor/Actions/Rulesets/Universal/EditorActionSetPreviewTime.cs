@@ -2,6 +2,8 @@
 using Quaver.API.Maps;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Editor.UI.Rulesets;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 
 namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
 {
@@ -11,6 +13,10 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
         /// <summary>
         /// </summary>
         public EditorActionType Type { get; } = EditorActionType.SetPreviewTime;
+
+        /// <summary>
+        /// </summary>
+        private EditorRuleset Ruleset { get; }
 
         /// <summary>
         /// </summary>
@@ -26,10 +32,12 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
 
         /// <summary>
         /// </summary>
+        /// <param name="ruleset"></param>
         /// <param name="workingMap"></param>
         /// <param name="time"></param>
-        public EditorActionSetPreviewTime(Qua workingMap, int time)
+        public EditorActionSetPreviewTime(EditorRuleset ruleset, Qua workingMap, int time)
         {
+            Ruleset = ruleset;
             WorkingMap = workingMap;
             PreviousPreviewTime = WorkingMap.SongPreviewTime;
             Time = time;
@@ -43,6 +51,8 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
             WorkingMap.SongPreviewTime = Time;
 
             var formattedTime = TimeSpan.FromMilliseconds(Time).ToString(@"mm\:ss\.fff");
+
+            MovePreviewPointLine(Time);
             NotificationManager.Show(NotificationLevel.Info, $"Set new song preview time to: {formattedTime}");
         }
 
@@ -54,7 +64,23 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
             WorkingMap.SongPreviewTime = PreviousPreviewTime;
 
             var formattedTime = TimeSpan.FromMilliseconds(PreviousPreviewTime).ToString(@"mm\:ss\.fff");
+
+            MovePreviewPointLine(PreviousPreviewTime);
             NotificationManager.Show(NotificationLevel.Info, $"Set song preview time back to: {formattedTime}");
+        }
+
+        /// <summary>
+        ///     Moves the preview point line on the tick graph to a new location.
+        /// </summary>
+        /// <param name="time"></param>
+        private void MovePreviewPointLine(int time)
+        {
+            switch (Ruleset)
+            {
+                case EditorRulesetKeys keys:
+                    keys.TickGraph.GraphRaw.MovePreviewPointLine(time);
+                    break;
+            }
         }
     }
 }

@@ -18,6 +18,8 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
+using Quaver.Shared.Screens.Editor.UI.Components;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
@@ -54,6 +56,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private EditorScreenView View => Screen.View as EditorScreenView;
 
+        /// <summary>
+        /// </summary>
+        public EditorTickGraphContainer TickGraph { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -66,8 +72,29 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             };
 
             CreateScrollContainer();
+            CreateTickGraph();
             ActionManager = CreateActionManager();
             SkinManager.SkinLoaded += OnSkinLoaded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            TickGraph.Update(gameTime);
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            TickGraph.Draw(gameTime);
+            base.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -76,6 +103,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         public override void Destroy()
         {
             SkinManager.SkinLoaded -= OnSkinLoaded;
+            TickGraph.Dispose();
             base.Destroy();
         }
 
@@ -341,11 +369,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             ScrollContainer.Destroy();
             ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
+
+            TickGraph.SetGraphXPos();
         }
 
         /// <summary>
         /// </summary>
-        public void CreateScrollContainer() => ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
+        public void CreateScrollContainer()
+        {
+            ScrollContainer = new EditorScrollContainerKeys(this) {Parent = Container};
+
+            if (TickGraph?.Graph != null)
+                TickGraph.SetGraphXPos();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -364,5 +400,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             new EditorCompositionToolButton(EditorCompositionTool.LongNote),
             new EditorCompositionToolButton(EditorCompositionTool.Mine)
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateTickGraph() => TickGraph = new EditorTickGraphContainer(this, WorkingMap);
     }
 }

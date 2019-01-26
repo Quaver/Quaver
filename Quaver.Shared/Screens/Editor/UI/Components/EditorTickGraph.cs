@@ -1,0 +1,142 @@
+﻿/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
+using Quaver.Shared.Screens.Editor.UI.Rulesets;
+using Wobble;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+using Wobble.Window;
+
+namespace Quaver.Shared.Screens.Editor.UI.Components
+{
+    public class EditorTickGraph : Sprite
+    {
+        /// <summary>
+        /// </summary>
+        private EditorRuleset Ruleset { get; }
+
+        /// <summary>
+        /// </summary>
+        private Qua Qua { get; }
+
+        /// <summary>
+        /// </summary>
+        private EditorTickGraphContainer Container { get; }
+
+        /// <summary>
+        /// </summary>
+        private Dictionary<TimingPointInfo, Sprite> TimingPointLines { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Dictionary<SliderVelocityInfo, Sprite> SliderVelocityLines { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite PreviewPoint { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Texture2D Pixel { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="qua"></param>
+        /// <param name="ruleset"></param>
+        public EditorTickGraph(EditorTickGraphContainer container, Qua qua, EditorRuleset ruleset)
+        {
+            Container = container;
+            Ruleset = ruleset;
+            Qua = qua;
+            Size = new ScalableVector2(50, WindowManager.Height - 36 - 48);
+            Tint = Color.Black;
+            Alpha = 0.75f;
+
+            Pixel = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
+            Pixel.SetData(new[] { Color.White });
+
+            AddBorder(Color.White, 2);
+            Border.Alpha = 0.45f;
+
+            CreateTickLines();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateTickLines()
+        {
+            TimingPointLines = new Dictionary<TimingPointInfo, Sprite>();
+            SliderVelocityLines = new Dictionary<SliderVelocityInfo, Sprite>();
+
+            foreach (var tp in Qua.TimingPoints)
+                TimingPointLines[tp] = CreateTimingPointLine(tp);
+
+            foreach (var sv in Qua.SliderVelocities)
+                SliderVelocityLines[sv] = CreateSliderVelocityLine(sv);
+
+            PreviewPoint = CreatePreviewPointLine(Qua.SongPreviewTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        /// <returns></returns>
+        private Sprite CreateTimingPointLine(TimingPointInfo tp) => new Sprite
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width - 2, 2),
+            Tint = Color.Crimson,
+            Y = Height * (float) (tp.StartTime / (AudioEngine.Track.Length)),
+            Image = Pixel,
+            Alpha = 0.85f
+        };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sv"></param>
+        /// <returns></returns>
+        private Sprite CreateSliderVelocityLine(SliderVelocityInfo sv) => new Sprite
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width - 2, 2),
+            Tint = Color.LimeGreen,
+            Y = Height * (float) (sv.StartTime / (AudioEngine.Track.Length)),
+            Image = Pixel,
+            Alpha = 0.85f
+        };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private Sprite CreatePreviewPointLine(int time) => new Sprite
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width - 2, 2),
+            Tint = Color.Gold,
+            Y = Height * (float) (time/ AudioEngine.Track.Length),
+            Image = Pixel,
+            Alpha = 0.85f
+        };
+
+        /// <summary>
+        /// </summary>
+        public void MovePreviewPointLine(int time)
+        {
+            PreviewPoint.Y = Height * (float) (time / AudioEngine.Track.Length);
+            Container.ForceRecache();
+        }
+    }
+}

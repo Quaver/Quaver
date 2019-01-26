@@ -609,7 +609,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///    Changes the audio preview time of the map.
         /// </summary>
-        public void ChangePreviewTime(int time) => Ruleset.ActionManager.SetPreviewTime(WorkingMap, time);
+        public void ChangePreviewTime(int time) => Ruleset.ActionManager.SetPreviewTime(Ruleset, WorkingMap, time);
 
         /// <summary>
         ///     Called when a file is dropped into the window.

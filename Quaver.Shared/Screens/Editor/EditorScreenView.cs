@@ -24,6 +24,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor
 {

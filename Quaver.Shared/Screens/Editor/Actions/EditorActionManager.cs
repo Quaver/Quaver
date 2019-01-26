@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal;
+using Quaver.Shared.Screens.Editor.UI.Rulesets;
 
 namespace Quaver.Shared.Screens.Editor.Actions
 {
@@ -67,6 +68,6 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// </summary>
         /// <param name="workingMap"></param>
         /// <param name="time"></param>
-        public void SetPreviewTime(Qua workingMap, int time) => Perform(new EditorActionSetPreviewTime(workingMap, time));
+        public void SetPreviewTime(EditorRuleset ruleset, Qua workingMap, int time) => Perform(new EditorActionSetPreviewTime(ruleset, workingMap, time));
     }
 }
