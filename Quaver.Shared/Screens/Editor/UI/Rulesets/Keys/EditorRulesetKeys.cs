@@ -18,7 +18,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
-using Quaver.Shared.Screens.Editor.UI.Components;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (i.Value?.Graph != null)
                     i.Value.Graph.Visible = i.Value.Type == SelectedVisualizationGraph.Value;
             }
-                
+
             VisualizationGraphs[SelectedVisualizationGraph.Value]?.Draw(gameTime);
             base.Draw(gameTime);
         }

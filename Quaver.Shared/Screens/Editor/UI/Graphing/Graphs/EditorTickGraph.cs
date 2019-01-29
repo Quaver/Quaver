@@ -7,17 +7,14 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Editor.UI.Components
+namespace Quaver.Shared.Screens.Editor.UI.Graphing
 {
     public class EditorTickGraph : EditorVisualizationGraph
     {

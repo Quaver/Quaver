@@ -1,4 +1,4 @@
-﻿namespace Quaver.Shared.Screens.Editor.UI.Components
+﻿namespace Quaver.Shared.Screens.Editor.UI.Graphing
 {
     public enum EditorVisualizationGraphType
     {

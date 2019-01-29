@@ -13,7 +13,6 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
-using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -22,7 +21,7 @@ using Wobble.Input;
 using Wobble.Window;
 using IDrawable = Wobble.Graphics.IDrawable;
 
-namespace Quaver.Shared.Screens.Editor.UI.Components
+namespace Quaver.Shared.Screens.Editor.UI.Graphing
 {
     public class EditorVisualizationGraphContainer : IDrawable, IDisposable
     {

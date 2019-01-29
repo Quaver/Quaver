@@ -2,7 +2,7 @@
 using Quaver.API.Maps;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Screens.Editor.UI.Components;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 

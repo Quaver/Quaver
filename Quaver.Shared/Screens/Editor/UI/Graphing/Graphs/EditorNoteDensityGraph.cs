@@ -1,7 +1,7 @@
 ﻿using Quaver.API.Maps;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 
-namespace Quaver.Shared.Screens.Editor.UI.Components
+namespace Quaver.Shared.Screens.Editor.UI.Graphing
 {
     public class EditorNoteDensityGraph : EditorVisualizationGraph
     {

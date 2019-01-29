@@ -7,7 +7,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Editor.UI.Components
+namespace Quaver.Shared.Screens.Editor.UI.Graphing
 {
     public abstract class EditorVisualizationGraph : Sprite
     {
