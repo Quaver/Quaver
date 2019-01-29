@@ -218,7 +218,7 @@ namespace Quaver.Shared.Graphics.Dialogs
             CancelButton = new TextButton(UserInterface.BlankBox,
                 Fonts.Exo2Medium, "Cancel", 14, (o, e) =>
                 {
-                    OnCancel(o, e);
+                    OnCancel?.Invoke(o, e);
                     Dismiss();
                 })
             {
