@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Navigation
                 (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_dashboard), "Edit Scroll Velocities (F3)", -48, Alignment.BotLeft,
-                (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet")),
+                (o, e) => screen.OpenScrollVelocityDialog()),
 
             new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol), "Set Audio Preview Time (F4)", -48, Alignment.BotLeft,
                 (o, e) => screen.ChangePreviewTime((int) AudioEngine.Track.Time)),

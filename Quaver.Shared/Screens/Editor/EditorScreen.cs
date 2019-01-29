@@ -36,6 +36,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
@@ -856,6 +857,11 @@ namespace Quaver.Shared.Screens.Editor
                 DialogManager.Show(new EditorMetadataDialog(this));
                 IsOpeningMetadataDialog = false;
             });
+        }
+
+        public void OpenScrollVelocityDialog()
+        {
+            DialogManager.Show(new EditorScrollVelocityDialog());
         }
 
         /// <summary>

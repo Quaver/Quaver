@@ -90,6 +90,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             IsClosing = true;
             MetadataChanger.Animations.Clear();
             MetadataChanger.MoveToX(-MetadataChanger.Width - 2, Easing.OutQuint, 400);
+
+            Animations.Clear();
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0f, 200));
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
         }
