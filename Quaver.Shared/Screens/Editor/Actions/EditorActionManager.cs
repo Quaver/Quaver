@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <summary>
         ///     Stores a LIFO structure of actions to undo.
         /// </summary>
-        private Stack<IEditorAction> UndoStack { get; } = new Stack<IEditorAction>();
+        public Stack<IEditorAction> UndoStack { get; } = new Stack<IEditorAction>();
 
         /// <summary>
         ///     Stores a LIFO structure of actions to redo.

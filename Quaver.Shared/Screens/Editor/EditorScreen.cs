@@ -881,6 +881,9 @@ namespace Quaver.Shared.Screens.Editor
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
                 return;
 
+            if (Ruleset.ActionManager.UndoStack.Count == 0)
+                return;
+
             Logger.Important($"Detected game crash. Autosaving map", LogType.Runtime);
 
             var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave";
