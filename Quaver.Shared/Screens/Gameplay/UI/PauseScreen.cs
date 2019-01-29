@@ -15,6 +15,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Window;
@@ -194,14 +195,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
 
-            // Call specific method for button selected
-            if (Selected.Equals(Continue))
+            if (Selected == Continue)
                 InitiateContinue();
 
-            else if (Selected.Equals(Retry))
+            else if (Selected == Retry)
                 InitiateRetry();
 
-            else if (Selected.Equals(Quit))
+            else if (Selected == Quit)
                 InitiateQuit();
         }
 
@@ -211,29 +211,25 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="button"></param>
         private void HoverButton(int index, bool dontPlayAudio = false)
         {
-            // Update indexing
             SelectedIndex = index;
             Selected = Buttons[index];
 
-            // Play sfx
-            // if (!dontPlayAudio)
-            // Todo: not implemented
-
             // Update Animations
             Buttons.ForEach(x => ClearNonAlphaAnimations(x));
-            foreach (var x in Buttons)
+            foreach (var button in Buttons)
             {
-                if (x.Equals(Buttons[index]))
+                ClearNonAlphaAnimations(button);
+
+                if (button == Selected)
                 {
-                    x.Animations.Add(new Animation(Easing.OutQuint, x.Tint, Color.White, ANIMATION_TIME));
-                    x.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, x.X, GetActivePosX(x) + HOVER_X_OFFSET, ANIMATION_TIME));
+                    button.FadeToColor(Color.White, Easing.OutQuint, ANIMATION_TIME);
+                    button.MoveToX(GetActivePosX(button) + HOVER_X_OFFSET, Easing.OutQuint, ANIMATION_TIME);
+
+                    continue;
                 }
 
-                else
-                {
-                    x.Animations.Add(new Animation(Easing.OutQuint, x.Tint, TintColor, ANIMATION_TIME));
-                    x.Animations.Add(new Animation(AnimationProperty.X, Easing.OutQuint, x.X, GetActivePosX(x), ANIMATION_TIME));
-                }
+                button.FadeToColor(TintColor, Easing.OutQuint, ANIMATION_TIME);
+                button.MoveToX(GetActivePosX(button), Easing.OutQuint, ANIMATION_TIME);
             }
         }
 
@@ -288,7 +284,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed)
                 Visible = false;
 
-            if (Screen.IsPaused)
+            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0)
             {
                 HandleKeyPressDown();
                 HandleKeyPressUp();
@@ -332,10 +328,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             for (var i = 0; i < drawable.Animations.Count; i++)
             {
-                if (!drawable.Animations[i].Properties.Equals(AnimationProperty.Alpha))
+                for (var i = drawable.Animations.Count - 1; i >= 0; i--)
                 {
+                    if (drawable.Animations[i].Properties == AnimationProperty.Alpha)
+                        continue;
+
                     drawable.Animations.RemoveAt(i);
-                    i--;
                 }
             }
         }
