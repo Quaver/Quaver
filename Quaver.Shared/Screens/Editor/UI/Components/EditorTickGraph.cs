@@ -19,20 +19,8 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor.UI.Components
 {
-    public class EditorTickGraph : Sprite
+    public class EditorTickGraph : EditorVisualizationGraph
     {
-        /// <summary>
-        /// </summary>
-        private EditorRuleset Ruleset { get; }
-
-        /// <summary>
-        /// </summary>
-        private Qua Qua { get; }
-
-        /// <summary>
-        /// </summary>
-        private EditorTickGraphContainer Container { get; }
-
         /// <summary>
         /// </summary>
         private Dictionary<TimingPointInfo, Sprite> TimingPointLines { get; set; }
@@ -45,33 +33,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
         /// </summary>
         private Sprite PreviewPoint { get; set; }
 
-        /// <summary>
-        /// </summary>
-        private Texture2D Pixel { get; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="container"></param>
         /// <param name="qua"></param>
         /// <param name="ruleset"></param>
-        public EditorTickGraph(EditorTickGraphContainer container, Qua qua, EditorRuleset ruleset)
-        {
-            Container = container;
-            Ruleset = ruleset;
-            Qua = qua;
-            Size = new ScalableVector2(50, WindowManager.Height - 36 - 48);
-            Tint = Color.Black;
-            Alpha = 0.75f;
-
-            Pixel = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
-            Pixel.SetData(new[] { Color.White });
-
-            AddBorder(Color.White, 2);
-            Border.Alpha = 0.45f;
-
-            CreateTickLines();
-        }
+        public EditorTickGraph(EditorVisualizationGraphContainer container, Qua qua, EditorRuleset ruleset) : base(container, qua, ruleset)
+            => CreateTickLines();
 
         /// <summary>
         /// </summary>

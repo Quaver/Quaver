@@ -2,6 +2,7 @@
 using Quaver.API.Maps;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Editor.UI.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 
@@ -78,7 +79,8 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
             switch (Ruleset)
             {
                 case EditorRulesetKeys keys:
-                    keys.TickGraph.GraphRaw.MovePreviewPointLine(time);
+                    var graph = keys.VisualizationGraphs[EditorVisualizationGraphType.Tick].GraphRaw as EditorTickGraph;
+                    graph?.MovePreviewPointLine(time);
                     break;
             }
         }

@@ -24,8 +24,12 @@ using IDrawable = Wobble.Graphics.IDrawable;
 
 namespace Quaver.Shared.Screens.Editor.UI.Components
 {
-    public class EditorTickGraphContainer : IDrawable, IDisposable
+    public class EditorVisualizationGraphContainer : IDrawable, IDisposable
     {
+        /// <summary>
+        /// </summary>
+        public EditorVisualizationGraphType Type { get; }
+
         /// <summary>
         /// </summary>
         private EditorRuleset Ruleset { get; }
@@ -38,7 +42,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
         /// <summary>
         ///     The raw graph that needs to be cached to a RenderTarget2D
         /// </summary>
-        public EditorTickGraph GraphRaw { get; }
+        public EditorVisualizationGraph GraphRaw { get; }
 
         /// <summary>
         ///     If on the next draw call we'll be force recaching the graph.
@@ -56,12 +60,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Components
 
         /// <summary>
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="ruleset"></param>
         /// <param name="map"></param>
-        public EditorTickGraphContainer(EditorRuleset ruleset, Qua map)
+        public EditorVisualizationGraphContainer(EditorVisualizationGraphType type, EditorRuleset ruleset, Qua map)
         {
+            Type = type;
             Ruleset = ruleset;
-            GraphRaw = new EditorTickGraph(this, map, ruleset);
+
+            switch (type)
+            {
+                case EditorVisualizationGraphType.Tick:
+                    GraphRaw = new EditorTickGraph(this, map, ruleset);
+                    break;
+                case EditorVisualizationGraphType.Density:
+                    GraphRaw = new EditorNoteDensityGraph(this, map, ruleset);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         /// <inheritdoc />

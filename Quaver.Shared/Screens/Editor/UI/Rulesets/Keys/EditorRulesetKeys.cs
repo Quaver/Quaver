@@ -58,7 +58,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        public EditorTickGraphContainer TickGraph { get; private set; }
+        public Bindable<EditorVisualizationGraphType> SelectedVisualizationGraph { get; }
+
+        /// <summary>
+        /// </summary>
+        public Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer> VisualizationGraphs { get; }
+            = new Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer>();
 
         /// <inheritdoc />
         /// <summary>
@@ -66,13 +71,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <param name="screen"></param>
         public EditorRulesetKeys(EditorScreen screen) : base(screen)
         {
-            CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select)
-            {
-                Value = EditorCompositionTool.Select
-            };
+            CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select) { Value = EditorCompositionTool.Select };
+            SelectedVisualizationGraph = new Bindable<EditorVisualizationGraphType>(EditorVisualizationGraphType.Tick)
+                { Value = EditorVisualizationGraphType.Tick};
 
             CreateScrollContainer();
-            CreateTickGraph();
+            CreateVisualizationGraphs();
             ActionManager = CreateActionManager();
             SkinManager.SkinLoaded += OnSkinLoaded;
         }
@@ -83,7 +87,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            TickGraph.Update(gameTime);
+            VisualizationGraphs[SelectedVisualizationGraph.Value]?.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -93,7 +97,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            TickGraph.Draw(gameTime);
+            foreach (var i in VisualizationGraphs)
+            {
+                if (i.Value?.Graph != null)
+                    i.Value.Graph.Visible = i.Value.Type == SelectedVisualizationGraph.Value;
+            }
+                
+            VisualizationGraphs[SelectedVisualizationGraph.Value]?.Draw(gameTime);
             base.Draw(gameTime);
         }
 
@@ -103,7 +113,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         public override void Destroy()
         {
             SkinManager.SkinLoaded -= OnSkinLoaded;
-            TickGraph.Dispose();
+
+            foreach (var i in VisualizationGraphs)
+                i.Value.Dispose();
+
             base.Destroy();
         }
 
@@ -144,9 +157,30 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length)
                         CompositionTool.Value = (EditorCompositionTool) index + 1;
                 }
+
+                SwitchGraphs();
             }
 
             HandleHitObjectMouseInput();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SwitchGraphs()
+        {
+            var index = (int) SelectedVisualizationGraph.Value;
+
+            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Z))
+            {
+                if (index - 1 >= 0)
+                    SelectedVisualizationGraph.Value = (EditorVisualizationGraphType) index - 1;
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.X))
+            {
+                if (index + 1 < Enum.GetNames(typeof(EditorVisualizationGraphType)).Length)
+                    SelectedVisualizationGraph.Value = (EditorVisualizationGraphType) index + 1;
+            }
         }
 
         /// <summary>
@@ -370,7 +404,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             ScrollContainer.Destroy();
             ScrollContainer = new EditorScrollContainerKeys(this) { Parent = Container };
 
-            TickGraph.SetGraphXPos();
+            foreach (var i in VisualizationGraphs)
+                i.Value.SetGraphXPos();
         }
 
         /// <summary>
@@ -379,8 +414,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             ScrollContainer = new EditorScrollContainerKeys(this) {Parent = Container};
 
-            if (TickGraph?.Graph != null)
-                TickGraph.SetGraphXPos();
+            foreach (var i in VisualizationGraphs)
+                i.Value?.SetGraphXPos();
         }
 
         /// <inheritdoc />
@@ -403,6 +438,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        private void CreateTickGraph() => TickGraph = new EditorTickGraphContainer(this, WorkingMap);
+        private void CreateVisualizationGraphs()
+        {
+            foreach (EditorVisualizationGraphType type in Enum.GetValues(typeof(EditorVisualizationGraphType)))
+                VisualizationGraphs.Add(type, new EditorVisualizationGraphContainer(type, this, WorkingMap));
+        }
     }
 }
