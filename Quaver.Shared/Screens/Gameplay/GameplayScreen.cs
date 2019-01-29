@@ -586,15 +586,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 // Restart the map if the user has held it down for
                 if (RestartKeyHoldTime >= 200)
-                {
-                    SkinManager.Skin.SoundRetry.CreateChannel().Play();
-
-                    // Use ChangeScreen here to give instant feedback. Can't be threaded
-                    if (InReplayMode)
-                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
-                    else
-                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
-                }
+                    Retry();
 
                 return;
             }
@@ -611,6 +603,21 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Animations.Clear();
                 screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 200));
             }
+        }
+
+        /// <summary>
+        ///     Will restart the screen appropriately.
+        /// </summary>
+        public void Retry()
+        {
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            SkinManager.Skin.SoundRetry.CreateChannel().Play();
+
+            // Use ChangeScreen here to give instant feedback. Can't be threaded
+            if (InReplayMode)
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+            else
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
         }
 
         /// <summary>

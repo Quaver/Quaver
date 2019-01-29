@@ -241,7 +241,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (!Screen.IsPaused)
                 return;
 
-            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             Screen.Pause();
         }
 
@@ -253,9 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (!Screen.IsPaused)
                 return;
 
-            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-            SkinManager.Skin.SoundRetry.CreateChannel().Play();
-            QuaverScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
+            Screen.Retry();
         }
 
         /// <summary>
@@ -326,15 +323,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="drawable"></param>
         private void ClearNonAlphaAnimations(Drawable drawable)
         {
-            for (var i = 0; i < drawable.Animations.Count; i++)
+            for (var i = drawable.Animations.Count - 1; i >= 0; i--)
             {
-                for (var i = drawable.Animations.Count - 1; i >= 0; i--)
-                {
-                    if (drawable.Animations[i].Properties == AnimationProperty.Alpha)
-                        continue;
+                if (drawable.Animations[i].Properties == AnimationProperty.Alpha)
+                    continue;
 
-                    drawable.Animations.RemoveAt(i);
-                }
+                drawable.Animations.RemoveAt(i);
             }
         }
 
