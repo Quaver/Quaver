@@ -35,6 +35,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.Autosave;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
@@ -157,6 +158,11 @@ namespace Quaver.Shared.Screens.Editor
 
             Metronome = new Metronome(WorkingMap);
             View = new EditorScreenView(this);
+
+            AppDomain.CurrentDomain.UnhandledException += OnCrash;
+
+            if (File.Exists($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave"))
+                DialogManager.Show(new AutosaveDetectionDialog());
         }
 
         /// <inheritdoc />
@@ -219,6 +225,7 @@ namespace Quaver.Shared.Screens.Editor
         public override void Destroy()
         {
             GameBase.Game.Window.FileDropped -= OnFileDropped;
+            AppDomain.CurrentDomain.UnhandledException -= OnCrash;
 
             if (MapManager.Selected.Value.Game == MapGame.Quaver)
                 FileWatcher.Dispose();
@@ -673,7 +680,7 @@ namespace Quaver.Shared.Screens.Editor
 
                 await Task.Delay(500);
 
-                if (GameBase.Game.TimeRunning - LastSaveTime < 600)
+                if (GameBase.Game.TimeRunning - LastSaveTime < 600 || Exiting)
                     return;
 
                 // Only make a new dialog if one isn't already up.
@@ -862,6 +869,22 @@ namespace Quaver.Shared.Screens.Editor
         public void OpenScrollVelocityDialog()
         {
             DialogManager.Show(new EditorScrollVelocityDialog());
+        }
+
+        /// <summary>
+        ///     Autosave when the game crashes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCrash(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+                return;
+
+            Logger.Important($"Detected game crash. Autosaving map", LogType.Runtime);
+
+            var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave";
+            WorkingMap.Save(path);
         }
 
         /// <summary>

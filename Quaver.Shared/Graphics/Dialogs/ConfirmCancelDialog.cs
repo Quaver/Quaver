@@ -67,13 +67,19 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// </summary>
         private EventHandler OnConfirm { get; }
 
+        /// <summary>
+        ///     Method called when cancelling the dialog.
+        /// </summary>
+        private EventHandler OnCancel { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ConfirmCancelDialog(string headerText, EventHandler onConfirm) : base(0)
+        public ConfirmCancelDialog(string headerText, EventHandler onConfirm, EventHandler onCancel = null) : base(0)
         {
             HeaderText = headerText;
             OnConfirm = onConfirm;
+            OnCancel = onCancel;
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 100));
             CreateContent();
         }
@@ -210,7 +216,11 @@ namespace Quaver.Shared.Graphics.Dialogs
         private void CreateCancelButton()
         {
             CancelButton = new TextButton(UserInterface.BlankBox,
-                Fonts.Exo2Medium, "Cancel", 14, (o, e) => Dismiss())
+                Fonts.Exo2Medium, "Cancel", 14, (o, e) =>
+                {
+                    OnCancel(o, e);
+                    Dismiss();
+                })
             {
                 Parent = AreYouSure,
                 Y = DividerLine.Y + DividerLine.Height + 25,
