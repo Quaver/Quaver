@@ -239,6 +239,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 X = ButtonRestartTrack.X + ButtonRestartTrack.Width + 15,
+                Y = -2,
                 FontSize = 24,
                 Alignment = Alignment.MidLeft
             };
@@ -246,6 +247,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             TextAudioTimeLeft = new SpriteTextBitmap(FontsBitmap.MuliBold, "-00:00.000")
             {
                 Parent = this,
+                Y = -2,
                 X = ButtonScrollDirection.AbsolutePosition.X - ButtonScrollDirection.Width - 15,
                 FontSize = 24,
                 Alignment = Alignment.MidLeft
