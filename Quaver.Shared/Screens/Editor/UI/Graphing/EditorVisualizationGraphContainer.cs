@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Editor.UI.Graphing.Graphs;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;

@@ -14,7 +14,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Editor.UI.Graphing
+namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
 {
     public class EditorTickGraph : EditorVisualizationGraph
     {
