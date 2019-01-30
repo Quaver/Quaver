@@ -7,6 +7,8 @@
 
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.Editor.UI.Graphing.Graphs;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 
 namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
@@ -49,6 +51,11 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
             WorkingMap.Sort();
             Container.RemoveHitObjectSprite(HitObject);
             Container.Ruleset.Screen.SetHitSoundObjectIndex();
+
+            var graphContainer = Container.Ruleset.VisualizationGraphs[EditorVisualizationGraphType.Density];
+            var graph = graphContainer?.GraphRaw as EditorNoteDensityGraph;
+            graph?.RefreshSample(HitObject);
+            graphContainer?.ForceRecache();
         }
 
         /// <inheritdoc />
