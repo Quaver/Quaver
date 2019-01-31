@@ -184,10 +184,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             {
                 case EditorRulesetKeys keys:
                     var view = (EditorScreenView) keys.Screen.View;
-                    Graph.Y = view.NavigationBar.Height + 1;
 
-                    keys.ScrollContainer.Update(new GameTime(TimeSpan.Zero, TimeSpan.Zero));
-                    Graph.X = keys.ScrollContainer.AbsolutePosition.X - Graph.Width - 10;
+                    if (Graph != null)
+                    {
+                        Graph.Y = view.NavigationBar.Height + 1;
+
+                        keys.ScrollContainer.Update(new GameTime(TimeSpan.Zero, TimeSpan.Zero));
+                        Graph.X = keys.ScrollContainer.AbsolutePosition.X - Graph.Width - 10;
+                    }
                     break;
                 default:
                     throw new InvalidOperationException();

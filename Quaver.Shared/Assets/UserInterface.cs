@@ -53,6 +53,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorToolMine { get; private set; }
         public static Texture2D EditorToolLongNote { get; private set; }
         public static Texture2D EditorToolNote { get; private set; }
+        public static Texture2D EditorLayerPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -99,6 +100,7 @@ namespace Quaver.Shared.Assets
             EditorToolNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/note.png"));
             EditorToolLongNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/long-note.png"));
             EditorToolMine = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/mine.png"));
+            EditorLayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/layer-panel.png"));
         }
     }
 }

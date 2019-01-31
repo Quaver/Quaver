@@ -38,6 +38,7 @@ using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Autosave;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
+using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
@@ -76,6 +77,10 @@ namespace Quaver.Shared.Screens.Editor
         ///     The game mode/ruleset used for the editor.
         /// </summary>
         public EditorRuleset Ruleset { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public EditorLayerer Layerer { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -213,7 +218,6 @@ namespace Quaver.Shared.Screens.Editor
                 }));
 
                 MapManager.Selected.Value.AskToRemoveHitObjects = false;
-
             }
 
             base.OnFirstUpdate();
@@ -417,6 +421,11 @@ namespace Quaver.Shared.Screens.Editor
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift)
                 || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                return;
+
+            var view = (EditorScreenView) View;
+
+            if (view.Layerer.Container.InputEnabled)
                 return;
 
             // Seek backwards

@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
+using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -42,6 +43,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorNavigationBar NavigationBar { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorLayerer Layerer { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -51,6 +56,7 @@ namespace Quaver.Shared.Screens.Editor
             CreateBackground();
             CreateControlBar();
             CreateNavigationBar();
+            CreateLayerer();
         }
 
         /// <inheritdoc />
@@ -65,6 +71,7 @@ namespace Quaver.Shared.Screens.Editor
             screen.Ruleset.Update(gameTime);
 
             Container?.Update(gameTime);
+            screen.Layerer?.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -80,6 +87,7 @@ namespace Quaver.Shared.Screens.Editor
             screen.Ruleset.Draw(gameTime);
 
             Container?.Draw(gameTime);
+            screen.Layerer?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -130,7 +138,7 @@ namespace Quaver.Shared.Screens.Editor
             Background.BrightnessSprite.ClearAnimations();
 
             Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-                Easing.Linear, Background.BrightnessSprite.Alpha, 0.40f, 200));
+                Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 200));
         }
 
         /// <summary>
@@ -168,6 +176,22 @@ namespace Quaver.Shared.Screens.Editor
             NavigationBar.Y = -NavigationBar.Height;
 
             NavigationBar.MoveToY(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        private void CreateLayerer()
+        {
+            Layerer = new EditorLayerer(Screen as EditorScreen)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = NavigationBar.Y + NavigationBar.Height + 50
+            };
+
+            Layerer.X = Layerer.Width;
+            Layerer.MoveToX(0, Easing.OutQuint, 800);
         }
     }
 }

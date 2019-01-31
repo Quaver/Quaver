@@ -168,6 +168,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private void SwitchGraphs()
         {
+            if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+                return;
+
             var index = (int) SelectedVisualizationGraph.Value;
 
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Z))
