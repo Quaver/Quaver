@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -78,6 +79,10 @@ namespace Quaver.Shared
         /// </summary>
         public bool IsDeployedBuild => AssemblyName.Version.Major != 0 || AssemblyName.Version.Minor != 0 || AssemblyName.Version.Revision != 0 ||
                                         AssemblyName.Version.Build != 0;
+
+        /// <summary>
+        /// </summary>
+        public List<Action> ScheduledRenderTargetDraws { get; } = new List<Action>();
 
         /// <summary>
         ///     Stringified version name of the client.
@@ -223,6 +228,12 @@ namespace Quaver.Shared
         {
             if (!IsReadyToUpdate)
                 return;
+
+            for (var i = ScheduledRenderTargetDraws.Count - 1; i >= 0; i--)
+            {
+                ScheduledRenderTargetDraws[i]?.Invoke();
+                ScheduledRenderTargetDraws.Remove(ScheduledRenderTargetDraws[i]);
+            }
 
             base.Draw(gameTime);
 

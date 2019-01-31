@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             if (SeekBarLine != null)
                 SeekBarLine.Y = (float) ( AudioEngine.Track.Time / AudioEngine.Track.Length ) * Graph.Height;
 
-            Graph.Update(gameTime);
+            Graph?.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -127,45 +127,52 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
                 // ignored
             }
 
-            var (pixelWidth, pixelHeight) = GraphRaw.AbsoluteSize * WindowManager.ScreenScale;
+            var game = GameBase.Game as QuaverGame;
 
-            var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth, (int) pixelHeight, false,
-                GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-            GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphRaw.SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.Opaque};
-            GraphRaw.Draw(gameTime);
-            GameBase.Game.SpriteBatch.End();
-
-            Texture2D outputTexture = renderTarget;
-
-            GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-
-            if (ForceRecaching && Graph != null)
+            game?.ScheduledRenderTargetDraws.Add(() =>
             {
-                Graph.Image = outputTexture;
-                ForceRecaching = false;
-            }
-            else
-            {
-                Graph = new ImageButton(outputTexture)
+                var (pixelWidth, pixelHeight) = GraphRaw.AbsoluteSize * WindowManager.ScreenScale;
+
+                var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth, (int) pixelHeight, false,
+                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+                GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
+                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+
+                GraphRaw.SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.Opaque};
+                GraphRaw.Draw(gameTime);
+                GameBase.Game.SpriteBatch.End();
+
+                Texture2D outputTexture = renderTarget;
+
+                GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+
+                if (ForceRecaching && Graph != null)
                 {
-                    Parent = Ruleset.Screen.View.Container,
-                    Size = GraphRaw.Size,
-                    SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.AlphaBlend},
-                    DestroyIfParentIsNull = false
-                };
+                    Graph.Image = outputTexture;
+                    ForceRecaching = false;
+                }
+                else
+                {
+                    Graph = new ImageButton(outputTexture)
+                    {
+                        Parent = Ruleset.Screen.View.Container,
+                        Size = GraphRaw.Size,
+                        SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.AlphaBlend},
+                        DestroyIfParentIsNull = false
+                    };
 
-                var view = Ruleset.Screen.View as EditorScreenView;
+                    var view = Ruleset.Screen.View as EditorScreenView;
 
-                var children = Ruleset.Screen.View.Container.Children;
+                    var children = Ruleset.Screen.View.Container.Children;
 
-                // Make sure the navbar appears over the graph, so that the hover tooltips are on top.
-                ListHelper.Swap(Ruleset.Screen.View.Container.Children, children.IndexOf(view?.NavigationBar), children.IndexOf(Graph));
-                CreateProgressSeekBar();
-            }
+                    // Make sure the navbar appears over the graph, so that the hover tooltips are on top.
+                    ListHelper.Swap(Ruleset.Screen.View.Container.Children, children.IndexOf(view?.NavigationBar), children.IndexOf(Graph));
+                    CreateProgressSeekBar();
+                }
 
-            SetGraphXPos();
+                SetGraphXPos();
+            });
         }
 
         /// <summary>
@@ -206,7 +213,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
         /// </summary>
         private void HandleDragging()
         {
-            if (Graph.IsHeld && !AudioEngine.Track.IsDisposed)
+            if (Graph != null && Graph.IsHeld && !AudioEngine.Track.IsDisposed)
             {
                 var percentage = (MouseManager.CurrentState.Y - Graph.AbsolutePosition.Y) / Graph.AbsoluteSize.Y;
                 var targetPos = percentage * AudioEngine.Track.Length;
