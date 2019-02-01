@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
                     Parent = this,
                     Alignment = Alignment.TopLeft,
                     Size = new ScalableVector2(width, 5),
-                    Y = Height * (float) (s.First().StartTime / SampleTime * SampleTime / AudioEngine.Track.Length) + 2,
+                    Y = Height - Height * (float) (s.First().StartTime / SampleTime * SampleTime / AudioEngine.Track.Length) + 2,
                     Tint = GetBarColor(width)
                 };
 
@@ -112,7 +112,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
                     Parent = this,
                     Alignment = Alignment.TopLeft,
                     Size = new ScalableVector2(width, 5),
-                    Y = Height * (float) (objs.First().StartTime / SampleTime * SampleTime / AudioEngine.Track.Length) + 2,
+                    Y = Height - Height * (float) (objs.First().StartTime / SampleTime * SampleTime / AudioEngine.Track.Length) + 2,
                     Tint = GetBarColor(width)
                 };
 

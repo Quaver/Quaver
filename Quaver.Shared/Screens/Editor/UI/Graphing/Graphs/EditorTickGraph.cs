@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
             Alignment = Alignment.TopCenter,
             Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.Crimson,
-            Y = Height * (float) (tp.StartTime / (AudioEngine.Track.Length)),
+            Y = Height - Height * (float) (tp.StartTime / (AudioEngine.Track.Length)),
             Image = Pixel,
             Alpha = 0.85f
         };
@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
             Alignment = Alignment.TopCenter,
             Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.LimeGreen,
-            Y = Height * (float) (sv.StartTime / (AudioEngine.Track.Length)),
+            Y = Height - Height * (float) (sv.StartTime / (AudioEngine.Track.Length)),
             Image = Pixel,
             Alpha = 0.85f
         };
@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
             Alignment = Alignment.TopCenter,
             Size = new ScalableVector2(Width - 4, 2),
             Tint = Color.Gold,
-            Y = Height * (float) (time/ AudioEngine.Track.Length),
+            Y = Height - Height * (float) (time/ AudioEngine.Track.Length),
             Image = Pixel,
             Alpha = 0.85f
         };
@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         /// </summary>
         public void MovePreviewPointLine(int time)
         {
-            PreviewPoint.Y = Height * (float) (time / AudioEngine.Track.Length);
+            PreviewPoint.Y = Height - Height * (float) (time / AudioEngine.Track.Length);
             Container.ForceRecache();
         }
     }

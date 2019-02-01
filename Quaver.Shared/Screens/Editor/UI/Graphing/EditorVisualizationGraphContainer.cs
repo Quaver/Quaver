@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             HandleDragging();
 
             if (SeekBarLine != null)
-                SeekBarLine.Y = (float) ( AudioEngine.Track.Time / AudioEngine.Track.Length ) * Graph.Height;
+                SeekBarLine.Y = Graph.Height - (float) ( AudioEngine.Track.Time / AudioEngine.Track.Length ) * Graph.Height;
 
             Graph?.Update(gameTime);
         }
@@ -220,7 +220,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             if (Graph != null && Graph.IsHeld && !AudioEngine.Track.IsDisposed)
             {
                 var percentage = (MouseManager.CurrentState.Y - Graph.AbsolutePosition.Y) / Graph.AbsoluteSize.Y;
-                var targetPos = percentage * AudioEngine.Track.Length;
+                var targetPos = (1 - percentage) * AudioEngine.Track.Length;
 
                 if ((int) targetPos != (int) AudioEngine.Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
                 {
