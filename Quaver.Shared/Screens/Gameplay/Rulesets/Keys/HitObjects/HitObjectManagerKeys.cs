@@ -19,7 +19,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -142,8 +141,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             get
             {
                 HitObjectInfo? nextObject = null;
-
                 var earliestObjectTime = int.MaxValue;
+
+                // Some objects are already queued in ActiveNoteLanes, check that first.
+                foreach (var objectsInLane in ActiveNoteLanes)
+                {
+                    if (objectsInLane.Count == 0)
+                        continue;
+
+                    var hitObject = objectsInLane.Peek();
+
+                    if (hitObject.Info.StartTime >= earliestObjectTime)
+                        continue;
+
+                    earliestObjectTime = hitObject.Info.StartTime;
+                    nextObject = hitObject.Info;
+                }
 
                 foreach (var objectsInLane in HitObjectQueueLanes)
                 {
