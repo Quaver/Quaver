@@ -570,7 +570,9 @@ namespace Quaver.Shared.Screens.Editor
 
                 if (AudioEngine.Track.Time >= obj.StartTime)
                 {
-                    if (ConfigManager.EditorEnableHitsounds.Value)
+                    var view = (EditorScreenView) View;
+
+                    if (ConfigManager.EditorEnableHitsounds.Value && !view.LayerCompositor.ScrollContainer.AvailableItems[obj.EditorLayer].Hidden)
                         HitObjectManager.PlayObjectHitSounds(obj);
 
                     HitSoundObjectIndex = i + 1;
