@@ -239,15 +239,17 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateEarlyLateText()
         {
+            var unscaledLargestHitWindow = LargestHitWindow / ModHelper.GetRateFromMods(Processor.Mods);
+
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.SourceSansProSemiBold, $"Late (+{LargestHitWindow}ms)", 13)
+            new SpriteText(Fonts.SourceSansProSemiBold, $"Late (+{unscaledLargestHitWindow}ms)", 13)
             {
                 Parent = this,
                 X = 2
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.SourceSansProSemiBold, $"Early (-{LargestHitWindow}ms)", 13)
+            new SpriteText(Fonts.SourceSansProSemiBold, $"Early (-{unscaledLargestHitWindow}ms)", 13)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
