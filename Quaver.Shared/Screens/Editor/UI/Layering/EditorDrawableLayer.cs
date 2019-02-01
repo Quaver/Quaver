@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     {
         /// <summary>
         /// </summary>
-        private EditorLayerer Layerer { get; }
+        private EditorLayerCompositor LayerCompositor { get; }
 
         /// <summary>
         /// </summary>
@@ -34,16 +34,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="layerer"></param>
+        /// <param name="layerCompositor"></param>
         /// <param name="name"></param>
-        public EditorDrawableLayer(EditorLayerer layerer, string name)
+        public EditorDrawableLayer(EditorLayerCompositor layerCompositor, string name)
         {
-            Layerer = layerer;
+            LayerCompositor = layerCompositor;
             Name = name;
             Tint = Color.White;
             Alpha = 0.45f;
 
-            Size = new ScalableVector2(Layerer.Width, 40);
+            Size = new ScalableVector2(LayerCompositor.Width, 40);
 
             CreateVisibilityCheckbox();
             CreateEditNamePencil();

@@ -9,13 +9,13 @@ using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorLayererContainer : ScrollContainer
+    public class EditorLayerContainer : ScrollContainer
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        public EditorLayererContainer(ScalableVector2 size) : base(size, size)
+        public EditorLayerContainer(ScalableVector2 size) : base(size, size)
         {
             Tint = Color.Transparent;
             Scrollbar.Tint = ColorHelper.HexToColor("#CCCCCC");

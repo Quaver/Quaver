@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public EditorLayerer Layerer { get; private set; }
+        public EditorLayerCompositor LayerCompositor { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -425,7 +425,7 @@ namespace Quaver.Shared.Screens.Editor
 
             var view = (EditorScreenView) View;
 
-            if (view.Layerer.Container.InputEnabled)
+            if (view.LayerCompositor.Container.InputEnabled)
                 return;
 
             // Seek backwards

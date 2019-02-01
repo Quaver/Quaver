@@ -14,7 +14,7 @@ using Sprite = Wobble.Graphics.Sprites.Sprite;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorLayerer : Sprite
+    public class EditorLayerCompositor : Sprite
     {
         /// <summary>
         /// </summary>
@@ -34,12 +34,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        public EditorLayererContainer Container { get; private set; }
+        public EditorLayerContainer Container { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorLayerer(EditorScreen screen)
+        public EditorLayerCompositor(EditorScreen screen)
         {
             Screen = screen;
             Size = new ScalableVector2(230, 194);
@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// </summary>
         private void CreateScrollContainer()
         {
-            Container = new EditorLayererContainer(new ScalableVector2(Width, Height - HeaderBackground.Height))
+            Container = new EditorLayerContainer(new ScalableVector2(Width, Height - HeaderBackground.Height))
             {
                 Parent = this,
                 Y = HeaderBackground.Height,

@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public EditorLayerer Layerer { get; private set; }
+        public EditorLayerCompositor LayerCompositor { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Editor
             screen.Ruleset.Update(gameTime);
 
             Container?.Update(gameTime);
-            screen.Layerer?.Update(gameTime);
+            screen.LayerCompositor?.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Editor
             screen.Ruleset.Draw(gameTime);
 
             Container?.Draw(gameTime);
-            screen.Layerer?.Draw(gameTime);
+            screen.LayerCompositor?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -183,15 +183,15 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void CreateLayerer()
         {
-            Layerer = new EditorLayerer(Screen as EditorScreen)
+            LayerCompositor = new EditorLayerCompositor(Screen as EditorScreen)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 Y = NavigationBar.Y + NavigationBar.Height + 50
             };
 
-            Layerer.X = Layerer.Width;
-            Layerer.MoveToX(0, Easing.OutQuint, 800);
+            LayerCompositor.X = LayerCompositor.Width;
+            LayerCompositor.MoveToX(0, Easing.OutQuint, 800);
         }
     }
 }
