@@ -88,7 +88,7 @@ namespace Quaver.Shared.Graphics.Containers
             // Create enough objects to use for the pool and contain them inside the drawable.
             for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
             {
-                var drawable = CreateObject();
+                var drawable = CreateObject(AvailableItems[i], i);
                 drawable.DestroyIfParentIsNull = false;
                 drawable.Y = (PoolStartingIndex + i) * drawable.HEIGHT;
 
@@ -176,6 +176,6 @@ namespace Quaver.Shared.Graphics.Containers
         ///     Creates an object for the sprite to use.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        protected abstract PoolableSprite<T> CreateObject();
+        protected abstract PoolableSprite<T> CreateObject(T item, int index);
     }
 }
