@@ -168,6 +168,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void AppearAsHiddenInLayer()
+        {
+            base.AppearAsHiddenInLayer();
+            Body.Tint = Tint;
+            Tail.Tint = Tint;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="mousePos"></param>
         /// <returns></returns>
         public override bool IsHovered(Vector2 mousePos) => base.IsHovered(mousePos) || Body.ScreenRectangle.Contains(mousePos) ||

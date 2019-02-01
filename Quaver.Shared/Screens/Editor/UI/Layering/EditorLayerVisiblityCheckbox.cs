@@ -10,13 +10,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     {
         /// <summary>
         /// </summary>
-        public EditorLayerInfo Layer { get; }
+        private EditorDrawableLayer DrawableLayer { get; }
 
         /// <summary>
         /// </summary>
-        public EditorLayerVisiblityCheckbox(EditorLayerInfo layer) : base(GetVisiblityTexture(layer.Hidden))
+        public EditorLayerVisiblityCheckbox(EditorDrawableLayer drawable) : base(GetVisiblityTexture(drawable.Item.Hidden))
         {
-            Layer = layer;
+            DrawableLayer = drawable;
             Clicked += (sender, args) => ToggleLayerVisiblity();
         }
 
@@ -24,8 +24,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// </summary>
         private void ToggleLayerVisiblity()
         {
-            Layer.Hidden = !Layer.Hidden;
-            Image = GetVisiblityTexture(Layer.Hidden);
+            DrawableLayer.Item.Hidden = !DrawableLayer.Item.Hidden;
+            Image = GetVisiblityTexture(DrawableLayer.Item.Hidden );
+            DrawableLayer.LayerCompositor.InvokeUpdatedEvent(EditorLayerUpdateType.Visibility, DrawableLayer.Item, DrawableLayer.Index);
         }
 
         /// <summary>

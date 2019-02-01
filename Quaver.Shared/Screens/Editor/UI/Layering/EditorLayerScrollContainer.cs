@@ -14,7 +14,7 @@ using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorLayerContainer : PoolableScrollContainer<EditorLayerInfo>
+    public class EditorLayerScrollContainer : PoolableScrollContainer<EditorLayerInfo>
     {
         /// <summary>
         /// </summary>
@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="poolSize"></param>
         /// <param name="poolStartingIndex"></param>
         /// <param name="size"></param>
-        public EditorLayerContainer(EditorLayerCompositor compositor, int poolSize, int poolStartingIndex, ScalableVector2 size)
+        public EditorLayerScrollContainer(EditorLayerCompositor compositor, int poolSize, int poolStartingIndex, ScalableVector2 size)
             : base(CreateLayersList(compositor.Screen.WorkingMap.EditorLayers), poolSize, poolStartingIndex, size, size)
         {
             Compositor = compositor;

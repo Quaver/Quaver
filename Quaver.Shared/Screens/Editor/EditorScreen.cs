@@ -151,7 +151,6 @@ namespace Quaver.Shared.Screens.Editor
                 return;
 
             SetHitSoundObjectIndex();
-            CreateRuleset();
 
             GameBase.Game.IsMouseVisible = true;
             GameBase.Game.GlobalUserInterface.Cursor.Visible = false;
@@ -163,6 +162,7 @@ namespace Quaver.Shared.Screens.Editor
 
             Metronome = new Metronome(WorkingMap);
             View = new EditorScreenView(this);
+            CreateRuleset();
 
             AppDomain.CurrentDomain.UnhandledException += OnCrash;
 
@@ -425,7 +425,7 @@ namespace Quaver.Shared.Screens.Editor
 
             var view = (EditorScreenView) View;
 
-            if (view.LayerCompositor.Container.InputEnabled)
+            if (view.LayerCompositor.ScrollContainer.InputEnabled)
                 return;
 
             // Seek backwards

@@ -93,5 +93,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         ///     Displays the object as selected.
         /// </summary>
         public virtual void AppearAsSelected() => Tint = SelectedColor;
+
+        /// <summary>
+        ///     Makes the object appear as if it is hidden in the layer
+        /// </summary>
+        public virtual void AppearAsHiddenInLayer() => Tint = new Color(40, 40, 40);
     }
 }

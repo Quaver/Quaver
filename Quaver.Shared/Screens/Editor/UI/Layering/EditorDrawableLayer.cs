@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     {
         /// <summary>
         /// </summary>
-        private EditorLayerCompositor LayerCompositor { get; }
+        public EditorLayerCompositor LayerCompositor { get; }
 
         /// <summary>
         /// </summary>
@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateVisibilityCheckbox() => VisibilityCheckbox = new EditorLayerVisiblityCheckbox(Item)
+        private void CreateVisibilityCheckbox() => VisibilityCheckbox = new EditorLayerVisiblityCheckbox(this)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,

@@ -18,6 +18,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
@@ -137,6 +138,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged += OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged += OnHitObjectMidpointAnchoredChanged;
+
+            var view = (EditorScreenView) Ruleset.Screen.View;
+            view.LayerCompositor.LayerUpdated += OnEditorLayerUpdated;
         }
 
         /// <inheritdoc />
@@ -197,6 +201,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged -= OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged -= OnHitObjectMidpointAnchoredChanged;
+
+            var view = (EditorScreenView) Ruleset.Screen.View;
+            view.LayerCompositor.LayerUpdated -= OnEditorLayerUpdated;
 
             HitObjects.ForEach(x => x.Destroy());
             Timeline.Destroy();
@@ -456,5 +463,23 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnHitObjectMidpointAnchoredChanged(object sender, BindableValueChangedEventArgs<bool> e) => ResetObjectPositions(false);
+
+        /// <summary>
+        ///     Called whenever an editor layer has been updated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEditorLayerUpdated(object sender, EditorLayerUpdatedEventArgs e)
+        {
+            var hitObjects = HitObjects.FindAll(x => x.Info.EditorLayer == e.Index);
+
+            if (!e.Type.HasFlag(EditorLayerUpdateType.Visibility))
+                return;
+
+            if (e.Layer.Hidden)
+                hitObjects.ForEach(x => x.AppearAsHiddenInLayer());
+            else
+                hitObjects.ForEach(x => x.AppearAsActive());
+        }
     }
 }
