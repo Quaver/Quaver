@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
@@ -47,34 +48,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
             CreateHeader();
             CreateScrollContainer();
-
-            // purely for test until actual implementation ----
-
-            Container.AddContainedDrawable(new EditorDrawableLayer(this, "Default Layer")
-            {
-                Parent = this,
-            });
-
-            Container.AddContainedDrawable(new EditorDrawableLayer(this, "Drums")
-            {
-                Parent = this,
-                Y = 40,
-                Tint = Color.Transparent
-            });
-
-            Container.AddContainedDrawable(new EditorDrawableLayer(this, "Claps")
-            {
-                Parent = this,
-                Y = 80,
-                Tint = Color.Transparent
-            });
-
-            Container.AddContainedDrawable(new EditorDrawableLayer(this, "Melody")
-            {
-                Parent = this,
-                Y = 120,
-                Tint = Color.Transparent
-            });
         }
 
         /// <summary>
@@ -119,13 +92,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// </summary>
         private void CreateScrollContainer()
         {
-            Container = new EditorLayerContainer(new ScalableVector2(Width, Height - HeaderBackground.Height))
+            var list = new List<int>();
+
+            for (var i = 0; i < 10000; i++)
+                list.Add(i);
+
+            Container = new EditorLayerContainer(this, list, 6, 0, new ScalableVector2(Width, Height - HeaderBackground.Height))
             {
                 Parent = this,
                 Y = HeaderBackground.Height,
             };
-
-            Container.ContentContainer.Height = Container.Height + 200;
         }
     }
 }

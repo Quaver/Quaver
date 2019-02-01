@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -9,7 +11,7 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorDrawableLayer : Sprite
+    public class EditorDrawableLayer : PoolableSprite<int>
     {
         /// <summary>
         /// </summary>
@@ -25,11 +27,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private string Name { get; set; }
+        private string Name { get; }
 
         /// <summary>
         /// </summary>
         private SpriteTextBitmap LayerName { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public sealed override int HEIGHT { get; } = 40;
 
         /// <inheritdoc />
         /// <summary>
@@ -43,7 +50,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Tint = Color.White;
             Alpha = 0.45f;
 
-            Size = new ScalableVector2(LayerCompositor.Width, 40);
+            Size = new ScalableVector2(LayerCompositor.Width, HEIGHT);
 
             CreateVisibilityCheckbox();
             CreateEditNamePencil();
@@ -79,5 +86,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Alignment = Alignment.MidLeft,
             X = EditLayerNameButton.X + EditLayerNameButton.Width + 10
         };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="index"></param>
+        public override void UpdateContent(int item, int index)
+        {
+        }
     }
 }
