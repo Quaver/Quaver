@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
@@ -37,6 +38,11 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public SpriteText Header { get; private set; }
 
+        /// <summary>
+        ///     Information on what maps are being imported
+        /// </summary>
+        public SpriteText InformationText { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -45,7 +51,7 @@ namespace Quaver.Shared.Screens.Importing
         {
             CreateBackground();
             CreateBanner();
-            CreateLoadingWheel();
+            MapsetImporter.ImportingMapset += OnImportingMapset;
         }
 
         /// <inheritdoc />
@@ -71,7 +77,11 @@ namespace Quaver.Shared.Screens.Importing
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            MapsetImporter.ImportingMapset -= OnImportingMapset;
+            Container?.Destroy();
+        }
 
         /// <summary>
         /// </summary>
@@ -82,14 +92,14 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        private void CreateLoadingWheel() => LoadingWheel = new Sprite
+        private void CreateLoadingWheel(Sprite parent) => LoadingWheel = new Sprite
         {
-            Parent = Container,
-            Alignment = Alignment.MidCenter,
+            Parent = parent,
+            Alignment = Alignment.BotCenter,
             Size = new ScalableVector2(60, 60),
             Image = UserInterface.LoadingWheel,
             Tint = Color.Yellow,
-            Y = 20
+            Y = -10
         };
 
         /// <summary>
@@ -104,6 +114,13 @@ namespace Quaver.Shared.Screens.Importing
             LoadingWheel.ClearAnimations();
             LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
         }
+
+        /// <summary>
+        ///     This method will update the screen when a mapset is finished being imported.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnImportingMapset(object sender, ImportingMapsetEventArgs e) => InformationText.Text = $"Now importing {e.FileName}. {e.Index + 1}/{e.Queue.Count}";
 
         /// <summary>
         ///     Creates the banner at the top of the screen
@@ -126,12 +143,21 @@ namespace Quaver.Shared.Screens.Importing
                 Tint = Colors.MainAccent
             };
 
-            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait while your maps are getting imported", 16)
+            Header = new SpriteText(Fonts.Exo2SemiBold, "Please wait. Maps are being imported.", 16)
             {
                 Parent = background,
                 Alignment = Alignment.TopCenter,
-                Y = 22
+                Y = 10
             };
+
+            InformationText = new SpriteText(Fonts.Exo2SemiBold, "", 14)
+            {
+                Parent = background,
+                Alignment = Alignment.TopCenter,
+                Y = Header.Y + Header.Height + 5
+            };
+
+            CreateLoadingWheel(background);
         }
     }
 }

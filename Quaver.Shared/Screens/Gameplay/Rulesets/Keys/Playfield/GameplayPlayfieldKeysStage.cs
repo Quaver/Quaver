@@ -272,23 +272,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
                     // todo: case statement for scroll direction
-                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 });
 
                 // Create the column lighting sprite.
-                var lightingY = Skin.ColumnLightingScale * Playfield.LaneSize * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);
-
+                var size = Skin.ColumnLightingScale * Playfield.LaneSize * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);
                 ColumnLightingObjects.Add(new ColumnLighting
                 {
                     Parent = Playfield.BackgroundContainer,
                     Image = Skin.ColumnLighting,
-                    Size = new ScalableVector2(Playfield.LaneSize, lightingY),
+                    Size = new ScalableVector2(Playfield.LaneSize, size),
                     Tint = Skin.ColumnColors[i],
                     X = posX,
+                    Y = Playfield.ColumnLightingPositionY[i],
                     // todo: case statement for scroll direction
-                    Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ColumnLightingPositionY[i] - lightingY : Playfield.ColumnLightingPositionY[i],
-                    // todo: case statement for scroll direction
-                    SpriteEffect = !GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                 });
             }

@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 var numBeatsOffsetted = 0;
 
                 // First point, so we need to make sure that the lines begin from the beginning of the track minus some.
-                if (tp == Ruleset.WorkingMap.TimingPoints.First() && startTime > 0)
+                if (Equals(tp, Ruleset.WorkingMap.TimingPoints.First()) && startTime > 0)
                 {
                     while (true)
                     {
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                 }
 
                 // Last point, so the lines have to extend to the end of the song + more,
-                if (tp == Ruleset.WorkingMap.TimingPoints[Ruleset.WorkingMap.TimingPoints.Count - 1])
+                if (Equals(tp, Ruleset.WorkingMap.TimingPoints[Ruleset.WorkingMap.TimingPoints.Count - 1]))
                     pointLength = AudioEngine.Track.Length + tp.MillisecondsPerBeat * numBeatsOffsetted + 2000;
 
                 // Create all lines.

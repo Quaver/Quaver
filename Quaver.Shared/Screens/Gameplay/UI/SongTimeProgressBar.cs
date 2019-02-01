@@ -7,8 +7,10 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
 
@@ -75,7 +77,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Bindable.Value = Screen.Timing.Time;
+            Bindable.Value = Screen.Timing.Time / ModHelper.GetRateFromMods(ModManager.Mods);
 
             // Only update time each second.
             if (Screen.Timing.Time - TimeLastProgressChange < 1000)
@@ -96,7 +98,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             // Set the time of the time left.
             if (Bindable.MaxValue - Bindable.Value >= 0)
             {
-                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)(Bindable.MaxValue - Bindable.Value));
+                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue - Bindable.Value);
 
                 // Get the old value.
                 var oldValue = TimeLeft.Value;
