@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Wobble.Graphics;
@@ -13,7 +14,7 @@ using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorLayerContainer : PoolableScrollContainer<int>
+    public class EditorLayerContainer : PoolableScrollContainer<EditorLayerInfo>
     {
         /// <summary>
         /// </summary>
@@ -23,12 +24,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <summary>
         /// </summary>
         /// <param name="compositor"></param>
-        /// <param name="availableItems"></param>
         /// <param name="poolSize"></param>
         /// <param name="poolStartingIndex"></param>
         /// <param name="size"></param>
-        public EditorLayerContainer(EditorLayerCompositor compositor, List<int> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size)
-            : base(availableItems, poolSize, poolStartingIndex, size, size)
+        public EditorLayerContainer(EditorLayerCompositor compositor, int poolSize, int poolStartingIndex, ScalableVector2 size)
+            : base(CreateLayersList(compositor.Screen.WorkingMap.EditorLayers), poolSize, poolStartingIndex, size, size)
         {
             Compositor = compositor;
             Tint = Color.Transparent;
@@ -51,9 +51,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override PoolableSprite<int> CreateObject() => new EditorDrawableLayer(Compositor, "None");
+        protected override PoolableSprite<EditorLayerInfo> CreateObject(EditorLayerInfo l, int index) => new EditorDrawableLayer(Compositor, l, index);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="layers"></param>
+        /// <returns></returns>
+        private static List<EditorLayerInfo> CreateLayersList(IEnumerable<EditorLayerInfo> layers)
+        {
+            var l = new List<EditorLayerInfo>(layers);
+            l.Insert(0, new EditorLayerInfo { Name = "Default Layer", });
+
+            return l;
+        }
     }
 }

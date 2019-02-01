@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
@@ -11,7 +12,7 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorDrawableLayer : PoolableSprite<int>
+    public class EditorDrawableLayer : PoolableSprite<EditorLayerInfo>
     {
         /// <summary>
         /// </summary>
@@ -27,10 +28,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private string Name { get; }
-
-        /// <summary>
-        /// </summary>
         private SpriteTextBitmap LayerName { get; set; }
 
         /// <inheritdoc />
@@ -42,14 +39,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <summary>
         /// </summary>
         /// <param name="layerCompositor"></param>
-        /// <param name="name"></param>
-        public EditorDrawableLayer(EditorLayerCompositor layerCompositor, string name)
+        /// <param name="item"></param>
+        /// <param name="index"></param>
+        public EditorDrawableLayer(EditorLayerCompositor layerCompositor, EditorLayerInfo item, int index) : base(item, index)
         {
             LayerCompositor = layerCompositor;
-            Name = name;
             Tint = Color.White;
-            Alpha = 0.45f;
 
+            Alpha = layerCompositor.SelectedLayerIndex.Value == index ? 0.45f : 0;
             Size = new ScalableVector2(LayerCompositor.Width, HEIGHT);
 
             CreateVisibilityCheckbox();
@@ -59,7 +56,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateVisibilityCheckbox() => VisibilityCheckbox = new EditorLayerVisiblityCheckbox(true)
+        private void CreateVisibilityCheckbox() => VisibilityCheckbox = new EditorLayerVisiblityCheckbox(Item)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -79,7 +76,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateLayerName() => LayerName = new SpriteTextBitmap(FontsBitmap.AllerRegular, Name)
+        private void CreateLayerName() => LayerName = new SpriteTextBitmap(FontsBitmap.AllerRegular, Item.Name)
         {
             Parent = this,
             FontSize = 16,
@@ -89,9 +86,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="layer"></param>
         /// <param name="index"></param>
-        public override void UpdateContent(int item, int index)
+        public override void UpdateContent(EditorLayerInfo layer, int index)
         {
         }
     }

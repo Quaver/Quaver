@@ -7,6 +7,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -19,7 +20,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     {
         /// <summary>
         /// </summary>
-        private EditorScreen Screen { get; }
+        public EditorScreen Screen { get; }
 
         /// <summary>
         /// </summary>
@@ -37,6 +38,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// </summary>
         public EditorLayerContainer Container { get; private set; }
 
+        /// <summary>
+        ///     The index of the currently selected layer.
+        /// </summary>
+        public BindableInt SelectedLayerIndex { get; } = new BindableInt(0, 0, int.MaxValue);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -48,6 +54,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
             CreateHeader();
             CreateScrollContainer();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            SelectedLayerIndex.Dispose();
+            base.Destroy();
         }
 
         /// <summary>
@@ -90,18 +105,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateScrollContainer()
+        private void CreateScrollContainer() => Container = new EditorLayerContainer(this, 6, 0, new ScalableVector2(Width, Height - HeaderBackground.Height))
         {
-            var list = new List<int>();
-
-            for (var i = 0; i < 10000; i++)
-                list.Add(i);
-
-            Container = new EditorLayerContainer(this, list, 6, 0, new ScalableVector2(Width, Height - HeaderBackground.Height))
-            {
-                Parent = this,
-                Y = HeaderBackground.Height,
-            };
-        }
+            Parent = this,
+            Y = HeaderBackground.Height,
+        };
     }
 }

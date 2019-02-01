@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 
@@ -8,16 +9,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
     public class EditorLayerVisiblityCheckbox : JukeboxButton
     {
         /// <summary>
-        ///     If the layer
         /// </summary>
-        private bool LayerVisible { get; set; }
+        public EditorLayerInfo Layer { get; }
 
         /// <summary>
         /// </summary>
-        /// <param name="layerVisible"></param>
-        public EditorLayerVisiblityCheckbox(bool layerVisible) : base(GetVisiblityTexture(layerVisible))
+        public EditorLayerVisiblityCheckbox(EditorLayerInfo layer) : base(GetVisiblityTexture(layer.Hidden))
         {
-            LayerVisible = layerVisible;
+            Layer = layer;
             Clicked += (sender, args) => ToggleLayerVisiblity();
         }
 
@@ -25,15 +24,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// </summary>
         private void ToggleLayerVisiblity()
         {
-            LayerVisible = !LayerVisible;
-            Image = GetVisiblityTexture(LayerVisible);
+            Layer.Hidden = !Layer.Hidden;
+            Image = GetVisiblityTexture(Layer.Hidden);
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="visible"></param>
+        /// <param name="hidden"></param>
         /// <returns></returns>
-        private static Texture2D GetVisiblityTexture(bool visible)
-            => visible ? FontAwesome.Get(FontAwesomeIcon.fa_check) : FontAwesome.Get(FontAwesomeIcon.fa_check_box_empty);
+        private static Texture2D GetVisiblityTexture(bool hidden)
+            => hidden ? FontAwesome.Get(FontAwesomeIcon.fa_check_box_empty) : FontAwesome.Get(FontAwesomeIcon.fa_check);
     }
 }
