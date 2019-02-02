@@ -200,10 +200,7 @@ namespace Quaver.Shared.Graphics.Containers
             RecalculateContainerHeight();
 
             if (scrollTo)
-            {
                 ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
-            }
-
         }
 
         /// <summary>
