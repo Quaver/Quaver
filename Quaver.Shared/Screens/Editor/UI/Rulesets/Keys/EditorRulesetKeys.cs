@@ -311,9 +311,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                         // Make the long note appear as inactive/dead. Gives a visual effect to the user that
                         // they need to do something with the note.
-                        var drawable = ScrollContainer.HitObjects.Find(x => x.Info == workingObject) as DrawableEditorHitObjectLong;
-
-                        if (drawable == null)
+                        if (!(ScrollContainer.HitObjects.Find(x => x.Info == workingObject) is DrawableEditorHitObjectLong drawable))
                             return;
 
                         drawable.AppearAsInactive();
@@ -392,9 +390,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             // Resize the long note and then reset the color of it.
             pendingObject.EndTime = (int) time;
-            ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
-            return true;
 
+            if (View.LayerCompositor.ScrollContainer.AvailableItems[pendingObject.EditorLayer].Hidden)
+                ScrollContainer.ResizeLongNote(pendingObject).AppearAsHiddenInLayer();
+            else
+                ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
+
+            return true;
         }
 
         /// <summary>
