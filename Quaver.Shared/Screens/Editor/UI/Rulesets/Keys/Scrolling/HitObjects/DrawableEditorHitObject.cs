@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
+using Quaver.Shared.Helpers;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
@@ -87,7 +88,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         ///    Resets the tint of the long note and makes it appear as if it is active.
         /// </summary>
-        public virtual void AppearAsActive() => Tint = Color.White;
+        public virtual void AppearAsActive()
+        {
+            var view = (EditorScreenView) Container.Ruleset.Screen.View;
+            Tint = ColorHelper.ToXnaColor(view.LayerCompositor.ScrollContainer.AvailableItems[Info.EditorLayer].GetColor());
+        }
 
         /// <summary>
         ///     Displays the object as selected.

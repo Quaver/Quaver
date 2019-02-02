@@ -140,8 +140,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         public override void AppearAsActive()
         {
             base.AppearAsActive();
-            Body.Tint = Color.White;
-            Tail.Tint = Color.White;
+            Body.Tint = Tint;
+            Tail.Tint = Tint;
         }
 
         /// <summary>

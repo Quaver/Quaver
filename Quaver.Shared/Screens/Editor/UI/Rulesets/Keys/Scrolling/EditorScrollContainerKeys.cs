@@ -367,6 +367,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 longNote.Tail.Width = hitObject.Width;
             }
 
+            hitObject.AppearAsActive();
+            
             // Check if the layer is hidden that the user is adding the object to and display the object
             // as that appropriate colour.
             if (((EditorScreenView)Ruleset.Screen.View).LayerCompositor.ScrollContainer.AvailableItems[hitObject.Info.EditorLayer].Hidden)

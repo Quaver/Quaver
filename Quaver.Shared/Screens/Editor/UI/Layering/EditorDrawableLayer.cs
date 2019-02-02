@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -79,6 +81,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Alignment = Alignment.MidLeft,
             X = 12,
             Size = new ScalableVector2(16, 16),
+            Tint = ColorHelper.ToXnaColor(Item.GetColor())
         };
 
         /// <summary>
@@ -88,7 +91,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = VisibilityCheckbox.X + VisibilityCheckbox.Width + 10,
-            Size = VisibilityCheckbox.Size
+            Size = VisibilityCheckbox.Size,
+            Tint = ColorHelper.ToXnaColor(Item.GetColor())
         };
 
         /// <summary>
@@ -98,7 +102,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Parent = this,
             FontSize = 16,
             Alignment = Alignment.MidLeft,
-            X = EditLayerNameButton.X + EditLayerNameButton.Width + 10
+            X = EditLayerNameButton.X + EditLayerNameButton.Width + 10,
+            Tint = ColorHelper.ToXnaColor(Item.GetColor())
         };
 
         /// <summary>
@@ -124,6 +129,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         public override void UpdateContent(EditorLayerInfo layer, int index)
         {
             LayerName.Text = layer.Name;
+            VisibilityCheckbox.Tint = ColorHelper.ToXnaColor(Item.GetColor());
+            LayerName.Tint = ColorHelper.ToXnaColor(Item.GetColor());
+            EditLayerNameButton.Tint = ColorHelper.ToXnaColor(Item.GetColor());
             Item = layer;
             Index = index;
         }
