@@ -227,6 +227,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                         throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
                 }
 
+                if (LoadingNextTrack)
+                    return;
+
                 LoadingNextTrack = true;
 
                 ThreadScheduler.Run(() =>
@@ -450,6 +453,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
 
+                if (LoadingNextTrack)
+                    return;
+
                 if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                     return;
 
@@ -487,6 +493,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             RestartButton.Clicked += (o, e) =>
             {
                 SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                if (LoadingNextTrack)
+                    return;
 
                 try
                 {
