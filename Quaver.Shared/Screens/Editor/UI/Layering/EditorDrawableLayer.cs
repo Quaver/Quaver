@@ -123,6 +123,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="index"></param>
         public override void UpdateContent(EditorLayerInfo layer, int index)
         {
+            LayerName.Text = layer.Name;
+            Item = layer;
+            Index = index;
         }
 
         /// <summary>
