@@ -41,7 +41,8 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         {
             StartTime = (int) time,
             EndTime = (int) time + 1,
-            Lane = lane
+            Lane = lane,
+            EditorLayer = ((EditorScreenView)Ruleset.Screen.View).LayerCompositor.SelectedLayerIndex.Value
         }));
 
         /// <summary>
