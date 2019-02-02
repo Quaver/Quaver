@@ -9,6 +9,8 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
@@ -25,6 +27,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <summary>
         /// </summary>
         private JukeboxButton EditLayerNameButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private ImageButton SelectLayerButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -52,6 +58,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             CreateVisibilityCheckbox();
             CreateEditNamePencil();
             CreateLayerName();
+            CreateSelectLayerButton();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            AnimateSelection(gameTime);
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -86,10 +103,43 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
+        private void CreateSelectLayerButton() => SelectLayerButton = new ImageButton(UserInterface.BlankBox,
+            (sender, args) =>
+            {
+                LayerCompositor.SelectedLayerIndex.Value = Index;
+                Logger.Debug($"Selected layer: {LayerCompositor.ScrollContainer.AvailableItems[Index].Name} ({Index})", LogType.Runtime, false);
+            })
+        {
+            Parent = this,
+            Size = new ScalableVector2(Width - EditLayerNameButton.X - EditLayerNameButton.Width, Height),
+            X = EditLayerNameButton.X + EditLayerNameButton.Width,
+            Alpha = 0
+        };
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="layer"></param>
         /// <param name="index"></param>
         public override void UpdateContent(EditorLayerInfo layer, int index)
         {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void AnimateSelection(GameTime gameTime)
+        {
+            float targetAlpha;
+
+            if (LayerCompositor.SelectedLayerIndex.Value == Index)
+                targetAlpha = 0.45f;
+            else if (GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position))
+                targetAlpha = 0.25f;
+            else
+                targetAlpha = 0f;
+
+            Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
         }
     }
 }
