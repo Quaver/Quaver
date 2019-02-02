@@ -137,8 +137,11 @@ namespace Quaver.Shared.Screens.Editor
         {
             OriginalMap = map;
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
+            FixInvalidHitObjectLayers();
 
             MapManager.Selected.Value.Qua = WorkingMap;
+
+            // Discord Rich Presence
             DiscordHelper.Presence.Details = WorkingMap.ToString();
             DiscordHelper.Presence.State = "Editing";
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
@@ -169,6 +172,15 @@ namespace Quaver.Shared.Screens.Editor
             if (File.Exists($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave"))
                 DialogManager.Show(new AutosaveDetectionDialog());
         }
+
+        /// <summary>
+        ///     Fixes HitObjects that contain invalid layers in the file.
+        /// </summary>
+        private void FixInvalidHitObjectLayers() => WorkingMap.HitObjects.ForEach(x =>
+        {
+            if (x.EditorLayer < 0 || x.EditorLayer > WorkingMap.EditorLayers.Count)
+                x.EditorLayer = 0;
+        });
 
         /// <inheritdoc />
         ///  <summary>
