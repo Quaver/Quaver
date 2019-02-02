@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         public void AppearAsInactive()
         {
-            var col = new Color(130, 130, 130);
+            var col = new Color(160, 160, 160);
             Tint = col;
             Body.Tint = col;
             Tail.Tint = col;
