@@ -482,7 +482,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 return;
 
             if (e.Layer.Hidden)
-                hitObjects.ForEach(x => x.AppearAsHiddenInLayer());
+                hitObjects.ForEach(x =>
+                {
+                    if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
+                    {
+                        var h = x as DrawableEditorHitObjectLong;
+                        h?.AppearAsInactive();
+                    }
+                    else
+                    {
+                        x.AppearAsHiddenInLayer();
+                    }
+                });
             else
             {
                 hitObjects.ForEach(x =>
