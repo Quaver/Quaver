@@ -29,7 +29,8 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         public void PlaceHitObject(int lane, double time) => Perform(new EditorActionPlaceHitObjectKeys(Ruleset.ScrollContainer, new HitObjectInfo
         {
             StartTime = (int) time,
-            Lane = lane
+            Lane = lane,
+            EditorLayer = ((EditorScreenView)Ruleset.Screen.View).LayerCompositor.SelectedLayerIndex.Value
         }));
 
         /// <summary>
