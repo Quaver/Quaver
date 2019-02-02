@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private ImageButton SelectLayerButton { get; set; }
+        private EditorDrawableLayerButton SelectLayerButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateSelectLayerButton() => SelectLayerButton = new ImageButton(UserInterface.BlankBox,
+        private void CreateSelectLayerButton() => SelectLayerButton = new EditorDrawableLayerButton(LayerCompositor, UserInterface.BlankBox,
             (sender, args) =>
             {
                 LayerCompositor.SelectedLayerIndex.Value = Index;

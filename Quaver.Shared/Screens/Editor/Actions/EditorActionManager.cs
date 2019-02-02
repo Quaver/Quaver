@@ -7,7 +7,9 @@
 
 using System.Collections.Generic;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal;
+using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 
 namespace Quaver.Shared.Screens.Editor.Actions
@@ -66,8 +68,17 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <summary>
         ///     Sets the time in the track for the audio preview.
         /// </summary>
+        /// <param name="ruleset"></param>
         /// <param name="workingMap"></param>
         /// <param name="time"></param>
         public void SetPreviewTime(EditorRuleset ruleset, Qua workingMap, int time) => Perform(new EditorActionSetPreviewTime(ruleset, workingMap, time));
+
+        /// <summary>
+        ///     Adds a layer to the map.
+        /// </summary>
+        /// <param name="workingMap"></param>
+        /// <param name="compositor"></param>
+        /// <param name="l"></param>
+        public void AddLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l) => Perform(new EditorActionAddLayer(workingMap, compositor, l));
     }
 }

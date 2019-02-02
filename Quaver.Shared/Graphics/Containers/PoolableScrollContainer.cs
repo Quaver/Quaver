@@ -88,12 +88,7 @@ namespace Quaver.Shared.Graphics.Containers
             // Create enough objects to use for the pool and contain them inside the drawable.
             for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
             {
-                var drawable = CreateObject(AvailableItems[i], i);
-                drawable.DestroyIfParentIsNull = false;
-                drawable.Y = (PoolStartingIndex + i) * drawable.HEIGHT;
-
-                drawable.UpdateContent(AvailableItems[i], i);
-                Pool.Add(drawable);
+                var drawable = AddObject(i);
 
                 if (i >= AvailableItems.Count)
                     continue;
@@ -170,6 +165,45 @@ namespace Quaver.Shared.Graphics.Containers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        /// <summary>
+        ///     Adds a drawable to the pool and returns it
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private PoolableSprite<T> AddObject(int index)
+        {
+            var drawable = CreateObject(AvailableItems[index], index);
+            drawable.DestroyIfParentIsNull = false;
+            drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT;
+
+            drawable.UpdateContent(AvailableItems[index], index);
+            Pool.Add(drawable);
+
+            return drawable;
+        }
+
+        /// <summary>
+        ///     Adds an object to the available ones and displays it at the bottom.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="scrollTo"></param>
+        protected void AddObjectToBottom(T obj, bool scrollTo)
+        {
+            AvailableItems.Add(obj);
+
+            // Need another drawable to use
+            if (Pool.Count < PoolSize)
+                AddContainedDrawable(AddObject(AvailableItems.Count - 1));
+
+            RecalculateContainerHeight();
+
+            if (scrollTo)
+            {
+                ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+            }
+
         }
 
         /// <summary>

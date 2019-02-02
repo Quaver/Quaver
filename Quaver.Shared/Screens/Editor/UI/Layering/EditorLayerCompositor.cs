@@ -102,7 +102,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateAddButton() => AddButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol))
+        private void CreateAddButton() => AddButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
+            (sender, args) => Screen.Ruleset.ActionManager.AddLayer(Screen.WorkingMap, this,
+                new EditorLayerInfo {Name = $"Layer {ScrollContainer.AvailableItems.Count}"}))
         {
             Parent = HeaderBackground,
             Alignment = Alignment.MidRight,

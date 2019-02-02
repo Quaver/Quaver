@@ -51,6 +51,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             base.Update(gameTime);
         }
 
+        /// <summary>
+        ///     Adds a layer to the container. Creates a drawable if necessary
+        /// </summary>
+        /// <param name="layer"></param>
+        public void AddLayer(EditorLayerInfo layer) => AddObjectToBottom(layer, true);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
