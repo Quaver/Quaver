@@ -342,7 +342,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             DrawableEditorHitObject hitObject;
 
             var skin = SkinManager.Skin.Keys[Ruleset.WorkingMap.Mode];
-            var index =skin.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(h, h.GetTimingPoint(Ruleset.WorkingMap.TimingPoints)) : 0;
+            var index = skin.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(h, h.GetTimingPoint(Ruleset.WorkingMap.TimingPoints)) : 0;
 
             if (h.IsLongNote)
             {
@@ -366,6 +366,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 longNote.Body.Width = hitObject.Width;
                 longNote.Tail.Width = hitObject.Width;
             }
+
+            // Check if the layer is hidden that the user is adding the object to and display the object
+            // as that appropriate colour.
+            if (((EditorScreenView)Ruleset.Screen.View).LayerCompositor.ScrollContainer.AvailableItems[hitObject.Info.EditorLayer].Hidden)
+                hitObject.AppearAsHiddenInLayer();
 
             lock (HitObjects)
                 HitObjects.Add(hitObject);
