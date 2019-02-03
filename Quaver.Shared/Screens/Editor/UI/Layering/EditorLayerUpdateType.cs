@@ -3,6 +3,6 @@
     public enum EditorLayerUpdateType
     {
         Visibility = 1 << 0,
-        Name = 1 << 1
+        Color = 1 << 1
     }
 }

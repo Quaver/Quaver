@@ -483,7 +483,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             var hitObjects = HitObjects.FindAll(x => x.Info.EditorLayer == e.Index);
 
-            if (!e.Type.HasFlag(EditorLayerUpdateType.Visibility))
+            if (!e.Type.HasFlag(EditorLayerUpdateType.Visibility) && !e.Type.HasFlag(EditorLayerUpdateType.Color))
                 return;
 
             if (e.Layer.Hidden)

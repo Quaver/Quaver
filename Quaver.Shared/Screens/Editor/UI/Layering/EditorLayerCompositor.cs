@@ -65,17 +65,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Image = UserInterface.EditorLayerPanel;
 
             CreateHeader();
-
-            try
-            {
-                CreateScrollContainer();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
+            CreateScrollContainer();
         }
 
         /// <inheritdoc />

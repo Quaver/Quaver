@@ -132,6 +132,12 @@ namespace Quaver.Shared.Screens.Editor
         private bool IsOpeningMetadataDialog { get; set; }
 
         /// <summary>
+        ///     What the user is currently doing when it comes to layers.
+        ///     This is used so we can change the active layer.
+        /// </summary>
+        public Bindable<EditorLayerInterface> ActiveLayerInterface { get; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -147,6 +153,8 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            ActiveLayerInterface = new Bindable<EditorLayerInterface>(EditorLayerInterface.Composition) { Value = EditorLayerInterface.Composition };
 
             ModManager.RemoveSpeedMods();
 
@@ -263,7 +271,7 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 HandleKeyPressEscape();
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value))
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value) && ActiveLayerInterface.Value != EditorLayerInterface.Editing)
                 HandleKeyPressSpace();
 
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))

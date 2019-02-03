@@ -20,6 +20,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -47,6 +48,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorLayerCompositor LayerCompositor { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorLayerEditor LayerEditor { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -56,7 +61,11 @@ namespace Quaver.Shared.Screens.Editor
             CreateBackground();
             CreateControlBar();
             CreateNavigationBar();
-            CreateLayerer();
+            CreateLayerCompositor();
+            CreateLayerEditor();
+
+            var editorScreen = (EditorScreen) Screen;
+            editorScreen.ActiveLayerInterface.ValueChanged += OnActiveLayerInterfaceChanged;
         }
 
         /// <inheritdoc />
@@ -97,6 +106,9 @@ namespace Quaver.Shared.Screens.Editor
         {
             var screen = (EditorScreen) Screen;
             screen.Ruleset.Destroy();
+
+            // ReSharper disable once DelegateSubtraction
+            screen.ActiveLayerInterface.ValueChanged -= OnActiveLayerInterfaceChanged;
 
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             Container?.Destroy();
@@ -181,7 +193,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///
         /// </summary>
-        private void CreateLayerer()
+        private void CreateLayerCompositor()
         {
             LayerCompositor = new EditorLayerCompositor(Screen as EditorScreen)
             {
@@ -192,6 +204,45 @@ namespace Quaver.Shared.Screens.Editor
 
             LayerCompositor.X = LayerCompositor.Width;
             LayerCompositor.MoveToX(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateLayerEditor()
+        {
+            LayerEditor = new EditorLayerEditor(Screen as EditorScreen, this)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = LayerCompositor.Y
+            };
+
+            LayerEditor.X = LayerEditor.Width;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnActiveLayerInterfaceChanged(object sender, BindableValueChangedEventArgs<EditorLayerInterface> e)
+        {
+            switch (e.Value)
+            {
+                case EditorLayerInterface.Composition:
+                    LayerCompositor.ClearAnimations();
+                    LayerCompositor.MoveToX(0, Easing.OutQuint, 350);
+                    LayerEditor.ClearAnimations();
+                    LayerEditor.MoveToX(LayerEditor.Width, Easing.OutQuint, 350);
+                    break;
+                case EditorLayerInterface.Editing:
+                    LayerCompositor.ClearAnimations();
+                    LayerCompositor.MoveToX(LayerCompositor.Width, Easing.OutQuint, 350);
+                    LayerEditor.ClearAnimations();
+                    LayerEditor.MoveToX(0, Easing.OutQuint, 350);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

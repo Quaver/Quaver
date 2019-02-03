@@ -89,6 +89,17 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <param name="workingMap"></param>
         /// <param name="compositor"></param>
         /// <param name="l"></param>
-        public void RemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l) => Perform(new EditorActionRemoveLayer(workingMap, compositor, l));
+        public void RemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l)
+            => Perform(new EditorActionRemoveLayer(workingMap, compositor, l));
+
+        /// <summary>
+        ///     Edits a given layer
+        /// </summary>
+        /// <param name="compositor"></param>
+        /// <param name="layer"></param>
+        /// <param name="name"></param>
+        /// <param name="color"></param>
+        public void EditLayer(EditorLayerCompositor compositor, EditorLayerInfo layer, string name, string color)
+            => Perform(new EditorActionEditLayer(compositor, layer, name, color));
     }
 }

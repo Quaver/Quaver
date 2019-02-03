@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
@@ -112,7 +113,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateEditNamePencil() => EditLayerNameButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil))
+        private void CreateEditNamePencil() => EditLayerNameButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
+            (o, e) =>
+            {
+                if (Index == 0)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot edit the default layer!");
+                    return;
+                }
+
+                LayerCompositor.SelectedLayerIndex.Value = Index;
+                LayerCompositor.Screen.ActiveLayerInterface.Value = EditorLayerInterface.Editing;
+            })
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
