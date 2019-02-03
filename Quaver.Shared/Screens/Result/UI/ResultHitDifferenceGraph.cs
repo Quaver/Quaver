@@ -23,6 +23,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 
@@ -87,6 +88,9 @@ namespace Quaver.Shared.Screens.Result.UI
 
             FilterHitStats();
             CreateDots();
+
+            AddBorder(Color.White);
+            Border.Alpha = 0.6f;
         }
 
         /// <summary>
