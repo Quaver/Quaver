@@ -196,8 +196,8 @@ namespace Quaver.Shared.Graphics.Dialogs
                     Dismiss();
                 })
             {
-                Parent = AreYouSure,
-                Y = DividerLine.Y + DividerLine.Height + 25,
+                Parent = DividerLine,
+                Y = 20,
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(200, 40),
                 Tint = Color.Transparent,
@@ -207,6 +207,7 @@ namespace Quaver.Shared.Graphics.Dialogs
                 }
             };
 
+            SureButton.X = -SureButton.Width / 2f - 10;
             SureButton.AddBorder(Color.LimeGreen, 2);
         }
 
@@ -222,8 +223,8 @@ namespace Quaver.Shared.Graphics.Dialogs
                     Dismiss();
                 })
             {
-                Parent = AreYouSure,
-                Y = DividerLine.Y + DividerLine.Height + 25,
+                Parent = DividerLine,
+                Y = SureButton.Y,
                 UsePreviousSpriteBatchOptions = true,
                 X = SureButton.X + SureButton.Width + 25,
                 Size = new ScalableVector2(200, 40),
@@ -234,6 +235,7 @@ namespace Quaver.Shared.Graphics.Dialogs
                 }
             };
 
+            CancelButton.X = CancelButton.Width / 2f + 10;
             CancelButton.AddBorder(Color.Crimson, 2);
         }
     }
