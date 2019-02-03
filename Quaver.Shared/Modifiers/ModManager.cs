@@ -59,10 +59,15 @@ namespace Quaver.Shared.Modifiers
             switch (modIdentifier)
             {
                 case ModIdentifier.Speed05X:
+                case ModIdentifier.Speed055X:
                 case ModIdentifier.Speed06X:
+                case ModIdentifier.Speed065X:
                 case ModIdentifier.Speed07X:
+                case ModIdentifier.Speed075X:
                 case ModIdentifier.Speed08X:
+                case ModIdentifier.Speed085X:
                 case ModIdentifier.Speed09X:
+                case ModIdentifier.Speed095X:
                 case ModIdentifier.Speed11X:
                 case ModIdentifier.Speed12X:
                 case ModIdentifier.Speed13X:

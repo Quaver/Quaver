@@ -154,10 +154,15 @@ namespace Quaver.Shared.Database.Maps
 
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
+        public double Difficulty055X { get; set; }
         public double Difficulty06X { get; set; }
+        public double Difficulty065X { get; set; }
         public double Difficulty07X { get; set; }
+        public double Difficulty075X { get; set; }
         public double Difficulty08X { get; set; }
+        public double Difficulty085X { get; set; }
         public double Difficulty09X { get; set; }
+        public double Difficulty095X { get; set; }
         public double Difficulty10X { get; set; }
         public double Difficulty11X { get; set; }
         public double Difficulty12X { get; set; }
@@ -300,10 +305,15 @@ namespace Quaver.Shared.Database.Maps
             var qua = LoadQua();
 
             Difficulty05X = qua.SolveDifficulty(ModIdentifier.Speed05X).OverallDifficulty;
+            Difficulty055X = qua.SolveDifficulty(ModIdentifier.Speed055X).OverallDifficulty;
             Difficulty06X = qua.SolveDifficulty(ModIdentifier.Speed06X).OverallDifficulty;
+            Difficulty065X = qua.SolveDifficulty(ModIdentifier.Speed065X).OverallDifficulty;
             Difficulty07X = qua.SolveDifficulty(ModIdentifier.Speed07X).OverallDifficulty;
+            Difficulty075X = qua.SolveDifficulty(ModIdentifier.Speed075X).OverallDifficulty;
             Difficulty08X = qua.SolveDifficulty(ModIdentifier.Speed08X).OverallDifficulty;
+            Difficulty085X = qua.SolveDifficulty(ModIdentifier.Speed085X).OverallDifficulty;
             Difficulty09X = qua.SolveDifficulty(ModIdentifier.Speed09X).OverallDifficulty;
+            Difficulty095X = qua.SolveDifficulty(ModIdentifier.Speed095X).OverallDifficulty;
             Difficulty10X = qua.SolveDifficulty().OverallDifficulty;
             Difficulty11X = qua.SolveDifficulty(ModIdentifier.Speed11X).OverallDifficulty;
             Difficulty12X = qua.SolveDifficulty(ModIdentifier.Speed12X).OverallDifficulty;
@@ -325,14 +335,24 @@ namespace Quaver.Shared.Database.Maps
         {
             if (mods.HasFlag(ModIdentifier.Speed05X))
                 return Difficulty05X;
+            if (mods.HasFlag(ModIdentifier.Speed055X))
+                return Difficulty055X;
             if (mods.HasFlag(ModIdentifier.Speed06X))
                 return Difficulty06X;
+            if (mods.HasFlag(ModIdentifier.Speed065X))
+                return Difficulty065X;
             if (mods.HasFlag(ModIdentifier.Speed07X))
                 return Difficulty07X;
+            if (mods.HasFlag(ModIdentifier.Speed075X))
+                return Difficulty075X;
             if (mods.HasFlag(ModIdentifier.Speed08X))
                 return Difficulty08X;
+            if (mods.HasFlag(ModIdentifier.Speed085X))
+                return Difficulty085X;
             if (mods.HasFlag(ModIdentifier.Speed09X))
                 return Difficulty09X;
+            if (mods.HasFlag(ModIdentifier.Speed095X))
+                return Difficulty095X;
             if (mods.HasFlag(ModIdentifier.Speed11X))
                 return Difficulty11X;
             if (mods.HasFlag(ModIdentifier.Speed12X))
