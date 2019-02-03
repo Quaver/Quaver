@@ -2,16 +2,15 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Editor.UI.Layering;
-using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
 {
-    public class EditorActionAddLayer : IEditorAction
+    public class EditorActionRemoveLayer : IEditorAction
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorActionType Type { get; } = EditorActionType.AddLayer;
+        public EditorActionType Type { get; } = EditorActionType.RemoveLayer;
 
         /// <summary>
         /// </summary>
@@ -27,7 +26,10 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
 
         /// <summary>
         /// </summary>
-        public EditorActionAddLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l)
+        /// <param name="workingMap"></param>
+        /// <param name="compositor"></param>
+        /// <param name="l"></param>
+        public EditorActionRemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l)
         {
             WorkingMap = workingMap;
             Compositor = compositor;
@@ -39,14 +41,16 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal
         /// </summary>
         public void Perform()
         {
-            WorkingMap.EditorLayers.Add(Layer);
-            Compositor.ScrollContainer.AddLayer(Layer);
-            Compositor.SelectedLayerIndex.Value = Compositor.ScrollContainer.AvailableItems.IndexOf(Layer);
+            var index = Compositor.ScrollContainer.AvailableItems.IndexOf(Layer);
+
+            WorkingMap.EditorLayers.Remove(Layer);
+            Compositor.ScrollContainer.RemoveLayer(Layer);
+            Compositor.SelectedLayerIndex.Value = index - 1;
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => new EditorActionRemoveLayer(WorkingMap, Compositor, Layer).Perform();
+        public void Undo() => new EditorActionAddLayer(WorkingMap, Compositor, Layer).Perform();
     }
 }

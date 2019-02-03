@@ -12,6 +12,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         PlaceHitObject,
         DeleteHitObject,
         SetPreviewTime,
-        AddLayer
+        AddLayer,
+        RemoveLayer
     }
 }

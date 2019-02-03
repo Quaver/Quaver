@@ -60,7 +60,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             Image = UserInterface.EditorLayerPanel;
 
             CreateHeader();
-            CreateScrollContainer();
+
+            try
+            {
+                CreateScrollContainer();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
 
         /// <inheritdoc />
@@ -91,7 +101,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateDeleteButton() => DeleteButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times))
+        private void CreateDeleteButton() => DeleteButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
+            (sender, args) =>
+            {
+                Screen.Ruleset.ActionManager.RemoveLayer(Screen.WorkingMap, this, ScrollContainer.AvailableItems[SelectedLayerIndex.Value]);
+            })
         {
             Parent = HeaderBackground,
             Alignment = Alignment.MidRight,
@@ -115,7 +129,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateScrollContainer() => ScrollContainer = new EditorLayerScrollContainer(this, 6, 0, new ScalableVector2(Width, Height - HeaderBackground.Height))
+        private void CreateScrollContainer() => ScrollContainer = new EditorLayerScrollContainer(this, int.MaxValue, 0,
+            new ScalableVector2(Width, Height - HeaderBackground.Height))
         {
             Parent = this,
             Y = HeaderBackground.Height,

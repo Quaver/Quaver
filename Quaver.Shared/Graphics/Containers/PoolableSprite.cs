@@ -1,9 +1,14 @@
-﻿using Wobble.Graphics.Sprites;
+﻿using Microsoft.Xna.Framework;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Graphics.Containers
 {
     public abstract class PoolableSprite<T> : Sprite, IPoolable<T>
     {
+        /// <summary>
+        /// </summary>
+        public PoolableScrollContainer<T> Container { get; }
+
         /// <summary>
         ///     The item that this sprite represents
         /// </summary>
@@ -12,17 +17,31 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The index that this sprite is in the pool
         /// </summary>
-        public int Index { get; protected set; }
+        public int Index { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="container"></param>
         /// <param name="item"></param>
         /// <param name="index"></param>
-        public PoolableSprite(T item, int index)
+        public PoolableSprite(PoolableScrollContainer<T> container, T item, int index)
         {
+            Container = container;
             Item = item;
             Index = index;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+                return;
+
+            base.Draw(gameTime);
         }
 
         /// <summary>

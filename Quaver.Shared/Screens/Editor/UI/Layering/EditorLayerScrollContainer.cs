@@ -57,11 +57,46 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="layer"></param>
         public void AddLayer(EditorLayerInfo layer) => AddObjectToBottom(layer, true);
 
+        /// <summary>
+        ///     Removes an object from the container.
+        /// </summary>
+        /// <param name="layer"></param>
+        public void RemoveLayer(EditorLayerInfo layer) => RemoveObject(layer);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override PoolableSprite<EditorLayerInfo> CreateObject(EditorLayerInfo l, int index) => new EditorDrawableLayer(Compositor, l, index);
+        protected override PoolableSprite<EditorLayerInfo> CreateObject(EditorLayerInfo l, int index) => new EditorDrawableLayer(this, Compositor, l, index);
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="obj"></param>
+        protected override void RemoveObject(EditorLayerInfo obj)
+        {
+            var index = AvailableItems.IndexOf(obj);
+
+            var drawable = (EditorDrawableLayer) Pool.Find(x => x.Index == index);
+
+            AvailableItems.Remove(obj);
+
+            drawable.EditLayerNameButton.Destroy();
+            drawable.SelectLayerButton.Destroy();
+            drawable.VisibilityCheckbox.Destroy();
+            drawable.Destroy();
+
+            RemoveContainedDrawable(drawable);
+            Pool.Remove(drawable);
+
+            for (var i = 0; i < Pool.Count; i++)
+            {
+                Pool[i].Y = (PoolStartingIndex + i) * drawable.HEIGHT;
+                Pool[i].Index = i;
+            }
+
+            RecalculateContainerHeight();
+        }
 
         /// <summary>
         /// </summary>

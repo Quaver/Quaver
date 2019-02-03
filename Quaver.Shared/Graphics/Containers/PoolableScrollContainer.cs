@@ -83,7 +83,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         protected void CreatePool()
         {
-            Pool = new List<PoolableSprite<T>>(PoolSize);
+            Pool = new List<PoolableSprite<T>>();
 
             // Create enough objects to use for the pool and contain them inside the drawable.
             for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
@@ -201,6 +201,62 @@ namespace Quaver.Shared.Graphics.Containers
 
             if (scrollTo)
                 ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+        }
+
+        /// <summary>
+        ///     Removes an object from the pool
+        /// </summary>
+        /// <param name="obj"></param>
+        protected virtual void RemoveObject(T obj)
+        {
+            /*
+            var index = AvailableItems.IndexOf(obj);
+            var drawable = Pool.Find(x => x.Index == index);
+
+            // Removing the last item in the list while index is still 0.
+            // get rid of it entirely.
+            if (index == AvailableItems.Count - 1 && PoolStartingIndex == 0)
+            {
+                if (drawable != null)
+                {
+                    Pool.Remove(drawable);
+                    RemoveContainedDrawable(drawable);
+                    drawable.Destroy();
+                }
+
+                AvailableItems.Remove(obj);
+                RecalculateContainerHeight();
+                return;
+            }
+            // Removing the last item in the list while the pool index isn't 0.
+            // in this case, we want to destroy the object entirely if it isn't needed
+            // or rearrange it, so that it's on top.
+            else if (index == AvailableItems.Count - 1 && PoolStartingIndex != 0)
+            {
+                if (drawable != null)
+                {
+                    // The object needs to be destroyed since it's no longer needed.
+                    if (index == PoolSize - 1)
+                    {
+                        Pool.Remove(drawable);
+                        RemoveContainedDrawable(drawable);
+                        drawable.Destroy();
+                    }
+                    // Reuse the object by placing it at the beginning of the pool.
+                    else
+                    {
+                        Pool.Remove(drawable);
+                        Pool.Insert(0, drawable);
+                    }
+                }
+
+                AvailableItems.Remove(obj);
+                RecalculateContainerHeight();
+                PoolStartingIndex--;
+            }
+            */
+
+            throw new NotImplementedException();
         }
 
         /// <summary>

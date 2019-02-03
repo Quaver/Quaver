@@ -24,15 +24,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private EditorLayerVisiblityCheckbox VisibilityCheckbox { get; set; }
+        public EditorLayerVisiblityCheckbox VisibilityCheckbox { get; private set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton EditLayerNameButton { get; set; }
+        public JukeboxButton EditLayerNameButton { get; private set; }
 
         /// <summary>
         /// </summary>
-        private EditorDrawableLayerButton SelectLayerButton { get; set; }
+        public EditorDrawableLayerButton SelectLayerButton { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -46,10 +46,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="scrollContainer"></param>
         /// <param name="layerCompositor"></param>
         /// <param name="item"></param>
         /// <param name="index"></param>
-        public EditorDrawableLayer(EditorLayerCompositor layerCompositor, EditorLayerInfo item, int index) : base(item, index)
+        public EditorDrawableLayer(EditorLayerScrollContainer scrollContainer, EditorLayerCompositor layerCompositor,
+            EditorLayerInfo item, int index) : base(scrollContainer, item, index)
         {
             LayerCompositor = layerCompositor;
             Tint = Color.White;
@@ -69,8 +71,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+                return;
+
             AnimateSelection(gameTime);
             base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+                return;
+
+            base.Draw(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            SelectLayerButton.Destroy();
+            base.Destroy();
         }
 
         /// <summary>

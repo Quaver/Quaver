@@ -6,8 +6,10 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal;
 using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
@@ -80,5 +82,22 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <param name="compositor"></param>
         /// <param name="l"></param>
         public void AddLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l) => Perform(new EditorActionAddLayer(workingMap, compositor, l));
+
+        /// <summary>
+        ///     Removes a layer from the map
+        /// </summary>
+        /// <param name="workingMap"></param>
+        /// <param name="compositor"></param>
+        /// <param name="l"></param>
+        public void RemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l)
+        {
+            if (l == compositor.ScrollContainer.AvailableItems.First())
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot delete the default layer!");
+                return;
+            }
+
+            Perform(new EditorActionRemoveLayer(workingMap, compositor, l));
+        }
     }
 }
