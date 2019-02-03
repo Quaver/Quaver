@@ -117,6 +117,8 @@ namespace Quaver.Shared.Skinning
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
+        internal Color TimingLineColor { get; private set; }
+
 #endregion
 
 #region TEXTURES
@@ -317,6 +319,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -361,6 +364,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -420,6 +424,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -468,6 +473,7 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -528,6 +534,7 @@ namespace Quaver.Shared.Skinning
             HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
+            TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
         }
 
         /// <summary>
