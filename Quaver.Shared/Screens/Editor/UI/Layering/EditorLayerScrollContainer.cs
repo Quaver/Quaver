@@ -55,7 +55,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         ///     Adds a layer to the container. Creates a drawable if necessary
         /// </summary>
         /// <param name="layer"></param>
-        public void AddLayer(EditorLayerInfo layer) => AddObjectToBottom(layer, true);
+        /// <param name="index"></param>
+        public void AddLayer(EditorLayerInfo layer, int index = -1)
+        {
+            if (index == -1)
+                AddObjectToBottom(layer, true);
+        }
 
         /// <summary>
         ///     Removes an object from the container.

@@ -368,7 +368,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             }
 
             hitObject.AppearAsActive();
-            
+
             // Check if the layer is hidden that the user is adding the object to and display the object
             // as that appropriate colour.
             if (((EditorScreenView)Ruleset.Screen.View).LayerCompositor.ScrollContainer.AvailableItems[hitObject.Info.EditorLayer].Hidden)
@@ -385,12 +385,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         {
             lock (HitObjects)
             {
-                var ho = HitObjects.Find(x => x.Info == h);
+                var ho = HitObjects?.Find(x => x.Info == h);
 
-                HitObjects.Remove(ho);
+                HitObjects?.Remove(ho);
 
-                ho.IsInView = false;
-                ho.Destroy();
+                if (ho != null)
+                {
+                    ho.IsInView = false;
+                    ho?.Destroy();
+                }
 
                 HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
             }
