@@ -89,15 +89,6 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <param name="workingMap"></param>
         /// <param name="compositor"></param>
         /// <param name="l"></param>
-        public void RemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l)
-        {
-            if (l == compositor.ScrollContainer.AvailableItems.First())
-            {
-                NotificationManager.Show(NotificationLevel.Error, "You cannot delete the default layer!");
-                return;
-            }
-
-            Perform(new EditorActionRemoveLayer(workingMap, compositor, l));
-        }
+        public void RemoveLayer(Qua workingMap, EditorLayerCompositor compositor, EditorLayerInfo l) => Perform(new EditorActionRemoveLayer(workingMap, compositor, l));
     }
 }
