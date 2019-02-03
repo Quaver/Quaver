@@ -78,6 +78,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
@@ -86,6 +90,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             base.Draw(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             SelectLayerButton.Destroy();

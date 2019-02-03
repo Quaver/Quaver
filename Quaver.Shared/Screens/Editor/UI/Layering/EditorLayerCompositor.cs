@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Editor.UI.Dialogs;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
 using Wobble.Assets;
@@ -13,6 +17,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 using IDrawable = Wobble.Graphics.IDrawable;
 using Sprite = Wobble.Graphics.Sprites.Sprite;
 
@@ -104,6 +109,21 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         private void CreateDeleteButton() => DeleteButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
             (sender, args) =>
             {
+                if (SelectedLayerIndex.Value == 0)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot delete the default layer!");
+                    return;
+                }
+
+                // Show them a confirmation dialog if objects are contained inside of the layer.
+                if (Screen.WorkingMap.HitObjects.Any(x => x.EditorLayer == SelectedLayerIndex.Value))
+                {
+                    DialogManager.Show(new LayerDeleteConfirmationDialog(Screen.Ruleset as EditorRulesetKeys,
+                        ScrollContainer.AvailableItems[SelectedLayerIndex.Value]));
+
+                    return;
+                }
+
                 Screen.Ruleset.ActionManager.RemoveLayer(Screen.WorkingMap, this, ScrollContainer.AvailableItems[SelectedLayerIndex.Value]);
             })
         {
