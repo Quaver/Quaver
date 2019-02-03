@@ -13,11 +13,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Autosave
 {
     public class AutosaveDetectionDialog : ConfirmCancelDialog
     {
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public AutosaveDetectionDialog() : base("Detected game crash. Reload From autosave?", OnConfirm, OnCancel)
+        public AutosaveDetectionDialog()
+            : base("The last time you edited this map, the game crashed. Would you like to recover your work?", OnConfirm, OnCancel)
         {
-
         }
 
         /// <summary>
