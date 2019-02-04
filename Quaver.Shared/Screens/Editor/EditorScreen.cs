@@ -271,12 +271,6 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value) && ActiveLayerInterface.Value != EditorLayerInterface.Editing)
                 HandleKeyPressSpace();
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))
-                ChangeAudioPlaybackRate(Direction.Backward);
-
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
-                ChangeAudioPlaybackRate(Direction.Forward);
-
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 OpenMetadataDialog();
 
@@ -479,6 +473,12 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.W))
                 MapManager.Selected.Value.OpenFolder();
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))
+                ChangeAudioPlaybackRate(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
+                ChangeAudioPlaybackRate(Direction.Forward);
         }
 
         /// <summary>
