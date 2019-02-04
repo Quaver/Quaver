@@ -31,10 +31,15 @@ namespace Quaver.Shared.Modifiers.Mods
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Speed05X,
+            ModIdentifier.Speed055X,
             ModIdentifier.Speed06X,
+            ModIdentifier.Speed065X,
             ModIdentifier.Speed07X,
+            ModIdentifier.Speed075X,
             ModIdentifier.Speed08X,
+            ModIdentifier.Speed085X,
             ModIdentifier.Speed09X,
+            ModIdentifier.Speed095X,
             ModIdentifier.Speed11X,
             ModIdentifier.Speed12X,
             ModIdentifier.Speed13X,
