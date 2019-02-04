@@ -125,10 +125,8 @@ namespace Quaver.Shared.Screens.Editor
         private Metronome Metronome { get; }
 
         /// <summary>
-        ///     If we're in the process of opening the metadata dialog,
-        ///     doing it under a task, to prevent freezing due to unoptimized text...
         /// </summary>
-        private bool IsOpeningMetadataDialog { get; set; }
+        private bool IsQuittingAfterSave { get; set; }
 
         /// <summary>
         ///     What the user is currently doing when it comes to layers.
@@ -385,20 +383,13 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void HandleKeyPressEscape()
         {
-            if (SaveInProgress)
-            {
-                NotificationManager.Show(NotificationLevel.Error, "Please wait until your map has finished saving before exiting!");
+            if (IsQuittingAfterSave)
                 return;
-            }
 
             if (Ruleset.ActionManager.HasUnsavedChanges)
-            {
                 DialogManager.Show(new EditorSaveAndQuitDialog(this));
-            }
             else
-            {
                 ExitToSelect();
-            }
         }
 
         /// <summary>
@@ -609,6 +600,12 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void Save(bool exitAfter = false)
         {
+            if (IsQuittingAfterSave)
+                return;
+
+            if (exitAfter)
+                IsQuittingAfterSave = true;
+
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot save a map loaded from another game.");
@@ -645,21 +642,27 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        private void ExitToSelect() => Exit(() =>
+        public void ExitToSelect()
         {
-            GameBase.Game.IsMouseVisible = false;
-            GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
+            Exit(() =>
+            {
+                for (var i = DialogManager.Dialogs.Count - 1; i >= 0; i--)
+                    DialogManager.Dismiss(DialogManager.Dialogs[i]);
 
-            DiscordHelper.Presence.StartTimestamp = 0;
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+                GameBase.Game.IsMouseVisible = false;
+                GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
 
-            if (AudioEngine.Track != null)
-                AudioEngine.Track.Rate = 1.0f;
+                DiscordHelper.Presence.StartTimestamp = 0;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-            AudioEngine.Track?.Fade(0, 100);
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Rate = 1.0f;
 
-            return new SelectScreen();
-        });
+                AudioEngine.Track?.Fade(0, 100);
+
+                return new SelectScreen();
+            });
+        }
 
         /// <summary>
         ///    Changes the audio preview time of the map.
@@ -899,24 +902,9 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///    Opens the dialog to change the metadata.
         /// </summary>
-        public void OpenMetadataDialog()
-        {
-            if (IsOpeningMetadataDialog)
-                return;
+        public void OpenMetadataDialog() => DialogManager.Show(new EditorMetadataDialog(this));
 
-            IsOpeningMetadataDialog = true;
-
-            Task.Run(() =>
-            {
-                DialogManager.Show(new EditorMetadataDialog(this));
-                IsOpeningMetadataDialog = false;
-            });
-        }
-
-        public void OpenScrollVelocityDialog()
-        {
-            DialogManager.Show(new EditorScrollVelocityDialog());
-        }
+        public void OpenScrollVelocityDialog() => DialogManager.Show(new EditorScrollVelocityDialog());
 
         /// <summary>
         ///     Autosave when the game crashes.

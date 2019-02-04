@@ -65,12 +65,12 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// <summary>
         ///     Method called when confirming the dialog.
         /// </summary>
-        private EventHandler OnConfirm { get; }
+        public EventHandler OnConfirm { get; set; }
 
         /// <summary>
         ///     Method called when cancelling the dialog.
         /// </summary>
-        private EventHandler OnCancel { get; }
+        public EventHandler OnCancel { get; set; }
 
         /// <inheritdoc />
         /// <summary>
