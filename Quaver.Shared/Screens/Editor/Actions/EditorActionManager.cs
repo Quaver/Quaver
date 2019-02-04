@@ -33,13 +33,14 @@ namespace Quaver.Shared.Screens.Editor.Actions
         private Stack<IEditorAction> RedoStack { get; } = new Stack<IEditorAction>();
 
         /// <summary>
+        ///     The last action the user performed before saving
         /// </summary>
         public IEditorAction LastSaveAction { get; set; }
 
         /// <summary>
-        ///     If the user needs a dialog when exiting the screen.
+        ///    Detects if the user has made changes to the map before saving.
         /// </summary>
-        public bool NeedsSaveQuitConfirmation => UndoStack.Count != 0  && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
+        public bool HasUnsavedChanges => UndoStack.Count != 0  && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
 
         /// <summary>
         /// </summary>

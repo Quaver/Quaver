@@ -391,7 +391,7 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
-            if (Ruleset.ActionManager.NeedsSaveQuitConfirmation)
+            if (Ruleset.ActionManager.HasUnsavedChanges)
             {
                 DialogManager.Show(new EditorSaveAndQuitDialog(this));
             }
