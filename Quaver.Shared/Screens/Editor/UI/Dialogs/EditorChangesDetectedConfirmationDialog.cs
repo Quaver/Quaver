@@ -30,14 +30,14 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs
 {
-   public class ChangesDetectedConfirmationDialog : ConfirmCancelDialog
+   public class EditorChangesDetectedConfirmationDialog : ConfirmCancelDialog
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="file"></param>
-        public ChangesDetectedConfirmationDialog(QuaverScreen screen, string file)
+        public EditorChangesDetectedConfirmationDialog(QuaverScreen screen, string file)
             : base("Detected outside changes to the .qua file. What you like to reload the editor?", (o, e) => OnConfirm(screen, file))
         {
         }

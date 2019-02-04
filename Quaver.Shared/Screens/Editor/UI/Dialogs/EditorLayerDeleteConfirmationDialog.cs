@@ -13,14 +13,14 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs
 {
-    public class LayerDeleteConfirmationDialog : ConfirmCancelDialog
+    public class EditorLayerDeleteConfirmationDialog : ConfirmCancelDialog
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="layer"></param>
-        public LayerDeleteConfirmationDialog(EditorRuleset ruleset, EditorLayerInfo layer)
+        public EditorLayerDeleteConfirmationDialog(EditorRuleset ruleset, EditorLayerInfo layer)
             : base($"Deleting this layer will also remove ALL objects inside of it. Confirm?",
                 (o, e) => OnConfirm(ruleset, layer))
         {

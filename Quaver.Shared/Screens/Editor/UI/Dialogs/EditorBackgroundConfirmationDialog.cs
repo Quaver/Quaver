@@ -28,14 +28,14 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs
 {
-    public class BackgroundConfirmationDialog : ConfirmCancelDialog
+    public class EditorBackgroundConfirmationDialog : ConfirmCancelDialog
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="file"></param>
-        public BackgroundConfirmationDialog(EditorScreen screen, string file)
+        public EditorBackgroundConfirmationDialog(EditorScreen screen, string file)
             : base("Would you like to change the background?", (o, e) => OnConfirm(screen, file))
         {
         }

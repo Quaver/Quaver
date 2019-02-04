@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Editor
             AppDomain.CurrentDomain.UnhandledException += OnCrash;
 
             if (File.Exists($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave"))
-                DialogManager.Show(new AutosaveDetectionDialog());
+                DialogManager.Show(new EditorAutosaveDetectionDialog());
         }
 
         /// <summary>
@@ -674,7 +674,7 @@ namespace Quaver.Shared.Screens.Editor
             if (!fileLower.EndsWith(".png") && !fileLower.EndsWith(".jpg") && !fileLower.EndsWith(".jpeg"))
                 return;
 
-            DialogManager.Show(new BackgroundConfirmationDialog(this, file));
+            DialogManager.Show(new EditorBackgroundConfirmationDialog(this, file));
         }
 
         /// <summary>
@@ -715,8 +715,8 @@ namespace Quaver.Shared.Screens.Editor
                     return;
 
                 // Only make a new dialog if one isn't already up.
-                if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.First().GetType() != typeof(ChangesDetectedConfirmationDialog))
-                    DialogManager.Show(new ChangesDetectedConfirmationDialog(this, args.FullPath));
+                if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.First().GetType() != typeof(EditorChangesDetectedConfirmationDialog))
+                    DialogManager.Show(new EditorChangesDetectedConfirmationDialog(this, args.FullPath));
             };
 
             FileWatcher.EnableRaisingEvents = true;

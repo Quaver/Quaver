@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
                 // Show them a confirmation dialog if objects are contained inside of the layer.
                 if (Screen.WorkingMap.HitObjects.Any(x => x.EditorLayer == SelectedLayerIndex.Value))
                 {
-                    DialogManager.Show(new LayerDeleteConfirmationDialog(Screen.Ruleset as EditorRulesetKeys,
+                    DialogManager.Show(new EditorLayerDeleteConfirmationDialog(Screen.Ruleset as EditorRulesetKeys,
                         ScrollContainer.AvailableItems[SelectedLayerIndex.Value]));
 
                     return;
