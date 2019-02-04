@@ -287,6 +287,27 @@ namespace Quaver.Shared.Screens.Select
         }
 
         /// <summary>
+        ///     Gets the adjacent rate value.
+        ///
+        ///     For example, if the current rate is 1.0x, the adjacent value would be either 0.95x or 1.1x,
+        ///     depending on the argument.
+        /// </summary>
+        /// <param name="faster">If true, returns the higher rate, otherwise the lower rate.</param>
+        /// <returns></returns>
+        private static float GetNextRate(bool faster)
+        {
+            var current = AudioEngine.Track.Rate;
+            var adjustment = 0.1f;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (current < 1.0f || (current == 1.0f && !faster))
+                adjustment = 0.05f;
+
+            var next = current + adjustment * (faster ? 1f : -1f);
+            return (float) Math.Round(next, 2);
+        }
+
+        /// <summary>
         ///     Handles when the user wants to increase/decrease the rate of the song.
         /// </summary>
         private static void HandleKeyPressControlRateChange()
@@ -297,11 +318,11 @@ namespace Quaver.Shared.Screens.Select
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+                ModManager.AddSpeedMods(GetNextRate(true));
 
             // Decrease Rate
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+                ModManager.AddSpeedMods(GetNextRate(false));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
