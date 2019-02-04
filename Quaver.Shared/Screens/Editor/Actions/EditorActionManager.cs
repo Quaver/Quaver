@@ -16,8 +16,12 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 
 namespace Quaver.Shared.Screens.Editor.Actions
 {
-    public class EditorActionManager
+    public abstract class EditorActionManager
     {
+        /// <summary>
+        /// </summary>
+        protected EditorScreen Screen { get; }
+
         /// <summary>
         ///     Stores a LIFO structure of actions to undo.
         /// </summary>
@@ -27,6 +31,20 @@ namespace Quaver.Shared.Screens.Editor.Actions
         ///     Stores a LIFO structure of actions to redo.
         /// </summary>
         private Stack<IEditorAction> RedoStack { get; } = new Stack<IEditorAction>();
+
+        /// <summary>
+        /// </summary>
+        public IEditorAction LastSaveAction { get; set; }
+
+        /// <summary>
+        ///     If the user needs a dialog when exiting the screen.
+        /// </summary>
+        public bool NeedsSaveQuitConfirmation => UndoStack.Count != 0  && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="screen"></param>
+        public EditorActionManager(EditorScreen screen) => Screen = screen;
 
         /// <summary>
         ///     Performs a given action for the editor to take.

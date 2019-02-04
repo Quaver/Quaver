@@ -35,7 +35,6 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
-using Quaver.Shared.Screens.Editor.UI.Dialogs.Autosave;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
 using Quaver.Shared.Screens.Editor.UI.Layering;
@@ -392,21 +391,14 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
-            Exit(() =>
+            if (Ruleset.ActionManager.NeedsSaveQuitConfirmation)
             {
-                GameBase.Game.IsMouseVisible = false;
-                GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
-
-                DiscordHelper.Presence.StartTimestamp = 0;
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
-
-                if (AudioEngine.Track != null)
-                    AudioEngine.Track.Rate = 1.0f;
-
-                AudioEngine.Track?.Fade(0, 100);
-
-                return new SelectScreen();
-            });
+                DialogManager.Show(new EditorSaveAndQuitDialog(this));
+            }
+            else
+            {
+                ExitToSelect();
+            }
         }
 
         /// <summary>
@@ -615,7 +607,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Saves the map
         /// </summary>
-        public void Save()
+        public void Save(bool exitAfter = false)
         {
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
@@ -632,6 +624,9 @@ namespace Quaver.Shared.Screens.Editor
             if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                 MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
+            // Impoortant. Save the last save action, so we know whether or not the user has made changes.
+            Ruleset.ActionManager.LastSaveAction = Ruleset.ActionManager.UndoStack.Count == 0 ? null : Ruleset.ActionManager.UndoStack.Peek();
+
             ThreadScheduler.Run(() =>
             {
                 var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
@@ -641,9 +636,30 @@ namespace Quaver.Shared.Screens.Editor
                 SaveInProgress = false;
                 LastSaveTime = GameBase.Game.TimeRunning;
 
-                NotificationManager.Show(NotificationLevel.Success, "Successfully saved the map.");
+                if (exitAfter)
+                    ExitToSelect();
+                else
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully saved the map.");
             });
         }
+
+        /// <summary>
+        /// </summary>
+        private void ExitToSelect() => Exit(() =>
+        {
+            GameBase.Game.IsMouseVisible = false;
+            GameBase.Game.GlobalUserInterface.Cursor.Visible = true;
+
+            DiscordHelper.Presence.StartTimestamp = 0;
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            if (AudioEngine.Track != null)
+                AudioEngine.Track.Rate = 1.0f;
+
+            AudioEngine.Track?.Fade(0, 100);
+
+            return new SelectScreen();
+        });
 
         /// <summary>
         ///    Changes the audio preview time of the map.

@@ -17,10 +17,11 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         /// </summary>
         private EditorRulesetKeys Ruleset { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="ruleset"></param>
-        public EditorActionManagerKeys(EditorRulesetKeys ruleset) => Ruleset = ruleset;
+        public EditorActionManagerKeys(EditorRulesetKeys ruleset) : base(ruleset.Screen) => Ruleset = ruleset;
 
         /// <summary>
         /// </summary>

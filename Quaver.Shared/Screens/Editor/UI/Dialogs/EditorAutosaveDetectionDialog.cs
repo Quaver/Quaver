@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -16,7 +15,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Wobble;
 using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Autosave
+namespace Quaver.Shared.Screens.Editor.UI.Dialogs
 {
     public class EditorAutosaveDetectionDialog : ConfirmCancelDialog
     {
