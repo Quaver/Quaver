@@ -260,6 +260,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                             try
                             {
                                 OnlineManager.Client.DownloadMap(filePath, map.Id);
+                                Logger.Important($"Successfully downloaded map: {map.Id}", LogType.Network);
                             }
                             catch (Exception)
                             {
