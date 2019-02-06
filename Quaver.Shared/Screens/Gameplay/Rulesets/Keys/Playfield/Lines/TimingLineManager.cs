@@ -93,8 +93,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
                 {
-                    if (songPos < target)
-                        Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
+                    Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
                 }
             }
         }
