@@ -549,7 +549,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         var sv = new SliderVelocityInfo()
                         {
                             StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                            Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
 
@@ -571,7 +571,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -587,7 +587,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -612,7 +612,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var sv = new SliderVelocityInfo()
                     {
                         StartTime = qua.TimingPoints[i].StartTime,
-                        Multiplier = (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                        Multiplier = qua.TimingPoints[i].Bpm / commonBpm
                     };
                     ScrollVelocities.Add(sv);
                 }
