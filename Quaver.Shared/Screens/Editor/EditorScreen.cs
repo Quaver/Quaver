@@ -953,6 +953,12 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot upload maps loaded from other games!");
+                return;
+            }
+
             // Check if the creator names match
             foreach (var map in MapManager.Selected.Value.Mapset.Maps)
             {
