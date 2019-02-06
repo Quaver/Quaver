@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.UI.Toolkit;
 using Wobble.Graphics;
@@ -42,6 +43,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// <summary>
         /// </summary>
         public List<EditorCompositionToolButton> CompositionToolButtons { get; protected set; }
+
+        /// <summary>
+        ///     HitObjects that are currently selected and ready to be copied or flipped.
+        /// </summary>
+        public List<HitObjectInfo> SelectedHitObjects { get; } = new List<HitObjectInfo>();
 
         /// <summary>
         /// </summary>

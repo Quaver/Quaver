@@ -132,6 +132,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.PageDown))
                 ConfigManager.EditorScrollSpeedKeys.Value--;
 
+            if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Delete))
+                DeleteSelectedHitObjects();
+
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
             for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
             {
@@ -161,7 +164,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 SwitchGraphs();
             }
 
-            HandleHitObjectMouseInput();
+            switch (CompositionTool.Value)
+            {
+                case EditorCompositionTool.Select:
+                    HandleHitObjectSelection();
+                    break;
+                case EditorCompositionTool.Note:
+                case EditorCompositionTool.LongNote:
+                case EditorCompositionTool.Mine:
+                    HandleHitObjectMouseInput();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -261,6 +276,41 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         }
 
         /// <summary>
+        ///     Handles the selecting of hitobjects
+        /// </summary>
+        private void HandleHitObjectSelection()
+        {
+            if (!MouseManager.IsUniqueClick(MouseButton.Left))
+                return;
+
+            var hoveredObject = ScrollContainer.GetHoveredHitObject();
+
+            // User has clicked on a new object and wants to select it.
+            if (hoveredObject != null)
+            {
+                // Object isn't hovered, so we need to add it
+                if (!SelectedHitObjects.Contains(hoveredObject.Info))
+                    SelectHitObject(hoveredObject);
+
+                // In the event that the user isn't pressing control, deselect all other hitobjects
+                if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ||
+                    KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+                    return;
+
+                for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
+                {
+                    if (SelectedHitObjects[i] != hoveredObject.Info)
+                        DeselectHitObject(ScrollContainer.HitObjects.Find(y => y.Info == SelectedHitObjects[i]));
+                }
+
+                return;
+            }
+
+            for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
+                DeselectHitObject(ScrollContainer.HitObjects.Find(y => y.Info == SelectedHitObjects[i]));
+        }
+
+        /// <summary>
         ///     Places a HitObject at a given lane.
         /// </summary>
         /// <param name="inputDevice"></param>
@@ -338,6 +388,46 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                         throw new ArgumentOutOfRangeException(nameof(inputDevice), inputDevice, null);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Selects an individual HitObject
+        /// </summary>
+        /// <param name="h"></param>
+        private void SelectHitObject(DrawableEditorHitObject h)
+        {
+            h.AppearAsSelected();
+            SelectedHitObjects.Add(h.Info);
+        }
+
+        /// <summary>
+        ///     Deselects an individual HitObject
+        /// </summary>
+        /// <param name="h"></param>
+        private void DeselectHitObject(DrawableEditorHitObject h)
+        {
+            var layer = View.LayerCompositor.ScrollContainer.AvailableItems[h.Info.EditorLayer];
+
+            if (PendingLongNoteReleases.Contains(h.Info))
+            {
+                var ln = h as DrawableEditorHitObjectLong;
+                ln?.AppearAsInactive();
+            }
+            else if (layer.Hidden)
+                h.AppearAsHiddenInLayer();
+            else
+                h.AppearAsActive();
+
+            SelectedHitObjects.Remove(h.Info);
+        }
+
+        /// <summary>
+        ///     Deletes all hitobjects that are currently selected.
+        /// </summary>
+        private void DeleteSelectedHitObjects()
+        {
+            ActionManager.Perform(new EditorActionBatchDeleteHitObjectKeys(this, ScrollContainer, new List<HitObjectInfo>(SelectedHitObjects)));
+            SelectedHitObjects.Clear();
         }
 
         /// <summary>

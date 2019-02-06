@@ -489,7 +489,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             if (e.Layer.Hidden)
                 hitObjects.ForEach(x =>
                 {
-                    if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
+                    if (Ruleset.SelectedHitObjects.Contains(x.Info))
+                        x.AppearAsSelected();
+                    else if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
                     {
                         var h = x as DrawableEditorHitObjectLong;
                         h?.AppearAsInactive();
@@ -503,7 +505,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             {
                 hitObjects.ForEach(x =>
                 {
-                    if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
+                    if (Ruleset.SelectedHitObjects.Contains(x.Info))
+                        x.AppearAsSelected();
+                    else if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
                     {
                         var h = x as DrawableEditorHitObjectLong;
                         h?.AppearAsInactive();
