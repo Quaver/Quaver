@@ -18,6 +18,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Server.Client;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
@@ -32,6 +33,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
@@ -127,6 +129,11 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         /// </summary>
         private bool IsQuittingAfterSave { get; set; }
+
+        /// <summary>
+        ///    If the user is currently uploading their mapset
+        /// </summary>
+        public bool UploadInProgress { get; set; }
 
         /// <summary>
         ///     What the user is currently doing when it comes to layers.
@@ -710,6 +717,9 @@ namespace Quaver.Shared.Screens.Editor
 
             FileWatcher.Changed += async (sender, args) =>
             {
+                if (UploadInProgress)
+                    return;
+
                 var path = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
 
                 var lastWriteTime = File.GetLastWriteTime(path);
@@ -753,13 +763,18 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
-            Button.IsGloballyClickable = false;
-
             // Save the already existing map.
-            Save();
+            if (Ruleset.ActionManager.HasUnsavedChanges)
+            {
+                DialogManager.Show(new EditorUnsavedChangesDialog(this));
+                return;
+            }
+
+            Button.IsGloballyClickable = false;
 
             var qua = ObjectHelper.DeepClone(WorkingMap);
             qua.DifficultyName = "";
+            qua.MapId = -1;
             qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
 
             var dir = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}";
@@ -904,6 +919,8 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void OpenMetadataDialog() => DialogManager.Show(new EditorMetadataDialog(this));
 
+        /// <summary>
+        /// </summary>
         public void OpenScrollVelocityDialog() => DialogManager.Show(new EditorScrollVelocityDialog());
 
         /// <summary>
@@ -923,6 +940,31 @@ namespace Quaver.Shared.Screens.Editor
 
             var path = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave";
             WorkingMap.Save(path);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UploadMapset()
+        {
+            // Only allow it if the user is logged in
+            if (OnlineManager.Status.Value != ConnectionStatus.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to upload the mapset!");
+                return;
+            }
+
+            // Check if the creator names match
+            foreach (var map in MapManager.Selected.Value.Mapset.Maps)
+            {
+                if ((map != MapManager.Selected.Value || WorkingMap.Creator == ConfigManager.Username.Value) &&
+                    (map == MapManager.Selected.Value || map.Creator == ConfigManager.Username.Value))
+                    continue;
+
+                NotificationManager.Show(NotificationLevel.Error, "You do not own this map. Do the usernames match?");
+                return;
+            }
+
+            DialogManager.Show(new EditorUploadConfirmationDialog());
         }
 
         /// <summary>

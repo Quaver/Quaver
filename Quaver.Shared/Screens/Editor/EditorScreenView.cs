@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void CreateNavigationBar()
         {
-            NavigationBar = new MainEditorNavigationBar(Screen as EditorScreen) {Parent = Container};
+            NavigationBar = new EditorNavigationBarMain(Screen as EditorScreen) {Parent = Container};
             NavigationBar.Y = -NavigationBar.Height;
 
             NavigationBar.MoveToY(0, Easing.OutQuint, 800);
