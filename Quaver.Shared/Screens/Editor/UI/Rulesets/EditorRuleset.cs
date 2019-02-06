@@ -50,6 +50,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         public List<HitObjectInfo> SelectedHitObjects { get; } = new List<HitObjectInfo>();
 
         /// <summary>
+        ///     Objects that are currently on the clipboard.
+        /// </summary>
+        public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public EditorRuleset(EditorScreen screen)
@@ -113,6 +118,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
                 btn.MoveToX(0, Easing.OutQuint, 450 + 50 * i);
             }
+        }
+
+        /// <summary>
+        ///     Copies selected hitobjects to the clipboard.
+        /// </summary>
+        public void CopySelectedHitObjects()
+        {
         }
     }
 }

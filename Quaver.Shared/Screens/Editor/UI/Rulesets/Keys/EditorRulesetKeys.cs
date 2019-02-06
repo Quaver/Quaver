@@ -164,6 +164,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 SwitchGraphs();
             }
 
+            // Select all
+            if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl)
+                || KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.A))
+                    SelectAllHitObjects();
+            }
+
             switch (CompositionTool.Value)
             {
                 case EditorCompositionTool.Select:
@@ -401,6 +409,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         }
 
         /// <summary>
+        /// </summary>
+        private void SelectAllHitObjects() => ScrollContainer.HitObjects.ForEach(SelectHitObject);
+
+        /// <summary>
         ///     Deselects an individual HitObject
         /// </summary>
         /// <param name="h"></param>
@@ -413,7 +425,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 var ln = h as DrawableEditorHitObjectLong;
                 ln?.AppearAsInactive();
             }
-            else if (layer.Hidden)
+            if (layer.Hidden)
                 h.AppearAsHiddenInLayer();
             else
                 h.AppearAsActive();
