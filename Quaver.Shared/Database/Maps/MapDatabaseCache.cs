@@ -28,7 +28,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The path of the local database
         /// </summary>
-        private static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
+        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
 
         /// <summary>
         ///     Dictates if we currently have loaded maps from other games.
@@ -340,6 +340,9 @@ namespace Quaver.Shared.Database.Maps
                 try
                 {
                     var path = $"{ConfigManager.SongDirectory}/{MapsToUpdate[i].Directory}/{MapsToUpdate[i].Path}";
+
+                    if (!File.Exists(path))
+                        continue;
 
                     var map = Map.FromQua(Qua.Parse(path), path);
                     map.CalculateDifficulties();

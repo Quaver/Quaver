@@ -50,13 +50,15 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Exports the entire mapset to a zip (.qp) file.
         /// </summary>
-        public void ExportToZip()
+        public string ExportToZip(bool openInExplorer = true)
         {
             var exportsDir = $"{ConfigManager.DataDirectory}/Exports/";
             System.IO.Directory.CreateDirectory(exportsDir);
 
             var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
             System.IO.Directory.CreateDirectory(tempFolder);
+
+            string outputPath = null;
 
             using (var archive = ZipArchive.Create())
             {
@@ -102,15 +104,17 @@ namespace Quaver.Shared.Database.Maps
 
                 archive.AddAllFromDirectory(tempFolder);
 
-                var outputPath = exportsDir +
+                outputPath = exportsDir +
                                  $"{StringHelper.FileNameSafeString(Artist + " - " + Title + " - " + GameBase.Game.TimeRunning)}.qp";
 
                 archive.SaveTo(outputPath, CompressionType.Deflate);
 
-                Utils.NativeUtils.HighlightInFileManager(outputPath);
+                if (openInExplorer)
+                    Utils.NativeUtils.HighlightInFileManager(outputPath);
             }
 
             System.IO.Directory.Delete(tempFolder, true);
+            return outputPath;
         }
     }
 }
