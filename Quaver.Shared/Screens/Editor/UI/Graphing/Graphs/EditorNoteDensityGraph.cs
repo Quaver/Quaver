@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
 
         /// <summary>
         /// </summary>
-        private Dictionary<int, Sprite> SampleBars { get; } = new Dictionary<int, Sprite>();
+        public Dictionary<int, Sprite> SampleBars { get; } = new Dictionary<int, Sprite>();
 
         /// <inheritdoc />
         /// <summary>

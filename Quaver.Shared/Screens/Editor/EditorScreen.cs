@@ -39,6 +39,8 @@ using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Dialogs;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.Editor.UI.Graphing.Graphs;
 using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -238,6 +240,16 @@ namespace Quaver.Shared.Screens.Editor
                     var ruleset = Ruleset as EditorRulesetKeys;
                     ruleset?.ScrollContainer.HitObjects.ForEach(x => x.Destroy());
                     ruleset?.ScrollContainer.HitObjects.Clear();
+
+                    // Clear the density graph and make sure there aren't any objects.
+                    var densityGraph = ruleset?.VisualizationGraphs[EditorVisualizationGraphType.Density].GraphRaw as EditorNoteDensityGraph;
+
+                    foreach (var sample in densityGraph.SampleBars)
+                        sample.Value.Destroy();
+
+                    densityGraph.SampleBars.Clear();
+                    ruleset?.VisualizationGraphs[EditorVisualizationGraphType.Density]?.ForceRecache();
+
                     DialogManager.Dismiss();
                 }));
 
