@@ -311,8 +311,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         public void CheckIfObjectsOnScreen()
         {
-            foreach (var obj in new List<DrawableEditorHitObject>(HitObjects))
-                obj.IsInView = obj.CheckIfOnScreen();
+            lock (HitObjects)
+            {
+                foreach (var obj in new List<DrawableEditorHitObject>(HitObjects))
+                {
+                    if (obj != null)
+                        obj.IsInView = obj.CheckIfOnScreen();
+                }
+            }
 
             foreach (var line in new List<TimelineTickLine>(Timeline.Lines))
                 line.IsInView = line.CheckIfOnScreen();
@@ -489,7 +495,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             if (e.Layer.Hidden)
                 hitObjects.ForEach(x =>
                 {
-                    if (Ruleset.SelectedHitObjects.Contains(x.Info))
+                    if (Ruleset.SelectedHitObjects.Contains(x))
                         x.AppearAsSelected();
                     else if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
                     {
@@ -505,7 +511,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             {
                 hitObjects.ForEach(x =>
                 {
-                    if (Ruleset.SelectedHitObjects.Contains(x.Info))
+                    if (Ruleset.SelectedHitObjects.Contains(x))
                         x.AppearAsSelected();
                     else if (Ruleset.PendingLongNoteReleases.Contains(x.Info))
                     {

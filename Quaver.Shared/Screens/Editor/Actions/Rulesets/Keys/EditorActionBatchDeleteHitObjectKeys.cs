@@ -6,9 +6,13 @@
 */
 
 using System.Collections.Generic;
+using osu_database_reader.Components.HitObjects;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.Editor.UI.Graphing.Graphs;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 
 namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 {
@@ -29,11 +33,11 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        private List<HitObjectInfo> HitObjects { get; }
+        private List<DrawableEditorHitObject> HitObjects { get; }
 
         /// <summary>
         /// </summary>
-        public EditorActionBatchDeleteHitObjectKeys(EditorRuleset ruleset, EditorScrollContainerKeys container, List<HitObjectInfo> hitObjects)
+        public EditorActionBatchDeleteHitObjectKeys(EditorRuleset ruleset, EditorScrollContainerKeys container, List<DrawableEditorHitObject> hitObjects)
         {
             Ruleset = ruleset;
             Container = container;
@@ -43,11 +47,49 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Perform() => HitObjects.ForEach(x => new EditorActionDeleteHitObjectKeys(Container, x).Perform());
+        public void Perform()
+        {
+            var graphContainer = Container.Ruleset.VisualizationGraphs[EditorVisualizationGraphType.Density];
+
+            lock (Container.HitObjects)
+            {
+                foreach (var h in HitObjects)
+                {
+                    Ruleset.WorkingMap.HitObjects.Remove(h.Info);
+                    Container.RemoveHitObjectSprite(h.Info);
+
+                    var graph = graphContainer?.GraphRaw as EditorNoteDensityGraph;
+                    graph?.RefreshSample(h.Info);
+                }
+            }
+
+            Ruleset.WorkingMap.Sort();
+            Container.Ruleset.Screen.SetHitSoundObjectIndex();
+            graphContainer?.ForceRecache();
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => HitObjects.ForEach(x => new EditorActionPlaceHitObjectKeys(Container, x).Perform());
+        public void Undo()
+        {
+            var graphContainer = Container.Ruleset.VisualizationGraphs[EditorVisualizationGraphType.Density];
+
+            lock (Container.HitObjects)
+            {
+                foreach (var h in HitObjects)
+                {
+                    Ruleset.WorkingMap.HitObjects.Add(h.Info);
+                    Container.AddHitObjectSprite(h.Info);
+
+                    var graph = graphContainer?.GraphRaw as EditorNoteDensityGraph;
+                    graph?.RefreshSample(h.Info);
+                }
+            }
+
+            Ruleset.WorkingMap.Sort();
+            Container.Ruleset.Screen.SetHitSoundObjectIndex();
+            graphContainer?.ForceRecache();
+        }
     }
 }

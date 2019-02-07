@@ -65,6 +65,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         public Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer> VisualizationGraphs { get; }
             = new Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer>();
 
+        /// <summary>
+        ///     HitObjects that are currently selected and ready to be copied or flipped.
+        /// </summary>
+        public List<DrawableEditorHitObject> SelectedHitObjects { get; } = new List<DrawableEditorHitObject>();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -297,25 +302,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             if (hoveredObject != null)
             {
                 // Object isn't hovered, so we need to add it
-                if (!SelectedHitObjects.Contains(hoveredObject.Info))
+                if (!SelectedHitObjects.Contains(hoveredObject))
                     SelectHitObject(hoveredObject);
 
-                // In the event that the user isn't pressing control, deselect all other hitobjects
                 if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ||
                     KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
                     return;
 
+                // In the event that the user isn't pressing control, deselect all other hitobjects
                 for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
                 {
-                    if (SelectedHitObjects[i] != hoveredObject.Info)
-                        DeselectHitObject(ScrollContainer.HitObjects.Find(y => y.Info == SelectedHitObjects[i]));
+                    if (SelectedHitObjects[i] != hoveredObject)
+                        DeselectHitObject(SelectedHitObjects[i]);
                 }
 
                 return;
             }
 
             for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
-                DeselectHitObject(ScrollContainer.HitObjects.Find(y => y.Info == SelectedHitObjects[i]));
+                DeselectHitObject(SelectedHitObjects[i]);
         }
 
         /// <summary>
@@ -405,12 +410,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         private void SelectHitObject(DrawableEditorHitObject h)
         {
             h.AppearAsSelected();
-            SelectedHitObjects.Add(h.Info);
+            SelectedHitObjects.Add(h);
         }
-
-        /// <summary>
-        /// </summary>
-        private void SelectAllHitObjects() => ScrollContainer.HitObjects.ForEach(SelectHitObject);
 
         /// <summary>
         ///     Deselects an individual HitObject
@@ -425,20 +426,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 var ln = h as DrawableEditorHitObjectLong;
                 ln?.AppearAsInactive();
             }
+
             if (layer.Hidden)
                 h.AppearAsHiddenInLayer();
             else
                 h.AppearAsActive();
 
-            SelectedHitObjects.Remove(h.Info);
+            SelectedHitObjects.Remove(h);
         }
+
+        /// <summary>
+        /// </summary>
+        private void SelectAllHitObjects() => ScrollContainer.HitObjects.ForEach(SelectHitObject);
 
         /// <summary>
         ///     Deletes all hitobjects that are currently selected.
         /// </summary>
         private void DeleteSelectedHitObjects()
         {
-            ActionManager.Perform(new EditorActionBatchDeleteHitObjectKeys(this, ScrollContainer, new List<HitObjectInfo>(SelectedHitObjects)));
+            ActionManager.Perform(new EditorActionBatchDeleteHitObjectKeys(this, ScrollContainer, new List<DrawableEditorHitObject>(SelectedHitObjects)));
             SelectedHitObjects.Clear();
         }
 
