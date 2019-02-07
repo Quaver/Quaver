@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -39,8 +40,12 @@ namespace Quaver
             Directory.SetCurrentDirectory(WorkingDirectory);
             Environment.CurrentDirectory = WorkingDirectory;
 
-            using (var p = Process.GetCurrentProcess())
-                p.PriorityClass = ProcessPriorityClass.High;
+            try
+            {
+                using (var p = Process.GetCurrentProcess())
+                    p.PriorityClass = ProcessPriorityClass.High;
+            }
+            catch (Win32Exception) { /* do nothing */ }
 
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
