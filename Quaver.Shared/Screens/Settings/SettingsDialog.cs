@@ -320,6 +320,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Blur Background In Gameplay", ConfigManager.BlurBackgroundInGameplay),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
+                    new SettingsBool(this, "Anchor HitObjects At Timing Line Midpoint", ConfigManager.AnchorHitObjectsAtMidpoint),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),

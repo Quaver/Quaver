@@ -245,6 +245,12 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
 
         /// <summary>
+        ///     If enabled , it will move the hitobjects to the middle of the timing lines
+        ///     giving a SM-type feel.
+        /// </summary>
+        internal static Bindable<bool> AnchorHitObjectsAtMidpoint { get; private set; }
+
+        /// <summary>
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
@@ -461,6 +467,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            AnchorHitObjectsAtMidpoint = ReadValue(@"AnchorHitObjectsAtMidpoint", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -538,6 +545,7 @@ namespace Quaver.Shared.Config
                     KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    AnchorHitObjectsAtMidpoint.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
