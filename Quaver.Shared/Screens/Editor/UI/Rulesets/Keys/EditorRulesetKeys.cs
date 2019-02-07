@@ -198,6 +198,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            // Right click/delete object.
+            if (MouseManager.IsUniqueClick(MouseButton.Right))
+                DeleteHoveredHitObject();
         }
 
         /// <summary>
@@ -290,10 +294,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                 PlaceObject(CompositionInputDevice.Mouse, lane, time);
             }
-
-            // Right click/delete object.
-            if (MouseManager.IsUniqueClick(MouseButton.Right))
-                DeleteHoveredHitObject();
         }
 
         /// <summary>
