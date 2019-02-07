@@ -180,6 +180,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.C))
                     CopySelectedHitObjects();
+
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.V))
+                    PasteHitObjects();
             }
 
             switch (CompositionTool.Value)
@@ -572,7 +575,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             Clipboard.Clear();
 
-            foreach (var h in SelectedHitObjects)
+            foreach (var h in SelectedHitObjects.OrderBy(x => x.Info.StartTime))
             {
                 copyString += $"{h.Info.StartTime}|2,";
                 Clipboard.Add(h.Info);
@@ -582,6 +585,34 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             var clipboard = new WindowsClipboard();
             clipboard.SetText(copyString);
+        }
+
+        /// <summary>
+        ///     Pastes hitobjects that are in the clipboard
+        /// </summary>
+        private void PasteHitObjects()
+        {
+            var clonedObjects = new List<HitObjectInfo>();
+
+            var difference = (int) AudioEngine.Track.Time - Clipboard.First().StartTime;
+
+            foreach (var h in Clipboard)
+            {
+                var hitObject = new HitObjectInfo()
+                {
+                    StartTime = h.StartTime + difference,
+                    EditorLayer = h.EditorLayer,
+                    HitSound = h.HitSound,
+                    Lane = h.Lane
+                };
+
+                if (h.IsLongNote)
+                    hitObject.EndTime = h.EndTime + difference;
+
+                clonedObjects.Add(hitObject);
+            }
+
+            ActionManager.Perform(new EditorActionBatchPlaceHitObjectKeys(WorkingMap, ScrollContainer, clonedObjects));
         }
     }
 }
