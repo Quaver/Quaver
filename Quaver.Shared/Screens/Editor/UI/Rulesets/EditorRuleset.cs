@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
         /// <summary>
         /// </summary>
-        public List<EditorCompositionToolButton> CompositionToolButtons { get; protected set; }
+        public List<EditorCompositionToolButton> CompositionToolButtons { get; }
 
         /// <summary>
         ///     Objects that are currently on the clipboard.
@@ -114,13 +114,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
 
                 btn.MoveToX(0, Easing.OutQuint, 450 + 50 * i);
             }
-        }
-
-        /// <summary>
-        ///     Copies selected hitobjects to the clipboard.
-        /// </summary>
-        public void CopySelectedHitObjects()
-        {
         }
     }
 }

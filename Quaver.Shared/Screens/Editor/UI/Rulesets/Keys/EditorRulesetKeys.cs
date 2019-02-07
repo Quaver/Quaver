@@ -29,6 +29,8 @@ using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Input;
+using Wobble.Platform.Linux;
+using Wobble.Platform.Windows;
 using Wobble.Window;
 using Keys = Microsoft.Xna.Framework;
 
@@ -175,6 +177,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             {
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.A))
                     SelectAllHitObjects();
+
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.C))
+                    CopySelectedHitObjects();
             }
 
             switch (CompositionTool.Value)
@@ -556,6 +561,27 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             foreach (EditorVisualizationGraphType type in Enum.GetValues(typeof(EditorVisualizationGraphType)))
                 VisualizationGraphs.Add(type, new EditorVisualizationGraphContainer(type, this, WorkingMap));
+        }
+
+        /// <summary>
+        ///     Copies the selected hitobjects to the clipboard
+        /// </summary>
+        private void CopySelectedHitObjects()
+        {
+            var copyString = "";
+
+            Clipboard.Clear();
+
+            foreach (var h in SelectedHitObjects)
+            {
+                copyString += $"{h.Info.StartTime}|2,";
+                Clipboard.Add(h.Info);
+            }
+
+            copyString = copyString.TrimEnd(',');
+
+            var clipboard = new WindowsClipboard();
+            clipboard.SetText(copyString);
         }
     }
 }
