@@ -549,7 +549,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         var sv = new SliderVelocityInfo()
                         {
                             StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                            Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
 
@@ -562,7 +562,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // SV does not start after the last timing point
                 else
                 {
-                    for (var j = index; j < qua.SliderVelocities.Count; j++)
+                    int j;
+                    for (j = index; j < qua.SliderVelocities.Count; j++)
                     {
                         // SV starts before the first timing point
                         if (qua.SliderVelocities[j].StartTime < qua.TimingPoints[0].StartTime)
@@ -570,7 +571,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -586,7 +587,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -595,13 +596,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                                 svFound = true;
                         }
 
-                        // Update current index if SV falls out of range for optimization
                         else
                         {
-                            index = j;
                             break;
                         }
                     }
+
+                    // Update the current index.
+                    index = j;
                 }
 
                 // Create BPM SV if no inheriting point is overlapping the current timing point
@@ -610,7 +612,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var sv = new SliderVelocityInfo()
                     {
                         StartTime = qua.TimingPoints[i].StartTime,
-                        Multiplier = (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                        Multiplier = qua.TimingPoints[i].Bpm / commonBpm
                     };
                     ScrollVelocities.Add(sv);
                 }

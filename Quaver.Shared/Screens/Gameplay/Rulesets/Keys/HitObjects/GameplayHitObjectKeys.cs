@@ -286,8 +286,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (!Info.IsLongNote)
                 return;
 
-            // It will ignore the rest of the code after this statement if long note size is equal/less than 0
-            if (CurrentLongNoteSize <= 0)
+            // It will ignore the rest of the code after this statement if long note size is less than 0
+            // LNs of zero size can happen on SV maps (the size is too small and rounds to zero)
+            if (CurrentLongNoteSize < 0)
             {
                 LongNoteBodySprite.Visible = false;
                 LongNoteEndSprite.Visible = false;
