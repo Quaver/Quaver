@@ -16,6 +16,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         RemoveLayer,
         EditLayer,
         BatchDeleteHitObjects,
-        BatchPlaceHitObjects
+        BatchPlaceHitObjects,
+        FlipHitObjectsHorizontally
     }
 }

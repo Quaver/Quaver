@@ -183,6 +183,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.V))
                     PasteHitObjects();
+
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.H))
+                    FlipHitObjectsHorizontally();
             }
 
             switch (CompositionTool.Value)
@@ -614,5 +617,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             ActionManager.Perform(new EditorActionBatchPlaceHitObjectKeys(WorkingMap, ScrollContainer, clonedObjects));
         }
+
+        /// <summary>
+        ///     Flips the selected hitobjects horizontally.
+        /// </summary>
+        private void FlipHitObjectsHorizontally()
+            => ActionManager.Perform(new EditorActionFlipObjectsHorizontallyKeys(WorkingMap, ScrollContainer, SelectedHitObjects));
     }
 }
