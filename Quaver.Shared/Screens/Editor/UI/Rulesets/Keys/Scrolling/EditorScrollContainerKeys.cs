@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// <summary>
         ///     The y position of the hit position.
         /// </summary>
-        public int HitPositionY { get; } = 620;
+        public int HitPositionY { get; } = 575;
 
         /// <summary>
         ///     The audio playback rate in the last frame. Used to know
