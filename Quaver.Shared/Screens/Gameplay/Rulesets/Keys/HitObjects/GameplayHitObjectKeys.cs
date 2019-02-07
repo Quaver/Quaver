@@ -280,12 +280,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
 
             // Update HitBody
-            if (CurrentlyBeingHeld)
-                HitObjectSprite.Y = SpritePosition;
-            else if (ConfigManager.AnchorHitObjectsAtMidpoint.Value)
-                HitObjectSprite.Y = SpritePosition + HitObjectSprite.Height / 2f;
-            else
-                HitObjectSprite.Y = SpritePosition;
+            HitObjectSprite.Y = SpritePosition;
 
             // Disregard the rest if it isn't a long note.
             if (!Info.IsLongNote)
