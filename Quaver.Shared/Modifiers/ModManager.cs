@@ -107,6 +107,9 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Inverse:
                     gameplayModifier = new ModInverse();
                     break;
+                case ModIdentifier.FullLN:
+                    gameplayModifier = new ModFullLN();
+                    break;
                 case ModIdentifier.Mirror:
                     gameplayModifier = new ModMirror();
                     break;

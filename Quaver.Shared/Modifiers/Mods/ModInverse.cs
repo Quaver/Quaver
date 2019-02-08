@@ -10,11 +10,11 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "Converts regular notes into long notes.";
+        public string Description { get; set; } = "Converts regular notes into long notes and vice versa.";
 
         public bool Ranked { get; set; } = false;
 
-        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes };
+        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes, ModIdentifier.FullLN };
 
         public void InitializeMod() {}
     }
