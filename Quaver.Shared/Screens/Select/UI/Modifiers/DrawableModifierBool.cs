@@ -34,12 +34,18 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             {
                 if (ModManager.Mods.HasFlag(Modifier.ModIdentifier))
                     ModManager.RemoveMod(Modifier.ModIdentifier);
-            }));
+            })
+            {
+                Width = 60,
+            });
             Options.Add(new DrawableModifierOption(this, "ON", (o, e) =>
             {
                 if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
                     ModManager.AddMod(Modifier.ModIdentifier);
-            }));
+            })
+            {
+                Width = 60,
+            });
         }
 
         /// <inheritdoc />
