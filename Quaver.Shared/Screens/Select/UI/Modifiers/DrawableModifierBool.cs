@@ -24,10 +24,9 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             ChangeSelectedOptionButton();
         }
 
-        /// <inheritdoc />
         /// <summary>
+        ///     Creates the option buttons.
         /// </summary>
-        /// <returns></returns>
         private void CreateModsDialogOptions()
         {
             Options.Add(new DrawableModifierOption(this, "OFF", (o, e) =>
