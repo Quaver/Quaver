@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
@@ -201,17 +202,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft,
                 },
 
-                new DrawableModifierBool(this, new ModNoLongNotes())
+                new DrawableModifierModList(this, new IGameplayModifier[]
                 {
-                    Alignment = Alignment.TopLeft,
-                },
-
-                new DrawableModifierBool(this, new ModInverse())
-                {
-                    Alignment = Alignment.TopLeft,
-                },
-
-                new DrawableModifierBool(this, new ModFullLN())
+                    new ModNoLongNotes(), new ModInverse(), new ModFullLN()
+                }, "Long Note Conversion", "Mix up the long notes.")
                 {
                     Alignment = Alignment.TopLeft,
                 },
