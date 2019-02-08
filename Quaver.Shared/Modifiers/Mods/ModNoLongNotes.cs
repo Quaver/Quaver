@@ -4,7 +4,7 @@ namespace Quaver.Shared.Modifiers.Mods
 {
     public class ModNoLongNotes : IGameplayModifier
     {
-        public string Name { get; set; } = "No Long Notes";
+        public string Name { get; set; } = "No LN";
 
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.NoLongNotes;
 
