@@ -67,13 +67,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             CreateModifierName();
             CreateModifierDescription();
             CreateRankedStatusIcon();
-            // ReSharper disable once VirtualMemberCallInConstructor
-            Options = CreateModsDialogOptions();
-
-            // ReSharper disable once VirtualMemberCallInConstructor
-            ChangeSelectedOptionButton();
-
-            AlignOptions();
+            Options = new List<DrawableModifierOption>();
 
             UsePreviousSpriteBatchOptions = true;
             ModManager.ModsChanged += OnModsChanged;
@@ -144,12 +138,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         }
 
         /// <summary>
-        ///    Creates the dialog options for the mods.
-        /// </summary>
-        /// <returns></returns>
-        public abstract List<DrawableModifierOption> CreateModsDialogOptions();
-
-        /// <summary>
         ///     Changes the selected option button (visually)
         /// </summary>
         public abstract void ChangeSelectedOptionButton();
@@ -157,7 +145,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Aligns the options. properly.
         /// </summary>
-        private void AlignOptions()
+        protected void AlignOptions()
         {
             for (var i = Options.Count - 1; i >= 0; i--)
             {

@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -10,31 +10,36 @@ using Quaver.Shared.Modifiers;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
 {
-    public class DrawableModifierBool : DrawableModifier
+    public sealed class DrawableModifierBool : DrawableModifier
     {
+        private IGameplayModifier Modifier { get; }
+
         public DrawableModifierBool(ModifiersDialog dialog, IGameplayModifier modifier)
-            : base(dialog, modifier) => UsePreviousSpriteBatchOptions = true;
+            : base(dialog, modifier)
+        {
+            Modifier = modifier;
+
+            CreateModsDialogOptions();
+            AlignOptions();
+            ChangeSelectedOptionButton();
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override List<DrawableModifierOption> CreateModsDialogOptions()
+        private void CreateModsDialogOptions()
         {
-            var options = new List<DrawableModifierOption>
+            Options.Add(new DrawableModifierOption(this, "OFF", (o, e) =>
             {
-                new DrawableModifierOption(this, "OFF", (o, e) =>
-                {
-                    if (ModManager.Mods.HasFlag(Modifier.ModIdentifier))
-                        ModManager.RemoveMod(Modifier.ModIdentifier);
-                }),
-                new DrawableModifierOption(this, "ON", (o, e) =>
-                {
-                    if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
-                        ModManager.AddMod(Modifier.ModIdentifier);
-                })
-            };
-            return options;
+                if (ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                    ModManager.RemoveMod(Modifier.ModIdentifier);
+            }));
+            Options.Add(new DrawableModifierOption(this, "ON", (o, e) =>
+            {
+                if (!ModManager.Mods.HasFlag(Modifier.ModIdentifier))
+                    ModManager.AddMod(Modifier.ModIdentifier);
+            }));
         }
 
         /// <inheritdoc />
