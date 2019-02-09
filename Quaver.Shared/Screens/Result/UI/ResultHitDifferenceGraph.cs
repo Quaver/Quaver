@@ -98,13 +98,14 @@ namespace Quaver.Shared.Screens.Result.UI
             // Make some fake hits for debugging.
             // CreateFakeHitStats();
 
-            // Exit early if there are no dots to draw.
-            if (Processor.Stats == null)
-                return;
+            // Draw the dots if there are any.
+            if (Processor.Stats != null)
+            {
+                FilterHitStats();
+                CreateDotsWithHitDifference();
+                CreateDotsWithoutHitDifference();
+            }
 
-            FilterHitStats();
-            CreateDotsWithHitDifference();
-            CreateDotsWithoutHitDifference();
             CreateEarlyLateText();
 
             AddBorder(Color.White);
