@@ -181,6 +181,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft
                 },
 
+                new DrawableModifierBool(this, new ModMirror())
+                {
+                    Alignment = Alignment.TopLeft
+                },
+
                 new DrawableModifierBool(this, new ModAutoplay())
                 {
                     Alignment = Alignment.TopLeft,
