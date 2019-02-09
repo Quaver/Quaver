@@ -240,8 +240,10 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
             ProgressBar = new SongTimeProgressBar(Screen, new Vector2(WindowManager.Width, 4), 0, Screen.Map.Length / ModHelper.GetRateFromMods(ModManager.Mods), 0,
-                Colors.MainAccentInactive, Colors.MainAccent)
+                skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft

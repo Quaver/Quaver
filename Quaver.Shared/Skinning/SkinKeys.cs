@@ -119,7 +119,11 @@ namespace Quaver.Shared.Skinning
 
         internal Color TimingLineColor { get; private set; }
 
-#endregion
+        internal Color SongTimeProgressInactiveColor { get; private set; }
+
+        internal Color SongTimeProgressActiveColor { get; private set; }
+
+        #endregion
 
 #region TEXTURES
 
@@ -320,6 +324,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -365,6 +371,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -425,6 +433,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -474,6 +484,8 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -535,6 +547,8 @@ namespace Quaver.Shared.Skinning
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
+            SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
+            SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
         }
 
         /// <summary>
