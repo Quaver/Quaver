@@ -250,6 +250,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -461,6 +465,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -538,6 +543,7 @@ namespace Quaver.Shared.Config
                     KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

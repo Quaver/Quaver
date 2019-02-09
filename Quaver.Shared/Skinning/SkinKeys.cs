@@ -119,7 +119,13 @@ namespace Quaver.Shared.Skinning
 
         internal Color TimingLineColor { get; private set; }
 
-#endregion
+        internal float JudgementCounterAlpha { get; private set; }
+
+        internal Color JudgementCounterFontColor { get; private set; }
+
+        internal int JudgementCounterSize { get; private set; }
+
+        #endregion
 
 #region TEXTURES
 
@@ -320,6 +326,9 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -365,6 +374,9 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -425,6 +437,9 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -474,6 +489,9 @@ namespace Quaver.Shared.Skinning
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
                     TimingLineColor = Color.White;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -535,6 +553,9 @@ namespace Quaver.Shared.Skinning
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
+            JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
+            JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
+            JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
         }
 
         /// <summary>
