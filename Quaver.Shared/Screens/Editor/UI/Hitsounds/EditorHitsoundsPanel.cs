@@ -10,7 +10,9 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -57,6 +59,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
         /// </summary>
         private void CreateHeader()
         {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
             HeaderBackground = new Sprite
             {
                 Parent = this,
@@ -65,7 +68,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
                 Tint = Color.Transparent,
             };
 
-            CreateClearButton();
+            // CreateClearButton();
         }
 
         /// <summary>
@@ -73,6 +76,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
         private void CreateClearButton() => ClearButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_double_sided_eraser),
             (sender, args) =>
             {
+                var ruleset = (EditorRulesetKeys) Screen.Ruleset;
+
+                if (ruleset.SelectedHitObjects.Count == 0)
+                    return;
+
+                ruleset.ActionManager.Perform(new EditorActionRemoveHitsoundKeys(ruleset,
+                    new List<DrawableEditorHitObject>(ruleset.SelectedHitObjects), 0));
+
             })
         {
             Parent = HeaderBackground,
