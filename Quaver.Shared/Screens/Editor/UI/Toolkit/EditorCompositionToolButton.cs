@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Toolkit
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = 10,
+                X = 12,
                 Size = new ScalableVector2(20, 20)
             };
 
