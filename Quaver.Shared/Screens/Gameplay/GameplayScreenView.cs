@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -456,7 +457,13 @@ namespace Quaver.Shared.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                Screen.Exit(() => new ResultScreen(Screen), 500);
+                Screen.Exit(() =>
+                {
+                    if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
+                        return new SelectScreen();
+
+                    return new ResultScreen(Screen);
+                }, 500);
                 ResultsScreenLoadInitiated = true;
             }
 
