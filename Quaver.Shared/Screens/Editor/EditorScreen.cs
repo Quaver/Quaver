@@ -399,7 +399,7 @@ namespace Quaver.Shared.Screens.Editor
             if (IsQuittingAfterSave)
                 return;
 
-            if (Ruleset.ActionManager.HasUnsavedChanges)
+            if (Ruleset.ActionManager.HasUnsavedChanges && MapManager.Selected.Value.Game == MapGame.Quaver)
                 DialogManager.Show(new EditorSaveAndQuitDialog(this));
             else
                 ExitToSelect();
