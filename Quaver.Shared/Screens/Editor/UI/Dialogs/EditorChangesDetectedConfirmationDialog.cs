@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
         /// <param name="screen"></param>
         /// <param name="file"></param>
         public EditorChangesDetectedConfirmationDialog(QuaverScreen screen, string file)
-            : base("Detected outside changes to the .qua file. What you like to reload the editor?", (o, e) => OnConfirm(screen, file))
+            : base("Detected outside changes to the .qua file. Would you like to reload the editor?", (o, e) => OnConfirm(screen, file))
         {
         }
 
