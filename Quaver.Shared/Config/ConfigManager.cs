@@ -254,6 +254,9 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
         ///     If true, the user will skip the results screen after quitting the game.
         /// </summary>
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
@@ -470,6 +473,7 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
 
@@ -549,6 +553,7 @@ namespace Quaver.Shared.Config
                     KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
                 });

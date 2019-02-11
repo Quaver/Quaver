@@ -399,7 +399,7 @@ namespace Quaver.Shared.Skinning
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
                 if (j == Judgement.Ghost)
-                    return;
+                    continue;
 
                 var element = $"judge-{j.ToString().ToLower()}";
                Judgements[j] = new List<Texture2D>()

@@ -158,7 +158,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
 
             // Create judgement status display
-            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            if (ConfigManager.DisplayJudgementCounter.Value)
+                JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
