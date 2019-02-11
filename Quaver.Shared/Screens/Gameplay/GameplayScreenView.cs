@@ -106,6 +106,10 @@ namespace Quaver.Shared.Screens.Gameplay
         public PauseScreen PauseScreen { get; set; }
 
         /// <summary>
+        /// </summary>
+        private ComboAlert ComboAlert { get; set; }
+
+        /// <summary>
         ///     Determines if the transitioner is currently fading on play restart.
         /// </summary>
         public bool FadingOnRestartKeyPress { get; set; }
@@ -132,11 +136,6 @@ namespace Quaver.Shared.Screens.Gameplay
         private bool ResultsScreenLoadInitiated { get; set; }
 
         /// <summary>
-        ///     The results screen to be loaded in the future on play completion.
-        /// </summary>
-        private QuaverScreen FutureResultsScreen { get; set; }
-
-        /// <summary>
         ///     When the results screen has successfully loaded, we'll be considered clear
         ///     to exit and fade out the screen.
         /// </summary>
@@ -154,6 +153,9 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
+
+            if (ConfigManager.DisplayComboAlerts.Value)
+                ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
 
             // Create judgement status display
             JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
