@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Skinning;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
 {
@@ -42,10 +46,26 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         /// </summary>
         public void Perform()
         {
+            var skin = SkinManager.Skin.Keys[WorkingMap.Mode];
+
             foreach (var h in HitObjects)
             {
                 h.Info.Lane = WorkingMap.GetKeyCount() - h.Info.Lane + 1;
                 h.X = Container.ScreenRectangle.X + Container.LaneSize * (h.Info.Lane - 1) + Container.DividerLineWidth;
+
+                var index = skin.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(h.Info, h.Info.GetTimingPoint(WorkingMap.TimingPoints)) : 0;
+
+                if (h.Info.IsLongNote)
+                {
+                    h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
+
+                    var ln = (DrawableEditorHitObjectLong) h;
+                    ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1].First();
+                    ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
+                    ln.ResizeLongNote();
+                }
+                else
+                    h.Image = skin.NoteHitObjects[h.Info.Lane - 1][index];
             }
         }
 
