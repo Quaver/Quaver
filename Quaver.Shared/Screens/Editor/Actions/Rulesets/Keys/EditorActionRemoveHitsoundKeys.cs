@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorActionType Type { get; } = EditorActionType.AddHitsound;
+        public EditorActionType Type { get; } = EditorActionType.RemoveHitsound;
 
         /// <summary>
         /// </summary>
