@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
@@ -158,7 +159,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
             var ruleset = (EditorRulesetKeys) Panel.Screen.Ruleset;
 
             if (ruleset.SelectedHitObjects.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You need to select objects before changing their hitsounds!");
                 return;
+            }
 
             if (Panel.SelectedObjectHitsounds.Value.HasFlag(Hitsounds))
             {
