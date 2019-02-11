@@ -6,9 +6,11 @@
 */
 
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Settings.Elements;
 using Wobble.Graphics;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
 {
@@ -41,6 +43,27 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         {
             InitialValue = initialValue;
             SaveValue = saveValue;
+            Width = sprite.Width;
+            UnhoverColor = Color.White;
+            HoverColor = Color.White;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            float targetAlpha;
+
+            if (GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position))
+                targetAlpha = 0.45f;
+            else
+                targetAlpha = 0f;
+
+            Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
+
+            base.Update(gameTime);
         }
 
         public abstract string GetValue();

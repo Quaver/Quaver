@@ -16,6 +16,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Settings.Elements;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -58,10 +59,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         {
             Dialog = dialog;
             Size = new ScalableVector2(400, 502);
-            Tint = ColorHelper.HexToColor($"#414345");
             Alpha = 1f;
+            Image = UserInterface.EditorMetadataPanel;
 
-            //CreateBorderLines();
             CreateHeader();
             CreateFooter();
             CreateOkButton();
@@ -105,31 +105,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
             HeaderBackground = new Sprite
             {
                 Parent = this,
-                Size = new ScalableVector2(Width, 45),
-                Tint = ColorHelper.HexToColor($"#212121")
-            };
-
-            var headerFlag = new Sprite()
-            {
-                Parent = HeaderBackground,
-                Size = new ScalableVector2(5, HeaderBackground.Height),
-                Tint = Color.LightGray,
+                Size = new ScalableVector2(Width, 38),
                 Alpha = 0
-            };
-
-            // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.Exo2SemiBold, "Edit Metadata", 14)
-            {
-                Parent = HeaderBackground,
-                Alignment = Alignment.MidLeft,
-                X = headerFlag.X + 15,
             };
 
             var exitButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) => Dialog.Close())
             {
                 Parent = HeaderBackground,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(20, 20)
+                Size = new ScalableVector2(20, 20),
+                Tint = Color.Crimson
             };
 
             exitButton.X -= exitButton.Width / 2f + 5;
@@ -140,55 +125,75 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         private void CreateFooter() => FooterBackground = new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width, 50),
+            Size = new ScalableVector2(Width, 38),
             Tint = ColorHelper.HexToColor("#212121"),
             Alignment = Alignment.BotLeft,
-            Y = 1
+            Y = 1,
+            Alpha = 0
         };
 
         /// <summary>
         /// </summary>
-        private void CreateOkButton() => OkButton = new BorderedTextButton("OK", Color.LimeGreen, (sender, args) =>
+        private void CreateOkButton()
         {
-            var changesMade = false;
-            Container.Items.ForEach(x =>
+            OkButton = new BorderedTextButton("OK", Color.LimeGreen, (sender, args) =>
             {
-                if (x.HasChanged())
-                    changesMade = true;
-            });
+                var changesMade = false;
+                Container.Items.ForEach(x =>
+                {
+                    if (x.HasChanged())
+                        changesMade = true;
+                });
 
-            if (!changesMade)
+                if (!changesMade)
+                {
+                    Dialog.Close();
+                    return;
+                }
+
+                if (MapManager.Selected.Value.Game != MapGame.Quaver)
+                {
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "You cannot change the metadata from maps loaded from other games.");
+                    return;
+                }
+
+                // Changes were made to the metadata, so we need to save it appropriately.
+                Logger.Important($"Changes made to map metadata and needs to save.", LogType.Runtime);
+                DialogManager.Show(new EditorMetadataConfirmationDialog(Dialog.Screen, this));
+            })
             {
-                Dialog.Close();
-                return;
-            }
+                Parent = FooterBackground,
+                Alignment = Alignment.MidRight,
+                X = -20,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13
+                }
+            };
 
-            if (MapManager.Selected.Value.Game != MapGame.Quaver)
-            {
-                NotificationManager.Show(NotificationLevel.Error, "You cannot change the metadata from maps loaded from other games.");
-                return;
-            }
-
-            // Changes were made to the metadata, so we need to save it appropriately.
-            Logger.Important($"Changes made to map metadata and needs to save.", LogType.Runtime);
-            DialogManager.Show(new EditorMetadataConfirmationDialog(Dialog.Screen, this));
-        })
-        {
-            Parent = FooterBackground,
-            Alignment = Alignment.MidRight,
-            X = -20,
-            Text = {Font = Fonts.Exo2SemiBold}
-        };
+            OkButton.Height -= 8;
+        }
 
         /// <summary>
         /// </summary>
-        private void CreateCancelButton() => CancelButton = new BorderedTextButton("Cancel", Color.Crimson, (sender, args) => Dialog.Close())
+        private void CreateCancelButton()
         {
-            Parent = FooterBackground,
-            Alignment = Alignment.MidRight,
-            X = OkButton.X - OkButton.Width - 20,
-            Text = { Font = Fonts.Exo2SemiBold }
-        };
+            CancelButton = new BorderedTextButton("Cancel", Color.Crimson, (sender, args) => Dialog.Close())
+            {
+                Parent = FooterBackground,
+                Alignment = Alignment.MidRight,
+                X = OkButton.X - OkButton.Width - 20,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13
+                }
+            };
+
+            CancelButton.Height -= 8;
+        }
 
         /// <summary>
         /// </summary>

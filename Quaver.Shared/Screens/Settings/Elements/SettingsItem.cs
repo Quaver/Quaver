@@ -20,6 +20,10 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         public SpriteText Name { get; }
 
+        protected Color HoverColor { get; set; } = ColorHelper.HexToColor("#cacaca");
+
+        protected Color UnhoverColor { get; set; } = Color.Black;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -28,7 +32,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public SettingsItem(SettingsDialog dialog, string name)
         {
             Size = new ScalableVector2(dialog.ContentContainer.Width - dialog.DividerLine.X - 10, 40);
-            Tint = Color.Black;
+            Tint = UnhoverColor;
             Alpha = 0.65f;
 
             Name = new SpriteText(Fonts.SourceSansProSemiBold, name, 13)
@@ -64,7 +68,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void Update(GameTime gameTime)
         {
             FadeToColor(GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                    ? ColorHelper.HexToColor("#cacaca") : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
+                    ? HoverColor : UnhoverColor, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
 
             base.Update(gameTime);
         }
