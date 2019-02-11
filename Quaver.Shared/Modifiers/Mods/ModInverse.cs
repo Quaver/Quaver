@@ -10,7 +10,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "Converts regular notes into long notes and vice versa.";
+        public string Description { get; set; } = "Converts regular notes into long notes and long notes into gaps.";
 
         public bool Ranked { get; set; } = false;
 
