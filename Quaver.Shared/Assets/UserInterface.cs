@@ -6,6 +6,7 @@
 */
 
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Screens.Editor.UI.Hitsounds;
 using Wobble;
 using Wobble.Assets;
 
@@ -56,6 +57,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorLayerPanel { get; private set; }
         public static Texture2D EditorEditLayerPanel { get; private set; }
         public static Texture2D EditorMetadataPanel { get; private set; }
+        public static Texture2D EditorHitsoundsPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -105,6 +107,7 @@ namespace Quaver.Shared.Assets
             EditorLayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/layer-panel.png"));
             EditorEditLayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/edit-layer-panel.png"));
             EditorMetadataPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/metadata-panel.png"));
+            EditorHitsoundsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/hitsounds-panel.png"));
         }
     }
 }

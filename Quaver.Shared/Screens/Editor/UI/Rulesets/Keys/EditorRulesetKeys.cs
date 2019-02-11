@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using osu.Shared;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
@@ -32,6 +33,7 @@ using Wobble.Input;
 using Wobble.Platform.Linux;
 using Wobble.Platform.Windows;
 using Wobble.Window;
+using GameMode = Quaver.API.Enums.GameMode;
 using Keys = Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
@@ -330,6 +332,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 return;
             }
 
+            // Don't deselect if the user is in the hitsound panel.
+            if (GraphicsHelper.RectangleContains(View.HitsoundEditor.ScreenRectangle, MouseManager.CurrentState.Position))
+                return;
+
             for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
                 DeselectHitObject(SelectedHitObjects[i]);
         }
@@ -422,6 +428,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         {
             h.AppearAsSelected();
             SelectedHitObjects.Add(h);
+            SetSelectedHitsounds();
         }
 
         /// <summary>
@@ -444,11 +451,43 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 h.AppearAsActive();
 
             SelectedHitObjects.Remove(h);
+            SetSelectedHitsounds();
         }
 
         /// <summary>
         /// </summary>
         private void SelectAllHitObjects() => ScrollContainer.HitObjects.ForEach(SelectHitObject);
+
+        /// <summary>
+        /// </summary>
+        public void SetSelectedHitsounds()
+        {
+            if (SelectedHitObjects.Count == 0)
+            {
+                View.HitsoundEditor.SelectedObjectHitsounds.Value = 0;
+                return;
+            }
+
+            var hitsoundList = Enum.GetValues(typeof(HitSounds));
+
+            // Start w/ a combination of all sounds, so ones that aren't active can get removed.
+            var activeHitsounds = HitSounds.Clap | HitSounds.Finish | HitSounds.Whistle;
+
+            foreach (var h in SelectedHitObjects)
+            {
+                foreach (HitSounds hitsound in hitsoundList)
+                {
+                    // The object doesn't contain this sound, so remove it.
+                    if (!h.Info.HitSound.HasFlag(hitsound) && activeHitsounds.HasFlag(hitsound))
+                        activeHitsounds -= hitsound;
+                }
+
+                if (activeHitsounds == 0)
+                    break;
+            }
+
+            View.HitsoundEditor.SelectedObjectHitsounds.Value = activeHitsounds;
+        }
 
         /// <summary>
         ///     Deletes all hitobjects that are currently selected.

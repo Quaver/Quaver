@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
+using Quaver.Shared.Screens.Editor.UI.Hitsounds;
 using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
@@ -52,6 +53,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorLayerEditor LayerEditor { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorHitsoundsPanel HitsoundEditor { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,6 +68,7 @@ namespace Quaver.Shared.Screens.Editor
             CreateNavigationBar();
             CreateLayerCompositor();
             CreateLayerEditor();
+            CreateHitsoundEditor();
 
             var editorScreen = (EditorScreen) Screen;
             editorScreen.ActiveLayerInterface.ValueChanged += OnActiveLayerInterfaceChanged;
@@ -199,7 +205,7 @@ namespace Quaver.Shared.Screens.Editor
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Y = NavigationBar.Y + NavigationBar.Height + 50
+                Y = NavigationBar.Y + NavigationBar.Height + 150
             };
 
             LayerCompositor.X = LayerCompositor.Width;
@@ -243,6 +249,21 @@ namespace Quaver.Shared.Screens.Editor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateHitsoundEditor()
+        {
+            HitsoundEditor = new EditorHitsoundsPanel((EditorScreen) Screen)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = LayerCompositor.Y + LayerCompositor.Height + 50
+            };
+
+            HitsoundEditor.X = HitsoundEditor.Width;
+            HitsoundEditor.MoveToX(0, Easing.OutQuint, 1000);
         }
     }
 }
