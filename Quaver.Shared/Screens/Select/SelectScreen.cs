@@ -97,9 +97,13 @@ namespace Quaver.Shared.Screens.Select
             DiscordHelper.Presence.State = "In the menus";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             ConfigManager.DisplayFailedLocalScores.ValueChanged += OnDisplayFailedScoresChanged;
+
+            var game = GameBase.Game as QuaverGame;
+            var cursor = game?.GlobalUserInterface.Cursor;
+            cursor.Alpha = 1;
+
             View = new SelectScreenView(this);
         }
 

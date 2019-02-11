@@ -123,6 +123,12 @@ namespace Quaver.Shared.Skinning
 
         internal Color SongTimeProgressActiveColor { get; private set; }
 
+        internal float JudgementCounterAlpha { get; private set; }
+
+        internal Color JudgementCounterFontColor { get; private set; }
+
+        internal int JudgementCounterSize { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -326,6 +332,9 @@ namespace Quaver.Shared.Skinning
                     TimingLineColor = Color.White;
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -373,6 +382,9 @@ namespace Quaver.Shared.Skinning
                     TimingLineColor = Color.White;
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -435,6 +447,9 @@ namespace Quaver.Shared.Skinning
                     TimingLineColor = Color.White;
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -486,6 +501,9 @@ namespace Quaver.Shared.Skinning
                     TimingLineColor = Color.White;
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -549,6 +567,9 @@ namespace Quaver.Shared.Skinning
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
+            JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
+            JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
         }
 
         /// <summary>

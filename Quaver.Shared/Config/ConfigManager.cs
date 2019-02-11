@@ -245,6 +245,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayComboAlerts { get; private set; }
+
+        /// <summary>
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
@@ -253,6 +257,13 @@ namespace Quaver.Shared.Config
         ///     If true, it'll display the numbers for the song time progress
         /// </summary>
         internal static Bindable<bool> DisplaySongTimeProgressNumbers { get; private set; }
+
+        /// </summary>
+        internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
+        ///     If true, the user will skip the results screen after quitting the game.
+        /// </summary>
+        internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -467,7 +478,9 @@ namespace Quaver.Shared.Config
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
-
+            DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
+            DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
@@ -545,6 +558,9 @@ namespace Quaver.Shared.Config
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
+                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
+                    DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

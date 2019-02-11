@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -105,6 +106,10 @@ namespace Quaver.Shared.Screens.Gameplay
         public PauseScreen PauseScreen { get; set; }
 
         /// <summary>
+        /// </summary>
+        private ComboAlert ComboAlert { get; set; }
+
+        /// <summary>
         ///     Determines if the transitioner is currently fading on play restart.
         /// </summary>
         public bool FadingOnRestartKeyPress { get; set; }
@@ -131,11 +136,6 @@ namespace Quaver.Shared.Screens.Gameplay
         private bool ResultsScreenLoadInitiated { get; set; }
 
         /// <summary>
-        ///     The results screen to be loaded in the future on play completion.
-        /// </summary>
-        private QuaverScreen FutureResultsScreen { get; set; }
-
-        /// <summary>
         ///     When the results screen has successfully loaded, we'll be considered clear
         ///     to exit and fade out the screen.
         /// </summary>
@@ -154,8 +154,12 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateScoreDisplay();
             CreateAccuracyDisplay();
 
+            if (ConfigManager.DisplayComboAlerts.Value)
+                ComboAlert = new ComboAlert(Screen.Ruleset.ScoreProcessor) { Parent = Container };
+
             // Create judgement status display
-            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            if (ConfigManager.DisplayJudgementCounter.Value)
+                JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
@@ -456,7 +460,13 @@ namespace Quaver.Shared.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                Screen.Exit(() => new ResultScreen(Screen), 500);
+                Screen.Exit(() =>
+                {
+                    if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
+                        return new SelectScreen();
+
+                    return new ResultScreen(Screen);
+                }, 500);
                 ResultsScreenLoadInitiated = true;
             }
 
