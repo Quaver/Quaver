@@ -254,6 +254,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
 
         /// <summary>
+        ///     If true, it'll display the numbers for the song time progress
+        /// </summary>
+        internal static Bindable<bool> DisplaySongTimeProgressNumbers { get; private set; }
+
         /// </summary>
         internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
 
@@ -473,10 +477,10 @@ namespace Quaver.Shared.Config
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
-
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
@@ -553,6 +557,7 @@ namespace Quaver.Shared.Config
                     KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
                     KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
                     KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
                     DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
