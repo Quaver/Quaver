@@ -594,10 +594,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <returns></returns>
         protected override List<EditorCompositionToolButton> CreateCompositionToolButtons() => new List<EditorCompositionToolButton>
         {
-            new EditorCompositionToolButton(EditorCompositionTool.Select),
-            new EditorCompositionToolButton(EditorCompositionTool.Note),
-            new EditorCompositionToolButton(EditorCompositionTool.LongNote),
-            new EditorCompositionToolButton(EditorCompositionTool.Mine)
+            new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Select),
+            new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Note),
+            new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.LongNote),
+            new EditorCompositionToolButton(View.CompositionToolbox, EditorCompositionTool.Mine)
         };
 
         /// <summary>

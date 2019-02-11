@@ -19,6 +19,7 @@ using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Navigation;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Editor.UI.Toolkit;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -57,6 +58,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorHitsoundsPanel HitsoundEditor { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorCompositionToolbox CompositionToolbox { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -69,6 +74,7 @@ namespace Quaver.Shared.Screens.Editor
             CreateLayerCompositor();
             CreateLayerEditor();
             CreateHitsoundEditor();
+            CreateCompositionToolbox();
 
             var editorScreen = (EditorScreen) Screen;
             editorScreen.ActiveLayerInterface.ValueChanged += OnActiveLayerInterfaceChanged;
@@ -264,6 +270,20 @@ namespace Quaver.Shared.Screens.Editor
 
             HitsoundEditor.X = HitsoundEditor.Width;
             HitsoundEditor.MoveToX(0, Easing.OutQuint, 1000);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateCompositionToolbox()
+        {
+            CompositionToolbox = new EditorCompositionToolbox
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft
+            };
+
+            CompositionToolbox.X = -CompositionToolbox.Width;
+            CompositionToolbox.MoveToX(0, Easing.OutQuint, 800);
         }
     }
 }

@@ -22,29 +22,66 @@ namespace Quaver.Shared.Screens.Editor.UI.Toolkit
     {
         /// <summary>
         /// </summary>
+        private EditorCompositionToolbox Toolbox { get; }
+
+        /// <summary>
+        /// </summary>
         private EditorCompositionTool Tool { get; }
 
         /// <summary>
         /// </summary>
+        private Sprite Icon { get; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextBitmap Name { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="toolbox"></param>
         /// <param name="tool"></param>
-        public EditorCompositionToolButton(EditorCompositionTool tool) : base(UserInterface.BlankBox)
+        public EditorCompositionToolButton(EditorCompositionToolbox toolbox, EditorCompositionTool tool) : base(UserInterface.BlankBox)
         {
+            Toolbox = toolbox;
             Tool = tool;
-            Size = new ScalableVector2(170, 38);
+            Size = new ScalableVector2(Toolbox.Width, 39);
+
+            Icon = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = 10,
+                Size = new ScalableVector2(20, 20)
+            };
+
+            Name = new SpriteTextBitmap(FontsBitmap.AllerRegular, "")
+            {
+                Parent = this,
+                FontSize = 16,
+                Alignment = Alignment.MidLeft,
+                X = Icon.X + Icon.Width + 10,
+            };
 
             switch (Tool)
             {
                 case EditorCompositionTool.Select:
-                    Image = UserInterface.EditorToolSelect;
+                    Icon.Image = UserInterface.EditorToolSelect;
+                    Name.Text = "Select";
                     break;
                 case EditorCompositionTool.Note:
-                    Image = UserInterface.EditorToolNote;
+                    Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_arrow_pointing_to_left);
+                    Name.Text = "Note";
                     break;
                 case EditorCompositionTool.LongNote:
-                    Image = UserInterface.EditorToolLongNote;
+                    Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_rounded_black_square_shape);
+                    Icon.Size = new ScalableVector2(16, 20);
+                    Icon.X += 2;
+                    Name.Text = "Long Note";
                     break;
                 case EditorCompositionTool.Mine:
-                    Image = UserInterface.EditorToolMine;
+                    Icon.Image = FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
+                    Name.Text = "Mine";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -78,11 +115,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Toolkit
             float targetAlpha;
 
             if (ruleset?.CompositionTool.Value == Tool)
-                targetAlpha = 1;
+                targetAlpha = 0.45f;
             else if (IsHovered)
-                targetAlpha = 0.85f;
+                targetAlpha = 0.25f;
             else
-                targetAlpha = 0.65f;
+                targetAlpha = 0f;
 
             Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
             base.Update(gameTime);

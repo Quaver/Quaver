@@ -104,15 +104,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets
         /// </summary>
         private void AlignCompositionToolButtons()
         {
+            var view = (EditorScreenView) Screen.View;
+
             for (var i = 0; i < CompositionToolButtons.Count; i++)
             {
                 var btn = CompositionToolButtons[i];
-                btn.Parent = Container;
+                btn.Parent = view.CompositionToolbox;
 
-                btn.Y = 50 * i + 260;
-                btn.X = -btn.Width;
-
-                btn.MoveToX(0, Easing.OutQuint, 450 + 50 * i);
+                btn.Y = btn.Height * i + view.CompositionToolbox.HeaderBackground.Height;
             }
         }
     }
