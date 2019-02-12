@@ -481,7 +481,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        private void SelectAllHitObjects() => ScrollContainer.HitObjects.ForEach(SelectHitObject);
+        private void SelectAllHitObjects()
+        {
+            // Select all in the current layer.
+            if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt))
+            {
+                ScrollContainer.HitObjects
+                    .FindAll(x => x.Info.EditorLayer == View.LayerCompositor.SelectedLayerIndex.Value)
+                    .ForEach(SelectHitObject);
+
+                return;
+            }
+
+            // Select all objects
+            ScrollContainer.HitObjects.ForEach(SelectHitObject);
+        }
 
         /// <summary>
         /// </summary>
