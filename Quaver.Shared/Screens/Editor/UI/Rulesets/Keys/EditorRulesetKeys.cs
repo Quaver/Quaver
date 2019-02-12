@@ -78,7 +78,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     The position of the mouse when it was initially clicked
         /// </summary>
-        private Vector2 MouseInitialClickPosition { get; set; }
+        public Vector2 MouseInitialClickPosition { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public EditorRectangleSelection RectangleSelector { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -93,6 +97,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             CreateScrollContainer();
             CreateVisualizationGraphs();
             ActionManager = CreateActionManager();
+            CreateRectangleSelector();
             SkinManager.SkinLoaded += OnSkinLoaded;
         }
 
@@ -444,7 +449,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         ///     Selects an individual HitObject
         /// </summary>
         /// <param name="h"></param>
-        private void SelectHitObject(DrawableEditorHitObject h)
+        public void SelectHitObject(DrawableEditorHitObject h)
         {
             h.AppearAsSelected();
             SelectedHitObjects.Add(h);
@@ -682,5 +687,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private void FlipHitObjectsHorizontally()
             => ActionManager.Perform(new EditorActionFlipObjectsHorizontallyKeys(WorkingMap, ScrollContainer, SelectedHitObjects));
+
+        /// <summary>
+        /// </summary>
+        private void CreateRectangleSelector() => RectangleSelector = new EditorRectangleSelection(this) { Parent = View.Container };
     }
 }

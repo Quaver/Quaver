@@ -168,6 +168,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
 
                     // Make sure the navbar appears over the graph, so that the hover tooltips are on top.
                     ListHelper.Swap(Ruleset.Screen.View.Container.Children, children.IndexOf(view?.NavigationBar), children.IndexOf(Graph));
+
                     CreateProgressSeekBar();
                 }
 
