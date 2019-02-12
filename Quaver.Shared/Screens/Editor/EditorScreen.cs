@@ -350,8 +350,6 @@ namespace Quaver.Shared.Screens.Editor
 
             if (AudioEngine.Track.IsPaused && playAfterRateChange)
                 AudioEngine.Track.Play();
-
-            NotificationManager.Show(NotificationLevel.Info, $"Audio playback rate changed to: {targetRate * 100}%");
         }
 
         /// <summary>

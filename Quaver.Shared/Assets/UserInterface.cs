@@ -59,6 +59,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorMetadataPanel { get; private set; }
         public static Texture2D EditorHitsoundsPanel { get; private set; }
         public static Texture2D EditorCompositionToolsPanel { get; private set; }
+        public static Texture2D EditorDetailsPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -110,6 +111,7 @@ namespace Quaver.Shared.Assets
             EditorMetadataPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/metadata-panel.png"));
             EditorHitsoundsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/hitsounds-panel.png"));
             EditorCompositionToolsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/composition-tools-panel.png"));
+            EditorDetailsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/details-panel.png"));
         }
     }
 }

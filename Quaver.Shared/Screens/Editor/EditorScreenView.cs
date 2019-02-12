@@ -13,6 +13,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
+using Quaver.Shared.Screens.Editor.UI.Details;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Hitsounds;
 using Quaver.Shared.Screens.Editor.UI.Layering;
@@ -62,6 +63,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorCompositionToolbox CompositionToolbox { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorDetailsPanel DetailsPanel { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -75,6 +80,7 @@ namespace Quaver.Shared.Screens.Editor
             CreateLayerEditor();
             CreateHitsoundEditor();
             CreateCompositionToolbox();
+            CreateDetailsPanel();
 
             var editorScreen = (EditorScreen) Screen;
             editorScreen.ActiveLayerInterface.ValueChanged += OnActiveLayerInterfaceChanged;
@@ -279,11 +285,26 @@ namespace Quaver.Shared.Screens.Editor
             CompositionToolbox = new EditorCompositionToolbox
             {
                 Parent = Container,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.TopLeft,
+                Y = HitsoundEditor.Y
             };
 
             CompositionToolbox.X = -CompositionToolbox.Width;
             CompositionToolbox.MoveToX(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateDetailsPanel()
+        {
+            DetailsPanel = new EditorDetailsPanel(Screen as EditorScreen)
+            {
+                Parent = Container,
+                Y = LayerCompositor.Y
+            };
+
+            DetailsPanel.X = -DetailsPanel.Width;
+            DetailsPanel.MoveToX(0, Easing.OutQuint, 800);
         }
     }
 }
