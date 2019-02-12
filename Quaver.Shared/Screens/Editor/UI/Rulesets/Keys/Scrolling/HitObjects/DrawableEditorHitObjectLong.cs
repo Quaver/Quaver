@@ -53,6 +53,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             TextureBody = texBody;
             TextureTail = texTail;
             CreateLongNoteSprite();
+            SelectionSprite.Parent = Body;
+            SelectionSprite.Alignment = Alignment.MidLeft;
         }
 
         /// <inheritdoc />
@@ -118,6 +120,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
+
+            SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
         }
 
         /// <summary>
@@ -167,9 +171,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         public override void AppearAsSelected()
         {
-            base.AppearAsSelected();
-            Body.Tint = SelectedColor;
-            Tail.Tint = SelectedColor;
+            SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
+            SelectionSprite.Visible = true;
         }
 
         /// <inheritdoc />
