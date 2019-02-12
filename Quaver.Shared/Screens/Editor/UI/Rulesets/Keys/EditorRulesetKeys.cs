@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using osu.Shared;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
@@ -73,6 +74,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         ///     HitObjects that are currently selected and ready to be copied or flipped.
         /// </summary>
         public List<DrawableEditorHitObject> SelectedHitObjects { get; } = new List<DrawableEditorHitObject>();
+
+        /// <summary>
+        ///     The position of the mouse when it was initially clicked
+        /// </summary>
+        private Vector2 MouseInitialClickPosition { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -306,10 +312,24 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private void HandleHitObjectSelection()
         {
+            if (MouseManager.PreviousState.LeftButton == ButtonState.Released &&
+                MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
+            {
+                MouseInitialClickPosition = MouseManager.CurrentState.Position;
+            }
+
             if (!MouseManager.IsUniqueClick(MouseButton.Left))
                 return;
 
             var hoveredObject = ScrollContainer.GetHoveredHitObject();
+
+            // Compare the y positions of the mouse when the user clicked the object initially, vs when they released.
+            var relativeY = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseInitialClickPosition.Y);
+            var relativeY2 = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y);
+
+            // Give a little bit of leniency for the mouse to move.
+            if (Math.Abs(relativeY2 - relativeY) > 2)
+                return;
 
             // User has clicked on a new object and wants to select it.
             if (hoveredObject != null)
