@@ -91,9 +91,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     rect.Width += 150;
 
                     var graph = Ruleset.VisualizationGraphs[Ruleset.SelectedVisualizationGraph.Value];
+                    var view = (EditorScreenView) Ruleset.Screen.View;
 
                     if (!GraphicsHelper.RectangleContains(graph.Graph.ScreenRectangle, MouseManager.CurrentState.Position)
-                        && GraphicsHelper.RectangleContains(rect, Ruleset.MouseInitialClickPosition))
+                        && GraphicsHelper.RectangleContains(rect, Ruleset.MouseInitialClickPosition)
+                        && !GraphicsHelper.RectangleContains(view.ControlBar.ScreenRectangle, Ruleset.MouseInitialClickPosition)
+                        && !GraphicsHelper.RectangleContains(view.NavigationBar.ScreenRectangle, Ruleset.MouseInitialClickPosition))
                     {
                         IsSelecting = true;
                         StartingPoint = new Vector2(MouseManager.CurrentState.X, MouseManager.CurrentState.Y);
@@ -120,8 +123,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     Ruleset.ScrollContainer.HitObjects.FindAll(x =>
                     {
                         var yInbetween = TimeDragStart > timeDragEnd ?
-                            IsBetween(x.Info.IsLongNote ? x.Info.EndTime - x.Info.StartTime : x.Info.StartTime, timeDragEnd, TimeDragStart)
-                            : IsBetween(x.Info.IsLongNote ? x.Info.EndTime - x.Info.StartTime : x.Info.StartTime, TimeDragStart, timeDragEnd);
+                            IsBetween(x.Info.StartTime, timeDragEnd, TimeDragStart)
+                            : IsBetween(x.Info.StartTime, TimeDragStart, timeDragEnd);
 
                         return yInbetween && (startLane < endLane ? IsBetween(x.Info.Lane, startLane, endLane) :
                                    IsBetween(x.Info.Lane, endLane, startLane));
