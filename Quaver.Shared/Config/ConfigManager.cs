@@ -484,7 +484,7 @@ namespace Quaver.Shared.Config
             KeyNavigateUp = ReadValue(@"KeyNavigateUp", Keys.Up, data);
             KeyNavigateDown = ReadValue(@"KeyNavigateDown", Keys.Down, data);
             KeyNavigateBack = ReadValue(@"KeyNavigateBack", Keys.Back, data);
-            KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Select, data);
+            KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Escape, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
