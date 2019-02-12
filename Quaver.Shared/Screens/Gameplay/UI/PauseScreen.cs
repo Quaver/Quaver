@@ -6,6 +6,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
 using System;
@@ -168,7 +169,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private void HandleKeyPressUp()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateUp.Value))
                 return;
 
             var index = SelectedIndex == 0 ? Buttons.Count - 1 : SelectedIndex - 1;
@@ -180,7 +181,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private void HandleKeyPressDown()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateDown.Value))
                 return;
 
             var index = SelectedIndex == Buttons.Count - 1 ? 0 : SelectedIndex + 1;
@@ -192,7 +193,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private void HandleKeyPressSelect()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateSelect.Value))
                 return;
 
             if (Selected == Continue)
