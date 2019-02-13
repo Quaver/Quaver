@@ -166,25 +166,25 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             CreateDistantOverlay();
 
-            // Depending on what the skin.ini's value is, we'll display the lane cover over the displays.
+            // Depending on what the config value is, we'll display ui elements over the lane cover.
             // Note: Lane cover will always be displayed over the receptors due to the creation order.
-            if (Skin.LaneCoverOverDisplays)
+            if (ConfigManager.UiElementsOverLaneCover.Value)
             {
+                CreateLaneCoverOverlay();
                 CreateComboDisplay();
                 CreateHitError();
-                CreateJudgementHitBurst();
                 CreateHitLighting();
+                CreateJudgementHitBurst();
                 CreateSongInfo();
-                CreateLaneCoverOverlay();
             }
             else
             {
-                CreateLaneCoverOverlay();
                 CreateComboDisplay();
                 CreateHitError();
-                CreateHitLighting();
                 CreateJudgementHitBurst();
+                CreateHitLighting();
                 CreateSongInfo();
+                CreateLaneCoverOverlay();
             }
 
             CreateHealthBar();
