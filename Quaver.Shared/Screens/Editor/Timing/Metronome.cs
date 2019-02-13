@@ -70,11 +70,13 @@ namespace Quaver.Shared.Screens.Editor.Timing
             if (!AudioEngine.Track.IsPlaying || Qua.TimingPoints.Count == 0)
                 return;
 
-            var point = Qua.GetTimingPointAt(AudioEngine.Track.Time);
+            var time = AudioEngine.Track.Time + ConfigManager.GlobalAudioOffset.Value;
+
+            var point = Qua.GetTimingPointAt(time);
 
             // Get the total amount of beats that'll be played for the timing point.
             // This can depend on if the user wants 8 beats or 4.
-            var totalBeats = (AudioEngine.Track.Time - point.StartTime) / (point.MillisecondsPerBeat / (ConfigManager.EditorMetronomePlayHalfBeats.Value ? 2 : 1));
+            var totalBeats = (time - point.StartTime) / (point.MillisecondsPerBeat / (ConfigManager.EditorMetronomePlayHalfBeats.Value ? 2 : 1));
 
             CurrentTotalBeats = (int) Math.Floor(totalBeats);
             CurrentBeat = (int) totalBeats % 4;
