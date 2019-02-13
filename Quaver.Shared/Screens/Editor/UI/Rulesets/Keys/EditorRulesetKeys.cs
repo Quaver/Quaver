@@ -201,10 +201,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                     FlipHitObjectsHorizontally();
             }
 
+            HandleHitObjectSelection();
+
             switch (CompositionTool.Value)
             {
                 case EditorCompositionTool.Select:
-                    HandleHitObjectSelection();
                     break;
                 case EditorCompositionTool.Note:
                 case EditorCompositionTool.LongNote:
@@ -326,35 +327,38 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             if (!MouseManager.IsUniqueClick(MouseButton.Left))
                 return;
 
-            var hoveredObject = ScrollContainer.GetHoveredHitObject();
-
-            // Compare the y positions of the mouse when the user clicked the object initially, vs when they released.
-            var relativeY = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseInitialClickPosition.Y);
-            var relativeY2 = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y);
-
-            // Give a little bit of leniency for the mouse to move.
-            if (Math.Abs(relativeY2 - relativeY) > 2)
-                return;
-
-            // User has clicked on a new object and wants to select it.
-            if (hoveredObject != null)
+            if (CompositionTool.Value == EditorCompositionTool.Select)
             {
-                // Object isn't hovered, so we need to add it
-                if (!SelectedHitObjects.Contains(hoveredObject))
-                    SelectHitObject(hoveredObject);
+                var hoveredObject = ScrollContainer.GetHoveredHitObject();
 
-                if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ||
-                    KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+                // Compare the y positions of the mouse when the user clicked the object initially, vs when they released.
+                var relativeY = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseInitialClickPosition.Y);
+                var relativeY2 = ScrollContainer.HitPositionY - (int) ScrollContainer.GetTimeFromY(MouseManager.CurrentState.Y);
+
+                // Give a little bit of leniency for the mouse to move.
+                if (Math.Abs(relativeY2 - relativeY) > 2)
                     return;
 
-                // In the event that the user isn't pressing control, deselect all other hitobjects
-                for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
+                // User has clicked on a new object and wants to select it.
+                if (hoveredObject != null)
                 {
-                    if (SelectedHitObjects[i] != hoveredObject)
-                        DeselectHitObject(SelectedHitObjects[i]);
-                }
+                    // Object isn't hovered, so we need to add it
+                    if (!SelectedHitObjects.Contains(hoveredObject))
+                        SelectHitObject(hoveredObject);
 
-                return;
+                    if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) ||
+                        KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+                        return;
+
+                    // In the event that the user isn't pressing control, deselect all other hitobjects
+                    for (var i = SelectedHitObjects.Count - 1; i >= 0; i--)
+                    {
+                        if (SelectedHitObjects[i] != hoveredObject)
+                            DeselectHitObject(SelectedHitObjects[i]);
+                    }
+
+                    return;
+                }
             }
 
             // Don't deselect if the user is in the hitsound panel.
