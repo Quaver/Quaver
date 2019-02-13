@@ -332,7 +332,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
                     new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
                     new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
-                    new SettingsBool(this, "Displays UI elements over skinnable lane covers", ConfigManager.UiElementsOverLaneCover)
+                    new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
                 }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()

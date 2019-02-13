@@ -262,7 +262,7 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     If enabled, the lane covers will be displayed under the ui elements.
         /// </summary>
-        internal static Bindable<bool> UiElementsOverLaneCover { get; private set; }
+        internal static Bindable<bool> UIElementsOverLaneCover { get; private set; }
 
         /// <summary>
         ///     If enabled, failed scores will not show in local scores.
@@ -510,7 +510,7 @@ namespace Quaver.Shared.Config
             LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
-            UiElementsOverLaneCover = ReadValue(@"UiElementsOverLaneCover", true, data);
+            UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -596,7 +596,7 @@ namespace Quaver.Shared.Config
                     LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTop.ValueChanged += AutoSaveConfiguration;
                     LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
-                    UiElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
+                    UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

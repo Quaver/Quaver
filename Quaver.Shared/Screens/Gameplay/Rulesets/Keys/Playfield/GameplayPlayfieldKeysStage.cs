@@ -1,7 +1,7 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
 */
 
@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Depending on what the config value is, we'll display ui elements over the lane cover.
             // Note: Lane cover will always be displayed over the receptors due to the creation order.
-            if (ConfigManager.UiElementsOverLaneCover.Value)
+            if (ConfigManager.UIElementsOverLaneCover.Value)
             {
                 CreateLaneCoverOverlay();
                 CreateComboDisplay();
