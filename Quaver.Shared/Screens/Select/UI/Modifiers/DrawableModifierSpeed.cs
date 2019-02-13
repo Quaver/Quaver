@@ -72,12 +72,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <returns></returns>
-        public override List<DrawableModifierOption> CreateModsDialogOptions() => new List<DrawableModifierOption>();
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         public override void ChangeSelectedOptionButton()
         {
         }
