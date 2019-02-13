@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
         {
             Parent = this,
             X = 10,
-            Y = HeaderBackground.Height + 16,
+            Y = HeaderBackground.Height + 10,
             FontSize = 16
         };
 
@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
         {
             Parent = this,
             X = 10,
-            Y = ObjectCount.Y + ObjectCount.Height + 10,
+            Y = ObjectCount.Y + ObjectCount.Height + 14,
             FontSize = 16
         };
 
@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
             {
                 Parent = this,
                 X = 10,
-                Y = PlaybackRate.Y + PlaybackRate.Height + 10,
+                Y = PlaybackRate.Y + PlaybackRate.Height + 14,
                 FontSize = 16
             };
 
@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
         {
             Parent = this,
             X = TextBeatSnap.X,
-            Y = TextBeatSnap.Y + TextBeatSnap.Height + 10,
+            Y = TextBeatSnap.Y + TextBeatSnap.Height + 14,
             FontSize = 16,
         };
 
@@ -282,7 +282,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
             {
                 Parent = this,
                 X = TextBeatSnap.X,
-                Y = TextDifficultyRating.Y + TextDifficultyRating.Height + 10,
+                Y = TextDifficultyRating.Y + TextDifficultyRating.Height + 14,
                 FontSize = 16,
             };
 
