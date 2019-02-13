@@ -536,7 +536,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             if (!ConfigManager.LaneCoverTop.Value)
                 return;
 
-            float yAxis = -LaneCoverContainer.Height +  (float) ConfigManager.LaneCoverTopHeight.Value / 100f * LaneCoverContainer.Height;
+            var yAxis = -LaneCoverContainer.Height + ConfigManager.LaneCoverTopHeight.Value / 100f * LaneCoverContainer.Height;
 
             var laneCoverTop = new Sprite
             {
@@ -556,7 +556,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             if (!ConfigManager.LaneCoverBottom.Value)
                 return;
 
-            float yAxis = LaneCoverContainer.Height - (float) (ConfigManager.LaneCoverBottomHeight.Value / 100f * LaneCoverContainer.Height);
+            var yAxis = LaneCoverContainer.Height - ConfigManager.LaneCoverBottomHeight.Value / 100f * LaneCoverContainer.Height;
 
             var laneCoverBottom = new Sprite
             {
