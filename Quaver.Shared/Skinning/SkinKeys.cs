@@ -217,6 +217,18 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
 
+        // ----- Lane Covers ----- //
+
+        /// <summary>
+        ///     Top lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     Bottom lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverBottom { get; private set; }
+
 #endregion
 
         /// <summary>
@@ -590,6 +602,11 @@ namespace Quaver.Shared.Skinning
             StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", false);
             StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", false);
             StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", false);
+            #endregion
+
+            #region LANECOVER
+            LaneCoverTop = LoadTexture(SkinKeysFolder.LaneCover, "cover-top", false);
+            LaneCoverBottom = LoadTexture(SkinKeysFolder.LaneCover, "cover-bottom", false);
             #endregion
 
             #region MISC

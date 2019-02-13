@@ -12,6 +12,7 @@ namespace Quaver.Shared.Skinning
         Stage,
         HitObjects,
         Receptors,
-        Lighting
+        Lighting,
+        LaneCover
     }
 }
