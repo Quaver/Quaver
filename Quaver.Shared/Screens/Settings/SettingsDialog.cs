@@ -327,7 +327,11 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
-                    new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit)
+                    new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
+                    new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
+                    new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
+                    new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
+                    new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom)
                 }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()

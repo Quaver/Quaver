@@ -240,6 +240,26 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TapToPause { get; private set; }
 
         /// <summary>
+        ///     The top lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverTopHeight { get; private set; }
+
+        /// <summary>
+        ///     The bottom lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverBottomHeight { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a top lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a bottom lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverBottom { get; private set; }
+
+        /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
@@ -481,6 +501,11 @@ namespace Quaver.Shared.Config
             DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
             SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
             DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
+            LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
+            LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
+            LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
+            LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
+
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
@@ -561,6 +586,10 @@ namespace Quaver.Shared.Config
                     DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
                     DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTop.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
