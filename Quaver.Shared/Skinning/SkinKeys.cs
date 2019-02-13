@@ -67,6 +67,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool ReceptorsOverHitObjects { get; private set; }
 
+        internal bool LaneCoverOverDisplays { get; private set; }
+
         internal SortedDictionary<Judgement, Color> JudgeColors { get; private set; }
 
         internal List<Color> ColumnColors { get; private set; } = new List<Color>();
@@ -217,6 +219,18 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
 
+        // ----- Lane Covers ----- //
+
+        /// <summary>
+        ///     Top lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     Bottom lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverBottom { get; private set; }
+
 #endregion
 
         /// <summary>
@@ -299,6 +313,7 @@ namespace Quaver.Shared.Skinning
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
+                    LaneCoverOverDisplays = true;
                     ColumnColors = new List<Color>()
                     {
                         Color.DarkGray,
@@ -349,6 +364,7 @@ namespace Quaver.Shared.Skinning
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
+                    LaneCoverOverDisplays = true;
                     ColumnColors = new List<Color>
                     {
                         new Color(255, 255, 255),
@@ -411,6 +427,7 @@ namespace Quaver.Shared.Skinning
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
+                    LaneCoverOverDisplays = true;
                     ColumnColors = new List<Color>
                     {
                         Color.DarkGray,
@@ -464,6 +481,7 @@ namespace Quaver.Shared.Skinning
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = false;
+                    LaneCoverOverDisplays = true;
                     ColumnColors = new List<Color>
                     {
                         new Color(255, 255, 255),
@@ -535,6 +553,7 @@ namespace Quaver.Shared.Skinning
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
             JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);
+            LaneCoverOverDisplays = ConfigHelper.ReadBool(LaneCoverOverDisplays, ini["LaneCoverOverDisplays"]);
             JudgeColors[Judgement.Marv] = ConfigHelper.ReadColor(JudgeColors[Judgement.Marv], ini["JudgeColorMarv"]);
             JudgeColors[Judgement.Perf] = ConfigHelper.ReadColor(JudgeColors[Judgement.Perf], ini["JudgeColorPerf"]);
             JudgeColors[Judgement.Great] = ConfigHelper.ReadColor(JudgeColors[Judgement.Great], ini["JudgeColorGreat"]);
@@ -590,6 +609,11 @@ namespace Quaver.Shared.Skinning
             StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", false);
             StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", false);
             StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", false);
+            #endregion
+
+            #region LANECOVER
+            LaneCoverTop = LoadTexture(SkinKeysFolder.LaneCover, "cover-top", false);
+            LaneCoverBottom = LoadTexture(SkinKeysFolder.LaneCover, "cover-bottom", false);
             #endregion
 
             #region MISC
