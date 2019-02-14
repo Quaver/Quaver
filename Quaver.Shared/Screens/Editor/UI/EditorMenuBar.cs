@@ -50,11 +50,15 @@ namespace Quaver.Shared.Screens.Editor.UI
                 return;
 
             Height = ImGui.GetWindowSize().Y;
-            CreateFileSection();
-            CreateEditSection();
-            CreateViewSection();
-            CreateAudioSection();
-            CreateHelpSection();
+
+            if (DialogManager.Dialogs.Count == 0)
+            {
+                CreateFileSection();
+                CreateEditSection();
+                CreateViewSection();
+                CreateAudioSection();
+                CreateHelpSection();
+            }
 
             ImGui.EndMenuBar();
             Button.IsGloballyClickable = !ImGui.IsAnyItemHovered();
