@@ -12,8 +12,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Eto.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -51,11 +51,12 @@ using Quaver.Shared.Screens.Select;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using YamlDotNet.Serialization;
+using Button = Wobble.Graphics.UI.Buttons.Button;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Shared.Screens.Editor
 {
@@ -185,6 +186,9 @@ namespace Quaver.Shared.Screens.Editor
 
             if (File.Exists($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave"))
                 DialogManager.Show(new EditorAutosaveDetectionDialog());
+
+            var d = new Dialog();
+            d.ShowModal();
         }
 
         /// <summary>

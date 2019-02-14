@@ -13,6 +13,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
+using Steamworks;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -43,6 +44,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// </summary>
         private Button CancelButton { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="dialog"></param>
@@ -50,13 +52,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             Dialog = dialog;
             Size = new ScalableVector2(400, 502);
-            Tint = ColorHelper.HexToColor($"#414345");
-            Alpha = 1f;
+            Image = UserInterface.EditorEditScrollVelocities;
 
             CreateHeader();
             CreateFooter();
             CreateOkButton();
-            CreateCancelButton();
+            CreateCancelButton();;
         }
 
         /// <summary>
@@ -66,34 +67,32 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             HeaderBackground = new Sprite
             {
                 Parent = this,
-                Size = new ScalableVector2(Width, 45),
-                Tint = ColorHelper.HexToColor($"#212121")
-            };
-
-            var headerFlag = new Sprite()
-            {
-                Parent = HeaderBackground,
-                Size = new ScalableVector2(5, HeaderBackground.Height),
-                Tint = Color.LightGray,
+                Size = new ScalableVector2(Width, 38),
                 Alpha = 0
             };
 
-            // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.Exo2SemiBold, "Edit Scroll Velocities", 14)
+            var removeButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) =>
             {
-                Parent = HeaderBackground,
-                Alignment = Alignment.MidLeft,
-                X = headerFlag.X + 15,
-            };
-
-            var exitButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) => Dialog.Close())
+            })
             {
                 Parent = HeaderBackground,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(20, 20)
+                Size = new ScalableVector2(20, 20),
+                Tint = Color.Crimson
             };
 
-            exitButton.X -= exitButton.Width / 2f + 5;
+            removeButton.X -= removeButton.Width / 2f;
+
+            var addButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), (sender, args) =>
+            {
+            })
+            {
+                Parent = HeaderBackground,
+                Alignment = Alignment.MidRight,
+                Size = new ScalableVector2(20, 20),
+                Tint = Color.LimeGreen,
+                X = removeButton.X - removeButton.Width - 12
+            };
         }
 
         /// <summary>
@@ -101,30 +100,47 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         private void CreateFooter() => FooterBackground = new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width, 50),
-            Tint = ColorHelper.HexToColor("#212121"),
+            Size = new ScalableVector2(Width, 38),
             Alignment = Alignment.BotLeft,
-            Y = 1
+            Alpha = 0
         };
 
         /// <summary>
         /// </summary>
-        private void CreateOkButton() => OkButton = new BorderedTextButton("OK", Color.LimeGreen, (sender, args) => Dialog.Close())
+        private void CreateOkButton()
         {
-            Parent = FooterBackground,
-            Alignment = Alignment.MidRight,
-            X = -20,
-            Text = {Font = Fonts.Exo2SemiBold}
-        };
+            OkButton = new BorderedTextButton("OK", Color.LimeGreen, (sender, args) => Dialog.Close())
+            {
+                Parent = FooterBackground,
+                Alignment = Alignment.MidRight,
+                X = -20,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13
+                }
+            };
+
+            OkButton.Height -= 8;
+        }
 
         /// <summary>
         /// </summary>
-        private void CreateCancelButton() => CancelButton = new BorderedTextButton("Cancel", Color.Crimson, (sender, args) => Dialog.Close())
+        private void CreateCancelButton()
         {
-            Parent = FooterBackground,
-            Alignment = Alignment.MidRight,
-            X = OkButton.X - OkButton.Width - 20,
-            Text = { Font = Fonts.Exo2SemiBold }
-        };
+            CancelButton = new BorderedTextButton("Cancel", Color.Crimson, (sender, args) => Dialog.Close())
+            {
+                Parent = FooterBackground,
+                Alignment = Alignment.MidRight,
+                X = OkButton.X - OkButton.Width - 20,
+                Text =
+                {
+                    Font = Fonts.Exo2SemiBold,
+                    FontSize = 13
+                }
+            };
+
+            CancelButton.Height -= 8;
+        }
     }
 }
