@@ -301,13 +301,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             if (ScrollDirection.Equals(ScrollDirection.Down))
             {
-                LongNoteBodySprite.Y = +LongNoteBodyOffset + SpritePosition - CurrentLongNoteSize;
-                LongNoteEndSprite.Y = SpritePosition - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+                LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize;
+                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize - LongNoteEndOffset;
             }
             else
             {
                 LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset;
-                LongNoteEndSprite.Y = SpritePosition + CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset + CurrentLongNoteSize - LongNoteEndOffset;
             }
         }
 
