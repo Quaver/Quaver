@@ -3,7 +3,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <Description></Description>
+    <Description>
+    </Description>
     <AssemblyName>Quaver</AssemblyName>
     <Title>Quaver</Title>
     <Product>Quaver</Product>
