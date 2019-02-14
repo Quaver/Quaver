@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteBodySprite.Tint = Color.White;
                 LongNoteEndSprite.Tint = Color.White;
-                LongNoteEndSprite.Visible = true;
+                LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
                 InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 UpdateLongNoteSize(InitialTrackPosition);
@@ -246,7 +246,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void ForceUpdateLongnote(long offset)
         {
-            if (offset < InitialTrackPosition)
+            // When LN end is not drawn, the LNs don't change their size as they are held.
+            if (offset < InitialTrackPosition || !SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
@@ -261,7 +262,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateSpritePositions(long offset)
         {
             // Update Sprite position with regards to LN's state
-            if (CurrentlyBeingHeld)
+            //
+            // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
+            // the end.
+            if (CurrentlyBeingHeld && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 if (offset > InitialTrackPosition)
                 {

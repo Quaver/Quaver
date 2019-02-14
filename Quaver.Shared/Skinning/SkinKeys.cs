@@ -129,6 +129,8 @@ namespace Quaver.Shared.Skinning
 
         internal int JudgementCounterSize { get; private set; }
 
+        internal bool DrawLongNoteEnd { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -347,6 +349,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
+                    DrawLongNoteEnd = false;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -397,6 +400,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
+                    DrawLongNoteEnd = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -462,6 +466,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
+                    DrawLongNoteEnd = false;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -516,6 +521,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
+                    DrawLongNoteEnd = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -582,6 +588,7 @@ namespace Quaver.Shared.Skinning
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
+            DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
         }
 
         /// <summary>
