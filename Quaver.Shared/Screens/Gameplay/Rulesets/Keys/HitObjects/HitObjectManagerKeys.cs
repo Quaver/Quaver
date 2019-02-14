@@ -451,6 +451,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
                 foreach (var hitObject in DeadNoteLanes[i])
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                foreach (var hitObject in HeldLongNoteLanes[i])
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
         }
 
