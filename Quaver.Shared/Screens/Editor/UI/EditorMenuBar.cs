@@ -6,6 +6,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics;
@@ -208,6 +209,19 @@ namespace Quaver.Shared.Screens.Editor.UI
             }
 
             ImGui.Separator();
+
+            if (ImGui.BeginMenu("Visualization Graph"))
+            {
+                var ruleset = (EditorRulesetKeys) Screen.Ruleset;
+
+                foreach (EditorVisualizationGraphType graph in Enum.GetValues(typeof(EditorVisualizationGraphType)))
+                {
+                    if (ImGui.MenuItem(graph.ToString(), null, ruleset.SelectedVisualizationGraph.Value == graph))
+                        ruleset.SelectedVisualizationGraph.Value = graph;
+                }
+
+                ImGui.EndMenu();
+            }
 
             ImGui.Separator();
 
