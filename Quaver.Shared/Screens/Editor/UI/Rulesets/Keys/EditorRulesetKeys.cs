@@ -197,6 +197,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.V))
                     PasteHitObjects();
 
+                if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.X))
+                    CutHitObjects();
+
                 if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.H))
                     FlipHitObjectsHorizontally();
             }
@@ -540,6 +543,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         private void DeleteSelectedHitObjects()
         {
+            if (SelectedHitObjects.Count == 0)
+                return;
+
             ActionManager.Perform(new EditorActionBatchDeleteHitObjectKeys(this, ScrollContainer, new List<DrawableEditorHitObject>(SelectedHitObjects)));
             SelectedHitObjects.Clear();
         }
@@ -659,6 +665,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         public void CopySelectedHitObjects()
         {
+            if (SelectedHitObjects.Count == 0)
+                return;
+
             var copyString = "";
 
             Clipboard.Clear();
@@ -701,6 +710,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             }
 
             ActionManager.Perform(new EditorActionBatchPlaceHitObjectKeys(WorkingMap, ScrollContainer, clonedObjects));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void CutHitObjects()
+        {
+            CopySelectedHitObjects();
+            DeleteSelectedHitObjects();
         }
 
         /// <summary>

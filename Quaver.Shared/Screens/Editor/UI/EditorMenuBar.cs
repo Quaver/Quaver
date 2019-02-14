@@ -126,7 +126,10 @@ namespace Quaver.Shared.Screens.Editor.UI
             ImGui.Separator();
 
             if (ImGui.MenuItem("Cut", "CTRL+X"))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+            {
+                var ruleset = Screen.Ruleset as EditorRulesetKeys;
+                ruleset?.CutHitObjects();
+            }
 
             if (ImGui.MenuItem("Copy", "CTRL+C"))
             {
