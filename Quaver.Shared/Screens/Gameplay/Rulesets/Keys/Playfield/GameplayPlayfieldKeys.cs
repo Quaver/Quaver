@@ -217,8 +217,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + hitObOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + holdHitObOffset;
+                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.HitLightingY;
                         TimingLinePositionY[i] = HitPositionY[i];
                         break;
