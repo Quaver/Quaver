@@ -290,15 +290,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (!Info.IsLongNote)
                 return;
 
-            // It will ignore the rest of the code after this statement if long note size is less than 0
-            // LNs of zero size can happen on SV maps (the size is too small and rounds to zero)
-            if (CurrentLongNoteSize < 0)
-            {
+            // Don't draw the body if the length is <= 0. Note that this does not mean that the LN should be hidden
+            // altogether: very short LNs, including zero-size on some SV maps after SV adjustment, have this below zero
+            // because CurrentLongNoteSize does not include half of the HitObjectSprite and half of the
+            // LongNoteEndSprite.
+            if (CurrentLongNoteSize <= 0)
                 LongNoteBodySprite.Visible = false;
-                LongNoteEndSprite.Visible = false;
-                HitObjectSprite.Visible = false;
-                return;
-            }
 
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteSize;
