@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Eto.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -93,7 +92,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
         /// </summary>
-        private List<int> AvailableBeatSnaps { get; } = new List<int> {1, 2, 3, 4, 6, 8, 12, 16};
+        public List<int> AvailableBeatSnaps { get; } = new List<int> {1, 2, 3, 4, 6, 8, 12, 16};
 
         /// <summary>
         /// </summary>
@@ -186,9 +185,6 @@ namespace Quaver.Shared.Screens.Editor
 
             if (File.Exists($"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}.autosave"))
                 DialogManager.Show(new EditorAutosaveDetectionDialog());
-
-            var d = new Dialog();
-            d.ShowModal();
         }
 
         /// <summary>
@@ -317,7 +313,7 @@ namespace Quaver.Shared.Screens.Editor
         ///     Changes the audio playback rate either up or down.
         /// </summary>
         /// <param name="direction"></param>
-        private void ChangeAudioPlaybackRate(Direction direction)
+        public void ChangeAudioPlaybackRate(Direction direction)
         {
             float targetRate;
 

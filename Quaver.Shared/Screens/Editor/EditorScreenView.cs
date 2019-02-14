@@ -46,10 +46,6 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public EditorNavigationBar NavigationBar { get; private set; }
-
-        /// <summary>
-        /// </summary>
         public EditorLayerCompositor LayerCompositor { get; private set; }
 
         /// <summary>
@@ -68,6 +64,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorDetailsPanel DetailsPanel { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public EditorMenuBar MenuBar { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             CreateBackground();
             CreateControlBar();
-            CreateNavigationBar();
+            MenuBar = new EditorMenuBar((EditorScreen) Screen);
             CreateLayerCompositor();
             CreateLayerEditor();
             CreateHitsoundEditor();
@@ -93,6 +93,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            MenuBar.Update(gameTime);
             Background.Update(gameTime);
 
             var screen = (EditorScreen) Screen;
@@ -116,6 +117,8 @@ namespace Quaver.Shared.Screens.Editor
 
             Container?.Draw(gameTime);
             screen.LayerCompositor?.Draw(gameTime);
+            MenuBar.Draw(gameTime);
+            GameBase.Game.SpriteBatch.End();
         }
 
         /// <inheritdoc />
@@ -200,16 +203,6 @@ namespace Quaver.Shared.Screens.Editor
         }
 
         /// <summary>
-        /// </summary>
-        private void CreateNavigationBar()
-        {
-            NavigationBar = new EditorNavigationBarMain(Screen as EditorScreen) {Parent = Container};
-            NavigationBar.Y = -NavigationBar.Height;
-
-            NavigationBar.MoveToY(0, Easing.OutQuint, 800);
-        }
-
-        /// <summary>
         ///
         /// </summary>
         private void CreateLayerCompositor()
@@ -218,7 +211,7 @@ namespace Quaver.Shared.Screens.Editor
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Y = NavigationBar.Y + NavigationBar.Height + 150
+                Y = MenuBar.Height + 140
             };
 
             LayerCompositor.X = LayerCompositor.Width;

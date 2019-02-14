@@ -82,11 +82,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     }
 
                     // User is scrolling down past the navigation bar, continue to seek the map backwards
-                    if (MouseManager.CurrentState.Y <= view.NavigationBar.ScreenRectangle.Y && AudioEngine.Track.IsPaused)
+                    if (MouseManager.CurrentState.Y <= 20 && AudioEngine.Track.IsPaused)
                     {
-                        if (view.NavigationBar.ScreenRectangle.Y - MouseManager.CurrentState.Y <=  5)
+                        if (20 - MouseManager.CurrentState.Y <=  5)
                             AudioEngine.Track.Seek(AudioEngine.Track.Time + 10);
-                        else if (view.NavigationBar.ScreenRectangle.Y - MouseManager.CurrentState.Y <= 10)
+                        else if (20 - MouseManager.CurrentState.Y <= 10)
                             AudioEngine.Track.Seek(AudioEngine.Track.Time + 30);
                         else
                             AudioEngine.Track.Seek(AudioEngine.Track.Time + 100);
@@ -102,8 +102,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
 
                     if (!GraphicsHelper.RectangleContains(graph.Graph.ScreenRectangle, MouseManager.CurrentState.Position)
                         && GraphicsHelper.RectangleContains(rect, Ruleset.MouseInitialClickPosition)
-                        && !GraphicsHelper.RectangleContains(view.ControlBar.ScreenRectangle, Ruleset.MouseInitialClickPosition)
-                        && !GraphicsHelper.RectangleContains(view.NavigationBar.ScreenRectangle, Ruleset.MouseInitialClickPosition))
+                        && !GraphicsHelper.RectangleContains(view.ControlBar.ScreenRectangle, Ruleset.MouseInitialClickPosition))
                     {
                         IsSelecting = true;
                         StartingPoint = new Vector2(MouseManager.CurrentState.X, MouseManager.CurrentState.Y);

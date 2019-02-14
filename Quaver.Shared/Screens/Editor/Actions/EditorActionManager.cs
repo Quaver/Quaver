@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         /// <summary>
         ///     Stores a LIFO structure of actions to redo.
         /// </summary>
-        private Stack<IEditorAction> RedoStack { get; } = new Stack<IEditorAction>();
+        public Stack<IEditorAction> RedoStack { get; } = new Stack<IEditorAction>();
 
         /// <summary>
         ///     The last action the user performed before saving

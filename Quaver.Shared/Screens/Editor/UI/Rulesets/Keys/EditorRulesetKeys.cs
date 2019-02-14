@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             }
 
             // Right click/delete object.
-            if (MouseManager.IsUniqueClick(MouseButton.Right))
+            if (MouseManager.IsUniqueClick(MouseButton.Right) && !View.MenuBar.IsActive)
                 DeleteHoveredHitObject();
         }
 
@@ -285,12 +285,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         private void HandleHitObjectMouseInput()
         {
             // Prevent clicking if in range of the nav/control bars.
-            if (View.NavigationBar.ScreenRectangle.Contains(MouseManager.CurrentState.Position) ||
-                View.ControlBar.ScreenRectangle.Contains(MouseManager.CurrentState.Position))
+            if (View.ControlBar.ScreenRectangle.Contains(MouseManager.CurrentState.Position))
                 return;
 
             // Left click/place object
-            if (MouseManager.IsUniqueClick(MouseButton.Left))
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && !View.MenuBar.IsActive)
             {
                 var lane = ScrollContainer.GetLaneFromX(MouseManager.CurrentState.X);
 
@@ -324,7 +323,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 MouseInitialClickPosition = MouseManager.CurrentState.Position;
             }
 
-            if (!MouseManager.IsUniqueClick(MouseButton.Left))
+            if (!MouseManager.IsUniqueClick(MouseButton.Left) || View.MenuBar.IsActive)
                 return;
 
             if (CompositionTool.Value == EditorCompositionTool.Select)
@@ -485,22 +484,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        private void SelectAllHitObjects()
+        public void SelectAllHitObjects()
         {
             // Select all in the current layer.
             if (KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) ||
                 KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt))
             {
-                ScrollContainer.HitObjects
-                    .FindAll(x => x.Info.EditorLayer == View.LayerCompositor.SelectedLayerIndex.Value)
-                    .ForEach(SelectHitObject);
-
+                SelectAllLayerHitObjects();
                 return;
             }
 
             // Select all objects
             ScrollContainer.HitObjects.ForEach(SelectHitObject);
         }
+
+        /// <summary>
+        /// </summary>
+        public void SelectAllLayerHitObjects() => ScrollContainer.HitObjects
+            .FindAll(x => x.Info.EditorLayer == View.LayerCompositor.SelectedLayerIndex.Value)
+            .ForEach(SelectHitObject);
 
         /// <summary>
         /// </summary>
@@ -655,7 +657,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     Copies the selected hitobjects to the clipboard
         /// </summary>
-        private void CopySelectedHitObjects()
+        public void CopySelectedHitObjects()
         {
             var copyString = "";
 
@@ -676,7 +678,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     Pastes hitobjects that are in the clipboard
         /// </summary>
-        private void PasteHitObjects()
+        public void PasteHitObjects()
         {
             var clonedObjects = new List<HitObjectInfo>();
 
@@ -704,7 +706,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <summary>
         ///     Flips the selected hitobjects horizontally.
         /// </summary>
-        private void FlipHitObjectsHorizontally()
+        public void FlipHitObjectsHorizontally()
             => ActionManager.Perform(new EditorActionFlipObjectsHorizontallyKeys(WorkingMap, ScrollContainer, SelectedHitObjects));
 
         /// <summary>

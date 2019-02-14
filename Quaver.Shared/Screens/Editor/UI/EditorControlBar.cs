@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             View = view;
             Map = map;
-            Size = new ScalableVector2(WindowManager.Width, 48);
+            Size = new ScalableVector2(WindowManager.Width, 38);
             Tint = ColorHelper.HexToColor("#161616");
             Alpha = 1;
 
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = 20
             };
 
@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonPlayPauseTrack.X + ButtonPlayPauseTrack.Width + 15
             };
 
@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonStopTrack.X + ButtonStopTrack.Width + 15
             };
 
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = -ButtonPlayPauseTrack.X,
             };
 
@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonPlayTest.X - ButtonPlayTest.Width - 20
             };
 
@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonBeatSnap.X - ButtonBeatSnap.Width - 20
             };
 
@@ -239,8 +239,8 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 X = ButtonRestartTrack.X + ButtonRestartTrack.Width + 15,
+                FontSize = 22,
                 Y = -2,
-                FontSize = 24,
                 Alignment = Alignment.MidLeft
             };
 
@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Parent = this,
                 Y = -2,
                 X = ButtonScrollDirection.AbsolutePosition.X - ButtonScrollDirection.Width - 15,
-                FontSize = 24,
+                FontSize = 22,
                 Alignment = Alignment.MidLeft
             };
 

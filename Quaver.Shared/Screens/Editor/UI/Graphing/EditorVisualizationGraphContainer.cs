@@ -167,7 +167,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
                     var children = Ruleset.Screen.View.Container.Children;
 
                     // Make sure the navbar appears over the graph, so that the hover tooltips are on top.
-                    ListHelper.Swap(Ruleset.Screen.View.Container.Children, children.IndexOf(view?.NavigationBar), children.IndexOf(Graph));
+                    // ListHelper.Swap(Ruleset.Screen.View.Container.Children, children.IndexOf(view?.NavigationBar), children.IndexOf(Graph));
 
                     CreateProgressSeekBar();
                 }
@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
 
                     if (Graph != null)
                     {
-                        Graph.Y = view.NavigationBar.Height + 1;
+                        Graph.Y = view.MenuBar.Height + 1;
 
                         keys.ScrollContainer.Update(new GameTime(TimeSpan.Zero, TimeSpan.Zero));
                         Graph.X = keys.ScrollContainer.AbsolutePosition.X - Graph.Width - 10;
