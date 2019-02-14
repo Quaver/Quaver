@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             var view = (EditorScreenView) ruleset.Screen.View;
             Size = new ScalableVector2(50, WindowManager.Height - 38 - view.MenuBar.Height);
             Tint = Color.Black;
-            Alpha = 0.75f;
+            Alpha = 0.85f;
 
             Pixel = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
             Pixel.SetData(new[] { Color.White });

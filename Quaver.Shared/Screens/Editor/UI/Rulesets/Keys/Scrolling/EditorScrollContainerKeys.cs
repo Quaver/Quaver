@@ -118,7 +118,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             Alignment = Alignment.MidCenter;
             Size = new ScalableVector2(LaneSize * ruleset.WorkingMap.GetKeyCount(), WindowManager.Height);
             Tint = Color.Black;
-            Alpha = 0.75f;
+            Alpha = 0.85f;
 
             CreateBorderLines();
             CreateHitPositionLine();

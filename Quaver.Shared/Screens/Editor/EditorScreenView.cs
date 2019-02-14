@@ -172,7 +172,7 @@ namespace Quaver.Shared.Screens.Editor
             Background.BrightnessSprite.ClearAnimations();
 
             Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
-                Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 200));
+                Easing.Linear, Background.BrightnessSprite.Alpha, 0.35f, 200));
         }
 
         /// <summary>
