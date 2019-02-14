@@ -66,11 +66,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         /// <summary>
         ///      The offset of the long note body from the hit object.
+        ///
+        ///      LN bodies are drawn from the middle of the start object to the middle of the end object. This is the
+        ///      half-size of the start object.
         /// </summary>
         private float LongNoteBodyOffset { get; set; }
 
         /// <summary>
         ///     The offset of the hold end from hold body.
+        ///
+        ///     LN bodies are drawn from the middle of the start object to the middle of the end object. This is the
+        ///     half-size of the end object.
         /// </summary>
         private float LongNoteEndOffset { get; set; }
 
@@ -100,7 +106,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float HitPosition { get; set; }
 
         /// <summary>
-        ///     Size Difference between HitObject and HoldHitOBject
+        ///     Difference between the actual LN length and the LN body sprite length.
+        ///
+        ///     LN bodies are drawn from the middle of the start object to the middle of the end object, and this
+        ///     difference takes those two half-heights into account.
         /// </summary>
         private float LongNoteSizeDifference { get; }
 
