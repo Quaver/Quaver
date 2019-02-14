@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Editor.UI
 
         /// <summary>
         /// </summary>
-        public float Height { get; } = 20;
+        public float Height { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -48,6 +48,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             if (!ImGui.BeginMainMenuBar())
                 return;
 
+            Height = ImGui.GetWindowSize().Y;
             CreateFileSection();
             CreateEditSection();
             CreateViewSection();
@@ -205,6 +206,8 @@ namespace Quaver.Shared.Screens.Editor.UI
 
                 ImGui.EndMenu();
             }
+
+            ImGui.Separator();
 
             ImGui.Separator();
 

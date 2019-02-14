@@ -164,6 +164,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
 
                     var view = Ruleset.Screen.View as EditorScreenView;
 
+                    Graph.Height = GraphRaw.Height - view.MenuBar.Height;
+
+
                     var children = Ruleset.Screen.View.Container.Children;
 
                     // Make sure the navbar appears over the graph, so that the hover tooltips are on top.
@@ -188,7 +191,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
 
                     if (Graph != null)
                     {
-                        Graph.Y = view.MenuBar.Height + 1;
+                        Graph.Y = view.MenuBar.Height;
 
                         keys.ScrollContainer.Update(new GameTime(TimeSpan.Zero, TimeSpan.Zero));
                         Graph.X = keys.ScrollContainer.AbsolutePosition.X - Graph.Width - 10;

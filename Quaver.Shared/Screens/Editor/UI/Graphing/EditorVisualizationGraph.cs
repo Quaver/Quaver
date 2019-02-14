@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
@@ -46,7 +47,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
             Ruleset = ruleset;
             Qua = qua;
 
-            Size = new ScalableVector2(50, WindowManager.Height - 36 - 48);
+            var view = (EditorScreenView) ruleset.Screen.View;
+            Size = new ScalableVector2(50, WindowManager.Height - 38 - view.MenuBar.Height);
             Tint = Color.Black;
             Alpha = 0.75f;
 
