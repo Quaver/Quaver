@@ -79,6 +79,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                             AudioEngine.Track.Seek(AudioEngine.Track.Time - 30);
                         else
                             AudioEngine.Track.Seek(AudioEngine.Track.Time - 100);
+
+                        Ruleset.Screen.SetHitSoundObjectIndex();
                     }
 
                     // User is scrolling down past the navigation bar, continue to seek the map backwards
@@ -90,6 +92,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                             AudioEngine.Track.Seek(AudioEngine.Track.Time + 30);
                         else
                             AudioEngine.Track.Seek(AudioEngine.Track.Time + 100);
+
+                        Ruleset.Screen.SetHitSoundObjectIndex();
                     }
                 }
                 else
