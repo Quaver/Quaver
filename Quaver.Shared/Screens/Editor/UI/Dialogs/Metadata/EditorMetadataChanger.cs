@@ -100,25 +100,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
 
         /// <summary>
         /// </summary>
-        private void CreateHeader()
+        private void CreateHeader() => HeaderBackground = new Sprite
         {
-            HeaderBackground = new Sprite
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, 38),
-                Alpha = 0
-            };
-
-            var exitButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times), (sender, args) => Dialog.Close())
-            {
-                Parent = HeaderBackground,
-                Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(20, 20),
-                Tint = Color.Crimson
-            };
-
-            exitButton.X -= exitButton.Width / 2f + 5;
-        }
+            Parent = this,
+            Size = new ScalableVector2(Width, 38),
+            Alpha = 0
+        };
 
         /// <summary>
         /// </summary>
