@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             Height = ImGui.GetWindowSize().Y;
 
-            if (DialogManager.Dialogs.Count == 0)
+            if (DialogManager.Dialogs.Count == 0 || Screen.Exiting)
             {
                 CreateFileSection();
                 CreateEditSection();
@@ -80,10 +80,10 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Upload Mapset", "CTRL+U"))
+            if (ImGui.MenuItem("Upload", "CTRL+U"))
                 Screen.UploadMapset();
 
-            if (ImGui.MenuItem("Export Mapset", "CTRL+E"))
+            if (ImGui.MenuItem("Export", "CTRL+E"))
                 EditorScreen.ExportToZip();
 
             ImGui.Separator();
