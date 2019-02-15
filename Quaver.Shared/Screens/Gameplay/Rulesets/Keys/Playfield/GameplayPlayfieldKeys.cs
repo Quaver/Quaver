@@ -203,8 +203,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
                 var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
+                var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
                 var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
-                LongNoteSizeAdjustment[i] = (holdHitObOffset - hitObOffset) / 2;
+
+                if (SkinManager.Skin.Keys[Screen.Map.Mode].DrawLongNoteEnd)
+                    LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
+                else
+                    LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
 
                 switch (ScrollDirections[i])
                 {
@@ -217,8 +222,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         break;
                     case ScrollDirection.Up:
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + hitObOffset;
-                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + holdHitObOffset;
+                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
                         ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.HitLightingY;
                         TimingLinePositionY[i] = HitPositionY[i];
                         break;
