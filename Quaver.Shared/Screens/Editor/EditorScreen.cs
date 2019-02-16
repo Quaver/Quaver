@@ -299,7 +299,7 @@ namespace Quaver.Shared.Screens.Editor
 
             // Scroll Velocities
             if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet.");
+                OpenScrollVelocityDialog();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
                 ChangePreviewTime((int) AudioEngine.Track.Time);
@@ -930,10 +930,6 @@ namespace Quaver.Shared.Screens.Editor
         public void OpenMetadataDialog() => DialogManager.Show(new EditorMetadataDialog(this));
 
         /// <summary>
-        /// </summary>
-        public void OpenScrollVelocityDialog() => DialogManager.Show(new EditorScrollVelocityDialog());
-
-        /// <summary>
         ///     Autosave when the game crashes.
         /// </summary>
         /// <param name="sender"></param>
@@ -996,5 +992,15 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, -1, "", (byte) GameMode.Keys4, WorkingMap.ToString(), 0);
+
+        /// <summary>
+        /// </summary>
+        public void OpenScrollVelocityDialog()
+        {
+            var view = (EditorScreenView) View;
+
+            if (!view.ScrollVelocityChanger.Shown)
+                view.ScrollVelocityChanger.Show();
+        }
     }
 }

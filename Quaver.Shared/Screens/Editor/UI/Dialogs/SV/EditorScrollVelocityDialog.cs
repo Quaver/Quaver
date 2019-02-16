@@ -5,11 +5,15 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Maps;
 using Quaver.Shared.Scheduling;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -19,37 +23,59 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
     {
         /// <summary>
         /// </summary>
-        private EditorScrollVelocityChanger ScrollVelocityChanger { get; set; }
+        private bool IsClosing { get; set; }
 
         /// <summary>
         /// </summary>
-        private bool IsClosing { get; set; }
+        private EditorScrollVelocityChanger Changer { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorScrollVelocityDialog() : base(0)
+        public EditorScrollVelocityDialog(EditorScrollVelocityChanger changer) : base(0)
         {
+            Changer = changer;
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 100));
 
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
-
-            Clicked += (sender, args) =>
-            {
-                if (!GraphicsHelper.RectangleContains(ScrollVelocityChanger.ScreenRectangle,
-                        MouseManager.CurrentState.Position) && !IsClosing)
-                {
-                    Close();
-                    IsClosing = true;
-                }
-            };
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void CreateContent() => CreateScrollVelocityChanger();
+        public override void CreateContent()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            Changer.Update(gameTime);
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            if (Changer.Shown)
+                Changer.Draw(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -58,21 +84,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         public override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                DialogManager.Dismiss(this);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateScrollVelocityChanger()
-        {
-            ScrollVelocityChanger = new EditorScrollVelocityChanger(this)
-            {
-                Parent = Container,
-                Alignment = Wobble.Graphics.Alignment.MidLeft
-            };
-
-            ScrollVelocityChanger.X = -ScrollVelocityChanger.Width;
-            ScrollVelocityChanger.MoveToX(0, Easing.OutQuint, 600);
+                Changer.Hide();
         }
 
         /// <summary>
@@ -84,12 +96,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 return;
 
             IsClosing = true;
-            ScrollVelocityChanger.Animations.Clear();
-            ScrollVelocityChanger.MoveToX(-ScrollVelocityChanger.Width - 2, Easing.OutQuint, 400);
-
             Animations.Clear();
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Alpha, 0f, 200));
-            ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
+            ThreadScheduler.RunAfter(() =>
+            {
+                lock (DialogManager.Dialogs)
+                    DialogManager.Dismiss(this);
+
+                ButtonManager.Remove(this);
+                IsClosing = false;
+            }, 450);
         }
     }
 }
