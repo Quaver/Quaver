@@ -142,15 +142,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             if (ImGui.Button("Add"))
             {
-                var game = GameBase.Game as QuaverGame;
-                var screen = game?.CurrentScreen as EditorScreen;
-
                 var sv = new SliderVelocityInfo()
                 {
                     StartTime = (int) AudioEngine.Track.Time,
                     Multiplier = 1.0f
                 };
 
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
                 screen?.Ruleset.ActionManager.Perform(new EditorActionAddSliderVelocity(WorkingMap, sv));
 
                 SelectedVelocities.Clear();
@@ -158,7 +157,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             }
 
             ImGui.SameLine();
-            ImGui.Button("Remove");
+
+            if (ImGui.Button("Remove"))
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+
+                screen?.Ruleset.ActionManager.Perform(new EditorActionRemoveSliderVelocities(WorkingMap, SelectedVelocities));
+
+                SelectedVelocities.Clear();
+
+                if (WorkingMap.SliderVelocities.Count != 0)
+                    SelectedVelocities.Add(WorkingMap.SliderVelocities.First());
+            }
         }
 
         /// <summary>
