@@ -19,6 +19,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         BatchPlaceHitObjects,
         FlipHitObjectsHorizontally,
         AddHitsound,
-        RemoveHitsound
+        RemoveHitsound,
+        AddSliderVelocity
     }
 }

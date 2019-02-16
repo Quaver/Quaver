@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         /// </summary>
         /// <param name="sv"></param>
         /// <returns></returns>
-        private Sprite CreateSliderVelocityLine(SliderVelocityInfo sv) => new Sprite
+        public Sprite CreateSliderVelocityLine(SliderVelocityInfo sv) => new Sprite
         {
             Parent = this,
             Alignment = Alignment.TopCenter,
@@ -105,6 +105,26 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         public void MovePreviewPointLine(int time)
         {
             PreviewPoint.Y = Height - Height * (float) (time / AudioEngine.Track.Length);
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sv"></param>
+        public void AddSliderVelocityLine(SliderVelocityInfo sv)
+        {
+            SliderVelocityLines[sv] = CreateSliderVelocityLine(sv);
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sv"></param>
+        public void RemoveSliderVelocityLine(SliderVelocityInfo sv)
+        {
+            SliderVelocityLines[sv].Destroy();
+            SliderVelocityLines.Remove(sv);
+
             Container.ForceRecache();
         }
     }

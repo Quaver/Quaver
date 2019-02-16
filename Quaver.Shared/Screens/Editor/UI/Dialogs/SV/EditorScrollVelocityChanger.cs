@@ -9,6 +9,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Editor.Actions.Rulesets.Universal;
 using Wobble;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.ImGUI;
@@ -137,9 +138,25 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
         /// <summary>
         /// </summary>
-        private static void HandleAddRemoveButtons()
+        private void HandleAddRemoveButtons()
         {
-            ImGui.Button("Add");
+            if (ImGui.Button("Add"))
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+
+                var sv = new SliderVelocityInfo()
+                {
+                    StartTime = (int) AudioEngine.Track.Time,
+                    Multiplier = 1.0f
+                };
+
+                screen?.Ruleset.ActionManager.Perform(new EditorActionAddSliderVelocity(WorkingMap, sv));
+
+                SelectedVelocities.Clear();
+                SelectedVelocities.Add(sv);
+            }
+
             ImGui.SameLine();
             ImGui.Button("Remove");
         }
