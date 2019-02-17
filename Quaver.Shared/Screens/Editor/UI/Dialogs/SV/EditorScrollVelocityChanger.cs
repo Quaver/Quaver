@@ -62,7 +62,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             Dialog = new EditorScrollVelocityDialog(this);
             WorkingMap = map;
+            SelectClosestVelocity();
+        }
 
+        /// <summary>
+        /// </summary>
+        private void SelectClosestVelocity()
+        {
             if (WorkingMap.SliderVelocities.Count == 0)
                 return;
 
@@ -84,6 +90,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             if (closestVelocity == null)
                 return;
 
+            SelectedVelocities.Clear();
             SelectedVelocities.Add(closestVelocity);
             NeedsToScroll = true;
 
@@ -279,7 +286,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
             if (NeedsToScroll && SelectedVelocities.Count != 0  && WorkingMap.SliderVelocities.Count == 0)
             {
-                ImGui.SetScrollHereY(-5.0f);
+                ImGui.SetScrollHereY(-0.05f);
                 NeedsToScroll = false;
             }
 
@@ -292,7 +299,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
                 if (NeedsToScroll && SelectedVelocities.Count != 0 && SelectedVelocities.First() == sv)
                 {
-                    ImGui.SetScrollHereY(-5.0f);
+                    ImGui.SetScrollHereY(-0.05f);
                     NeedsToScroll = false;
                 }
 
@@ -370,6 +377,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         public void Show()
         {
             Shown = true;
+            NeedsToScroll = true;
+            SelectClosestVelocity();
             DialogManager.Show(Dialog);
 
             if (!ButtonManager.Buttons.Contains(Dialog))
