@@ -497,7 +497,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 }
 
                 TextTime = newTime.ToString(CultureInfo.InvariantCulture);
-                TextMultiplier = $"{newMultiplier:.00}";
+                TextMultiplier = $"{newMultiplier:0.00}";
 
                 // ReSharper disable twice CompareOfFloatsByEqualityOperator
                 if (sv.StartTime != newTime || sv.Multiplier != newMultiplier)
