@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
@@ -122,6 +123,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         /// <param name="sv"></param>
         public void RemoveSliderVelocityLine(SliderVelocityInfo sv)
         {
+            if (sv == null)
+            {
+                Console.WriteLine("What??");
+                return;
+            }
+
             if (SliderVelocityLines.ContainsKey(sv))
             {
                 SliderVelocityLines[sv].Destroy();

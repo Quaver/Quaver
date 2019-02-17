@@ -50,6 +50,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// </summary>
         public List<SliderVelocityInfo> SelectedVelocities { get; } = new List<SliderVelocityInfo>();
 
+        /// <summary>
+        /// </summary>
+        private bool NeedsToScroll { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -81,6 +85,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 return;
 
             SelectedVelocities.Add(closestVelocity);
+            NeedsToScroll = true;
 
             TextTime = closestVelocity.StartTime.ToString(CultureInfo.InvariantCulture);
             TextMultiplier = $"{closestVelocity.Multiplier:0.00}";
@@ -100,6 +105,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 {
                     SelectedVelocities.Clear();
                     SelectedVelocities.AddRange(WorkingMap.SliderVelocities);
+
+                    if (SelectedVelocities.Count >= 1 || SelectedVelocities.Count == 0)
+                    {
+                        TextTime = "";
+                        TextMultiplier = $"";
+                    }
+                    else
+                    {
+                        SetInputTextToFirstSelected();
+                    }
                 }
             }
 
@@ -174,21 +189,51 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
                 SelectedVelocities.Clear();
                 SelectedVelocities.Add(sv);
+                NeedsToScroll = true;
+
+                TextTime = sv.StartTime.ToString(CultureInfo.InvariantCulture);
+                TextMultiplier = $"{sv.Multiplier:0.00}";
             }
 
             ImGui.SameLine();
 
             if (ImGui.Button("Remove"))
             {
+                if (SelectedVelocities.Count == 0)
+                    return;
+
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as EditorScreen;
+
+                var lastSv = SelectedVelocities.Last();
 
                 screen?.Ruleset.ActionManager.Perform(new EditorActionRemoveSliderVelocities(WorkingMap, new List<SliderVelocityInfo>(SelectedVelocities)));
 
                 SelectedVelocities.Clear();
 
                 if (WorkingMap.SliderVelocities.Count != 0)
-                    SelectedVelocities.Add(WorkingMap.SliderVelocities.First());
+                {
+                    var sv = WorkingMap.SliderVelocities.FindLast(x => x.StartTime <= lastSv.StartTime);
+
+                    if (sv != null)
+                    {
+                        TextTime = sv.StartTime.ToString(CultureInfo.InvariantCulture);
+                        TextMultiplier = $"{sv.Multiplier:0.00}";
+                        SelectedVelocities.Add(sv);
+                    }
+                    else
+                    {
+                        TextTime = "";
+                        TextMultiplier = $"";
+                    }
+                }
+                else
+                {
+                    TextTime = "";
+                    TextMultiplier = $"";
+                }
+
+                NeedsToScroll = true;
             }
         }
 
@@ -199,12 +244,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text("Time");
-            ImGui.InputText("", ref TextTime, 100, ImGuiInputTextFlags.CharsDecimal);
+
+            ImGui.InputText("", ref TextTime, 100, SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal);
 
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text("Multiplier");
-            ImGui.InputText(" ", ref TextMultiplier, 100, ImGuiInputTextFlags.CharsDecimal);
+            ImGui.InputText(" ", ref TextMultiplier, 100, SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal);
         }
 
         /// <summary>
@@ -231,12 +277,24 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 105);
 
+            if (NeedsToScroll && SelectedVelocities.Count != 0  && WorkingMap.SliderVelocities.Count == 0)
+            {
+                ImGui.SetScrollHereY(-5.0f);
+                NeedsToScroll = false;
+            }
+
             foreach (var sv in WorkingMap.SliderVelocities)
             {
                 var isSelected = SelectedVelocities.Contains(sv);
 
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
+
+                if (NeedsToScroll && SelectedVelocities.Count != 0 && SelectedVelocities.First() == sv)
+                {
+                    ImGui.SetScrollHereY(-5.0f);
+                    NeedsToScroll = false;
+                }
 
                 OnSvButtonClicked(sv, isSelected);
 
@@ -272,20 +330,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                         SelectedVelocities.Remove(sv);
 
                     if (SelectedVelocities.Count == 1)
-                    {
-                        TextTime = SelectedVelocities.First().StartTime.ToString(CultureInfo.InvariantCulture);
-                        TextMultiplier = $"{SelectedVelocities.First().Multiplier:0.00}";
-                    }
+                        SetInputTextToFirstSelected();
                 }
                 else
                 {
                     SelectedVelocities.Add(sv);
 
                     if (SelectedVelocities.Count == 1)
-                    {
-                        TextTime = SelectedVelocities.First().StartTime.ToString(CultureInfo.InvariantCulture);
-                        TextMultiplier = $"{SelectedVelocities.First().Multiplier:0.00}";
-                    }
+                        SetInputTextToFirstSelected();
                     else
                     {
                         TextTime = "";
@@ -333,6 +385,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             Shown = false;
             Dialog.Close();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SetInputTextToFirstSelected()
+        {
+            TextTime = SelectedVelocities.First().StartTime.ToString(CultureInfo.InvariantCulture);
+            TextMultiplier = $"{SelectedVelocities.First().Multiplier:0.00}";
         }
     }
 }

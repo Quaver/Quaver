@@ -109,7 +109,7 @@ namespace Quaver.Shared.Database.Maps
 
                         try
                         {
-                            newMap = Map.FromQua(map.LoadQua(), filePath);
+                            newMap = Map.FromQua(map.LoadQua(false), filePath);
                         }
                         catch (Exception e)
                         {
@@ -154,7 +154,7 @@ namespace Quaver.Shared.Database.Maps
                 // Found map that isn't cached in the database yet.
                 try
                 {
-                    var map = Map.FromQua(Qua.Parse(file), file);
+                    var map = Map.FromQua(Qua.Parse(file, false), file);
                     map.CalculateDifficulties();
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     InsertMap(map, file);
@@ -344,7 +344,7 @@ namespace Quaver.Shared.Database.Maps
                     if (!File.Exists(path))
                         continue;
 
-                    var map = Map.FromQua(Qua.Parse(path), path);
+                    var map = Map.FromQua(Qua.Parse(path, false), path);
                     map.CalculateDifficulties();
                     map.Id = MapsToUpdate[i].Id;
 
