@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as EditorScreen;
 
-                screen?.Ruleset.ActionManager.Perform(new EditorActionRemoveSliderVelocities(WorkingMap, SelectedVelocities));
+                screen?.Ruleset.ActionManager.Perform(new EditorActionRemoveSliderVelocities(WorkingMap, new List<SliderVelocityInfo>(SelectedVelocities)));
 
                 SelectedVelocities.Clear();
 
