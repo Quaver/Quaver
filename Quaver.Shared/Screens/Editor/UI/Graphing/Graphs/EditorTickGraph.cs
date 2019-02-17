@@ -124,10 +124,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         public void RemoveSliderVelocityLine(SliderVelocityInfo sv)
         {
             if (sv == null)
-            {
-                Console.WriteLine("What??");
                 return;
-            }
 
             if (SliderVelocityLines.ContainsKey(sv))
             {
@@ -135,6 +132,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
                 SliderVelocityLines.Remove(sv);
             }
 
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sv"></param>
+        public void MoveSliderVelocityLine(SliderVelocityInfo sv)
+        {
+            if (sv == null || !SliderVelocityLines.ContainsKey(sv))
+                return;
+
+            SliderVelocityLines[sv].Y = Height - Height * (float) (sv.StartTime / (AudioEngine.Track.Length));
             Container.ForceRecache();
         }
     }

@@ -21,6 +21,7 @@ namespace Quaver.Shared.Screens.Editor.Actions
         AddHitsound,
         RemoveHitsound,
         AddSliderVelocity,
-        RemoveSliderVelocities
+        RemoveSliderVelocities,
+        ChangeScrollVelocity
     }
 }

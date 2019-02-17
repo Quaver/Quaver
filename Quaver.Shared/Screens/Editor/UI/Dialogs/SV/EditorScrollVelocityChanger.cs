@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -53,6 +54,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// <summary>
         /// </summary>
         private bool NeedsToScroll { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private static Regex DigitsOnly { get; } = new Regex(@"[^\d]");
+
+        /// <summary>
+        /// </summary>
+        private static Regex DecimalRegex { get; } = new Regex(@"/^\d*\.?\d*$/");
+
+        /// <summary>
+        /// </summary>
+        private bool TextTimeFocusedInLastFrame { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool TextMultiplierFocusedInLastFrame { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -252,12 +269,39 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
             ImGui.Text("Time");
 
-            ImGui.InputText("", ref TextTime, 100, SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal);
+            if (ImGui.InputText("", ref TextTime, 100,
+                SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal))
+            {
+                if (string.IsNullOrEmpty(TextTime) || string.IsNullOrWhiteSpace(TextTime))
+                    TextTime = "0";
+
+                TextTime = OnlyDigits(TextTime);
+            }
+
+            // User stopped typing in the time field, so it needs to be updated
+            if (!ImGui.IsItemActive() && TextTimeFocusedInLastFrame)
+                UpdateSelectedVelocities();
+
+            TextTimeFocusedInLastFrame = ImGui.IsItemActive();
 
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text("Multiplier");
-            ImGui.InputText(" ", ref TextMultiplier, 100, SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal);
+
+            if (ImGui.InputText(" ", ref TextMultiplier, 100,
+                SelectedVelocities.Count == 0 ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.CharsDecimal))
+            {
+                if (string.IsNullOrEmpty(TextMultiplier) || string.IsNullOrWhiteSpace(TextMultiplier))
+                    TextMultiplier = "1.0";
+
+                TextMultiplier = Decimal(TextMultiplier);
+            }
+
+            // User stopped typing in multiplier frame
+            if (!ImGui.IsItemActive() && TextMultiplierFocusedInLastFrame)
+                UpdateSelectedVelocities();
+
+            TextMultiplierFocusedInLastFrame = ImGui.IsItemActive();
         }
 
         /// <summary>
@@ -402,6 +446,43 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             TextTime = SelectedVelocities.First().StartTime.ToString(CultureInfo.InvariantCulture);
             TextMultiplier = $"{SelectedVelocities.First().Multiplier:0.00}";
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string OnlyDigits(string num) => DigitsOnly.Replace(num, "");
+
+        /// <summary>
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string Decimal(string num) => DecimalRegex.Replace(num, "");
+
+        /// <summary>
+        /// </summary>
+        private void UpdateSelectedVelocities()
+        {
+            if (SelectedVelocities.Count == 0)
+                return;
+
+            var changes = new List<EditorScrollVelocityChangeInfo>();
+
+            foreach (var sv in SelectedVelocities)
+            {
+                var newTime = string.IsNullOrEmpty(TextTime) ? sv.StartTime : float.Parse(TextTime);
+                var newMultiplier = string.IsNullOrEmpty(TextMultiplier) ? sv.Multiplier : float.Parse(TextMultiplier);
+
+                // ReSharper disable twice CompareOfFloatsByEqualityOperator
+                if (sv.StartTime != newTime || sv.Multiplier != newMultiplier)
+                    changes.Add(new EditorScrollVelocityChangeInfo(sv, newTime, newMultiplier));
+            }
+
+            var game = GameBase.Game as QuaverGame;
+            var screen = game?.CurrentScreen as EditorScreen;
+
+            screen?.Ruleset.ActionManager.Perform(new EditorActionChangeScrollVelocity(WorkingMap, changes));
         }
     }
 }
