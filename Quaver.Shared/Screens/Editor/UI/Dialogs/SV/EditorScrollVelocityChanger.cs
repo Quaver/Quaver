@@ -472,13 +472,32 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             foreach (var sv in SelectedVelocities)
             {
                 var time = OnlyDigits(TextTime);
-                var multiplier = Decimal(TextMultiplier).Replace("+", "").Replace("/", "").Replace("*", "");
+                var multiplier = Decimal(TextMultiplier);
 
-                TextTime = time;
-                TextMultiplier = multiplier;
+                float newTime;
 
-                var newTime = string.IsNullOrEmpty(TextTime) ? sv.StartTime : float.Parse(time);
-                var newMultiplier = string.IsNullOrEmpty(TextMultiplier) ? sv.Multiplier : float.Parse(multiplier);
+                try
+                {
+                    newTime = string.IsNullOrEmpty(TextTime) ? sv.StartTime : float.Parse(time);
+                }
+                catch (Exception)
+                {
+                    newTime = sv.StartTime;
+                }
+
+                float newMultiplier;
+
+                try
+                {
+                    newMultiplier = string.IsNullOrEmpty(TextMultiplier) ? sv.Multiplier : float.Parse(multiplier);
+                }
+                catch (Exception e)
+                {
+                    newMultiplier = sv.Multiplier;
+                }
+
+                TextTime = newTime.ToString(CultureInfo.InvariantCulture);
+                TextMultiplier = $"{newMultiplier:.00}";
 
                 // ReSharper disable twice CompareOfFloatsByEqualityOperator
                 if (sv.StartTime != newTime || sv.Multiplier != newMultiplier)
