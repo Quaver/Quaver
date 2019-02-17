@@ -311,6 +311,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 else if (bwdDiff < fwdDiff)
                     time = timeBwd;
 
+                if (WorkingMap.TimingPoints.Count == 0)
+                    return;
+
                 PlaceObject(CompositionInputDevice.Mouse, lane, time);
             }
         }

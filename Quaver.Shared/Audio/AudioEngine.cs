@@ -96,14 +96,14 @@ namespace Quaver.Shared.Audio
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static double GetNearestSnapTimeFromTime(Qua map, Direction direction, int snap, double time)
         {
-            if (Track == null || Track.IsDisposed || Track.IsStopped)
-                throw new AudioEngineException("Cannot seek to nearest snap if a track isn't loaded");
-
             if (map == null)
                 throw new ArgumentNullException(nameof(map));
 
             // Get the current timing point
             var point = map.GetTimingPointAt(time);
+
+            if (point == null)
+                return 0;
 
             // Get the amount of milliseconds that each snap takes in the beat.
             var snapTimePerBeat = 60000 / point.Bpm / snap;
