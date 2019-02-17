@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI;
 using Quaver.Shared.Screens.Editor.UI.Details;
+using Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.SV;
 using Quaver.Shared.Screens.Editor.UI.Hitsounds;
@@ -71,7 +72,9 @@ namespace Quaver.Shared.Screens.Editor
 
         /// <summary>
         /// </summary>
-        public EditorScrollVelocityChanger ScrollVelocityChanger { get; set; }
+        public EditorScrollVelocityChanger ScrollVelocityChanger { get; }
+
+        public EditorGoToObjectsPanel GoToPanel { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -90,6 +93,7 @@ namespace Quaver.Shared.Screens.Editor
 
             var editorScreen = (EditorScreen) Screen;
             ScrollVelocityChanger = new EditorScrollVelocityChanger(editorScreen.WorkingMap);
+            GoToPanel = new EditorGoToObjectsPanel();
             editorScreen.ActiveLayerInterface.ValueChanged += OnActiveLayerInterfaceChanged;
         }
 

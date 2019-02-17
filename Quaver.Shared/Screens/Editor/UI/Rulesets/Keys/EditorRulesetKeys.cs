@@ -466,7 +466,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         ///     Deselects an individual HitObject
         /// </summary>
         /// <param name="h"></param>
-        private void DeselectHitObject(DrawableEditorHitObject h)
+        public void DeselectHitObject(DrawableEditorHitObject h)
         {
             var layer = View.LayerCompositor.ScrollContainer.AvailableItems[h.Info.EditorLayer];
 
@@ -674,7 +674,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             foreach (var h in SelectedHitObjects.OrderBy(x => x.Info.StartTime))
             {
-                copyString += $"{h.Info.StartTime}|2,";
+                copyString += $"{h.Info.StartTime}|{h.Info.Lane},";
                 Clipboard.Add(h.Info);
             }
 

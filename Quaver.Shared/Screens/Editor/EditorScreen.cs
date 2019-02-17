@@ -304,6 +304,9 @@ namespace Quaver.Shared.Screens.Editor
             if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
                 ChangePreviewTime((int) AudioEngine.Track.Time);
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                OpenGoToDialog();
+
             HandleAudioSeeking();
             HandleCtrlInput(gameTime);
             HandleBeatSnapChanges();
@@ -985,6 +988,16 @@ namespace Quaver.Shared.Screens.Editor
 
             if (!view.ScrollVelocityChanger.Shown)
                 view.ScrollVelocityChanger.Show();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void OpenGoToDialog()
+        {
+            var view = (EditorScreenView) View;
+
+            if (!view.GoToPanel.Shown)
+                view.GoToPanel.Show();
         }
     }
 }

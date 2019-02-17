@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             SetWindowSize();
 
             ImGui.Begin("Scroll Velocities", ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoCollapse |
-                                             ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoSavedSettings);
+                                             ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.AlwaysAutoResize);
 
             AddHeaderText();
             HandleAddRemoveButtons();

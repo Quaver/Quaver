@@ -1,40 +1,32 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
-*/
-
-using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.API.Maps;
 using Quaver.Shared.Scheduling;
 using Wobble;
-using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
+namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
 {
-    public class EditorScrollVelocityDialog : DialogScreen
+    public class EditorGoToObjectsDialog : DialogScreen
     {
+        /// <summary>
+        /// </summary>
+        public EditorGoToObjectsPanel Panel { get; }
+
         /// <summary>
         /// </summary>
         private bool IsClosing { get; set; }
 
-        /// <summary>
-        /// </summary>
-        private EditorScrollVelocityChanger Changer { get; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorScrollVelocityDialog(EditorScrollVelocityChanger changer) : base(0)
+        public EditorGoToObjectsDialog(EditorGoToObjectsPanel panel) : base(0)
         {
-            Changer = changer;
+            Panel = panel;
+
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 0.75f, 100));
 
             // ReSharper disable once VirtualMemberCallInConstructor
@@ -44,17 +36,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void CreateContent()
-        {
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Changer.Update(gameTime);
+            Panel.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -66,8 +51,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             base.Draw(gameTime);
 
-            if (Changer.Shown)
-                Changer.Draw(gameTime);
+            if (Panel.Shown)
+                Panel.Draw(gameTime);
 
             GameBase.Game.SpriteBatch.End();
         }
@@ -82,11 +67,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void CreateContent()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Changer.Hide();
+                Panel.Hide();
         }
 
         /// <summary>

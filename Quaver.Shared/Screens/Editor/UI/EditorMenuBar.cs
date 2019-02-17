@@ -183,6 +183,11 @@ namespace Quaver.Shared.Screens.Editor.UI
             if (ImGui.MenuItem("Set Audio Preview Time", "F4"))
                 Screen.ChangePreviewTime((int) AudioEngine.Track.Time);
 
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Go To Objects...", "F5"))
+                Screen.OpenGoToDialog();
+
             ImGui.EndMenu();
         }
 
