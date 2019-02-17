@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                     MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
-                var qua = Qua.Parse(realPath);
+                var qua = Qua.Parse(realPath, false);
                 game?.CurrentScreen.Exit(() => new EditorScreen(qua));
             }
             catch (Exception exception)

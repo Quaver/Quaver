@@ -435,7 +435,7 @@ namespace Quaver.Shared.Screens.Select
 
             try
             {
-                return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
             }
             catch (Exception)
             {

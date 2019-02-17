@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
             {
                 try
                 {
-                    return new EditorScreen(Qua.Parse(file));
+                    return new EditorScreen(Qua.Parse(file, false));
                 }
                 catch (Exception exception)
                 {

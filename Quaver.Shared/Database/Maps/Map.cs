@@ -262,7 +262,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public Qua LoadQua()
+        public Qua LoadQua(bool checkValidity = true)
         {
             // Reference to the parsed .qua file
             Qua qua;
@@ -272,7 +272,7 @@ namespace Quaver.Shared.Database.Maps
             {
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
-                    qua = Qua.Parse(quaPath);
+                    qua = Qua.Parse(quaPath, checkValidity);
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);

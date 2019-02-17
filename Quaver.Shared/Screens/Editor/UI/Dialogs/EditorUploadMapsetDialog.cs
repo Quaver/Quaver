@@ -334,7 +334,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                     if (Response.Code != MapsetSubmissionStatusCode.SuccessUpdated && Response.Code != MapsetSubmissionStatusCode.SuccessUploaded)
                         return;
 
-                    game?.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    game?.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua(false)));
                 })
             {
                 Parent = ContainingBox,
@@ -370,7 +370,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                     if (Response.Code != MapsetSubmissionStatusCode.SuccessUpdated && Response.Code != MapsetSubmissionStatusCode.SuccessUploaded)
                         return;
 
-                    game?.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
+                    game?.CurrentScreen.Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua(false)));
                 })
             {
                 Parent = ContainingBox,

@@ -89,6 +89,26 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            // Select all input
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.A))
+                {
+                    SelectedVelocities.Clear();
+                    SelectedVelocities.AddRange(WorkingMap.SliderVelocities);
+                }
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         protected override void RenderImguiLayout()
         {
             SetWindowSize();

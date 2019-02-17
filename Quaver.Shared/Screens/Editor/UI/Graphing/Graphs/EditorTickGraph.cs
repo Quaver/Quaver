@@ -122,8 +122,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
         /// <param name="sv"></param>
         public void RemoveSliderVelocityLine(SliderVelocityInfo sv)
         {
-            SliderVelocityLines[sv].Destroy();
-            SliderVelocityLines.Remove(sv);
+            if (SliderVelocityLines.ContainsKey(sv))
+            {
+                SliderVelocityLines[sv].Destroy();
+                SliderVelocityLines.Remove(sv);
+            }
 
             Container.ForceRecache();
         }

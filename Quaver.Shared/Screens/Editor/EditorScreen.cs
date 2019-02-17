@@ -843,23 +843,7 @@ namespace Quaver.Shared.Screens.Editor
                     // Makes the file different to prevent exception thrown in the DB for same md5 checksum
                     Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
                     BackgroundFile = "",
-                    Mode = GameMode.Keys4,
-                    TimingPoints =
-                    {
-                        new TimingPointInfo()
-                        {
-                            Bpm = 0,
-                            StartTime = 0
-                        }
-                    },
-                    HitObjects =
-                    {
-                        new HitObjectInfo()
-                        {
-                            StartTime = 0,
-                            Lane = 1
-                        }
-                    }
+                    Mode = GameMode.Keys4
                 };
 
                 // Create a new directory to house the map.
