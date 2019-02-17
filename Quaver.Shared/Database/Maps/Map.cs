@@ -242,7 +242,6 @@ namespace Quaver.Shared.Database.Maps
                 Description = qua.Description,
                 MapId = qua.MapId,
                 MapSetId = qua.MapSetId,
-                Bpm = qua.GetCommonBpm(),
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
@@ -250,6 +249,15 @@ namespace Quaver.Shared.Database.Maps
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
             };
+
+            try
+            {
+                map.Bpm = qua.GetCommonBpm();
+            }
+            catch (Exception)
+            {
+                map.Bpm = 0;
+            }
 
             map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
             map.DateAdded = DateTime.Now;
@@ -315,7 +323,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void CalculateDifficulties()
         {
-            var qua = LoadQua();
+            var qua = LoadQua(false);
 
             Difficulty05X = qua.SolveDifficulty(ModIdentifier.Speed05X).OverallDifficulty;
             Difficulty06X = qua.SolveDifficulty(ModIdentifier.Speed06X).OverallDifficulty;
