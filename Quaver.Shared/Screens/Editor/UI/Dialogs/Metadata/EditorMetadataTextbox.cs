@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
                 AllowSubmission = false
             };
 
-            Textbox.AddBorder(Color.LightGray);
+            Textbox.AddBorder(Color.LightGray, 2);
         }
 
         public override string GetValue() => Textbox.RawText;
