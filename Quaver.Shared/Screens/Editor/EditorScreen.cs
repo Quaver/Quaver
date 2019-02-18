@@ -212,8 +212,7 @@ namespace Quaver.Shared.Screens.Editor
                 if (AudioEngine.Track.IsDisposed)
                     AudioEngine.LoadCurrentTrack();
 
-                if (DialogManager.Dialogs.Count == 0)
-                    HandleInput(gameTime);
+                HandleInput(gameTime);
             }
 
             base.Update(gameTime);
@@ -281,35 +280,58 @@ namespace Quaver.Shared.Screens.Editor
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
-            if (Exiting || DialogManager.Dialogs.Count != 0)
+            if (Exiting)
                 return;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                HandleKeyPressEscape();
+            if (DialogManager.Dialogs.Count == 0)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                    HandleKeyPressEscape();
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value) && ActiveLayerInterface.Value != EditorLayerInterface.Editing)
-                HandleKeyPressSpace();
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                    OpenMetadataDialog();
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
-                OpenMetadataDialog();
+                // Timing Setup
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                    OpenTimingPointDialog();
 
-            // Timing Setup
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet.");
+                // Scroll Velocities
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
+                    OpenScrollVelocityDialog();
 
-            // Scroll Velocities
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
-                OpenScrollVelocityDialog();
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
+                    ChangePreviewTime((int) AudioEngine.Track.Time);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
-                ChangePreviewTime((int) AudioEngine.Track.Time);
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                    OpenGoToDialog();
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
-                OpenGoToDialog();
+                HandleAudioSeeking();
 
-            HandleAudioSeeking();
-            HandleCtrlInput(gameTime);
-            HandleBeatSnapChanges();
+                HandleCtrlInput(gameTime);
+                HandleBeatSnapChanges();
+            }
+
+            var view = (EditorScreenView) View;
+
+            if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.Last() == view.TimingPointChanger.Dialog)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value) && ActiveLayerInterface.Value != EditorLayerInterface.Editing)
+                    HandleKeyPressSpace();
+
+                if (DialogManager.Dialogs.Count != 0)
+                {
+                    HandleAudioSeeking();
+
+                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    {
+                        if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))
+                            ChangeAudioPlaybackRate(Direction.Backward);
+
+                        if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
+                            ChangeAudioPlaybackRate(Direction.Forward);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -493,6 +515,7 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.W))
                 MapManager.Selected.Value.OpenFolder();
+
 
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorDecreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Backward);
@@ -902,6 +925,12 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
+            if (DialogManager.Dialogs.Count != 0)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before test playing!");
+                return;
+            }
+
             AudioEngine.Track.Rate = 1.0f;
 
             Exit(() =>
@@ -998,6 +1027,18 @@ namespace Quaver.Shared.Screens.Editor
 
             if (!view.GoToPanel.Shown)
                 view.GoToPanel.Show();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void OpenTimingPointDialog()
+        {
+            var view = (EditorScreenView) View;
+
+            if (!view.TimingPointChanger.Shown)
+                view.TimingPointChanger.Show();
+
+            view.ControlBar.Parent = view.TimingPointChanger.Dialog;
         }
     }
 }

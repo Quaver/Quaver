@@ -101,7 +101,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
         /// <summary>
         /// </summary>
-        private void InitializeLines(bool forceRefresh = false)
+        public void InitializeLines(bool forceRefresh = false)
         {
             if (CachedLines.ContainsKey(Ruleset.Screen.BeatSnap.Value) && !forceRefresh)
             {
@@ -361,5 +361,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnBeatSnapColorTypeChanged(object sender, BindableValueChangedEventArgs<EditorBeatSnapColor> e) => RecolorLines();
+
+        /// <summary>
+        /// </summary>
+        public void CompletelyReinitialize() => ThreadScheduler.Run(() =>
+        {
+            foreach (var item in CachedLines)
+                item.Value.ForEach(x => x.Destroy());
+
+            CachedLines.Clear();
+            InitializeLines(true);
+        });
     }
 }

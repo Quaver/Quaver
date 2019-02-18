@@ -173,7 +173,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Screen.OpenMetadataDialog();
 
             if (ImGui.MenuItem("Timing Points", "F2"))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                Screen.OpenTimingPointDialog();
 
             if (ImGui.MenuItem("Scroll Velocities", "F3"))
                 Screen.OpenScrollVelocityDialog();

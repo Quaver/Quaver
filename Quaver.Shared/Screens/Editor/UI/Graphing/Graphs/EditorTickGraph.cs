@@ -137,6 +137,32 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
 
         /// <summary>
         /// </summary>
+        /// <param name="tp"></param>
+        public void AddTimingPointLine(TimingPointInfo tp)
+        {
+            TimingPointLines[tp] = CreateTimingPointLine(tp);
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        public void RemoveTimingPointLine(TimingPointInfo tp)
+        {
+            if (tp == null)
+                return;
+
+            if (TimingPointLines.ContainsKey(tp))
+            {
+                TimingPointLines[tp].Destroy();
+                TimingPointLines.Remove(tp);
+            }
+
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sv"></param>
         public void MoveSliderVelocityLine(SliderVelocityInfo sv)
         {
@@ -144,6 +170,22 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing.Graphs
                 return;
 
             SliderVelocityLines[sv].Y = Height - Height * (float) (sv.StartTime / (AudioEngine.Track.Length));
+            Container.ForceRecache();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        public void MoveTimingPointLine(TimingPointInfo tp)
+        {
+            if (tp == null || !TimingPointLines.ContainsKey(tp))
+                return;
+
+            TimingPointLines[tp].Y = Height - Height * (float) (tp.StartTime / AudioEngine.Track.Length);
+
+            if (TimingPointLines[tp].Y < 0)
+                TimingPointLines[tp].Y = 0;
+
             Container.ForceRecache();
         }
     }

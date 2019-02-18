@@ -114,8 +114,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Details
 
             var timingPoint = Screen.WorkingMap.GetTimingPointAt(AudioEngine.Track.Time);
 
-            if (timingPoint != LastTimingPoint)
-                Bpm.Text = $"BPM: {timingPoint.Bpm:0.00}";
+            if (timingPoint == null)
+                Bpm.Text = "BPM: No Timing Point!";
+            else if (timingPoint != LastTimingPoint)
+                Bpm.Text = $"BPM: {timingPoint?.Bpm:0.00}";
 
             LastTimingPoint = timingPoint;
             LastObjectCount = Screen.WorkingMap.HitObjects.Count;
