@@ -33,7 +33,7 @@ namespace Quaver.Shared.Audio
         public static Map Map { get; private set; }
 
         /// <summary>
-        ///     Cancellation token to stop the existing background load tasks
+        ///     Cancellation token to prevent multiple audio tracks playing at once
         /// </summary>
         private static CancellationTokenSource Source { get; set; } = new CancellationTokenSource();
 
