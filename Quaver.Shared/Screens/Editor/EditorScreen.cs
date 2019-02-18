@@ -819,6 +819,7 @@ namespace Quaver.Shared.Screens.Editor
 
             // Add the new map to the db.
             var map = Map.FromQua(qua, path);
+            map.DateAdded = DateTime.Now;
             map.Id = MapDatabaseCache.InsertMap(map, path);
 
             // Reload the mapsets
