@@ -7,6 +7,8 @@
 
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Config;
@@ -31,22 +33,46 @@ namespace Quaver.Shared.Audio
         public static Map Map { get; private set; }
 
         /// <summary>
+        ///     Cancellation token to prevent multiple audio tracks playing at once
+        /// </summary>
+        private static CancellationTokenSource Source { get; set; } = new CancellationTokenSource();
+
+        /// <summary>
         ///     Loads the track for the currently selected map.
         /// </summary>
         public static void LoadCurrentTrack()
         {
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
+
             Map = MapManager.Selected.Value;
+            var token = Source.Token;
 
-            if (Track != null && !Track.IsDisposed)
-                Track.Dispose();
-
-            Track = new AudioTrack(MapManager.CurrentAudioPath)
+            try
             {
-                Volume = ConfigManager.VolumeMusic.Value,
-                Rate = ModHelper.GetRateFromMods(ModManager.Mods),
-            };
+                if (Track != null && !Track.IsDisposed)
+                    Track.Dispose();
 
-            Track.ToggleRatePitching(ConfigManager.Pitched.Value);
+                var newTrack = new AudioTrack(MapManager.CurrentAudioPath)
+                {
+                    Volume = ConfigManager.VolumeMusic.Value,
+                    Rate = ModHelper.GetRateFromMods(ModManager.Mods),
+                };
+
+                token.ThrowIfCancellationRequested();
+
+                Track = newTrack;
+                Track.ToggleRatePitching(ConfigManager.Pitched.Value);
+            }
+            catch (OperationCanceledException e)
+            {
+                // ignored
+            }
+            catch (Exception e)
+            {
+                //Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
