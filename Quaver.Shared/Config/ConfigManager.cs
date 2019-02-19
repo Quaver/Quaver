@@ -329,6 +329,36 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
+        ///     Keybinding for leftward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for rightward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateRight { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for upward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateUp { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for downward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateDown { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for backward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateBack { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for selection in navigation interface.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -512,6 +542,12 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
+            KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
+            KeyNavigateUp = ReadValue(@"KeyNavigateUp", Keys.Up, data);
+            KeyNavigateDown = ReadValue(@"KeyNavigateDown", Keys.Down, data);
+            KeyNavigateBack = ReadValue(@"KeyNavigateBack", Keys.Escape, data);
+            KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Enter, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -601,6 +637,14 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
+
+
+                    KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateDown.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateBack.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateSelect.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.ValueChanged += AutoSaveConfiguration;

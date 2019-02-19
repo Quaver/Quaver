@@ -195,7 +195,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateBack.Value))
                 return;
 
             switch (view.ActiveContainer)
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter) || AvailableMapsets.Count == 0)
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateSelect.Value) || AvailableMapsets.Count == 0)
                 return;
 
             switch (view.ActiveContainer)
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Select
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateRight.Value))
                 return;
 
             switch (view.ActiveContainer)
@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Select
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateLeft.Value))
                 return;
 
             switch (view.ActiveContainer)

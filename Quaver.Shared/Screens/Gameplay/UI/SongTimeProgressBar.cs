@@ -64,7 +64,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                     X = 10
                 };
 
-                TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-00:00", new Vector2(0.6f, 0.6f))
+                var startText = (new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue)).ToString("mm:ss");
+                TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-" + startText, new Vector2(0.6f, 0.6f))
                 {
                     Parent = this,
                     Alignment = Alignment.TopRight,

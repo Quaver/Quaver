@@ -382,6 +382,12 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
                     new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
                     new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
+                    new SettingsKeybind(this, "Interface - Select", ConfigManager.KeyNavigateSelect),
+                    new SettingsKeybind(this, "Interface - Back", ConfigManager.KeyNavigateBack),
+                    new SettingsKeybind(this, "Interface - Navigate Left", ConfigManager.KeyNavigateLeft),
+                    new SettingsKeybind(this, "Interface - Navigate Right", ConfigManager.KeyNavigateRight),
+                    new SettingsKeybind(this, "Interface - Navigate Up", ConfigManager.KeyNavigateUp),
+                    new SettingsKeybind(this, "Interface - Navigate Down", ConfigManager.KeyNavigateDown),
                     new SettingsKeybind(this, "Editor - Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                     new SettingsKeybind(this, "Editor - Decrease Audio Plaback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
                     new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
