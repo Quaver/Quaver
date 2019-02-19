@@ -240,9 +240,38 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TapToPause { get; private set; }
 
         /// <summary>
+        ///     The top lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverTopHeight { get; private set; }
+
+        /// <summary>
+        ///     The bottom lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverBottomHeight { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a top lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a bottom lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverBottom { get; private set; }
+
+        /// <summary>
+        ///     If enabled, the lane covers will be displayed under the ui elements.
+        /// </summary>
+        internal static Bindable<bool> UIElementsOverLaneCover { get; private set; }
+
+        /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayComboAlerts { get; private set; }
 
         /// <summary>
         ///     The scroll speed used in the editor.
@@ -283,6 +312,21 @@ namespace Quaver.Shared.Config
         ///     If the metronome in the editor will play half beats.
         /// </summary>
         internal static Bindable<bool> EditorMetronomePlayHalfBeats { get; private set; }
+
+        /// <summary>
+        ///     If true, it'll display the numbers for the song time progress
+        /// </summary>
+        internal static Bindable<bool> DisplaySongTimeProgressNumbers { get; private set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
+        /// <summary></summary>
+        ///     If true, the user will skip the results screen after quitting the game.
+        /// </summary>
+        internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -503,6 +547,15 @@ namespace Quaver.Shared.Config
             EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
             EditorPlayMetronome = ReadValue(@"EditorPlayMetronome", true, data);
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
+            DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
+            DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
+            DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
+            LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
+            LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
+            LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
+            LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
+            UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -585,6 +638,15 @@ namespace Quaver.Shared.Config
                     EditorHitObjectsMidpointAnchored.ValueChanged += AutoSaveConfiguration;
                     EditorPlayMetronome.ValueChanged += AutoSaveConfiguration;
                     EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
+                    DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
+                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
+                    DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTop.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
+                    UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

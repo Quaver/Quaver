@@ -11,7 +11,7 @@ namespace Quaver.Shared.Modifiers.Mods
 {
     public class ModNoLongNotes : IGameplayModifier
     {
-        public string Name { get; set; } = "No Long Notes";
+        public string Name { get; set; } = "No LN";
 
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.NoLongNotes;
 
@@ -21,7 +21,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool Ranked { get; set; } = false;
 
-        public ModIdentifier[] IncompatibleMods { get; set; } = { };
+        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Inverse, ModIdentifier.FullLN };
 
         public void InitializeMod() {}
     }

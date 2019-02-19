@@ -83,6 +83,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public Sprite DistantOverlay { get; private set; }
 
         /// <summary>
+        ///     Container that contains the elements for lane cover.
+        /// </summary>
+        public Container LaneCoverContainer { get; private set; }
+
+        /// <summary>
         ///     Sprite that displays the current combo.
         /// </summary>
         public NumberDisplay ComboDisplay { get; private set; }
@@ -159,14 +164,30 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitObjectContainer();
             }
 
-            // Create Stage Elements
             CreateDistantOverlay();
-            CreateComboDisplay();
-            CreateHitError();
-            CreateJudgementHitBurst();
-            CreateHitLighting();
+
+            // Depending on what the config value is, we'll display ui elements over the lane cover.
+            // Note: Lane cover will always be displayed over the receptors due to the creation order.
+            if (ConfigManager.UIElementsOverLaneCover.Value)
+            {
+                CreateLaneCoverOverlay();
+                CreateComboDisplay();
+                CreateHitError();
+                CreateHitLighting();
+                CreateJudgementHitBurst();
+                CreateSongInfo();
+            }
+            else
+            {
+                CreateComboDisplay();
+                CreateHitError();
+                CreateJudgementHitBurst();
+                CreateHitLighting();
+                CreateSongInfo();
+                CreateLaneCoverOverlay();
+            }
+
             CreateHealthBar();
-            CreateSongInfo();
         }
 
         /// <summary>
@@ -331,6 +352,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
+        ///     Creates the lane cover container and overlay sprites.
+        /// </summary>
+        private void CreateLaneCoverOverlay()
+        {
+            LaneCoverContainer = new Container
+            {
+                Size = new ScalableVector2(Playfield.ForegroundContainer.Width, Playfield.ForegroundContainer.Height, 0, 0),
+                Alignment = Alignment.TopLeft,
+                Parent = Playfield.ForegroundContainer
+            };
+
+            // Apply the covers.
+            ApplyTopLaneCover();
+            ApplyBottomLaneCover();
+        }
+
+        /// <summary>
         ///     Creates the combo display sprite.
         /// </summary>
         private void CreateComboDisplay()
@@ -488,6 +526,46 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Receptors[index].Image = pressed ? Skin.NoteReceptorsDown[index] : Skin.NoteReceptorsUp[index];
             ColumnLightingObjects[index].Active = pressed;
+        }
+
+        /// <summary>
+        ///     Applies a top lane cover if enabled in settings.
+        /// </summary>
+        private void ApplyTopLaneCover()
+        {
+            if (!ConfigManager.LaneCoverTop.Value)
+                return;
+
+            var yAxis = -LaneCoverContainer.Height + ConfigManager.LaneCoverTopHeight.Value / 100f * LaneCoverContainer.Height;
+
+            var laneCoverTop = new Sprite
+            {
+                Image = Skin.LaneCoverTop,
+                Y = yAxis,
+                Size = new ScalableVector2(LaneCoverContainer.Width, 700),
+                Alignment = Alignment.BotLeft,
+                Parent = LaneCoverContainer,
+            };
+        }
+
+        /// <summary>
+        ///     Applies the bottom lane cover if enabled in settings.
+        /// </summary>
+        private void ApplyBottomLaneCover()
+        {
+            if (!ConfigManager.LaneCoverBottom.Value)
+                return;
+
+            var yAxis = LaneCoverContainer.Height - ConfigManager.LaneCoverBottomHeight.Value / 100f * LaneCoverContainer.Height;
+
+            var laneCoverBottom = new Sprite
+            {
+                Image = Skin.LaneCoverBottom,
+                Y = yAxis,
+                Size = new ScalableVector2(LaneCoverContainer.Width, 700),
+                Alignment = Alignment.TopLeft,
+                Parent = LaneCoverContainer,
+            };
         }
     }
 }

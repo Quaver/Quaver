@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             Alpha = 0.75f;
             UsePreviousSpriteBatchOptions = true;
             Text.UsePreviousSpriteBatchOptions = true;
-            Size = new ScalableVector2(60, Modifier.Height * 0.75f);
+            Size = new ScalableVector2(Width + 20, Modifier.Height * 0.75f);
 
             Deselect();
         }

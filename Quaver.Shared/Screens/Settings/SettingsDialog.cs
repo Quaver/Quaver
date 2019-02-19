@@ -321,9 +321,18 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
+                    new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),
+                    new SettingsBool(this, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
+                    new SettingsBool(this, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
-                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
+                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
+                    new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
+                    new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
+                    new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
+                    new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
+                    new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
+                    new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
                 }),
                 // Editor
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()

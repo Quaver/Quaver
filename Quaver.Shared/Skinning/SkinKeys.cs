@@ -117,7 +117,21 @@ namespace Quaver.Shared.Skinning
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
-#endregion
+        internal Color TimingLineColor { get; private set; }
+
+        internal Color SongTimeProgressInactiveColor { get; private set; }
+
+        internal Color SongTimeProgressActiveColor { get; private set; }
+
+        internal float JudgementCounterAlpha { get; private set; }
+
+        internal Color JudgementCounterFontColor { get; private set; }
+
+        internal int JudgementCounterSize { get; private set; }
+
+        internal bool DrawLongNoteEnd { get; private set; }
+
+        #endregion
 
 #region TEXTURES
 
@@ -204,6 +218,18 @@ namespace Quaver.Shared.Skinning
         ///
         /// </summary>
         internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
+
+        // ----- Lane Covers ----- //
+
+        /// <summary>
+        ///     Top lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     Bottom lane cover texture.
+        /// </summary>
+        internal Texture2D LaneCoverBottom { get; private set; }
 
 #endregion
 
@@ -317,6 +343,13 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
+                    DrawLongNoteEnd = false;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -361,6 +394,13 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
+                    DrawLongNoteEnd = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -420,6 +460,13 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
+                    DrawLongNoteEnd = false;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -468,6 +515,13 @@ namespace Quaver.Shared.Skinning
                     HitErrorPosY = 55;
                     HitErrorHeight = 10;
                     HitErrorChevronSize = 8;
+                    TimingLineColor = Color.White;
+                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
+                    SongTimeProgressActiveColor = Color.Red;
+                    JudgementCounterAlpha = 1;
+                    JudgementCounterFontColor = Color.Black;
+                    JudgementCounterSize = 45;
+                    DrawLongNoteEnd = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -528,6 +582,13 @@ namespace Quaver.Shared.Skinning
             HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
             HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
+            TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
+            SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
+            SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
+            JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
+            JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
+            JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
+            DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
         }
 
         /// <summary>
@@ -548,6 +609,11 @@ namespace Quaver.Shared.Skinning
             StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", false);
             StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", false);
             StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", false);
+            #endregion
+
+            #region LANECOVER
+            LaneCoverTop = LoadTexture(SkinKeysFolder.LaneCover, "cover-top", false);
+            LaneCoverBottom = LoadTexture(SkinKeysFolder.LaneCover, "cover-bottom", false);
             #endregion
 
             #region MISC

@@ -19,7 +19,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
-using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -144,6 +143,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 HitObjectInfo nextObject = null;
 
                 var earliestObjectTime = int.MaxValue;
+
+                // Some objects are already queued in ActiveNoteLanes, check that first.
+                foreach (var objectsInLane in ActiveNoteLanes)
+                {
+                    if (objectsInLane.Count == 0)
+                        continue;
+
+                    var hitObject = objectsInLane.Peek();
+
+                    if (hitObject.Info.StartTime >= earliestObjectTime)
+                        continue;
+
+                    earliestObjectTime = hitObject.Info.StartTime;
+                    nextObject = hitObject.Info;
+                }
 
                 foreach (var objectsInLane in HitObjectQueueLanes)
                 {
@@ -309,7 +323,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     screenView.UpdateScoreboardUsers();
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int)Ruleset.Screen.Timing.Time, Judgement.Miss,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.StartTime, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
@@ -369,7 +383,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     const Judgement missedJudgement = Judgement.Okay;
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, (int)Ruleset.Screen.Timing.Time, Judgement.Okay,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, Judgement.Okay,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
                     Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
@@ -437,6 +451,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 foreach (var hitObject in ActiveNoteLanes[i])
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
                 foreach (var hitObject in DeadNoteLanes[i])
+                    hitObject.ForceUpdateLongnote(CurrentTrackPosition);
+                foreach (var hitObject in HeldLongNoteLanes[i])
                     hitObject.ForceUpdateLongnote(CurrentTrackPosition);
             }
         }
@@ -532,7 +548,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         var sv = new SliderVelocityInfo()
                         {
                             StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                            Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                         };
                         ScrollVelocities.Add(sv);
 
@@ -545,7 +561,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // SV does not start after the last timing point
                 else
                 {
-                    for (var j = index; j < qua.SliderVelocities.Count; j++)
+                    int j;
+                    for (j = index; j < qua.SliderVelocities.Count; j++)
                     {
                         // SV starts before the first timing point
                         if (qua.SliderVelocities[j].StartTime < qua.TimingPoints[0].StartTime)
@@ -553,7 +570,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[0].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[0].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -569,7 +586,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                             var sv = new SliderVelocityInfo()
                             {
                                 StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
                             };
                             ScrollVelocities.Add(sv);
 
@@ -578,13 +595,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                                 svFound = true;
                         }
 
-                        // Update current index if SV falls out of range for optimization
                         else
                         {
-                            index = j;
                             break;
                         }
                     }
+
+                    // Update the current index.
+                    index = j;
                 }
 
                 // Create BPM SV if no inheriting point is overlapping the current timing point
@@ -593,7 +611,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var sv = new SliderVelocityInfo()
                     {
                         StartTime = qua.TimingPoints[i].StartTime,
-                        Multiplier = (float)(qua.TimingPoints[i].Bpm / commonBpm)
+                        Multiplier = qua.TimingPoints[i].Bpm / commonBpm
                     };
                     ScrollVelocities.Add(sv);
                 }

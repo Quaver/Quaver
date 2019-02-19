@@ -6,7 +6,9 @@
 */
 
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -59,6 +61,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             X = offsetX;
             Height = 2;
             Parent = playfield.Stage.TimingLineContainer;
+            Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].TimingLineColor;
         }
 
         /// <summary>
