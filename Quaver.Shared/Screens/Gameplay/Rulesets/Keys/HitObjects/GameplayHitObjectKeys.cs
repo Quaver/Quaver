@@ -306,6 +306,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (CurrentLongNoteSize <= 0)
                 LongNoteBodySprite.Visible = false;
 
+            // However, if the LN end is drawn and the actual LN size is <= 0, we can stop drawing the LN end as it has
+            // probably been completely overlapped by the LN start at this point (and is sliding below the receptors).
+            if (CurrentLongNoteSize + LongNoteSizeDifference <= 0)
+                LongNoteEndSprite.Visible = false;
+
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteSize;
 
