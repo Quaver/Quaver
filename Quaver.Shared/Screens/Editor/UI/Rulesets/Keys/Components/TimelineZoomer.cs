@@ -1,8 +1,8 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework;
@@ -42,7 +42,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
         /// </summary>
         private void CreateZoomButtons()
         {
-            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_in), "Zoom Timeline In", 50, Alignment.TopLeft,
+            ZoomIn = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_sign_in_a_black_circle), "Zoom In (PGUP)",
+                50, Alignment.TopLeft,
                 (o, e) => ConfigManager.EditorScrollSpeedKeys.Value++)
             {
                 Parent = this,
@@ -51,7 +52,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Size = new ScalableVector2(Width / 2, Width / 2)
             };
 
-            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_zoom_out), "Zoom Timeline Out", -50, Alignment.BotLeft,
+            ZoomOut = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_minus_sign_inside_a_black_circle), "Zoom Out (PGDN)",
+                -50, Alignment.BotLeft,
                 (o, e) => ConfigManager.EditorScrollSpeedKeys.Value--)
             {
                 Parent = this,
@@ -71,6 +73,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(Width, 2),
+                Alpha = 0.45f
             };
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -79,6 +82,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(2, Height),
+                Alpha = 0.45f
             };
 
             // ReSharper disable once ObjectCreationAsStatement
@@ -87,6 +91,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                 Parent = this,
                 Alignment = Alignment.BotLeft,
                 Size = new ScalableVector2(Width, 2),
+                Alpha = 0.45f
             };
         }
     }

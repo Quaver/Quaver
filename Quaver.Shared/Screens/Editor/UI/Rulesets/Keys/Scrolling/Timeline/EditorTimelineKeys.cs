@@ -1,8 +1,8 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -12,7 +12,9 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -51,6 +53,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
 
             InitializeLines();
             Ruleset.Screen.BeatSnap.ValueChanged += OnBeatSnapChanged;
+            ConfigManager.EditorOnlyShowMeasureLines.ValueChanged += OnOnlyShowMeasureLinesChanged;
+            ConfigManager.EditorBeatSnapColorType.ValueChanged += OnBeatSnapColorTypeChanged;
         }
 
         /// <inheritdoc />
@@ -89,13 +93,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             foreach (var item in CachedLines)
                 item.Value.ForEach(x => x.Destroy());
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             Ruleset.Screen.BeatSnap.ValueChanged -= OnBeatSnapChanged;
+            ConfigManager.EditorOnlyShowMeasureLines.ValueChanged -= OnOnlyShowMeasureLinesChanged;
+            ConfigManager.EditorBeatSnapColorType.ValueChanged -= OnBeatSnapColorTypeChanged;
         }
 
         /// <summary>
         /// </summary>
-        private void InitializeLines(bool forceRefresh = false)
+        public void InitializeLines(bool forceRefresh = false)
         {
             if (CachedLines.ContainsKey(Ruleset.Screen.BeatSnap.Value) && !forceRefresh)
             {
@@ -148,7 +154,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                     if (measureBeat && time >= tp.StartTime)
                         measureCount++;
 
-                    var height = measureBeat ? 4 : 1;
+                    var height = measureBeat ? 5 : 2;
 
                     lines.Add(new TimelineTickLine(Container, tp, time, i, measureCount)
                     {
@@ -157,6 +163,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
                         X = Container.AbsolutePosition.X + 2,
                         Y = Container.HitPositionY - time * Container.TrackSpeed - height,
                         Tint = GetLineColor(i % Ruleset.Screen.BeatSnap.Value, i),
+                        Visible = ConfigManager.EditorOnlyShowMeasureLines.Value && measureBeat || !ConfigManager.EditorOnlyShowMeasureLines.Value,
                         Height = height
                     });
                 }
@@ -179,8 +186,91 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         ///     Gets an individual lioe color for the snap line.
         /// </summary>
         /// <param name="val"></param>
+        /// <param name="i"></param>
         /// <returns></returns>
         private Color GetLineColor(int val, int i)
+        {
+            switch (ConfigManager.EditorBeatSnapColorType.Value)
+            {
+                case EditorBeatSnapColor.Default:
+                    return GetDefaultLineColor(val, i);
+                case EditorBeatSnapColor.Legacy:
+                    return GetLegacyLineColor(val, i);
+                case EditorBeatSnapColor.White:
+                    return Color.White;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+         /// <summary>
+        ///     Gets the "legacy" line colors (osu! basically).
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Color GetDefaultLineColor(int val, int i)
+        {
+            switch (Ruleset.Screen.BeatSnap.Value)
+            {
+                // 1/1th
+                case 1:
+                    return Color.White;
+                // 1/2nd
+                case 2:
+                    switch (val)
+                    {
+                        case 0:
+                            return Color.White;
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/4th
+                case 4:
+                    switch (val)
+                    {
+                        case 0:
+                        case 4:
+                            return Color.White;
+                        case 1:
+                        case 3:
+                            return ColorHelper.HexToColor("#af4fb8");
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/3rd, 1/6th, 1/12th,
+                case 3:
+                case 6:
+                case 12:
+                    if (val % 3 == 0)
+                        return Color.White;
+                    else if (val == 0)
+                        return Color.White;
+                    else
+                        return ColorHelper.HexToColor("#4e94b7");
+                // 1/8th, 1//16th
+                case 8:
+                case 16:
+                    if (val == 0)
+                        return Color.White;
+                    else if (( i - 1 ) % 2 == 0)
+                        return ColorHelper.HexToColor("#af4fb8");
+                    else if (i % 4 == 0)
+                        return ColorHelper.HexToColor("#4e94b7");
+                    else
+                        return Colors.MainAccent;
+                default:
+                    return Color.White;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the "legacy" line colors (osu! basically).
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Color GetLegacyLineColor(int val, int i)
         {
             switch (Ruleset.Screen.BeatSnap.Value)
             {
@@ -240,6 +330,47 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => ThreadScheduler.Run(() => InitializeLines());
+        private void OnBeatSnapChanged(object sender, BindableValueChangedEventArgs<int> e) => ThreadScheduler.Run(() =>
+        {
+            InitializeLines();
+            RecolorLines();
+            ShowMeasureLineIfApplicable();
+        });
+
+        /// <summary>
+        ///     Called when the user wants to display/not display measure lines
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOnlyShowMeasureLinesChanged(object sender, BindableValueChangedEventArgs<bool> e) => ShowMeasureLineIfApplicable();
+
+        /// <summary>
+        ///     Recolors the beat snap lines to the appropriate config color
+        /// </summary>
+        private void RecolorLines() => Lines.ForEach(x => x.Tint = GetLineColor(x.Index % Ruleset.Screen.BeatSnap.Value, x.Index));
+
+        /// <summary>
+        ///     Shows ONLY measure lines if the user wants it in config
+        /// </summary>
+        private void ShowMeasureLineIfApplicable() => Lines.ForEach(x => x.Visible = ConfigManager.EditorOnlyShowMeasureLines.Value && x.IsMeasureLine
+                                                                                 || !ConfigManager.EditorOnlyShowMeasureLines.Value);
+
+        /// <summary>
+        ///     Called when the user changes their snap colors in config.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBeatSnapColorTypeChanged(object sender, BindableValueChangedEventArgs<EditorBeatSnapColor> e) => RecolorLines();
+
+        /// <summary>
+        /// </summary>
+        public void CompletelyReinitialize() => ThreadScheduler.Run(() =>
+        {
+            foreach (var item in CachedLines)
+                item.Value.ForEach(x => x.Destroy());
+
+            CachedLines.Clear();
+            InitializeLines(true);
+        });
     }
 }

@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Select
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 ||
                 MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
-                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
+                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -460,7 +460,7 @@ namespace Quaver.Shared.Screens.Select
 
             try
             {
-                return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
             }
             catch (Exception)
             {

@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -18,6 +18,7 @@ using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Skinning;
@@ -137,7 +138,8 @@ namespace Quaver.Shared.Database.Maps
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
             // Skins
-            } else if (e.EndsWith(".qs"))
+            }
+            else if (e.EndsWith(".qs"))
             {
                 switch (screen.Type)
                 {
@@ -148,6 +150,18 @@ namespace Quaver.Shared.Database.Maps
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before importing a skin");
+                        return;
+                }
+            }
+            else if (e.EndsWith(".mp3") || e.EndsWith(".ogg"))
+            {
+                switch (screen.Type)
+                {
+                    case QuaverScreenType.Select:
+                        EditorScreen.HandleNewMapsetCreation(e);
+                        break;
+                    default:
+                        NotificationManager.Show(NotificationLevel.Error, "Go to the song select screen first to create a new mapset!");
                         return;
                 }
             }

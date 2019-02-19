@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework;
@@ -20,6 +20,10 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         public SpriteText Name { get; }
 
+        protected Color HoverColor { get; set; } = ColorHelper.HexToColor("#cacaca");
+
+        protected Color UnhoverColor { get; set; } = Color.Black;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -28,7 +32,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public SettingsItem(SettingsDialog dialog, string name)
         {
             Size = new ScalableVector2(dialog.ContentContainer.Width - dialog.DividerLine.X - 10, 40);
-            Tint = Color.Black;
+            Tint = UnhoverColor;
             Alpha = 0.65f;
 
             Name = new SpriteText(Fonts.SourceSansProSemiBold, name, 13)
@@ -39,6 +43,24 @@ namespace Quaver.Shared.Screens.Settings.Elements
             };
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sprite"></param>
+        /// <param name="name"></param>
+        public SettingsItem(Drawable sprite, string name)
+        {
+            Size = new ScalableVector2(sprite.Width - 10, 40);
+            Tint = Color.Black;
+            Alpha = 0.65f;
+
+            Name = new SpriteText(Fonts.Exo2SemiBold, name, 13)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = 15
+            };
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -46,7 +68,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         public override void Update(GameTime gameTime)
         {
             FadeToColor(GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                    ? ColorHelper.HexToColor("#cacaca") : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
+                    ? HoverColor : UnhoverColor, gameTime.ElapsedGameTime.TotalMilliseconds, 70);
 
             base.Update(gameTime);
         }

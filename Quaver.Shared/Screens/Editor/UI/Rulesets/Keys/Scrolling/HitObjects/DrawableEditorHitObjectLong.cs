@@ -1,8 +1,17 @@
-﻿using System;
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
+*/
+
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -44,6 +53,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             TextureBody = texBody;
             TextureTail = texTail;
             CreateLongNoteSprite();
+            SelectionSprite.Parent = Body;
+            SelectionSprite.Alignment = Alignment.MidLeft;
         }
 
         /// <inheritdoc />
@@ -98,7 +109,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
                 Size = new ScalableVector2(Width, (float) Container.LaneSize * TextureTail.Height / TextureTail.Width),
                 Y = -Body.Height,
             };
-
         }
 
         /// <summary>
@@ -110,14 +120,23 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
+
+            SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
         private float GetLongNoteHeight()
-            => Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed -
-                        (float) Container.LaneSize * TextureTail.Height / TextureTail.Width / 2f - Height / 2f - Y);
+        {
+            var height = Math.Abs(Container.HitPositionY - Info.EndTime * Container.TrackSpeed -
+                            (float) Container.LaneSize * TextureTail.Height / TextureTail.Width / 2 - Height / 2f - Y);
+
+            if (ConfigManager.EditorHitObjectsMidpointAnchored.Value)
+                height -= Height / 2f;
+
+            return height;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -125,5 +144,53 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <returns></returns>
         public override bool CheckIfOnScreen() => base.CheckIfOnScreen() ||
                                                   AudioEngine.Track.Time >= Info.StartTime && AudioEngine.Track.Time <= Info.EndTime + 1000;
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void AppearAsActive()
+        {
+            base.AppearAsActive();
+            Body.Tint = Tint;
+            Tail.Tint = Tint;
+        }
+
+        /// <summary>
+        ///     Makes the long note appear as if it is dead/inactive.
+        /// </summary>
+        public void AppearAsInactive()
+        {
+            var col = new Color(160, 160, 160);
+            Tint = col;
+            Body.Tint = col;
+            Tail.Tint = col;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void AppearAsSelected()
+        {
+            SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
+            SelectionSprite.Visible = true;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void AppearAsHiddenInLayer()
+        {
+            base.AppearAsHiddenInLayer();
+            Body.Tint = Tint;
+            Tail.Tint = Tint;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public override bool IsHovered(Vector2 mousePos) => base.IsHovered(mousePos) || Body.ScreenRectangle.Contains(mousePos) ||
+                                                            Tail.ScreenRectangle.Contains(mousePos);
     }
 }

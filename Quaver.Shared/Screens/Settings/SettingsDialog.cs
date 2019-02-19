@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -333,6 +333,17 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
                     new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                     new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                }),
+                // Editor
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()
+                {
+                    new SettingsEditorSnapColors(this),
+                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds),
+                    new SettingsBool(this, "Enable Metronome", ConfigManager.EditorPlayMetronome),
+                    new SettingsBool(this, "Play Metronome Half-Beats", ConfigManager.EditorMetronomePlayHalfBeats),
+                    new SettingsBool(this, "Show Lane Divider Lines", ConfigManager.EditorShowLaneDividerLines),
+                    new SettingsBool(this, "Only Show Measure Lines", ConfigManager.EditorOnlyShowMeasureLines),
+                    new SettingsBool(this, "Anchor HitObjects At Midpoint", ConfigManager.EditorHitObjectsMidpointAnchored),
                 }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()

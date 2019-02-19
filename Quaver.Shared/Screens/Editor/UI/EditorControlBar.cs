@@ -1,8 +1,8 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             View = view;
             Map = map;
-            Size = new ScalableVector2(WindowManager.Width, 48);
+            Size = new ScalableVector2(WindowManager.Width, 38);
             Tint = ColorHelper.HexToColor("#161616");
             Alpha = 1;
 
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = 20
             };
 
@@ -149,18 +149,18 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonPlayPauseTrack.X + ButtonPlayPauseTrack.Width + 15
             };
 
             ButtonStopTrack.Clicked += (o, e) => EditorScreen.StopTrack();
 
             // Restart
-            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow), "Restart Track", padding)
+            ButtonRestartTrack = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_refresh_page_option), "Restart Track", padding)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonStopTrack.X + ButtonStopTrack.Width + 15
             };
 
@@ -182,17 +182,24 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = -ButtonPlayPauseTrack.X,
             };
 
-            ButtonPlayTest.Clicked += (o, e) => NotificationManager.Show(NotificationLevel.Warning, "Play Testing is not implemented yet!");
+            ButtonPlayTest.Clicked += (o, e) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+
+                // ReSharper disable once SwitchStatementMissingSomeCases
+                screen?.GoPlayTest();
+            };
 
             ButtonBeatSnap = new EditorControlButton(FontAwesome.Get(FontAwesomeIcon.fa_align_justify), "Change Beat Snap", padding, Alignment.MidRight)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonPlayTest.X - ButtonPlayTest.Width - 20
             };
 
@@ -210,7 +217,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(18,18),
                 X = ButtonBeatSnap.X - ButtonBeatSnap.Width - 20
             };
 
@@ -219,7 +226,8 @@ namespace Quaver.Shared.Screens.Editor.UI
                 var game = GameBase.Game as QuaverGame;
                 var screen = game?.CurrentScreen as EditorScreen;
                 var ruleset = screen?.Ruleset as EditorRulesetKeys;
-                ruleset?.ToggleScrollDirection();
+                //cruleset?.ToggleScrollDirection();
+                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
             };
         }
 
@@ -231,15 +239,17 @@ namespace Quaver.Shared.Screens.Editor.UI
             {
                 Parent = this,
                 X = ButtonRestartTrack.X + ButtonRestartTrack.Width + 15,
-                FontSize = 24,
+                FontSize = 22,
+                Y = -2,
                 Alignment = Alignment.MidLeft
             };
 
             TextAudioTimeLeft = new SpriteTextBitmap(FontsBitmap.MuliBold, "-00:00.000")
             {
                 Parent = this,
+                Y = -2,
                 X = ButtonScrollDirection.AbsolutePosition.X - ButtonScrollDirection.Width - 15,
-                FontSize = 24,
+                FontSize = 22,
                 Alignment = Alignment.MidLeft
             };
 

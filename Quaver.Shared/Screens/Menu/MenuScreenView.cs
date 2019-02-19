@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -37,6 +37,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -415,10 +416,11 @@ namespace Quaver.Shared.Screens.Menu
 
                 try
                 {
-                    return new EditorScreen(MapManager.Selected.Value.LoadQua());
+                    return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
                     return new MenuScreen();
                 }

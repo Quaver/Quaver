@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
@@ -21,6 +22,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
@@ -457,9 +459,21 @@ namespace Quaver.Shared.Screens.Gameplay
                 ScreenChangedToRedOnFailure = true;
             }
 
-            // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
+                if (Screen.IsPlayTesting)
+                {
+                    if (AudioEngine.Track.IsPlaying)
+                    {
+                        AudioEngine.Track.Pause();
+                        AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    }
+
+                    Screen.Exit(() => new EditorScreen(Screen.Map));
+                    ResultsScreenLoadInitiated = true;
+                    return;
+                }
+
                 Screen.Exit(() =>
                 {
                     if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
@@ -467,6 +481,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     return new ResultScreen(Screen);
                 }, 500);
+
                 ResultsScreenLoadInitiated = true;
             }
 

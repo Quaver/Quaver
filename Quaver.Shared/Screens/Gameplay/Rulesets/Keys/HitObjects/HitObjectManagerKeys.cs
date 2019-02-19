@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -136,11 +136,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override HitObjectInfo? NextHitObject
+        public override HitObjectInfo NextHitObject
         {
             get
             {
-                HitObjectInfo? nextObject = null;
+                HitObjectInfo nextObject = null;
+
                 var earliestObjectTime = int.MaxValue;
 
                 // Some objects are already queued in ActiveNoteLanes, check that first.
@@ -198,7 +199,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     isHoldingAnyNotes = true;
                 }
 
-                return !(nextObject.Value.StartTime - CurrentAudioPosition < GameplayAudioTiming.StartDelay + 5000) && !isHoldingAnyNotes;
+                return !(nextObject.StartTime - CurrentAudioPosition < GameplayAudioTiming.StartDelay + 5000) && !isHoldingAnyNotes;
             }
         }
 
@@ -511,15 +512,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Kills a hold pool object.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="destroy"></param>
+        /// <param name="gameplayHitObject"></param>
         public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject)
         {
             // Change start time and LN size.
             gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentAudioPosition);
-            var temp = gameplayHitObject.Info;
-            temp.StartTime = (int)CurrentAudioPosition;
-            gameplayHitObject.Info = temp;
             gameplayHitObject.CurrentlyBeingHeld = false;
             gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
             gameplayHitObject.Kill();
