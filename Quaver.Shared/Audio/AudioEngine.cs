@@ -63,7 +63,7 @@ namespace Quaver.Shared.Audio
                 token.ThrowIfCancellationRequested();
 
                 Track = newTrack;
-                Track.ToggleRatePitching(ConfigManager.Pitched.Value);
+                Track.ApplyRate(ConfigManager.Pitched.Value);
             }
             catch (OperationCanceledException e)
             {
