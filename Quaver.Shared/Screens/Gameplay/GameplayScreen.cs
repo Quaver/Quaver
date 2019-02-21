@@ -224,11 +224,11 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            var testingQua = ObjectHelper.DeepClone(map);
-            testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
-
             if (isPlayTesting)
             {
+                var testingQua = ObjectHelper.DeepClone(map);
+                testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+
                 Map = testingQua;
                 OriginalEditorMap = map;
             }
