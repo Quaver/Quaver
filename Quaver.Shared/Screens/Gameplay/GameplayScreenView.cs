@@ -469,7 +469,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
                     }
 
-                    Screen.Exit(() => new EditorScreen(Screen.Map));
+                    Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
                     ResultsScreenLoadInitiated = true;
                     return;
                 }

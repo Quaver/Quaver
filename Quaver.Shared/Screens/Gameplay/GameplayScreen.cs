@@ -73,6 +73,13 @@ namespace Quaver.Shared.Screens.Gameplay
         public Qua Map { get; }
 
         /// <summary>
+        ///     If test playing, a new .qua is made with only objects from that section of the map
+        ///     It is set to <see cref="Map"/>. This keeps the original map, so we can use it
+        ///     to go back to the editor after testing.
+        /// </summary>
+        public Qua OriginalEditorMap { get; }
+
+        /// <summary>
         ///     The list of scores displayed on the leaderboard.
         /// </summary>
         public List<Score> LocalScores { get; }
@@ -212,11 +219,22 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="scores"></param>
         /// <param name="replay"></param>
         /// <param name="isPlayTesting"></param>
+        /// <param name="playTestTime"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            Map = map;
+            if (isPlayTesting)
+            {
+                var testingQua = ObjectHelper.DeepClone(map);
+                testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+
+                Map = testingQua;
+                OriginalEditorMap = map;
+            }
+            else
+                Map = map;
+
             LocalScores = scores;
             MapHash = md5;
             LoadedReplay = replay;
@@ -396,7 +414,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     AudioEngine.Track.Seek(PlayTestAudioTime);
                 }
 
-                Exit(() => new EditorScreen(Map));
+                Exit(() => new EditorScreen(OriginalEditorMap));
             }
 
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
@@ -684,7 +702,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Use ChangeScreen here to give instant feedback. Can't be threaded
             if (IsPlayTesting)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, null, true, PlayTestAudioTime));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime));
             else if (InReplayMode)
                 QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
             else
