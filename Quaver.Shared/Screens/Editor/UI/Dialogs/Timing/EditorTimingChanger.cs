@@ -292,6 +292,40 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
 
             TextTimeFocusedInLastFrame = ImGui.IsItemActive();
 
+            ImGui.SameLine();
+
+            if (SelectedTimingPoints.Count == 1)
+            {
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+
+                if (ImGui.ArrowButton("1", ImGuiDir.Left))
+                {
+                    var tp = SelectedTimingPoints.First();
+
+                    screen?.Ruleset.ActionManager.Perform(new EditorActionChangeTimingPoint(WorkingMap, new List<EditorTimingPointChangeInfo>
+                    {
+                        new EditorTimingPointChangeInfo(tp, tp.StartTime - 1, tp.Bpm)
+                    }));
+
+                    TextTime = $"{tp.StartTime:0.00}";
+                }
+
+                ImGui.SameLine();
+
+                if (ImGui.ArrowButton("2", ImGuiDir.Right))
+                {
+                    var tp = SelectedTimingPoints.First();
+
+                    screen?.Ruleset.ActionManager.Perform(new EditorActionChangeTimingPoint(WorkingMap, new List<EditorTimingPointChangeInfo>
+                    {
+                        new EditorTimingPointChangeInfo(tp, tp.StartTime + 1, tp.Bpm)
+                    }));
+
+                    TextTime = $"{tp.StartTime:0.00}";
+                }
+            }
+
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text("BPM");
