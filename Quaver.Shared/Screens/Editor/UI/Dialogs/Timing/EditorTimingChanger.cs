@@ -326,7 +326,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
                 }
             }
 
-
             ImGui.Dummy(new Vector2(0, 10));
 
             ImGui.Text("BPM");
