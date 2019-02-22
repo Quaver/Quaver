@@ -1,25 +1,17 @@
 language: csharp
-solution: Quaver.sln
-os:
-- osx
-env:
-global:
-- Configuration=Public
-
+mono: none
+dotnet: 2.1
 git:
-  submodules: false
-  
-branches:
-  only:
-  - master
-
-before_install:
-- git clone ssh://git@github.com/Swan/Quaver.Online.git
-
+    submodules: true
 install:
-- wget -O MonoGame.pkg "http://teamcity.monogame.net/guestAuth/repository/download/MonoGame_PackageMacAndLinux/.lastSuccessful/MonoGame.pkg?branch_MonoGame=%3Cdefault%3E"
-- sudo installer -pkg "MonoGame.pkg" -target /
-
+  - dotnet restore
 script:
-- nuget restore Quaver.sln
-- msbuild Quaver/Quaver.csproj /p:Configuration=Public /v:d /t:Build
+  - dotnet build ./Quaver
+after_success:
+ - wget https://raw.githubusercontent.com/Swan/travis-ci-discord-webhook/master/send.sh
+ - chmod +x send.sh
+ - ./send.sh success $WEBHOOK_URL
+after_failure:
+ - wget https://raw.githubusercontent.com/Swan/travis-ci-discord-webhook/master/send.sh
+ - chmod +x send.sh
+ - ./send.sh failure $WEBHOOK_URL

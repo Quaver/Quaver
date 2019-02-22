@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -321,9 +321,29 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
+                    new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),
+                    new SettingsBool(this, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
+                    new SettingsBool(this, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
                     new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
-                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause)
+                    new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
+                    new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
+                    new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
+                    new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
+                    new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
+                    new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
+                    new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                }),
+                // Editor
+                new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()
+                {
+                    new SettingsEditorSnapColors(this),
+                    new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds),
+                    new SettingsBool(this, "Enable Metronome", ConfigManager.EditorPlayMetronome),
+                    new SettingsBool(this, "Play Metronome Half-Beats", ConfigManager.EditorMetronomePlayHalfBeats),
+                    new SettingsBool(this, "Show Lane Divider Lines", ConfigManager.EditorShowLaneDividerLines),
+                    new SettingsBool(this, "Only Show Measure Lines", ConfigManager.EditorOnlyShowMeasureLines),
+                    new SettingsBool(this, "Anchor HitObjects At Midpoint", ConfigManager.EditorHitObjectsMidpointAnchored),
                 }),
                 // Skinning
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
@@ -362,6 +382,12 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsKeybind(this, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
                     new SettingsKeybind(this, "Quick Exit", ConfigManager.KeyQuickExit),
                     new SettingsKeybind(this, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
+                    new SettingsKeybind(this, "Interface - Select", ConfigManager.KeyNavigateSelect),
+                    new SettingsKeybind(this, "Interface - Back", ConfigManager.KeyNavigateBack),
+                    new SettingsKeybind(this, "Interface - Navigate Left", ConfigManager.KeyNavigateLeft),
+                    new SettingsKeybind(this, "Interface - Navigate Right", ConfigManager.KeyNavigateRight),
+                    new SettingsKeybind(this, "Interface - Navigate Up", ConfigManager.KeyNavigateUp),
+                    new SettingsKeybind(this, "Interface - Navigate Down", ConfigManager.KeyNavigateDown),
                     new SettingsKeybind(this, "Editor - Pause/Play Track", ConfigManager.KeyEditorPausePlay),
                     new SettingsKeybind(this, "Editor - Decrease Audio Plaback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
                     new SettingsKeybind(this, "Editor - Increase Audio Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)

@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -59,10 +59,15 @@ namespace Quaver.Shared.Modifiers
             switch (modIdentifier)
             {
                 case ModIdentifier.Speed05X:
+                case ModIdentifier.Speed055X:
                 case ModIdentifier.Speed06X:
+                case ModIdentifier.Speed065X:
                 case ModIdentifier.Speed07X:
+                case ModIdentifier.Speed075X:
                 case ModIdentifier.Speed08X:
+                case ModIdentifier.Speed085X:
                 case ModIdentifier.Speed09X:
+                case ModIdentifier.Speed095X:
                 case ModIdentifier.Speed11X:
                 case ModIdentifier.Speed12X:
                 case ModIdentifier.Speed13X:
@@ -98,6 +103,15 @@ namespace Quaver.Shared.Modifiers
                     break;
                 case ModIdentifier.Randomize:
                     gameplayModifier = new ModRandomize();
+                    break;
+                case ModIdentifier.Inverse:
+                    gameplayModifier = new ModInverse();
+                    break;
+                case ModIdentifier.FullLN:
+                    gameplayModifier = new ModFullLN();
+                    break;
+                case ModIdentifier.Mirror:
+                    gameplayModifier = new ModMirror();
                     break;
                 default:
                     return;

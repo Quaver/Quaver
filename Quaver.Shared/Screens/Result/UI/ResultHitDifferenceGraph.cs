@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -23,6 +23,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Primitives;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 
@@ -31,9 +32,19 @@ namespace Quaver.Shared.Screens.Result.UI
     public class ResultHitDifferenceGraph : Sprite
     {
         /// <summary>
-        ///     The size of each dot.
+        ///     The size of each hit dot.
         /// </summary>
         private const float DotSize = 3;
+
+        /// <summary>
+        ///     The size of each miss dot.
+        /// </summary>
+        private const float MissDotSize = 5;
+
+        /// <summary>
+        ///     The largest of the dot sizes. Used for things like minimum graph width and dot positioning.
+        /// </summary>
+        private static float MaxDotSize => Math.Max(DotSize, MissDotSize);
 
         /// <summary>
         ///     The score processor.
@@ -41,9 +52,16 @@ namespace Quaver.Shared.Screens.Result.UI
         private ScoreProcessor Processor { get; set; }
 
         /// <summary>
-        ///     Hit stats that we care about (only hits), also releases scaled down according to their window multiplier.
+        ///     Hit stats with meaningful hit differences which are drawn as regular dots. This includes hits
+        ///     within the judgement range. LN release hit differences are scaled down by their multiplier.
         /// </summary>
-        private List<HitStat> FilteredStats { get; set; }
+        private List<HitStat> StatsWithHitDifference { get; set; }
+
+        /// <summary>
+        ///     Hit stats without meaningful hit differences which are drawn as centered dots. This includes hits
+        ///     outside of the judgement range (early LN releases) and misses (including late LN releases).
+        /// </summary>
+        private List<HitStat> StatsWithoutHitDifference { get; set; }
 
         /// <summary>
         ///     Time of the first hit. Set in FilterHitStats().
@@ -76,17 +94,22 @@ namespace Quaver.Shared.Screens.Result.UI
 
             CreateMiddleLine();
             CreateJudgementAreas();
-            CreateEarlyLateText();
 
             // Make some fake hits for debugging.
             // CreateFakeHitStats();
 
-            // Exit early if there are no dots to draw.
-            if (Processor.Stats == null)
-                return;
+            // Draw the dots if there are any.
+            if (Processor.Stats != null)
+            {
+                FilterHitStats();
+                CreateDotsWithHitDifference();
+                CreateDotsWithoutHitDifference();
+            }
 
-            FilterHitStats();
-            CreateDots();
+            CreateEarlyLateText();
+
+            AddBorder(Color.White);
+            Border.Alpha = 0.6f;
         }
 
         /// <summary>
@@ -108,7 +131,7 @@ namespace Quaver.Shared.Screens.Result.UI
             if (totalLength == 0)
                 return Width / 2;
 
-            return (time - EarliestHitTime) * ((Width - DotSize) / totalLength) + DotSize / 2;
+            return (time - EarliestHitTime) * ((Width - MaxDotSize) / totalLength) + MaxDotSize / 2;
         }
 
         /// <summary>
@@ -239,15 +262,17 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateEarlyLateText()
         {
+            var unscaledLargestHitWindow = LargestHitWindow / ModHelper.GetRateFromMods(Processor.Mods);
+
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.SourceSansProSemiBold, $"Late (+{LargestHitWindow}ms)", 13)
+            new SpriteText(Fonts.SourceSansProSemiBold, $"Late (+{unscaledLargestHitWindow}ms)", 13)
             {
                 Parent = this,
                 X = 2
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteText(Fonts.SourceSansProSemiBold, $"Early (-{LargestHitWindow}ms)", 13)
+            new SpriteText(Fonts.SourceSansProSemiBold, $"Early (-{unscaledLargestHitWindow}ms)", 13)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -260,52 +285,51 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void FilterHitStats()
         {
-            FilteredStats = new List<HitStat>();
+            StatsWithHitDifference = new List<HitStat>();
+            StatsWithoutHitDifference = new List<HitStat>();
             EarliestHitTime = int.MaxValue;
             LatestHitTime = int.MinValue;
 
-            // We only care about hits within the largest hit window.
-            var statsWeCareAbout =
-                from breakdown in Processor.Stats
-                where breakdown.Type == HitStatType.Hit
-                where Math.Abs(breakdown.HitDifference) <= LargestHitWindow
-                select breakdown;
-
-            foreach (var breakdown in statsWeCareAbout)
+            foreach (var breakdown in Processor.Stats)
             {
                 EarliestHitTime = Math.Min(EarliestHitTime, breakdown.SongPosition);
                 LatestHitTime = Math.Max(LatestHitTime, breakdown.SongPosition);
 
-                // Scale LN release hit errors to match regular hits.
-                if (breakdown.KeyPressType == KeyPressType.Release)
+                var hitDifference = breakdown.HitDifference;
+                if (breakdown.KeyPressType == KeyPressType.Release && breakdown.Judgement != Judgement.Miss)
                 {
-                    FilteredStats.Add(new HitStat(breakdown.Type, breakdown.KeyPressType, breakdown.HitObject,
-                        breakdown.SongPosition, breakdown.Judgement,
-                        (int) (breakdown.HitDifference / Processor.WindowReleaseMultiplier[breakdown.Judgement]),
-                        breakdown.Accuracy, breakdown.Health));
+                    // Scale LN release hit errors to match regular hits.
+                    hitDifference = (int) (breakdown.HitDifference /
+                                           Processor.WindowReleaseMultiplier[breakdown.Judgement]);
                 }
+
+                var hitStat = new HitStat(breakdown.Type, breakdown.KeyPressType, breakdown.HitObject,
+                    breakdown.SongPosition, breakdown.Judgement, hitDifference, breakdown.Accuracy,
+                    breakdown.Health);
+
+                // No need to check for Type == Miss as all of them have hitDifference == int.MinValue.
+                if (hitDifference != int.MinValue && Math.Abs(hitDifference) <= LargestHitWindow)
+                    StatsWithHitDifference.Add(hitStat);
                 else
-                {
-                    FilteredStats.Add(breakdown);
-                }
+                    StatsWithoutHitDifference.Add(hitStat);
             }
         }
 
         /// <summary>
-        ///     Creates dots for the individual hit differences.
+        ///     Creates dots for hits with meaningful hit differences.
         /// </summary>
-        private void CreateDots()
+        private void CreateDotsWithHitDifference()
         {
             // Exit if we don't have any dots to draw.
-            if (FilteredStats.Count == 0)
+            if (StatsWithHitDifference.Count == 0)
                 return;
 
             // Return if the graph isn't wide enough.
-            if (Width < DotSize)
+            if (Width < MaxDotSize)
                 return;
 
             // Create a sprite for every dot.
-            foreach (var breakdown in FilteredStats)
+            foreach (var breakdown in StatsWithHitDifference)
             {
                 // ReSharper disable once ObjectCreationAsStatement
                 new Sprite
@@ -316,6 +340,31 @@ namespace Quaver.Shared.Screens.Result.UI
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (DotSize / 2),
                     Y = (int) HitDifferenceToY(breakdown.HitDifference),
+                    Alignment = Alignment.MidLeft,
+                };
+            }
+        }
+
+        /// <summary>
+        ///     Creates dots for hits without meaningful hit differences.
+        /// </summary>
+        private void CreateDotsWithoutHitDifference()
+        {
+            // Return if the graph isn't wide enough.
+            if (Width < MaxDotSize)
+                return;
+
+            foreach (var breakdown in StatsWithoutHitDifference)
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new Sprite
+                {
+                    Parent = this,
+                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[breakdown.Judgement],
+                    Size = new ScalableVector2(MissDotSize, MissDotSize),
+                    Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
+                    X = (int) TimeToX(breakdown.SongPosition) - (int) (MissDotSize / 2),
+                    Y = 0,
                     Alignment = Alignment.MidLeft,
                 };
             }

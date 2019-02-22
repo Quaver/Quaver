@@ -1,8 +1,8 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2019 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework;
@@ -41,14 +41,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         public bool IsInView { get; set; }
 
         /// <summary>
-        ///     The text that displays the measure in the song.
-        /// </summary>
-        private SpriteTextBitmap TextMeasure { get; set; }
-
-        /// <summary>
         ///     Determines if this line is for a measure.
         /// </summary>
-        private bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
+        public bool IsMeasureLine => Index / Container.Ruleset.Screen.BeatSnap.Value % 4 == 0
                                       && Index % Container.Ruleset.Screen.BeatSnap.Value == 0 && Time >= TimingPoint.StartTime;
 
         /// <inheritdoc />
@@ -69,14 +64,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
             if (!IsMeasureLine)
                 return;
 
-            TextMeasure = new SpriteTextBitmap(FontsBitmap.MuliBold, measureCount.ToString())
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                FontSize = 28
-            };
-
-            TextMeasure.X = -TextMeasure.Width - 15;
             Y = -2;
         }
 
@@ -84,15 +71,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime)
-        {
-            DrawToSpriteBatch();
-
-            if (!IsMeasureLine)
-                return;
-
-            TextMeasure.DrawToSpriteBatch();
-        }
+        public override void Draw(GameTime gameTime) => DrawToSpriteBatch();
 
         /// <summary>
         ///     Checks if the timing line is on-screen.

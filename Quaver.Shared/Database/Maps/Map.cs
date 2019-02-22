@@ -2,21 +2,26 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.Server.Client;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using SQLite;
 using Wobble.Bindables;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -154,10 +159,15 @@ namespace Quaver.Shared.Database.Maps
 
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
+        public double Difficulty055X { get; set; }
         public double Difficulty06X { get; set; }
+        public double Difficulty065X { get; set; }
         public double Difficulty07X { get; set; }
+        public double Difficulty075X { get; set; }
         public double Difficulty08X { get; set; }
+        public double Difficulty085X { get; set; }
         public double Difficulty09X { get; set; }
+        public double Difficulty095X { get; set; }
         public double Difficulty10X { get; set; }
         public double Difficulty11X { get; set; }
         public double Difficulty12X { get; set; }
@@ -202,6 +212,19 @@ namespace Quaver.Shared.Database.Maps
         public bool NeedsOnlineUpdate { get; set; }
 
         /// <summary>
+        ///     Determines if the map is newly created and should open the metadata screen in the editor.
+        /// </summary>
+        [Ignore]
+        public bool NewlyCreated { get; set; }
+
+        /// <summary>
+        ///     If set to true, when the user loads the map up in the editor, it
+        ///     will prompt the user if they would like to remove all HitObjects from the map.
+        /// </summary>
+        [Ignore]
+        public bool AskToRemoveHitObjects { get; set; }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>
@@ -224,7 +247,6 @@ namespace Quaver.Shared.Database.Maps
                 Description = qua.Description,
                 MapId = qua.MapId,
                 MapSetId = qua.MapSetId,
-                Bpm = qua.GetCommonBpm(),
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
@@ -232,6 +254,15 @@ namespace Quaver.Shared.Database.Maps
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
             };
+
+            try
+            {
+                map.Bpm = qua.GetCommonBpm();
+            }
+            catch (Exception)
+            {
+                map.Bpm = 0;
+            }
 
             map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
             map.DateAdded = DateTime.Now;
@@ -244,7 +275,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public Qua LoadQua()
+        public Qua LoadQua(bool checkValidity = true)
         {
             // Reference to the parsed .qua file
             Qua qua;
@@ -254,7 +285,7 @@ namespace Quaver.Shared.Database.Maps
             {
                 case MapGame.Quaver:
                     var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
-                    qua = Qua.Parse(quaPath);
+                    qua = Qua.Parse(quaPath, checkValidity);
                     break;
                 case MapGame.Osu:
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
@@ -297,13 +328,18 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void CalculateDifficulties()
         {
-            var qua = LoadQua();
+            var qua = LoadQua(false);
 
             Difficulty05X = qua.SolveDifficulty(ModIdentifier.Speed05X).OverallDifficulty;
+            Difficulty055X = qua.SolveDifficulty(ModIdentifier.Speed055X).OverallDifficulty;
             Difficulty06X = qua.SolveDifficulty(ModIdentifier.Speed06X).OverallDifficulty;
+            Difficulty065X = qua.SolveDifficulty(ModIdentifier.Speed065X).OverallDifficulty;
             Difficulty07X = qua.SolveDifficulty(ModIdentifier.Speed07X).OverallDifficulty;
+            Difficulty075X = qua.SolveDifficulty(ModIdentifier.Speed075X).OverallDifficulty;
             Difficulty08X = qua.SolveDifficulty(ModIdentifier.Speed08X).OverallDifficulty;
+            Difficulty085X = qua.SolveDifficulty(ModIdentifier.Speed085X).OverallDifficulty;
             Difficulty09X = qua.SolveDifficulty(ModIdentifier.Speed09X).OverallDifficulty;
+            Difficulty095X = qua.SolveDifficulty(ModIdentifier.Speed095X).OverallDifficulty;
             Difficulty10X = qua.SolveDifficulty().OverallDifficulty;
             Difficulty11X = qua.SolveDifficulty(ModIdentifier.Speed11X).OverallDifficulty;
             Difficulty12X = qua.SolveDifficulty(ModIdentifier.Speed12X).OverallDifficulty;
@@ -325,14 +361,24 @@ namespace Quaver.Shared.Database.Maps
         {
             if (mods.HasFlag(ModIdentifier.Speed05X))
                 return Difficulty05X;
+            if (mods.HasFlag(ModIdentifier.Speed055X))
+                return Difficulty055X;
             if (mods.HasFlag(ModIdentifier.Speed06X))
                 return Difficulty06X;
+            if (mods.HasFlag(ModIdentifier.Speed065X))
+                return Difficulty065X;
             if (mods.HasFlag(ModIdentifier.Speed07X))
                 return Difficulty07X;
+            if (mods.HasFlag(ModIdentifier.Speed075X))
+                return Difficulty075X;
             if (mods.HasFlag(ModIdentifier.Speed08X))
                 return Difficulty08X;
+            if (mods.HasFlag(ModIdentifier.Speed085X))
+                return Difficulty085X;
             if (mods.HasFlag(ModIdentifier.Speed09X))
                 return Difficulty09X;
+            if (mods.HasFlag(ModIdentifier.Speed095X))
+                return Difficulty095X;
             if (mods.HasFlag(ModIdentifier.Speed11X))
                 return Difficulty11X;
             if (mods.HasFlag(ModIdentifier.Speed12X))
@@ -355,6 +401,56 @@ namespace Quaver.Shared.Database.Maps
                 return Difficulty20X;
 
             return Difficulty10X;
+        }
+
+        /// <summary>
+        ///     Opens the browser to visit the mapset's page.
+        /// </summary>
+        public void VisitMapsetPage()
+        {
+            if (MapSetId == -1)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "This mapset is not uploaded to the Quaver servers.");
+                return;
+            }
+
+            BrowserHelper.OpenURL(MapId != -1 ? $"{OnlineClient.WEBSITE_URL}/mapsets/map/{MapId}" : $"{OnlineClient.WEBSITE_URL}/mapsets/{MapSetId}");
+        }
+
+        /// <summary>
+        ///     Opens the folder to the mapset while highlighting the file.
+        /// </summary>
+        public void OpenFolder()
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot open a folder for a map loaded from another game.");
+                return;
+            }
+
+            var path = $"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}";
+            Utils.NativeUtils.HighlightInFileManager(path);
+        }
+
+        /// <summary>
+        ///     Opens the .qua file
+        /// </summary>
+        public void OpenFile()
+        {
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot open a .qua loaded from another game.");
+                return;
+            }
+
+            try
+            {
+                Process.Start("notepad.exe", "\"" + $"{ConfigManager.SongDirectory.Value}/{Directory}/{Path}".Replace("/", "\\") + "\"");
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the file.");
+            }
         }
     }
 

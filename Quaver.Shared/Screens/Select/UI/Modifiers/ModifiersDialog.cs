@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
@@ -181,6 +182,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft
                 },
 
+                new DrawableModifierBool(this, new ModMirror())
+                {
+                    Alignment = Alignment.TopLeft
+                },
+
                 new DrawableModifierBool(this, new ModAutoplay())
                 {
                     Alignment = Alignment.TopLeft,
@@ -196,7 +202,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     Alignment = Alignment.TopLeft,
                 },
 
-                new DrawableModifierBool(this, new ModNoLongNotes())
+                new DrawableModifierModList(this, new IGameplayModifier[]
+                {
+                    new ModNoLongNotes(), new ModInverse(), new ModFullLN()
+                }, "Long Note Conversion", "Mix up the long notes.")
                 {
                     Alignment = Alignment.TopLeft,
                 },
@@ -204,7 +213,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 new DrawableModifierBool(this, new ModRandomize())
                 {
                     Alignment = Alignment.TopLeft,
-                }
+                },
             };
 
             for (var i = 0; i < ModsList.Count; i++)

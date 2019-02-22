@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Linq;
@@ -31,10 +31,15 @@ namespace Quaver.Shared.Modifiers.Mods
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Speed05X,
+            ModIdentifier.Speed055X,
             ModIdentifier.Speed06X,
+            ModIdentifier.Speed065X,
             ModIdentifier.Speed07X,
+            ModIdentifier.Speed075X,
             ModIdentifier.Speed08X,
+            ModIdentifier.Speed085X,
             ModIdentifier.Speed09X,
+            ModIdentifier.Speed095X,
             ModIdentifier.Speed11X,
             ModIdentifier.Speed12X,
             ModIdentifier.Speed13X,
