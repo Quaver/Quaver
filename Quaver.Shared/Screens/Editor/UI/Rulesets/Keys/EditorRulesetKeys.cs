@@ -595,7 +595,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             if ((int) time < pendingObject.StartTime)
             {
-                NotificationManager.Show(NotificationLevel.Error, "You need to select a position later than the start time");
+                var timespan = TimeSpan.FromMilliseconds(pendingObject.StartTime);
+
+                NotificationManager.Show(NotificationLevel.Error, $"You must place the long note end at: " +
+                                                                  $"{timespan.Minutes}:{timespan.Seconds}.{timespan.Milliseconds} ({lane}) " +
+                                                                  $"further than its start time. Click here to go to the object.", (sender, args) =>
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(pendingObject.StartTime);
+                    Screen.SetHitSoundObjectIndex();
+                });
                 return true;
             }
 
