@@ -601,7 +601,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                                                                   $"{timespan.Minutes}:{timespan.Seconds}.{timespan.Milliseconds} ({lane}) " +
                                                                   $"further than its start time. Click here to go to the object.", (sender, args) =>
                 {
-                    AudioEngine.Track.Pause();
+                    if (AudioEngine.Track.IsPlaying)
+                        AudioEngine.Track.Pause();
+                    
                     AudioEngine.Track.Seek(pendingObject.StartTime);
                     Screen.SetHitSoundObjectIndex();
                 });
