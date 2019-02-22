@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
+using Quaver.Server.Client;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -290,6 +291,9 @@ namespace Quaver.Shared.Screens.Editor.UI
         {
             if (!ImGui.BeginMenu("Help"))
                 return;
+
+            if (ImGui.MenuItem("Editor Guide"))
+                BrowserHelper.OpenURL($"{OnlineClient.WEBSITE_URL}/wiki/Editor");
 
             if (ImGui.MenuItem("Settings", "CTRL+O"))
                 DialogManager.Show(new SettingsDialog());
