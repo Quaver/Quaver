@@ -20,18 +20,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
     {
         /// <summary>
         /// </summary>
-        private string BpmInput = "";
-
-        /// <summary>
-        /// </summary>
-        private string TimeOffset = "";
-
-        /// <summary>
-        /// </summary>
-        private string TapCount = "";
-
-        /// <summary>
-        /// </summary>
         private int TapCountNumber { get; set; } = 0;
 
         /// <summary>
@@ -90,18 +78,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
 
             ImGui.Dummy(new Vector2(0, 15));
 
-            ImGui.Text("BPM");
-            ImGui.InputText("    ", ref BpmInput, 100, ImGuiInputTextFlags.ReadOnly);
+            ImGui.Text($"BPM: {BpmAverage:0.00}");
 
             ImGui.Dummy(new Vector2(0, 5));
 
-            ImGui.Text("First Tap Time");
-            ImGui.InputText("     ", ref TimeOffset, 100, ImGuiInputTextFlags.ReadOnly);
+            ImGui.Text($"First Tap Time: {FirstTapAudioTime:0.00}");
 
             ImGui.Dummy(new Vector2(0, 5));
 
-            ImGui.Text("# of Taps");
-            ImGui.InputText("      ", ref TapCount, 100, ImGuiInputTextFlags.ReadOnly);
+            ImGui.Text($"# of Taps: {TapCountNumber}");
 
             if (TapCountNumber > 4)
             {
@@ -119,7 +104,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
         /// <returns></returns>
         private static Vector2 GetSize()
         {
-            var nativeSize = new Vector2(390, 500);
+            var nativeSize = new Vector2(390, 323);
 
             var scale = WindowManager.DetermineDrawScaling();
             return new Vector2(nativeSize.X * scale.X, nativeSize.Y * scale.Y);
@@ -145,17 +130,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
             {
                 TapStart = tapTimer;
                 TapCountNumber = 1;
-
-                TapCount = TapCountNumber.ToString();
                 FirstTapAudioTime = AudioEngine.Track.Time;
-                TimeOffset = $"{AudioEngine.Track.Time:0.00}";
             }
             else
             {
                 BpmAverage = 60000f * TapCountNumber / (tapTimer - TapStart);
-
-                BpmInput = $"{BpmAverage:0.00}";
-                TapCount = TapCountNumber.ToString();
                 TapCountNumber++;
             }
         }
@@ -164,11 +143,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
         /// </summary>
         private void ResetCounter()
         {
+            BpmAverage = 0;
+            FirstTapAudioTime = 0;
             TapCountNumber = 0;
             TapStart = 0;
-            TapCount = "";
-            BpmInput = "";
-            TimeOffset = "";
         }
     }
 }

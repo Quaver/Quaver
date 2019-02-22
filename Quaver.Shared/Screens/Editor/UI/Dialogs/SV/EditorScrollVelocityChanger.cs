@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
         /// <summary>
         /// </summary>
-        private EditorScrollVelocityDialog Dialog { get; }
+        public EditorScrollVelocityDialog Dialog { get; }
 
         /// <summary>
         /// </summary>
@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             var size = GetSize();
             ImGui.SetNextWindowSize(size);
-            ImGui.SetNextWindowPos(new Vector2(ConfigManager.WindowWidth.Value / 2f - size.X / 2f, ConfigManager.WindowHeight.Value/ 2f - size.Y / 2f));
+            ImGui.SetNextWindowPos(new Vector2(ConfigManager.WindowWidth.Value - size.X, ConfigManager.WindowHeight.Value/ 2f - size.Y / 2f));
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 var time = OnlyDigits(TextTime);
                 var multiplier = Decimal(TextMultiplier);
 
-                float newTime;
+                float newTime = 0;
 
                 try
                 {
@@ -496,9 +496,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                     newMultiplier = sv.Multiplier;
                 }
 
-                TextTime = newTime.ToString(CultureInfo.InvariantCulture);
-                TextMultiplier = $"{newMultiplier:0.00}";
-
                 // ReSharper disable twice CompareOfFloatsByEqualityOperator
                 if (sv.StartTime != newTime || sv.Multiplier != newMultiplier)
                     changes.Add(new EditorScrollVelocityChangeInfo(sv, newTime, newMultiplier));
@@ -508,6 +505,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             var screen = game?.CurrentScreen as EditorScreen;
 
             screen?.Ruleset.ActionManager.Perform(new EditorActionChangeScrollVelocity(WorkingMap, changes));
+
+            if (changes.Count != 0)
+            {
+                TextTime = "";
+                TextMultiplier = $"{changes.First().NewMultiplier:0.00}";
+            }
         }
     }
 }

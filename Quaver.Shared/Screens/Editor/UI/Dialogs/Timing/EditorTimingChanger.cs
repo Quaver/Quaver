@@ -541,9 +541,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
                     newBpm = tp.Bpm;
                 }
 
-                TextTime = newTime.ToString(CultureInfo.InvariantCulture);
-                TextBpm = $"{newBpm:0.00}";
-
                 // ReSharper disable twice CompareOfFloatsByEqualityOperator
                 if (tp.StartTime != newTime || tp.Bpm!= newBpm)
                     changes.Add(new EditorTimingPointChangeInfo(tp, newTime, newBpm));
@@ -553,6 +550,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
             var screen = game?.CurrentScreen as EditorScreen;
 
             screen?.Ruleset.ActionManager.Perform(new EditorActionChangeTimingPoint(WorkingMap, changes));
+
+            if (changes.Count != 0)
+            {
+                TextTime = "";
+                TextBpm = $"{changes.First().NewBpm:0.00}";
+            }
         }
     }
 }
