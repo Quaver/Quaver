@@ -506,8 +506,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
             screen?.Ruleset.ActionManager.Perform(new EditorActionChangeScrollVelocity(WorkingMap, changes));
 
-            TextTime = "";
-            TextMultiplier = $"{changes.First().NewMultiplier:0.00}";
+            if (changes.Count != 0)
+            {
+                TextTime = "";
+                TextMultiplier = $"{changes.First().NewMultiplier:0.00}";
+            }
         }
     }
 }

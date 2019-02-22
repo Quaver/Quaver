@@ -551,8 +551,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
 
             screen?.Ruleset.ActionManager.Perform(new EditorActionChangeTimingPoint(WorkingMap, changes));
 
-            TextTime = "";
-            TextBpm = $"{changes.First().NewBpm:0.00}";
+            if (changes.Count != 0)
+            {
+                TextTime = "";
+                TextBpm = $"{changes.First().NewBpm:0.00}";
+            }
         }
     }
 }
