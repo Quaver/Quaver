@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
         /// <summary>
         /// </summary>
-        private EditorScrollVelocityDialog Dialog { get; }
+        public EditorScrollVelocityDialog Dialog { get; }
 
         /// <summary>
         /// </summary>

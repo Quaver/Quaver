@@ -107,6 +107,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
 
                 ButtonManager.Remove(this);
                 IsClosing = false;
+
+                var game = GameBase.Game as QuaverGame;
+                var screen = game?.CurrentScreen as EditorScreen;
+                var view = screen?.View as EditorScreenView;
+                view.ControlBar.Parent = view.Container;
             }, 450);
         }
     }

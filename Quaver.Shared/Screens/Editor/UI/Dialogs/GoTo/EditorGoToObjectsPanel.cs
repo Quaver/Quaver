@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
 
         /// <summary>
         /// </summary>
-        private EditorGoToObjectsDialog Dialog { get; }
+        public EditorGoToObjectsDialog Dialog { get; }
 
         /// <summary>
         /// </summary>

@@ -313,7 +313,8 @@ namespace Quaver.Shared.Screens.Editor
 
             var view = (EditorScreenView) View;
 
-            if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.Last() == view.TimingPointChanger.Dialog)
+            if (DialogManager.Dialogs.Count == 0 || DialogManager.Dialogs.Last() == view.TimingPointChanger.Dialog ||
+                DialogManager.Dialogs.Last() == view.ScrollVelocityChanger.Dialog)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorPausePlay.Value) && ActiveLayerInterface.Value != EditorLayerInterface.Editing)
                     HandleKeyPressSpace();
@@ -1018,6 +1019,8 @@ namespace Quaver.Shared.Screens.Editor
 
             if (!view.ScrollVelocityChanger.Shown)
                 view.ScrollVelocityChanger.Show();
+
+            view.ControlBar.Parent = view.ScrollVelocityChanger.Dialog;
         }
 
         /// <summary>
