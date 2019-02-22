@@ -474,7 +474,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                 var time = OnlyDigits(TextTime);
                 var multiplier = Decimal(TextMultiplier);
 
-                float newTime;
+                float newTime = 0;
 
                 try
                 {
@@ -496,9 +496,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
                     newMultiplier = sv.Multiplier;
                 }
 
-                TextTime = newTime.ToString(CultureInfo.InvariantCulture);
-                TextMultiplier = $"{newMultiplier:0.00}";
-
                 // ReSharper disable twice CompareOfFloatsByEqualityOperator
                 if (sv.StartTime != newTime || sv.Multiplier != newMultiplier)
                     changes.Add(new EditorScrollVelocityChangeInfo(sv, newTime, newMultiplier));
@@ -508,6 +505,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
             var screen = game?.CurrentScreen as EditorScreen;
 
             screen?.Ruleset.ActionManager.Perform(new EditorActionChangeScrollVelocity(WorkingMap, changes));
+
+            TextTime = "";
+            TextMultiplier = $"{changes.First().NewMultiplier:0.00}";
         }
     }
 }
