@@ -143,6 +143,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Timing
         /// </summary>
         private void ResetCounter()
         {
+            BpmAverage = 0;
+            FirstTapAudioTime = 0;
             TapCountNumber = 0;
             TapStart = 0;
         }
