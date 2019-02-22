@@ -84,6 +84,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         public EditorRectangleSelection RectangleSelector { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool GaveLongNoteGuide { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -430,7 +435,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
                         drawable.AppearAsInactive();
 
-                        NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
+                        if (!GaveLongNoteGuide)
+                        {
+                            NotificationManager.Show(NotificationLevel.Info, "Scroll through the timeline and place the end of the long note.");
+                            GaveLongNoteGuide = true;
+                        }
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "This tool isn't implemented yet. Choose another!");
