@@ -1,8 +1,8 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
@@ -40,12 +40,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private int InitialPoolSize { get; } = 6;
 
         /// <summary>
-        ///     Convert from BPM to measure length in milliseconds. (4 beats)
-        ///     Equals to 4 * 60 * 1000
-        /// </summary>
-        public float BpmToMeasureLengthMs { get; } = 240000;
-
-        /// <summary>
         ///     The Scroll Direction of every Timing Line
         /// </summary>
         public ScrollDirection ScrollDirection { get; }
@@ -66,7 +60,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private float PositionX { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
@@ -94,13 +88,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
                 // Get target position and increment
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
                 var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;
-                var increment = BpmToMeasureLengthMs / map.TimingPoints[i].Bpm;
+                var increment = (int) map.TimingPoints[i].Signature * map.TimingPoints[i].MillisecondsPerBeat;
 
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
                 {
-                    if (songPos < target)
-                        Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
+                    Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
                 }
             }
         }

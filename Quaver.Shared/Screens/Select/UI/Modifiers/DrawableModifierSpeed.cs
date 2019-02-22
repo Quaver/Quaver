@@ -1,8 +1,8 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
@@ -29,10 +29,15 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         private List<string> Speeds { get; } = new List<string>()
         {
             "0.5x",
+            "0.55x",
             "0.6x",
+            "0.65x",
             "0.7x",
+            "0.75x",
             "0.8x",
+            "0.85x",
             "0.9x",
+            "0.95x",
             "1.0x",
             "1.1x",
             "1.2x",
@@ -63,12 +68,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             ButtonSelectRight = { UsePreviousSpriteBatchOptions = true },
             SelectedItemText = { UsePreviousSpriteBatchOptions = true }
         };
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override List<DrawableModifierOption> CreateModsDialogOptions() => new List<DrawableModifierOption>();
 
         /// <inheritdoc />
         /// <summary>

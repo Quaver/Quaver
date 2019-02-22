@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
             "You can quickly access the modifier menu by pressing F1 during song select",
             $"Pressing {ConfigManager.KeyToggleOverlay.Value} will open/close the in-game chat",
             "Mapsets are a grouping of individual map difficulties",
-            "There isn't an editor in the game yet. This is a planned feature",
+            "You can create a new mapset by dragging a mp3 file inside of the game window.",
             "Pausing during gameplay will invalidate your score from online ranking",
             "You can send replays to a friend by exporting them in the results screen",
             "You can send mapsets to a friend by exporting them in the song select screen",

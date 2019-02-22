@@ -1,8 +1,8 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework;
@@ -56,9 +56,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                     return;
 
                 // Make the size of the display look more pressed.
-                Width = JudgementCounter.DisplayItemSize.Y - JudgementCounter.DisplayItemSize.Y / 4;
+                var skin = SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode];
+
+                Width = skin.JudgementCounterSize - skin.JudgementCounterSize / 4;
                 Height = Width;
-                X = -JudgementCounter.DisplayItemSize.Y / 16;
+                X = -skin.JudgementCounterSize / 16f;
             }
         }
 
@@ -87,13 +89,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
 
+            var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
+
             SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j))
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                Tint = Color.Black,
+                Tint = skin.JudgementCounterFontColor,
                 X = 0,
-                FontSize = 16
+                FontSize = (int)(Width * 0.35f)
             };
 
             InactiveColor = color;

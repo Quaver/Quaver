@@ -2,10 +2,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Screens.Editor.UI.Hitsounds;
 using Wobble;
 using Wobble.Assets;
 
@@ -49,6 +50,18 @@ namespace Quaver.Shared.Assets
         public static Texture2D MenuBackgroundBlurred { get; private set; }
         public static Texture2D QuaverLogoStylish { get; private set; }
         public static Texture2D QuaverLogoShadowed { get; private set; }
+        public static Texture2D EditorToolSelect { get; private set; }
+        public static Texture2D EditorToolMine { get; private set; }
+        public static Texture2D EditorToolLongNote { get; private set; }
+        public static Texture2D EditorToolNote { get; private set; }
+        public static Texture2D EditorLayerPanel { get; private set; }
+        public static Texture2D EditorEditLayerPanel { get; private set; }
+        public static Texture2D EditorMetadataPanel { get; private set; }
+        public static Texture2D EditorHitsoundsPanel { get; private set; }
+        public static Texture2D EditorCompositionToolsPanel { get; private set; }
+        public static Texture2D EditorDetailsPanel { get; private set; }
+        public static Texture2D EditorHitObjectSelection { get; private set; }
+        public static Texture2D EditorEditScrollVelocities { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -91,6 +104,18 @@ namespace Quaver.Shared.Assets
             MenuBackgroundBlurred = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-blurred.jpg"));
             QuaverLogoStylish = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-stylish.png"));
             QuaverLogoShadowed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/quaver-logo-shadowed.png"));
+            EditorToolSelect = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/select.png"));
+            EditorToolNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/note.png"));
+            EditorToolLongNote = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/long-note.png"));
+            EditorToolMine = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/mine.png"));
+            EditorLayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/layer-panel.png"));
+            EditorEditLayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/edit-layer-panel.png"));
+            EditorMetadataPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/metadata-panel.png"));
+            EditorHitsoundsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/hitsounds-panel.png"));
+            EditorCompositionToolsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/composition-tools-panel.png"));
+            EditorDetailsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/details-panel.png"));
+            EditorHitObjectSelection = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/hitobject-selection.png"));
+            EditorEditScrollVelocities = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/edit-scroll-velocities-panel.png"));
         }
     }
 }

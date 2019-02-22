@@ -2,15 +2,17 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
@@ -78,6 +80,10 @@ namespace Quaver.Shared
         /// </summary>
         public bool IsDeployedBuild => AssemblyName.Version.Major != 0 || AssemblyName.Version.Minor != 0 || AssemblyName.Version.Revision != 0 ||
                                         AssemblyName.Version.Build != 0;
+
+        /// <summary>
+        /// </summary>
+        public List<Action> ScheduledRenderTargetDraws { get; } = new List<Action>();
 
         /// <summary>
         ///     Stringified version name of the client.
@@ -224,6 +230,12 @@ namespace Quaver.Shared
             if (!IsReadyToUpdate)
                 return;
 
+            for (var i = ScheduledRenderTargetDraws.Count - 1; i >= 0; i--)
+            {
+                ScheduledRenderTargetDraws[i]?.Invoke();
+                ScheduledRenderTargetDraws.Remove(ScheduledRenderTargetDraws[i]);
+            }
+
             base.Draw(gameTime);
 
             // Draw dialogs
@@ -263,12 +275,11 @@ namespace Quaver.Shared
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
             {
                 AudioTrack.GlobalVolume = e.Value;
-                AudioSample.GlobalVolume = e.Value;
             };;
 
             ConfigManager.VolumeMusic.ValueChanged += (sender, e) => { if (AudioEngine.Track != null) AudioEngine.Track.Volume = e.Value;  };
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
-            ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
+            ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ApplyRate(e.Value);
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
 
@@ -460,9 +471,7 @@ namespace Quaver.Shared
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
-                case QuaverScreenType.Editor:
                     Transitioner.FadeIn();
-
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
             }

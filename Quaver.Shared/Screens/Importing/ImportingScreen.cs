@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Quaver.Server.Common.Objects;
@@ -50,10 +50,13 @@ namespace Quaver.Shared.Screens.Importing
             {
                 MapsetImporter.ImportMapsetsInQueue();
 
+                if (MapDatabaseCache.MapsToUpdate.Count != 0)
+                    MapDatabaseCache.ForceUpdateMaps();
+
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
                     var view = View as ImportingScreenView;
-                    view.Header.Text = "Please wait while we're recalculating map difficulties";
+                    view.Header.Text = "Please wait. Calculating difficulties for maps.";
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();;
                 }
 

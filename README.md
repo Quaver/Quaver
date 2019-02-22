@@ -2,11 +2,9 @@
   <img src="https://i.imgur.com/UK3PWJW.png" width="175px" height="175px">
 </p>
 
-# Quaver [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Blog](https://img.shields.io/badge/Blog-Read-blue.svg)](https://blog.quavergame.com) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
+# Quaver [![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Blog](https://img.shields.io/badge/Blog-Read-blue.svg)](https://blog.quavergame.com) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 
 >🎶 The ultimate, community-driven, and open-source competitive rhythm game.
-
-If you're looking for the official release of Quaver with added online connectivity and rankings, sign up for the Steam alpha on our [website](https://quavergame.com)! 
 
 ### Table of Contents ###
 * [Requirements](https://github.com/Quaver/Quaver#requirements)

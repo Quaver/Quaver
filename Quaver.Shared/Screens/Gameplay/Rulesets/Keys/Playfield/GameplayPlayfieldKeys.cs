@@ -1,8 +1,8 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using Microsoft.Xna.Framework;
@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
+using Quaver.Shared.Screens.Gameplay.UI;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -71,24 +72,39 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         internal float ReceptorPadding => SkinManager.Skin.Keys[Screen.Map.Mode].NotePadding;
 
         /// <summary>
-        ///     Position for each Receptor in each lane
+        ///     Position for each Receptor in each lane from the top of the screen.
         /// </summary>
-        internal float[] ReceptorPositionY { get; set; }
+        internal float[] ReceptorPositionY { get; private set; }
 
         /// <summary>
-        ///     Position for each Column Lighting
+        ///     Position for each Column Lighting relative from the top of the screen.
         /// </summary>
-        internal float[] ColumnLightingPositionY { get; set; }
+        internal float[] ColumnLightingPositionY { get; private set; }
+
+        /// <summary>
+        ///     HitObject Target Position from the relative top of the screen.
+        /// </summary>
+        internal float[] HitPositionY { get; private set; }
+
+        /// <summary>
+        ///     HeldHitObject Target Position relative from the top of the screen.
+        /// </summary>
+        internal float[] HoldHitPositionY { get; private set; }
+
+        /// <summary>
+        ///     Position for each Timing Line relative from the top of the screen.
+        /// </summary>
+        internal float[] TimingLinePositionY { get; private set; }
+
+        /// <summary>
+        ///     Size Adjustment for each LongNote in specific lane so the LN EndTime snaps with StartTime.
+        /// </summary>
+        internal float[] LongNoteSizeAdjustment { get; private set; }
 
         /// <summary>
         ///     Determines the scroll direction of each lane
         /// </summary>
         public ScrollDirection[] ScrollDirections { get; private set; }
-
-        /// <summary>
-        ///     The offset from the edge of the screen of the hit position.
-        /// </summary>
-        public float[] HitPositionOffsets { get; private set; }
 
         /// <summary>
         ///     Ctor
@@ -101,8 +117,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Ruleset = ruleset;
             Container = new Container();
             SetLaneScrollDirections();
-            SetReceptorPositions();
-            ApplyHitPositionsOffset();
+            SetReferencePositions();
             CreateElementContainers();
         }
 
@@ -172,52 +187,48 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     Set Positions for Receptor and Hit Lighting
+        ///     Set Positions for Receptor, Column Lighting, Hit Position, and Timing Lines
         /// </summary>
-        private void SetReceptorPositions()
+        private void SetReferencePositions()
         {
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             ReceptorPositionY = new float[ScrollDirections.Length];
             ColumnLightingPositionY = new float[ScrollDirections.Length];
+            HitPositionY = new float[ScrollDirections.Length];
+            HoldHitPositionY = new float[ScrollDirections.Length];
+            TimingLinePositionY = new float[ScrollDirections.Length];
+            LongNoteSizeAdjustment = new float[ScrollDirections.Length];
 
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
+                var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
+                var holdHitObOffset = LaneSize * skin.NoteHoldHitObjects[i][0].Height / skin.NoteHoldHitObjects[i][0].Width;
+                var holdEndOffset = LaneSize * skin.NoteHoldEnds[i].Height / skin.NoteHoldEnds[i].Width;
+                var receptorOffset = LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width;
+
+                if (SkinManager.Skin.Keys[Screen.Map.Mode].DrawLongNoteEnd)
+                    LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
+                else
+                    LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
+
                 switch (ScrollDirections[i])
                 {
                     case ScrollDirection.Down:
-                        ReceptorPositionY[i] = WindowManager.Height - (skin.ReceptorPosOffsetY + LaneSize * skin.NoteReceptorsUp[i].Height / skin.NoteReceptorsUp[i].Width);
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY;
+                        ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;;
+                        HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
+                        TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
                         break;
                     case ScrollDirection.Up:
-                        var receptor = skin.NoteReceptorsUp[i];
-                        var hitObject = skin.NoteHitObjects[i][0];
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY + skin.ColumnSize * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                        HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.HitLightingY;
+                        TimingLinePositionY[i] = HitPositionY[i];
                         break;
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Set Hit Position Variables to every lane that each Hit Object will reference. 
-        /// </summary>
-        private void ApplyHitPositionsOffset()
-        {
-            var skin = SkinManager.Skin.Keys[Ruleset.Mode];
-            HitPositionOffsets = new float[ScrollDirections.Length];
-
-            for (var i = 0; i < ScrollDirections.Length; i++)
-            {
-                switch (ScrollDirections[i])
-                {
-                    case ScrollDirection.Down:
-                        HitPositionOffsets[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
-                        break;
-                    case ScrollDirection.Up:
-                        HitPositionOffsets[i] = (ColumnLightingPositionY[i] - skin.HitPosOffsetY);
-                        break;
                 }
             }
         }
