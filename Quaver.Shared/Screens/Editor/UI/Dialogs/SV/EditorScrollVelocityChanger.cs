@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.SV
         {
             var size = GetSize();
             ImGui.SetNextWindowSize(size);
-            ImGui.SetNextWindowPos(new Vector2(ConfigManager.WindowWidth.Value / 2f - size.X / 2f, ConfigManager.WindowHeight.Value/ 2f - size.Y / 2f));
+            ImGui.SetNextWindowPos(new Vector2(ConfigManager.WindowWidth.Value - size.X, ConfigManager.WindowHeight.Value/ 2f - size.Y / 2f));
         }
 
         /// <summary>
