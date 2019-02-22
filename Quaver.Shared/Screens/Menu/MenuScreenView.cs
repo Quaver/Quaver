@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Dialogs;
@@ -36,6 +37,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -397,10 +399,32 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnEditorPanelClicked(object sender, EventArgs e)
+        private void OnEditorPanelClicked(object sender, EventArgs e)
         {
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+            if (MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot edit without a map selected.");
+                return;
+            }
+
+            var screen = Screen as MenuScreen;
+
+            screen?.Exit(() =>
+            {
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track?.Pause();
+
+                try
+                {
+                    return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                    return new MenuScreen();
+                }
+            });
         }
     }
 }

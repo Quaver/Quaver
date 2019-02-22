@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -17,7 +17,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
@@ -73,7 +75,7 @@ namespace Quaver.Shared.Screens.Select
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 ||
                 MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
-                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
+                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -95,9 +97,13 @@ namespace Quaver.Shared.Screens.Select
             DiscordHelper.Presence.State = "In the menus";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             ConfigManager.DisplayFailedLocalScores.ValueChanged += OnDisplayFailedScoresChanged;
+
+            var game = GameBase.Game as QuaverGame;
+            var cursor = game?.GlobalUserInterface.Cursor;
+            cursor.Alpha = 1;
+
             View = new SelectScreenView(this);
         }
 
@@ -163,8 +169,11 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Plays the audio track at the preview time if it has stopped
         /// </summary>
-        private static void KeepPlayingAudioTrackAtPreview()
+        private void KeepPlayingAudioTrackAtPreview()
         {
+            if (Exiting)
+                return;
+
             if (AudioEngine.Track == null)
             {
                 AudioEngine.PlaySelectedTrackAtPreview();
@@ -186,7 +195,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateBack.Value))
                 return;
 
             switch (view.ActiveContainer)
@@ -209,7 +218,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter) || AvailableMapsets.Count == 0)
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateSelect.Value) || AvailableMapsets.Count == 0)
                 return;
 
             switch (view.ActiveContainer)
@@ -237,7 +246,7 @@ namespace Quaver.Shared.Screens.Select
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateRight.Value))
                 return;
 
             switch (view.ActiveContainer)
@@ -265,7 +274,7 @@ namespace Quaver.Shared.Screens.Select
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Left))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateLeft.Value))
                 return;
 
             switch (view.ActiveContainer)
@@ -282,6 +291,27 @@ namespace Quaver.Shared.Screens.Select
         }
 
         /// <summary>
+        ///     Gets the adjacent rate value.
+        ///
+        ///     For example, if the current rate is 1.0x, the adjacent value would be either 0.95x or 1.1x,
+        ///     depending on the argument.
+        /// </summary>
+        /// <param name="faster">If true, returns the higher rate, otherwise the lower rate.</param>
+        /// <returns></returns>
+        private static float GetNextRate(bool faster)
+        {
+            var current = AudioEngine.Track.Rate;
+            var adjustment = 0.1f;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (current < 1.0f || (current == 1.0f && !faster))
+                adjustment = 0.05f;
+
+            var next = current + adjustment * (faster ? 1f : -1f);
+            return (float) Math.Round(next, 2);
+        }
+
+        /// <summary>
         ///     Handles when the user wants to increase/decrease the rate of the song.
         /// </summary>
         private static void HandleKeyPressControlRateChange()
@@ -292,11 +322,11 @@ namespace Quaver.Shared.Screens.Select
 
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+                ModManager.AddSpeedMods(GetNextRate(true));
 
             // Decrease Rate
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+                ModManager.AddSpeedMods(GetNextRate(false));
 
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
@@ -419,6 +449,24 @@ namespace Quaver.Shared.Screens.Select
             }
 
             return new MenuScreen();
+        });
+
+        /// <summary>
+        ///     Exits the screen to the editor
+        /// </summary>
+        public void ExitToEditor() => Exit(() =>
+        {
+            AudioEngine.Track?.Pause();
+
+            try
+            {
+                return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
+            }
+            catch (Exception)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                return new SelectScreen();
+            }
         });
 
         /// <summary>

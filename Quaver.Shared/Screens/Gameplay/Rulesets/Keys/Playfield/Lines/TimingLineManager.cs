@@ -1,12 +1,13 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System.Collections.Generic;
 using Quaver.API.Maps;
+using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
@@ -39,21 +40,38 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         private int InitialPoolSize { get; } = 6;
 
         /// <summary>
-        ///     Convert from BPM to measure length in milliseconds. (4 beats)
-        ///     Equals to 4 * 60 * 1000
+        ///     The Scroll Direction of every Timing Line
         /// </summary>
-        public float BpmToMeasureLengthMs { get; } = 240000;
+        public ScrollDirection ScrollDirection { get; }
 
         /// <summary>
-        /// 
+        ///     Target position when TrackPosition = 0
+        /// </summary>
+        private float TrackOffset { get; }
+
+        /// <summary>
+        ///     Size of every Timing Line
+        /// </summary>
+        private float SizeX { get; }
+
+        /// <summary>
+        ///     Position of every Timing Line
+        /// </summary>
+        private float PositionX { get; }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="map"></param>
         /// <param name="ruleset"></param>
-        public TimingLineManager(GameplayRuleset ruleset)
+        public TimingLineManager(GameplayRulesetKeys ruleset, ScrollDirection direction, float targetY, float size, float offset)
         {
-            Ruleset = (GameplayRulesetKeys)ruleset;
+            TrackOffset = targetY;
+            SizeX = size;
+            PositionX = offset;
+            ScrollDirection = direction;
+            Ruleset = ruleset;
             HitObjectManager = (HitObjectManagerKeys)ruleset.HitObjectManager;
-            TimingLine.GlobalTrackOffset = HitObjectManager.HitPositionOffset;
             GenerateTimingLineInfo(ruleset.Map);
             InitializeObjectPool();
         }
@@ -69,14 +87,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
             {
                 // Get target position and increment
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
-                var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1: map.Length;
-                var increment = BpmToMeasureLengthMs / map.TimingPoints[i].Bpm;
+                var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;
+                var increment = (int) map.TimingPoints[i].Signature * map.TimingPoints[i].MillisecondsPerBeat;
 
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
                 {
-                    if (songPos < target)
-                        Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
+                    Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
                 }
             }
         }
@@ -131,7 +148,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         /// <param name="info"></param>
         private void CreatePoolObject(TimingLineInfo info)
         {
-            var line = new TimingLine(Ruleset, info);
+            var line = new TimingLine(Ruleset, info, ScrollDirection, TrackOffset, SizeX, PositionX);
             line.UpdateSpritePosition(HitObjectManager.CurrentTrackPosition);
             Pool.Enqueue(line);
         }

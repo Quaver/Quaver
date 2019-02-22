@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -46,7 +46,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
         /// <summary>
         ///     The long note Y offset from the receptor.
-        ///     TODO: I don't think this gets updated upon scroll speed change
         /// </summary>
         public long InitialLongNoteTrackPosition { get; private set; }
 
@@ -56,30 +55,35 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private float SpritePosition { get; set; }
 
         /// <summary>
-        ///     The width of the object.
-        /// </summary>
-        private float Width { get; set; }
-
-        /// <summary>
         ///     The initial size of this object's long note.
         /// </summary>
         public float InitialLongNoteSize { get; set; }
 
         /// <summary>
         ///     The current size of this object's long note.
-        ///     TODO: I don't think this gets updated upon scroll speed change
         /// </summary>
         private float CurrentLongNoteSize { get; set; }
 
         /// <summary>
         ///      The offset of the long note body from the hit object.
+        ///
+        ///      LN bodies are drawn from the middle of the start object to the middle of the end object. This is the
+        ///      half-size of the start object.
         /// </summary>
         private float LongNoteBodyOffset { get; set; }
 
         /// <summary>
         ///     The offset of the hold end from hold body.
+        ///
+        ///     LN bodies are drawn from the middle of the start object to the middle of the end object. This is the
+        ///     half-size of the end object.
         /// </summary>
         private float LongNoteEndOffset { get; set; }
+
+        /// <summary>
+        ///     The direction this hit object is traveling.
+        /// </summary>
+        private ScrollDirection ScrollDirection { get; set; }
 
         /// <summary>
         ///     The actual HitObject sprite.
@@ -97,16 +101,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
-        ///     General Distance from the receptor. Calculated from hit body size and global offset
+        ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
         /// </summary>
-        public static float HitPositionOffset { get; set; } = 0;
+        private float HitPosition { get; set; }
 
         /// <summary>
-        ///     Distance from the receptor for the current HitObjectSprite's image
+        ///     Difference between the actual LN length and the LN body sprite length.
+        ///
+        ///     LN bodies are drawn from the middle of the start object to the middle of the end object, and this
+        ///     difference takes those two half-heights into account.
         /// </summary>
-        private float SpritePositionOffset => GameplayRulesetKeys.IsDownscroll
-            ? HitPositionOffset - HitObjectSprite.Height
-            : HitPositionOffset + HitObjectSprite.Height;
+        private float LongNoteSizeDifference { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -119,7 +124,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectManager = manager;
             Ruleset = ruleset;
 
-            InitializeSprites(ruleset, info.Lane - 1);
+            var lane = info.Lane - 1;
+            var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+            LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
+            InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
 
@@ -128,26 +136,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ruleset"></param>
-        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane)
+        private void InitializeSprites(GameplayRulesetKeys ruleset, int lane, ScrollDirection direction)
         {
             // Reference variables
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
             var posX = playfield.Stage.Receptors[lane].X;
+            var flipNoteBody = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll;
+            var flipNoteEnd = direction.Equals(ScrollDirection.Up) && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll;
+            ScrollDirection = direction;
 
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(posX, 0),
-                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
-                                ? SpriteEffects.FlipVertically
-                                : SpriteEffects.None,
-                Image = UserInterface.BlankBox,
+                SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
-
-            // Update hit body's size to match image ratio
-            HitObjectSprite.Size = new ScalableVector2(playfield.LaneSize, playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
-            LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
             // Create Hold Body
             var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[lane];
@@ -166,9 +170,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 Position = new ScalableVector2(posX, 0),
                 Size = new ScalableVector2(playfield.LaneSize, 0),
                 Parent = playfield.Stage.HitObjectContainer,
-                SpriteEffect = !GameplayRulesetKeys.IsDownscroll && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteEndImagesOnUpscroll
-                    ? SpriteEffects.FlipVertically
-                    : SpriteEffects.None,
+                SpriteEffect = flipNoteEnd ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
             // Set long note end properties.
@@ -188,9 +190,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <param name="manager"></param>
         public void InitializeObject(HitObjectManagerKeys manager, HitObjectInfo info)
         {
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
             Info = info;
-
-            var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
 
             // Update Hit Object State
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
@@ -215,7 +217,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 LongNoteBodySprite.Tint = Color.White;
                 LongNoteEndSprite.Tint = Color.White;
-                LongNoteEndSprite.Visible = true;
+                LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
                 InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
                 UpdateLongNoteSize(InitialTrackPosition);
@@ -240,20 +242,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Calculates the position of the Hit Object with a position offset.
         /// </summary>
         /// <returns></returns>
-        public float GetSpritePosition(long offset) => SpritePositionOffset + ((InitialTrackPosition - offset) * (GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
+        public float GetSpritePosition(long offset) => HitPosition + ((InitialTrackPosition - offset) * (ScrollDirection.Equals(ScrollDirection.Down) ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed) / HitObjectManagerKeys.TrackRounding);
 
         /// <summary>
         ///     Updates LN size
         /// </summary>
         /// <param name="offset"></param>
-        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (InitialLongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding;
+        public void UpdateLongNoteSize(long offset) => CurrentLongNoteSize = (InitialLongNoteTrackPosition - offset) * HitObjectManagerKeys.ScrollSpeed / HitObjectManagerKeys.TrackRounding - LongNoteSizeDifference;
 
         /// <summary>
         ///     Will forcibly update LN on scroll speed change or specific modifier.
         /// </summary>
         public void ForceUpdateLongnote(long offset)
         {
-            if (offset < InitialTrackPosition)
+            // When LN end is not drawn, the LNs don't change their size as they are held.
+            if (offset < InitialTrackPosition || !SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 UpdateLongNoteSize(InitialTrackPosition);
                 InitialLongNoteSize = CurrentLongNoteSize;
@@ -268,12 +271,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateSpritePositions(long offset)
         {
             // Update Sprite position with regards to LN's state
-            if (CurrentlyBeingHeld)
+            //
+            // If the LN end is not drawn, don't move the LN start up with time since it ends up sliding above the LN in
+            // the end.
+            if (CurrentlyBeingHeld && SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd)
             {
                 if (offset > InitialTrackPosition)
                 {
                     UpdateLongNoteSize(offset);
-                    SpritePosition = SpritePositionOffset;
+                    SpritePosition = HitPosition;
                 }
                 else
                 {
@@ -293,27 +299,30 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             if (!Info.IsLongNote)
                 return;
 
-            // It will ignore the rest of the code after this statement if long note size is equal/less than 0
+            // Don't draw the body if the length is <= 0. Note that this does not mean that the LN should be hidden
+            // altogether: very short LNs, including zero-size on some SV maps after SV adjustment, have this below zero
+            // because CurrentLongNoteSize does not include half of the HitObjectSprite and half of the
+            // LongNoteEndSprite.
             if (CurrentLongNoteSize <= 0)
-            {
                 LongNoteBodySprite.Visible = false;
+
+            // However, if the LN end is drawn and the actual LN size is <= 0, we can stop drawing the LN end as it has
+            // probably been completely overlapped by the LN start at this point (and is sliding below the receptors).
+            if (CurrentLongNoteSize + LongNoteSizeDifference <= 0)
                 LongNoteEndSprite.Visible = false;
-                HitObjectSprite.Visible = false;
-                return;
-            }
 
             //Update HoldBody Position and Size
             LongNoteBodySprite.Height = CurrentLongNoteSize;
 
-            if (GameplayRulesetKeys.IsDownscroll)
+            if (ScrollDirection.Equals(ScrollDirection.Down))
             {
-                LongNoteBodySprite.Y = + LongNoteBodyOffset + SpritePosition - CurrentLongNoteSize;
-                LongNoteEndSprite.Y = SpritePosition - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+                LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize;
+                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset - CurrentLongNoteSize - LongNoteEndOffset;
             }
             else
             {
                 LongNoteBodySprite.Y = SpritePosition + LongNoteBodyOffset;
-                LongNoteEndSprite.Y = SpritePosition + CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+                LongNoteEndSprite.Y = SpritePosition + LongNoteBodyOffset + CurrentLongNoteSize - LongNoteEndOffset;
             }
         }
 

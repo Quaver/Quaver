@@ -1,8 +1,8 @@
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -23,17 +23,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// <summary>
         ///     Reference to the ruleset.
         /// </summary>
-        private GameplayScreen Screen { get; }
+        public GameplayScreen Screen { get; }
 
         /// <summary>
         ///     The list of judgement displays.
         /// </summary>
         private Dictionary<Judgement, JudgementCounterItem> JudgementDisplays { get; }
-
-        /// <summary>
-        ///     The size of each display item.
-        /// </summary>
-        public static Vector2 DisplayItemSize { get; } = new Vector2(45, 45);
 
         /// <inheritdoc />
         /// <summary>
@@ -45,17 +40,21 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             // Create the judgement displays.
             JudgementDisplays = new Dictionary<Judgement, JudgementCounterItem>();
+
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
             for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
             {
                 var key = (Judgement)i;
                 var color = SkinManager.Skin.Keys[Screen.Map.Mode].JudgeColors[key];
 
                 // Default it to an inactive color.
-                JudgementDisplays[key] = new JudgementCounterItem(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(DisplayItemSize.Y, DisplayItemSize.Y))
+                JudgementDisplays[key] = new JudgementCounterItem(this, key, new Color(color.R / 2, color.G / 2, color.B / 2),
+                    new Vector2(skin.JudgementCounterSize, skin.JudgementCounterSize))
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
                     Image = SkinManager.Skin.JudgementOverlay,
+                    Alpha = skin.JudgementCounterAlpha
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
@@ -94,11 +93,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
         /// </summary>
         /// <param name="counterItem"></param>
         /// <param name="dt"></param>
-        private static void UpdateTextAndSize(JudgementCounterItem counterItem, double dt)
+        private void UpdateTextAndSize(JudgementCounterItem counterItem, double dt)
         {
             // Tween size and pos back to normal
-            counterItem.Width = MathHelper.Lerp(counterItem.Width, DisplayItemSize.Y, (float)Math.Min(dt / 180, 1));
-            counterItem.Height = MathHelper.Lerp(counterItem.Height, DisplayItemSize.Y, (float)Math.Min(dt / 180, 1));
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            counterItem.Width = MathHelper.Lerp(counterItem.Width, skin.JudgementCounterSize, (float)Math.Min(dt / 180, 1));
+            counterItem.Height = MathHelper.Lerp(counterItem.Height, skin.JudgementCounterSize, (float)Math.Min(dt / 180, 1));
             counterItem.X = MathHelper.Lerp(counterItem.X, 0, (float) Math.Min(dt / 180, 1));
         }
     }

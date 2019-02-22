@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -98,6 +98,13 @@ namespace Quaver.Shared.Database.Scores
         public int CountMiss { get; set; }
 
         /// <summary>
+        ///     Integer based seed used for shuffling the lanes when randomize mod is active.
+        ///     Defaults to -1 if there is no seed.
+        /// </summary>
+        [Ignore]
+        public int RandomizeModifierSeed { get; set; } = -1;
+        
+        /// <summary>
         ///     Bitwise sum of the mods used in the play
         /// </summary>
         public ModIdentifier Mods { get; set; }
@@ -151,8 +158,10 @@ namespace Quaver.Shared.Database.Scores
         /// <param name="md5"></param>
         /// <param name="name"></param>
         /// <param name="scrollSpeed"></param>
+        /// <param name="pauseCount"></param>
+        /// <param name="seed"></param>
         /// <returns></returns>
-        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount)
+        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount, int seed)
         {
             var score = new Score()
             {
@@ -173,6 +182,7 @@ namespace Quaver.Shared.Database.Scores
                 Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 PauseCount =  pauseCount,
+                RandomizeModifierSeed = seed,
                 JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()),
             };
 
@@ -231,7 +241,8 @@ namespace Quaver.Shared.Database.Scores
             CountGreat = CountGreat,
             CountGood = CountGood,
             CountOkay = CountOkay,
-            CountMiss = CountMiss
+            CountMiss = CountMiss,
+            RandomizeModifierSeed = RandomizeModifierSeed
         };
     }
 }

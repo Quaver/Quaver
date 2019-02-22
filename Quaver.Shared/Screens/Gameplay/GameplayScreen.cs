@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -27,10 +27,12 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -71,6 +73,13 @@ namespace Quaver.Shared.Screens.Gameplay
         public Qua Map { get; }
 
         /// <summary>
+        ///     If test playing, a new .qua is made with only objects from that section of the map
+        ///     It is set to <see cref="Map"/>. This keeps the original map, so we can use it
+        ///     to go back to the editor after testing.
+        /// </summary>
+        public Qua OriginalEditorMap { get; }
+
+        /// <summary>
         ///     The list of scores displayed on the leaderboard.
         /// </summary>
         public List<Score> LocalScores { get; }
@@ -83,12 +92,23 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The current replay being watched (if there is one.)
         /// </summary>
-        public Replay LoadedReplay { get; }
+        public Replay LoadedReplay { get; private set; }
 
         /// <summary>
         ///     If we are currently viewing a replay.
         /// </summary>
-        public bool InReplayMode { get; }
+        public bool InReplayMode { get; set; }
+
+        /// <summary>
+        ///     If we're currently in play test mode.
+        /// </summary>
+        public bool IsPlayTesting { get; }
+
+        /// <summary>
+        ///     The time in the audio the play test began.
+        ///     Used for retries
+        /// </summary>
+        public double PlayTestAudioTime { get; }
 
         /// <summary>
         ///     Determines if the gameplay has actually started.
@@ -128,7 +148,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed => (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
+        public bool Failed => !IsPlayTesting && (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
@@ -198,14 +218,28 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="md5"></param>
         /// <param name="scores"></param>
         /// <param name="replay"></param>
-        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null)
+        /// <param name="isPlayTesting"></param>
+        /// <param name="playTestTime"></param>
+        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            Map = map;
+            if (isPlayTesting)
+            {
+                var testingQua = ObjectHelper.DeepClone(map);
+                testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+
+                Map = testingQua;
+                OriginalEditorMap = map;
+            }
+            else
+                Map = map;
+
             LocalScores = scores;
             MapHash = md5;
             LoadedReplay = replay;
+            IsPlayTesting = isPlayTesting;
+            PlayTestAudioTime = playTestTime;
 
             Timing = new GameplayAudioTiming(this);
 
@@ -260,6 +294,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
+            if (Exiting)
+                return;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Handle pausing
@@ -284,6 +321,42 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
                     HandleQuickExit();
+
+                // Handle play test autoplay input.
+                if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                {
+                    var inputManager = (KeysInputManager) Ruleset.InputManager;
+
+                    if (LoadedReplay == null)
+                    {
+                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                        inputManager.ReplayInputManager = new ReplayInputManagerKeys(this);
+                        inputManager.ReplayInputManager.HandleSkip();
+                        inputManager.ReplayInputManager.CurrentFrame++;
+                    }
+
+                    InReplayMode = !InReplayMode;
+                    inputManager.ReplayInputManager.HandleSkip();
+                    inputManager.ReplayInputManager.CurrentFrame++;
+
+                    if (!InReplayMode)
+                    {
+                        for (var i = 0; i < Map.GetKeyCount(); i++)
+                        {
+                            inputManager.ReplayInputManager.UniquePresses[i] = false;
+                            inputManager.ReplayInputManager.UniqueReleases[i] = true;
+                            inputManager.BindingStore[i].Pressed = false;
+
+                            var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                            playfield.Stage.HitLightingObjects[i].StopHolding();
+                            playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
+                        }
+
+                        inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
+                    }
+
+                    NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}");
+                }
 
                 // Only allow offset changes if the map hasn't started or if we're on a break
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
@@ -332,6 +405,18 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                Exit(() => new EditorScreen(OriginalEditorMap));
+            }
+
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
                 Pause(gameTime);
             // The user wants to resume their play.
@@ -529,7 +614,6 @@ namespace Quaver.Shared.Screens.Gameplay
                     // ignored
                 }
             }
-
         }
 
         /// <summary>
@@ -588,12 +672,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (RestartKeyHoldTime >= 200)
                 {
                     SkinManager.Skin.SoundRetry.CreateChannel().Play();
-
-                    // Use ChangeScreen here to give instant feedback. Can't be threaded
-                    if (InReplayMode)
-                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
-                    else
-                        QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
+                    Retry();
                 }
 
                 return;
@@ -611,6 +690,23 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Animations.Clear();
                 screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 1, 0, 200));
             }
+        }
+
+        /// <summary>
+        ///     Will restart the screen appropriately.
+        /// </summary>
+        public void Retry()
+        {
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            SkinManager.Skin.SoundRetry.CreateChannel().Play();
+
+            // Use ChangeScreen here to give instant feedback. Can't be threaded
+            if (IsPlayTesting)
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime));
+            else if (InReplayMode)
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+            else
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores));
         }
 
         /// <summary>
@@ -654,7 +750,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             DiscordHelper.Presence.Details = Map.ToString();
 
-            if (InReplayMode)
+            if (IsPlayTesting)
+                DiscordHelper.Presence.State = "Play Testing";
+            else if (InReplayMode)
                 DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
                 DiscordHelper.Presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
@@ -677,7 +775,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
             string content;
 
-            if (InReplayMode)
+            if (IsPlayTesting)
+            {
+                status = ClientStatus.Playing;
+                content = Map.ToString();
+            }
+            else if (InReplayMode)
             {
                 status = ClientStatus.Watching;
                 content = LoadedReplay.PlayerName;

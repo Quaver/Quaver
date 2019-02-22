@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -47,6 +47,11 @@ namespace Quaver.Shared.Skinning
         private static bool SkinExportInProgress { get; set; }
 
         /// <summary>
+        ///     Event raised when the user's skin has reloaded.
+        /// </summary>
+        public static event EventHandler<SkinReloadedEventArgs> SkinLoaded;
+
+        /// <summary>
         ///     Called every frame. Waits for a skin reload to be queued up.
         /// </summary>
         public static void HandleSkinReloading()
@@ -56,6 +61,7 @@ namespace Quaver.Shared.Skinning
             {
                 Load();
                 TimeSkinReloadRequested = 0;
+                SkinLoaded?.Invoke(typeof(SkinManager), new SkinReloadedEventArgs());
 
                 ThreadScheduler.RunAfter(() =>
                 {

@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -72,9 +72,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// </summary>
         public static void PlayObjectHitSounds(HitObjectInfo hitObject)
         {
-            if (!ConfigManager.EnableHitsounds.Value)
-                return;
-
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
                 SkinManager.Skin.SoundHit.CreateChannel().Play();

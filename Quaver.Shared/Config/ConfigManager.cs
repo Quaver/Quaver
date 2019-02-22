@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -150,14 +150,14 @@ namespace Quaver.Shared.Config
         internal static BindableInt ScrollSpeed7K { get; private set; }
 
         /// <summary>
-        ///     Should 4k be played with DownScroll? If false, it's UpScroll
+        ///     Direction in which hit objects will be moving for 4K gamemode
         /// </summary>
-        internal static Bindable<bool> DownScroll4K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection4K { get; private set; }
 
         /// <summary>
-        ///     Should 7k be played with DownScroll? If false, it's UpScroll
+        ///     Direction in which hit objects will be moving for 7K gamemode
         /// </summary>
-        internal static Bindable<bool> DownScroll7K { get; private set; }
+        internal static Bindable<ScrollDirection> ScrollDirection7K { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -238,11 +238,125 @@ namespace Quaver.Shared.Config
         ///     If enabled, the user will be able to tap to pause instead of having to hold for 500ms to pause.
         /// </summary>
         internal static Bindable<bool> TapToPause { get; private set; }
-        
+
+        /// <summary>
+        ///     The top lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverTopHeight { get; private set; }
+
+        /// <summary>
+        ///     The bottom lane cover's adjustable height between levels 0-50
+        /// </summary>
+        internal static BindableInt LaneCoverBottomHeight { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a top lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverTop { get; private set; }
+
+        /// <summary>
+        ///     If enabled, gameplay will have a bottom lane cover using the adjustable height.
+        /// </summary>
+        internal static Bindable<bool> LaneCoverBottom { get; private set; }
+
+        /// <summary>
+        ///     If enabled, the lane covers will be displayed under the ui elements.
+        /// </summary>
+        internal static Bindable<bool> UIElementsOverLaneCover { get; private set; }
+
         /// <summary>
         ///     If enabled, failed scores will not show in local scores.
         /// </summary>
         internal static Bindable<bool> DisplayFailedLocalScores { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayComboAlerts { get; private set; }
+
+        /// <summary>
+        ///     The scroll speed used in the editor.
+        /// </summary>
+        internal static BindableInt EditorScrollSpeedKeys { get; private set; }
+
+        /// <summary>
+        ///     Whether or not to play hitsounds in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorEnableHitsounds { get; private set; }
+
+        /// <summary>
+        ///     The type of beat snap colors that'll be displayed in the editor.
+        /// </summary>
+        internal static Bindable<EditorBeatSnapColor> EditorBeatSnapColorType { get; private set; }
+
+        /// <summary>
+        ///     Whether or not the user only wants to display measure lines while editing.
+        /// </summary>
+        internal static Bindable<bool> EditorOnlyShowMeasureLines { get; private set; }
+
+        /// <summary>
+        ///     Whether or not the user would like to display the lines that divide the lanes.
+        /// </summary>
+        internal static Bindable<bool> EditorShowLaneDividerLines { get; private set; }
+
+        /// <summary>
+        ///     Anchors HitObjects to the middle, so the snap lines are in the middle of the object.
+        /// </summary>
+        internal static Bindable<bool> EditorHitObjectsMidpointAnchored { get; private set; }
+
+        /// <summary>
+        ///     Whether or jot the user wants to play the metronome in the editor
+        /// </summary>
+        internal static Bindable<bool> EditorPlayMetronome { get; private set; }
+
+        /// <summary>
+        ///     If the metronome in the editor will play half beats.
+        /// </summary>
+        internal static Bindable<bool> EditorMetronomePlayHalfBeats { get; private set; }
+
+        /// <summary>
+        ///     If true, it'll display the numbers for the song time progress
+        /// </summary>
+        internal static Bindable<bool> DisplaySongTimeProgressNumbers { get; private set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        internal static Bindable<bool> DisplayJudgementCounter { get; private set; }
+
+        /// <summary></summary>
+        ///     If true, the user will skip the results screen after quitting the game.
+        /// </summary>
+        internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for leftward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for rightward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateRight { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for upward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateUp { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for downward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateDown { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for backward navigation.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateBack { get; private set; }
+
+        /// <summary>
+        ///     Keybinding for selection in navigation interface.
+        /// </summary>
+        internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -305,6 +419,21 @@ namespace Quaver.Shared.Config
         ///     The key to quickly exit the map.
         /// </summary>
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
+
+        /// <summary>
+        ///     The key to pause/play the track in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorPausePlay { get; private set; }
+
+        /// <summary>
+        ///     The key to lower the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorDecreaseAudioRate { get; private set; }
+
+        /// <summary>
+        ///     The key to increase the audio rate in the editor.
+        /// </summary>
+        internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -396,8 +525,8 @@ namespace Quaver.Shared.Config
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
-            DownScroll4K = ReadValue(@"DownScroll4K", true, data);
-            DownScroll7K = ReadValue(@"DownScroll7K", true, data);
+            ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
+            ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
@@ -413,6 +542,12 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
+            KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
+            KeyNavigateUp = ReadValue(@"KeyNavigateUp", Keys.Up, data);
+            KeyNavigateDown = ReadValue(@"KeyNavigateDown", Keys.Down, data);
+            KeyNavigateBack = ReadValue(@"KeyNavigateBack", Keys.Escape, data);
+            KeyNavigateSelect = ReadValue(@"KeyNavigateSelect", Keys.Enter, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -437,6 +572,26 @@ namespace Quaver.Shared.Config
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
+            EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
+            KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
+            KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
+            KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
+            EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
+            EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
+            EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
+            EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
+            EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
+            EditorPlayMetronome = ReadValue(@"EditorPlayMetronome", true, data);
+            EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
+            DisplaySongTimeProgressNumbers = ReadValue(@"DisplaySongTimeProgressNumbers", true, data);
+            DisplayJudgementCounter = ReadValue(@"DisplayJudgementCounter", true, data);
+            SkipResultsScreenAfterQuit = ReadValue(@"SkipResultsScreenAfterQuit", false, data);
+            DisplayComboAlerts = ReadValue(@"DisplayComboAlerts", true, data);
+            LaneCoverTopHeight = ReadInt(@"LaneCoverTopHeight", 25, 0, 75, data);
+            LaneCoverBottomHeight = ReadInt(@"LaneCoverBottomHeight", 25, 0, 75, data);
+            LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
+            LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
+            UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -471,8 +626,8 @@ namespace Quaver.Shared.Config
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll4K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll7K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection4K.ValueChanged += AutoSaveConfiguration;
+                    ScrollDirection7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
                     Skin.ValueChanged += AutoSaveConfiguration;
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
@@ -482,6 +637,14 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
+
+
+                    KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateDown.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateBack.ValueChanged += AutoSaveConfiguration;
+                    KeyNavigateSelect.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.ValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.ValueChanged += AutoSaveConfiguration;
@@ -510,6 +673,24 @@ namespace Quaver.Shared.Config
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
+                    EditorScrollSpeedKeys.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorPausePlay.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorDecreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    KeyEditorIncreaseAudioRate.ValueChanged += AutoSaveConfiguration;
+                    EditorBeatSnapColorType.ValueChanged += AutoSaveConfiguration;
+                    EditorShowLaneDividerLines.ValueChanged += AutoSaveConfiguration;
+                    EditorHitObjectsMidpointAnchored.ValueChanged += AutoSaveConfiguration;
+                    EditorPlayMetronome.ValueChanged += AutoSaveConfiguration;
+                    EditorMetronomePlayHalfBeats.ValueChanged += AutoSaveConfiguration;
+                    DisplaySongTimeProgressNumbers.ValueChanged += AutoSaveConfiguration;
+                    DisplayJudgementCounter.ValueChanged += AutoSaveConfiguration;
+                    SkipResultsScreenAfterQuit.ValueChanged += AutoSaveConfiguration;
+                    DisplayComboAlerts.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTopHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverTop.ValueChanged += AutoSaveConfiguration;
+                    LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
+                    UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
@@ -525,7 +706,7 @@ namespace Quaver.Shared.Config
             // Attempt to parse the value and default it if it can't.
             try
             {
-                binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
+                binded.Value = (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
             }
             catch (Exception e)
             {
@@ -707,14 +888,14 @@ namespace Quaver.Shared.Config
         /// </summary>
         /// <param name="sFilename"></param>
         /// <returns></returns>
-        private static bool IsFileReady(string sFilename)
+        public static bool IsFileReady(string sFilename)
         {
             // If the file can be opened for exclusive access it means that the file
             // is no longer locked by another process.
             try
             {
                 using (var inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
-                    return ( inputStream.Length > 0 );
+                    return (inputStream.Length > 0);
             }
             catch (Exception)
             {

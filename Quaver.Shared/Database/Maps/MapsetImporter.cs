@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -18,6 +18,7 @@ using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Skinning;
@@ -34,6 +35,11 @@ namespace Quaver.Shared.Database.Maps
         ///     List of file paths that are ready to be imported to the game.
         /// </summary>
         public static List<string> Queue { get; } = new List<string>();
+
+        /// <summary>
+        ///     Invoked when a map gets initialized for importing
+        /// </summary>
+        public static event EventHandler<ImportingMapsetEventArgs> ImportingMapset;
 
         /// <summary>
         /// Watches the songs directory for any changes.
@@ -132,7 +138,8 @@ namespace Quaver.Shared.Database.Maps
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
             // Skins
-            } else if (e.EndsWith(".qs"))
+            }
+            else if (e.EndsWith(".qs"))
             {
                 switch (screen.Type)
                 {
@@ -143,6 +150,18 @@ namespace Quaver.Shared.Database.Maps
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before importing a skin");
+                        return;
+                }
+            }
+            else if (e.EndsWith(".mp3") || e.EndsWith(".ogg"))
+            {
+                switch (screen.Type)
+                {
+                    case QuaverScreenType.Select:
+                        EditorScreen.HandleNewMapsetCreation(e);
+                        break;
+                    default:
+                        NotificationManager.Show(NotificationLevel.Error, "Go to the song select screen first to create a new mapset!");
                         return;
                 }
             }
@@ -158,10 +177,12 @@ namespace Quaver.Shared.Database.Maps
             if (MapManager.Selected.Value != null)
                 selectedMap = MapManager.Selected.Value;
 
-            foreach (var file in Queue)
+            for (var i = 0; i < Queue.Count; i++)
             {
+                var file = Queue[i];
                 var time = (long) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).Milliseconds;
                 var extractDirectory = $@"{ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(file)} - {time}/";
+                ImportingMapset.Invoke(typeof(MapsetImporter), new ImportingMapsetEventArgs(Queue, Path.GetFileName(file), i));
 
                 try
                 {
@@ -181,11 +202,11 @@ namespace Quaver.Shared.Database.Maps
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
                     Logger.Important($"Successfully imported {file}", LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Success, $"Successfully imported file: {Path.GetFileName(file)}");
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, $"Failed to import file: {Path.GetFileName(file)}");
                 }
             }
 

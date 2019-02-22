@@ -2,12 +2,11 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
 using Quaver.API.Enums;
-using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -25,8 +24,6 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "You'll need to be super accurate.";
 
         public bool Ranked { get; set; } = true;
-
-        public Sprite UnrankedSprite { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Chill };
 

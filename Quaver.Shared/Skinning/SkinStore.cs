@@ -2,7 +2,7 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Copyright (c) 2017-2018 Swan & The Quaver Team <support@quavergame.com>.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
 using System;
@@ -161,6 +161,11 @@ namespace Quaver.Shared.Skinning
         internal List<Texture2D> Skip { get; private set; }
 
         /// <summary>
+        ///     Displayed when the user achieves high combos
+        /// </summary>
+        internal List<Texture2D> ComboAlerts { get; private set; }
+
+        /// <summary>
         ///     Sound effect elements.
         /// </summary>
         internal AudioSample SoundHit { get; private set; }
@@ -175,6 +180,7 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundHover { get; private set; }
         internal AudioSample SoundFailure { get; private set; }
         internal AudioSample SoundRetry { get; private set; }
+        internal List<AudioSample> SoundComboAlerts { get; private set; }
 
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
@@ -229,10 +235,9 @@ namespace Quaver.Shared.Skinning
             LoadScoreboard();
             LoadHealthBar();
             LoadSkip();
+            LoadComboAlert();
             LoadSoundEffects();
         }
-
-
 
         /// <summary>
         ///     Loads a single texture element.
@@ -394,7 +399,7 @@ namespace Quaver.Shared.Skinning
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
                 if (j == Judgement.Ghost)
-                    return;
+                    continue;
 
                 var element = $"judge-{j.ToString().ToLower()}";
                Judgements[j] = new List<Texture2D>()
@@ -509,6 +514,24 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Loads combo alerts if they exist
+        /// </summary>
+        private void LoadComboAlert()
+        {
+            var comboAlertFolder = $"{Dir}/Combo/";
+
+            const string comboAlert = "combo-alert";
+
+            ComboAlerts = new List<Texture2D>();
+
+            for (var i = 0; i < 100 && File.Exists($"{comboAlertFolder}/{comboAlert}-{i + 1}.png"); i++)
+            {
+                ComboAlerts.Add(LoadSingleTexture($"{comboAlertFolder}/{comboAlert}-{i + 1}",
+                    $"Quaver.Resources/Textures/Skins/Shared/Combo/{comboAlert}-{i + 1}.png"));
+            }
+        }
+
+        /// <summary>
         ///     Loads all sound effect elements.
         /// </summary>
         private void LoadSoundEffects()
@@ -550,6 +573,12 @@ namespace Quaver.Shared.Skinning
 
             const string soundHover = "sound-hover";
             SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover, "Menu");
+
+            const string soundComboAlert = "sound-combo-alert";
+            SoundComboAlerts = new List<AudioSample>();
+
+            for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundComboAlert}-{i + 1}.wav"); i++)
+                SoundComboAlerts.Add(LoadSoundEffect($"{sfxFolder}/{soundComboAlert}-{i + 1}", soundComboAlert + "-" + i + 1, "Menu"));
         }
     }
 }
