@@ -30,6 +30,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
@@ -298,7 +299,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         /// </summary>
         private void RunObjectScreenCheckThread() => ThreadScheduler.Run(() =>
         {
-            while (!Ruleset.Screen.Exiting && Parent != null)
+            while (!Ruleset.Screen.Exiting)
             {
                 CheckIfObjectsOnScreen();
                 Thread.Sleep(30);
