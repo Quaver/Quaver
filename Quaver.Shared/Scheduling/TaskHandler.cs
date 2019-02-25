@@ -1,9 +1,22 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
+*/
+
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Scheduling
 {
+    /// <summary>
+    ///     This will be used to handle threaded tasks.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
     public class TaskHandler<T, TResult>
     {
         private Func<T, TResult> Function { get; }
@@ -34,21 +47,24 @@ namespace Quaver.Shared.Scheduling
             Source.Cancel();
             Source.Dispose();
             Source = new CancellationTokenSource();
-            try
+            Task.Run(async () =>
             {
-                var token = Source.Token;
-                var result = Function(input);
-                token.ThrowIfCancellationRequested();
-                OnCompleted?.Invoke(typeof(TaskHandler<T, TResult>), new TaskCompleteEventArgs<T,TResult>(input, result));
-            }
-            catch (OperationCanceledException e)
-            {
-                Cancel(input);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-            }
+                try
+                {
+                    var token = Source.Token;
+                    var result = Function(input);
+                    token.ThrowIfCancellationRequested();
+                    OnCompleted?.Invoke(typeof(TaskHandler<T, TResult>), new TaskCompleteEventArgs<T, TResult>(input, result));
+                }
+                catch (OperationCanceledException e)
+                {
+                    Cancel(input);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
         }
 
         /// <summary>
