@@ -477,18 +477,21 @@ namespace Quaver.Shared.Screens.Editor
             if (view.LayerCompositor.ScrollContainer.InputEnabled)
                 return;
 
+            var beatSnapValue = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)
+                ? BeatSnap.Value == 1 ? BeatSnap.Value : BeatSnap.Value / 2 : BeatSnap.Value;
+
             // Seek backwards
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
                 MouseManager.PreviousState.ScrollWheelValue)
             {
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, BeatSnap.Value);
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, beatSnapValue);
                 SetHitSoundObjectIndex();
             }
             // Seek Forwards
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
                 MouseManager.PreviousState.ScrollWheelValue)
             {
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, beatSnapValue);
                 SetHitSoundObjectIndex();
             }
         }
