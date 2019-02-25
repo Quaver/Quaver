@@ -666,8 +666,21 @@ namespace Quaver.Shared.Screens.Select
             {
                 DeletePath(path);
 
-                // Reload cache, reload available mapsets.
-                MapDatabaseCache.Load(false);
+                // Remove mapset/difficulty from cache.
+                switch (type)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps.ForEach(MapDatabaseCache.RemoveMap);
+                        break;
+
+                    case SelectContainerStatus.Difficulty:
+                        MapDatabaseCache.RemoveMap(AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps[view.DifficultyScrollContainer.SelectedMapIndex]);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
                 MapDatabaseCache.OrderAndSetMapsets();
 
                 if (PreviousSearchTerm.Length > 0)
