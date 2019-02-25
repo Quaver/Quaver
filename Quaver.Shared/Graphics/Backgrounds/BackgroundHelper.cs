@@ -135,6 +135,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 catch (OperationCanceledException e)
                 {
                     // ignored
+                    Console.WriteLine(e);
                 }
                 catch (Exception e)
                 {
