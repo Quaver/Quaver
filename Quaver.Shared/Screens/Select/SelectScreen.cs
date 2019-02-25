@@ -685,7 +685,7 @@ namespace Quaver.Shared.Screens.Select
                 {
                     view.Destroy();
                     AudioEngine.Track = null;
-                    MapManager.Selected = null;
+                    MapManager.Selected.Value = null;
                     MapDeletingInProgress = false;
                     ExitToMenu();
                     return;
