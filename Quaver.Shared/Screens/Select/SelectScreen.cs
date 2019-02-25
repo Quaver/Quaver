@@ -664,7 +664,6 @@ namespace Quaver.Shared.Screens.Select
 
             try
             {
-                // delet :amgery:
                 DeletePath(path);
 
                 // Reload cache, reload available mapsets.
@@ -733,10 +732,8 @@ namespace Quaver.Shared.Screens.Select
             var attributes = File.GetAttributes(path);
 
             if (attributes.HasFlag(FileAttributes.Directory))
-                // its a directory!
                 Directory.Delete(path, true);
             else
-                // its a file...
                 File.Delete(path);
         }
     }
