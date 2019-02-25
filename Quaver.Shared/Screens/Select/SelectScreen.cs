@@ -619,9 +619,6 @@ namespace Quaver.Shared.Screens.Select
                     // Dispose of the currently playing track.
                     AudioEngine.Track?.Dispose();
 
-                    // Dispose of the selected map.
-                    MapManager.Selected?.Dispose();
-
                     // Run deletion & Reload in the background.
                     ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath));
 
