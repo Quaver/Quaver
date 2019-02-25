@@ -597,7 +597,7 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
-            EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraphe", EditorVisualizationGraphType.Tick, data);
+            EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
