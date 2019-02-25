@@ -349,7 +349,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
-                    DrawLongNoteEnd = false;
+                    DrawLongNoteEnd = true;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -466,7 +466,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterAlpha = 1;
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
-                    DrawLongNoteEnd = false;
+                    DrawLongNoteEnd = true;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
