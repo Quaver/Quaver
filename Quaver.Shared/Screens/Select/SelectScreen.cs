@@ -19,6 +19,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
@@ -585,9 +586,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
             var type = view.ActiveContainer;
-
             var filePath = string.Empty;
-            var confirmDelete = new ConfirmDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : type == SelectContainerStatus.Difficulty ? "difficulty" : null )} ? ");
 
             var selectedMapset = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex];
 
@@ -616,39 +615,33 @@ namespace Quaver.Shared.Screens.Select
                     throw new ArgumentOutOfRangeException();
             }
 
-            confirmDelete.Confirmation += (sender, confirm) =>
+            var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : type == SelectContainerStatus.Difficulty ? "difficulty" : null )} ? ", (sender, confirm) =>
             {
-                if (!confirm)
-                    return;
-
                 MapDeletingInProgress = true;
 
                 try
                 {
-                    lock (this)
-                    {
-                        // Dispose of the background for the currently selected map.
-                        BackgroundHelper.Background?.Dispose();
+                    // Dispose of the background for the currently selected map.
+                    BackgroundHelper.Background?.Dispose();
 
-                        // Dispose of the currently playing track.
-                        AudioEngine.Track?.Dispose();
+                    // Dispose of the currently playing track.
+                    AudioEngine.Track?.Dispose();
 
-                        // Dispose of the selected map.
-                        MapManager.Selected?.Dispose();
+                    // Dispose of the selected map.
+                    MapManager.Selected?.Dispose();
 
-                        // Run deletion & Reload in the background.
-                        ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath));
-                    }
+                    // Run deletion & Reload in the background.
+                    ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath));
 
                     // Finally show confirmation notification
-                    NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted from Quaver!");
+                    NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {selectedMapset.Title} from Quaver!");
                 }
                 catch (ArgumentOutOfRangeException)
                 {
                     // Handle error
-                    NotificationManager.Show(NotificationLevel.Error,"An error has occured. Please check runtime.log!");
+                    NotificationManager.Show(NotificationLevel.Error, "An error has occured. Please check runtime.log!");
                 }
-            };
+            });
 
             // Finally show the confirmation dialog that orchestrates the deleting process.
             DialogManager.Show(confirmDelete);
