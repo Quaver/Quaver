@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Editor
                 return;
 
             var beatSnapValue = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)
-                ? BeatSnap.Value == 1 ? BeatSnap.Value : BeatSnap.Value / 2 : BeatSnap.Value;
+                ? BeatSnap.Value == BeatSnap.MinValue ? BeatSnap.Value : BeatSnap.Value / 2 : BeatSnap.Value;
 
             // Seek backwards
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
