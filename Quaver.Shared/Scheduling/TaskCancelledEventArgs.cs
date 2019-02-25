@@ -18,6 +18,6 @@ namespace Quaver.Shared.Scheduling
         /// </summary>
         public T Input { get; }
 
-        public TaskCancelledEventArgs (T input) => Input = input
+        public TaskCancelledEventArgs(T input) => Input = input;
     }
 }
