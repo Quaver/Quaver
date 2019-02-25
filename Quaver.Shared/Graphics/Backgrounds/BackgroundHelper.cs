@@ -118,6 +118,11 @@ namespace Quaver.Shared.Graphics.Backgrounds
             return tex;
         }
 
+        /// <summary>
+        ///     Called when the background image is finished loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private static void FinishLoad(object sender, TaskCompleteEventArgs<Map, Texture2D> args)
         {
             RawTexture = args.Result;
@@ -125,13 +130,18 @@ namespace Quaver.Shared.Graphics.Backgrounds
             {
                 try
                 {
-                    await Task.Delay(100, LoadBackgroundTask.Source.Token);
+                    var token = LoadBackgroundTask.Source.Token;
+                    await Task.Delay(100, token);
                     ShouldBlur = true;
                     Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(args.Input, args.Result));
                 }
                 catch (OperationCanceledException e)
                 {
                     // ignored
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
                 }
             });
         }
