@@ -315,7 +315,7 @@ namespace Quaver.Shared.Screens.Editor
                     OpenGoToDialog();
 
                 HandleCtrlShiftInput();
-                HandleCtrlInput(gameTime);
+                HandleCtrlInput();
                 HandleBeatSnapChanges();
                 HandleAudioSeeking();
             }
@@ -497,7 +497,7 @@ namespace Quaver.Shared.Screens.Editor
         /// <summary>
         ///     Handles all input when the user is holding down CTRL
         /// </summary>
-        private void HandleCtrlInput(GameTime gameTime)
+        private void HandleCtrlInput()
         {
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift) ||
