@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -52,11 +51,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         private static bool ShouldBlur { get; set; }
 
         /// <summary>
-        ///     Cancellation token to stop the existing background load tasks
-        /// </summary>
-        private static CancellationTokenSource Source { get; set; }
-
-        /// <summary>
         ///     Event invoked when a new background has been loaded
         /// </summary>
         public static event EventHandler<BackgroundLoadedEventArgs> Loaded;
@@ -67,12 +61,19 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static event EventHandler<BackgroundBlurredEventArgs> Blurred;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public static TaskHandler<Map, Texture2D> LoadBackgroundTask { get; private set; }
+
+        /// <summary>
         ///     Initializes the background helper for the entire game.
         /// </summary>
         public static void Initialize()
         {
             Background = new BackgroundImage(UserInterface.MenuBackground, 0);
-            Source = new CancellationTokenSource();
+            Func<Map, Texture2D> action = Load;
+            LoadBackgroundTask = new TaskHandler<Map, Texture2D>(action);
+            LoadBackgroundTask.OnCompleted += FinishLoad;
         }
 
         /// <summary>
@@ -109,31 +110,30 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     Queues a load of the background for a map
         /// </summary>
-        public static void Load(Map map) => ThreadScheduler.Run(() =>
+        private static Texture2D Load(Map map)
         {
+            Map = map;
+            var path = MapManager.GetBackgroundPath(map);
+            var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackground;
+            return tex;
+        }
+
+        /// <summary>
+        ///     Called when the background image is finished loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private static void FinishLoad(object sender, TaskCompleteEventArgs<Map, Texture2D> args)
+        {
+            RawTexture = args.Result;
             Task.Run(async () =>
             {
-                Source.Cancel();
-                Source.Dispose();
-                Source = new CancellationTokenSource();
-
-                Map = map;
-                var token = Source.Token;
-
-                token.ThrowIfCancellationRequested();
-
                 try
                 {
-                    var path = MapManager.GetBackgroundPath(map);
-
-                    var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackground;
-                    RawTexture = tex;
-
-                    token.ThrowIfCancellationRequested();
-
+                    var token = LoadBackgroundTask.Source.Token;
                     await Task.Delay(100, token);
                     ShouldBlur = true;
-                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
+                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(args.Input, RawTexture));
                 }
                 catch (OperationCanceledException e)
                 {
@@ -145,7 +145,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     Logger.Error(e, LogType.Runtime);
                 }
             });
-        });
+        }
 
         /// <summary>
         ///     Fades the background brightness all the way to black

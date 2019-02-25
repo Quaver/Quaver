@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
             screen.WorkingMap.BackgroundFile = fileName;
             MapManager.Selected.Value.BackgroundPath = fileName;
 
-            BackgroundHelper.Load(MapManager.Selected.Value);
+            BackgroundHelper.LoadBackgroundTask.Run(MapManager.Selected.Value);
             screen.Save();
         }
     }
