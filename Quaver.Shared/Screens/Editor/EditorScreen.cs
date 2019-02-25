@@ -534,6 +534,11 @@ namespace Quaver.Shared.Screens.Editor
 
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyEditorIncreaseAudioRate.Value))
                 ChangeAudioPlaybackRate(Direction.Forward);
+
+            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
+                ConfigManager.EditorScrollSpeedKeys.Value++;
+            else if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
+                ConfigManager.EditorScrollSpeedKeys.Value--;
         }
 
         /// <summary>
