@@ -61,7 +61,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static event EventHandler<BackgroundBlurredEventArgs> Blurred;
 
         /// <summary>
-        /// 
+        /// Task Handler for Background loading.
         /// </summary>
         public static TaskHandler<Map, Texture2D> LoadBackgroundTask { get; private set; }
 
