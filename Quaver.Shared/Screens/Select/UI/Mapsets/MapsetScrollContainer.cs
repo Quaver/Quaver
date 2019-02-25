@@ -517,7 +517,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             View.Banner?.Brightness?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, View.Banner.Brightness.Alpha, 1, 200));
 
             BackgroundHelper.FadeToBlack();
-            BackgroundHelper.Load(MapManager.Selected.Value);
+            BackgroundHelper.LoadBackgroundTask.Run(MapManager.Selected.Value);
         }
 
         /// <summary>

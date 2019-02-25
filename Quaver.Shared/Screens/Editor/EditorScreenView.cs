@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Editor
                 return;
             }
 
-            BackgroundHelper.Load(MapManager.Selected.Value);
+            BackgroundHelper.LoadBackgroundTask.Run(MapManager.Selected.Value);
         }
 
         /// <summary>

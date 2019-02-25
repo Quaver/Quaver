@@ -97,7 +97,7 @@ namespace Quaver.Shared.Screens.Result
             }
 
             // Otherwise queue a load on it.
-            BackgroundHelper.Load(MapManager.Selected.Value);
+            BackgroundHelper.LoadBackgroundTask.Run(MapManager.Selected.Value);
         }
 
         /// <summary>
