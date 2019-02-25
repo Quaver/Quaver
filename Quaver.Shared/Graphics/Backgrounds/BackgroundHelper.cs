@@ -120,13 +120,16 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 Map = map;
                 var token = Source.Token;
 
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
                     var path = MapManager.GetBackgroundPath(map);
+
                     var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackground;
+                    RawTexture = tex;
 
                     token.ThrowIfCancellationRequested();
-                    RawTexture = tex;
 
                     await Task.Delay(100, token);
                     ShouldBlur = true;
@@ -135,6 +138,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 catch (OperationCanceledException e)
                 {
                     // ignored
+                    Console.WriteLine(e);
                 }
                 catch (Exception e)
                 {
