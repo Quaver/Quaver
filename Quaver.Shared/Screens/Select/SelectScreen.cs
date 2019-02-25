@@ -372,14 +372,6 @@ namespace Quaver.Shared.Screens.Select
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0)
                 return;
 
-            // osu! loaded map check to avoid errors due to the map loaded being virtual from osu.
-            if (MapManager.Selected.Value.Game == MapGame.Osu)
-            {
-                // Display error message
-                NotificationManager.Show(NotificationLevel.Error,$"This map cannot be deleted due to it being loaded directly from osu!");
-                return;
-            }
-
             try
             {
                 DeleteSelected();
@@ -658,6 +650,14 @@ namespace Quaver.Shared.Screens.Select
 
             if (view.MapsetScrollContainer.SelectedMapsetIndex < 0)
                 return;
+
+            // Externally loaded map check
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                // Display error message
+                NotificationManager.Show(NotificationLevel.Error,"This map was loaded from an external source, it cannot be deleted.");
+                return;
+            }
 
             var preservedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
             var preservedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
