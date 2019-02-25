@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
@@ -17,8 +18,10 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
@@ -67,6 +70,14 @@ namespace Quaver.Shared.Screens.Select
         ///     True when exiting
         /// </summary>
         public bool IsExitingToGameplay { get; private set; }
+
+        /// <summary>
+        ///     Used as an extra precaution for spamming the delete + enter buttons to spam delete maps.
+        ///
+        ///     Which causes FileNotFoundException's due to the highlighted file being deleted before it could update
+        ///     properly.
+        /// </summary>
+        private bool MapDeletingInProgress { get; set; }
 
         /// <summary>
         /// </summary>
@@ -150,7 +161,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0 || Exiting)
+            if (DialogManager.Dialogs.Count != 0 || MapDeletingInProgress || Exiting)
                 return;
 
             HandleKeyPressEscape();
@@ -159,6 +170,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressLeft();
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
+            HandleKeyPressDel();
             HandleKeyPressF1();
             // HandleKeyPressF2(); // disabled for now, till the container issue is resolved.
             HandleMousePressRight();
@@ -352,6 +364,32 @@ namespace Quaver.Shared.Screens.Select
         }
 
         /// <summary>
+        ///     Handles when the user presses the del key
+        /// </summary>
+        private void HandleKeyPressDel()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0)
+                return;
+
+            // osu! loaded map check to avoid errors due to the map loaded being virtual from osu.
+            if (MapManager.Selected.Value.Game == MapGame.Osu)
+            {
+                // Display error message
+                NotificationManager.Show(NotificationLevel.Error,$"This map cannot be deleted due to it being loaded directly from osu!");
+                return;
+            }
+
+            try
+            {
+                DeleteSelected();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                MapDeletingInProgress = false;
+            }
+        }
+
+        /// <summary>
         ///     Handles when the user presses the F1 key
         /// </summary>
         private void HandleKeyPressF1()
@@ -535,6 +573,178 @@ namespace Quaver.Shared.Screens.Select
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, mapset.Maps[randomMapIndex], true);
                     break;
             }
+        }
+
+        /// <summary>
+        ///     Used to start the deleting process.
+        ///
+        ///     woo now AiAe will stop telling me to add this.
+        /// </summary>
+        /// <param name="type"></param>
+        private void DeleteSelected()
+        {
+            var view = View as SelectScreenView;
+            var type = view.ActiveContainer;
+
+            var filePath = string.Empty;
+            var confirmDelete = new ConfirmDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : type == SelectContainerStatus.Difficulty ? "difficulty" : null )} ? ");
+
+            var selectedMapset = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex];
+
+            if (AvailableMapsets.Count == 0)
+                return;
+
+            switch (type)
+            {
+                case SelectContainerStatus.Mapsets:
+                    if (selectedMapset == null)
+                        return;
+
+                    filePath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+                    break;
+
+                case SelectContainerStatus.Difficulty:
+                    var selectedDifficulty = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps[view.DifficultyScrollContainer.SelectedMapIndex];
+
+                    if (selectedDifficulty == null)
+                        return;
+
+                    filePath = selectedMapset.Maps.Count > 1 ? Path.Combine(Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory), selectedDifficulty.Path) : Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            confirmDelete.Confirmation += (sender, confirm) =>
+            {
+                if (!confirm)
+                    return;
+
+                MapDeletingInProgress = true;
+
+                try
+                {
+                    lock (this)
+                    {
+                        // Dispose of the background for the currently selected map.
+                        BackgroundHelper.Background?.Dispose();
+
+                        // Dispose of the currently playing track.
+                        AudioEngine.Track?.Dispose();
+
+                        // Dispose of the selected map.
+                        MapManager.Selected?.Dispose();
+
+                        // Run deletion & Reload in the background.
+                        ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath));
+                    }
+
+                    // Finally show confirmation notification
+                    NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted from Quaver!");
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // Handle error
+                    NotificationManager.Show(NotificationLevel.Error,"An error has occured. Please check runtime.log!");
+                }
+            };
+
+            // Finally show the confirmation dialog that orchestrates the deleting process.
+            DialogManager.Show(confirmDelete);
+        }
+
+        /// <summary>
+        ///     Used to delete a mapset or difficulty, then reload the available maps.
+        /// </summary>
+        /// <param name="path"></param>
+        private void DeleteAndReloadMaps(string path)
+        {
+            var view = View as SelectScreenView;
+            var type = view.ActiveContainer;
+
+            if (view.MapsetScrollContainer.SelectedMapsetIndex < 0)
+                return;
+
+            var preservedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var preservedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+
+            try
+            {
+                // delet :amgery:
+                DeletePath(path);
+
+                // Reload cache, reload available mapsets.
+                MapDatabaseCache.Load(false);
+                MapDatabaseCache.OrderAndSetMapsets();
+
+                if (PreviousSearchTerm.Length > 0)
+                {
+                    // Grab the mapsets available to the user according to their previous search term.
+                    AvailableMapsets = MapsetHelper.SearchMapsets(MapManager.Mapsets, PreviousSearchTerm);
+                    AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
+                }
+                else
+                    AvailableMapsets = MapManager.Mapsets;
+
+                // If the deleted mapset was the last one, then exit back to menu.
+                if (AvailableMapsets.Count == 0)
+                {
+                    view.Destroy();
+                    AudioEngine.Track = null;
+                    MapManager.Selected = null;
+                    MapDeletingInProgress = false;
+                    ExitToMenu();
+                    return;
+                }
+
+                // Repopulate container.
+                view.MapsetScrollContainer.InitializeWithNewSets();
+
+                // Restore index
+                switch (type)
+                {
+                    case SelectContainerStatus.Mapsets:
+                        // if the selected mapset is at the end of the list
+                        if (preservedMapsetIndex == AvailableMapsets.Count)
+                            view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
+                        else
+                            view.MapsetScrollContainer.SelectMapset(preservedMapsetIndex);
+                        break;
+
+                    case SelectContainerStatus.Difficulty:
+                        if (preservedDifficultyIndex == AvailableMapsets[preservedMapsetIndex].Maps.Count)
+                            view.MapsetScrollContainer.SelectMap(preservedMapsetIndex, AvailableMapsets[preservedMapsetIndex].Maps[preservedDifficultyIndex - 1], true);
+                        else
+                            view.MapsetScrollContainer.SelectMap(preservedMapsetIndex, AvailableMapsets[preservedMapsetIndex].Maps[preservedDifficultyIndex], true);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            MapDeletingInProgress = false;
+        }
+
+        /// <summary>
+        ///     Determines if the path is a file or directory then deletes it using the appropriate method.
+        /// </summary>
+        /// <param name="path"></param>
+        private void DeletePath(string path)
+        {
+            var attributes = File.GetAttributes(path);
+
+            if (attributes.HasFlag(FileAttributes.Directory))
+                // its a directory!
+                Directory.Delete(path, true);
+            else
+                // its a file...
+                File.Delete(path);
         }
     }
 }
