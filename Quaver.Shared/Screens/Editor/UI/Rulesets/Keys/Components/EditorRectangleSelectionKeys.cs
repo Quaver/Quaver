@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
@@ -101,7 +102,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     var rect = Ruleset.ScrollContainer.ScreenRectangle;
                     rect.Width += 150;
 
-                    var graph = Ruleset.VisualizationGraphs[Ruleset.SelectedVisualizationGraph.Value];
+                    var graph = Ruleset.VisualizationGraphs[ConfigManager.EditorVisualizationGraph.Value];
                     var view = (EditorScreenView) Ruleset.Screen.View;
 
                     if (!GraphicsHelper.RectangleContains(graph.Graph.ScreenRectangle, MouseManager.CurrentState.Position)

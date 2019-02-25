@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
@@ -329,6 +330,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SkipResultsScreenAfterQuit { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<EditorVisualizationGraphType> EditorVisualizationGraph { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -592,6 +597,7 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
+            EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraphe", EditorVisualizationGraphType.Tick, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -691,6 +697,7 @@ namespace Quaver.Shared.Config
                     LaneCoverTop.ValueChanged += AutoSaveConfiguration;
                     LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
                     UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
+                    EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

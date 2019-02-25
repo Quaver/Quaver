@@ -229,8 +229,8 @@ namespace Quaver.Shared.Screens.Editor.UI
 
                 foreach (EditorVisualizationGraphType graph in Enum.GetValues(typeof(EditorVisualizationGraphType)))
                 {
-                    if (ImGui.MenuItem(graph.ToString(), null, ruleset.SelectedVisualizationGraph.Value == graph))
-                        ruleset.SelectedVisualizationGraph.Value = graph;
+                    if (ImGui.MenuItem(graph.ToString(), null, ConfigManager.EditorVisualizationGraph.Value == graph))
+                        ConfigManager.EditorVisualizationGraph.Value = graph;
                 }
 
                 ImGui.EndMenu();
