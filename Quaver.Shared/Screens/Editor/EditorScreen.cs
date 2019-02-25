@@ -314,10 +314,10 @@ namespace Quaver.Shared.Screens.Editor
                 if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
                     OpenGoToDialog();
 
-                HandleAudioSeeking();
-
+                HandleCtrlShiftInput();
                 HandleCtrlInput(gameTime);
                 HandleBeatSnapChanges();
+                HandleAudioSeeking();
             }
 
             var view = (EditorScreenView) View;
@@ -463,37 +463,35 @@ namespace Quaver.Shared.Screens.Editor
         }
 
         /// <summary>
-        ///     Handles seeking through the audio whether with the scroll wheel or
-        ///     arrow keys
+        ///     Handles seeking through the audio whether with the scroll wheel or arrow keys
         /// </summary>
         private void HandleAudioSeeking()
         {
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift)
-                || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
-                return;
-
             var view = (EditorScreenView) View;
 
-            if (view.LayerCompositor.ScrollContainer.InputEnabled)
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || view.LayerCompositor.ScrollContainer.InputEnabled ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
-            var beatSnapValue = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)
-                ? BeatSnap.Value == BeatSnap.MinValue ? BeatSnap.Value : BeatSnap.Value / 2 : BeatSnap.Value;
+            Seek(BeatSnap.Value);
+        }
 
-            // Seek backwards
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
-                MouseManager.PreviousState.ScrollWheelValue)
-            {
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, beatSnapValue);
-                SetHitSoundObjectIndex();
-            }
-            // Seek Forwards
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
-                MouseManager.PreviousState.ScrollWheelValue)
-            {
-                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, beatSnapValue);
-                SetHitSoundObjectIndex();
-            }
+        /// <summary>
+        ///     Handles all input when the user is holding down CTRL and SHIFT
+        /// </summary>
+        private void HandleCtrlShiftInput()
+        {
+            var view = (EditorScreenView) View;
+
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || view.LayerCompositor.ScrollContainer.InputEnabled ||
+                !((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift)) &&
+                (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            Seek(BeatSnap.Value == BeatSnap.MinValue ? BeatSnap.Value : BeatSnap.Value / 2);
         }
 
         /// <summary>
@@ -501,8 +499,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void HandleCtrlInput(GameTime gameTime)
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.S))
@@ -543,7 +542,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue || KeyboardManager.IsUniqueKeyPress(Keys.Up))
@@ -1070,6 +1071,27 @@ namespace Quaver.Shared.Screens.Editor
                 view.TimingPointChanger.Show();
 
             view.ControlBar.Parent = view.TimingPointChanger.Dialog;
+        }
+
+        /// <summary>
+        ///     Used to seek the track to the nearest beatsnap value.
+        /// </summary>
+        private void Seek(int beatSnapValue)
+        {
+            // Seek backwards
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || MouseManager.CurrentState.ScrollWheelValue >
+                MouseManager.PreviousState.ScrollWheelValue)
+            {
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, beatSnapValue);
+                SetHitSoundObjectIndex();
+            }
+            // Seek Forwards
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
+                     MouseManager.PreviousState.ScrollWheelValue)
+            {
+                AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, beatSnapValue);
+                SetHitSoundObjectIndex();
+            }
         }
     }
 }
