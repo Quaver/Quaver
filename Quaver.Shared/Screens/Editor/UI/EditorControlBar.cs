@@ -82,6 +82,11 @@ namespace Quaver.Shared.Screens.Editor.UI
         private bool DraggingInLastFrame { get; set; }
 
         /// <summary>
+        ///     Determines if the audio has been previously paused before dragging the progress bar.
+        /// </summary>
+        private bool PreviouslyPlaying { get; set; }
+
+        /// <summary>
         /// </summary>
         private Sprite ProgressBall { get; set; }
 
@@ -316,6 +321,8 @@ namespace Quaver.Shared.Screens.Editor.UI
 
                 if ((int) targetPos != (int) AudioEngine.Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
                 {
+                    PreviouslyPlaying = AudioEngine.Track.IsPlaying;
+
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
 
@@ -332,7 +339,7 @@ namespace Quaver.Shared.Screens.Editor.UI
             }
             else if (DraggingInLastFrame)
             {
-                if (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
+                if (PreviouslyPlaying && (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed)))
                     AudioEngine.Track.Play();
 
                 DraggingInLastFrame = false;
