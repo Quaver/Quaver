@@ -4,10 +4,22 @@ using System.Text;
 
 namespace Quaver.Shared.Scheduling
 {
-    public class TaskCompleteEventArgs<T> : EventArgs
+    public class TaskCompleteEventArgs<T, TResult> : EventArgs
     {
-        public T Value { get; }
+        /// <summary>
+        ///     Input given to task
+        /// </summary>
+        public T Input { get; }
 
-        public TaskCompleteEventArgs(T value) => Value = value;
+        /// <summary>
+        ///     Result of the task
+        /// </summary>
+        public TResult Result { get; }
+
+        public TaskCompleteEventArgs(T input, TResult result)
+        {
+            Input = Input;
+            Result = result;
+        }
     }
 }

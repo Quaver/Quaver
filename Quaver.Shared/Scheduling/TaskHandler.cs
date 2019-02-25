@@ -1,48 +1,67 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Scheduling
 {
-    public class TaskHandler<T>
+    public class TaskHandler<T, TResult>
     {
-        private Action<T> Action { get; }
+        private Func<T, TResult> Function { get; }
 
         /// <summary>
-        ///     Event Invoked when the task gets completed
+        ///     Event Invoked when the task gets completed.
         /// </summary>
-        public event EventHandler<TaskCompleteEventArgs<T>> OnCompleted;
+        public event EventHandler<TaskCompleteEventArgs<T, TResult>> OnCompleted;
 
         /// <summary>
-        ///     Event Invoked when the task gets cancelled
+        ///     Event Invoked when the task gets cancelled.
         /// </summary>
-        public event EventHandler<TaskCancelledEventArgs> OnCancelled;
+        public event EventHandler<TaskCancelledEventArgs<T>> OnCancelled;
 
-        private CancellationTokenSource Source { get; set; }
+        /// <summary>
+        ///     Used to handle Task Cancellation.
+        /// </summary>
+        public CancellationTokenSource Source { get; private set; } = new CancellationTokenSource();
 
-        public TaskHandler(Action<T> action) => Action = action;
+        public TaskHandler(Func<T, TResult> function) => Function = function;
 
-        private void Run()
+        /// <summary>
+        ///     This method will cancel the previous task and run a new task.
+        /// </summary>
+        /// <param name="input"></param>
+        public void Run(T input)
         {
-            // do stuff
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
             try
             {
-                //var value = Action.Invoke();
-                Source.Token.ThrowIfCancellationRequested();
-                OnCompleted?.Invoke(typeof(TaskHandler<T>), new TaskCompleteEventArgs());
+                var token = Source.Token;
+                var result = Function(input);
+                token.ThrowIfCancellationRequested();
+                OnCompleted?.Invoke(typeof(TaskHandler<T, TResult>), new TaskCompleteEventArgs<T,TResult>(input, result));
             }
             catch (OperationCanceledException e)
             {
-                Cancel();
+                Cancel(input);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
             }
         }
 
-        private void Cancel() => OnCancelled?.Invoke(typeof(TaskHandler<T>), new TaskCancelledEventArgs());
+        /// <summary>
+        ///     This method is called when a task is cancelled.
+        /// </summary>
+        /// <param name="input"></param>
+        private void Cancel(T input) => OnCancelled?.Invoke(typeof(TaskHandler<T, TResult>), new TaskCancelledEventArgs<T>(input));
 
+        /// <summary>
+        ///     Should be called when Task Handler will no longer be used.
+        /// </summary>
         public void Dispose()
         {
-            Cancel();
             OnCompleted = null;
             OnCancelled = null;
         }

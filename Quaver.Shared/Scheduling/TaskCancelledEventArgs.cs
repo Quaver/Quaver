@@ -4,11 +4,13 @@ using System.Text;
 
 namespace Quaver.Shared.Scheduling
 {
-    public class TaskCancelledEventArgs : EventArgs
+    public class TaskCancelledEventArgs<T> : EventArgs
     {
-        public TaskCancelledEventArgs ()
-        {
+        /// <summary>
+        ///     Input given to task before cancelled
+        /// </summary>
+        public T Input { get; }
 
-        }
+        public TaskCancelledEventArgs (T input) => Input = input
     }
 }
