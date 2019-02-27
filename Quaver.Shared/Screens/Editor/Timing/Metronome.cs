@@ -52,6 +52,7 @@ namespace Quaver.Shared.Screens.Editor.Timing
         /// </summary>
         private int LastTotalBeats { get; set; }
 
+
         /// <summary>
         /// </summary>
         /// <param name="qua"></param>
@@ -75,7 +76,10 @@ namespace Quaver.Shared.Screens.Editor.Timing
             var point = Qua.GetTimingPointAt(time);
 
             if (time < point.StartTime)
+            {
+                LastBeat = -1;
                 return;
+            }
 
             // Get the total amount of beats that'll be played for the timing point.
             // This can depend on if the user wants 8 beats or 4.
