@@ -11,9 +11,9 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
-using Quaver.Shared.Screens.Menu.UI.Dialogs;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -97,7 +97,11 @@ namespace Quaver.Shared.Screens.Menu
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                DialogManager.Show(new QuitDialog());
+                DialogManager.Show(new ConfirmCancelDialog("Are you sure you want to exit Quaver?",(sender, args) =>
+                {
+                    var game = GameBase.Game as QuaverGame;
+                    game?.Exit();
+                }));
         }
         
         /// <inheritdoc />
