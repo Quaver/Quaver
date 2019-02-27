@@ -418,11 +418,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Creates the HitError Sprite.
         /// </summary>
-        private void CreateHitError() => HitError = new HitErrorBar(new ScalableVector2(50, 10))
+        private void CreateHitError() => HitError = new HitErrorBar(new ScalableVector2(50, Skin.HitErrorHeight))
         {
             Parent = Playfield.ForegroundContainer,
             Alignment = Alignment.MidCenter,
-            Position = new ScalableVector2(0, 55)
+            Position = new ScalableVector2(Skin.HitErrorPosX, Skin.HitErrorPosY)
         };
 
         /// <summary>
