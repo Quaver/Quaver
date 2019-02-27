@@ -815,7 +815,7 @@ namespace Quaver.Shared.Screens.Editor
             qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
 
             var dir = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}";
-            var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+            var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
             qua.Save(path);
 
             // Add the new map to the db.
@@ -882,7 +882,7 @@ namespace Quaver.Shared.Screens.Editor
                 File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
 
                 // Save the new .qua file into the directory
-                var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+                var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                 qua.Save(path);
 
                 // Place the new map inside of the database and make sure all the loaded maps are correct
