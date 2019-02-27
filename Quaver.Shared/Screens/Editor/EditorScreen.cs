@@ -144,6 +144,12 @@ namespace Quaver.Shared.Screens.Editor
         public Bindable<EditorLayerInterface> ActiveLayerInterface { get; }
 
         /// <summary>
+        ///     Dictates if the user has clicked the play test button once, so they can be disallowed
+        ///     from spamming it - causing your entire PC to go to absolute shit.
+        /// </summary>
+        private bool IsGoingToPlayTest { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -921,15 +927,22 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void GoPlayTest()
         {
+            if (IsGoingToPlayTest)
+                return;
+
+            IsGoingToPlayTest = true;
+
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= AudioEngine.Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There aren't any hitobjects to play test past this point!");
+                IsGoingToPlayTest = false;
                 return;
             }
 
             if (DialogManager.Dialogs.Count != 0)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before test playing!");
+                IsGoingToPlayTest = false;
                 return;
             }
 
