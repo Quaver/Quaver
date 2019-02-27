@@ -165,7 +165,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
-            CreateScoreboard();
+
+            if (!Screen.IsPlayTesting)
+                CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
 
