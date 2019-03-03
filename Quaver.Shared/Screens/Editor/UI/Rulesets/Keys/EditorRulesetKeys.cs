@@ -63,10 +63,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorVisualizationGraphType> SelectedVisualizationGraph { get; }
-
-        /// <summary>
-        /// </summary>
         public Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer> VisualizationGraphs { get; }
             = new Dictionary<EditorVisualizationGraphType, EditorVisualizationGraphContainer>();
 
@@ -96,9 +92,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         public EditorRulesetKeys(EditorScreen screen) : base(screen)
         {
             CompositionTool = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select) { Value = EditorCompositionTool.Select };
-            SelectedVisualizationGraph = new Bindable<EditorVisualizationGraphType>(EditorVisualizationGraphType.Tick)
-                { Value = EditorVisualizationGraphType.Tick};
-
             CreateScrollContainer();
             CreateVisualizationGraphs();
             ActionManager = CreateActionManager();
@@ -112,7 +105,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            VisualizationGraphs[SelectedVisualizationGraph.Value]?.Update(gameTime);
+            VisualizationGraphs[ConfigManager.EditorVisualizationGraph.Value]?.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -125,10 +118,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             foreach (var i in VisualizationGraphs)
             {
                 if (i.Value?.Graph != null)
-                    i.Value.Graph.Visible = i.Value.Type == SelectedVisualizationGraph.Value;
+                    i.Value.Graph.Visible = i.Value.Type == ConfigManager.EditorVisualizationGraph.Value;
             }
 
-            VisualizationGraphs[SelectedVisualizationGraph.Value]?.Draw(gameTime);
+            VisualizationGraphs[ConfigManager.EditorVisualizationGraph.Value]?.Draw(gameTime);
             base.Draw(gameTime);
         }
 
@@ -237,18 +230,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 KeyboardManager.CurrentState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
                 return;
 
-            var index = (int) SelectedVisualizationGraph.Value;
+            var index = (int) ConfigManager.EditorVisualizationGraph.Value;
 
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.Z))
             {
                 if (index - 1 >= 0)
-                    SelectedVisualizationGraph.Value = (EditorVisualizationGraphType) index - 1;
+                    ConfigManager.EditorVisualizationGraph.Value = (EditorVisualizationGraphType) index - 1;
             }
 
             if (KeyboardManager.IsUniqueKeyPress(Microsoft.Xna.Framework.Input.Keys.X))
             {
                 if (index + 1 < Enum.GetNames(typeof(EditorVisualizationGraphType)).Length)
-                    SelectedVisualizationGraph.Value = (EditorVisualizationGraphType) index + 1;
+                    ConfigManager.EditorVisualizationGraph.Value = (EditorVisualizationGraphType) index + 1;
             }
         }
 
@@ -603,7 +596,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 {
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
-                    
+
                     AudioEngine.Track.Seek(pendingObject.StartTime);
                     Screen.SetHitSoundObjectIndex();
                 });

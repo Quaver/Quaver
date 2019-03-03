@@ -322,8 +322,17 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
                     HandleQuickExit();
 
-                // Handle play test autoplay input.
+                // Go back to editor at the same time
                 if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                {
+                    if (AudioEngine.Track.IsPlaying)
+                        AudioEngine.Track.Pause();
+
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+                }
+
+                // Handle play test autoplay input.
+                if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 {
                     var inputManager = (KeysInputManager) Ruleset.InputManager;
 
