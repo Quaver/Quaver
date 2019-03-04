@@ -12,6 +12,7 @@ using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
@@ -20,7 +21,6 @@ using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
-using Quaver.Shared.Screens.Menu.UI.Dialogs;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -218,7 +218,14 @@ namespace Quaver.Shared.Screens.Menu
             const int targetY = -5;
             const int animationTime = 1100;
 
-            PowerButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), (o, e) => DialogManager.Show(new QuitDialog()))
+            PowerButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), (o, e) =>
+            {
+                DialogManager.Show(new ConfirmCancelDialog("Are you sure you want to exit Quaver?",(sender, args) =>
+                {
+                    var game = GameBase.Game as QuaverGame;
+                    game?.Exit();
+                }));
+            })
             {
                 Alignment = Alignment.BotRight,
             };

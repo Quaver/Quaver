@@ -150,7 +150,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         ///     Creates the text that displays the modifier's description.
         /// </summary>
         private void CreateModifierDescription() =>
-            _descriptionText = new SpriteText(Fonts.Exo2SemiBold, "", 12, false)
+            _descriptionText = new SpriteText(Fonts.Exo2SemiBold, "", 12)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

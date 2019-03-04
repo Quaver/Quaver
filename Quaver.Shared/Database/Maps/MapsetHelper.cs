@@ -136,16 +136,16 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        /// Searches and returns mapsets given a term
+        /// Searches and returns mapsets given a query
         /// </summary>
         /// <param name="mapsets"></param>
-        /// <param name="term"></param>
+        /// <param name="query></param>
         /// <returns></returns>
-        internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string term)
+        internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string query)
         {
             var sets = new List<Mapset>();
 
-            term = term.ToLower();
+            query = query.ToLower();
 
             // All the possible relational operators for the search query
             var operators = new List<string>
@@ -158,39 +158,60 @@ namespace Quaver.Shared.Database.Maps
                 ">",
                 "=",
             };
-            var options = new List<string>
+
+            // The shortest and longest matching sequences for every option. For example, "d" and "difficulty" means you
+            // can search for "d>5", "di>5", "dif>5" and so on up to "difficulty>5".
+            //
+            // When adding new options with overlapping first characters, specify the shortest unambiguous sequence as
+            // the new key. So, for example, "duration" should be added as "du", "duration". This way "d" still searches
+            // for "difficulty" (backwards-compatibility) and "du" searches for duration.
+            var options = new Dictionary<SearchFilterOption, (string Shortest, string Longest)>()
             {
-                "bpm",
-                "diff",
-                "length",
-                "keys",
-                "status"
+                { SearchFilterOption.BPM,        ("b", "bpm") },
+                { SearchFilterOption.Difficulty, ("d", "difficulty") },
+                { SearchFilterOption.Length,     ("l", "length") },
+                { SearchFilterOption.Keys,       ("k", "keys") },
+                { SearchFilterOption.Status,     ("s", "status") },
             };
 
             // Stores a dictionary of the found pairs in the search query
             // <option, value, operator>
-            var foundSearchQueries = new List<SearchQuery>();
+            var foundSearchFilters = new List<SearchFilter>();
 
-            // Get a list of all the matching search queries
-            foreach (var op in operators)
+            var terms = query.Split(null).ToList();
+
+            // Get a list of all the matching search filters.
+            // All matched filters are removed from the list of terms.
+            for (var i = terms.Count - 1; i >= 0; i--)
             {
-                if (!Regex.Match(term, $@"\b{op}\b", RegexOptions.IgnoreCase).Success)
-                    continue;
+                var term = terms[i];
 
-                // Get the search option alone.
-                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase))
-                    .Split(' ').Last();
+                foreach (var op in operators)
+                {
+                    var match = Regex.Match(term, $@"(.+)\b{op}\b(.+)");
+                    if (!match.Success)
+                        continue;
 
-                var val = term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
-                         .First();
+                    var searchOption = match.Groups[1].Value;
+                    var val = match.Groups[2].Value;
 
-                if (options.Contains(searchOption))
-                    foundSearchQueries.Add(new SearchQuery
+                    foreach (var (option, (shortest, longest)) in options)
                     {
-                        Operator = op,
-                        Option = searchOption,
-                        Value = val
-                    });
+                        if (longest.StartsWith(searchOption) && searchOption.StartsWith(shortest))
+                        {
+                            foundSearchFilters.Add(new SearchFilter
+                            {
+                                Option = option,
+                                Value = val,
+                                Operator = op,
+                            });
+
+                            // Remove it from the search terms.
+                            terms.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
             }
 
             // Create a list of mapsets with the matched mapsets
@@ -200,32 +221,32 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var exitLoop = false;
 
-                    foreach (var searchQuery in foundSearchQueries)
+                    foreach (var searchQuery in foundSearchFilters)
                     {
                         switch (searchQuery.Option)
                         {
-                            case "bpm":
+                            case SearchFilterOption.BPM:
                                 if (!float.TryParse(searchQuery.Value, out var valBpm))
                                     exitLoop = true;
 
                                 if (!CompareValues(map.Bpm, valBpm, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
-                            case "diff":
+                            case SearchFilterOption.Difficulty:
                                 if (!float.TryParse(searchQuery.Value, out var valDiff))
                                     exitLoop = true;
 
                                 if (!CompareValues(map.Difficulty10X, valDiff, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
-                            case "length":
+                            case SearchFilterOption.Length:
                                 if (!float.TryParse(searchQuery.Value, out var valLength))
                                     exitLoop = true;
 
                                 if (!CompareValues(map.SongLength, valLength, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
-                            case "keys":
+                            case SearchFilterOption.Keys:
                                 switch (map.Mode)
                                 {
                                     case GameMode.Keys4:
@@ -246,7 +267,7 @@ namespace Quaver.Shared.Database.Maps
                                         throw new ArgumentOutOfRangeException();
                                 }
                                 break;
-                            case "status":
+                            case SearchFilterOption.Status:
                                 if (!(searchQuery.Operator.Equals(operators[2]) ||
                                     searchQuery.Operator.Equals(operators[6])))
                                     exitLoop = true;
@@ -284,24 +305,30 @@ namespace Quaver.Shared.Database.Maps
                     if (exitLoop)
                         continue;
 
-                    // Find the parts of the original query that aren't operators
-                    term = foundSearchQueries.Aggregate(term,
-                        (current, query) => current.Replace(query.Option + query.Operator + query.Value, "")).Trim();
+                    // Check if the terms exist in any of the following properties.
+                    foreach (var term in terms)
+                    {
+                        try
+                        {
+                            if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
+                                !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
+                                !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
+                                !map.DifficultyName.ToLower().Contains(term))
+                            {
+                                exitLoop = true;
+                                break;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Some values can be null and they break the game.
+                            exitLoop = true;
+                            break;
+                        }
+                    }
 
-                    // Check if the term exist in any of the following properties
-                    try
-                    {
-                        if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
-                            !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
-                            !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                            !map.DifficultyName.ToLower().Contains(term))
-                            continue;
-                    }
-                    catch (Exception)
-                    {
-                        // Some values can be null and they break the game.
+                    if (exitLoop)
                         continue;
-                    }
 
                     // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
@@ -355,14 +382,14 @@ namespace Quaver.Shared.Database.Maps
     }
 
     /// <summary>
-    ///     A struct for the map searching method.
+    ///     A struct for the map searching filter.
     /// </summary>
-    public struct SearchQuery
+    public struct SearchFilter
     {
         /// <summary>
         ///     The search option - bpm, length, etc,
         /// </summary>
-        public string Option;
+        public SearchFilterOption Option;
 
         /// <summary>
         ///     The value the user is searching
@@ -373,5 +400,36 @@ namespace Quaver.Shared.Database.Maps
         ///     The operator the user gave
         /// </summary>
         public string Operator;
+    }
+
+    /// <summary>
+    ///     Options you can filter by.
+    /// </summary>
+    public enum SearchFilterOption
+    {
+        /// <summary>
+        ///     BPM.
+        /// </summary>
+        BPM,
+
+        /// <summary>
+        ///     Difficulty rating.
+        /// </summary>
+        Difficulty,
+
+        /// <summary>
+        ///     Length in seconds.
+        /// </summary>
+        Length,
+
+        /// <summary>
+        ///     Key count.
+        /// </summary>
+        Keys,
+
+        /// <summary>
+        ///     Status (ranked, not submitted, etc.)
+        /// </summary>
+        Status,
     }
 }
