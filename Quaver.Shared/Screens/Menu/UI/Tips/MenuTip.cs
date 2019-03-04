@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteText(Fonts.Exo2BoldItalic, "TIP:", 13, false)
+            TextTip = new SpriteText(Fonts.Exo2BoldItalic, "TIP:", 13)
             {
                 Alignment = Alignment.MidLeft,
                 X = 5,
@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteText(Fonts.Exo2SemiBold, " ", 12, false)
+            TextTipContent = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
             {
                 Alignment = Alignment.MidLeft
             };

@@ -216,7 +216,6 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 {
                     Font = Fonts.Exo2SemiBold,
                     FontSize = 13,
-                    ForceDrawAtSize = true,
                     Alignment = Alignment.TopLeft
                 },
                 Border =
