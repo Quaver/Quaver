@@ -123,7 +123,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 Text =
                 {
                     FontSize = 11,
-                    ForceDrawAtSize = false,
                     Font = Fonts.SourceSansProSemiBold
                 }
             };
@@ -153,7 +152,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 Text =
                 {
                     FontSize = 11,
-                    ForceDrawAtSize = false,
                     Font = Fonts.SourceSansProSemiBold
                 }
             };
@@ -183,7 +181,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 Text =
                 {
                     FontSize = 11,
-                    ForceDrawAtSize = false,
                     Font = Fonts.SourceSansProSemiBold
                 }
             };
@@ -237,10 +234,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 Tint = Color.Black,
                 Alpha = 0.25f,
                 Cursor = { Y = 5},
-                InputText =
-                {
-                    ForceDrawAtSize = false
-                }
             };
 
             SearchTextbox.AddBorder(Color.White, 2);

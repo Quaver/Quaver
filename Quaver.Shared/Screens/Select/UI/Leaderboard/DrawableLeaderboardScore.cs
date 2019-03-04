@@ -240,7 +240,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
         private void CreateTextScoreAndCombo() => TextScore = new SpriteText(Fonts.Exo2Bold,
-            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11, false)
+            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
@@ -250,7 +250,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11, false)
+        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11)
         {
             Parent = this,
             Alignment = Alignment.TopRight,
@@ -277,7 +277,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 timeAgo = "1 minute ago";
             }
 
-            TimeAgo = new SpriteText(Fonts.Exo2Bold, timeAgo, 11, false)
+            TimeAgo = new SpriteText(Fonts.Exo2Bold, timeAgo, 11)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
