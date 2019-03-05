@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -157,6 +158,28 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public DateTime DateAdded { get; set; }
 
+        /// <summary>
+        ///     The count of regular notes.
+        /// </summary>
+        public int RegularNoteCount { get; set; }
+
+        /// <summary>
+        ///     The count of long notes.
+        /// </summary>
+        public int LongNoteCount { get; set; }
+
+        /// <summary>
+        ///     The percentage of long notes among the map's hit objects.
+        /// </summary>
+        public float LNPercentage
+        {
+            get
+            {
+                var hitObjectCount = RegularNoteCount + LongNoteCount;
+                return hitObjectCount == 0 ? 0 : ((float) LongNoteCount / hitObjectCount * 100);
+            }
+        }
+
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
         public double Difficulty055X { get; set; }
@@ -253,6 +276,8 @@ namespace Quaver.Shared.Database.Maps
                 Tags = qua.Tags,
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
+                RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
+                LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
             };
 
             try

@@ -218,6 +218,8 @@ namespace Quaver.Shared.Database.Maps
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         BackgroundPath = "",
+                        RegularNoteCount = map.CountHitCircles,
+                        LongNoteCount = map.CountSliders
                     };
 
                     // Get the BPM of the osu! maps
