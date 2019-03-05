@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -90,8 +91,11 @@ namespace Quaver.Shared.Screens
 
             // Update client status on the server.
             var status = screen.GetClientStatus();
+
             if (status != null)
                 OnlineManager.Client?.UpdateClientStatus(status);
+
+            OtherGameMapDatabaseCache.RunThread();
         }
 
         /// <summary>
