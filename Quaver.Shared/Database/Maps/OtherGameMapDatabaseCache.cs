@@ -312,7 +312,6 @@ namespace Quaver.Shared.Database.Maps
                     }
 
                     MapsToCache[OtherGameCacheAction.Add].Remove(map);
-
                 }
             }
         }
