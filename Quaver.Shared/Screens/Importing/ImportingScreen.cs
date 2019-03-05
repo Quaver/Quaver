@@ -48,7 +48,6 @@ namespace Quaver.Shared.Screens.Importing
         {
             ThreadScheduler.Run(() =>
             {
-
                 MapsetImporter.ImportMapsetsInQueue();
 
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
