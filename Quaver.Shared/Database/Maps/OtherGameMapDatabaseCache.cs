@@ -312,7 +312,6 @@ namespace Quaver.Shared.Database.Maps
 
                     MapsToCache[OtherGameCacheAction.Add].Remove(map);
 
-                    Logger.Important($"Other Game Sync Maps Left (ADD): " +$"{MapsToCache[OtherGameCacheAction.Add].Count}", LogType.Runtime, false);
                 }
             }
         }
@@ -350,8 +349,6 @@ namespace Quaver.Shared.Database.Maps
                     }
 
                     MapsToCache[OtherGameCacheAction.Update].Remove(map);
-
-                    Logger.Important($"Other Game Sync Maps Left (UPDATE): " +$"{MapsToCache[OtherGameCacheAction.Update].Count}", LogType.Runtime, false);
                 }
             }
         }
@@ -379,7 +376,6 @@ namespace Quaver.Shared.Database.Maps
                 finally
                 {
                     MapsToCache[OtherGameCacheAction.Delete].Remove(map);
-                    Logger.Important($"Other Game Sync Maps Left (DELETE): " +$"{MapsToCache[OtherGameCacheAction.Delete].Count}", LogType.Runtime, false);
                 }
             }
         }
