@@ -168,6 +168,18 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public int LongNoteCount { get; set; }
 
+        /// <summary>
+        ///     The percentage of long notes among the map's hit objects.
+        /// </summary>
+        public float LNPercentage
+        {
+            get
+            {
+                var hitObjectCount = RegularNoteCount + LongNoteCount;
+                return hitObjectCount == 0 ? 0 : ((float) LongNoteCount / hitObjectCount * 100);
+            }
+        }
+
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
         public double Difficulty055X { get; set; }
