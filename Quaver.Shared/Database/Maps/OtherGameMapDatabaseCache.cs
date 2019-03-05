@@ -219,7 +219,8 @@ namespace Quaver.Shared.Database.Maps
                         Game = MapGame.Osu,
                         BackgroundPath = "",
                         RegularNoteCount = map.CountHitCircles,
-                        LongNoteCount = map.CountSliders
+                        LongNoteCount = map.CountSliders,
+                        LocalOffset = map.OffsetLocal
                     };
 
                     // Get the BPM of the osu! maps
