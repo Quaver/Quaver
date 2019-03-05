@@ -114,8 +114,8 @@ namespace Quaver.Shared.Graphics.Notifications
                 Alpha = MathHelper.Lerp(Alpha, 0, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60, 1));
 
             // Fade out if it has been shown a long time.
-            if (!HasBeenClicked && TimeElapsedSinceShown >= 2500)
-                Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 240, 1));
+            if (!HasBeenClicked && TimeElapsedSinceShown >= 4000)
+                Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 400, 1));
 
             base.Update(gameTime);
         }

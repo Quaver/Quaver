@@ -31,11 +31,6 @@ namespace Quaver.Shared.Database.Maps
         public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
 
         /// <summary>
-        ///     Dictates if we currently have loaded maps from other games.
-        /// </summary>
-        public static bool LoadedMapsFromOtherGames { get; private set; }
-
-        /// <summary>
         ///     List of maps to force update after editing them.
         /// </summary>
         public static List<Map> MapsToUpdate { get; } = new List<Map>();
@@ -237,82 +232,6 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
-        ///     Reads the osu!.db file defined in config and loads all of those maps into the cache.
-        /// </summary>
-        private static IEnumerable<Map> LoadOsuBeatmapDatabase()
-        {
-            try
-            {
-                var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
-                MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
-
-                // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
-                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7 )).ToList();
-                osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
-
-                var osuToQuaverMaps = new List<Map>();
-
-                foreach (var map in osuBeatmaps)
-                {
-                    var newMap = new Map
-                    {
-                        Md5Checksum = map.BeatmapChecksum,
-                        Directory = map.FolderName,
-                        Path = map.BeatmapFileName,
-                        Artist = map.Artist,
-                        Title = map.Title,
-                        MapSetId = -1,
-                        MapId = -1,
-                        DifficultyName = map.Version,
-                        RankedStatus = RankedStatus.NotSubmitted,
-                        Creator = map.Creator,
-                        AudioPath = map.AudioFileName,
-                        AudioPreviewTime = map.AudioPreviewTime,
-                        Description = $"",
-                        Source = map.SongSource,
-                        Tags = map.SongTags,
-                        // ReSharper disable once CompareOfFloatsByEqualityOperator
-                        Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
-                        SongLength = map.TotalTime,
-                        Game = MapGame.Osu,
-                        BackgroundPath = "",
-                        RegularNoteCount = map.CountHitCircles,
-                        LongNoteCount = map.CountSliders,
-                    };
-
-                    // Get the BPM of the osu! maps
-                    if (map.TimingPoints != null)
-                    {
-                        try
-                        {
-                            newMap.Bpm = Math.Round(60000 / map.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
-                        }
-                        catch (Exception e)
-                        {
-                            newMap.Bpm = 0;
-                        }
-                    }
-
-                    osuToQuaverMaps.Add(newMap);
-                }
-
-                return osuToQuaverMaps;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Runtime);
-
-                var game = GameBase.Game as QuaverGame;
-                var screen = game?.CurrentScreen;
-
-                if (screen != null)
-                    NotificationManager.Show(NotificationLevel.Error, "Failed to load maps from other games. Is your db path correct in config?");
-
-                return new List<Map>();
-            }
-        }
-
-        /// <summary>
         ///     Fetches all maps, groups them into mapsets, sets them to allow them to be played.
         /// </summary>
         public static void OrderAndSetMapsets()
@@ -320,14 +239,7 @@ namespace Quaver.Shared.Database.Maps
             var maps = FetchAll();
 
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
-            {
-                maps = maps.Concat(LoadOsuBeatmapDatabase()).ToList();
-                LoadedMapsFromOtherGames = true;
-            }
-            else
-            {
-                LoadedMapsFromOtherGames = false;
-            }
+                maps = maps.Concat(OtherGameMapDatabaseCache.Load()).ToList();
 
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
