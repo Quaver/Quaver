@@ -144,11 +144,8 @@ namespace Quaver.Shared.Graphics
             {
                 switch (Type)
                 {
-                    case NumberDisplayType.Score:
-                        CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
-                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
-                        break;
                     case NumberDisplayType.Accuracy:
+                    case NumberDisplayType.Score:
                         CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
                             (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
                         break;
