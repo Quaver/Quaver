@@ -96,7 +96,7 @@ namespace Quaver.Shared.Graphics
         ///     The last time the value was changed
         ///     (Used for timing animations for example).
         /// </summary>
-        internal long LastValueChangeTime { get; private set; }
+        private long LastValueChangeTime { get; set; }
 
         /// <summary>
         ///     The size of the digits.
@@ -108,8 +108,6 @@ namespace Quaver.Shared.Graphics
         ///     the length of the numbers change
         /// </summary>
         private float InitialPosition { get; }
-
-        private double TimeSinceLastScoreUpdate { get; set; }
 
         /// <inheritdoc />
         /// <summary>
