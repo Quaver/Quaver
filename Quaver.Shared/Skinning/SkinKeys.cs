@@ -93,15 +93,23 @@ namespace Quaver.Shared.Skinning
 
         internal int ScoreDisplayPosY { get; private set; }
 
+        internal int ScoreDisplayScale { get; private set; }
+
         internal int AccuracyDisplayPosX { get; private set; }
 
         internal int AccuracyDisplayPosY { get; private set; }
+
+        internal int AccuracyDisplayScale { get; private set; }
 
         internal int KpsDisplayPosX { get; private set; }
 
         internal int KpsDisplayPosY { get; private set; }
 
+        internal int KpsDisplayScale { get; private set; }
+
         internal int ComboPosY { get; private set; }
+
+        internal int ComboDisplayScale { get; private set; }
 
         internal int JudgementBurstPosY { get; private set; }
 
@@ -122,6 +130,8 @@ namespace Quaver.Shared.Skinning
         internal Color SongTimeProgressInactiveColor { get; private set; }
 
         internal Color SongTimeProgressActiveColor { get; private set; }
+
+        internal int SongTimeProgressScale { get; private set; }
 
         internal float JudgementCounterAlpha { get; private set; }
 
@@ -350,6 +360,11 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
                     DrawLongNoteEnd = true;
+                    ScoreDisplayScale = 45;
+                    AccuracyDisplayScale = 45;
+                    ComboDisplayScale = 100;
+                    KpsDisplayScale = 45;
+                    SongTimeProgressScale = 60;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -401,6 +416,11 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
                     DrawLongNoteEnd = true;
+                    ScoreDisplayScale = 45;
+                    AccuracyDisplayScale = 45;
+                    ComboDisplayScale = 100;
+                    KpsDisplayScale = 45;
+                    SongTimeProgressScale = 60;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -467,6 +487,11 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
                     DrawLongNoteEnd = true;
+                    ScoreDisplayScale = 45;
+                    AccuracyDisplayScale = 45;
+                    ComboDisplayScale = 100;
+                    KpsDisplayScale = 45;
+                    SongTimeProgressScale = 60;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -522,6 +547,11 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterFontColor = Color.Black;
                     JudgementCounterSize = 45;
                     DrawLongNoteEnd = true;
+                    ScoreDisplayScale = 45;
+                    AccuracyDisplayScale = 45;
+                    ComboDisplayScale = 100;
+                    KpsDisplayScale = 45;
+                    SongTimeProgressScale = 60;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -589,6 +619,11 @@ namespace Quaver.Shared.Skinning
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
             JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
             DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
+            ScoreDisplayScale = ConfigHelper.ReadInt32(ScoreDisplayScale, ini["ScoreDisplayScale"]);
+            AccuracyDisplayScale = ConfigHelper.ReadInt32(AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
+            ComboDisplayScale = ConfigHelper.ReadInt32(ComboDisplayScale, ini["ComboDisplayScale"]);
+            KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);
+            SongTimeProgressScale = ConfigHelper.ReadInt32(SongTimeProgressScale, ini["SongTimeProgressScale"]);
         }
 
         /// <summary>
