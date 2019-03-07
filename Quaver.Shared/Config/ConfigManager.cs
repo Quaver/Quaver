@@ -529,8 +529,8 @@ namespace Quaver.Shared.Config
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 5, 100, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 5, 100, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
