@@ -30,6 +30,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
@@ -495,11 +496,7 @@ namespace Quaver.Shared.Screens.Result
 
             Exit(() =>
             {
-                if (AudioEngine.Track != null)
-                {
-                    lock (AudioEngine.Track)
-                        AudioEngine.Track.Fade(10, 300);
-                }
+                Transitioner.FadeOutAudio();
 
                 // Load up the .qua file again
                 var qua = MapManager.Selected.Value.LoadQua();
@@ -516,12 +513,9 @@ namespace Quaver.Shared.Screens.Result
         {
             Exit(() =>
             {
-                lock (AudioEngine.Track)
-                    AudioEngine.Track.Fade(10, 300);
-
+                Transitioner.FadeOutAudio();
                 return new MapLoadingScreen(new List<Score>());
             });
-
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
         }
 
@@ -552,11 +546,8 @@ namespace Quaver.Shared.Screens.Result
 
                     Exit(() =>
                     {
-                        if (AudioEngine.Track != null)
-                        {
-                            lock (AudioEngine.Track)
-                                AudioEngine.Track.Fade(10, 300);
-                        }
+                        Transitioner.FadeOutAudio();
+
                         GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
                         return new MapLoadingScreen(new List<Score>(), replay);
                     });

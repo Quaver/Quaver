@@ -18,6 +18,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
@@ -425,12 +426,7 @@ namespace Quaver.Shared.Screens.Select
                 var cursor = game.GlobalUserInterface.Cursor;
                 cursor.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, cursor.Alpha, 0, 200));
 
-                if (AudioEngine.Track != null)
-                {
-                    lock (AudioEngine.Track)
-                        AudioEngine.Track?.Fade(10, 500);
-                }
-
+                Transitioner.FadeOutAudio();
                 return new MapLoadingScreen(new List<Score>());
             }, 100);
         }

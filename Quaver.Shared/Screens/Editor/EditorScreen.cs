@@ -708,8 +708,7 @@ namespace Quaver.Shared.Screens.Editor
                 if (AudioEngine.Track != null)
                     AudioEngine.Track.Rate = 1.0f;
 
-                AudioEngine.Track?.Fade(0, 100);
-
+                Transitioner.FadeOutAudio();
                 return new SelectScreen();
             });
         }

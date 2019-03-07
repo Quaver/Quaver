@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -75,6 +76,17 @@ namespace Quaver.Shared.Graphics.Transitions
         {
             Blackness.ClearAnimations();
             Blackness.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Blackness.Alpha, 0, 300));
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void FadeOutAudio()
+        {
+            if (AudioEngine.Track == null)
+                return;
+
+            lock (AudioEngine.Track)
+                AudioEngine.Track.Fade(10, 300);
         }
     }
 }
