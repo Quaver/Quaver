@@ -100,6 +100,11 @@ namespace Quaver.Shared
             }
         }
 
+        /// <summary>
+        ///     Used to detect when to limit FPS if the user's window isn't active.
+        /// </summary>
+        private bool WindowActiveInPreviousFrame { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -219,6 +224,7 @@ namespace Quaver.Shared
             Transitioner.Update(gameTime);
 
             SkinManager.HandleSkinReloading();
+            LimitFpsOnInactiveWindow();
         }
 
         /// <inheritdoc />
@@ -475,6 +481,24 @@ namespace Quaver.Shared
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
             }
+        }
+
+        /// <summary>
+        ///     Handles limiting the game's FPS when the window isn't active.
+        /// </summary>
+        private void LimitFpsOnInactiveWindow()
+        {
+            if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen())
+            {
+                Graphics.SynchronizeWithVerticalRetrace = false;
+                TargetElapsedTime = TimeSpan.FromSeconds(1d / 30);
+                IsFixedTimeStep = true;
+            }
+            // Restore user's settings
+            else if (IsActive && !WindowActiveInPreviousFrame)
+                InitializeFpsLimiting();
+
+            WindowActiveInPreviousFrame = IsActive;
         }
     }
 }

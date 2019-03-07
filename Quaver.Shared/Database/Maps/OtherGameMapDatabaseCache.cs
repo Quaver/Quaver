@@ -259,7 +259,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Returns if the user is on a screen where syncing can occur
         /// </summary>
         /// <returns></returns>
-        private static bool OnSyncableScreen()
+        public static bool OnSyncableScreen()
         {
             var game = (QuaverGame) GameBase.Game;
 
