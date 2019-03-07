@@ -74,26 +74,38 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     // User is scrolling down past the navigation bar, continue to seek the map backwards
                     if (MouseManager.CurrentState.Y >= view.ControlBar.ScreenRectangle.Y && AudioEngine.Track.IsPaused)
                     {
-                        if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <=  5)
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time - 10);
-                        else if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 10)
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time - 30);
-                        else
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time - 100);
+                        double seekTime;
 
+                        if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 30)
+                            seekTime = AudioEngine.Track.Time - 2;
+                        else if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 60)
+                            seekTime = AudioEngine.Track.Time - 6;
+                        else
+                            seekTime = AudioEngine.Track.Time - 50;
+
+                        if (seekTime < 0 || seekTime > AudioEngine.Track.Length)
+                            return;
+
+                        AudioEngine.Track.Seek(seekTime);
                         Ruleset.Screen.SetHitSoundObjectIndex();
                     }
 
                     // User is scrolling down past the navigation bar, continue to seek the map backwards
                     if (MouseManager.CurrentState.Y <= 20 && AudioEngine.Track.IsPaused)
                     {
-                        if (20 - MouseManager.CurrentState.Y <=  5)
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time + 10);
-                        else if (20 - MouseManager.CurrentState.Y <= 10)
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time + 30);
-                        else
-                            AudioEngine.Track.Seek(AudioEngine.Track.Time + 100);
+                        double seekTime;
 
+                        if (20 - MouseManager.CurrentState.Y <= 30)
+                            seekTime = AudioEngine.Track.Time + 2;
+                        else if (20 - MouseManager.CurrentState.Y <= 60)
+                            seekTime = AudioEngine.Track.Time + 6;
+                        else
+                            seekTime = AudioEngine.Track.Time + 50;
+
+                        if (seekTime < 0 || seekTime > AudioEngine.Track.Length)
+                            return;
+
+                        AudioEngine.Track.Seek(seekTime);
                         Ruleset.Screen.SetHitSoundObjectIndex();
                     }
                 }
