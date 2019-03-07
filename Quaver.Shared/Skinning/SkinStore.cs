@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -212,7 +213,7 @@ namespace Quaver.Shared.Skinning
             if (!File.Exists($"{Dir}/{name}"))
                 return;
 
-            Config = new IniFileParser.IniFileParser().ReadFile($"{Dir}/{name}");
+            Config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile($"{Dir}/{name}");
 
             // Parse very general things in config.
             Name = ConfigHelper.ReadString(Name, Config["General"]["Name"]);
