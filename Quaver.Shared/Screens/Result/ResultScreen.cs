@@ -362,7 +362,16 @@ namespace Quaver.Shared.Screens.Result
             if (IsFetchingOnlineReplay)
                 return;
 
-            Exit(() => new SelectScreen());
+            Exit(() =>
+            {
+                if (AudioEngine.Track != null)
+                {
+                    lock (AudioEngine.Track)
+                        AudioEngine.Track.Fade(10, 300);
+                }
+
+                return new SelectScreen();
+            });
         }
 
         /// <summary>
@@ -505,7 +514,14 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         public void ExitToRetryMap()
         {
-            Exit(() => new MapLoadingScreen(new List<Score>()));
+            Exit(() =>
+            {
+                lock (AudioEngine.Track)
+                    AudioEngine.Track.Fade(10, 300);
+
+                return new MapLoadingScreen(new List<Score>());
+            });
+
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
         }
 
