@@ -27,18 +27,24 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         private SpriteText Value { get; }
 
+        /// <summary>
+        ///     Converts the bindable value to string for displaying.
+        /// </summary>
+        private Func<int, string> Display { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="dialog"></param>
         /// <param name="name"></param>
         /// <param name="bindable"></param>
-        public SettingsSlider(SettingsDialog dialog, string name, BindableInt bindable) : base(dialog, name)
+        public SettingsSlider(SettingsDialog dialog, string name, BindableInt bindable, Func<int, string> display = null) : base(dialog, name)
         {
+            Display = display ?? (x => x.ToString());
             Bindable = bindable;
             bindable.ValueChanged += OnValueChanged;
 
-            Value = new SpriteText(Fonts.Exo2Medium, $"{bindable.Value.ToString()}", 13)
+            Value = new SpriteText(Fonts.Exo2Medium, Display(bindable.Value), 13)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -50,9 +56,9 @@ namespace Quaver.Shared.Screens.Settings.Elements
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -90,
+                X = -110,
                 UsePreviousSpriteBatchOptions = true,
-                Width = 350,
+                Width = 330,
                 Height = 2,
                 ProgressBall =
                 {
@@ -75,6 +81,6 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnValueChanged(object sender, BindableValueChangedEventArgs<int> e) => Value.Text = $"{e.Value}";
+        private void OnValueChanged(object sender, BindableValueChangedEventArgs<int> e) => Value.Text = Display(e.Value);
     }
 }
