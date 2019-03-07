@@ -307,7 +307,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Master Volume", ConfigManager.VolumeGlobal),
                     new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic),
                     new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect),
-                    new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched)
+                    new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched),
+                    new SettingsSlider(this, "Global Audio Offset", ConfigManager.GlobalAudioOffset)
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
