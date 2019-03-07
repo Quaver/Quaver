@@ -75,10 +75,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     {
                         double seekTime;
 
-                        if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 5)
-                            seekTime = AudioEngine.Track.Time - 5;
-                        else if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 10)
-                            seekTime = AudioEngine.Track.Time - 10;
+                        if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 30)
+                            seekTime = AudioEngine.Track.Time - 2;
+                        else if (MouseManager.CurrentState.Y - view.ControlBar.ScreenRectangle.Y <= 60)
+                            seekTime = AudioEngine.Track.Time - 6;
                         else
                             seekTime = AudioEngine.Track.Time - 50;
 
@@ -94,10 +94,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components
                     {
                         double seekTime;
 
-                        if (20 - MouseManager.CurrentState.Y <= 5)
-                            seekTime = AudioEngine.Track.Time + 5;
-                        else if (20 - MouseManager.CurrentState.Y <= 10)
-                            seekTime = AudioEngine.Track.Time + 10;
+                        if (20 - MouseManager.CurrentState.Y <= 30)
+                            seekTime = AudioEngine.Track.Time + 2;
+                        else if (20 - MouseManager.CurrentState.Y <= 60)
+                            seekTime = AudioEngine.Track.Time + 6;
                         else
                             seekTime = AudioEngine.Track.Time + 50;
 
