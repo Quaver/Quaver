@@ -12,6 +12,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
 
@@ -54,25 +55,25 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             Screen = screen;
 
+            var skin = SkinManager.Skin.Keys[screen.Map.Mode];
             if (ConfigManager.DisplaySongTimeProgressNumbers.Value)
             {
-                CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(0.6f, 0.6f))
+                CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(skin.SongTimeProgressScale / 100f,
+                    skin.SongTimeProgressScale / 100f), 10)
                 {
                     Parent = this,
                     Alignment = Alignment.TopLeft,
                     Y = -Height - 25,
-                    X = 10
                 };
 
                 var startText = (new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue)).ToString("mm:ss");
-                TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-" + startText, new Vector2(0.6f, 0.6f))
+                TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-" + startText, new Vector2(skin.SongTimeProgressScale / 100f,
+                    skin.SongTimeProgressScale / 100f), -10)
                 {
                     Parent = this,
                     Alignment = Alignment.TopRight,
                     Y = CurrentTime.Y
                 };
-
-                TimeLeft.X = -TimeLeft.TotalWidth - 10;
             }
         }
 

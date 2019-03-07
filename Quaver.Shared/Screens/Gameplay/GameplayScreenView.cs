@@ -261,29 +261,32 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Creates the score display sprite.
         /// </summary>
-        private void CreateScoreDisplay() => ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
-                                                                                new Vector2(0.45f, 0.45f))
+        private void CreateScoreDisplay()
         {
-            Parent = Container,
-            Alignment = Alignment.TopLeft,
-            X = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX,
-            Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
-        };
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
+                new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
+            };
+        }
 
         /// <summary>
         ///     Creates the accuracy display sprite.
         /// </summary>
         private void CreateAccuracyDisplay()
         {
-            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0), new Vector2(0.45f, 0.45f))
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0),
+                new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
             };
-
-            // Set the position of the accuracy display.
-            AccuracyDisplay.X = -AccuracyDisplay.TotalWidth + SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX;
-            AccuracyDisplay.Y = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY;
         }
 
         /// <summary>
@@ -292,18 +295,8 @@ namespace Quaver.Shared.Screens.Gameplay
         public void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
-            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.Ruleset.ScoreProcessor.Score);
-
-            // Grab the old accuracy
-            var oldAcc = AccuracyDisplay.Value;
-
-            // Update the new accuracy.
-            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.Ruleset.ScoreProcessor.Accuracy);
-
-            // If the old accuracy's length isn't the same, then we need to reposition the sprite
-            // Example: 100.00% to 99.99% needs repositioning.
-            if (oldAcc.Length != AccuracyDisplay.Value.Length)
-                AccuracyDisplay.X = -AccuracyDisplay.TotalWidth + SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX;
+            ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
+            AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
         /// <summary>
@@ -311,15 +304,16 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void CreateKeysPerSecondDisplay()
         {
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
             // Create KPS display
-            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(0.45f, 0.45f))
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f),
+                SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight
             };
 
-            // Set the position of the KPS display
-            KpsDisplay.X = -KpsDisplay.TotalWidth + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX;
             KpsDisplay.Y = AccuracyDisplay.Y + AccuracyDisplay.Digits[0].Height + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY;
         }
 
