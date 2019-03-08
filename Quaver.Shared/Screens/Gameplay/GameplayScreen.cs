@@ -307,15 +307,37 @@ namespace Quaver.Shared.Screens.Gameplay
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
+            // CTRL+ input while play testing
+            if (IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                                  KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.P))
+                {
+                    if (!AudioEngine.Track.IsDisposed)
+                    {
+                        if (AudioEngine.Track.IsPlaying)
+                        {
+                            AudioEngine.Track.Pause();
+                            IsPaused = true;
+                        }
+                        else
+                        {
+                            AudioEngine.Track.Play();
+                            IsPaused = false;
+                        }
+                    }
+                }
+            }
+
+            // Handle the restarting of the map.
+            HandlePlayRestart(dt);
+
             // Everything after this point is applicable to gameplay ONLY.
             if (IsPaused || Failed)
                 return;
 
             if (!IsPlayComplete)
             {
-                // Handle the restarting of the map.
-                HandlePlayRestart(dt);
-
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                     SkipToNextObject();
 
@@ -656,6 +678,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandlePlayRestart(double dt)
         {
+            if (!IsPlayTesting && (IsPaused || Failed))
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
                 IsRestartingPlay = true;
 
