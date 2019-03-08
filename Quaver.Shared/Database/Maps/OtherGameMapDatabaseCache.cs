@@ -259,18 +259,17 @@ namespace Quaver.Shared.Database.Maps
         ///     Returns if the user is on a screen where syncing can occur
         /// </summary>
         /// <returns></returns>
-        private static bool OnSyncableScreen()
+        public static bool OnSyncableScreen()
         {
             var game = (QuaverGame) GameBase.Game;
 
-            switch (game.CurrentScreen.Type)
+            switch (game.CurrentScreen?.Type)
             {
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Gameplay:
                 case QuaverScreenType.Loading:
                 case QuaverScreenType.Alpha:
                 case QuaverScreenType.Importing:
-                case QuaverScreenType.Results:
                     return false;
                 default:
                     return true;
