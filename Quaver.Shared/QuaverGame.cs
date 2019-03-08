@@ -488,6 +488,9 @@ namespace Quaver.Shared
         /// </summary>
         private void LimitFpsOnInactiveWindow()
         {
+            if (CurrentScreen != null && CurrentScreen.Exiting)
+                return;
+
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen())
             {
                 Graphics.SynchronizeWithVerticalRetrace = false;

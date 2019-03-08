@@ -270,7 +270,6 @@ namespace Quaver.Shared.Database.Maps
                 case QuaverScreenType.Loading:
                 case QuaverScreenType.Alpha:
                 case QuaverScreenType.Importing:
-                case QuaverScreenType.Results:
                     return false;
                 default:
                     return true;
