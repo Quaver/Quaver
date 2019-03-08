@@ -22,6 +22,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -472,6 +473,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 Screen.Exit(() =>
                 {
+                    ThreadScheduler.RunAfter(() => Graphics.Transitions.Transitioner.FadeOutAudio(600), 500);
+
                     if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
                         return new SelectScreen();
 

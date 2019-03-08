@@ -14,6 +14,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Select.UI.Maps;
 using Wobble.Graphics;
@@ -483,7 +484,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
                 return;
 
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
-                AudioEngine.Track.Fade(0, 200);
+                Transitioner.FadeOutAudio();
 
             ThreadScheduler.Run(() =>
             {
@@ -499,7 +500,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
                         AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
                         AudioEngine.Track.Volume = 0;
                         AudioEngine.Track.Play();
-                        AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 800);
+                        AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 1000);
                     }
                     catch (Exception)
                     {

@@ -15,6 +15,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Playercard;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
@@ -356,7 +357,7 @@ namespace Quaver.Shared.Screens.Menu
             {
                 screen?.Exit(() =>
                 {
-                    AudioEngine.Track?.Fade(10, 300);
+                    Transitioner.FadeOutAudio();
                     return new ImportingScreen();
                 });
 
@@ -374,7 +375,7 @@ namespace Quaver.Shared.Screens.Menu
 
             screen?.Exit(() =>
             {
-                AudioEngine.Track?.Fade(10, 300);
+                Transitioner.FadeOutAudio();
                 return new SelectScreen();
             });
         }

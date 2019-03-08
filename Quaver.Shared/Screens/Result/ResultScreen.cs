@@ -161,6 +161,9 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         public override void OnFirstUpdate()
         {
+            if (!AudioEngine.Track.IsDisposed && AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Pause();
+
             MakeCursorVisible();
 
             if (ResultsType == ResultScreenType.Replay)
@@ -365,12 +368,7 @@ namespace Quaver.Shared.Screens.Result
 
             Exit(() =>
             {
-                if (AudioEngine.Track != null)
-                {
-                    lock (AudioEngine.Track)
-                        AudioEngine.Track.Fade(10, 300);
-                }
-
+                Transitioner.FadeOutAudio();
                 return new SelectScreen();
             });
         }

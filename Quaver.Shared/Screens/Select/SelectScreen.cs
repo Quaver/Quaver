@@ -405,7 +405,7 @@ namespace Quaver.Shared.Screens.Select
                     MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
                 }
                 else
-                    AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 500);
+                    AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 1000);
 
                 return;
             }
@@ -436,12 +436,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         public void ExitToMenu() => Exit(() =>
         {
-            if (AudioEngine.Track != null)
-            {
-                lock (AudioEngine.Track)
-                    AudioEngine.Track?.Fade(10, 300);
-            }
-
+            Transitioner.FadeOutAudio();
             return new MenuScreen();
         });
 

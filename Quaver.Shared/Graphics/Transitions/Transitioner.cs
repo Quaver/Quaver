@@ -80,13 +80,13 @@ namespace Quaver.Shared.Graphics.Transitions
 
         /// <summary>
         /// </summary>
-        public static void FadeOutAudio()
+        public static void FadeOutAudio(int time = 300)
         {
             if (AudioEngine.Track == null)
                 return;
 
             lock (AudioEngine.Track)
-                AudioEngine.Track.Fade(10, 300);
+                AudioEngine.Track.Fade(0, time);
         }
     }
 }
