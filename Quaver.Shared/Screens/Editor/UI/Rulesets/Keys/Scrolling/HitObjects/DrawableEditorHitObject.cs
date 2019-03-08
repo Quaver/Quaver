@@ -106,7 +106,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         public virtual void AppearAsActive()
         {
             var view = (EditorScreenView) Container.Ruleset.Screen.View;
-            Tint = ColorHelper.ToXnaColor(view.LayerCompositor.ScrollContainer.AvailableItems[Info.EditorLayer].GetColor());
+
+            if (ConfigManager.EditorViewLayers.Value)
+                Tint = ColorHelper.ToXnaColor(view.LayerCompositor.ScrollContainer.AvailableItems[Info.EditorLayer].GetColor());
+            else
+                Tint = Color.White;
 
             SelectionSprite.Visible = false;
         }

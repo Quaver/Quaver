@@ -335,6 +335,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<EditorVisualizationGraphType> EditorVisualizationGraph { get; private set; }
 
         /// <summary>
+        ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorViewLayers { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -599,6 +604,7 @@ namespace Quaver.Shared.Config
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
+            EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -644,8 +650,6 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
-
-
                     KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
@@ -697,6 +701,7 @@ namespace Quaver.Shared.Config
                     LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTop.ValueChanged += AutoSaveConfiguration;
                     LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
+                    EditorViewLayers.ValueChanged += AutoSaveConfiguration;
                     UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                     EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
                 });
