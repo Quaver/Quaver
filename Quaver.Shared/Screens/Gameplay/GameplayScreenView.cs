@@ -365,7 +365,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var mapScores = MapManager.Selected.Value.Scores.Value;
 
-            if (mapScores == null || mapScores.Count <= 0 || Scoreboard.Users.Count != 1)
+            if (mapScores == null || mapScores.Count <= 0 || Scoreboard?.Users?.Count != 1)
                 return;
 
             for (var i = 0; i < 4 && i < mapScores.Count; i++)
