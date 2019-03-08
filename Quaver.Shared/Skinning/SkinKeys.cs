@@ -211,10 +211,6 @@ namespace Quaver.Shared.Skinning
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteHoldHitObjects { get; } = new List<Texture2D>();
-
-        /// <summary>
-        /// </summary>
         internal List<Texture2D> EditorLayerNoteHoldBodies { get; } = new List<Texture2D>();
 
         /// <summary>
@@ -820,6 +816,11 @@ namespace Quaver.Shared.Skinning
                 // Receptors
                 NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));
                 NoteReceptorsDown.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-down-{i + 1}", false));
+
+                // Editor
+                EditorLayerNoteHitObjects.Add(LoadTexture(SkinKeysFolder.Editor, $"note-hitobject-{i + 1}", false));
+                EditorLayerNoteHoldBodies.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdbody-{i + 1}", false));
+                EditorLayerNoteHoldEnds.Add(LoadTexture(SkinKeysFolder.Editor, $"note-holdend-{i + 1}", false));
             }
         }
     }

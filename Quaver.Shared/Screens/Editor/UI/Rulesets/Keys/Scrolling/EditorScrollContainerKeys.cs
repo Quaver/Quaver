@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged += OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged += OnHitObjectMidpointAnchoredChanged;
-            ConfigManager.EditorUseLayerHitObjects.ValueChanged += OnEditorUseLayerHitObjects;
+            ConfigManager.EditorViewLayers.ValueChanged += OnEditorUseLayerHitObjects;
 
             var view = (EditorScreenView) Ruleset.Screen.View;
             view.LayerCompositor.LayerUpdated += OnEditorLayerUpdated;
@@ -204,7 +204,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged -= OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged -= OnHitObjectMidpointAnchoredChanged;
-            ConfigManager.EditorUseLayerHitObjects.ValueChanged -= OnEditorUseLayerHitObjects;
+            ConfigManager.EditorViewLayers.ValueChanged -= OnEditorUseLayerHitObjects;
 
             var view = (EditorScreenView) Ruleset.Screen.View;
             view.LayerCompositor.LayerUpdated -= OnEditorLayerUpdated;
@@ -356,12 +356,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
             if (h.IsLongNote)
             {
-                if (ConfigManager.EditorUseLayerHitObjects.Value)
+                if (ConfigManager.EditorViewLayers.Value)
                 {
                     hitObject = new DrawableEditorHitObjectLong(this, h,
-                        UserInterface.BlankBox,
-                        UserInterface.BlankBox,
-                        UserInterface.BlankBox);
+                        skin.EditorLayerNoteHitObjects[h.Lane - 1],
+                        skin.EditorLayerNoteHoldBodies[h.Lane - 1],
+                        skin.EditorLayerNoteHoldEnds[h.Lane - 1]);
                 }
                 else
                 {
@@ -373,8 +373,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             }
             else
             {
-                if (ConfigManager.EditorUseLayerHitObjects.Value)
-                    hitObject = new DrawableEditorHitObject(this, h, UserInterface.BlankBox);
+                if (ConfigManager.EditorViewLayers.Value)
+                    hitObject = new DrawableEditorHitObject(this, h, skin.EditorLayerNoteHitObjects[h.Lane - 1]);
                 else
                     hitObject = new DrawableEditorHitObject(this, h, skin.NoteHitObjects[h.Lane - 1][index]);
             }
@@ -542,13 +542,64 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnEditorUseLayerHitObjects(object sender, BindableValueChangedEventArgs<bool> e)
         {
-            Console.WriteLine("??");
+            lock (HitObjects)
+            {
+                var skin = SkinManager.Skin.Keys[Ruleset.Screen.WorkingMap.Mode];
+
+                HitObjects.ForEach(h =>
+                {
+                    var index = skin.ColorObjectsBySnapDistance ?
+                        HitObjectManager.GetBeatSnap(h.Info, h.Info.GetTimingPoint(Ruleset.Screen.WorkingMap.TimingPoints)) : 0;
+
+                    if (h.Info.IsLongNote)
+                    {
+                        var ln = (DrawableEditorHitObjectLong) h;
+
+                        if (ConfigManager.EditorViewLayers.Value)
+                        {
+                            h.Image = skin.EditorLayerNoteHitObjects[h.Info.Lane - 1];
+                            ln.Body.Image = skin.EditorLayerNoteHoldBodies[h.Info.Lane - 1];
+                            ln.Tail.Image = skin.EditorLayerNoteHoldEnds[h.Info.Lane - 1];
+                        }
+                        else
+                        {
+                            h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
+                            ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1].First();
+                            ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
+                        }
+
+                        ln.ResizeLongNote();
+                    }
+                    else
+                    {
+                        if (ConfigManager.EditorViewLayers.Value)
+                            h.Image = skin.EditorLayerNoteHitObjects[h.Info.Lane - 1];
+                        else
+                            h.Image = skin.NoteHitObjects[h.Info.Lane - 1][index];
+                    }
+
+                    h.AppearAsActive();
+
+                    // Get the layer the object is in
+                    var view = (EditorScreenView) Ruleset.Screen.View;
+                    var layer = view.LayerCompositor.ScrollContainer.AvailableItems[h.Info.EditorLayer];
+
+                    if (Ruleset.SelectedHitObjects.Contains(h))
+                        h.AppearAsSelected();
+                    else if (Ruleset.PendingLongNoteReleases.Contains(h.Info))
+                    {
+                        var ln = h as DrawableEditorHitObjectLong;
+                        ln?.AppearAsInactive();
+                    }
+                    else if (layer.Hidden)
+                        h.AppearAsHiddenInLayer();
+                });
+            }
         }
     }
 }
