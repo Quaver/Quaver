@@ -491,7 +491,8 @@ namespace Quaver.Shared
             if (CurrentScreen != null && CurrentScreen.Exiting)
                 return;
 
-            if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen())
+            if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
+                OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
             {
                 Graphics.SynchronizeWithVerticalRetrace = false;
                 TargetElapsedTime = TimeSpan.FromSeconds(1d / 30);
