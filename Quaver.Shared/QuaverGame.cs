@@ -495,7 +495,7 @@ namespace Quaver.Shared
                 IsFixedTimeStep = true;
             }
             // Restore user's settings
-            else if (IsActive && !WindowActiveInPreviousFrame)
+            else if (IsActive && !WindowActiveInPreviousFrame || !OtherGameMapDatabaseCache.OnSyncableScreen() && !WindowActiveInPreviousFrame)
                 InitializeFpsLimiting();
 
             WindowActiveInPreviousFrame = IsActive;

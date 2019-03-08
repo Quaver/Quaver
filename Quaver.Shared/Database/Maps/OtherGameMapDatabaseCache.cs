@@ -263,7 +263,7 @@ namespace Quaver.Shared.Database.Maps
         {
             var game = (QuaverGame) GameBase.Game;
 
-            switch (game.CurrentScreen.Type)
+            switch (game.CurrentScreen?.Type)
             {
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Gameplay:
