@@ -61,7 +61,14 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        public override string GetNoScoresAvailableString(Map map)
+        public override string GetNoScoresAvailableString(Map map) => GetNoScoresAvailable(map);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static string GetNoScoresAvailable(Map map)
         {
             if (!OnlineManager.Connected)
                 return "You must be logged in to view online scores!";

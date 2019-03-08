@@ -343,9 +343,11 @@ namespace Quaver.Shared.Screens.Select
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 return;
 
-            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
-                ConfigManager.LeaderboardSection.Value = LeaderboardType.Global;
-            else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Global)
+            var index = (int) ConfigManager.LeaderboardSection.Value;
+
+            if (index + 1 < Enum.GetNames(typeof(LeaderboardType)).Length)
+                ConfigManager.LeaderboardSection.Value = (LeaderboardType) index + 1;
+            else
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
         }
 

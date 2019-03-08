@@ -13,6 +13,7 @@ using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
@@ -61,6 +62,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             MapManager.Selected.ValueChanged += OnMapChange;
             OnlineManager.Status.ValueChanged += OnOnlineStatusChange;
             ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChange;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -76,6 +78,8 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
             // ReSharper disable once DelegateSubtraction
             ConfigManager.LeaderboardSection.ValueChanged -= OnLeaderboardSectionChange;
+
+            ModManager.ModsChanged -= OnModsChanged;
 
             if (Source != null)
             {
@@ -103,6 +107,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         {
             Sections[LeaderboardType.Local] = new LeaderboardScoreSectionLocal(this) {Parent = this};
             Sections[LeaderboardType.Global] = new LeaderboardScoreSectionGlobal(this) {Parent = this};
+            Sections[LeaderboardType.Mods] = new LeaderboardScoreSectionMods(this) { Parent = this};
         }
 
         /// <summary>
@@ -187,7 +192,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    if (scores.Scores.Count == 0)
+                    if (scores.Scores.Count == 0 && scores.PersonalBest == null)
                     {
                         NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
                         NoScoresAvailableText.Alpha = 0;
@@ -230,7 +235,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             if (e.Value != ConnectionStatus.Connected || e.OldValue == ConnectionStatus.Connected)
                 return;
 
-            if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Global)
+            if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Global && ConfigManager.LeaderboardSection.Value != LeaderboardType.Mods)
                 return;
 
             // When the user connects again, load scores.
@@ -247,6 +252,14 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             Sections[e.OldValue].ClearScores();
             Sections[e.OldValue].Visible = false;
             Sections[e.Value].Visible = true;
+
+            LoadNewScores();
+        }
+
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Mods)
+                return;
 
             LoadNewScores();
         }
