@@ -247,6 +247,9 @@ namespace Quaver.Shared.Screens.Editor.UI
             if (ImGui.MenuItem("Anchor Objects At Midpoint", null, ConfigManager.EditorHitObjectsMidpointAnchored.Value))
                 ConfigManager.EditorHitObjectsMidpointAnchored.Value = !ConfigManager.EditorHitObjectsMidpointAnchored.Value;
 
+            if (ImGui.MenuItem("Use Layer Objects", null, ConfigManager.EditorUseLayerHitObjects.Value))
+                ConfigManager.EditorUseLayerHitObjects.Value = !ConfigManager.EditorUseLayerHitObjects.Value;
+
            ImGui.EndMenu();
         }
 

@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
@@ -139,6 +140,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged += OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged += OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged += OnHitObjectMidpointAnchoredChanged;
+            ConfigManager.EditorUseLayerHitObjects.ValueChanged += OnEditorUseLayerHitObjects;
 
             var view = (EditorScreenView) Ruleset.Screen.View;
             view.LayerCompositor.LayerUpdated += OnEditorLayerUpdated;
@@ -202,6 +204,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
             ConfigManager.EditorScrollSpeedKeys.ValueChanged -= OnScrollSpeedChanged;
             ConfigManager.EditorShowLaneDividerLines.ValueChanged -= OnShowDividerLinesChanged;
             ConfigManager.EditorHitObjectsMidpointAnchored.ValueChanged -= OnHitObjectMidpointAnchoredChanged;
+            ConfigManager.EditorUseLayerHitObjects.ValueChanged -= OnEditorUseLayerHitObjects;
 
             var view = (EditorScreenView) Ruleset.Screen.View;
             view.LayerCompositor.LayerUpdated -= OnEditorLayerUpdated;
@@ -353,14 +356,27 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
 
             if (h.IsLongNote)
             {
-                hitObject = new DrawableEditorHitObjectLong(this, h,
-                    skin.NoteHoldHitObjects[h.Lane - 1][index],
-                    skin.NoteHoldBodies[h.Lane - 1].First(),
-                    skin.NoteHoldEnds[h.Lane - 1]);
+                if (ConfigManager.EditorUseLayerHitObjects.Value)
+                {
+                    hitObject = new DrawableEditorHitObjectLong(this, h,
+                        UserInterface.BlankBox,
+                        UserInterface.BlankBox,
+                        UserInterface.BlankBox);
+                }
+                else
+                {
+                    hitObject = new DrawableEditorHitObjectLong(this, h,
+                        skin.NoteHoldHitObjects[h.Lane - 1][index],
+                        skin.NoteHoldBodies[h.Lane - 1].First(),
+                        skin.NoteHoldEnds[h.Lane - 1]);
+                }
             }
             else
             {
-                hitObject = new DrawableEditorHitObject(this, h, skin.NoteHitObjects[h.Lane - 1][index]);
+                if (ConfigManager.EditorUseLayerHitObjects.Value)
+                    hitObject = new DrawableEditorHitObject(this, h, UserInterface.BlankBox);
+                else
+                    hitObject = new DrawableEditorHitObject(this, h, skin.NoteHitObjects[h.Lane - 1][index]);
             }
 
             hitObject.Alignment = Alignment.TopLeft;
@@ -523,6 +539,16 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                         x.AppearAsActive();
                 });
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEditorUseLayerHitObjects(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            Console.WriteLine("??");
         }
     }
 }

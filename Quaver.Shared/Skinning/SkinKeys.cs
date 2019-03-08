@@ -205,6 +205,22 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
 
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteHitObjects { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteHoldHitObjects { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteHoldBodies { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// </summary>
+        internal List<Texture2D> EditorLayerNoteHoldEnds { get; } = new List<Texture2D>();
+
         // ----- Receptors ----- //
 
         /// <summary>
