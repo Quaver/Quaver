@@ -8,7 +8,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Audio;
+using Wobble;
 using Wobble.Audio;
+using Wobble.Audio.Tracks;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay
@@ -40,7 +42,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                AudioEngine.LoadCurrentTrack();
+                if (Screen.IsCalibratingOffset)
+                    AudioEngine.Track = new AudioTrack(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/Offset/offset.mp3"));
+                else
+                    AudioEngine.LoadCurrentTrack();
 
                 if (Screen.IsPlayTesting)
                 {

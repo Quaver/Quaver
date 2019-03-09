@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -28,16 +29,19 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -212,6 +216,16 @@ namespace Quaver.Shared.Screens.Gameplay
         public long TimePlayed { get; }
 
         /// <summary>
+        ///     If the user is currently calibrating their offset.
+        /// </summary>
+        public bool IsCalibratingOffset { get; }
+
+        /// <summary>
+        ///     Used when calibrating offset
+        /// </summary>
+        public Metronome Metronome { get; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -220,7 +234,8 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="replay"></param>
         /// <param name="isPlayTesting"></param>
         /// <param name="playTestTime"></param>
-        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0)
+        public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
+            bool isCalibratingOffset = false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
@@ -240,6 +255,7 @@ namespace Quaver.Shared.Screens.Gameplay
             LoadedReplay = replay;
             IsPlayTesting = isPlayTesting;
             PlayTestAudioTime = playTestTime;
+            IsCalibratingOffset = isCalibratingOffset;
 
             Timing = new GameplayAudioTiming(this);
 
@@ -264,6 +280,10 @@ namespace Quaver.Shared.Screens.Gameplay
             SetRichPresence();
 
             AudioTrack.AllowPlayback = true;
+
+            if (IsCalibratingOffset)
+                Metronome = new Metronome(map);
+
             View = new GameplayScreenView(this);
         }
 
@@ -284,8 +304,21 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleInput(gameTime);
             HandleFailure();
             ReplayCapturer.Capture(gameTime);
+            // Metronome?.Update(gameTime);
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (IsCalibratingOffset)
+                AudioEngine.Track?.Dispose();
+
+            Metronome?.Dispose();
+            base.Destroy();
         }
 
         /// <summary>
@@ -336,7 +369,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsPaused || Failed)
                 return;
 
-            if (!IsPlayComplete)
+            if (!IsPlayComplete && !IsCalibratingOffset)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                     SkipToNextObject();
@@ -446,6 +479,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 }
 
                 Exit(() => new EditorScreen(OriginalEditorMap));
+            }
+
+            if (IsCalibratingOffset && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) ||
+                                         KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
+            {
+                OffsetConfirmDialog.Exit(this);
             }
 
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
@@ -678,7 +717,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandlePlayRestart(double dt)
         {
-            if (!IsPlayTesting && (IsPaused || Failed))
+            if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset)
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
@@ -836,6 +875,27 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             return new UserClientStatus(status, Map.MapId, MapHash, (byte) Ruleset.Mode, content, (long) ModManager.Mods);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void HandleSuggestedOffsetCalculations()
+        {
+            var stats = Ruleset.ScoreProcessor.Stats.FindAll(x => x.KeyPressType == KeyPressType.Press);
+
+            var offset = 0;
+
+            // Calculate new offset
+            if (stats.Count != 0)
+            {
+                var samples = new List<double>(stats.Select(x => (double) x.HitDifference).ToList());
+                var stdDev = samples.StandardDeviation();
+
+                if (Math.Abs(stdDev) < Ruleset.ScoreProcessor.JudgementWindow[Judgement.Good])
+                    offset = (int) samples.Average() + ConfigManager.GlobalAudioOffset.Value;
+            }
+
+            DialogManager.Show(new OffsetConfirmDialog(this, offset));
         }
     }
 }

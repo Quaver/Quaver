@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -25,6 +26,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
+using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select;
@@ -143,6 +145,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private bool ClearToExitScreen { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private OffsetCalibratorTip Tip { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -166,7 +172,7 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
 
-            if (!Screen.IsPlayTesting)
+            if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
                 CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
@@ -191,6 +197,15 @@ namespace Quaver.Shared.Screens.Gameplay
             // Notify the user if their local offset is actually set for this map.
             if (MapManager.Selected.Value.LocalOffset != 0)
                 NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset}ms");
+
+            if (Screen.IsCalibratingOffset)
+            {
+                Tip = new OffsetCalibratorTip
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidCenter
+                };
+            }
         }
 
         /// <inheritdoc />
@@ -466,6 +481,13 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
 
                     Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+                    ResultsScreenLoadInitiated = true;
+                    return;
+                }
+
+                if (Screen.IsCalibratingOffset)
+                {
+                    Screen.HandleSuggestedOffsetCalculations();
                     ResultsScreenLoadInitiated = true;
                     return;
                 }

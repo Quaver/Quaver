@@ -254,13 +254,10 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="qua"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static Map FromQua(Qua qua, string path)
+        public static Map FromQua(Qua qua, string path, bool skipPathSetting = false)
         {
             var map = new Map
             {
-                Md5Checksum = MapsetHelper.GetMd5Checksum(path),
-                Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) ?? throw new InvalidOperationException()).Name.Replace("\\", "/"),
-                Path = System.IO.Path.GetFileName(path)?.Replace("\\", "/"),
                 Artist = qua.Artist,
                 Title = qua.Title,
                 HighestRank = Grade.None,
@@ -280,6 +277,22 @@ namespace Quaver.Shared.Database.Maps
                 LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
             };
 
+            if (!skipPathSetting)
+            {
+                try
+                {
+                    map.Md5Checksum = MapsetHelper.GetMd5Checksum(path);
+                    map.Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) ?? throw new InvalidOperationException()).Name.Replace("\\", "/");
+                    map.Path = System.IO.Path.GetFileName(path)?.Replace("\\", "/");
+                    map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
+                }
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch (Exception)
+                {
+
+                }
+            }
+
             try
             {
                 map.Bpm = qua.GetCommonBpm();
@@ -289,7 +302,6 @@ namespace Quaver.Shared.Database.Maps
                 map.Bpm = 0;
             }
 
-            map.LastFileWrite = File.GetLastWriteTimeUtc(map.Path);
             map.DateAdded = DateTime.Now;
             return map;
         }
