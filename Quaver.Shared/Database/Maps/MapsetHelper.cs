@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Modifiers;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps
@@ -237,7 +238,7 @@ namespace Quaver.Shared.Database.Maps
                                 if (!float.TryParse(searchQuery.Value, out var valDiff))
                                     exitLoop = true;
 
-                                if (!CompareValues(map.Difficulty10X, valDiff, searchQuery.Operator))
+                                if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Length:
