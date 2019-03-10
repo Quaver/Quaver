@@ -234,6 +234,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="replay"></param>
         /// <param name="isPlayTesting"></param>
         /// <param name="playTestTime"></param>
+        /// <param name="isCalibratingOffset"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false)
         {
@@ -335,6 +336,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // Handle pausing
             if (!Failed && !IsPlayComplete)
                 HandlePauseInput(gameTime);
+
 
             // Show/hide scoreboard.
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
@@ -893,9 +895,18 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (stdDev < Ruleset.ScoreProcessor.JudgementWindow[Judgement.Good])
                     offset = (int) -samples.Average() + ConfigManager.GlobalAudioOffset.Value;
-            }
 
-            DialogManager.Show(new OffsetConfirmDialog(this, offset));
+                if (!Exiting)
+                    DialogManager.Show(new OffsetConfirmDialog(this, offset));
+            }
+            else
+            {
+                if (Exiting)
+                    return;
+
+                NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
+                OffsetConfirmDialog.Exit(this);
+            }
         }
     }
 }
