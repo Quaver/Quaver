@@ -8,6 +8,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -51,14 +52,20 @@ namespace Quaver.Shared.Screens.Settings.Elements
 
             CalibrateOffsetButton.Clicked += (o, e) =>
             {
+                var game = (QuaverGame) GameBase.Game;
+
+                if (game.CurrentScreen.Type == QuaverScreenType.Editor)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before calibrating a new offset");
+                    return;
+                }
+
                 var path = $"Quaver.Resources/Maps/Offset/offset.qua";
 
                 var qua = Qua.Parse(GameBase.Game.Resources.Get(path));
 
                 if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed && AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Pause();
-
-                var game = (QuaverGame) GameBase.Game;
 
                 game.CurrentScreen?.Exit(() =>
                 {

@@ -10,7 +10,9 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
+using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -71,7 +73,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
             DialogManager.Show(options);
 
             ModManager.RemoveAllMods();
-            return new MenuScreen();
+
+            switch (QuaverScreenManager.LastScreen)
+            {
+                case QuaverScreenType.Select:
+                    return new SelectScreen();
+                default:
+                    return new SelectScreen();
+            }
         });
     }
 }
