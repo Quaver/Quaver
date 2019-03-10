@@ -894,7 +894,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 var stdDev = samples.StandardDeviation();
 
                 if (stdDev < Ruleset.ScoreProcessor.JudgementWindow[Judgement.Good])
-                    offset = (int) -samples.Average() + ConfigManager.GlobalAudioOffset.Value;
+                    offset = (int) samples.Average() + ConfigManager.GlobalAudioOffset.Value;
 
                 if (!Exiting)
                     DialogManager.Show(new OffsetConfirmDialog(this, offset));
