@@ -885,28 +885,31 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var stats = Ruleset.ScoreProcessor.Stats.FindAll(x => x.KeyPressType == KeyPressType.Press);
 
-            var offset = 0;
-
-            // Calculate new offset
-            if (stats.Count != 0)
+            if (stats.Count == 0)
             {
-                var samples = new List<double>(stats.Select(x => (double) x.HitDifference).ToList());
-                var stdDev = samples.StandardDeviation();
-
-                if (stdDev < Ruleset.ScoreProcessor.JudgementWindow[Judgement.Good])
-                    offset = (int) samples.Average() + ConfigManager.GlobalAudioOffset.Value;
-
-                if (!Exiting)
-                    DialogManager.Show(new OffsetConfirmDialog(this, offset));
+                ExitOffsetCalibrationOnFailure();
+                return;
             }
+
+            var samples = new List<double>(stats.Select(x => (double) x.HitDifference).ToList());
+            var stdDev = samples.StandardDeviation();
+
+            if (stdDev < 25 && !Exiting)
+                DialogManager.Show(new OffsetConfirmDialog(this, (int) samples.Average() + ConfigManager.GlobalAudioOffset.Value));
             else
-            {
-                if (Exiting)
-                    return;
+                ExitOffsetCalibrationOnFailure();
+        }
 
-                NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
-                OffsetConfirmDialog.Exit(this);
-            }
+        /// <summary>
+        ///
+        /// </summary>
+        private void ExitOffsetCalibrationOnFailure()
+        {
+            if (Exiting)
+                return;
+
+            NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
+            OffsetConfirmDialog.Exit(this);
         }
     }
 }
