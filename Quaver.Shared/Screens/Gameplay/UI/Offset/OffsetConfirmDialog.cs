@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
         /// <param name="screen"></param>
         /// <param name="offset"></param>
         public OffsetConfirmDialog(QuaverScreen screen, int offset)
-            : base($"Your suggested offset is: {offset}ms. Would you like to use this?", (o, e) => OnConfirm(screen, offset),
+            : base($"Your suggested offset is: {offset} ms. Would you like to use this?", (o, e) => OnConfirm(screen, offset),
                 (o, e) => OnCancel(screen)) => Screen = screen;
 
         public override void HandleInput(GameTime gameTime)
