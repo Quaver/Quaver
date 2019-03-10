@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     The list of available settings sections.
         /// </summary>
-        private List<SettingsSection> Sections { get; set; }
+        public List<SettingsSection> Sections { get; private set; }
 
         /// <summary>
         ///     The currently selected options section.
@@ -308,7 +308,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic, x => $"{x}%"),
                     new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect, x => $"{x}%"),
                     new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched),
-                    new SettingsSlider(this, "Global Audio Offset", ConfigManager.GlobalAudioOffset, x => $"{x} ms")
+                    new SettingsSlider(this, "Global Audio Offset", ConfigManager.GlobalAudioOffset, x => $"{x} ms"),
+                    new SettingsCalibrateOffset(this, "Calibrate Offset")
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>

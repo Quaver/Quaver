@@ -25,6 +25,11 @@ namespace Quaver.Shared.Screens
         public static QuaverScreen QueuedScreen { get; private set; }
 
         /// <summary>
+        ///     The previous screen that the user was on.
+        /// </summary>
+        public static QuaverScreenType LastScreen { get; private set; } = QuaverScreenType.None;
+
+        /// <summary>
         ///     If delaying a screen change, this is the amount of time that will have
         ///     to elapse for it to start the fade
         /// </summary>
@@ -84,6 +89,10 @@ namespace Quaver.Shared.Screens
             Logger.Important($"Changed to Screen '{screen.Type}'", LogType.Runtime);
 
             var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen != null)
+                LastScreen = game.CurrentScreen.Type;
+
             game.CurrentScreen = screen;
 
             ScreenManager.ChangeScreen(screen);

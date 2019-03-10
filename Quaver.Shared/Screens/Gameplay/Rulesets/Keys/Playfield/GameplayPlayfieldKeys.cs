@@ -156,6 +156,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void SetLaneScrollDirections()
         {
             var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+
             ScrollDirection direction;
             switch (Ruleset.Map.Mode)
             {
