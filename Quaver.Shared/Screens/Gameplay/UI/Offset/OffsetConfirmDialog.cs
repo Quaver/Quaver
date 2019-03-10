@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
                 case QuaverScreenType.Select:
                     return new SelectScreen();
                 default:
-                    return new SelectScreen();
+                    return new MenuScreen();
             }
         });
     }
