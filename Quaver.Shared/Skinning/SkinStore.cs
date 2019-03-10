@@ -67,6 +67,11 @@ namespace Quaver.Shared.Skinning
         internal Texture2D Cursor { get; private set; }
 
         /// <summary>
+        ///     Whether the cursor should be centered.
+        /// </summary>
+        internal bool CenterCursor { get; private set; }
+
+        /// <summary>
         ///     Grade Textures.
         /// </summary>
         internal Dictionary<Grade, Texture2D> Grades { get; } = new Dictionary<Grade, Texture2D>();
@@ -201,6 +206,7 @@ namespace Quaver.Shared.Skinning
 
             // Change cursor image.
             GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
+            GameBase.Game.GlobalUserInterface.Cursor.Center = CenterCursor;
         }
 
         /// <summary>
@@ -219,6 +225,7 @@ namespace Quaver.Shared.Skinning
             Name = ConfigHelper.ReadString(Name, Config["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
             Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
+            CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
         }
 
         /// <summary>
