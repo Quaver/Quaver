@@ -36,6 +36,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -502,6 +503,13 @@ namespace Quaver.Shared.Screens.Gameplay
                                          KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
             {
                 OffsetConfirmDialog.Exit(this);
+            }
+
+            // Exit back to selector if we're in a replay.
+            if (InReplayMode && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
+            {
+                Exit(() => new SelectScreen());
+                return;
             }
 
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
