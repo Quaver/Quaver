@@ -187,11 +187,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
-        ///     If the judgement counter will animate when hitting objects.
-        /// </summary>
-        internal static Bindable<bool> AnimateJudgementCounter { get; private set; }
-
-        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
@@ -543,7 +538,6 @@ namespace Quaver.Shared.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
-            AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
@@ -676,7 +670,6 @@ namespace Quaver.Shared.Config
                     KeyIncreaseMapOffset.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseMapOffset.ValueChanged += AutoSaveConfiguration;
                     KeyScoreboardVisible.ValueChanged += AutoSaveConfiguration;
-                    AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;

@@ -81,26 +81,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
             {
                 if (Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key] != JudgementDisplays[item.Key].JudgementCount)
                     JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
-
-                UpdateTextAndSize(JudgementDisplays[item.Key], dt);
             }
 
             base.Update(gameTime);
-        }
-
-        /// <summary>
-        ///     Makes sure that the text is changed to a singular number when collapsing.
-        /// </summary>
-        /// <param name="counterItem"></param>
-        /// <param name="dt"></param>
-        private void UpdateTextAndSize(JudgementCounterItem counterItem, double dt)
-        {
-            // Tween size and pos back to normal
-            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
-
-            counterItem.Width = MathHelper.Lerp(counterItem.Width, skin.JudgementCounterSize, (float)Math.Min(dt / 180, 1));
-            counterItem.Height = MathHelper.Lerp(counterItem.Height, skin.JudgementCounterSize, (float)Math.Min(dt / 180, 1));
-            counterItem.X = MathHelper.Lerp(counterItem.X, 0, (float) Math.Min(dt / 180, 1));
         }
     }
 }
