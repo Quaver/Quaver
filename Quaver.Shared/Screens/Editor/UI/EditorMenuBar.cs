@@ -229,8 +229,8 @@ namespace Quaver.Shared.Screens.Editor.UI
 
                 foreach (EditorVisualizationGraphType graph in Enum.GetValues(typeof(EditorVisualizationGraphType)))
                 {
-                    if (ImGui.MenuItem(graph.ToString(), null, ruleset.SelectedVisualizationGraph.Value == graph))
-                        ruleset.SelectedVisualizationGraph.Value = graph;
+                    if (ImGui.MenuItem(graph.ToString(), null, ConfigManager.EditorVisualizationGraph.Value == graph))
+                        ConfigManager.EditorVisualizationGraph.Value = graph;
                 }
 
                 ImGui.EndMenu();
@@ -246,6 +246,9 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             if (ImGui.MenuItem("Anchor Objects At Midpoint", null, ConfigManager.EditorHitObjectsMidpointAnchored.Value))
                 ConfigManager.EditorHitObjectsMidpointAnchored.Value = !ConfigManager.EditorHitObjectsMidpointAnchored.Value;
+
+            if (ImGui.MenuItem("View Layers", null, ConfigManager.EditorViewLayers.Value))
+                ConfigManager.EditorViewLayers.Value = !ConfigManager.EditorViewLayers.Value;
 
            ImGui.EndMenu();
         }

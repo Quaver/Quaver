@@ -72,14 +72,14 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
                 Position = new ScalableVector2(15, 12)
             };
 
-            Artist = new SpriteText(Fonts.Exo2SemiBold, " ", 12, false)
+            Artist = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 3)
             };
 
-            Creator = new SpriteText(Fonts.Exo2Medium, " ", 10, false)
+            Creator = new SpriteText(Fonts.Exo2Medium, " ", 10)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

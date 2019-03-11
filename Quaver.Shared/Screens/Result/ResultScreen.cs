@@ -244,8 +244,10 @@ namespace Quaver.Shared.Screens.Result
                 ScoreProcessor.Stats = Gameplay.Ruleset.ScoreProcessor.Stats;
 
                 // Remove all modifiers that was played during the replay, so the user doesn't still have them
-                // activated when they go back to select.
-                ModManager.RemoveAllMods();
+                // activated when they go back to select. (autoplay is the only exception)
+                if (!ModManager.IsActivated(ModIdentifier.Autoplay))
+                    ModManager.RemoveAllMods();
+
                 return;
             }
 

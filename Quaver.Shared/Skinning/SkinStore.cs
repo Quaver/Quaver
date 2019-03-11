@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -64,6 +65,11 @@ namespace Quaver.Shared.Skinning
         ///     The user's mouse cursor.
         /// </summary>
         internal Texture2D Cursor { get; private set; }
+
+        /// <summary>
+        ///     Whether the cursor should be centered.
+        /// </summary>
+        internal bool CenterCursor { get; private set; }
 
         /// <summary>
         ///     Grade Textures.
@@ -200,6 +206,7 @@ namespace Quaver.Shared.Skinning
 
             // Change cursor image.
             GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
+            GameBase.Game.GlobalUserInterface.Cursor.Center = CenterCursor;
         }
 
         /// <summary>
@@ -212,12 +219,13 @@ namespace Quaver.Shared.Skinning
             if (!File.Exists($"{Dir}/{name}"))
                 return;
 
-            Config = new IniFileParser.IniFileParser().ReadFile($"{Dir}/{name}");
+            Config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile($"{Dir}/{name}");
 
             // Parse very general things in config.
             Name = ConfigHelper.ReadString(Name, Config["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, Config["General"]["Author"]);
             Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
+            CenterCursor = ConfigHelper.ReadBool(false, Config["General"]["CenterCursor"]);
         }
 
         /// <summary>

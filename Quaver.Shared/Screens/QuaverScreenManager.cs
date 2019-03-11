@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -22,6 +23,11 @@ namespace Quaver.Shared.Screens
         ///     The screen that's currently queued to load
         /// </summary>
         public static QuaverScreen QueuedScreen { get; private set; }
+
+        /// <summary>
+        ///     The previous screen that the user was on.
+        /// </summary>
+        public static QuaverScreenType LastScreen { get; private set; } = QuaverScreenType.None;
 
         /// <summary>
         ///     If delaying a screen change, this is the amount of time that will have
@@ -83,6 +89,10 @@ namespace Quaver.Shared.Screens
             Logger.Important($"Changed to Screen '{screen.Type}'", LogType.Runtime);
 
             var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen != null)
+                LastScreen = game.CurrentScreen.Type;
+
             game.CurrentScreen = screen;
 
             ScreenManager.ChangeScreen(screen);
@@ -90,8 +100,11 @@ namespace Quaver.Shared.Screens
 
             // Update client status on the server.
             var status = screen.GetClientStatus();
+
             if (status != null)
                 OnlineManager.Client?.UpdateClientStatus(status);
+
+            OtherGameMapDatabaseCache.RunThread();
         }
 
         /// <summary>

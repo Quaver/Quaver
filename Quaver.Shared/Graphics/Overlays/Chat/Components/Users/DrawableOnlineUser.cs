@@ -13,6 +13,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -158,7 +159,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             else
             {
                 // If we don't have user information, request it to the server to obtain it.
-                OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
+                if (ChatManager.IsActive)
+                    OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
 
                 Username.Text = $"User#{User.OnlineUser.Id}";
                 Avatar.Border.Tint = Color.White;

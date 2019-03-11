@@ -17,6 +17,7 @@ using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Packets.Server;
@@ -79,16 +80,6 @@ namespace Quaver.Shared.Online
         public static Dictionary<int, User> OnlineUsers { get; private set; }
 
         /// <summary>
-        ///     The thread that online actions will take place on.
-        /// </summary>
-        private static SmartThreadPool Thread { get; set; } = new SmartThreadPool();
-
-        /// <summary>
-        ///     The thread worker for the online connection.
-        /// </summary>
-        private static IWorkItemResult Worker { get; set; }
-
-        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
@@ -112,8 +103,8 @@ namespace Quaver.Shared.Online
             }
 
             // Initiate the connection to the game server.
-            Worker = Thread.QueueWorkItem(() => Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
-                SteamManager.PTicket, SteamManager.PcbTicket, false));
+            Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(),
+                SteamManager.PTicket, SteamManager.PcbTicket, false);
         }
 
         /// <summary>

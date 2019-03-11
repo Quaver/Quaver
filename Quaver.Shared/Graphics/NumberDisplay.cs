@@ -7,9 +7,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -20,17 +22,10 @@ namespace Quaver.Shared.Graphics
     public class NumberDisplay : Sprite
     {
         /// <summary>
-        ///     The number value for this display in string format.
-        ///     If the value isn't a valid number or percentage.
-        ///
-        ///     Sample Inputs:
-        ///         - 123
-        ///         - 1000000
-        ///         - 40.23
-        ///         - 99.12%
+        ///     The value of the number display
         /// </summary>
         private string _value;
-        internal string Value
+        public string Value
         {
             get => _value;
             set
@@ -50,6 +45,15 @@ namespace Quaver.Shared.Graphics
                     InitializeDigits();
             }
         }
+
+        /// <summary>
+        /// </summary>
+        public double TargetValue { get; private set; }
+
+        /// <summary>
+        ///     The value that is currently displayed
+        /// </summary>
+        public double CurrentValue { get; private set; }
 
         /// <summary>
         ///     The type of number display this is.
@@ -92,12 +96,18 @@ namespace Quaver.Shared.Graphics
         ///     The last time the value was changed
         ///     (Used for timing animations for example).
         /// </summary>
-        internal long LastValueChangeTime { get; private set; }
+        private long LastValueChangeTime { get; set; }
 
         /// <summary>
         ///     The size of the digits.
         /// </summary>
         private Vector2 ImageScale { get; }
+
+        /// <summary>
+        ///     The initial position of the display, used to place it in the same position when
+        ///     the length of the numbers change
+        /// </summary>
+        private float InitialPosition { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -106,10 +116,13 @@ namespace Quaver.Shared.Graphics
         /// <param name="type"></param>
         /// <param name="startingValue"></param>
         /// <param name="imageScale"></param>
-        internal NumberDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale)
+        /// <param name="position"></param>
+        internal NumberDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale, float position)
         {
             ImageScale = imageScale;
             Value = startingValue;
+            InitialPosition = position;
+            CurrentValue = 0;
             Type = type;
 
             // First validate the initial value to see if everything is correct.
@@ -118,6 +131,77 @@ namespace Quaver.Shared.Graphics
             // Create and initialize the digits.
             Digits = new List<Sprite>();
             InitializeDigits();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (CurrentValue != TargetValue)
+            {
+                switch (Type)
+                {
+                    case NumberDisplayType.Accuracy:
+                    case NumberDisplayType.Score:
+                        CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
+                            (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
+                        break;
+                    case NumberDisplayType.Combo:
+                        CurrentValue = TargetValue;
+                        break;
+                    case NumberDisplayType.SongTime:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                switch (Type)
+                {
+                    case NumberDisplayType.Score:
+                        Value = StringHelper.ScoreToString((int) Math.Ceiling(CurrentValue));
+                        break;
+                    case NumberDisplayType.Combo:
+                        Value = ((int) Math.Ceiling(CurrentValue)).ToString();
+                        break;
+                    case NumberDisplayType.Accuracy:
+                        Value = StringHelper.AccuracyToString((float) CurrentValue);
+                        break;
+                    case NumberDisplayType.SongTime:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            SetXPosition();
+            base.Update(gameTime);
+        }
+
+        private void SetXPosition()
+        {
+            switch (Alignment)
+            {
+                case Alignment.TopLeft:
+                case Alignment.MidLeft:
+                case Alignment.BotLeft:
+                    X = InitialPosition;
+                    break;
+                case Alignment.TopCenter:
+                case Alignment.MidCenter:
+                case Alignment.BotCenter:
+                    X = -TotalWidth / 2f;
+                    break;
+                case Alignment.TopRight:
+                case Alignment.MidRight:
+                case Alignment.BotRight:
+                    X = -TotalWidth + InitialPosition;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -210,6 +294,12 @@ namespace Quaver.Shared.Graphics
             for (var i = Value.Length; i < Digits.Count; i++)
                 Digits[i].Visible = false;
         }
+
+        /// <summary>
+        ///     Updates the value of the number idsplay
+        /// </summary>
+        /// <param name="num"></param>
+        public void UpdateValue(double num) => TargetValue = num;
 
         /// <summary>
         ///     Converts a single character into a texture.

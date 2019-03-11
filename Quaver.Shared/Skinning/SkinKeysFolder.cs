@@ -13,6 +13,7 @@ namespace Quaver.Shared.Skinning
         HitObjects,
         Receptors,
         Lighting,
-        LaneCover
+        LaneCover,
+        Editor
     }
 }

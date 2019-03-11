@@ -9,6 +9,7 @@ namespace Quaver.Shared.Screens
 {
     public enum QuaverScreenType
     {
+        None,
         Editor,
         Gameplay,
         Loading,

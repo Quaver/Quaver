@@ -144,6 +144,12 @@ namespace Quaver.Shared.Screens.Editor
         public Bindable<EditorLayerInterface> ActiveLayerInterface { get; }
 
         /// <summary>
+        ///     Dictates if the user has clicked the play test button once, so they can be disallowed
+        ///     from spamming it - causing your entire PC to go to absolute shit.
+        /// </summary>
+        private bool IsGoingToPlayTest { get; set; }
+
+        /// <summary>
         /// </summary>
         public EditorScreen(Qua map)
         {
@@ -506,7 +512,7 @@ namespace Quaver.Shared.Screens.Editor
                 MapManager.Selected.Value.VisitMapsetPage();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.U))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                UploadMapset();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.E))
                 ExportToZip();
@@ -815,7 +821,7 @@ namespace Quaver.Shared.Screens.Editor
             qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
 
             var dir = $"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}";
-            var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+            var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
             qua.Save(path);
 
             // Add the new map to the db.
@@ -882,7 +888,7 @@ namespace Quaver.Shared.Screens.Editor
                 File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
 
                 // Save the new .qua file into the directory
-                var path = $"{dir}/{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}.qua";
+                var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
                 qua.Save(path);
 
                 // Place the new map inside of the database and make sure all the loaded maps are correct
@@ -921,15 +927,22 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void GoPlayTest()
         {
+            if (IsGoingToPlayTest)
+                return;
+
+            IsGoingToPlayTest = true;
+
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= AudioEngine.Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Error, "There aren't any hitobjects to play test past this point!");
+                IsGoingToPlayTest = false;
                 return;
             }
 
             if (DialogManager.Dialogs.Count != 0)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before test playing!");
+                IsGoingToPlayTest = false;
                 return;
             }
 
