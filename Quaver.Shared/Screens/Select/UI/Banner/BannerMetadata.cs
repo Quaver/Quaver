@@ -52,6 +52,11 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private BannerMetadataItem Difficulty { get; }
 
+        /// <summary>
+        ///     The percentage of long notes among the map's hit objects.
+        /// </summary>
+        private BannerMetadataItem LNPercentage { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -70,13 +75,15 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             Bpm = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "BPM", "240") { Parent = this, Alignment = Alignment.MidLeft };
             Length = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "Length", "0:00") { Parent = this, Alignment = Alignment.MidLeft };
             Difficulty = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "Difficulty", "13.22") { Parent = this, Alignment = Alignment.MidLeft };
+            LNPercentage = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "LNs", "10%") { Parent = this, Alignment = Alignment.MidLeft };
 
             Items = new List<BannerMetadataItem>
             {
                 Mode,
                 Bpm,
                 Length,
-                Difficulty
+                Difficulty,
+                LNPercentage
             };
 
             ModManager.ModsChanged += OnModsChanged;
@@ -104,6 +111,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             Bpm.UpdateValue(((int)(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))).ToString(CultureInfo.InvariantCulture));
             Length.UpdateValue(length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss"));
             Difficulty.UpdateValue(StringHelper.AccuracyToString((float) map.DifficultyFromMods(ModManager.Mods)).Replace("%", ""));
+            LNPercentage.UpdateValue(((int) map.LNPercentage).ToString(CultureInfo.InvariantCulture) + "%");
 
             for (var i = 0; i < Items.Count; i++)
             {

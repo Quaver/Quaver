@@ -90,7 +90,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = TextHeader.Y + TextHeader.Height - 2,
-                ForceDrawAtSize = false
             };
 
             UpdateOnlineUserCount();

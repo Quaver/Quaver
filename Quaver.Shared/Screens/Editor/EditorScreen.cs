@@ -512,7 +512,7 @@ namespace Quaver.Shared.Screens.Editor
                 MapManager.Selected.Value.VisitMapsetPage();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.U))
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                UploadMapset();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.E))
                 ExportToZip();

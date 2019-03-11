@@ -205,7 +205,7 @@ namespace Quaver.Shared.Modifiers
             {
                 CurrentModifiersList.RemoveAll(x => x.Type == ModType.Speed);
 
-                if (AudioEngine.Track != null)
+                if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
 
                 CheckModInconsistencies();

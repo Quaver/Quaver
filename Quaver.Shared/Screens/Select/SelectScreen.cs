@@ -73,9 +73,7 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreen()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0 ||
-                MapDatabaseCache.LoadedMapsFromOtherGames != ConfigManager.AutoLoadOsuBeatmaps.Value ||
-                QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
+            if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -345,9 +343,11 @@ namespace Quaver.Shared.Screens.Select
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 return;
 
-            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
-                ConfigManager.LeaderboardSection.Value = LeaderboardType.Global;
-            else if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Global)
+            var index = (int) ConfigManager.LeaderboardSection.Value;
+
+            if (index + 1 < Enum.GetNames(typeof(LeaderboardType)).Length)
+                ConfigManager.LeaderboardSection.Value = (LeaderboardType) index + 1;
+            else
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
         }
 
@@ -480,13 +480,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
-        {
-            if (e.Value == MapDatabaseCache.LoadedMapsFromOtherGames)
-                return;
-
-            Exit(() => new ImportingScreen());
-        }
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Exit(() => new ImportingScreen());
 
         /// <summary>
         ///     Called when the user changes the option for displaying failed scores.

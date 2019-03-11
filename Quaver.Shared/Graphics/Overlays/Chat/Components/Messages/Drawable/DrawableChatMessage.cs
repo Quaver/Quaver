@@ -142,7 +142,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteText(Fonts.SourceSansProSemiBold, Message.Message, 14, true,
+        private void CreateMessageContentText() => TextMessageContent = new SpriteText(Fonts.SourceSansProSemiBold, Message.Message, 14,
                 (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
             Parent = this,

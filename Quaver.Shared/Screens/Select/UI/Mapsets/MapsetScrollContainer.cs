@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -119,7 +120,10 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0;
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && DialogManager.Dialogs.Count == 0
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
             if (ContentContainer.Y < PreviousContentContainerY)
                 HandlePoolShifting(Direction.Forward);

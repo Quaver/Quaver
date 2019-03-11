@@ -288,8 +288,9 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void CreateLeaderboardSelector() => LeaderboardSelector = new LeaderboardSelector(this, new List<LeaderboardSelectorItem>()
         {
-            new LeaderboardSelectorItemRankings(LeaderboardType.Local, "Local Scores"),
-            new LeaderboardSelectorItemRankings(LeaderboardType.Global, "Global Scores")
+            new LeaderboardSelectorItemRankings(LeaderboardType.Local, "Local"),
+            new LeaderboardSelectorItemRankings(LeaderboardType.Global, "Global"),
+            new LeaderboardSelectorItemRankings(LeaderboardType.Mods, "Mods")
         })
         {
             Parent = Container
