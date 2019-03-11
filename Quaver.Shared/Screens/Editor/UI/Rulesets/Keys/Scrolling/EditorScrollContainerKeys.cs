@@ -26,7 +26,6 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Skinning;
-using TagLib;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
