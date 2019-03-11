@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
                     ModManager.AddMod(ModIdentifier.NoFail);
 
                     // Load the background (usually the default one)
-                    BackgroundHelper.Load(MapManager.Selected.Value);
+                    BackgroundHelper.LoadBackgroundTask.Run(MapManager.Selected.Value);
                     DialogManager.Dismiss(Dialog);
 
                     return new GameplayScreen(qua, "", new List<Score>(), null, false, 0, true);
