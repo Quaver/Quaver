@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.Timeline;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Skinning;
+using TagLib;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -573,7 +574,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                             ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
                         }
 
-                        ln.ResizeLongNote();
+                        ln.TextureBody = ln.Body.Image;
+                        ln.TextureTail = ln.Tail.Image;
                     }
                     else
                     {
@@ -583,6 +585,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                             h.Image = skin.NoteHitObjects[h.Info.Lane - 1][index];
                     }
 
+                    // Resize and reposition the object to support skins that are of different sizes.
+                    h.SetHeight();
+                    h.SetPositionY();
+                    h.Resize();
+
+                    // Reset back to an active state temporarily because any objects that don't
+                    // fit the following cases are considered active still.
                     h.AppearAsActive();
 
                     // Get the layer the object is in

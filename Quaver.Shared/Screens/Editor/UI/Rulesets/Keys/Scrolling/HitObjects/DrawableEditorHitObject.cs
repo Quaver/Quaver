@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Container = container;
             Info = info;
             Image = texHead;
-            Height = (float) (Container.LaneSize - Container.DividerLineWidth * 2) * Image.Height / Image.Width;
+            SetHeight();
             DestroyIfParentIsNull = false;
             SetPositionY();
 
@@ -132,6 +132,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             Tint = new Color(40, 40, 40);
             SelectionSprite.Visible = false;
         }
+
+        public virtual void Resize() => SetHeight();
+
+        public void SetHeight() => Height = (float) (Container.LaneSize - Container.DividerLineWidth * 2) * Image.Height / Image.Width;
 
         /// <summary>
         ///

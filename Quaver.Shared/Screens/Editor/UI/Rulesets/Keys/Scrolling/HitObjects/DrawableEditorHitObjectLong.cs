@@ -32,12 +32,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         ///     The texture for the long note's body
         /// </summary>
-        private Texture2D TextureBody { get; }
+        public Texture2D TextureBody { get; set; }
 
         /// <summary>
         ///     The texture for the long note's end.
         /// </summary>
-        private Texture2D TextureTail { get; }
+        public Texture2D TextureTail { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -183,6 +183,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             base.AppearAsHiddenInLayer();
             Body.Tint = Tint;
             Tail.Tint = Tint;
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void Resize()
+        {
+            base.Resize();
+            Tail.Height = (float) Container.LaneSize * TextureTail.Height / TextureTail.Width;
+            ResizeLongNote();
         }
 
         /// <inheritdoc />
