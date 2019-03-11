@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Settings
         /// <summary>
         ///     The list of available settings sections.
         /// </summary>
-        private List<SettingsSection> Sections { get; set; }
+        public List<SettingsSection> Sections { get; private set; }
 
         /// <summary>
         ///     The currently selected options section.
@@ -304,15 +304,17 @@ namespace Quaver.Shared.Screens.Settings
                 // Audio
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), "Audio", new List<Drawable>
                 {
-                    new SettingsSlider(this, "Master Volume", ConfigManager.VolumeGlobal),
-                    new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic),
-                    new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect),
-                    new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched)
+                    new SettingsSlider(this, "Master Volume", ConfigManager.VolumeGlobal, x => $"{x}%"),
+                    new SettingsSlider(this, "Music Volume", ConfigManager.VolumeMusic, x => $"{x}%"),
+                    new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect, x => $"{x}%"),
+                    new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched),
+                    new SettingsSlider(this, "Global Audio Offset", ConfigManager.GlobalAudioOffset, x => $"{x} ms"),
+                    new SettingsCalibrateOffset(this, "Calibrate Offset")
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
                 {
-                    new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness),
+                    new SettingsSlider(this, "Background Brightness", ConfigManager.BackgroundBrightness, x => $"{x}%"),
                     new SettingsSlider(this, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
                     new SettingsSlider(this, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K),
                     new SettingsScrollDirection(this, "Scroll Direction 4K", ConfigManager.ScrollDirection4K),
@@ -324,12 +326,11 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),
                     new SettingsBool(this, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
                     new SettingsBool(this, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                    new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
                     new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
-                    new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
-                    new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
+                    new SettingsSlider(this, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight, x => $"{x}%"),
+                    new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight, x => $"{x}%"),
                     new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
                     new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
                     new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)

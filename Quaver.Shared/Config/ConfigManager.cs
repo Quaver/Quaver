@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -186,11 +187,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
-        ///     If the judgement counter will animate when hitting objects.
-        /// </summary>
-        internal static Bindable<bool> AnimateJudgementCounter { get; private set; }
-
-        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
@@ -332,6 +328,11 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<EditorVisualizationGraphType> EditorVisualizationGraph { get; private set; }
+
+        /// <summary>
+        ///     If true, it'll use hitobjects specifically for viewing layers in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorViewLayers { get; private set; }
 
         /// <summary>
         ///     Keybinding for leftward navigation.
@@ -501,7 +502,7 @@ namespace Quaver.Shared.Config
             if (!File.Exists(_gameDirectory + "/quaver.cfg"))
                 File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
 
-            var data = new IniFileParser.IniFileParser().ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
+            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
 
             // Read / Set Config Values
             // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
@@ -528,16 +529,15 @@ namespace Quaver.Shared.Config
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 5, 100, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 5, 100, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
-            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
-            AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
@@ -598,6 +598,7 @@ namespace Quaver.Shared.Config
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
+            EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -643,8 +644,6 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
-
-
                     KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
@@ -671,7 +670,6 @@ namespace Quaver.Shared.Config
                     KeyIncreaseMapOffset.ValueChanged += AutoSaveConfiguration;
                     KeyDecreaseMapOffset.ValueChanged += AutoSaveConfiguration;
                     KeyScoreboardVisible.ValueChanged += AutoSaveConfiguration;
-                    AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
@@ -696,6 +694,7 @@ namespace Quaver.Shared.Config
                     LaneCoverBottomHeight.ValueChanged += AutoSaveConfiguration;
                     LaneCoverTop.ValueChanged += AutoSaveConfiguration;
                     LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
+                    EditorViewLayers.ValueChanged += AutoSaveConfiguration;
                     UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                     EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
                 });

@@ -83,6 +83,10 @@ namespace Quaver.Shared.Screens.Editor.UI
 
         /// <summary>
         /// </summary>
+        private bool WasPlayingBeforeDragging { get; set; }
+
+        /// <summary>
+        /// </summary>
         private Sprite ProgressBall { get; set; }
 
         /// <inheritdoc />
@@ -317,7 +321,10 @@ namespace Quaver.Shared.Screens.Editor.UI
                 if ((int) targetPos != (int) AudioEngine.Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
                 {
                     if (AudioEngine.Track.IsPlaying)
+                    {
+                        WasPlayingBeforeDragging = true;
                         AudioEngine.Track.Pause();
+                    }
 
                     AudioEngine.Track.Seek(targetPos);
 
@@ -332,10 +339,11 @@ namespace Quaver.Shared.Screens.Editor.UI
             }
             else if (DraggingInLastFrame)
             {
-                if (AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
+                if (WasPlayingBeforeDragging && AudioEngine.Track.IsPaused || (AudioEngine.Track.IsStopped && !AudioEngine.Track.HasPlayed))
                     AudioEngine.Track.Play();
 
                 DraggingInLastFrame = false;
+                WasPlayingBeforeDragging = false;
             }
         }
     }

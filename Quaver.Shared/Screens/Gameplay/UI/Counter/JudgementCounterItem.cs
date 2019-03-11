@@ -50,17 +50,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
                 SpriteText.Text = value == 0
                     ? JudgementHelper.JudgementToShortName(Judgement)
                     : JudgementCount.ToString();
-
-                // Don't animate it if the user doesn't want to.
-                if (!ConfigManager.AnimateJudgementCounter.Value)
-                    return;
-
-                // Make the size of the display look more pressed.
-                var skin = SkinManager.Skin.Keys[ParentDisplay.Screen.Map.Mode];
-
-                Width = skin.JudgementCounterSize - skin.JudgementCounterSize / 4;
-                Height = Width;
-                X = -skin.JudgementCounterSize / 16f;
             }
         }
 

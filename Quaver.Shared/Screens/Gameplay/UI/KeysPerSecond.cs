@@ -30,9 +30,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         private double Time { get; set; }
 
-
-        public KeysPerSecond(NumberDisplayType type, string startingValue, Vector2 imageScale)
-            : base(type, startingValue, imageScale)
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="startingValue"></param>
+        /// <param name="imageScale"></param>
+        /// <param name="position"></param>
+        internal KeysPerSecond(NumberDisplayType type, string startingValue, Vector2 imageScale, float position)
+            : base(type, startingValue, imageScale, position)
         {
         }
 

@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Modifiers;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Maps
@@ -172,6 +173,7 @@ namespace Quaver.Shared.Database.Maps
                 { SearchFilterOption.Length,     ("l", "length") },
                 { SearchFilterOption.Keys,       ("k", "keys") },
                 { SearchFilterOption.Status,     ("s", "status") },
+                { SearchFilterOption.LNs,        ("ln", "lns") },
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -236,7 +238,7 @@ namespace Quaver.Shared.Database.Maps
                                 if (!float.TryParse(searchQuery.Value, out var valDiff))
                                     exitLoop = true;
 
-                                if (!CompareValues(map.Difficulty10X, valDiff, searchQuery.Operator))
+                                if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Length:
@@ -293,6 +295,31 @@ namespace Quaver.Shared.Database.Maps
                                     default:
                                         throw new ArgumentOutOfRangeException();
                                 }
+                                break;
+                            case SearchFilterOption.LNs:
+                                var valueToCompareTo = 0;
+                                var stringToParse = "";
+
+                                if (searchQuery.Value.Last() == '%')
+                                {
+                                    stringToParse = searchQuery.Value.Substring(0, searchQuery.Value.Length - 1);
+                                    valueToCompareTo = (int) map.LNPercentage;
+                                }
+                                else
+                                {
+                                    stringToParse = searchQuery.Value;
+                                    valueToCompareTo = map.LongNoteCount;
+                                }
+
+                                if (!int.TryParse(stringToParse, out var value))
+                                {
+                                    exitLoop = true;
+                                    break;
+                                }
+
+                                if (!CompareValues(valueToCompareTo, value, searchQuery.Operator))
+                                    exitLoop = true;
+
                                 break;
                             default:
                                 break;
@@ -431,5 +458,10 @@ namespace Quaver.Shared.Database.Maps
         ///     Status (ranked, not submitted, etc.)
         /// </summary>
         Status,
+
+        /// <summary>
+        ///     LN count or percentage.
+        /// </summary>
+        LNs,
     }
 }

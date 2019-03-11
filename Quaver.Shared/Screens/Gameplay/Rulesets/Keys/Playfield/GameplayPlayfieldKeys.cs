@@ -131,7 +131,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.TopCenter,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
             };
 
             // Create the foreground container.
@@ -139,7 +140,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.TopCenter,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
             };
 
             Stage = new GameplayPlayfieldKeysStage(Screen, this);
@@ -154,6 +156,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private void SetLaneScrollDirections()
         {
             var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+
             ScrollDirection direction;
             switch (Ruleset.Map.Mode)
             {

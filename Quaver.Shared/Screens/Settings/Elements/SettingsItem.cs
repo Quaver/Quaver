@@ -24,6 +24,8 @@ namespace Quaver.Shared.Screens.Settings.Elements
 
         protected Color UnhoverColor { get; set; } = Color.Black;
 
+        protected SettingsDialog Dialog { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -31,6 +33,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <param name="name"></param>
         public SettingsItem(SettingsDialog dialog, string name)
         {
+            Dialog = dialog;
             Size = new ScalableVector2(dialog.ContentContainer.Width - dialog.DividerLine.X - 10, 40);
             Tint = UnhoverColor;
             Alpha = 0.65f;

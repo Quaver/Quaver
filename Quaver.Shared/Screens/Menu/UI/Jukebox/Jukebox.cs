@@ -18,6 +18,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -162,7 +163,8 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Jukebox controls
         /// </summary>
-        private void HandleJukeboxInput() {
+        private void HandleJukeboxInput()
+        {
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
@@ -191,7 +193,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void SelectNextTrack(Direction direction)
         {
-            if (MapManager.Mapsets.Count == 0)
+            var game = (QuaverGame) GameBase.Game;
+
+            if (MapManager.Mapsets.Count == 0 || game.CurrentScreen.Exiting)
                 return;
 
             try
