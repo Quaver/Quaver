@@ -32,12 +32,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         ///     The texture for the long note's body
         /// </summary>
-        public Texture2D TextureBody { get; set; }
+        public Texture2D TextureBody { get; private set; }
 
         /// <summary>
         ///     The texture for the long note's end.
         /// </summary>
-        public Texture2D TextureTail { get; set; }
+        public Texture2D TextureTail { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -201,5 +201,17 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <returns></returns>
         public override bool IsHovered(Vector2 mousePos) => base.IsHovered(mousePos) || Body.ScreenRectangle.Contains(mousePos) ||
                                                             Tail.ScreenRectangle.Contains(mousePos);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="tail"></param>
+        public void ChangeTextures(Texture2D body, Texture2D tail)
+        {
+            Body.Image = body;
+            Tail.Image = tail;
+            TextureBody = Body.Image;
+            TextureTail = Tail.Image;
+        }
     }
 }

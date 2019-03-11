@@ -564,18 +564,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                         if (ConfigManager.EditorViewLayers.Value)
                         {
                             h.Image = skin.EditorLayerNoteHitObjects[h.Info.Lane - 1];
-                            ln.Body.Image = skin.EditorLayerNoteHoldBodies[h.Info.Lane - 1];
-                            ln.Tail.Image = skin.EditorLayerNoteHoldEnds[h.Info.Lane - 1];
+                            ln.ChangeTextures(skin.EditorLayerNoteHoldBodies[h.Info.Lane - 1], skin.EditorLayerNoteHoldEnds[h.Info.Lane - 1]);
                         }
                         else
                         {
                             h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
-                            ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1].First();
-                            ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
+                            ln.ChangeTextures(skin.NoteHoldBodies[h.Info.Lane - 1].First(), skin.NoteHoldEnds[h.Info.Lane - 1]);
                         }
-
-                        ln.TextureBody = ln.Body.Image;
-                        ln.TextureTail = ln.Tail.Image;
                     }
                     else
                     {

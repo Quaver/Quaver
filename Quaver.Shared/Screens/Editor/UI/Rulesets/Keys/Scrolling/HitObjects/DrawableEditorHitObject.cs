@@ -133,12 +133,15 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
             SelectionSprite.Visible = false;
         }
 
+        /// <summary>
+        /// </summary>
         public virtual void Resize() => SetHeight();
 
+        /// <summary>
+        /// </summary>
         public void SetHeight() => Height = (float) (Container.LaneSize - Container.DividerLineWidth * 2) * Image.Height / Image.Width;
 
         /// <summary>
-        ///
         /// </summary>
         private void CreateSelectionSprite() => SelectionSprite = new Sprite()
         {
