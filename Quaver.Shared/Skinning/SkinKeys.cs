@@ -369,8 +369,8 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
                     JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.Black;
-                    JudgementCounterSize = 45;
+                    JudgementCounterFontColor = Color.White;
+                    JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
                     AccuracyDisplayScale = 45;
@@ -425,8 +425,8 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
                     JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.Black;
-                    JudgementCounterSize = 45;
+                    JudgementCounterFontColor = Color.White;
+                    JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
                     AccuracyDisplayScale = 45;
@@ -496,8 +496,8 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
                     JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.Black;
-                    JudgementCounterSize = 45;
+                    JudgementCounterFontColor = Color.White;
+                    JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
                     AccuracyDisplayScale = 45;
@@ -556,8 +556,8 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressInactiveColor = new Color(136, 136, 136);
                     SongTimeProgressActiveColor = Color.Red;
                     JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.Black;
-                    JudgementCounterSize = 45;
+                    JudgementCounterFontColor = Color.White;
+                    JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
                     AccuracyDisplayScale = 45;

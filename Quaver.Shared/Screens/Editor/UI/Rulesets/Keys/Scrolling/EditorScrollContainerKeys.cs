@@ -563,17 +563,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                         if (ConfigManager.EditorViewLayers.Value)
                         {
                             h.Image = skin.EditorLayerNoteHitObjects[h.Info.Lane - 1];
-                            ln.Body.Image = skin.EditorLayerNoteHoldBodies[h.Info.Lane - 1];
-                            ln.Tail.Image = skin.EditorLayerNoteHoldEnds[h.Info.Lane - 1];
+                            ln.ChangeTextures(skin.EditorLayerNoteHoldBodies[h.Info.Lane - 1], skin.EditorLayerNoteHoldEnds[h.Info.Lane - 1]);
                         }
                         else
                         {
                             h.Image = skin.NoteHoldHitObjects[h.Info.Lane - 1][index];
-                            ln.Body.Image = skin.NoteHoldBodies[h.Info.Lane - 1].First();
-                            ln.Tail.Image = skin.NoteHoldEnds[h.Info.Lane - 1];
+                            ln.ChangeTextures(skin.NoteHoldBodies[h.Info.Lane - 1].First(), skin.NoteHoldEnds[h.Info.Lane - 1]);
                         }
-
-                        ln.ResizeLongNote();
                     }
                     else
                     {
@@ -583,6 +579,13 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                             h.Image = skin.NoteHitObjects[h.Info.Lane - 1][index];
                     }
 
+                    // Resize and reposition the object to support skins that are of different sizes.
+                    h.SetHeight();
+                    h.SetPositionY();
+                    h.Resize();
+
+                    // Reset back to an active state temporarily because any objects that don't
+                    // fit the following cases are considered active still.
                     h.AppearAsActive();
 
                     // Get the layer the object is in

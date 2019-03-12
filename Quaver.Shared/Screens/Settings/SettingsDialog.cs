@@ -326,7 +326,6 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),
                     new SettingsBool(this, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
                     new SettingsBool(this, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                    new SettingsBool(this, "Animate Judgement Counter", ConfigManager.AnimateJudgementCounter),
                     new SettingsBool(this, "Display Scoreboard", ConfigManager.ScoreboardVisible),
                     new SettingsBool(this, "Tap to Pause", ConfigManager.TapToPause),
                     new SettingsBool(this, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit),
