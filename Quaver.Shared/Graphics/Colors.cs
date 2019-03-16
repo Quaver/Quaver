@@ -13,11 +13,6 @@ namespace Quaver.Shared.Graphics
 {
     public static class Colors
     {
-        /// <summary>
-        ///     Color for dead long notes.
-        /// </summary>
-        public static readonly Color DeadLongNote = new Color(50, 50, 50);
-
         #region QUAVER_COLORS
 
         /// <summary>
