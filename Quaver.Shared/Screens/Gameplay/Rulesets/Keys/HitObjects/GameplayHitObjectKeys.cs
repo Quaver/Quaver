@@ -348,7 +348,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     When the object iself dies, we want to change it to a dead color.
+        ///     When the object itself dies, we want to change it to a dead color.
         /// </summary>
         public void Kill()
         {
