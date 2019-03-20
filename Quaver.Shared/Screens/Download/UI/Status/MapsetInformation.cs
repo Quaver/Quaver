@@ -276,9 +276,9 @@ namespace Quaver.Shared.Screens.Download.UI.Status
             CancelButton.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
             ViewMapsetPageButton.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                MapBanner.Image = ImageDownloader.DownloadMapsetBanner((int) mapset["id"]);
+                MapBanner.Image = await ImageDownloader.DownloadMapsetBanner((int) mapset["id"]);
                 MapBanner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 300));
             });
         }

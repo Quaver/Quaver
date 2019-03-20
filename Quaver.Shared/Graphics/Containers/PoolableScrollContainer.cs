@@ -32,7 +32,7 @@ namespace Quaver.Shared.Graphics.Containers
         ///     The items that are available to use for the drawables.
         ///     Essentially what the drawable represents.
         /// </summary>
-        public List<T> AvailableItems { get; }
+        public List<T> AvailableItems { get; set; }
 
         /// <summary>
         ///    The index at which the object pool begins, so we'll be aware of where to scroll.

@@ -281,9 +281,9 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <summary>
         ///
         /// </summary>
-        private void FetchMapsetBanner() => Task.Run(() =>
+        private void FetchMapsetBanner() => Task.Run(async () =>
         {
-            Banner.Image = ImageDownloader.DownloadMapsetBanner(MapsetId);
+            Banner.Image = await ImageDownloader.DownloadMapsetBanner(MapsetId);
             Banner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, IsAlreadyOwned ? 0.45f : 1, 300));
         });
     }
