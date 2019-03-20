@@ -335,6 +335,22 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorViewLayers { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> LobbyFilterHasPassword { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> LobbyFilterFullGame { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> LobbyFilterOwnsMap { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> LobbyFilterHasFriends { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -599,6 +615,10 @@ namespace Quaver.Shared.Config
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
             EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
             EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
+            LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
+            LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
+            LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);
+            LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -697,6 +717,10 @@ namespace Quaver.Shared.Config
                     EditorViewLayers.ValueChanged += AutoSaveConfiguration;
                     UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
                     EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
+                    LobbyFilterHasPassword.ValueChanged += AutoSaveConfiguration;
+                    LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;
+                    LobbyFilterOwnsMap.ValueChanged += AutoSaveConfiguration;
+                    LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
