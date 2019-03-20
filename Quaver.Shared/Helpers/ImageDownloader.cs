@@ -8,9 +8,11 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Wobble;
@@ -25,7 +27,7 @@ namespace Quaver.Shared.Helpers
         ///     Downloads a mapset banner and returns a stream for it
         /// </summary>
         /// <param name="id"></param>
-        public static Texture2D DownloadMapsetBanner(int id)
+        public static async Task<Texture2D> DownloadMapsetBanner(int id)
         {
             if (DownloadScreen.MapsetBanners.ContainsKey(id))
                 return DownloadScreen.MapsetBanners[id];
@@ -36,7 +38,7 @@ namespace Quaver.Shared.Helpers
             {
                 using (var webClient = new WebClient())
                 {
-                    var data = webClient.DownloadData(url);
+                    var data = await webClient.DownloadDataTaskAsync(url);
 
                     using (var mem = new MemoryStream(data))
                     {
@@ -52,11 +54,7 @@ namespace Quaver.Shared.Helpers
             }
 
             // Make a transparent texture.
-            var texture = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
-            texture.SetData(new[] { Color.Transparent });
-            DownloadScreen.MapsetBanners[id] = texture;
-
-            return texture;
+            return UserInterface.MenuBackgroundBlurred;
         }
     }
 }

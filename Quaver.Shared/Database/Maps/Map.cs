@@ -489,6 +489,8 @@ namespace Quaver.Shared.Database.Maps
                 NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the file.");
             }
         }
+
+        public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }
 
     /// <summary>
