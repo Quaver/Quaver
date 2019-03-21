@@ -164,7 +164,8 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                     InputText =
                     {
                         Text = $"{ConfigManager.Username.Value}'s Game"
-                    }
+                    },
+                    MaxCharacters = 100
                 }
             };
 
@@ -175,6 +176,10 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = GameName.Y + GameName.Height + spacing,
+                Textbox =
+                {
+                    MaxCharacters = 100
+                }
             };
 
             GameType = new LabelledHorizontalSelector(width - 50, "Game Type", new List<string>
@@ -235,6 +240,12 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
             if (MapManager.Selected.Value == null)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot create a game without having a map selected!");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(GameName.Textbox.RawText) || string.IsNullOrWhiteSpace(GameName.Textbox.RawText))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must provide a valid game name.");
                 return;
             }
 

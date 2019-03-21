@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
                     str = "Joining multiplayer game. Please wait...";
                     break;
                 case JoiningGameDialogType.Creating:
-                    str = "Creating multiplyer game. Please wait...";
+                    str = "Creating multiplayer game. Please wait...";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
