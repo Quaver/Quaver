@@ -243,6 +243,12 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 return;
             }
 
+            if (string.IsNullOrEmpty(GameName.Textbox.RawText) || string.IsNullOrWhiteSpace(GameName.Textbox.RawText))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must provide a valid game name.");
+                return;
+            }
+
             var game = MultiplayerGame.CreateCustom(Enum.Parse<MultiplayerGameType>(GameType.Selector.SelectedItemText.Text),
                 GameName.Textbox.RawText, Password.Textbox.RawText,
                 int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
