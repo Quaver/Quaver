@@ -271,6 +271,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayComboAlerts { get; private set; }
 
         /// <summary>
+        ///     If enabled, accuracy display is smoothed.
+        /// </summary>
+        internal static Bindable<bool> SmoothAccuracyChanges { get; private set; }
+
+        /// <summary>
         ///     The scroll speed used in the editor.
         /// </summary>
         internal static BindableInt EditorScrollSpeedKeys { get; private set; }
@@ -613,6 +618,7 @@ namespace Quaver.Shared.Config
             LaneCoverTop = ReadValue(@"LaneCoverTop", false, data);
             LaneCoverBottom = ReadValue(@"LaneCoverBottom", false, data);
             UIElementsOverLaneCover = ReadValue(@"UIElementsOverLaneCover", true, data);
+            SmoothAccuracyChanges = ReadValue(@"SmoothAccuracyChanges", true, data);
             EditorVisualizationGraph = ReadValue(@"EditorVisualizationGraph", EditorVisualizationGraphType.Tick, data);
             EditorViewLayers = ReadValue(@"EditorViewLayers", false, data);
             LobbyFilterHasPassword = ReadValue(@"LobbyFilterHasPassword", true, data);
@@ -716,6 +722,7 @@ namespace Quaver.Shared.Config
                     LaneCoverBottom.ValueChanged += AutoSaveConfiguration;
                     EditorViewLayers.ValueChanged += AutoSaveConfiguration;
                     UIElementsOverLaneCover.ValueChanged += AutoSaveConfiguration;
+                    SmoothAccuracyChanges.ValueChanged += AutoSaveConfiguration;
                     EditorVisualizationGraph.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterHasPassword.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;

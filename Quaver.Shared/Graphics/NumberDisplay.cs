@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -144,13 +145,23 @@ namespace Quaver.Shared.Graphics
             {
                 switch (Type)
                 {
-                    case NumberDisplayType.Accuracy:
                     case NumberDisplayType.Score:
                         CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
                             (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
                         break;
                     case NumberDisplayType.Combo:
                         CurrentValue = TargetValue;
+                        break;
+                    case NumberDisplayType.Accuracy:
+                        if (ConfigManager.SmoothAccuracyChanges.Value)
+                        {
+                            CurrentValue = MathHelper.Lerp((float) CurrentValue, (float) TargetValue,
+                                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
+                        }
+                        else
+                        {
+                            CurrentValue = TargetValue;
+                        }
                         break;
                     case NumberDisplayType.SongTime:
                         break;
