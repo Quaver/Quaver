@@ -58,7 +58,15 @@ namespace Quaver.Shared.Screens.Menu
 
             if (!FirstMenuLoad && ConfigManager.AutoLoginToServer.Value)
             {
-                OnlineManager.Login();
+                try
+                {
+                    OnlineManager.Login();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
                 FirstMenuLoad = true;
             }
         }
@@ -103,7 +111,7 @@ namespace Quaver.Shared.Screens.Menu
                     game?.Exit();
                 }));
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
