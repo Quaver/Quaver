@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using Quaver.Shared.Database.Maps;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -245,7 +246,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(firstDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(firstDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     // Update the mapset's information and y position.
@@ -278,7 +279,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(lastDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(lastDifficulty.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     lastDifficulty.Y = (PoolStartingIndex - 1) * DrawableDifficulty.HEIGHT + (PoolStartingIndex - 1)

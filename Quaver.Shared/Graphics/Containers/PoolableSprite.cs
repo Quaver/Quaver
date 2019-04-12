@@ -6,6 +6,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Graphics.Containers
@@ -45,7 +46,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);
