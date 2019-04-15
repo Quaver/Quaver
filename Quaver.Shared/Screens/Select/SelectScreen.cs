@@ -590,7 +590,7 @@ namespace Quaver.Shared.Screens.Select
                     break;
 
                 case SelectContainerStatus.Difficulty:
-                    var selectedDifficulty = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps[view.DifficultyScrollContainer.SelectedMapIndex];
+                    var selectedDifficulty = selectedMapset.Maps[view.DifficultyScrollContainer.SelectedMapIndex];
 
                     if (selectedDifficulty == null)
                         return;
