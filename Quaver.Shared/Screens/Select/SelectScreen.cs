@@ -650,7 +650,7 @@ namespace Quaver.Shared.Screens.Select
             if (MapManager.Selected.Value.Game != MapGame.Quaver)
             {
                 // Display error message
-                NotificationManager.Show(NotificationLevel.Error,"This map was loaded from an external source, it cannot be deleted.");
+                NotificationManager.Show(NotificationLevel.Error, "This map was loaded from an external source, it cannot be deleted.");
                 return;
             }
 
