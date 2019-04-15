@@ -569,9 +569,7 @@ namespace Quaver.Shared.Screens.Select
         }
 
         /// <summary>
-        ///     Used to start the deleting process.
-        ///
-        ///     woo now AiAe will stop telling me to add this.
+        ///     Starts the deleting process.
         /// </summary>
         /// <param name="type"></param>
         private void DeleteSelected()
