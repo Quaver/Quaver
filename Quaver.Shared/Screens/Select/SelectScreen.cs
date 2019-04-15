@@ -605,7 +605,7 @@ namespace Quaver.Shared.Screens.Select
                     throw new ArgumentOutOfRangeException();
             }
 
-            var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : type == SelectContainerStatus.Difficulty ? "difficulty" : null )} ? ", (sender, confirm) =>
+            var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
             {
                 MapDeletingInProgress = true;
 
