@@ -369,7 +369,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void HandleKeyPressDel()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0)
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || AvailableMapsets.Count == 0)
                 return;
 
             try
@@ -579,9 +579,6 @@ namespace Quaver.Shared.Screens.Select
             var filePath = string.Empty;
 
             var selectedMapset = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex];
-
-            if (AvailableMapsets.Count == 0)
-                return;
 
             switch (type)
             {
