@@ -583,9 +583,6 @@ namespace Quaver.Shared.Screens.Select
             switch (type)
             {
                 case SelectContainerStatus.Mapsets:
-                    if (selectedMapset == null)
-                        return;
-
                     filePath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
                     break;
 
@@ -594,9 +591,6 @@ namespace Quaver.Shared.Screens.Select
 
                     var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
                     var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
-
-                    if (selectedDifficulty == null)
-                        return;
 
                     filePath = selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath;
                     break;
