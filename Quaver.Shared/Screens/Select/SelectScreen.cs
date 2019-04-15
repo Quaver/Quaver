@@ -592,10 +592,13 @@ namespace Quaver.Shared.Screens.Select
                 case SelectContainerStatus.Difficulty:
                     var selectedDifficulty = selectedMapset.Maps[view.DifficultyScrollContainer.SelectedMapIndex];
 
+                    var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+                    var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
+
                     if (selectedDifficulty == null)
                         return;
 
-                    filePath = selectedMapset.Maps.Count > 1 ? Path.Combine(Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory), selectedDifficulty.Path) : Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+                    filePath = selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath;
                     break;
 
                 default:
