@@ -571,11 +571,11 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Starts the deleting process.
         /// </summary>
-        /// <param name="type"></param>
         private void DeleteSelected()
         {
             var view = View as SelectScreenView;
             var type = view.ActiveContainer;
+
             var filePath = string.Empty;
 
             var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
@@ -731,7 +731,7 @@ namespace Quaver.Shared.Screens.Select
         ///     Determines if the path is a file or directory then deletes it using the appropriate method.
         /// </summary>
         /// <param name="path"></param>
-        private void DeletePath(string path)
+        private static void DeletePath(string path)
         {
             var attributes = File.GetAttributes(path);
 
