@@ -578,8 +578,12 @@ namespace Quaver.Shared.Screens.Select
             var type = view.ActiveContainer;
             var filePath = string.Empty;
 
-            var selectedMapset = AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex];
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+            var selectedMapset = AvailableMapsets[selectedMapsetIndex];
+            var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
 
+            // Switch statement for setting predefined variable to the correct file path depending on the select container type.
             switch (type)
             {
                 case SelectContainerStatus.Mapsets:
@@ -587,8 +591,6 @@ namespace Quaver.Shared.Screens.Select
                     break;
 
                 case SelectContainerStatus.Difficulty:
-                    var selectedDifficulty = selectedMapset.Maps[view.DifficultyScrollContainer.SelectedMapIndex];
-
                     var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
                     var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
 
@@ -599,6 +601,7 @@ namespace Quaver.Shared.Screens.Select
                     throw new ArgumentOutOfRangeException();
             }
 
+            // Commence deleting and reloading.
             var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
             {
                 MapDeletingInProgress = true;
@@ -612,7 +615,7 @@ namespace Quaver.Shared.Screens.Select
                     AudioEngine.Track?.Dispose();
 
                     // Run deletion & Reload in the background.
-                    ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath));
+                    ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath, type, selectedMapsetIndex, selectedDifficultyIndex));
 
                     // Finally show confirmation notification
                     NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {selectedMapset.Title} from Quaver!");
@@ -632,12 +635,14 @@ namespace Quaver.Shared.Screens.Select
         ///     Used to delete a mapset or difficulty, then reload the available maps.
         /// </summary>
         /// <param name="path"></param>
-        private void DeleteAndReloadMaps(string path)
+        /// <param name="type"></param>
+        /// <param name="mapsetIndex"></param>
+        /// <param name="difficultyIndex"></param>
+        private void DeleteAndReloadMaps(string path, SelectContainerStatus type, int mapsetIndex, int difficultyIndex)
         {
             var view = View as SelectScreenView;
-            var type = view.ActiveContainer;
 
-            if (view.MapsetScrollContainer.SelectedMapsetIndex < 0)
+            if (mapsetIndex < 0)
                 return;
 
             // Externally loaded map check
@@ -648,9 +653,6 @@ namespace Quaver.Shared.Screens.Select
                 return;
             }
 
-            var preservedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
-            var preservedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
-
             try
             {
                 DeletePath(path);
@@ -659,11 +661,11 @@ namespace Quaver.Shared.Screens.Select
                 switch (type)
                 {
                     case SelectContainerStatus.Mapsets:
-                        AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps.ForEach(MapDatabaseCache.RemoveMap);
+                        AvailableMapsets[mapsetIndex].Maps.ForEach(MapDatabaseCache.RemoveMap);
                         break;
 
                     case SelectContainerStatus.Difficulty:
-                        MapDatabaseCache.RemoveMap(AvailableMapsets[view.MapsetScrollContainer.SelectedMapsetIndex].Maps[view.DifficultyScrollContainer.SelectedMapIndex]);
+                        MapDatabaseCache.RemoveMap(AvailableMapsets[mapsetIndex].Maps[difficultyIndex]);
                         break;
 
                     default:
@@ -700,17 +702,17 @@ namespace Quaver.Shared.Screens.Select
                 {
                     case SelectContainerStatus.Mapsets:
                         // if the selected mapset is at the end of the list
-                        if (preservedMapsetIndex == AvailableMapsets.Count)
+                        if (mapsetIndex == AvailableMapsets.Count)
                             view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
                         else
-                            view.MapsetScrollContainer.SelectMapset(preservedMapsetIndex);
+                            view.MapsetScrollContainer.SelectMapset(mapsetIndex);
                         break;
 
                     case SelectContainerStatus.Difficulty:
-                        if (preservedDifficultyIndex == AvailableMapsets[preservedMapsetIndex].Maps.Count)
-                            view.MapsetScrollContainer.SelectMap(preservedMapsetIndex, AvailableMapsets[preservedMapsetIndex].Maps[preservedDifficultyIndex - 1], true);
+                        if (difficultyIndex == AvailableMapsets[mapsetIndex].Maps.Count)
+                            view.MapsetScrollContainer.SelectMap(mapsetIndex, AvailableMapsets[mapsetIndex].Maps[difficultyIndex - 1], true);
                         else
-                            view.MapsetScrollContainer.SelectMap(preservedMapsetIndex, AvailableMapsets[preservedMapsetIndex].Maps[preservedDifficultyIndex], true);
+                            view.MapsetScrollContainer.SelectMap(mapsetIndex, AvailableMapsets[mapsetIndex].Maps[difficultyIndex], true);
                         break;
 
                     default:
