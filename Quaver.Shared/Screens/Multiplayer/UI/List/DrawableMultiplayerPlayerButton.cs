@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
@@ -43,7 +44,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

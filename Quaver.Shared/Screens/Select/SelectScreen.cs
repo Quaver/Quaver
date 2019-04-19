@@ -335,11 +335,11 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus) || KeyboardManager.IsUniqueKeyPress(Keys.Add))
                 ModManager.AddSpeedMods(GetNextRate(true));
 
             // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus) || KeyboardManager.IsUniqueKeyPress(Keys.Subtract))
                 ModManager.AddSpeedMods(GetNextRate(false));
 
             // Change from pitched to non-pitched

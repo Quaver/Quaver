@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Lobby.UI
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 

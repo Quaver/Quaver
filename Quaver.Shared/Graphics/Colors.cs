@@ -71,6 +71,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#4cb0f7");
             if (userGroups.HasFlag(UserGroups.RankingSupervisor))
                 return ColorHelper.HexToColor($"#49e6ef");
+            if (userGroups.HasFlag(UserGroups.Contributor))
+                return ColorHelper.HexToColor($"#75e475");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

@@ -71,7 +71,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             Size = new ScalableVector2(width, TextUserGroup.Height + 3);
             AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 3);
             Border.Alpha = 0.85f;
-            Border.Y = -1;
         }
 
         /// <summary>
@@ -100,6 +99,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             if (groups.HasFlag(UserGroups.RankingSupervisor))
                 return FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol);
+
+            if (groups.HasFlag(UserGroups.Contributor))
+                return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
 
             return null;
         }
@@ -131,6 +133,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             if (groups.HasFlag(UserGroups.RankingSupervisor))
                 return "Ranking Supervisor";
+
+            if (groups.HasFlag(UserGroups.Contributor))
+                return "Contributor";
 
             return null;
         }

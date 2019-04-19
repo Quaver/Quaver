@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online;
@@ -184,7 +185,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(firstUser.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(firstUser.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     // Update the user's information and y position.
@@ -209,7 +210,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(lastUser.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(lastUser.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     lastUser.Y = (PoolStartingIndex - 1) * DrawableOnlineUser.HEIGHT;

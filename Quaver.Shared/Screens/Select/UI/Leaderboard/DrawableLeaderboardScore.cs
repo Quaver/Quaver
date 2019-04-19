@@ -9,6 +9,7 @@ using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using MonoGame.Extended;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -295,7 +296,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Parent.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Parent.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 
