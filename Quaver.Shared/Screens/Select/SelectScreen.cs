@@ -369,7 +369,9 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void HandleKeyPressDel()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || AvailableMapsets.Count == 0)
+            var view = View as SelectScreenView;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || AvailableMapsets.Count == 0 || view.MapsetScrollContainer.SelectedMapsetIndex == -1)
                 return;
 
             try
@@ -606,25 +608,17 @@ namespace Quaver.Shared.Screens.Select
             {
                 MapDeletingInProgress = true;
 
-                try
-                {
-                    // Dispose of the background for the currently selected map.
-                    BackgroundHelper.Background?.Dispose();
+                // Dispose of the background for the currently selected map.
+                BackgroundHelper.Background?.Dispose();
 
-                    // Dispose of the currently playing track.
-                    AudioEngine.Track?.Dispose();
+                // Dispose of the currently playing track.
+                AudioEngine.Track?.Dispose();
 
-                    // Run deletion & Reload in the background.
-                    ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath, type, selectedMapsetIndex, selectedDifficultyIndex));
+                // Run deletion & Reload in the background.
+                ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath, type, selectedMapsetIndex, selectedDifficultyIndex));
 
-                    // Finally show confirmation notification
-                    NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {selectedMapset.Title} from Quaver!");
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    // Handle error
-                    NotificationManager.Show(NotificationLevel.Error, "An error has occured. Please check runtime.log!");
-                }
+                // Finally show confirmation notification
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {selectedMapset.Title} from Quaver!");
             });
 
             // Finally show the confirmation dialog that orchestrates the deleting process.
