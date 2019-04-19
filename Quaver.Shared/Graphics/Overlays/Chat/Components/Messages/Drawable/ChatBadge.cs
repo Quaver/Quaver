@@ -71,7 +71,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             Size = new ScalableVector2(width, TextUserGroup.Height + 3);
             AddBorder(new Color(Tint.R / 2, Tint.G / 2, Tint.B / 2), 3);
             Border.Alpha = 0.85f;
-            Border.Y = -1;
         }
 
         /// <summary>
