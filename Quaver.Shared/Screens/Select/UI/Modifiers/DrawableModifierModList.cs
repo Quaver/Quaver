@@ -52,6 +52,9 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
 
             foreach (var mod in Modifiers)
             {
+                if (!mod.AllowedInMultiplayer)
+                    continue;
+
                 Options.Add(new DrawableModifierOption(this, mod.Name, (o, e) =>
                 {
                     if (!ModManager.Mods.HasFlag(mod.ModIdentifier))

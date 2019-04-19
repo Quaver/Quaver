@@ -21,6 +21,8 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool Ranked { get; set; } = false;
 
+        public bool AllowedInMultiplayer { get; set; } = false;
+
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.NoFail

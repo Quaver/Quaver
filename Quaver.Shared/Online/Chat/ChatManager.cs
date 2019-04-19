@@ -121,6 +121,12 @@ namespace Quaver.Shared.Online.Chat
                 else
                 {
                     Dialog.IsClickable = true;
+
+                    var chanButton = Dialog.ChatChannelList.Buttons.Find(x => x.Channel == Dialog.ActiveChannel);
+
+                    if (chanButton != null && chanButton.IsUnread)
+                        chanButton.IsUnread = false;
+
                     DialogManager.Show(Dialog);
                 }
             }
@@ -317,7 +323,7 @@ namespace Quaver.Shared.Online.Chat
             // Determine if the channel is unread.
             foreach (var channelButton in Dialog.ChatChannelList.Buttons)
             {
-                if (channelButton.Channel == channel && Dialog.ActiveChannel != channel)
+                if (channelButton.Channel == channel && !IsActive)
                     channelButton.IsUnread = true;
             }
 

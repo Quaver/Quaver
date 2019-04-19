@@ -21,7 +21,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The pool of sprites to be used within the container
         /// </summary>
-        public List<PoolableSprite<T>> Pool { get; private set; }
+        public List<PoolableSprite<T>> Pool { get; protected set; }
 
         /// <summary>
         ///     The size of the object pool

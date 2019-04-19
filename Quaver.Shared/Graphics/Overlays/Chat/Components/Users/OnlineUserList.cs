@@ -426,7 +426,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void PeriodicallyRequestClientStatuses()
         {
-            if (GameBase.Game.TimeRunning - LastStatusRequestTime < 15000)
+            if (GameBase.Game.TimeRunning - LastStatusRequestTime < 5000 && LastStatusRequestTime != 0)
                 return;
 
             // Get all the users in the buffer.

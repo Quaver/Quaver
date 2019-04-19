@@ -72,6 +72,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsPaused || Screen.Failed)
                 return;
 
+            if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted)
+                return;
+
             // If they audio hasn't begun yet, start counting down until the beginning of the map.
             // This is to give a delay before the audio starts.
             if (Time < 0)

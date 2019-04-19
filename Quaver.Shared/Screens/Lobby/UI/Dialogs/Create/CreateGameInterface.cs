@@ -253,7 +253,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 GameName.Textbox.RawText, Password.Textbox.RawText,
                 int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
                 MapManager.Selected.Value.MapId,
-                MapManager.Selected.Value.MapSetId, MultiplayerGameRuleset.Free_For_All,
+                MapManager.Selected.Value.MapSetId, Enum.Parse<MultiplayerGameRuleset>(Ruleset.Selector.SelectedItemText.Text.Replace("-", "_")),
                 AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
                 MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum);
 

@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics.Menu
     {
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Text { get; }
+        public SpriteTextBitmap Text { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -60,6 +60,12 @@ namespace Quaver.Shared.Graphics.Menu
             var b = MathHelper.Lerp(Text.Tint.B, color.B, (float) Math.Min(dt / scale, 1));
 
             Text.Tint = new Color((int)r, (int)g, (int)b);
+        }
+
+        public void ChangeText(string text)
+        {
+            Text.Text = text;
+            Size = Text.Size;
         }
     }
 }

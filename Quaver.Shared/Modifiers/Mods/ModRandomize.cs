@@ -21,7 +21,7 @@ namespace Quaver.Shared.Modifiers.Mods
         ///     Used in shuffling the order of the playfields lanes.
         /// </summary>
         public int Seed;
-            
+
         public string Name { get; set; } = "Randomize";
 
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Randomize;
@@ -31,6 +31,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Swap up the lanes.";
 
         public bool Ranked { get; set; } = false;
+
+        public bool AllowedInMultiplayer { get; set; } = false;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
 

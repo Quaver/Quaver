@@ -8,6 +8,7 @@
 using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -250,7 +251,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11)
+        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString((ModIdentifier) Score.Mods), 11)
         {
             Parent = this,
             Alignment = Alignment.TopRight,

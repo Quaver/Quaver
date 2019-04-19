@@ -157,7 +157,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Mods.Alpha = alpha;
 
                 if (Screen.InReplayMode)
-                    Watching.Alpha = alpha;
+                    Watching.Alpha = 0;
             }
             else
             {
