@@ -101,6 +101,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (groups.HasFlag(UserGroups.RankingSupervisor))
                 return FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol);
 
+            if (groups.HasFlag(UserGroups.Contributor))
+                return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
+
             return null;
         }
 
@@ -131,6 +134,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             if (groups.HasFlag(UserGroups.RankingSupervisor))
                 return "Ranking Supervisor";
+
+            if (groups.HasFlag(UserGroups.Contributor))
+                return "Contributor";
 
             return null;
         }
