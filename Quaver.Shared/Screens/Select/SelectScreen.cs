@@ -371,7 +371,7 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || AvailableMapsets.Count == 0 || view.MapsetScrollContainer.SelectedMapsetIndex == -1)
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || view.MapsetScrollContainer.SelectedMapsetIndex == -1)
                 return;
 
             DeleteSelected();
