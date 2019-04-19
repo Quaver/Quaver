@@ -374,14 +374,7 @@ namespace Quaver.Shared.Screens.Select
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || AvailableMapsets.Count == 0 || view.MapsetScrollContainer.SelectedMapsetIndex == -1)
                 return;
 
-            try
-            {
-                DeleteSelected();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                MapDeletingInProgress = false;
-            }
+            DeleteSelected();
         }
 
         /// <summary>
