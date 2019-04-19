@@ -657,17 +657,15 @@ namespace Quaver.Shared.Screens.Select
             {
                 DeletePath(path);
 
-                // Remove mapset/difficulty from cache and AvailableMapsets list.
+                // Remove mapset/difficulty from cache.
                 switch (type)
                 {
                     case SelectContainerStatus.Mapsets:
                         AvailableMapsets[mapsetIndex].Maps.ForEach(MapDatabaseCache.RemoveMap);
-                        AvailableMapsets.Remove(AvailableMapsets[mapsetIndex]);
                         break;
 
                     case SelectContainerStatus.Difficulty:
                         MapDatabaseCache.RemoveMap(AvailableMapsets[mapsetIndex].Maps[difficultyIndex]);
-                        AvailableMapsets[mapsetIndex].Maps.Remove(AvailableMapsets[mapsetIndex].Maps[difficultyIndex]);
                         break;
 
                     default:
@@ -676,8 +674,17 @@ namespace Quaver.Shared.Screens.Select
 
                 MapDatabaseCache.OrderAndSetMapsets();
 
+                if (PreviousSearchTerm.Length > 0)
+                {
+                    // Grab the mapsets available to the user according to their previous search term.
+                    AvailableMapsets = MapsetHelper.SearchMapsets(MapManager.Mapsets, PreviousSearchTerm);
+                    AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets);
+                }
+                else
+                    AvailableMapsets = MapManager.Mapsets;
+
                 // If the deleted mapset was the last one, then exit back to menu.
-                if (MapManager.Mapsets.Count == 0)
+                if (AvailableMapsets.Count == 0)
                 {
                     view.Destroy();
                     AudioEngine.Track = null;
