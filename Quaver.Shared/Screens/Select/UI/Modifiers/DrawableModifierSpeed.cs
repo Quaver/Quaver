@@ -6,12 +6,17 @@
 */
 
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
@@ -22,6 +27,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         ///     Horizontal selector to change the rate of the audio
         /// </summary>
         private HorizontalSelector RateChanger { get; }
+
+        /// <summary>
+        /// </summary>
+        private ImageButton NotFreeRateButton { get; }
 
         /// <summary>
         ///     All of the available speeds to play
@@ -56,18 +65,42 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// </summary>
         /// <param name="dialog"></param>
         public DrawableModifierSpeed(ModifiersDialog dialog) : base(dialog, new ModSpeed(ModIdentifier.Speed05X))
-            => RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(200, 32), Fonts.Exo2SemiBold, 13,
-            UserInterface.HorizontalSelectorLeft,
-            UserInterface.HorizontalSelectorRight, new ScalableVector2(32, 32), 0, OnSelected, GetSelectedIndex())
         {
-            Parent = this,
-            Alignment = Alignment.MidRight,
-            X = -54,
-            UsePreviousSpriteBatchOptions = true,
-            ButtonSelectLeft = { UsePreviousSpriteBatchOptions = true },
-            ButtonSelectRight = { UsePreviousSpriteBatchOptions = true },
-            SelectedItemText = { UsePreviousSpriteBatchOptions = true }
-        };
+            RateChanger = new HorizontalSelector(Speeds, new ScalableVector2(200, 32), Fonts.Exo2SemiBold, 13,
+                UserInterface.HorizontalSelectorLeft,
+                UserInterface.HorizontalSelectorRight, new ScalableVector2(32, 32), 0, OnSelected, GetSelectedIndex())
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -54,
+                UsePreviousSpriteBatchOptions = true,
+                ButtonSelectLeft = {UsePreviousSpriteBatchOptions = true},
+                ButtonSelectRight = {UsePreviousSpriteBatchOptions = true},
+                SelectedItemText = {UsePreviousSpriteBatchOptions = true}
+            };
+
+            NotFreeRateButton = new ImageButton(UserInterface.BlankBox, (sender, args) =>
+            {
+                if (OnlineManager.CurrentGame != null && !OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+                    NotificationManager.Show(NotificationLevel.Error, "Free Rate is not enabled for this match!");
+            })
+            {
+                Parent = this,
+                Size = Size,
+                Tint = Color.Black,
+                Alpha = 0.75f,
+                UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            NotFreeRateButton.Visible = OnlineManager.CurrentGame != null
+                                        && !OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Rate)
+                                        && OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser;
+
+            base.Update(gameTime);
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -108,6 +141,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="index"></param>
         private static void OnSelected(string val, int index)
         {
+
             if (val == "1.0x")
             {
                 ModManager.RemoveSpeedMods();

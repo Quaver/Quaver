@@ -105,7 +105,10 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e) => HandleBackgroundChange();
+        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
+        {
+            HandleBackgroundChange();
+        }
 
         /// <summary>
         ///     Creates the sprite that displays the map information

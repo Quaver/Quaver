@@ -11,6 +11,7 @@ using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Replays;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -18,9 +19,12 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
+using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
@@ -57,6 +61,14 @@ namespace Quaver.Shared.Screens.Loading
         {
             Scores = scores;
             Replay = replay;
+
+            if (OnlineManager.CurrentGame != null)
+                OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
+
+            var game = GameBase.Game as QuaverGame;
+            var cursor = game?.GlobalUserInterface.Cursor;
+            cursor.Alpha = 0;
+
             View = new MapLoadingScreenView(this);
             AudioTrack.AllowPlayback = false;
         }
@@ -87,6 +99,17 @@ namespace Quaver.Shared.Screens.Loading
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void Destroy()
+        {
+            if (OnlineManager.CurrentGame != null)
+                OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+
+            base.Destroy();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => null;
 
@@ -102,9 +125,10 @@ namespace Quaver.Shared.Screens.Loading
             MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
 
             if (Replay != null)
-            {
-                AddModsFromReplay(Replay);
-            }
+                AddModsFromIdentifiers(Replay.Mods);
+
+            if (OnlineManager.CurrentGame != null)
+                AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
 
             MapManager.Selected.Value.Qua.ApplyMods(ModManager.Mods);
 
@@ -172,23 +196,44 @@ namespace Quaver.Shared.Screens.Loading
         }
 
         /// <summary>
-        ///     Adds all modifiers that were present in the replay.
+        ///     Adds all modifiers from a mod enum combo
         /// </summary>
-        private static void AddModsFromReplay(Replay replay)
+        public static void AddModsFromIdentifiers(ModIdentifier mods)
         {
             // Remove all the current mods that we have on.
             ModManager.RemoveAllMods();
 
-            // Put on the mods from the replay.);
-            for (var i = 0; i <= Math.Log((int)replay.Mods, 2); i++)
+            for (var i = 0; i <= Math.Log((long)mods, 2); i++)
             {
-                var mod = (ModIdentifier)Math.Pow(2, i);
+                var mod = (ModIdentifier)((long)Math.Pow(2, i));
 
-                if (!replay.Mods.HasFlag(mod))
+                if (!mods.HasFlag(mod))
                     continue;
 
-                ModManager.AddMod(mod);
+                try
+                {
+                    ModManager.AddMod(mod);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
+        {
+            MapManager.Selected.Value.Scores.Value.RemoveAll(x => x.PlayerId == e.UserId);
+            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
+            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
+            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
+            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
+            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
         }
     }
 }

@@ -183,7 +183,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
                 map.ClearScores();
                 var scores = section.FetchScores();
-                map.Scores.Value = scores.Scores;
+
+                if (OnlineManager.CurrentGame == null)
+                    map.Scores.Value = scores.Scores;
 
                 cancellationToken.ThrowIfCancellationRequested();
                 section.IsFetching = false;

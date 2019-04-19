@@ -8,6 +8,8 @@
 using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using MonoGame.Extended;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -250,7 +252,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11)
+        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString((ModIdentifier) Score.Mods), 11)
         {
             Parent = this,
             Alignment = Alignment.TopRight,
@@ -294,7 +296,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Parent.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Parent.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 

@@ -8,6 +8,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
@@ -36,7 +37,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Compositor.ScrollContainer.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Compositor.ScrollContainer.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

@@ -15,6 +15,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Menu;
@@ -362,24 +363,29 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Creates the navbar at the bottom of the screen
         /// </summary>
-        private void CreateBottomNavbar() => BottomNavbar = new Navbar(new List<NavbarItem>()
+        private void CreateBottomNavbar()
         {
-            // Mods
-            new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModifiersDialog()), true, false, true),
-
-            // Edit
-            new NavbarItem("Edit", false, (o, e) =>
+            var items = new List<NavbarItem>
             {
-                var screen = Screen as SelectScreen;
-                screen?.ExitToEditor();
-            }, true, false, true),
+                new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModifiersDialog()), true, false,
+                    true)
+            };
 
-            // Export Mapset
-            new NavbarItem("Export", false, (o, e) =>
+            if (OnlineManager.CurrentGame == null)
+            {
+                items.Add(new NavbarItem("Edit", false, (o, e) =>
+                {
+                    var screen = Screen as SelectScreen;
+                    screen?.ExitToEditor();
+                }, true, false, true));
+            }
+
+            items.Add(new NavbarItem("Export", false, (o, e) =>
             {
                 if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "Slow down! You can only export a set every 2 seconds.");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "Slow down! You can only export a set every 2 seconds.");
                     return;
                 }
 
@@ -391,39 +397,35 @@ namespace Quaver.Shared.Screens.Select
                     MapManager.Selected.Value.Mapset.ExportToZip();
                     NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
                 });
-            }, true, false, true),
+            }, true, false, true));
 
-            // Select a random map
-            // new NavbarItem("Random", false, (o, e) =>
-            // {
-            //     var screen = Screen as SelectScreen;
-            //     screen.SelectRandomMap();
-            // }, true, false, true)
-        }, new List<NavbarItem>()
-        {
-            // Play
-            new NavbarItem("Play", false, (o, e) =>
+
+            BottomNavbar = new Navbar(items, new List<NavbarItem>()
             {
-                switch (ActiveContainer)
+                // Play
+                new NavbarItem("Play", false, (o, e) =>
                 {
-                    case SelectContainerStatus.Mapsets:
-                        SwitchToContainer(SelectContainerStatus.Difficulty);
-                        break;
-                    case SelectContainerStatus.Difficulty:
-                        var screen = Screen as SelectScreen;
-                        screen?.ExitToGameplay();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }, true, false, true),
+                    switch (ActiveContainer)
+                    {
+                        case SelectContainerStatus.Mapsets:
+                            SwitchToContainer(SelectContainerStatus.Difficulty);
+                            break;
+                        case SelectContainerStatus.Difficulty:
+                            var screen = Screen as SelectScreen;
+                            screen?.ExitToGameplay();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }, true, false, true),
 
-            // Game Options
-            new NavbarItem("Options", false, (o, e) => DialogManager.Show(new SettingsDialog()), true, false, true)
-        }, true)
-        {
-            Parent = Container,
-            Alignment = Alignment.TopLeft,
-        };
+                // Game Options
+                new NavbarItem("Options", false, (o, e) => DialogManager.Show(new SettingsDialog()), true, false, true)
+            }, true)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+            };
+        }
     }
 }

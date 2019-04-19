@@ -16,6 +16,7 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
@@ -36,6 +37,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
+using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -152,7 +154,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed => !IsPlayTesting && (!ModManager.IsActivated(ModIdentifier.NoFail) && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
+        public bool Failed =>
+            OnlineManager.CurrentGame == null && !IsPlayTesting && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                                                                    && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
@@ -226,6 +230,32 @@ namespace Quaver.Shared.Screens.Gameplay
         public Metronome Metronome { get; }
 
         /// <summary>
+        ///     The index of the last judgement that was sent to the server
+        /// </summary>
+        public int LastJudgementIndexSentToServer { get; private set; } = -1;
+
+        /// <summary>
+        ///     The time that the judgements were last sent to the server
+        /// </summary>
+        private long TimeJudgementsLastSentToServer { get; set; }
+
+        /// <summary>
+        ///     If the current play session is a multiplayer game
+        /// </summary>
+        public bool IsMultiplayerGame { get; }
+
+        /// <summary>
+        ///     If false, the game wont start if we're in a multiplayer match,
+        ///     We'll be in a state where we're waiting for all players.
+        /// </summary>
+        public bool IsMultiplayerGameStarted { get; private set; }
+
+        /// <summary>
+        ///     Whether or not we have requested to skip the song in multiplayer
+        /// </summary>
+        public bool RequestedToSkipSong { get; private set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -257,6 +287,14 @@ namespace Quaver.Shared.Screens.Gameplay
             IsPlayTesting = isPlayTesting;
             PlayTestAudioTime = playTestTime;
             IsCalibratingOffset = isCalibratingOffset;
+            IsMultiplayerGame = OnlineManager.CurrentGame != null;
+
+            if (IsMultiplayerGame)
+            {
+                OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
+                OnlineManager.Client.OnAllPlayersLoaded += OnAllPlayersLoaded;
+                OnlineManager.Client.OnAllPlayersSkipped += OnAllPlayersSkipped;
+            }
 
             Timing = new GameplayAudioTiming(this);
 
@@ -288,6 +326,16 @@ namespace Quaver.Shared.Screens.Gameplay
             View = new GameplayScreenView(this);
         }
 
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            if (IsMultiplayerGame)
+                OnlineManager.Client?.MultiplayerGameScreenLoaded();
+
+            base.OnFirstUpdate();
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -306,6 +354,7 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleFailure();
             ReplayCapturer.Capture(gameTime);
             // Metronome?.Update(gameTime);
+            SendJudgementsToServer();
 
             base.Update(gameTime);
         }
@@ -317,6 +366,13 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (IsCalibratingOffset)
                 AudioEngine.Track?.Dispose();
+
+            if (IsMultiplayerGame)
+            {
+                OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+                OnlineManager.Client.OnAllPlayersLoaded -= OnAllPlayersLoaded;
+                OnlineManager.Client.OnAllPlayersSkipped -= OnAllPlayersSkipped;
+            }
 
             Metronome?.Dispose();
             base.Destroy();
@@ -336,7 +392,6 @@ namespace Quaver.Shared.Screens.Gameplay
             // Handle pausing
             if (!Failed && !IsPlayComplete)
                 HandlePauseInput(gameTime);
-
 
             // Show/hide scoreboard.
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
@@ -371,13 +426,16 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsPaused || Failed)
                 return;
 
+            if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
+                    HandleQuickExit();
+            }
+
             if (!IsPlayComplete && !IsCalibratingOffset)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                     SkipToNextObject();
-
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
-                    HandleQuickExit();
 
                 // Go back to editor at the same time
                 if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
@@ -471,6 +529,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
+            if (OnlineManager.CurrentGame != null)
+                return;
+
             // Go back to editor if we're currently play testing.
             if (IsPlayTesting && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
             {
@@ -637,6 +698,17 @@ namespace Quaver.Shared.Screens.Gameplay
                     NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.");
                     break;
                 default:
+                    var game = GameBase.Game as QuaverGame;
+                    var cursor = game?.GlobalUserInterface.Cursor;
+                    cursor.Alpha = 1;
+
+                    if (IsMultiplayerGame)
+                    {
+                        OnlineManager.LeaveGame();
+                        Exit(() => new LobbyScreen());
+                        return;
+                    }
+
                     ForceFail = true;
                     HasQuit = true;
 
@@ -722,6 +794,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset)
                 return;
 
+            if (OnlineManager.CurrentGame != null)
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
                 IsRestartingPlay = true;
 
@@ -787,10 +862,21 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Skips the song to the next object if on a break.
         /// </summary>
-        private void SkipToNextObject()
+        private void SkipToNextObject(bool force = false)
         {
             if (!EligibleToSkip || IsPaused || IsResumeInProgress)
                 return;
+
+            if (IsMultiplayerGame && !force)
+            {
+                if (RequestedToSkipSong)
+                    return;
+
+                OnlineManager.Client?.RequestToSkipSong();
+                RequestedToSkipSong = true;
+                NotificationManager.Show(NotificationLevel.Info, "Requested to skip song. Waiting for all other players to skip!");
+                return;
+            }
 
             // Get the skip time of the next object.
             var nextObject = Ruleset.HitObjectManager.NextHitObject.StartTime;
@@ -825,7 +911,12 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             DiscordHelper.Presence.Details = Map.ToString();
 
-            if (IsPlayTesting)
+            if (OnlineManager.CurrentGame != null)
+            {
+                DiscordHelper.Presence.State = $"{OnlineManager.CurrentGame.Name} " +
+                                               $"({OnlineManager.CurrentGame.Players.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
+            }
+            else if (IsPlayTesting)
                 DiscordHelper.Presence.State = "Play Testing";
             else if (InReplayMode)
                 DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
@@ -911,5 +1002,63 @@ namespace Quaver.Shared.Screens.Gameplay
             NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
             OffsetConfirmDialog.Exit(this);
         }
+
+        /// <summary>
+        /// </summary>
+        private void SendJudgementsToServer()
+        {
+            if (GameBase.Game.TimeRunning - TimeJudgementsLastSentToServer < 500 || OnlineManager.CurrentGame == null)
+                return;
+
+            TimeJudgementsLastSentToServer = GameBase.Game.TimeRunning;
+
+            if (Ruleset.ScoreProcessor.Stats.Count == 0)
+                return;
+
+            if (Ruleset.ScoreProcessor.Stats.Count == LastJudgementIndexSentToServer + 1)
+                return;
+
+            var judgementsToGive = new List<Judgement>();
+
+            for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.ScoreProcessor.Stats.Count; i++)
+                judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
+
+            OnlineManager.Client.SendGameJudgements(judgementsToGive);
+            LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
+        {
+            var view = (GameplayScreenView) View;
+
+            view.Scoreboard?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
+            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
+            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
+            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
+            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
+            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+        }
+
+        /// <summary>
+        ///     Called when all players are ready to start.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAllPlayersLoaded(object sender, AllPlayersLoadedEventArgs e)
+            => IsMultiplayerGameStarted = true;
+
+        /// <summary>
+        ///     Called when all players in the multiplayer game have skipped.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAllPlayersSkipped(object sender, AllPlayersSkippedEventArgs e)
+            => SkipToNextObject(true);
     }
 }

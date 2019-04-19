@@ -15,6 +15,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
+using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -64,7 +65,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///     The list of order judgements the user has gotten, so we can calculate their score
         ///     as the user plays the map.
         /// </summary>
-        public List<Judgement> Judgements { get; }
+        public List<Judgement> Judgements { get; set; }
 
         /// <summary>
         ///     The avatar for the user.
@@ -104,7 +105,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Reference to the score
         /// </summary>
-        private Score LocalScore { get; }
+        public Score LocalScore { get; }
+
+        /// <summary>
+        ///     If the particular user has quit the game
+        /// </summary>
+        public bool HasQuit { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -155,7 +161,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods) : Screen.Ruleset.ScoreProcessor;
+                    if (screen.IsMultiplayerGame && Type == ScoreboardUserType.Other)
+                    {
+                        var mp = new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives);
+                        Processor = new ScoreProcessorKeys(Screen.Map, mods, mp);
+                    }
+                    else
+                        Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, mods): Screen.Ruleset.ScoreProcessor;
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -172,7 +184,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             if (Type != ScoreboardUserType.Self)
             {
-                if (LocalScore != null && LocalScore.IsOnline)
+                if (LocalScore != null && (LocalScore.IsOnline || LocalScore.IsMultiplayer))
                 {
                     // Check to see if we have a Steam avatar for this user cached.
                     if (SteamManager.UserAvatars.ContainsKey((ulong)LocalScore.SteamId))
@@ -277,6 +289,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         private void SetTintBasedOnHealth()
         {
+            if (Processor.MultiplayerProcessor != null)
+            {
+                if (Processor.MultiplayerProcessor.IsEliminated || Processor.MultiplayerProcessor.IsRegeneratingHealth)
+                {
+                    Username.Tint = Color.Red;
+                    return;
+                }
+            }
+
             if (Processor.Health >= 60)
                 Username.Tint = Color.White;
             else if (Processor.Health >= 40)
@@ -301,6 +322,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             Avatar.Image = e.Texture;
             Avatar.ClearAnimations();
             Avatar.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Avatar.Alpha, 1, 600));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void QuitGame()
+        {
+            HasQuit = true;
+            Username.Text = $"[Quit] {UsernameRaw}";
+            Username.Tint = Color.Crimson;
         }
     }
 }

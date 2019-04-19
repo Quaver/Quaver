@@ -17,15 +17,18 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Skinning;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Screens;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -86,11 +89,27 @@ namespace Quaver.Shared.Database.Maps
                 var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
 
-                // If in song select, automatically go to the import screen
-                if (screen.Type != QuaverScreenType.Select || screen.Exiting)
+                if (screen.Exiting)
                     return;
 
-                screen.Exit(() => new ImportingScreen());
+                if (screen.Type == QuaverScreenType.Select)
+                {
+                    if (OnlineManager.CurrentGame != null)
+                    {
+                        var mpScreen = ScreenManager.Screens.ToList().Find(x => x is MultiplayerScreen);
+                        screen.Exit(() => new ImportingScreen(mpScreen as MultiplayerScreen), 0, QuaverScreenChangeType.AddToStack);
+                        return;
+                    }
+
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+
+                if (screen.Type == QuaverScreenType.Multiplayer)
+                {
+                    screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen), 0, QuaverScreenChangeType.AddToStack);
+                    return;
+                }
             }
             // Quaver Replay
             else if (e.EndsWith(".qr"))

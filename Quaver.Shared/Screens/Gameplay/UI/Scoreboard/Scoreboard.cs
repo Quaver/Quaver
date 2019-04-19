@@ -8,12 +8,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
+using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
+using Wobble.Logging;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 {
@@ -37,6 +44,54 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 x.Scoreboard = this;
                 x.Y = x.TargetYPosition;
             });
+
+            if (OnlineManager.CurrentGame != null)
+                OnlineManager.Client.OnGameJudgements += OnGameJudgements;
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (OnlineManager.CurrentGame != null)
+                OnlineManager.Client.OnGameJudgements -= OnGameJudgements;
+
+            base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnGameJudgements(object sender, GameJudgementsEventArgs e)
+        {
+            ScoreboardUser user = null;
+
+            foreach (var u in Users)
+            {
+                if (u.LocalScore == null)
+                    continue;
+
+                if (u.LocalScore.PlayerId == e.UserId)
+                {
+                    user = u;
+                    break;
+                }
+            }
+
+            if (user == null)
+                return;
+
+            lock (user.Judgements)
+            lock (user.Processor.CurrentJudgements)
+            {
+                foreach (var t in e.Judgements)
+                {
+                    user.Judgements.Add(t);
+                    user.CalculateScoreForNextObject();
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -68,7 +123,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal void CalculateScores()
         {
-            Users.ForEach(x => x.CalculateScoreForNextObject());
+            Users.ForEach(x =>
+            {
+                x.CalculateScoreForNextObject();
+            });
 
             // Set each user's target position
             // Set Y positions.
@@ -81,7 +139,26 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTargetYPositions()
         {
-            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy)).ToList();
+            List<ScoreboardUser> users;
+
+            if (Users.First().Processor.MultiplayerProcessor != null)
+            {
+               users = Users
+                    .OrderBy(x => x.HasQuit)
+                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
+                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
+                    .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
+                    .ThenByDescending(x => x.Processor.Accuracy)
+                    .ToList();
+            }
+            else
+            {
+                users = Users
+                    .OrderBy(x => x.Processor.Health <= 0)
+                    .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
+                    .ThenByDescending(x => x.Processor.Accuracy)
+                    .ToList();
+            }
 
             for (var i = 0; i < users.Count; i++)
             {

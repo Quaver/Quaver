@@ -8,19 +8,20 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
@@ -79,7 +80,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             AnimateSelection(gameTime);
@@ -92,7 +93,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);

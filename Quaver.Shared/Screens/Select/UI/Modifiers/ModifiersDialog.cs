@@ -5,14 +5,20 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -44,6 +50,11 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// </summary>
         private List<DrawableModifier> ModsList { get; set; }
 
+        /// <summary>
+        ///     The active modifiers when the dialog was opened.
+        /// </summary>
+        private ModIdentifier ModsWhenDialogOpen { get; }
+
         private bool isClosing { get; set; }
 
         /// <inheritdoc />
@@ -51,6 +62,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// </summary>
         public ModifiersDialog() : base(0)
         {
+            ModsWhenDialogOpen = ModManager.Mods;
             CreateContent();
 
             Clicked += (sender, args) =>
@@ -216,6 +228,15 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 },
             };
 
+            for (var i = ModsList.Count - 1; i >= 0; i--)
+            {
+                if (ModsList[i] is DrawableModifierBool mod)
+                {
+                    if (!mod.Modifier.AllowedInMultiplayer && OnlineManager.CurrentGame != null)
+                        ModsList.Remove(ModsList[i]);
+                }
+            }
+
             for (var i = 0; i < ModsList.Count; i++)
             {
                 var mod = ModsList[i];
@@ -236,6 +257,71 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         {
             if (isClosing)
                 return;
+
+            if (OnlineManager.CurrentGame != null)
+            {
+                if (ModsWhenDialogOpen != ModManager.Mods)
+                {
+                    var diffRating = OnlineManager.CurrentGame.DifficultyRating;
+
+                    // Only update the difficulty rating when closing if the selected map is still the same.
+                    // If the user switches maps, but changes modifiers, it'll be incorrect.
+                    if (OnlineManager.CurrentGame.MapMd5 == MapManager.Selected.Value.Md5Checksum)
+                        diffRating = MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
+
+                    var rateNow = ModHelper.GetRateFromMods(ModManager.Mods);
+
+                    // Change the global mods of the game
+                    var rateMod = (long) ModHelper.GetModsFromRate(rateNow);
+
+                    if (rateMod == -1)
+                        rateMod = 0;
+
+                    var activeModsWithoutRate = (long) ModManager.Mods - rateMod;
+
+                    if (activeModsWithoutRate == -1)
+                        activeModsWithoutRate = 0;
+
+                    // If we're on regular free mod mode, when we change the rate,
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    if (OnlineManager.CurrentGame.FreeModType == MultiplayerFreeModType.Regular &&
+                        ModHelper.GetRateFromMods(ModsWhenDialogOpen) != rateNow
+                        && OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                    {
+                        OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod, diffRating);
+
+                        // Change the mods of ourselves minus the mods rate (gets all other activated modes)
+                        OnlineManager.Client?.MultiplayerChangePlayerModifiers(activeModsWithoutRate);
+                    }
+                    // Free mod is enabled, but we haven't done any rate changing, so just
+                    // enable player modifiers for us
+                    else if (OnlineManager.CurrentGame.FreeModType != MultiplayerFreeModType.None)
+                    {
+                        // Free Mod + Free Rate
+                        if (OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Regular)
+                            && OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+                        {
+                            OnlineManager.Client.MultiplayerChangePlayerModifiers((long) ModManager.Mods);
+                        }
+                        // Either Free Mod OR Free Rate
+                        else
+                        {
+                            switch (OnlineManager.CurrentGame.FreeModType)
+                            {
+                                case MultiplayerFreeModType.Regular:
+                                    OnlineManager.Client?.MultiplayerChangePlayerModifiers(activeModsWithoutRate);
+                                    break;
+                                case MultiplayerFreeModType.Rate:
+                                    OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) ModHelper.GetModsFromRate(rateNow));
+                                    break;
+                            }
+                        }
+                    }
+                    // We're host & free mod isn't enabled, so change the global game mods
+                    else if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                        OnlineManager.Client?.MultiplayerChangeGameModifiers((long) ModManager.Mods, diffRating);
+                }
+            }
 
             isClosing = true;
             InterfaceContainer.Animations.Clear();

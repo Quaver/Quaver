@@ -164,7 +164,8 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                     InputText =
                     {
                         Text = $"{ConfigManager.Username.Value}'s Game"
-                    }
+                    },
+                    MaxCharacters = 100
                 }
             };
 
@@ -175,6 +176,10 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = GameName.Y + GameName.Height + spacing,
+                Textbox =
+                {
+                    MaxCharacters = 100
+                }
             };
 
             GameType = new LabelledHorizontalSelector(width - 50, "Game Type", new List<string>
@@ -238,11 +243,17 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 return;
             }
 
+            if (string.IsNullOrEmpty(GameName.Textbox.RawText) || string.IsNullOrWhiteSpace(GameName.Textbox.RawText))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must provide a valid game name.");
+                return;
+            }
+
             var game = MultiplayerGame.CreateCustom(Enum.Parse<MultiplayerGameType>(GameType.Selector.SelectedItemText.Text),
                 GameName.Textbox.RawText, Password.Textbox.RawText,
                 int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
                 MapManager.Selected.Value.MapId,
-                MapManager.Selected.Value.MapSetId, MultiplayerGameRuleset.Free_For_All,
+                MapManager.Selected.Value.MapSetId, Enum.Parse<MultiplayerGameRuleset>(Ruleset.Selector.SelectedItemText.Text.Replace("-", "_")),
                 AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
                 MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum);
 

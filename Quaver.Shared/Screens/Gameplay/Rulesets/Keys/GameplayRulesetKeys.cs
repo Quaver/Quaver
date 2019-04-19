@@ -11,9 +11,11 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -34,7 +36,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         ///     We can't intiialize it in Playfield as that gets created first.
         ///
         ///     This is a list because multiple scroll directions require multiple Timing Line Managers.
-        /// 
+        ///
         /// </summary>
         public List<TimingLineManager> TimingLineManager { get; } = new List<TimingLineManager>();
 
@@ -109,7 +111,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        protected override ScoreProcessor CreateScoreProcessor(Qua map) => new ScoreProcessorKeys(map, ModManager.Mods);
+        protected override ScoreProcessor CreateScoreProcessor(Qua map)
+        {
+            if (Screen.IsMultiplayerGame)
+            {
+                return new ScoreProcessorKeys(map, ModManager.Mods,
+                    new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives));
+            }
+
+            return new ScoreProcessorKeys(map, ModManager.Mods);
+        }
 
         /// <inheritdoc />
         /// <summary>

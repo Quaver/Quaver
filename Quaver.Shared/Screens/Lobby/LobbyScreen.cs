@@ -37,6 +37,7 @@ namespace Quaver.Shared.Screens.Lobby
 
             DiscordHelper.Presence.Details = "Finding a Game";
             DiscordHelper.Presence.State = "In the Lobby";
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             View = new LobbyScreenView(this);

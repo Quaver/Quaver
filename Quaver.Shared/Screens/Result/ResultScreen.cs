@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -36,7 +37,9 @@ using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
 using Wobble;
@@ -112,17 +115,54 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         public bool IsFetchingOnlineReplay { get; set; }
 
+       /// <summary>
+       ///     Multiplayer scores (if in a multiplayer match)
+       /// </summary>
+        private List<ScoreboardUser> MultiplayerScores { get; }
+
+        /// <summary>
+        /// </summary>
+        private MultiplayerScreen MultiplayerScreen { get; }
+
         /// <summary>
         /// </summary>
         /// <param name="gameplay"></param>
-        public ResultScreen(GameplayScreen gameplay)
+        /// <param name="multiplayerScores"></param>
+        /// <param name="multiplayerScreen"></param>
+        public ResultScreen(GameplayScreen gameplay, List<ScoreboardUser> multiplayerScores = null, MultiplayerScreen multiplayerScreen = null)
         {
             Gameplay = gameplay;
             ResultsType = ResultScreenType.Gameplay;
             ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
+            MultiplayerScores = multiplayerScores;
+            MultiplayerScreen = multiplayerScreen;
 
             InitializeIfGameplayType();
             ChangeDiscordPresence();
+
+            if (MultiplayerScores != null)
+            {
+                Logger.Important($"Multiplayer Player Game Finished!", LogType.Network);
+
+                MultiplayerScores.ForEach(x =>
+                {
+                    var modsString = "None";
+
+                    try
+                    {
+                        modsString = ModHelper.GetModsString(x.Processor.Mods);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+
+                    Logger.Important($"{(x.UsernameRaw)}: {x.Processor.Score}, {x.Processor.Accuracy}, " +
+                                     $"{x.Processor.TotalJudgementCount}, {x.RatingProcessor.CalculateRating(x.Processor)} | " +
+                                     $"{modsString}", LogType.Network);
+                });
+            }
+
             View = new ResultScreenView(this);
         }
 
@@ -303,7 +343,7 @@ namespace Quaver.Shared.Screens.Result
             ThreadScheduler.Run(SaveLocalScore);
 
             // Don't submit scores if disconnected from the server completely.
-            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected || Gameplay.IsMultiplayerGame)
                 return;
 
             ThreadScheduler.Run(() =>
@@ -361,6 +401,12 @@ namespace Quaver.Shared.Screens.Result
         {
             if (IsFetchingOnlineReplay)
                 return;
+
+            if (OnlineManager.CurrentGame != null)
+            {
+                Exit(() => MultiplayerScreen ?? new MultiplayerScreen(OnlineManager.CurrentGame));
+                return;
+            }
 
             Exit(() => new SelectScreen());
         }
@@ -581,7 +627,14 @@ namespace Quaver.Shared.Screens.Result
             var grade = Gameplay.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
             var combo = $"{ScoreProcessor.MaxCombo}x";
 
-            DiscordHelper.Presence.State = $"{state}: {grade} {score} {acc} {combo}";
+            if (OnlineManager.CurrentGame == null)
+                DiscordHelper.Presence.State = $"{state}: {grade} {score} {acc} {combo}";
+            else
+            {
+                DiscordHelper.Presence.State = $"{StringHelper.AddOrdinal(MultiplayerScores.First().Rank)} " +
+                                               $"Place: {MultiplayerScores.First().RatingProcessor.CalculateRating(ScoreProcessor):0.00} {acc} {grade} {score}";
+            }
+
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
     }

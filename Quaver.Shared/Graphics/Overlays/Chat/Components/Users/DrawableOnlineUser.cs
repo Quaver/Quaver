@@ -200,6 +200,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 case ClientStatus.InLobby:
                     statusText = "Finding a Match";
                     break;
+                case ClientStatus.Multiplayer:
+                    statusText = "Playing Multiplayer";
+                    break;
             }
 
             Status.Text = statusText;

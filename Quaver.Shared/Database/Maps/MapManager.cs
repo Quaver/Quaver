@@ -82,5 +82,23 @@ namespace Quaver.Shared.Database.Maps
                     return "";
             }
         }
+
+        /// <summary>
+        ///     Finds a map based on the md5 hash
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <returns></returns>
+        public static Map FindMapFromMd5(string md5)
+        {
+            foreach (var set in Mapsets)
+            {
+                var found = set.Maps.Find(x => x.Md5Checksum == md5);
+
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
     }
 }
