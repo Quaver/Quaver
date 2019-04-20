@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
@@ -71,14 +72,6 @@ namespace Quaver.Shared.Screens.Select
         ///     True when exiting
         /// </summary>
         public bool IsExitingToGameplay { get; private set; }
-
-        /// <summary>
-        ///     Used as an extra precaution for spamming the delete + enter buttons to spam delete maps.
-        ///
-        ///     Which causes FileNotFoundException's due to the highlighted file being deleted before it could update
-        ///     properly.
-        /// </summary>
-        private bool MapDeletingInProgress { get; set; }
 
         /// <summary>
         /// </summary>
@@ -162,7 +155,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         private void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0 || MapDeletingInProgress || Exiting)
+            if (DialogManager.Dialogs.Count != 0 || Exiting)
                 return;
 
             HandleKeyPressEscape();
@@ -371,7 +364,8 @@ namespace Quaver.Shared.Screens.Select
         {
             var view = View as SelectScreenView;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 || view.MapsetScrollContainer.SelectedMapsetIndex == -1)
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 ||
+                view.MapsetScrollContainer.SelectedMapsetIndex < 0 || view.DifficultyScrollContainer.SelectedMapIndex < 0)
                 return;
 
             DeleteSelected();
@@ -587,7 +581,7 @@ namespace Quaver.Shared.Screens.Select
 
                 case SelectContainerStatus.Difficulty:
                     var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
-                    var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
+                    var difficultyPath = Path.Combine(mapsetPath, selectedMapset.Maps[selectedDifficultyIndex].Path);
 
                     filePath = selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath;
                     break;
@@ -599,7 +593,15 @@ namespace Quaver.Shared.Screens.Select
             // Commence deleting and reloading.
             var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
             {
-                MapDeletingInProgress = true;
+                var mapTitle = selectedMapset.Maps.First().Title;
+
+                // Externally loaded map check
+                if (MapManager.Selected.Value.Game != MapGame.Quaver)
+                {
+                    // Display error message
+                    NotificationManager.Show(NotificationLevel.Error, "This map was loaded from an external source, it cannot be deleted.");
+                    return;
+                }
 
                 // Dispose of the background for the currently selected map.
                 BackgroundHelper.Background?.Dispose();
@@ -607,104 +609,72 @@ namespace Quaver.Shared.Screens.Select
                 // Dispose of the currently playing track.
                 AudioEngine.Track?.Dispose();
 
-                // Run deletion & Reload in the background.
-                ThreadScheduler.Run(() => DeleteAndReloadMaps(filePath, type, selectedMapsetIndex, selectedDifficultyIndex));
-
-                // Finally show confirmation notification
-                NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {selectedMapset.Title} from Quaver!");
-            });
-
-            // Finally show the confirmation dialog that orchestrates the deleting process.
-            DialogManager.Show(confirmDelete);
-        }
-
-        /// <summary>
-        ///     Used to delete a mapset or difficulty, then reload the available maps.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="type"></param>
-        /// <param name="mapsetIndex"></param>
-        /// <param name="difficultyIndex"></param>
-        private void DeleteAndReloadMaps(string path, SelectContainerStatus type, int mapsetIndex, int difficultyIndex)
-        {
-            var view = View as SelectScreenView;
-
-            if (mapsetIndex < 0)
-                return;
-
-            // Externally loaded map check
-            if (MapManager.Selected.Value.Game != MapGame.Quaver)
-            {
-                // Display error message
-                NotificationManager.Show(NotificationLevel.Error, "This map was loaded from an external source, it cannot be deleted.");
-                return;
-            }
-
-            try
-            {
-                DeletePath(path);
+                // Run path deletion in the background.
+                ThreadScheduler.Run(() => DeletePath(filePath));
 
                 // Remove mapset/difficulty from cache and AvailableMapsets list.
                 switch (type)
                 {
                     case SelectContainerStatus.Mapsets:
-                        AvailableMapsets[mapsetIndex].Maps.ForEach(MapDatabaseCache.RemoveMap);
-                        AvailableMapsets.Remove(AvailableMapsets[mapsetIndex]);
-                        break;
+                        selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                        MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
+                        AvailableMapsets.Remove(selectedMapset);
+                        view.MapsetScrollContainer.InitializeWithNewSets();
 
-                    case SelectContainerStatus.Difficulty:
-                        MapDatabaseCache.RemoveMap(AvailableMapsets[mapsetIndex].Maps[difficultyIndex]);
-                        AvailableMapsets[mapsetIndex].Maps.Remove(AvailableMapsets[mapsetIndex].Maps[difficultyIndex]);
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                MapDatabaseCache.OrderAndSetMapsets();
-
-                // If the deleted mapset was the last one, then exit back to menu.
-                if (MapManager.Mapsets.Count == 0)
-                {
-                    view.Destroy();
-                    AudioEngine.Track = null;
-                    MapManager.Selected.Value = null;
-                    MapDeletingInProgress = false;
-                    ExitToMenu();
-                    return;
-                }
-
-                // Repopulate container.
-                view.MapsetScrollContainer.InitializeWithNewSets();
-
-                // Restore index
-                switch (type)
-                {
-                    case SelectContainerStatus.Mapsets:
-                        // if the selected mapset is at the end of the list
-                        if (mapsetIndex == AvailableMapsets.Count)
+                        // Restore index
+                        if (selectedMapsetIndex == AvailableMapsets.Count)
                             view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
                         else
-                            view.MapsetScrollContainer.SelectMapset(mapsetIndex);
+                            view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
                         break;
 
                     case SelectContainerStatus.Difficulty:
-                        if (difficultyIndex == AvailableMapsets[mapsetIndex].Maps.Count)
-                            view.MapsetScrollContainer.SelectMap(mapsetIndex, AvailableMapsets[mapsetIndex].Maps[difficultyIndex - 1], true);
+                        if (selectedMapset.Maps.Count > 1)
+                        {
+                            MapDatabaseCache.RemoveMap(selectedDifficulty);
+                            MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
+                            selectedMapset.Maps.Remove(selectedDifficulty);
+                            view.DifficultyScrollContainer.ReInitializeDifficulties();
+
+                            view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
+                                selectedDifficultyIndex == selectedMapset.Maps.Count
+                                    ? selectedMapset.Maps[selectedDifficultyIndex - 1]
+                                    : selectedMapset.Maps[selectedDifficultyIndex], true);
+                        }
                         else
-                            view.MapsetScrollContainer.SelectMap(mapsetIndex, AvailableMapsets[mapsetIndex].Maps[difficultyIndex], true);
+                        {
+                            selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                            MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
+                            AvailableMapsets.Remove(selectedMapset);
+                            view.MapsetScrollContainer.InitializeWithNewSets();
+
+                            // if the selected mapset is at the end of the list
+                            if (selectedMapsetIndex == AvailableMapsets.Count)
+                                view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
+                            else
+                                view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
+                        }
                         break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
 
-            MapDeletingInProgress = false;
+                // Finally show confirmation notification
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {mapTitle} from Quaver!");
+
+                // If the deleted mapset was the last one, then exit back to menu.
+                if (MapManager.Mapsets.Count != 0)
+                    return;
+
+                view.Destroy();
+                AudioEngine.Track = null;
+                MapManager.Selected.Value = null;
+                ExitToMenu();
+            });
+
+            // Finally show the confirmation dialog that orchestrates the deleting process.
+            DialogManager.Show(confirmDelete);
         }
 
         /// <summary>
