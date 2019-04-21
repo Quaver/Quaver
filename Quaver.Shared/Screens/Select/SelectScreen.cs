@@ -583,7 +583,7 @@ namespace Quaver.Shared.Screens.Select
                     var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
                     var difficultyPath = Path.Combine(mapsetPath, selectedMapset.Maps[selectedDifficultyIndex].Path);
 
-                    filePath = selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath;
+                    filePath = Math.Min(selectedMapset.Maps.Count, AvailableMapsets.Count - 1) > 1 ? difficultyPath : mapsetPath;
                     break;
 
                 default:
@@ -613,51 +613,32 @@ namespace Quaver.Shared.Screens.Select
                 ThreadScheduler.Run(() => DeletePath(filePath));
 
                 // Remove mapset/difficulty from cache and AvailableMapsets list.
-                switch (type)
+                if (type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count > 1)
                 {
-                    case SelectContainerStatus.Mapsets:
-                        selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
-                        MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
-                        AvailableMapsets.Remove(selectedMapset);
-                        view.MapsetScrollContainer.InitializeWithNewSets();
 
-                        // Restore index
-                        if (selectedMapsetIndex == AvailableMapsets.Count)
-                            view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
-                        else
-                            view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
-                        break;
+                    MapDatabaseCache.RemoveMap(selectedDifficulty);
+                    MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
+                    selectedMapset.Maps.Remove(selectedDifficulty);
+                    view.DifficultyScrollContainer.ReInitializeDifficulties();
 
-                    case SelectContainerStatus.Difficulty:
-                        if (selectedMapset.Maps.Count > 1)
-                        {
-                            MapDatabaseCache.RemoveMap(selectedDifficulty);
-                            MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
-                            selectedMapset.Maps.Remove(selectedDifficulty);
-                            view.DifficultyScrollContainer.ReInitializeDifficulties();
+                    // Restore index
+                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
+                        Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count) == selectedMapset.Maps.Count
+                            ? selectedMapset.Maps[selectedDifficultyIndex - 1]
+                            : selectedMapset.Maps[selectedDifficultyIndex], true);
+                }
+                else if(type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1)
+                {
+                    selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                    MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
+                    AvailableMapsets.Remove(selectedMapset);
+                    view.MapsetScrollContainer.InitializeWithNewSets();
 
-                            view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
-                                selectedDifficultyIndex == selectedMapset.Maps.Count
-                                    ? selectedMapset.Maps[selectedDifficultyIndex - 1]
-                                    : selectedMapset.Maps[selectedDifficultyIndex], true);
-                        }
-                        else
-                        {
-                            selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
-                            MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
-                            AvailableMapsets.Remove(selectedMapset);
-                            view.MapsetScrollContainer.InitializeWithNewSets();
-
-                            // if the selected mapset is at the end of the list
-                            if (selectedMapsetIndex == AvailableMapsets.Count)
-                                view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
-                            else
-                                view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
-                        }
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    // Restore index
+                    if (selectedMapsetIndex == AvailableMapsets.Count)
+                        view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
+                    else
+                        view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
                 }
 
                 // Finally show confirmation notification
