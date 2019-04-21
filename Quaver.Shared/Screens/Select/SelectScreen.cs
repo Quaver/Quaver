@@ -565,30 +565,13 @@ namespace Quaver.Shared.Screens.Select
             var view = View as SelectScreenView;
             var type = view.ActiveContainer;
 
-            var filePath = string.Empty;
-
             var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
             var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
             var selectedMapset = AvailableMapsets[selectedMapsetIndex];
             var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
 
-            // Switch statement for setting predefined variable to the correct file path depending on the select container type.
-            switch (type)
-            {
-                case SelectContainerStatus.Mapsets:
-                    filePath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
-                    break;
-
-                case SelectContainerStatus.Difficulty:
-                    var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
-                    var difficultyPath = Path.Combine(mapsetPath, selectedMapset.Maps[selectedDifficultyIndex].Path);
-
-                    filePath = Math.Min(selectedMapset.Maps.Count, AvailableMapsets.Count - 1) > 1 ? difficultyPath : mapsetPath;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+            var difficultyPath = Path.Combine(mapsetPath, selectedMapset.Maps[selectedDifficultyIndex].Path);
 
             // Commence deleting and reloading.
             var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
@@ -610,7 +593,7 @@ namespace Quaver.Shared.Screens.Select
                 AudioEngine.Track?.Dispose();
 
                 // Run path deletion in the background.
-                ThreadScheduler.Run(() => DeletePath(filePath));
+                ThreadScheduler.Run(() => DeletePath(type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath));
 
                 // Remove mapset/difficulty from cache and AvailableMapsets list.
                 if (type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1)
@@ -621,10 +604,7 @@ namespace Quaver.Shared.Screens.Select
                     view.MapsetScrollContainer.InitializeWithNewSets();
 
                     // Restore index.
-                    if (selectedMapsetIndex == AvailableMapsets.Count)
-                        view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
-                    else
-                        view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
+                    view.MapsetScrollContainer.SelectMapset(Math.Min(selectedMapsetIndex, AvailableMapsets.Count - 1));
                 }
                 else
                 {
@@ -634,10 +614,7 @@ namespace Quaver.Shared.Screens.Select
                     view.DifficultyScrollContainer.ReInitializeDifficulties();
 
                     // Restore index.
-                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
-                        Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count) == selectedMapset.Maps.Count
-                            ? selectedMapset.Maps[selectedDifficultyIndex - 1]
-                            : selectedMapset.Maps[selectedDifficultyIndex], true);
+                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, selectedMapset.Maps[Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count - 1)], true);
                 }
 
                 // Finally show confirmation notification.
