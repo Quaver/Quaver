@@ -643,6 +643,9 @@ namespace Quaver.Shared.Screens.Select
                             view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
                         break;
                     }
+                    
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 // Finally show confirmation notification.
