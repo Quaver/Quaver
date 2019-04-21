@@ -595,10 +595,10 @@ namespace Quaver.Shared.Screens.Select
             {
                 var mapTitle = selectedMapset.Maps.First().Title;
 
-                // Externally loaded map check
+                // Externally loaded map check.
                 if (MapManager.Selected.Value.Game != MapGame.Quaver)
                 {
-                    // Display error message
+                    // Display error message.
                     NotificationManager.Show(NotificationLevel.Error, "This map was loaded from an external source, it cannot be deleted.");
                     return;
                 }
@@ -612,16 +612,16 @@ namespace Quaver.Shared.Screens.Select
                 // Run path deletion in the background.
                 ThreadScheduler.Run(() => DeletePath(filePath));
 
+                // Remove mapset/difficulty from cache and AvailableMapsets list.
                 switch (type)
                 {
-                    // Remove mapset/difficulty from cache and AvailableMapsets list.
                     case SelectContainerStatus.Difficulty when selectedMapset.Maps.Count > 1:
                         MapDatabaseCache.RemoveMap(selectedDifficulty);
                         MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
                         selectedMapset.Maps.Remove(selectedDifficulty);
                         view.DifficultyScrollContainer.ReInitializeDifficulties();
 
-                        // Restore index
+                        // Restore index.
                         view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
                             Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count) == selectedMapset.Maps.Count
                                 ? selectedMapset.Maps[selectedDifficultyIndex - 1]
@@ -636,7 +636,7 @@ namespace Quaver.Shared.Screens.Select
                         AvailableMapsets.Remove(selectedMapset);
                         view.MapsetScrollContainer.InitializeWithNewSets();
 
-                        // Restore index
+                        // Restore index.
                         if (selectedMapsetIndex == AvailableMapsets.Count)
                             view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
                         else
@@ -645,7 +645,7 @@ namespace Quaver.Shared.Screens.Select
                     }
                 }
 
-                // Finally show confirmation notification
+                // Finally show confirmation notification.
                 NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {mapTitle} from Quaver!");
 
                 // If the deleted mapset was the last one, then exit back to menu.
