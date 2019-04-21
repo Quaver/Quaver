@@ -612,33 +612,37 @@ namespace Quaver.Shared.Screens.Select
                 // Run path deletion in the background.
                 ThreadScheduler.Run(() => DeletePath(filePath));
 
-                // Remove mapset/difficulty from cache and AvailableMapsets list.
-                if (type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count > 1)
+                switch (type)
                 {
+                    // Remove mapset/difficulty from cache and AvailableMapsets list.
+                    case SelectContainerStatus.Difficulty when selectedMapset.Maps.Count > 1:
+                        MapDatabaseCache.RemoveMap(selectedDifficulty);
+                        MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
+                        selectedMapset.Maps.Remove(selectedDifficulty);
+                        view.DifficultyScrollContainer.ReInitializeDifficulties();
 
-                    MapDatabaseCache.RemoveMap(selectedDifficulty);
-                    MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
-                    selectedMapset.Maps.Remove(selectedDifficulty);
-                    view.DifficultyScrollContainer.ReInitializeDifficulties();
+                        // Restore index
+                        view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
+                            Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count) == selectedMapset.Maps.Count
+                                ? selectedMapset.Maps[selectedDifficultyIndex - 1]
+                                : selectedMapset.Maps[selectedDifficultyIndex], true);
+                        break;
 
-                    // Restore index
-                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex,
-                        Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count) == selectedMapset.Maps.Count
-                            ? selectedMapset.Maps[selectedDifficultyIndex - 1]
-                            : selectedMapset.Maps[selectedDifficultyIndex], true);
-                }
-                else if(type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1)
-                {
-                    selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
-                    MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
-                    AvailableMapsets.Remove(selectedMapset);
-                    view.MapsetScrollContainer.InitializeWithNewSets();
+                    case SelectContainerStatus.Mapsets:
+                    case SelectContainerStatus.Difficulty when selectedMapset.Maps.Count == 1:
+                    {
+                        selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                        MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
+                        AvailableMapsets.Remove(selectedMapset);
+                        view.MapsetScrollContainer.InitializeWithNewSets();
 
-                    // Restore index
-                    if (selectedMapsetIndex == AvailableMapsets.Count)
-                        view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
-                    else
-                        view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
+                        // Restore index
+                        if (selectedMapsetIndex == AvailableMapsets.Count)
+                            view.MapsetScrollContainer.SelectMapset(AvailableMapsets.Count - 1); // set to end
+                        else
+                            view.MapsetScrollContainer.SelectMapset(selectedMapsetIndex);
+                        break;
+                    }
                 }
 
                 // Finally show confirmation notification
