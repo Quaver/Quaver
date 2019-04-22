@@ -19,6 +19,9 @@ namespace Quaver.Shared.Assets
         public static BitmapFont AllerRegular { get; private set; }
         public static BitmapFont MuliRegular { get; private set; }
         public static BitmapFont MuliBold { get; private set; }
+        public static BitmapFont CodeProRegular { get; private set; }
+        public static BitmapFont CodeProBold { get; private set; }
+        public static BitmapFont GothamRegular { get; private set; }
 
         public static void Load()
         {
@@ -26,6 +29,9 @@ namespace Quaver.Shared.Assets
             AllerRegular = GameBase.Game.Content.Load<BitmapFont>("aller-regular");
             MuliRegular = GameBase.Game.Content.Load<BitmapFont>("muli");
             MuliBold = GameBase.Game.Content.Load<BitmapFont>("muli-bold");
+            CodeProRegular = GameBase.Game.Content.Load<BitmapFont>("code-pro");
+            CodeProBold = GameBase.Game.Content.Load<BitmapFont>("code-pro-bold");
+            GothamRegular = GameBase.Game.Content.Load<BitmapFont>("gotham");
         }
     }
 }

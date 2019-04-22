@@ -199,7 +199,7 @@ namespace Quaver.Shared.Database.Maps
                     var newMap = new OtherGameMap()
                     {
                         Md5Checksum = map.BeatmapChecksum,
-                        Directory = map.FolderName,
+                        Directory = map.FolderName.Trim(),
                         Path = map.BeatmapFileName,
                         Artist = map.Artist,
                         Title = map.Title,

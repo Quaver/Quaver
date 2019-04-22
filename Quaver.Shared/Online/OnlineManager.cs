@@ -20,13 +20,18 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
-using Quaver.Server.Common.Packets.Server;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
 using Steamworks;
 using UniversalThreadManagement;
@@ -51,6 +56,7 @@ namespace Quaver.Shared.Online
             {
                 Self = null;
                 OnlineUsers = new Dictionary<int, User>();
+                MultiplayerGames = new Dictionary<string, MultiplayerGame>();
 
                 if (_client != null)
                     return;
@@ -78,6 +84,17 @@ namespace Quaver.Shared.Online
         ///     Dictionary containing all of the currently online users.
         /// </summary>
         public static Dictionary<int, User> OnlineUsers { get; private set; }
+
+        /// <summary>
+        ///     Dictionary containing all the currently available multiplayer games.
+        ///     game_hash:game
+        /// </summary>
+        public static Dictionary<string, MultiplayerGame> MultiplayerGames { get; private set; }
+
+        /// <summary>
+        ///     The current multiplayer game the player is in
+        /// </summary>
+        public static MultiplayerGame CurrentGame { get; private set; }
 
         /// <summary>
         ///     Logs into the Quaver server.
@@ -138,6 +155,11 @@ namespace Quaver.Shared.Online
             Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
             Client.OnUserStatusReceived += OnUserStatusReceived;
+            Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
+            Client.OnJoinedMultiplayerGame += OnJoinedMultiplayerGame;
+            Client.OnGameHostChanged += OnGameHostChanged;
+            Client.OnGameDisbanded += OnGameDisbanded;
+            Client.OnJoinGameFailed += OnJoinGameFailed;
         }
 
         /// <summary>
@@ -145,7 +167,27 @@ namespace Quaver.Shared.Online
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e) => Status.Value = e.Status;
+        private static void OnConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
+        {
+            Status.Value = e.Status;
+
+            if (Status.Value == ConnectionStatus.Connected)
+                return;
+
+            var game = (QuaverGame) GameBase.Game;
+
+            switch (game.CurrentScreen.Type)
+            {
+                case QuaverScreenType.Lobby:
+                case QuaverScreenType.Multiplayer:
+                    LeaveLobby();
+                    game.CurrentScreen.Exit(() => new MenuScreen());
+                    break;
+                case QuaverScreenType.Gameplay:
+                    var screen = (GameplayScreen) game.CurrentScreen;
+                    break;
+            }
+        }
 
         /// <summary>
         ///     Called when the user needs to choose a username.
@@ -492,6 +534,167 @@ namespace Quaver.Shared.Online
 
                 ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
             }
+        }
+
+        /// <summary>
+        ///     Called whenever receiving information about a multiplayer game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnMultiplayerGameInfoReceived(object sender, MultiplayerGameInfoEventArgs e)
+        {
+            MultiplayerGames[e.Game.Id] = e.Game;
+
+            e.Game.PlayerIds.ForEach(x =>
+            {
+                if (OnlineUsers.ContainsKey(x))
+                    e.Game.Players.Add(OnlineUsers[x].OnlineUser);
+            });
+
+            if (OnlineUsers.ContainsKey(e.Game.HostId))
+                e.Game.Host = OnlineUsers[e.Game.HostId].OnlineUser;
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen.Type != QuaverScreenType.Lobby || game.CurrentScreen.Exiting)
+                return;
+
+            Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} | {e.Game.HasPassword} | {e.Game.Password}\n", LogType.Network);
+
+            var screen = (LobbyScreen) game.CurrentScreen;
+
+            screen.AddOrUpdateGame(e.Game);
+            var view = screen.View as LobbyScreenView;
+            view?.MatchContainer.FilterGames(view.Searchbox.RawText, true);
+        }
+
+        /// <summary>
+        ///     Called when the player successfully joins a multiplayer game.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnJoinedMultiplayerGame(object sender, JoinedGameEventArgs e)
+        {
+            // In the event that the game doesn't exist in our list.
+            // We'll probably want to handle this in a different way, but for now, we should
+            // assume that the user always has the game in their list.
+            if (!MultiplayerGames.ContainsKey(e.GameId))
+            {
+                Logger.Warning($"Server tried to place us in game: {e.GameId}, but it doesn't exist!", LogType.Runtime);
+                return;
+            }
+
+            CurrentGame = MultiplayerGames[e.GameId];
+            CurrentGame.Players.Add(Self.OnlineUser);
+
+            // Get the current screen
+            var game = (QuaverGame) GameBase.Game;
+
+            game.CurrentScreen.Exit(() =>
+            {
+                Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+                return new MultiplayerScreen(CurrentGame);
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameHostChanged(object sender, GameHostChangedEventArgs e)
+        {
+            if (!OnlineUsers.ContainsKey(e.UserId))
+            {
+                Logger.Warning($"Game host changed to user: {e.UserId}, but they are not online!", LogType.Network);
+                return;
+            }
+
+            CurrentGame.Host = OnlineUsers[e.UserId].OnlineUser;
+
+            if (CurrentGame.Host == Self.OnlineUser)
+                NotificationManager.Show(NotificationLevel.Success, "You are now the host of the game!");
+
+            Logger.Important($"New multiplayer game host: {CurrentGame.Host.Username} (#{CurrentGame.Host.Id})", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when a multiplayer game has been disbanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameDisbanded(object sender, GameDisbandedEventArgs e)
+        {
+            if (!MultiplayerGames.ContainsKey(e.GameId))
+                return;
+
+            var game = MultiplayerGames[e.GameId];
+
+            // Handle disbanding logic UI wise.
+            var quaver = (QuaverGame) GameBase.Game;
+
+            if (quaver.CurrentScreen.Type != QuaverScreenType.Lobby)
+                return;
+
+            var screen = (LobbyScreen) quaver.CurrentScreen;
+            screen.DeleteGame(game);
+
+            Logger.Important($"Game: {game.Name} <{game.Id}> has been disbanded", LogType.Network);
+            MultiplayerGames.Remove(e.GameId);
+        }
+
+        /// <summary>
+        ///     Called when failing to join a multiplayer game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnJoinGameFailed(object sender, JoinGameFailedEventargs e)
+        {
+            Logger.Important($"Failed to join multiplayer match with reason: {e.Reason}", LogType.Network);
+
+            string reason;
+
+            switch (e.Reason)
+            {
+                case JoinGameFailureReason.Password:
+                    reason = "Failed to join game because you have entered an incorrect password.";
+                    break;
+                case JoinGameFailureReason.Full:
+                    reason = "The game you have tried to join is full.";
+                    break;
+                case JoinGameFailureReason.MatchNoExists:
+                    reason = "The game you have tried to join no longer exists.";
+                    break;
+                default:
+                    reason = "Failed to join multiplayer game for an unknown reason.";
+                    break;
+            }
+
+            NotificationManager.Show(NotificationLevel.Error, reason);
+        }
+
+        /// <summary>
+        ///     Leaves the current multiplayer game if any
+        /// </summary>
+        public static void LeaveGame()
+        {
+            if (CurrentGame == null)
+                return;
+
+            Client.LeaveGame();
+            MultiplayerGames.Clear();
+            CurrentGame = null;
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void JoinLobby() => Client?.JoinLobby();
+
+        /// <summary>
+        /// </summary>
+        public static void LeaveLobby()
+        {
+            Client?.LeaveLobby();
+            MultiplayerGames.Clear();
         }
     }
 }

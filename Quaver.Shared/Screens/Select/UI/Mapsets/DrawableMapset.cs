@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Wobble.Graphics;
@@ -164,7 +165,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }

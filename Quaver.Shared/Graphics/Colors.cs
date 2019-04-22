@@ -13,11 +13,6 @@ namespace Quaver.Shared.Graphics
 {
     public static class Colors
     {
-        /// <summary>
-        ///     Color for dead long notes.
-        /// </summary>
-        public static readonly Color DeadLongNote = new Color(50, 50, 50);
-
         #region QUAVER_COLORS
 
         /// <summary>
@@ -76,6 +71,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#4cb0f7");
             if (userGroups.HasFlag(UserGroups.RankingSupervisor))
                 return ColorHelper.HexToColor($"#49e6ef");
+            if (userGroups.HasFlag(UserGroups.Contributor))
+                return ColorHelper.HexToColor($"#75e475");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

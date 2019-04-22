@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
@@ -261,7 +262,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);
@@ -274,16 +275,16 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = Rectangle.Intersect(ScreenRectangle, Container.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 
         /// <summary>
         ///
         /// </summary>
-        private void FetchMapsetBanner() => Task.Run(() =>
+        private void FetchMapsetBanner() => Task.Run(async () =>
         {
-            Banner.Image = ImageDownloader.DownloadMapsetBanner(MapsetId);
+            Banner.Image = await ImageDownloader.DownloadMapsetBanner(MapsetId);
             Banner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, IsAlreadyOwned ? 0.45f : 1, 300));
         });
     }
