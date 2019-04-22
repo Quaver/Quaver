@@ -571,7 +571,7 @@ namespace Quaver.Shared.Screens.Select
             var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
 
             var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
-            var difficultyPath = Path.Combine(mapsetPath, selectedMapset.Maps[selectedDifficultyIndex].Path);
+            var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
 
             // Commence deleting and reloading.
             var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
