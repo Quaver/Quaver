@@ -600,16 +600,16 @@ namespace Quaver.Shared.Screens.Select
                 if (deleteMapset)
                 {
                     selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
-                    MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
-                    AvailableMapsets.Remove(selectedMapset);
+                    AvailableMapsets.RemoveAt(selectedMapsetIndex);
+                    MapManager.Mapsets.Remove(selectedMapset);
                     view.MapsetScrollContainer.InitializeWithNewSets();
                     view.MapsetScrollContainer.SelectMapset(Math.Min(selectedMapsetIndex, AvailableMapsets.Count - 1));
                 }
                 else
                 {
                     MapDatabaseCache.RemoveMap(selectedDifficulty);
+                    selectedMapset.Maps.RemoveAt(selectedDifficultyIndex);
                     MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
-                    selectedMapset.Maps.Remove(selectedDifficulty);
                     view.DifficultyScrollContainer.ReInitializeDifficulties();
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, selectedMapset.Maps[Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count - 1)], true);
                 }
