@@ -20,6 +20,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
@@ -395,10 +396,16 @@ namespace Quaver.Shared.Screens.Menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnCustomGamesPanelClicked(object sender, EventArgs e)
+        private void OnCustomGamesPanelClicked(object sender, EventArgs e)
         {
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet. Check back later.");
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to play multiplayer.");
+                return;
+            }
+
+            var screen = (QuaverScreen) Screen;
+            screen.Exit(() => new LobbyScreen());
         }
 
         /// <summary>

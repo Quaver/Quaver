@@ -108,11 +108,17 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private int LoadFailures { get; set; }
 
+        /// <summary>
+        ///     If true, it will not set the rich presence for discord when the track changes.
+        /// </summary>
+        private bool IgnoreRichPresence { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public Jukebox()
+        public Jukebox(bool ignoreRichPresence = false)
         {
+            IgnoreRichPresence = ignoreRichPresence;
             TrackListQueue = new List<Map>();
 
             // If a track is already playing, add it to the queue.
@@ -574,8 +580,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Changes the discord presence to a listening state.
         /// </summary>
-        private static void ChangeDiscordPresenceToSongTitle()
+        private void ChangeDiscordPresenceToSongTitle()
         {
+            if (IgnoreRichPresence)
+                return;
+
             DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
             DiscordHelper.Presence.State = "In the Menus - Listening";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
@@ -584,8 +593,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Changes the discord presence to an idle state
         /// </summary>
-        private static void ChangeDiscordPresenceToIdle()
+        private void ChangeDiscordPresenceToIdle()
         {
+            if (IgnoreRichPresence)
+                return;
+
             DiscordHelper.Presence.Details = $"Idle";
             DiscordHelper.Presence.State = "In the Menus";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);

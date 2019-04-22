@@ -197,6 +197,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                 case ClientStatus.Editing:
                     statusText = $"Editing a Map";
                     break;
+                case ClientStatus.InLobby:
+                    statusText = "Finding a Match";
+                    break;
             }
 
             Status.Text = statusText;

@@ -8,6 +8,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Wobble;
 using Wobble.Graphics;
@@ -126,7 +127,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (Rectangle.Intersect(ScreenRectangle, NotificationManager.Container.ScreenRectangle).IsEmpty)
+            if (RectangleF.Intersect(ScreenRectangle, NotificationManager.Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);

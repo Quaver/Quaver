@@ -62,6 +62,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorDetailsPanel { get; private set; }
         public static Texture2D EditorHitObjectSelection { get; private set; }
         public static Texture2D EditorEditScrollVelocities { get; private set; }
+        public static Texture2D MenuBackgroundRaw { get; private set; }
+        public static Texture2D Scrollbar { get; private set; }
+        public static Texture2D LobbyCreateGame { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -116,6 +119,9 @@ namespace Quaver.Shared.Assets
             EditorDetailsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/details-panel.png"));
             EditorHitObjectSelection = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/hitobject-selection.png"));
             EditorEditScrollVelocities = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Editor/edit-scroll-velocities-panel.png"));
-        }
+            MenuBackgroundRaw = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-raw.jpg"));
+            Scrollbar = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/scrollbar.png"));
+            LobbyCreateGame = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/create-game.png"));
+;        }
     }
 }

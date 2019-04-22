@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Graphics;
@@ -32,7 +33,7 @@ namespace Quaver.Shared.Graphics.Containers
         ///     The items that are available to use for the drawables.
         ///     Essentially what the drawable represents.
         /// </summary>
-        public List<T> AvailableItems { get; }
+        public List<T> AvailableItems { get; set; }
 
         /// <summary>
         ///    The index at which the object pool begins, so we'll be aware of where to scroll.
@@ -135,7 +136,7 @@ namespace Quaver.Shared.Graphics.Containers
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     // Update the mapset's information and y position.
@@ -157,7 +158,7 @@ namespace Quaver.Shared.Graphics.Containers
 
                     // Check if the object is in the rect of the ScrollContainer.
                     // If it is, then there's no updating that needs to happen.
-                    if (!Rectangle.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
+                    if (!RectangleF.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
                         return;
 
                     lastDrawable.Y = (PoolStartingIndex - 1) * DrawableHeight;

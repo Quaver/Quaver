@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Shared.Online;
@@ -186,7 +187,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
                     // Check the top message at the pool starting index to see if it is still in range
                     message = DrawableChatMessages[PoolStartingIndex];
 
-                    var newRect = Rectangle.Intersect(message.ScreenRectangle, ScreenRectangle);
+                    var newRect = RectangleF.Intersect(message.ScreenRectangle, ScreenRectangle);
 
                     if (!newRect.IsEmpty)
                         return;
@@ -208,7 +209,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages
 
                     message = DrawableChatMessages[PoolStartingIndex + MAX_MESSAGES_SHOWN - 1];
 
-                    var rect = Rectangle.Intersect(message.ScreenRectangle, ScreenRectangle);
+                    var rect = RectangleF.Intersect(message.ScreenRectangle, ScreenRectangle);
 
                     if (!rect.IsEmpty)
                         return;

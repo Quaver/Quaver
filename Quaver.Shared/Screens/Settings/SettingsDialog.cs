@@ -333,7 +333,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight, x => $"{x}%"),
                     new SettingsBool(this, "Top Lane Cover", ConfigManager.LaneCoverTop),
                     new SettingsBool(this, "Bottom Lane Cover", ConfigManager.LaneCoverBottom),
-                    new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                    new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
+                    new SettingsBool(this, "Smooth Accuracy Changes", ConfigManager.SmoothAccuracyChanges)
                 }),
                 // Editor
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()

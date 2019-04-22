@@ -141,6 +141,8 @@ namespace Quaver.Shared.Skinning
 
         internal bool DrawLongNoteEnd { get; private set; }
 
+        internal Color DeadNoteColor { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -377,6 +379,7 @@ namespace Quaver.Shared.Skinning
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
+                    DeadNoteColor = new Color(50, 50, 50);
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -433,6 +436,7 @@ namespace Quaver.Shared.Skinning
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
+                    DeadNoteColor = new Color(50, 50, 50);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -504,6 +508,7 @@ namespace Quaver.Shared.Skinning
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
+                    DeadNoteColor = new Color(50, 50, 50);
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -564,6 +569,7 @@ namespace Quaver.Shared.Skinning
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
+                    DeadNoteColor = new Color(50, 50, 50);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -636,6 +642,7 @@ namespace Quaver.Shared.Skinning
             ComboDisplayScale = ConfigHelper.ReadInt32(ComboDisplayScale, ini["ComboDisplayScale"]);
             KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);
             SongTimeProgressScale = ConfigHelper.ReadInt32(SongTimeProgressScale, ini["SongTimeProgressScale"]);
+            DeadNoteColor = ConfigHelper.ReadColor(DeadNoteColor, ini["DeadNoteColor"]);
         }
 
         /// <summary>

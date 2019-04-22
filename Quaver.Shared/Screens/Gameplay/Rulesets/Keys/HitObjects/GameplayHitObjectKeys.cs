@@ -348,15 +348,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         }
 
         /// <summary>
-        ///     When the object iself dies, we want to change it to a dead color.
+        ///     When the object itself dies, we want to change it to a dead color.
         /// </summary>
         public void Kill()
         {
-            HitObjectSprite.Tint = Colors.DeadLongNote;
+            var deadNoteColor = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
+            HitObjectSprite.Tint = deadNoteColor;
             if (Info.IsLongNote)
             {
-                LongNoteBodySprite.Tint = Colors.DeadLongNote;
-                LongNoteEndSprite.Tint = Colors.DeadLongNote;
+                LongNoteBodySprite.Tint = deadNoteColor;
+                LongNoteEndSprite.Tint = deadNoteColor;
             }
         }
 
