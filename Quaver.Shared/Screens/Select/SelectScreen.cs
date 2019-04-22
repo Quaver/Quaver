@@ -577,6 +577,7 @@ namespace Quaver.Shared.Screens.Select
             var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )} ? ", (sender, confirm) =>
             {
                 var mapTitle = selectedMapset.Maps.First().Title;
+                var deleteMapset = type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1;
 
                 // Externally loaded map check.
                 if (MapManager.Selected.Value.Game != MapGame.Quaver)
@@ -593,17 +594,15 @@ namespace Quaver.Shared.Screens.Select
                 AudioEngine.Track?.Dispose();
 
                 // Run path deletion in the background.
-                ThreadScheduler.Run(() => DeletePath(type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count > 1 ? difficultyPath : mapsetPath));
+                ThreadScheduler.Run(() => DeletePath(deleteMapset ? mapsetPath : difficultyPath));
 
                 // Remove mapset/difficulty from cache and AvailableMapsets list.
-                if (type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1)
+                if (deleteMapset)
                 {
                     selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
                     MapManager.Mapsets.RemoveAt(selectedMapsetIndex);
                     AvailableMapsets.Remove(selectedMapset);
                     view.MapsetScrollContainer.InitializeWithNewSets();
-
-                    // Restore index.
                     view.MapsetScrollContainer.SelectMapset(Math.Min(selectedMapsetIndex, AvailableMapsets.Count - 1));
                 }
                 else
@@ -612,8 +611,6 @@ namespace Quaver.Shared.Screens.Select
                     MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
                     selectedMapset.Maps.Remove(selectedDifficulty);
                     view.DifficultyScrollContainer.ReInitializeDifficulties();
-
-                    // Restore index.
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, selectedMapset.Maps[Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count - 1)], true);
                 }
 
