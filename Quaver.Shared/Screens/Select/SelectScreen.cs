@@ -601,7 +601,7 @@ namespace Quaver.Shared.Screens.Select
                 {
                     selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
                     AvailableMapsets.RemoveAt(selectedMapsetIndex);
-                    MapManager.Mapsets.Remove(selectedMapset);
+                    selectedMapset.Maps.ForEach(x => MapManager.Mapsets.RemoveAll(y => y.Maps.Exists(z => x.Md5Checksum == z.Md5Checksum)));
                     view.MapsetScrollContainer.InitializeWithNewSets();
                     view.MapsetScrollContainer.SelectMapset(Math.Min(selectedMapsetIndex, AvailableMapsets.Count - 1));
                 }
@@ -609,7 +609,7 @@ namespace Quaver.Shared.Screens.Select
                 {
                     MapDatabaseCache.RemoveMap(selectedDifficulty);
                     selectedMapset.Maps.RemoveAt(selectedDifficultyIndex);
-                    MapManager.Mapsets[selectedMapsetIndex].Maps.Remove(selectedDifficulty);
+                    MapManager.Mapsets.RemoveAll(x => x.Maps.Exists(y => y.Md5Checksum == selectedDifficulty.Md5Checksum));
                     view.DifficultyScrollContainer.ReInitializeDifficulties();
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, selectedMapset.Maps[Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count - 1)], true);
                 }
