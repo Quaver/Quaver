@@ -216,7 +216,7 @@ namespace Quaver.Shared.Screens.Editor
                     Metronome.Update(gameTime);
 
                 if (AudioEngine.Track.IsDisposed)
-                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.LoadCurrentTrack(false, true);
 
                 HandleInput(gameTime);
             }
@@ -408,10 +408,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             try
             {
-                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused && !AudioEngine.Track.IsPreview)
-                    return true;
-
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, true);
                 return true;
             }
             catch (Exception e)
@@ -569,7 +566,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, true);
                 SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
@@ -587,7 +584,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, true);
                 SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();

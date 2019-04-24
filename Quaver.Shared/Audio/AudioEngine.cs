@@ -40,7 +40,9 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     Loads the track for the currently selected map.
         /// </summary>
-        public static void LoadCurrentTrack(bool preview = false)
+        /// <param name="preview"></param>
+        /// <param name="autoDispose"></param>
+        public static void LoadCurrentTrack(bool preview = false, bool dontAutoDispose = false)
         {
             Source.Cancel();
             Source.Dispose();
@@ -54,7 +56,7 @@ namespace Quaver.Shared.Audio
                 if (Track != null && !Track.IsDisposed)
                     Track.Dispose();
 
-                var newTrack = new AudioTrack(MapManager.CurrentAudioPath, preview)
+                var newTrack = new AudioTrack(MapManager.CurrentAudioPath, preview, dontAutoDispose)
                 {
                     Volume = ConfigManager.VolumeMusic.Value,
                     Rate = ModHelper.GetRateFromMods(ModManager.Mods),
