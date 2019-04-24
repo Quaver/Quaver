@@ -42,7 +42,7 @@ namespace Quaver.Shared.Audio
         /// </summary>
         /// <param name="preview"></param>
         /// <param name="autoDispose"></param>
-        public static void LoadCurrentTrack(bool preview = false, bool autoDispose = true)
+        public static void LoadCurrentTrack(bool preview = false, bool autoDispose = false)
         {
             Source.Cancel();
             Source.Dispose();
