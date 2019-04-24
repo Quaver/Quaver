@@ -216,7 +216,7 @@ namespace Quaver.Shared.Screens.Editor
                     Metronome.Update(gameTime);
 
                 if (AudioEngine.Track.IsDisposed)
-                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.LoadCurrentTrack(false, true);
 
                 HandleInput(gameTime);
             }
@@ -408,10 +408,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             try
             {
-                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused && !AudioEngine.Track.IsPreview)
-                    return true;
-
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, true);
                 return true;
             }
             catch (Exception e)
@@ -479,14 +476,12 @@ namespace Quaver.Shared.Screens.Editor
                 MouseManager.PreviousState.ScrollWheelValue)
             {
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, BeatSnap.Value);
-                SetHitSoundObjectIndex();
             }
             // Seek Forwards
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
                 MouseManager.PreviousState.ScrollWheelValue)
             {
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
-                SetHitSoundObjectIndex();
             }
         }
 
@@ -567,16 +562,16 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void PlayPauseTrack()
         {
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+            if (AudioEngine.Track.IsDisposed)
             {
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, true);
                 SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
             else if (AudioEngine.Track.IsPlaying)
                 AudioEngine.Track.Pause();
-            else if (AudioEngine.Track.IsPaused)
+            else if (AudioEngine.Track.IsPaused || AudioEngine.Track.IsStopped)
                 AudioEngine.Track.Play();
         }
 
@@ -585,25 +580,22 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void RestartTrack()
         {
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
+            if (AudioEngine.Track.IsDisposed)
             {
-                AudioEngine.LoadCurrentTrack();
-                SetHitSoundObjectIndex();
-
+                AudioEngine.LoadCurrentTrack(false, true);
+                
                 AudioEngine.Track.Play();
             }
             else if (AudioEngine.Track.IsPlaying)
             {
                 AudioEngine.Track.Pause();
                 AudioEngine.Track.Seek(0);
-                SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
-            else if (AudioEngine.Track.IsPaused)
+            else if (AudioEngine.Track.IsPaused || AudioEngine.Track.IsStopped)
             {
                 AudioEngine.Track.Seek(0);
-                SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
