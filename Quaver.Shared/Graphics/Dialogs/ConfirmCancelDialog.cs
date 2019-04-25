@@ -118,6 +118,12 @@ namespace Quaver.Shared.Graphics.Dialogs
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            {
+                OnConfirm(this, new EventArgs());
+                Dismiss();
+            }
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 Dismiss();
         }
