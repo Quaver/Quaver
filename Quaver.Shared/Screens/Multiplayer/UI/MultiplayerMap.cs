@@ -253,6 +253,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Game.MapsetId = e.MapsetId;
             Game.Map = e.Map;
             Game.DifficultyRating = e.DifficultyRating;
+            Game.AllDifficultyRatings = e.AllDifficultyRatings;
             Game.GameMode = e.GameMode;
 
             UpdateContent();
