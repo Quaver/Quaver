@@ -15,6 +15,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 
@@ -53,6 +54,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         public SpriteText Status { get; private set; }
 
         /// <summary>
+        ///     The content of the user's status (the map and difficulty that's being played or edited).
+        /// </summary>
+        public SpriteText Content { get; private set; }
+
+        /// <summary>
+        ///     The scroll container for the content.
+        /// </summary>
+        public ScrollContainer ContentContainer { get; private set; }
+
+        /// <summary>
         ///     The height of the drawable user.
         /// </summary>
         public static int HEIGHT { get; } = 50;
@@ -76,6 +87,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             CreateAvatar();
             CreateUsername();
             CreateStatus();
+            CreateContent();
+            CreateContentContainer();
         }
 
         /// <inheritdoc />
@@ -88,6 +101,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
             var targetAlpha = IsHovered ? 0.45f : 0;
             Alpha = MathHelper.Lerp(Alpha, targetAlpha, (float) Math.Min(dt / 60, 1));
+
+            AnimateContent();
 
             base.Update(gameTime);
         }
@@ -141,6 +156,28 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         };
 
         /// <summary>
+        ///     Creates the text for the user's status content
+        /// </summary>
+        private void CreateContent() => Content = new SpriteText(Fonts.SourceSansProSemiBold, "", 10);
+
+        /// <summary>
+        ///     Creates the container for the user's status content
+        /// </summary>
+        private void CreateContentContainer()
+        {
+            ContentContainer = new ScrollContainer(new ScalableVector2(Width - Status.X - 5, 0),
+                new ScalableVector2(0, 0))
+            {
+                Parent = this,
+                Alpha = 0,
+                X = Username.X,
+                Y = 31
+            };
+
+            ContentContainer.AddContainedDrawable(Content);
+        }
+
+        /// <summary>
         ///     Updates the drawable with new user information.
         /// </summary>
         /// <param name="user"></param>
@@ -168,6 +205,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             }
 
             UpdateStatus();
+            UpdateContent();
         }
 
         /// <summary>
@@ -203,6 +241,39 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             }
 
             Status.Text = statusText;
+        }
+
+        /// <summary>
+        ///     Updates the Content text and related properties.
+        /// </summary>
+        private void UpdateContent()
+        {
+            // FIXME: remove this condition when current map + difficulty is separated from watched player's name.
+            var text = User.CurrentStatus.Content;
+            if (User.CurrentStatus.Status == ClientStatus.Watching)
+                text = "";
+
+            // Don't reset animations and stuff if the text didn't change.
+            if (Content.Text == text)
+                return;
+
+            Content.Text = text;
+            ContentContainer.ContentContainer.Size = Content.Size; // Set the contained container size to the text size.
+            ContentContainer.Height = Content.Height; // Make sure the text doesn't cut off vertically.
+            Content.X = 0; // Reset the X position of the text.
+            Content.ClearAnimations();
+
+            // When Content is empty, move Username and Status down a little so they are centered.
+            if (text.Length == 0)
+            {
+                Username.Y = 6;
+                Status.Y = 27;
+            }
+            else
+            {
+                Username.Y = 0;
+                Status.Y = 17;
+            }
         }
 
         /// <summary>
@@ -251,5 +322,28 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         /// <param name="tex"></param>
         private void SetAvatar(Texture2D tex) => Avatar.Image = tex;
+
+        /// <summary>
+        ///     Animates the Content text to move back and forth in the scroll container.
+        /// </summary>
+        private void AnimateContent()
+        {
+            // Reset the animations only when they have run out.
+            if (Content.Animations.Count != 0)
+                return;
+
+            // No need to animate if Content fits.
+            if (Content.Width <= ContentContainer.Width)
+                return;
+
+            var distance = Content.Width - ContentContainer.Width;
+            var time = (int) (distance * 30);
+
+            Content
+                .Wait(1000)
+                .MoveToX(-distance, Easing.Linear, time)
+                .Wait(1000)
+                .MoveToX(0, Easing.Linear, time);
+        }
     }
 }
