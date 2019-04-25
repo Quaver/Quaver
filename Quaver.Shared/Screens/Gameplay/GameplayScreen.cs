@@ -1007,7 +1007,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SendJudgementsToServer()
         {
-            if (GameBase.Game.TimeRunning - TimeJudgementsLastSentToServer < 500 || OnlineManager.CurrentGame == null)
+            if (GameBase.Game.TimeRunning - TimeJudgementsLastSentToServer < 400 || OnlineManager.CurrentGame == null)
                 return;
 
             TimeJudgementsLastSentToServer = GameBase.Game.TimeRunning;
