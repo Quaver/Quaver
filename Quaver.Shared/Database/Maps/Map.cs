@@ -490,6 +490,42 @@ namespace Quaver.Shared.Database.Maps
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public List<double> GetDifficultyRatings()
+        {
+            var ratings = new List<double>
+            {
+                Difficulty05X,
+                Difficulty055X,
+                Difficulty06X,
+                Difficulty065X,
+                Difficulty07X,
+                Difficulty075X,
+                Difficulty08X,
+                Difficulty085X,
+                Difficulty09X,
+                Difficulty095X,
+                Difficulty10X,
+                Difficulty11X,
+                Difficulty12X,
+                Difficulty13X,
+                Difficulty14X,
+                Difficulty15X,
+                Difficulty16X,
+                Difficulty17X,
+                Difficulty18X,
+                Difficulty19X,
+                Difficulty20X
+            };
+
+            for (var i = 0; i < ratings.Count; i++)
+                ratings[i] = Math.Round(ratings[i], 2);
+
+            return ratings;
+        }
+
         public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }
 
