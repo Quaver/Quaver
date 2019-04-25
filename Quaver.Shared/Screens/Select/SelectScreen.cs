@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
@@ -18,9 +20,12 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
@@ -172,6 +177,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressLeft();
             HandleKeyPressControlRateChange();
             HandleKeyPressTab();
+            HandleKeyPressDel();
             HandleKeyPressF1();
             // HandleKeyPressF2(); // disabled for now, till the container issue is resolved.
             HandleMousePressRight();
@@ -365,6 +371,20 @@ namespace Quaver.Shared.Screens.Select
                 ConfigManager.LeaderboardSection.Value = (LeaderboardType) index + 1;
             else
                 ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the del key
+        /// </summary>
+        private void HandleKeyPressDel()
+        {
+            var view = View as SelectScreenView;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete) || DialogManager.Dialogs.Count > 0 ||
+                view.MapsetScrollContainer.SelectedMapsetIndex < 0 || view.DifficultyScrollContainer.SelectedMapIndex < 0)
+                return;
+
+            DeleteSelected();
         }
 
         /// <summary>
@@ -619,6 +639,94 @@ namespace Quaver.Shared.Screens.Select
                     view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, mapset.Maps[randomMapIndex], true);
                     break;
             }
+        }
+
+        /// <summary>
+        ///     Starts the deleting process.
+        /// </summary>
+        private void DeleteSelected()
+        {
+            // Externally loaded map check.
+            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            {
+                // Display error message.
+                NotificationManager.Show(NotificationLevel.Error, "This map was loaded from another game, and it cannot be deleted.");
+                return;
+            }
+
+            var view = View as SelectScreenView;
+            var type = view.ActiveContainer;
+
+            var selectedMapsetIndex = view.MapsetScrollContainer.SelectedMapsetIndex;
+            var selectedDifficultyIndex = view.DifficultyScrollContainer.SelectedMapIndex;
+            var selectedMapset = AvailableMapsets[selectedMapsetIndex];
+            var selectedDifficulty = selectedMapset.Maps[selectedDifficultyIndex];
+
+            var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, selectedMapset.Directory);
+            var difficultyPath = Path.Combine(mapsetPath, selectedDifficulty.Path);
+
+            // Commence deleting and reloading.
+            var confirmDelete = new ConfirmCancelDialog($"Are you sure you want to delete this {( type == SelectContainerStatus.Mapsets ? "mapset" : "difficulty" )}?", (sender, confirm) =>
+            {
+                var mapTitle = selectedMapset.Maps.First().Title;
+                var deleteMapset = type == SelectContainerStatus.Mapsets || type == SelectContainerStatus.Difficulty && selectedMapset.Maps.Count == 1;
+
+                // Dispose of the background for the currently selected map.
+                BackgroundHelper.Background?.Dispose();
+
+                // Dispose of the currently playing track.
+                AudioEngine.Track?.Dispose();
+
+                // Run path deletion in the background.
+                ThreadScheduler.Run(() => DeletePath(deleteMapset ? mapsetPath : difficultyPath));
+
+                // Remove mapset/difficulty from cache and AvailableMapsets list.
+                if (deleteMapset)
+                {
+                    selectedMapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
+                    AvailableMapsets.RemoveAt(selectedMapsetIndex);
+                    MapManager.Mapsets.RemoveAll(x => x.Directory == selectedMapset.Directory);
+                    view.MapsetScrollContainer.InitializeWithNewSets();
+                    view.MapsetScrollContainer.SelectMapset(Math.Min(selectedMapsetIndex, AvailableMapsets.Count - 1));
+                }
+                else
+                {
+                    MapDatabaseCache.RemoveMap(selectedDifficulty);
+                    selectedMapset.Maps.RemoveAt(selectedDifficultyIndex);
+                    MapManager.Mapsets.Find(x => x.Directory == selectedMapset.Directory).Maps.RemoveAll(x => x.Md5Checksum == selectedDifficulty.Md5Checksum);
+                    view.DifficultyScrollContainer.ReInitializeDifficulties();
+                    view.MapsetScrollContainer.SelectMap(selectedMapsetIndex, selectedMapset.Maps[Math.Min(selectedDifficultyIndex, selectedMapset.Maps.Count - 1)], true);
+                }
+
+                // Finally show confirmation notification.
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully deleted {mapTitle} from Quaver!");
+
+                // If the deleted mapset was the last one, then exit back to menu.
+                if (MapManager.Mapsets.Count != 0)
+                    return;
+
+                view.Destroy();
+                AudioEngine.Track = null;
+                MapManager.Selected.Value = null;
+                ExitToMenu();
+            });
+
+            // Finally show the confirmation dialog that orchestrates the deleting process.
+            DialogManager.Show(confirmDelete);
+        }
+
+        /// <summary>
+        ///     Determines if the path is a file or directory then deletes it using the appropriate method.
+        /// </summary>
+        /// <param name="path"></param>
+        private static void DeletePath(string path)
+        {
+            var attributes = File.GetAttributes(path);
+
+            if (attributes.HasFlag(FileAttributes.Directory))
+                Directory.Delete(path, true);
+            else
+                File.Delete(path);
         }
     }
 }
