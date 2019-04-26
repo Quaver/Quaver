@@ -84,7 +84,6 @@ namespace Quaver.Shared.Audio
         {
             try
             {
-                LoadCurrentTrack();
                 Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
                 Track.Play();
             }
