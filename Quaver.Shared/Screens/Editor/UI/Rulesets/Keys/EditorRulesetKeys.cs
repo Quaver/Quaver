@@ -586,23 +586,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             var pendingObject = PendingLongNoteReleases[lane - 1];
 
-            if ((int) time < pendingObject.StartTime)
-            {
-                var timespan = TimeSpan.FromMilliseconds(pendingObject.StartTime);
-
-                NotificationManager.Show(NotificationLevel.Error, $"You must place the long note end at: " +
-                                                                  $"{timespan.Minutes}:{timespan.Seconds}.{timespan.Milliseconds} ({lane}) " +
-                                                                  $"further than its start time. Click here to go to the object.", (sender, args) =>
-                {
-                    if (AudioEngine.Track.IsPlaying)
-                        AudioEngine.Track.Pause();
-
-                    AudioEngine.Track.Seek(pendingObject.StartTime);
-                    Screen.SetHitSoundObjectIndex();
-                });
-                return true;
-            }
-
             // Returning false here because the user should be able to delete the note if they're
             // still on the starting area.
             if ((int) time == pendingObject.StartTime)
@@ -611,12 +594,23 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 return false;
             }
 
+            // Handle case when time < StartTime.
+            if ((int) time < pendingObject.StartTime)
+            {
+                pendingObject.EndTime = pendingObject.StartTime;
+                pendingObject.StartTime = (int) time;
+
+                // Update the start position of the Hit Object
+                ScrollContainer.RemoveHitObjectSprite(pendingObject);
+                ScrollContainer.AddHitObjectSprite(pendingObject);
+            }
+            else
+                pendingObject.EndTime = (int) time;
+
             // Long note is no longer pending given that the user has entered a correct position.
             PendingLongNoteReleases[lane - 1] = null;
 
             // Resize the long note and then reset the color of it.
-            pendingObject.EndTime = (int) time;
-
             if (View.LayerCompositor.ScrollContainer.AvailableItems[pendingObject.EditorLayer].Hidden)
                 ScrollContainer.ResizeLongNote(pendingObject).AppearAsHiddenInLayer();
             else
