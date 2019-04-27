@@ -171,8 +171,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// </summary>
         public override void AppearAsSelected()
         {
+            base.AppearAsSelected();
             SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
-            SelectionSprite.Visible = true;
+        }
+
+        public override void AppearAndSetAsUnrankable()
+        {
+            base.AppearAndSetAsUnrankable();
+            SelectionSprite.Size = new ScalableVector2(Width, GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20);
         }
 
         /// <inheritdoc />

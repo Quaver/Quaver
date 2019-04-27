@@ -43,6 +43,7 @@ using Quaver.Shared.Screens.Editor.UI.Graphing.Graphs;
 using Quaver.Shared.Screens.Editor.UI.Layering;
 using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.AutoMod;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
@@ -81,6 +82,11 @@ namespace Quaver.Shared.Screens.Editor
         ///     The game mode/ruleset used for the editor.
         /// </summary>
         public EditorRuleset Ruleset { get; private set; }
+
+        /// <summary>
+        ///     Used to log errors, warnings, and suggestions for the map.
+        /// </summary>
+        public AutoModManager AutoMod { get; } = new AutoModManager();
 
         /// <summary>
         /// </summary>
@@ -313,6 +319,10 @@ namespace Quaver.Shared.Screens.Editor
 
                 if (KeyboardManager.IsUniqueKeyPress(Keys.F5))
                     OpenGoToDialog();
+
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F6))
+                    OpenAutoModDialog();
+
 
                 HandleAudioSeeking();
 
@@ -1045,6 +1055,18 @@ namespace Quaver.Shared.Screens.Editor
                 view.ScrollVelocityChanger.Show();
 
             view.ControlBar.Parent = view.ScrollVelocityChanger.Dialog;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void OpenAutoModDialog()
+        {
+            var view = (EditorScreenView) View;
+
+            if (!view.AutoModViewer.Shown)
+                view.AutoModViewer.Show();
+
+            view.ControlBar.Parent = view.AutoModViewer.Dialog;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Editor.Actions;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets;
 using Quaver.Shared.Screens.Editor.Actions.Rulesets.Keys;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.AutoMod;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Components;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects;
@@ -97,6 +98,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             ActionManager = CreateActionManager();
             CreateRectangleSelector();
             SkinManager.SkinLoaded += OnSkinLoaded;
+            CheckForUnrankableNotePlacement();
         }
 
         /// <inheritdoc />
@@ -220,6 +222,81 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             // Right click/delete object.
             if (MouseManager.IsUniqueClick(MouseButton.Right) && !View.MenuBar.IsActive)
                 DeleteHoveredHitObject();
+        }
+
+        /// <summary>
+        /// Check to see if there is invalid noteplacement for ranked.
+        /// This will get called everytime a note is placed
+        /// </summary>
+        private void CheckForUnrankableNotePlacement()
+        {
+            const float deltaThresholdMs = 10;
+
+            // todo: TEMP
+            ScrollContainer.HitObjects.Sort((x, y) => x.Info.StartTime.CompareTo(y.Info.StartTime));
+
+            for (var i = 0; i < ScrollContainer.HitObjects.Count; i++)
+            {
+                var currentObject = ScrollContainer.HitObjects[i];
+
+                if (currentObject.Info.IsLongNote)
+                {
+                    // Error Case: LN is negative.
+                    if (currentObject.Info.EndTime < currentObject.Info.StartTime)
+                    {
+                        currentObject.AppearAndSetAsUnrankable();
+                        Screen.AutoMod.AddLog(AutoModLogType.Error,
+                            $"Hit Object @ {currentObject.GetInfo()} has a negative ending. (LN End < Start)",
+                            currentObject);
+                    }
+
+                    // Error Case: LN is too short.
+                    else if (currentObject.Info.EndTime < currentObject.Info.StartTime + 10)
+                    {
+                        currentObject.AppearAndSetAsUnrankable();
+                        Screen.AutoMod.AddLog(AutoModLogType.Error,
+                            $"Hit Object @ {currentObject.GetInfo()} is too short. LN length is less than 10ms.",
+                            currentObject);
+                    }
+                }
+
+                // Error Case: Object starts before audio.
+                if (currentObject.Info.StartTime < 0)
+                {
+                    currentObject.AppearAndSetAsUnrankable();
+                    Screen.AutoMod.AddLog(AutoModLogType.Error,
+                        $"Hit Object @ {currentObject.GetInfo()} starts before the audio.",
+                        currentObject);
+                }
+
+                for (var j = i + 1; j < ScrollContainer.HitObjects.Count; j++)
+                {
+                    var nextObject = ScrollContainer.HitObjects[j];
+
+                    if (currentObject.Info.Lane != nextObject.Info.Lane)
+                        continue;
+
+                    // Error Case: Hit Objects are too close.
+                    if (nextObject.Info.StartTime < currentObject.Info.StartTime + deltaThresholdMs)
+                    {
+                        nextObject.AppearAndSetAsUnrankable();
+                        Screen.AutoMod.AddLog(AutoModLogType.Error,
+                            $"Hit Object @ {nextObject.GetInfo()} is too close to {currentObject.GetInfo()}",
+                            nextObject);
+                    }
+
+                    // Error Case: Hit Object is overlapping an LN
+                    else if (nextObject.Info.StartTime < currentObject.Info.EndTime)
+                    {
+                        nextObject.AppearAndSetAsUnrankable();
+                        Screen.AutoMod.AddLog(AutoModLogType.Error,
+                            $"Hit Object @ {nextObject.GetInfo()} is overlapping {currentObject.GetInfo()}",
+                            nextObject);
+                    }
+                    else
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -412,6 +489,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 {
                     case EditorCompositionTool.Note:
                         am?.PlaceHitObject(lane, time);
+
+                        // TODO: Temporary
+                        CheckForUnrankableNotePlacement();
+
                         break;
                     case EditorCompositionTool.LongNote:
                         am?.PlaceLongNote(lane, time);
@@ -485,6 +566,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
                 h.AppearAsHiddenInLayer();
             else
                 h.AppearAsActive();
+
+            if (h.Unrankable)
+                h.AppearAndSetAsUnrankable();
 
             SelectedHitObjects.Remove(h);
             SetSelectedHitsounds();
@@ -622,6 +706,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
             else
                 ScrollContainer.ResizeLongNote(pendingObject).AppearAsActive();
 
+            // TODO: Temporary
+            CheckForUnrankableNotePlacement();
+
             return true;
         }
 
@@ -690,7 +777,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             foreach (var h in SelectedHitObjects.OrderBy(x => x.Info.StartTime))
             {
-                copyString += $"{h.Info.StartTime}|{h.Info.Lane},";
+                copyString += $"{h.GetInfo()},";
                 Clipboard.Add(h.Info);
             }
 

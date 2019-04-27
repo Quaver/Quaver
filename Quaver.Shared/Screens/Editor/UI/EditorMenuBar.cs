@@ -189,6 +189,9 @@ namespace Quaver.Shared.Screens.Editor.UI
             if (ImGui.MenuItem("Go To Objects...", "F5"))
                 Screen.OpenGoToDialog();
 
+            if (ImGui.MenuItem("Open AutoMod", "F6"))
+                Screen.OpenAutoModDialog();
+
             ImGui.EndMenu();
         }
 

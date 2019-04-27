@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
@@ -12,6 +13,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using TagLib.Riff;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -29,6 +31,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         public HitObjectInfo Info { get; }
 
         /// <summary>
+        /// Will determine if this object will be Highlighted as Unrankable.
+        /// </summary>
+        public bool Unrankable { get; set; }
+
+        /// <summary>
         ///     Keeps track of if the object is on screen.
         ///     Separate property because this is handled on another thread.
         /// </summary>
@@ -38,6 +45,8 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         ///     The color when the object is shown as selected.
         /// </summary>
         protected Color SelectedColor { get; } = Color.LimeGreen;
+
+        protected Color UnrankableColor { get; } = Color.Red;
 
         /// <summary>
         /// </summary>
@@ -121,7 +130,18 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         public virtual void AppearAsSelected()
         {
             SelectionSprite.Size = new ScalableVector2(Width, Width);
+            SelectionSprite.Tint = Colors.MainAccent;
+            SelectionSprite.Alpha = 0.70f;
             SelectionSprite.Visible = true;
+        }
+
+        public virtual void AppearAndSetAsUnrankable()
+        {
+            SelectionSprite.Size = new ScalableVector2(Width, Width);
+            SelectionSprite.Tint = UnrankableColor;
+            SelectionSprite.Alpha = 0.85f;
+            SelectionSprite.Visible = true;
+            Unrankable = true;
         }
 
         /// <summary>
@@ -140,6 +160,12 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <summary>
         /// </summary>
         public void SetHeight() => Height = (float) (Container.LaneSize - Container.DividerLineWidth * 2) * Image.Height / Image.Width;
+
+        /// <summary>
+        ///     Returns a string in the format of {StartTime}|{Lane}
+        /// </summary>
+        /// <returns></returns>
+        public string GetInfo() => $"{Info.StartTime}|{Info.Lane}";
 
         /// <summary>
         /// </summary>
