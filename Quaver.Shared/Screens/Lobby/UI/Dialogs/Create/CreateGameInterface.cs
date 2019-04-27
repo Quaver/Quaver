@@ -255,7 +255,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 MapManager.Selected.Value.MapId,
                 MapManager.Selected.Value.MapSetId, MultiplayerGameRuleset.Free_For_All,
                 AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
-                MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum);
+                MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum, new List<double>());
 
             DialogManager.Show(new JoiningGameDialog(JoiningGameDialogType.Creating));
 
