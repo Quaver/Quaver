@@ -214,6 +214,23 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///    Removes an individual map in the database.
+        /// </summary>
+        /// <param name="map"></param>
+        public static void RemoveMap(Map map)
+        {
+            try
+            {
+                new SQLiteConnection(DatabasePath).Delete(map);
+                Logger.Debug($"Deleted map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
