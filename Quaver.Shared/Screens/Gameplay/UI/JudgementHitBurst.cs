@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -86,6 +87,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="j"></param>
         public void PerformJudgementAnimation(Judgement j)
         {
+            // If show hit accuracy is disabled, do nothing
+            if (!ConfigManager.ShowHitAccuracy.Value) return;
+
             ChangeJudgementFrames(j);
             Visible = true;
 
