@@ -463,6 +463,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        ///     Whether hit accuracies such as Marv/Perf should be displayed
+        /// </summary>
+        internal static Bindable<bool> ShowHitAccuracy { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -625,6 +630,7 @@ namespace Quaver.Shared.Config
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
+            ShowHitAccuracy = ReadValue(@"ShowHitAccuracy", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -728,6 +734,7 @@ namespace Quaver.Shared.Config
                     LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterOwnsMap.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
+                    ShowHitAccuracy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
