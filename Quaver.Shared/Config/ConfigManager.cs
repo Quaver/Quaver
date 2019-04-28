@@ -17,6 +17,7 @@ using IniFileParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
@@ -463,6 +464,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        ///     Language to display UI in.
+        /// </summary>
+        internal static Bindable<LocalizationLanguage> Language { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -625,6 +631,7 @@ namespace Quaver.Shared.Config
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
+            Language = ReadValue(@"LocalizationLanguage", LocalizationLanguage.EN, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -728,6 +735,7 @@ namespace Quaver.Shared.Config
                     LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterOwnsMap.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
+                    Language.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

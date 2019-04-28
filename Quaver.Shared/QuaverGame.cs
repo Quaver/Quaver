@@ -34,6 +34,7 @@ using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Skinning;
+using Quaver.Shared.Localization;
 using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -418,17 +419,17 @@ namespace Quaver.Shared
             switch (ConfigManager.FpsLimiterType.Value)
             {
                 case FpsLimitType.Unlimited:
-                    NotificationManager.Show(NotificationLevel.Info, "FPS is now unlimited.");
+                    NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get(LocalizedString.FPS_IS_NOW_UNLIMITED));
                     break;
                 case FpsLimitType.Limited:
-                    NotificationManager.Show(NotificationLevel.Info, $"FPS is now limited to: 240 FPS");
+                    NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get(LocalizedString.FPS_IS_NOW_LIMITED_TO_240_FPS));
                     break;
                 case FpsLimitType.Vsync:
-                    NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                    NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get(LocalizedString.VSYNC_ENABLED));
                     break;
                 case FpsLimitType.Custom:
                     NotificationManager.Show(NotificationLevel.Info,
-                        $"FPS is now custom limited to: {ConfigManager.CustomFpsLimit.Value}");
+                        LocalizationManager.Get(LocalizedString.FPS_IS_NOW_CUSTOM_LIMITED_TO, ConfigManager.CustomFpsLimit.Value));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

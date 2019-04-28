@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Settings.Elements;
@@ -83,6 +84,8 @@ namespace Quaver.Shared.Screens.Settings
         /// </summary>
         public Point NewQueuedScreenResolution { get; set; }
 
+        public LocalizationLanguage NewQueuedLanguage { get; set; }
+
         /// <summary>
         ///     If true, the dialog won't close if the user presses escape.
         ///     This is used for when keybinds are changed (and the user wants to change it to escape).
@@ -98,6 +101,7 @@ namespace Quaver.Shared.Screens.Settings
             // are non nullable.
             NewQueuedDefaultSkin = ConfigManager.DefaultSkin.Value;
             NewQueuedScreenResolution = new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+            NewQueuedLanguage = ConfigManager.Language.Value;
 
             Animations.Add(new Animation(AnimationProperty.Alpha, Easing.OutQuint, Alpha, 0.65f, 300));
             CreateContent();
@@ -257,6 +261,15 @@ namespace Quaver.Shared.Screens.Settings
                     dismissDalog = false;
                 }
 
+                // Handle language reloads
+                if(NewQueuedLanguage != ConfigManager.Language.Value)
+                {
+                    ConfigManager.Language.Value = NewQueuedLanguage;
+                    Logger.Log("Current Language: " + LocalizationManager.CurrentLanguage, LogLevel.Debug, LogType.Runtime);
+
+                    dismissDalog = false;
+                }
+
                 if (dismissDalog)
                     DialogManager.Dismiss(this);
             };
@@ -296,6 +309,7 @@ namespace Quaver.Shared.Screens.Settings
                 // Video
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), "Video", new List<Drawable>
                 {
+                    new SettingsLanguage(this, "Language"),
                     new SettingsResolution(this, "Screen Resolution"),
                     new SettingsBool(this, "Fullscreen", ConfigManager.WindowFullScreen),
                     new SettingsFpsLimiter(this),

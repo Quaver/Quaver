@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
@@ -164,7 +165,7 @@ namespace Quaver.Shared.Screens.Menu
         private void CreateNavbar() => Navbar = Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
         {
             new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
-            new NavbarItem("Home", true),
+            new NavbarItem(LocalizationManager.Get(LocalizedString.HOME), true),
         }, new List<NavbarItem>
         {
             new NavbarItemUser(this),
