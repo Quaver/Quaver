@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// </summary>
         /// <param name="dialog"></param>
         public SettingsLanguage(SettingsDialog dialog, string name)
-            : base(dialog, name, FpsLimiterTypesToStringList(), (val, i) => OnChange(dialog, val, i), (int)ConfigManager.Language.Value)
+            : base(dialog, name, LanguageTypesToStringList(), (val, i) => OnChange(dialog, val, i), (int)ConfigManager.Language.Value)
             => ConfigManager.Language.ValueChanged += OnBindableValueChanged;
 
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<string> FpsLimiterTypesToStringList() => Enum.GetNames(typeof(LocalizationLanguage)).ToList();
+        private static List<string> LanguageTypesToStringList() => Enum.GetNames(typeof(LocalizationLanguage)).ToList();
 
         /// <summary>
         /// </summary>
