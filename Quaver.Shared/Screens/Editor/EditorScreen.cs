@@ -476,12 +476,14 @@ namespace Quaver.Shared.Screens.Editor
                 MouseManager.PreviousState.ScrollWheelValue)
             {
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Backward, BeatSnap.Value);
+                SetHitSoundObjectIndex();
             }
             // Seek Forwards
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || MouseManager.CurrentState.ScrollWheelValue <
                 MouseManager.PreviousState.ScrollWheelValue)
             {
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, BeatSnap.Value);
+                SetHitSoundObjectIndex();
             }
         }
 
@@ -562,14 +564,7 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void PlayPauseTrack()
         {
-            if (AudioEngine.Track.IsDisposed)
-            {
-                AudioEngine.LoadCurrentTrack();
-                SetHitSoundObjectIndex();
-
-                AudioEngine.Track.Play();
-            }
-            else if (AudioEngine.Track.IsPlaying)
+            if (AudioEngine.Track.IsPlaying)
                 AudioEngine.Track.Pause();
             else if (AudioEngine.Track.IsPaused || AudioEngine.Track.IsStopped)
                 AudioEngine.Track.Play();
@@ -580,9 +575,10 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public void RestartTrack()
         {
-            if (AudioEngine.Track.IsDisposed)
+            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed)
             {
                 AudioEngine.LoadCurrentTrack();
+                SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
@@ -590,12 +586,14 @@ namespace Quaver.Shared.Screens.Editor
             {
                 AudioEngine.Track.Pause();
                 AudioEngine.Track.Seek(0);
+                SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
-            else if (AudioEngine.Track.IsPaused || AudioEngine.Track.IsStopped)
+            else if (AudioEngine.Track.IsPaused)
             {
                 AudioEngine.Track.Seek(0);
+                SetHitSoundObjectIndex();
 
                 AudioEngine.Track.Play();
             }
