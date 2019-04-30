@@ -83,9 +83,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                     {
                         if (OnlineManager.CurrentGame.CountdownStartTime == -1)
+                        {
                             OnlineManager.Client?.MultiplayerGameStartCountdown();
+                            OnlineManager.Client?.MultiplayerGameIsReady();
+                        }
                         else
+                        {
                             OnlineManager.Client?.MultiplayerGameStopCountdown();
+                            OnlineManager.Client?.MultiplayerGameIsNotReady();
+                        }
                     }
                     // Not host, so the button should be a ready toggle.
                     else if (!OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
