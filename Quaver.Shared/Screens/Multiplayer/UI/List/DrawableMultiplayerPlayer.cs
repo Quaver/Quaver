@@ -223,7 +223,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnGameMapChanged(object sender, GameMapChangedEventArgs e)
-            => NoMapIcon.Visible = false;
+        {
+            NoMapIcon.Visible = false;
+            UpdateContent(Item, Index);
+        }
 
         /// <summary>
         /// </summary>
