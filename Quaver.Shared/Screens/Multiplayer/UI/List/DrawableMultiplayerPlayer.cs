@@ -133,6 +133,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
             OnlineManager.Client.OnPlayerReady += OnGamePlayerReady;
             OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
+            OnlineManager.Client.OnUserStats += OnUserStats;
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
             if (!OnlineManager.OnlineUsers[item.Id].HasUserInfo)
@@ -145,6 +146,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                     Avatar.Alpha = 1;
                 }
             }
+
+            // Request user stats if necessary
+            if (OnlineManager.OnlineUsers[item.Id].Stats.Count == 0)
+                OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
         }
 
         /// <inheritdoc />
@@ -179,6 +184,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGamePlayerNoMap -= OnGamePlayerNoMap;
             OnlineManager.Client.OnGamePlayerHasMap -= OnGamePlayerHasMap;
             OnlineManager.Client.OnPlayerReady -= OnGamePlayerReady;
+            OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
 
             base.Destroy();
@@ -215,6 +221,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             Avatar.Image = e.Texture;
             Avatar.FadeTo(1, Easing.Linear, 400);
         }
+
+        private void OnUserStats(object sender, UserStatsEventArgs e)
+            => UpdateContent(Item, Index);
 
         /// <summary>
         ///     Called when the map has changed. Everyone has their no map icon cleared, as we
