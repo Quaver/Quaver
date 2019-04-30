@@ -170,8 +170,13 @@ namespace Quaver.Shared.Screens.Editor
 
             ModManager.RemoveSpeedMods();
 
+            // While the current track is already loaded before going to this screen, we want to reload it to verify that
+            // the right audio track is being used for the editor screen
+            var time = AudioEngine.Track.Time;
             if (!LoadAudioTrack())
                 return;
+
+            AudioEngine.Track.Seek(time);
 
             SetHitSoundObjectIndex();
 
