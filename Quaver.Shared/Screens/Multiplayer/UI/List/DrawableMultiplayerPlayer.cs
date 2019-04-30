@@ -9,6 +9,8 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -44,11 +46,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Rank { get; }
+        private Sprite NoMapIcon { get; }
 
         /// <summary>
         /// </summary>
-        private Sprite NoMapIcon { get; }
+        private Sprite Flag { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -73,12 +75,21 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
             Avatar.AddBorder(GetPlayerColor(), 2);
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
+            Flag = new Sprite()
             {
                 Parent = Button,
                 Alignment = Alignment.MidLeft,
-                X = Avatar.X + Avatar.Width + 14,
-                FontSize = 17
+                X = Avatar.X + Avatar.Width + 12,
+                Image = item.CountryFlag == null ? Flags.Get("XX") : Flags.Get(item.CountryFlag),
+                Size = new ScalableVector2(26, 26)
+            };
+
+            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
+            {
+                Parent = Flag,
+                Alignment = Alignment.MidLeft,
+                X = Flag.Width + 6,
+                FontSize = 16
             };
 
             HostCrown = new Sprite
@@ -104,14 +115,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Tint = Color.LimeGreen
             };
 
-            Rank = new SpriteTextBitmap(FontsBitmap.GothamRegular, "")
-            {
-                Parent = Button,
-                Alignment = Alignment.MidRight,
-                X = Ready.X - Ready.Width - 16,
-                FontSize = 15
-            };
-
             NoMapIcon = new Sprite()
             {
                 Parent = Button,
@@ -130,6 +133,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
             OnlineManager.Client.OnPlayerReady += OnGamePlayerReady;
             OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
+            OnlineManager.Client.OnUserStats += OnUserStats;
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
             if (!OnlineManager.OnlineUsers[item.Id].HasUserInfo)
@@ -142,6 +146,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                     Avatar.Alpha = 1;
                 }
             }
+
+            // Request user stats if necessary
+            if (OnlineManager.OnlineUsers[item.Id].Stats.Count == 0)
+                OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
         }
 
         /// <inheritdoc />
@@ -153,11 +161,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         {
             if (OnlineManager.OnlineUsers[item.Id].HasUserInfo)
             {
-                Username.Text = item.Username;
-                HostCrown.X = Username.Width + 12;
+                var stats = OnlineManager.OnlineUsers[Item.Id].Stats;
+                var rank = stats.ContainsKey((GameMode) OnlineManager.CurrentGame.GameMode) ? $" (#{stats[(GameMode) OnlineManager.CurrentGame.GameMode].Rank})" : "";
 
-                if (OnlineManager.OnlineUsers[Item.Id].Stats.ContainsKey(GameMode.Keys4))
-                    Rank.Text = $"";
+                Username.Text = item.Username + rank;
+                HostCrown.X = Username.Width + 12;
             }
 
             HostCrown.Visible = OnlineManager.CurrentGame.HostId == Item.Id;
@@ -176,6 +184,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGamePlayerNoMap -= OnGamePlayerNoMap;
             OnlineManager.Client.OnGamePlayerHasMap -= OnGamePlayerHasMap;
             OnlineManager.Client.OnPlayerReady -= OnGamePlayerReady;
+            OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
 
             base.Destroy();
@@ -194,6 +203,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 return;
 
             Item = user;
+            Flag.Image = Flags.Get(user.CountryFlag);
 
             SteamManager.SendAvatarRetrievalRequest((ulong) user.SteamId);
             UpdateContent(Item, Index);
@@ -212,6 +222,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             Avatar.FadeTo(1, Easing.Linear, 400);
         }
 
+        private void OnUserStats(object sender, UserStatsEventArgs e)
+            => UpdateContent(Item, Index);
+
         /// <summary>
         ///     Called when the map has changed. Everyone has their no map icon cleared, as we
         ///     will wait for a new update.
@@ -219,7 +232,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnGameMapChanged(object sender, GameMapChangedEventArgs e)
-            => NoMapIcon.Visible = false;
+        {
+            NoMapIcon.Visible = false;
+            UpdateContent(Item, Index);
+        }
 
         /// <summary>
         /// </summary>

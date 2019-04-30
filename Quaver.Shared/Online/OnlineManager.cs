@@ -183,6 +183,7 @@ namespace Quaver.Shared.Online
             Client.OnGameMaxPlayersChanged += OnGameMaxPlayersChanged;
             Client.OnGameTeamWinCount += OnGameTeamWinCountChanged;
             Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+            Client.OnUserStats += OnUserStats;
         }
 
         /// <summary>
@@ -1000,6 +1001,15 @@ namespace Quaver.Shared.Online
             }
 
             CurrentGame.PlayerWins.Add(new MultiplayerPlayerWins() { UserId = e.UserId, Wins = e.Wins});
+        }
+
+        private static void OnUserStats(object sender, UserStatsEventArgs e)
+        {
+            foreach (var user in e.Stats)
+            {
+                foreach (var stats in user.Value)
+                    OnlineUsers[user.Key].Stats[(GameMode) stats.Key] = stats.Value;
+            }
         }
 
         /// <summary>
