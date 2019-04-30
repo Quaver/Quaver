@@ -181,6 +181,8 @@ namespace Quaver.Shared.Online
             Client.OnGameRulesetChanged += OnGameRulesetChanged;
             Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
             Client.OnGameMaxPlayersChanged += OnGameMaxPlayersChanged;
+            Client.OnGameTeamWinCount += OnGameTeamWinCountChanged;
+            Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
         }
 
         /// <summary>
@@ -969,6 +971,35 @@ namespace Quaver.Shared.Online
 
             Console.WriteLine($"NEW PLAYHER COUJNT: " + e.MaxPlayers);
             CurrentGame.MaxPlayers = e.MaxPlayers;
+        }
+
+        private static void OnGameTeamWinCountChanged(object sender, TeamWinCountEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.RedTeamWins = e.RedTeamWins;
+            CurrentGame.BlueTeamWins = e.BlueTeamWins;
+
+            Logger.Important($"Team Win Count Updated: Red: {e.RedTeamWins} | Blue: {e.BlueTeamWins}", LogType.Network);
+        }
+
+        private static void OnGamePlayerWinCount(object sender, PlayerWinCountEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            Logger.Important($"Received updated win count for #{e.UserId}: {e.Wins}", LogType.Network);
+
+            var playerWins = CurrentGame.PlayerWins.Find(x => x.UserId == e.UserId);
+
+            if (playerWins != null)
+            {
+                playerWins.Wins = e.Wins;
+                return;
+            }
+
+            CurrentGame.PlayerWins.Add(new MultiplayerPlayerWins() { UserId = e.UserId, Wins = e.Wins});
         }
 
         /// <summary>
