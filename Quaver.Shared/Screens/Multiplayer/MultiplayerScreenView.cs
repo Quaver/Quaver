@@ -269,10 +269,23 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// <param name="e"></param>
         private void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
-            if (!e.Message.Channel.StartsWith("#multiplayer"))
+            if (!e.Message.Channel.StartsWith("#multi"))
                 return;
 
-            Feed.AddItem(Color.Yellow, $"[CHAT] {e.Message.SenderName}: " +
+            var prefix = e.Message.Channel.StartsWith("#multiplayer") ? "[CHAT]" : "[TEAM]";
+
+            var color = Color.Yellow;
+
+            // Team chat
+            if (e.Message.Channel.StartsWith("#multi_team"))
+            {
+                if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(e.Message.Sender.OnlineUser.Id))
+                    color = Color.Crimson;
+                if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(e.Message.Sender.OnlineUser.Id))
+                    color = ColorHelper.HexToColor($"#4cb0f7");
+            }
+
+            Feed.AddItem(color, $"{prefix} {e.Message.SenderName}: " +
                          $"{string.Concat(e.Message.Message.Take(40))}{(e.Message.Message.Length >= 40 ? "..." : "")}" );
         }
     }
