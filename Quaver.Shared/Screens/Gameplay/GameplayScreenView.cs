@@ -161,6 +161,10 @@ namespace Quaver.Shared.Screens.Gameplay
             Screen = (GameplayScreen)screen;
 
             CreateBackground();
+
+            if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
+                CreateScoreboard();
+
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
@@ -174,9 +178,6 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
-
-            if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
-                CreateScoreboard();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
 
@@ -454,6 +455,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Re-change the transitioner and pause screen's parent so that they appear on top of the scoreboard
             // again.
+            ProgressBar.Parent = Container;
             Transitioner.Parent = Container;
             PauseScreen.Parent = Container;
         }

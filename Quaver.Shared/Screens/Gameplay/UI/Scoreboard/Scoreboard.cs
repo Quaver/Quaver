@@ -18,7 +18,9 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Logging;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
@@ -106,11 +108,19 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             // Tween to target Y positions
             Users.ForEach(user =>
             {
-                user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
+                if (user.ShouldBeShown)
+                    user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
 
                 // Tween X Position based on if the scoreboard is hidden
                 if (ConfigManager.ScoreboardVisible.Value)
-                    user.X = MathHelper.Lerp(user.X, 0, (float) Math.Min(dt / 120, 1));
+                {
+                    if (user.ShouldBeShown)
+                        user.X = MathHelper.Lerp(user.X, 0, (float) Math.Min(dt / 120, 1));
+                    else
+                    {
+                        user.X = MathHelper.Lerp(user.X, -user.Width - 10, (float) Math.Min(dt / 90, 1));
+                    }
+                }
                 else
                     user.X = MathHelper.Lerp(user.X, -user.Width - 10, (float) Math.Min(dt / 120, 1));
             });
@@ -163,19 +173,38 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     .ToList();
             }
 
+            var lastVisibleIndex = 0;
+
+            var selfPassed = false;
+
             for (var i = 0; i < users.Count; i++)
             {
-                // Set new username and rank.
+                if (users[i].Type == ScoreboardUserType.Self)
+                    selfPassed = true;
+
                 users[i].Rank = i + 1;
+                users[i].RankText.Text = users[i].Rank + ".";
+
+                var maxRank = selfPassed ? 5 : 4;
+                var previouslyShouldBeShown = users[i].ShouldBeShown;
+                users[i].ShouldBeShown = users[i].Rank <= maxRank || users[i].Type == ScoreboardUserType.Self;
+
+                if (users[i].ShouldBeShown)
+                    lastVisibleIndex = i;
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = users.Count * -users[i].Height / 2f;
+                    users[i].TargetYPosition = Math.Min(users.Count, 5) * -users[i].Height / 2f;
                     continue;
                 }
 
-                users[i].TargetYPosition = users[i - 1].TargetYPosition + users[i].Height + 8;
+                users[i].TargetYPosition = users[lastVisibleIndex - 1].TargetYPosition + users[i].Height + 4;
+
+                if (!previouslyShouldBeShown && users[i].ShouldBeShown)
+                {
+                    users[i].Y = users[i].TargetYPosition;
+                }
             }
         }
     }
