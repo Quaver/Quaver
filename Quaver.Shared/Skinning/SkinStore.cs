@@ -152,6 +152,26 @@ namespace Quaver.Shared.Skinning
         internal Texture2D ScoreboardOther { get; private set; }
 
         /// <summary>
+        ///     The scoreboard for the red team
+        /// </summary>
+        internal Texture2D ScoreboardRedTeam { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the red team (other players)
+        /// </summary>
+        internal Texture2D ScoreboardRedTeamOther { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the blue team
+        /// </summary>
+        internal Texture2D ScoreboardBlueTeam { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the blue team (other players)
+        /// </summary>
+        internal Texture2D ScoreboardBlueTeamOther { get; set; }
+
+        /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; private set; }
@@ -492,6 +512,18 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardOther = "scoreboard-other";
             ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardOther}.png");
+
+            const string scoreboardRedTeam = "scoreboard-red-team";
+            ScoreboardRedTeam = LoadSingleTexture($"{scoreboardFolder}/{scoreboardRedTeam}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardRedTeam}.png");
+
+            const string scoreboardRedTeamOther = "scoreboard-red-team-other";
+            ScoreboardRedTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardRedTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardRedTeamOther}.png");
+
+            const string scoreboardBlueTeam = "scoreboard-blue-team";
+            ScoreboardBlueTeam = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeam}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeam}.png");
+
+            const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
+            ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
         }
 
         /// <summary>

@@ -1035,7 +1035,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var view = (GameplayScreenView) View;
 
-            view.Scoreboard?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
+            view.ScoreboardLeft?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
             OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
             OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
             OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
