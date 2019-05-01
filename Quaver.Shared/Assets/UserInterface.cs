@@ -66,6 +66,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D Scrollbar { get; private set; }
         public static Texture2D LobbyCreateGame { get; private set; }
 
+        public static Texture2D TeamBannerRed { get; private set; }
+
+        public static Texture2D TeamBannerBlue { get; private set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -122,6 +126,8 @@ namespace Quaver.Shared.Assets
             MenuBackgroundRaw = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-raw.jpg"));
             Scrollbar = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/scrollbar.png"));
             LobbyCreateGame = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/create-game.png"));
+            TeamBannerRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-red.png"));
+            TeamBannerBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-blue.png"));
 ;        }
     }
 }

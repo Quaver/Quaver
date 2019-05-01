@@ -14,12 +14,18 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Logging;
+using Wobble.Window;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
@@ -27,15 +33,45 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
     public class Scoreboard : Container
     {
         /// <summary>
+        ///     The type of scoreboard this is
+        /// </summary>
+        public ScoreboardType Type { get; }
+
+        /// <summary>
+        ///     The team (if any) this scoreboard represents
+        /// </summary>
+        public MultiplayerTeam Team { get; }
+
+        /// <summary>
         ///     The list of users on the scoreboard.
         /// </summary>
         public List<ScoreboardUser> Users { get; }
 
+        /// <summary>
+        ///     Displays the banner for the scoreboard team
+        /// </summary>
+        public ScoreboardTeamBanner TeamBanner { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        internal Scoreboard(IEnumerable<ScoreboardUser> users)
+        internal Scoreboard(ScoreboardType type, IEnumerable<ScoreboardUser> users, MultiplayerTeam team = MultiplayerTeam.Red)
         {
+            Type = type;
+            Team = team;
+
+            if (Type == ScoreboardType.Teams)
+            {
+                TeamBanner = new ScoreboardTeamBanner(this)
+                {
+                    Parent = this,
+                    Y = 235,
+                };
+
+                if (Team == MultiplayerTeam.Blue)
+                    TeamBanner.X = WindowManager.Width - TeamBanner.Width;
+            }
+
             Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy)).ToList();
             SetTargetYPositions();
 
@@ -43,6 +79,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 x.Scoreboard = this;
                 x.Y = x.TargetYPosition;
+
+                if (Team == MultiplayerTeam.Blue)
+                    x.X = WindowManager.Width;
             });
 
             if (OnlineManager.CurrentGame != null)
@@ -89,7 +128,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 foreach (var t in e.Judgements)
                 {
                     user.Judgements.Add(t);
-                    user.CalculateScoreForNextObject();
+                    user.CalculateScoreForNextObject(t == e.Judgements.Last());
                 }
             }
         }
@@ -106,14 +145,46 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             // Tween to target Y positions
             Users.ForEach(user =>
             {
-                user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
+                if (user.ShouldBeShown)
+                    user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
 
                 // Tween X Position based on if the scoreboard is hidden
                 if (ConfigManager.ScoreboardVisible.Value)
-                    user.X = MathHelper.Lerp(user.X, 0, (float) Math.Min(dt / 120, 1));
+                {
+                    if (user.ShouldBeShown)
+                    {
+                        var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - user.Width;
+                        user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 120, 1));
+                    }
+                    else
+                    {
+                        var target = Team == MultiplayerTeam.Red ? -user.Width - 10 : WindowManager.Width + user.Width + 10;
+                        user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 90, 1));
+                    }
+                }
                 else
-                    user.X = MathHelper.Lerp(user.X, -user.Width - 10, (float) Math.Min(dt / 120, 1));
+                {
+                    var target = Team == MultiplayerTeam.Red ? -user.Width - 10 : WindowManager.Width + user.Width + 10;
+                    user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 90, 1));
+                }
+
+                user.Visible = user.X >= -user.Width + 10;
             });
+
+            // Lerp team banner in and out
+            if (TeamBanner != null)
+            {
+                if (ConfigManager.ScoreboardVisible.Value)
+                {
+                    var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - TeamBanner.Width;
+                    TeamBanner.X = MathHelper.Lerp(TeamBanner.X, target, (float) Math.Min(dt / 120, 1));
+                }
+                else
+                {
+                    var target = Team == MultiplayerTeam.Red ? -TeamBanner.Width - 10 : WindowManager.Width + TeamBanner.Width + 10;
+                    TeamBanner.X = MathHelper.Lerp(TeamBanner.X, target, (float) Math.Min(dt / 90, 1));
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -123,10 +194,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal void CalculateScores()
         {
-            Users.ForEach(x =>
+            foreach (var x in Users)
             {
+                if (OnlineManager.CurrentGame != null && x.Type != ScoreboardUserType.Self)
+                    return;
+
                 x.CalculateScoreForNextObject();
-            });
+            }
 
             // Set each user's target position
             // Set Y positions.
@@ -140,6 +214,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public void SetTargetYPositions()
         {
             List<ScoreboardUser> users;
+
+            if (Users.Count == 0)
+                return;
 
             if (Users.First().Processor.MultiplayerProcessor != null)
             {
@@ -160,19 +237,40 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     .ToList();
             }
 
+            var lastVisibleIndex = 0;
+
+            var selfPassed = false;
+
             for (var i = 0; i < users.Count; i++)
             {
-                // Set new username and rank.
+                if (users[i].Type == ScoreboardUserType.Self)
+                    selfPassed = true;
+
                 users[i].Rank = i + 1;
+                users[i].RankText.Text = users[i].Rank + ".";
+
+                var maxRank = selfPassed ? 5 : 4;
+                var previouslyShouldBeShown = users[i].ShouldBeShown;
+                users[i].ShouldBeShown = users[i].Rank <= maxRank || users[i].Type == ScoreboardUserType.Self;
+
+                if (users[i].ShouldBeShown)
+                    lastVisibleIndex = i;
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = users.Count * -users[i].Height / 2f;
+                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
+                        ? Math.Min(users.Count, 5) * -users[i].Height / 2f
+                        : 4 * -users[i].Height / 2f + 14;
                     continue;
                 }
 
-                users[i].TargetYPosition = users[i - 1].TargetYPosition + users[i].Height + 8;
+                users[i].TargetYPosition = users[lastVisibleIndex - 1].TargetYPosition + users[i].Height + 4;
+
+                if (!previouslyShouldBeShown && users[i].ShouldBeShown)
+                {
+                    users[i].Y = users[i].TargetYPosition;
+                }
             }
         }
     }

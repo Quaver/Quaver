@@ -16,12 +16,15 @@ using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -70,12 +73,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The avatar for the user.
         /// </summary>
-        private Sprite Avatar { get; }
+        internal Sprite Avatar { get; }
 
         /// <summary>
         ///     Text that displays the username of the player.
         /// </summary>
-        internal SpriteText Username { get; }
+        internal SpriteTextBitmap Username { get; }
 
         /// <summary>
         ///     Text that displays the current score of the user.
@@ -86,6 +89,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///     Text that displays the user's current combo.
         /// </summary>
         internal SpriteTextBitmap Combo { get; }
+
+        /// <summary>
+        ///     Text that displays the rank for each user
+        /// </summary>
+        internal SpriteTextBitmap RankText { get; }
 
         /// <summary>
         ///     The current judgement we're on in the list of them to calculate their score.
@@ -111,6 +119,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///     If the particular user has quit the game
         /// </summary>
         public bool HasQuit { get; private set; }
+
+        /// <summary>
+        ///     If the scoreboard should be shown
+        /// </summary>
+        public bool ShouldBeShown { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -150,7 +163,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     break;
                 case ScoreboardUserType.Other:
                     Image = SkinManager.Skin.ScoreboardOther;
-                    Alpha = 0.75f;
                     textAlpha = 0.65f;
                     break;
                 default:
@@ -182,6 +194,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
+            RankText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "?.")
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                FontSize = 19,
+                X = Avatar.X + Avatar.Width + 14,
+                Alpha = textAlpha
+            };
+
             if (Type != ScoreboardUserType.Self)
             {
                 if (LocalScore != null && (LocalScore.IsOnline || LocalScore.IsMultiplayer))
@@ -191,7 +212,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                         Avatar.Image = SteamManager.UserAvatars[(ulong)LocalScore.SteamId];
                     else
                     {
-
                         Avatar.Alpha = 0;
                         Avatar.Image = UserInterface.UnknownAvatar;
 
@@ -207,32 +227,34 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
 
             // Create username text.
-            Username = new SpriteText(Fonts.Exo2Bold, GetUsernameFormatted(), 13)
+            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, GetUsernameFormatted())
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                X = Avatar.Width + 10,
+                X = RankText.X + RankText.Width + 18,
+                Y = 6,
+                FontSize = 16
             };
 
             // Create score text.
-            Score = new SpriteTextBitmap(FontsBitmap.AllerRegular, "0.00")
+            Score = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                Y = Username.Y + Username.Height + 2,
+                Y = Username.Y + Username.Height + 4,
                 X = Username.X,
-                FontSize = 18
+                FontSize = 15
             };
 
             // Create score text.
-            Combo = new SpriteTextBitmap(FontsBitmap.AllerRegular, $"{Processor.Combo:N0}x")
+            Combo = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Processor.Combo:N0}x")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Alpha = textAlpha,
-                FontSize = 18,
+                FontSize = 15,
                 X = -5
             };
         }
@@ -251,14 +273,24 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Calculates score for a given object. Essentially it just calcs for the next Hitstat.
         /// </summary>
-        internal void CalculateScoreForNextObject()
+        internal void CalculateScoreForNextObject(bool setScoreboardValues = true)
         {
-            if (Type == ScoreboardUserType.Self)
+            if (setScoreboardValues && Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
+
+                if (Processor.MultiplayerProcessor != null)
+                {
+                    if (Processor.MultiplayerProcessor.IsRegeneratingHealth ||
+                        Processor.MultiplayerProcessor.IsEliminated)
+                        rating = 0;
+                }
+
+                Score.Text = $"{rating:0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();
+                Scoreboard.TeamBanner?.UpdateAverageRating();
                 return;
             }
 
@@ -269,10 +301,23 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             var processor = (ScoreProcessorKeys) Processor;
             processor.CalculateScore(Judgements[CurrentJudgement]);
 
-            SetTintBasedOnHealth();
+            if (setScoreboardValues)
+            {
+                SetTintBasedOnHealth();
 
-            Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
-            Combo.Text = Processor.Combo.ToString("N0") + "x";
+                var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
+
+                if (Processor.MultiplayerProcessor != null)
+                {
+                    if (Processor.MultiplayerProcessor.IsRegeneratingHealth ||
+                        Processor.MultiplayerProcessor.IsEliminated)
+                        rating = 0;
+                }
+
+                Score.Text = $"{rating:0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Combo.Text = Processor.Combo.ToString("N0") + "x";
+                Scoreboard.TeamBanner?.UpdateAverageRating();
+            }
 
             CurrentJudgement++;
         }
@@ -331,6 +376,50 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             HasQuit = true;
             Username.Text = $"[Quit] {UsernameRaw}";
             Username.Tint = Color.Crimson;
+        }
+
+        // Sets the appropriate image for the scoreboard user
+        public void SetImage()
+        {
+            switch (Type)
+            {
+                case ScoreboardUserType.Self:
+                    Image = SkinManager.Skin.Scoreboard;
+
+                    if (OnlineManager.CurrentGame != null &&
+                        OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                    {
+                        switch (Scoreboard.Team)
+                        {
+                            case MultiplayerTeam.Red:
+                                Image = SkinManager.Skin.ScoreboardRedTeam;
+                                break;
+                            case MultiplayerTeam.Blue:
+                                Image = SkinManager.Skin.ScoreboardBlueTeam;
+                                break;
+                        }
+                    }
+                    break;
+                case ScoreboardUserType.Other:
+                    Image = SkinManager.Skin.ScoreboardOther;
+
+                    if (OnlineManager.CurrentGame != null &&
+                        OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                    {
+                        switch (Scoreboard.Team)
+                        {
+                            case MultiplayerTeam.Red:
+                                Image = SkinManager.Skin.ScoreboardRedTeamOther;
+                                break;
+                            case MultiplayerTeam.Blue:
+                                Image = SkinManager.Skin.ScoreboardBlueTeamOther;
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
