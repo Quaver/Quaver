@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 foreach (var t in e.Judgements)
                 {
                     user.Judgements.Add(t);
-                    user.CalculateScoreForNextObject();
+                    user.CalculateScoreForNextObject(t == e.Judgements.Last());
                 }
             }
         }
@@ -123,10 +123,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         internal void CalculateScores()
         {
-            Users.ForEach(x =>
+            foreach (var x in Users)
             {
+                if (OnlineManager.CurrentGame != null && x.Type != ScoreboardUserType.Self)
+                    return;
+
                 x.CalculateScoreForNextObject();
-            });
+            }
 
             // Set each user's target position
             // Set Y positions.

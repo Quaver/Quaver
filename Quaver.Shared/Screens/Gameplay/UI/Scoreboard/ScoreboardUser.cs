@@ -251,9 +251,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Calculates score for a given object. Essentially it just calcs for the next Hitstat.
         /// </summary>
-        internal void CalculateScoreForNextObject()
+        internal void CalculateScoreForNextObject(bool setScoreboardValues = true)
         {
-            if (Type == ScoreboardUserType.Self)
+            if (setScoreboardValues && Type == ScoreboardUserType.Self)
             {
                 Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
@@ -269,10 +269,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             var processor = (ScoreProcessorKeys) Processor;
             processor.CalculateScore(Judgements[CurrentJudgement]);
 
-            SetTintBasedOnHealth();
-
-            Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
-            Combo.Text = Processor.Combo.ToString("N0") + "x";
+            if (setScoreboardValues)
+            {
+                SetTintBasedOnHealth();
+                Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Combo.Text = Processor.Combo.ToString("N0") + "x";
+            }
 
             CurrentJudgement++;
         }
