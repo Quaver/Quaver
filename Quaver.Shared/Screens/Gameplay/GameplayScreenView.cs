@@ -188,7 +188,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Create judgement status display
             if (ConfigManager.DisplayJudgementCounter.Value)
-                JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            {
+                if (OnlineManager.CurrentGame == null || OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+                    JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            }
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
