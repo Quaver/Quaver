@@ -311,7 +311,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 ChangeTeam.Parent = null;
                 RightAligned.Remove(ChangeTeam);
             }
-            
+
             AlignRightItems(RightAligned);
         }
     }
