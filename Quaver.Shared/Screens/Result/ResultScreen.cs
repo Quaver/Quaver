@@ -343,8 +343,14 @@ namespace Quaver.Shared.Screens.Result
             ThreadScheduler.Run(SaveLocalScore);
 
             // Don't submit scores if disconnected from the server completely.
-            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected || Gameplay.IsMultiplayerGame)
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
                 return;
+
+            if (Gameplay.IsMultiplayerGame && ScoreProcessor.MultiplayerProcessor.HasFailed)
+            {
+                Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
+                return;
+            }
 
             ThreadScheduler.Run(() =>
             {
