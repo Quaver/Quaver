@@ -411,6 +411,7 @@ namespace Quaver.Shared.Screens.Result
             if (OnlineManager.CurrentGame != null)
             {
                 Exit(() => MultiplayerScreen ?? new MultiplayerScreen(OnlineManager.CurrentGame));
+                MultiplayerScreen.SetRichPresence();
                 return;
             }
 
