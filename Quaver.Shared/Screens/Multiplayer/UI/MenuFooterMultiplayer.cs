@@ -55,6 +55,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnGameCountdownStart += OnCountdownStart;
             OnlineManager.Client.OnGameCountdownStop += OnCountdownStop;
             OnlineManager.Client.OnFreeModTypeChanged += OnFreeModTypeChanged;
+            OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
         }
 
         /// <inheritdoc />
@@ -67,6 +68,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnPlayerNotReady -= OnPlayerNotReady;
             OnlineManager.Client.OnGameCountdownStart -= OnCountdownStart;
             OnlineManager.Client.OnGameCountdownStop -= OnCountdownStop;
+            OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
             ReadyUp.Destroy();
             SelectMap.Destroy();
             base.Destroy();
@@ -294,6 +296,23 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
                 RightAligned.Add(ChangeTeam);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
+        {
+            if (e.Ruleset == MultiplayerGameRuleset.Team && !RightAligned.Contains(ChangeTeam))
+                RightAligned.Add(ChangeTeam);
+            else
+            {
+                ChangeTeam.Parent = null;
+                RightAligned.Remove(ChangeTeam);
+            }
+            
+            AlignRightItems(RightAligned);
         }
     }
 }
