@@ -173,6 +173,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             DifficultyName.Text = " - \"" + diffName + "\"";
 
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Select)
+                return;
+
             // Find the map
             var map = MapManager.FindMapFromMd5(Game.MapMd5);
             MapManager.Selected.Value = map;
@@ -189,7 +194,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 if (map != BackgroundHelper.Map)
                     Background.Alpha = 0;
 
-                var game = (QuaverGame) GameBase.Game;
 
                 if (game.CurrentScreen.Type == QuaverScreenType.Lobby || game.CurrentScreen.Type == QuaverScreenType.Multiplayer
                                                                       || QuaverScreenManager.QueuedScreen.Type == QuaverScreenType.Multiplayer
