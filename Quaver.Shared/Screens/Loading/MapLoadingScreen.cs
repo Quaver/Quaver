@@ -62,9 +62,6 @@ namespace Quaver.Shared.Screens.Loading
             Scores = scores;
             Replay = replay;
 
-            if (OnlineManager.CurrentGame != null)
-                OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
-
             var game = GameBase.Game as QuaverGame;
             var cursor = game?.GlobalUserInterface.Cursor;
             cursor.Alpha = 0;
@@ -94,17 +91,6 @@ namespace Quaver.Shared.Screens.Loading
             });
 
             base.OnFirstUpdate();
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            if (OnlineManager.CurrentGame != null)
-                OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
-
-            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -219,21 +205,6 @@ namespace Quaver.Shared.Screens.Loading
                     Logger.Error(e, LogType.Runtime);
                 }
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
-        {
-            MapManager.Selected.Value.Scores.Value.RemoveAll(x => x.PlayerId == e.UserId);
-            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
-            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
-            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
-            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
-            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
         }
     }
 }

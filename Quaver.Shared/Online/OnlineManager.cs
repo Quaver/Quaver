@@ -46,6 +46,7 @@ using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using static Quaver.Shared.Online.OnlineManager;
 
 namespace Quaver.Shared.Online
 {
@@ -184,6 +185,8 @@ namespace Quaver.Shared.Online
             Client.OnGameTeamWinCount += OnGameTeamWinCountChanged;
             Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
             Client.OnUserStats += OnUserStats;
+            Client.OnUserJoinedGame += OnUserJoinedGame;
+            Client.OnUserLeftGame += OnUserLeftGame;
         }
 
         /// <summary>
@@ -1010,6 +1013,35 @@ namespace Quaver.Shared.Online
                 foreach (var stats in user.Value)
                     OnlineUsers[user.Key].Stats[(GameMode) stats.Key] = stats.Value;
             }
+        }
+
+        private static void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+                CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
+
+            if (!CurrentGame.PlayerIds.Contains(e.UserId))
+                CurrentGame.PlayerIds.Add(e.UserId);
+
+            if (CurrentGame.PlayerMods.All(x => x.UserId != e.UserId))
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = "0"});
+        }
+
+        private static void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.PlayerIds.Remove(e.UserId);
+            CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+            CurrentGame.PlayersReady.Remove(e.UserId);
+            CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
+            CurrentGame.RedTeamPlayers.Remove(e.UserId);
+            CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
         }
 
         /// <summary>
