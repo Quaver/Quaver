@@ -314,13 +314,8 @@ namespace Quaver.Shared.Online
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
 
-            DiscordHelper.Presence = new DiscordRpc.RichPresence
-            {
-                LargeImageKey = "quaver",
-                LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4),
-                EndTimestamp = 0
-            };
-
+            DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Send client status update packet.
@@ -469,13 +464,8 @@ namespace Quaver.Shared.Online
 
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
 
-            DiscordHelper.Presence = new DiscordRpc.RichPresence
-            {
-                LargeImageKey = "quaver",
-                LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode),
-                EndTimestamp = 0
-            };
-
+            DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
