@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -74,6 +75,17 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     isClosing = true;
                 }
             };
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameStarted += OnGameStarted;
+        }
+
+        public override void Destroy()
+        {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameStarted -= OnGameStarted;
+
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -253,12 +265,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Closes the dialog.
         /// </summary>
-        private void Close()
+        private void Close(bool changeMods = true)
         {
             if (isClosing)
                 return;
 
-            if (OnlineManager.CurrentGame != null)
+            if (OnlineManager.CurrentGame != null && changeMods)
             {
                 if (ModsWhenDialogOpen != ModManager.Mods)
                 {
@@ -328,5 +340,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             InterfaceContainer.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint, InterfaceContainer.Y, InterfaceContainer.Height, 600));
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 450);
         }
+
+        private void OnGameStarted(object sender, GameStartedEventArgs e) => Close(false);
     }
 }

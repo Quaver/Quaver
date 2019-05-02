@@ -291,6 +291,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (IsMultiplayerGame)
             {
+                OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
                 OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
                 OnlineManager.Client.OnAllPlayersLoaded += OnAllPlayersLoaded;
                 OnlineManager.Client.OnAllPlayersSkipped += OnAllPlayersSkipped;
@@ -370,6 +371,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame)
             {
                 OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+                OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
                 OnlineManager.Client.OnAllPlayersLoaded -= OnAllPlayersLoaded;
                 OnlineManager.Client.OnAllPlayersSkipped -= OnAllPlayersSkipped;
             }
@@ -686,7 +688,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleQuickExit()
         {
-            if (InReplayMode && !Failed && !IsPlayComplete)
+            if (InReplayMode && !Failed && !IsPlayComplete || Exiting)
                 return;
 
             TimesRequestedToPause++;
@@ -704,8 +706,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     if (IsMultiplayerGame)
                     {
-                        OnlineManager.LeaveGame();
-                        Exit(() => new LobbyScreen());
+                        Exit(() =>
+                        {
+                            OnlineManager.LeaveGame();
+                            return new LobbyScreen();
+                        });
+
                         return;
                     }
 
@@ -914,7 +920,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (OnlineManager.CurrentGame != null)
             {
                 DiscordHelper.Presence.State = $"{OnlineManager.CurrentGame.Name} " +
-                                               $"({OnlineManager.CurrentGame.Players.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
+                                               $"({OnlineManager.CurrentGame.PlayerIds.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
             }
             else if (IsPlayTesting)
                 DiscordHelper.Presence.State = "Play Testing";
@@ -1034,15 +1040,11 @@ namespace Quaver.Shared.Screens.Gameplay
         private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
         {
             var view = (GameplayScreenView) View;
-
             view.ScoreboardLeft?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
-            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
-            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
-            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
-            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
-            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            SetRichPresence();
         }
+
+        private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e) => SetRichPresence();
 
         /// <summary>
         ///     Called when all players are ready to start.

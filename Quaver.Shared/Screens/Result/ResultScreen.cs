@@ -24,6 +24,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -343,8 +344,14 @@ namespace Quaver.Shared.Screens.Result
             ThreadScheduler.Run(SaveLocalScore);
 
             // Don't submit scores if disconnected from the server completely.
-            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected || Gameplay.IsMultiplayerGame)
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
                 return;
+
+            if (Gameplay.IsMultiplayerGame && ScoreProcessor.MultiplayerProcessor.HasFailed)
+            {
+                Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
+                return;
+            }
 
             ThreadScheduler.Run(() =>
             {
@@ -405,6 +412,7 @@ namespace Quaver.Shared.Screens.Result
             if (OnlineManager.CurrentGame != null)
             {
                 Exit(() => MultiplayerScreen ?? new MultiplayerScreen(OnlineManager.CurrentGame));
+                MultiplayerScreen.SetRichPresence();
                 return;
             }
 
@@ -631,11 +639,63 @@ namespace Quaver.Shared.Screens.Result
                 DiscordHelper.Presence.State = $"{state}: {grade} {score} {acc} {combo}";
             else
             {
-                DiscordHelper.Presence.State = $"{StringHelper.AddOrdinal(MultiplayerScores.First().Rank)} " +
-                                               $"Place: {MultiplayerScores.First().RatingProcessor.CalculateRating(ScoreProcessor):0.00} {acc} {grade} {score}";
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                {
+                    var redTeamAverage = GetTeamAverage(MultiplayerTeam.Red);
+                    var blueTeamAverage = GetTeamAverage(MultiplayerTeam.Blue);
+
+                    DiscordHelper.Presence.State = $"Red: {redTeamAverage:0.00} vs. Blue: {blueTeamAverage:0.00}";
+                }
+                else
+                {
+                    DiscordHelper.Presence.State = $"{StringHelper.AddOrdinal(MultiplayerScores.First().Rank)} " +
+                                                   $"Place: {MultiplayerScores.First().RatingProcessor.CalculateRating(ScoreProcessor):0.00} {acc} {grade}";
+                }
             }
 
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
+
+        /// <summary>
+        ///     Gets the average rating of an individual team
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private double GetTeamAverage(MultiplayerTeam team)
+        {
+            List<ScoreboardUser> users;
+
+            switch (team)
+            {
+                case MultiplayerTeam.Red:
+                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Red);
+                    break;
+                case MultiplayerTeam.Blue:
+                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Blue);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(team), team, null);
+            }
+
+            if (users.Count == 0)
+                return 0;
+
+            var sum = 0d;
+
+            users.ForEach(x =>
+            {
+                var rating = x.RatingProcessor.CalculateRating(x.Processor);
+
+                if (x.Processor.MultiplayerProcessor.IsEliminated || x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
+                    rating = 0;
+
+                sum += rating;
+            });
+
+            return sum / users.Count;
+        }
+
+
     }
 }
