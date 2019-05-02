@@ -672,9 +672,6 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="e"></param>
         private void OnGameEnded(object sender, GameEndedEventArgs e)
         {
-            if (AudioEngine.Track.IsPlaying)
-                AudioEngine.Track.Pause();
-
             var screen = new MultiplayerScreen(OnlineManager.CurrentGame, true);
             Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers(), screen), 2000);
         }
