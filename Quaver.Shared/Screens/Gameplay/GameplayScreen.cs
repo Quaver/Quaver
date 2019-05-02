@@ -686,7 +686,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleQuickExit()
         {
-            if (InReplayMode && !Failed && !IsPlayComplete)
+            if (InReplayMode && !Failed && !IsPlayComplete || Exiting)
                 return;
 
             TimesRequestedToPause++;
@@ -704,8 +704,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     if (IsMultiplayerGame)
                     {
-                        OnlineManager.LeaveGame();
-                        Exit(() => new LobbyScreen());
+                        Exit(() =>
+                        {
+                            OnlineManager.LeaveGame();
+                            return new LobbyScreen();
+                        });
+
                         return;
                     }
 
