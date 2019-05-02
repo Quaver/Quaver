@@ -530,6 +530,9 @@ namespace Quaver.Shared.Screens.Select
         {
             if (MultiplayerScreen != null)
             {
+                var view = (MultiplayerScreenView) MultiplayerScreen.View;
+                view.Map.UpdateContent();
+
                 RemoveTopScreen(MultiplayerScreen);
                 return;
             }

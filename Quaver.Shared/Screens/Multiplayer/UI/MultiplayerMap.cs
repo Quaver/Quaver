@@ -192,7 +192,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var game = (QuaverGame) GameBase.Game;
 
                 if (game.CurrentScreen.Type == QuaverScreenType.Lobby || game.CurrentScreen.Type == QuaverScreenType.Multiplayer
-                                                                      || QuaverScreenManager.QueuedScreen.Type == QuaverScreenType.Multiplayer)
+                                                                      || QuaverScreenManager.QueuedScreen.Type == QuaverScreenType.Multiplayer
+                                                                      || AudioEngine.Map != map)
                 {
                     BackgroundHelper.Load(MapManager.Selected.Value);
 
