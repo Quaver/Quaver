@@ -1031,7 +1031,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
 
             LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
-            OnlineManager.Client.SendGameJudgements(judgementsToGive);
+
+            if (OnlineManager.CurrentGame.InProgress)
+                OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
         /// <summary>

@@ -187,6 +187,8 @@ namespace Quaver.Shared.Online
             Client.OnUserStats += OnUserStats;
             Client.OnUserJoinedGame += OnUserJoinedGame;
             Client.OnUserLeftGame += OnUserLeftGame;
+            Client.OnGameEnded += OnGameEnded;
+            Client.OnGameStarted += OnGameStarted;
         }
 
         /// <summary>
@@ -1032,6 +1034,22 @@ namespace Quaver.Shared.Online
             CurrentGame.RedTeamPlayers.Remove(e.UserId);
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
+        }
+
+        private static void OnGameEnded(object sender, GameEndedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.InProgress = false;
+        }
+
+        private static void OnGameStarted(object sender, GameStartedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.InProgress = true;
         }
 
         /// <summary>
