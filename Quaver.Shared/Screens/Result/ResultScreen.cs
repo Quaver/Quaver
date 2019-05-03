@@ -347,10 +347,19 @@ namespace Quaver.Shared.Screens.Result
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
                 return;
 
-            if (Gameplay.IsMultiplayerGame && ScoreProcessor.MultiplayerProcessor.HasFailed)
+            if (Gameplay.IsMultiplayerGame)
             {
-                Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
-                return;
+                if (ScoreProcessor.MultiplayerProcessor.HasFailed)
+                {
+                    Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
+                    return;
+                }
+
+                if (!Gameplay.IsPlayComplete)
+                {
+                    Logger.Important($"Skipping score submission due to play not being complete in multiplayer match", LogType.Network);
+                    return;
+                }
             }
 
             ThreadScheduler.Run(() =>
