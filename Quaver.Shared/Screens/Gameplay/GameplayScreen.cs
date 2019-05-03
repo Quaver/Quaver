@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The time that the judgements were last sent to the server
         /// </summary>
-        private long TimeJudgementsLastSentToServer { get; set; }
+        private double TimeSinceLastJudgementsSentToServer { get; set; }
 
         /// <summary>
         ///     If the current play session is a multiplayer game
@@ -343,6 +343,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            TimeSinceLastJudgementsSentToServer += gameTime.ElapsedGameTime.TotalMilliseconds;
             Timing.Update(gameTime);
 
             if (!Failed && !IsPlayComplete)
@@ -1013,10 +1014,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SendJudgementsToServer()
         {
-            if (GameBase.Game.TimeRunning - TimeJudgementsLastSentToServer < 400 || OnlineManager.CurrentGame == null)
+            if (TimeSinceLastJudgementsSentToServer < 400 || OnlineManager.CurrentGame == null)
                 return;
 
-            TimeJudgementsLastSentToServer = GameBase.Game.TimeRunning;
+            TimeSinceLastJudgementsSentToServer = 0;
 
             if (Ruleset.ScoreProcessor.Stats.Count == 0)
                 return;
@@ -1029,8 +1030,8 @@ namespace Quaver.Shared.Screens.Gameplay
             for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.ScoreProcessor.Stats.Count; i++)
                 judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
 
-            OnlineManager.Client.SendGameJudgements(judgementsToGive);
             LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
+            OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
         /// <summary>
