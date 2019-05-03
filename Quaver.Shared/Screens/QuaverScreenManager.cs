@@ -39,14 +39,14 @@ namespace Quaver.Shared.Screens
         ///     If delaying a screen change, this is the amount of time that will have
         ///     to elapse for it to start the fade
         /// </summary>
-        private static int DelayedScreenChangeTime { get; set; }
+        public static int DelayedScreenChangeTime { get; private set; }
 
         /// <summary>
         ///     After scheduling a delayed screen change, this keeps track of the amount of
         ///     time that has elapsed. It will take <see cref="DelayedScreenChangeTime"/> amount
         ///     of time for it to begin the fade.
         /// </summary>
-        private static double TimeElapsedSinceDelayStarted { get; set; }
+        public static double TimeElapsedSinceDelayStarted { get; private set; }
 
         /// <summary>
         ///     Updates the screen manager
