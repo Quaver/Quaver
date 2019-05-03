@@ -350,12 +350,16 @@ namespace Quaver.Shared.Screens.Result
             if (Gameplay.IsMultiplayerGame)
             {
                 if (ScoreProcessor.MultiplayerProcessor.HasFailed)
+                {
                     Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
+                    return;
+                }
 
                 if (!Gameplay.IsPlayComplete)
+                {
                     Logger.Important($"Skipping score submission due to play not being complete in multiplayer match", LogType.Network);
-
-                return;
+                    return;
+                }
             }
 
             ThreadScheduler.Run(() =>
