@@ -253,9 +253,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             if (e.UserId != Item.Id)
                 return;
 
-            if (!OnlineManager.CurrentGame.PlayersWithoutMap.Contains(e.UserId))
-                OnlineManager.CurrentGame.PlayersWithoutMap.Add(e.UserId);
-
             NoMapIcon.Visible = true;
         }
 
@@ -267,9 +264,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         {
             if (e.UserId != Item.Id)
                 return;
-
-            if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(e.UserId))
-                OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
 
             NoMapIcon.Visible = false;
         }

@@ -358,7 +358,6 @@ namespace Quaver.Shared.Screens.Result
                 return;
             }
 
-
             ThreadScheduler.Run(() =>
             {
                 Logger.Important($"Beginning to submit score on map: {Gameplay.MapHash}", LogType.Network);

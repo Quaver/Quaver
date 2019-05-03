@@ -189,6 +189,8 @@ namespace Quaver.Shared.Online
             Client.OnUserLeftGame += OnUserLeftGame;
             Client.OnGameEnded += OnGameEnded;
             Client.OnGameStarted += OnGameStarted;
+            Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
+            Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
         }
 
         /// <summary>
@@ -1050,6 +1052,24 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.InProgress = true;
+        }
+
+        private static void OnGamePlayerNoMap(object sender, PlayerGameNoMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (!CurrentGame.PlayersWithoutMap.Contains(e.UserId))
+                CurrentGame.PlayersWithoutMap.Add(e.UserId);
+        }
+
+        private static void OnGamePlayerHasMap(object sender, GamePlayerHasMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (CurrentGame.PlayersWithoutMap.Contains(e.UserId))
+                CurrentGame.PlayersWithoutMap.Remove(e.UserId);
         }
 
         /// <summary>
