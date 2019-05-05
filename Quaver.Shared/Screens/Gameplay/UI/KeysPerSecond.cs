@@ -73,6 +73,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Adds a click to the KPS times.
         /// </summary>
-        public void AddClick() => Clicks.Add(Time);
+        public void AddClick()
+        {
+            Clicks.Add(Time);
+            Value = Kps.ToString();
+        }
     }
 }
