@@ -210,13 +210,14 @@ namespace Quaver.Shared.Screens.Gameplay
         public override void Update(GameTime gameTime)
         {
             CheckIfNewScoreboardUsers();
-            GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
 
             // Update the position and size of the grade display.
             GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
+            GradeDisplay.Height = AccuracyDisplay.Height;
+            GradeDisplay.UpdateWidth();
         }
 
         /// <inheritdoc />
@@ -338,7 +339,6 @@ namespace Quaver.Shared.Screens.Gameplay
         private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
         {
             Parent = Container,
-            Size = new ScalableVector2(AccuracyDisplay.Digits[0].Width, AccuracyDisplay.Digits[0].Height),
             Alignment = Alignment.TopRight,
             X = AccuracyDisplay.X - AccuracyDisplay.Width - 8,
             Y = AccuracyDisplay.Y
