@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
@@ -50,6 +51,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public new GameplayScreen Screen { get; }
 
         /// <summary>
+        ///     Handles calculating rating
+        /// </summary>
+        internal RatingProcessorKeys RatingProcessor { get; }
+
+        /// <summary>
         ///     The map's background.
         /// </summary>
         public BackgroundImage Background { get; private set; }
@@ -63,6 +69,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     The display for the user's score.
         /// </summary>
         private NumberDisplay ScoreDisplay { get; set; }
+
+        /// <summary>
+        ///     The display for the user's rating.
+        /// </summary>
+        private NumberDisplay RatingDisplay { get; set; }
 
         /// <summary>
         ///     The display for the user's accuracy
@@ -151,10 +162,12 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
+            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.Ruleset.ScoreProcessor.Mods));
 
             CreateBackground();
             CreateProgressBar();
             CreateScoreDisplay();
+            CreateRatingDisplay();
             CreateAccuracyDisplay();
 
             if (ConfigManager.DisplayComboAlerts.Value)
@@ -290,6 +303,23 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
+        ///     Creates the rating display sprite.
+        /// </summary>
+        private void CreateRatingDisplay()
+        {
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            RatingDisplay = new NumberDisplay(NumberDisplayType.Rating, StringHelper.RatingToString(0),
+                new Vector2(skin.RatingDisplayScale / 100f, skin.RatingDisplayScale / 100f))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosX,
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosY
+            };
+        }
+
+        /// <summary>
         ///     Creates the accuracy display sprite.
         /// </summary>
         private void CreateAccuracyDisplay()
@@ -313,6 +343,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 

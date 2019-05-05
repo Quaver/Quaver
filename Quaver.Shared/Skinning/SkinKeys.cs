@@ -95,6 +95,12 @@ namespace Quaver.Shared.Skinning
 
         internal int ScoreDisplayScale { get; private set; }
 
+        internal int RatingDisplayPosX { get; private set; }
+
+        internal int RatingDisplayPosY { get; private set; }
+
+        internal int RatingDisplayScale { get; private set; }
+
         internal int AccuracyDisplayPosX { get; private set; }
 
         internal int AccuracyDisplayPosY { get; private set; }
@@ -357,6 +363,8 @@ namespace Quaver.Shared.Skinning
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
+                    RatingDisplayPosX = 10;
+                    RatingDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
@@ -378,6 +386,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
+                    RatingDisplayScale = 45;
                     AccuracyDisplayScale = 45;
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
@@ -415,6 +424,8 @@ namespace Quaver.Shared.Skinning
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
+                    RatingDisplayPosX = 10;
+                    RatingDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
@@ -436,6 +447,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
+                    RatingDisplayScale = 45;
                     AccuracyDisplayScale = 45;
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
@@ -488,6 +500,8 @@ namespace Quaver.Shared.Skinning
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
+                    RatingDisplayPosX = 10;
+                    RatingDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
@@ -509,6 +523,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
+                    RatingDisplayScale = 45;
                     AccuracyDisplayScale = 45;
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
@@ -550,6 +565,8 @@ namespace Quaver.Shared.Skinning
                     HitLightingHeight = 0;
                     ScoreDisplayPosX = 10;
                     ScoreDisplayPosY = 5;
+                    RatingDisplayPosX = 10;
+                    RatingDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
@@ -571,6 +588,7 @@ namespace Quaver.Shared.Skinning
                     JudgementCounterSize = 40;
                     DrawLongNoteEnd = true;
                     ScoreDisplayScale = 45;
+                    RatingDisplayScale = 45;
                     AccuracyDisplayScale = 45;
                     ComboDisplayScale = 100;
                     KpsDisplayScale = 45;
@@ -624,6 +642,8 @@ namespace Quaver.Shared.Skinning
             HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
             ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
+            RatingDisplayPosX = ConfigHelper.ReadInt32(RatingDisplayPosX, ini["RatingDisplayPosX"]);
+            RatingDisplayPosY = ConfigHelper.ReadInt32(RatingDisplayPosY, ini["RatingDisplayPosY"]);
             AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
             AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
             KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, ini["KpsDisplayPosX"]);
@@ -645,6 +665,7 @@ namespace Quaver.Shared.Skinning
             JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
             DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
             ScoreDisplayScale = ConfigHelper.ReadInt32(ScoreDisplayScale, ini["ScoreDisplayScale"]);
+            RatingDisplayScale = ConfigHelper.ReadInt32(RatingDisplayScale, ini["RatingDisplayScale"]);
             AccuracyDisplayScale = ConfigHelper.ReadInt32(AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
             ComboDisplayScale = ConfigHelper.ReadInt32(ComboDisplayScale, ini["ComboDisplayScale"]);
             KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);

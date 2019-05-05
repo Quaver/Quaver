@@ -123,6 +123,7 @@ namespace Quaver.Shared.Graphics
                             (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
                         break;
                     case NumberDisplayType.Combo:
+                    case NumberDisplayType.Rating:
                         CurrentValue = TargetValue;
                         break;
                     case NumberDisplayType.Accuracy:
@@ -152,6 +153,9 @@ namespace Quaver.Shared.Graphics
                         break;
                     case NumberDisplayType.Accuracy:
                         Value = StringHelper.AccuracyToString((float) CurrentValue);
+                        break;
+                    case NumberDisplayType.Rating:
+                        Value = StringHelper.RatingToString(CurrentValue);
                         break;
                     case NumberDisplayType.SongTime:
                         break;
@@ -314,6 +318,7 @@ namespace Quaver.Shared.Graphics
                 // 0
                 case '0' when Type == NumberDisplayType.Score:
                 case '0' when Type == NumberDisplayType.Accuracy:
+                case '0' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[0];
                 case '0' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[0];
@@ -322,6 +327,7 @@ namespace Quaver.Shared.Graphics
                 // 1
                 case '1' when Type == NumberDisplayType.Score:
                 case '1' when Type == NumberDisplayType.Accuracy:
+                case '1' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[1];
                 case '1' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[1];
@@ -330,6 +336,7 @@ namespace Quaver.Shared.Graphics
                 // 2
                 case '2' when Type == NumberDisplayType.Score:
                 case '2' when Type == NumberDisplayType.Accuracy:
+                case '2' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[2];
                 case '2' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[2];
@@ -338,6 +345,7 @@ namespace Quaver.Shared.Graphics
                 // 3
                 case '3' when Type == NumberDisplayType.Score:
                 case '3' when Type == NumberDisplayType.Accuracy:
+                case '3' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[3];
                 case '3' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[3];
@@ -346,6 +354,7 @@ namespace Quaver.Shared.Graphics
                 // 4
                 case '4' when Type == NumberDisplayType.Score:
                 case '4' when Type == NumberDisplayType.Accuracy:
+                case '4' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[4];
                 case '4' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[4];
@@ -354,6 +363,7 @@ namespace Quaver.Shared.Graphics
                 // 5
                 case '5' when Type == NumberDisplayType.Score:
                 case '5' when Type == NumberDisplayType.Accuracy:
+                case '5' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[5];
                 case '5' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[5];
@@ -362,6 +372,7 @@ namespace Quaver.Shared.Graphics
                 // 6
                 case '6' when Type == NumberDisplayType.Score:
                 case '6' when Type == NumberDisplayType.Accuracy:
+                case '6' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[6];
                 case '6' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[6];
@@ -370,6 +381,7 @@ namespace Quaver.Shared.Graphics
                 // 7
                 case '7' when Type == NumberDisplayType.Score:
                 case '7' when Type == NumberDisplayType.Accuracy:
+                case '7' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[7];
                 case '7' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[7];
@@ -378,6 +390,7 @@ namespace Quaver.Shared.Graphics
                 // 8
                 case '8' when Type == NumberDisplayType.Score:
                 case '8' when Type == NumberDisplayType.Accuracy:
+                case '8' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[8];
                 case '8' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[8];
@@ -386,6 +399,7 @@ namespace Quaver.Shared.Graphics
                 // 9
                 case '9' when Type == NumberDisplayType.Score:
                 case '9' when Type == NumberDisplayType.Accuracy:
+                case '9' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[9];
                 case '9' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[9];
@@ -415,6 +429,7 @@ namespace Quaver.Shared.Graphics
         Score,
         Accuracy,
         Combo,
-        SongTime
+        SongTime,
+        Rating
     }
 }
