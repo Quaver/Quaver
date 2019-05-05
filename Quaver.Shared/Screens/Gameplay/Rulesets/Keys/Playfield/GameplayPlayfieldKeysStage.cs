@@ -380,6 +380,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
+                X = Skin.ComboPosX,
                 Y = Skin.ComboPosY
             };
 

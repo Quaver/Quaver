@@ -107,6 +107,8 @@ namespace Quaver.Shared.Skinning
 
         internal int KpsDisplayScale { get; private set; }
 
+        internal int ComboPosX { get; private set; }
+
         internal int ComboPosY { get; private set; }
 
         internal int ComboDisplayScale { get; private set; }
@@ -359,6 +361,7 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
+                    ComboPosX = 0;
                     ComboPosY = -40;
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
@@ -416,6 +419,7 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
+                    ComboPosX = 0;
                     ComboPosY = -40;
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
@@ -488,6 +492,7 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
+                    ComboPosX = 0;
                     ComboPosY = -40;
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
@@ -549,6 +554,7 @@ namespace Quaver.Shared.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
+                    ComboPosX = 0;
                     ComboPosY = -40;
                     JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
@@ -622,6 +628,7 @@ namespace Quaver.Shared.Skinning
             AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
             KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, ini["KpsDisplayPosX"]);
             KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, ini["KpsDisplayPosY"]);
+            ComboPosX = ConfigHelper.ReadInt32(ComboPosX, ini["ComboPosX"]);
             ComboPosY = ConfigHelper.ReadInt32(ComboPosY, ini["ComboPosY"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, ini["HealthBarType"]);
