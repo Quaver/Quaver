@@ -631,8 +631,8 @@ namespace Quaver.Shared.Skinning
             ComboPosX = ConfigHelper.ReadInt32(ComboPosX, ini["ComboPosX"]);
             ComboPosY = ConfigHelper.ReadInt32(ComboPosY, ini["ComboPosY"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
-            HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, ini["HealthBarType"]);
-            HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
+            HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
+            HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
             HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
             HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
