@@ -300,7 +300,8 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                X = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX,
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY
             };
         }
 
