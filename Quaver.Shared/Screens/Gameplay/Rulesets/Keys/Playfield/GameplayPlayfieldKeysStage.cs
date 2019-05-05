@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create the combo display.
-            ComboDisplay = new NumberDisplay(NumberDisplayType.Combo, "0", new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f), 0)
+            ComboDisplay = new NumberDisplay(NumberDisplayType.Combo, "0", new Vector2(skin.ComboDisplayScale / 100f, skin.ComboDisplayScale / 100f))
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
@@ -403,10 +403,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Set the new one
             ComboDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Combo);
-
-            // If the combo needs repositioning, do so accordingly.
-            if ((int)Math.Floor(Math.Log10(OldCombo) + 1) != (int)Math.Floor(Math.Log10(Screen.Ruleset.ScoreProcessor.Combo) + 1))
-                ComboDisplay.X = -ComboDisplay.TotalWidth / 2f;
 
             // Set the position and scale  of the combo display, so that we can perform some animations.
             ComboDisplay.Y = OriginalComboDisplayY - 5;

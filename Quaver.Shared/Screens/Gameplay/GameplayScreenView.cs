@@ -85,11 +85,6 @@ namespace Quaver.Shared.Screens.Gameplay
         private GradeDisplay GradeDisplay { get; set; }
 
         /// <summary>
-        ///     The x position of the grade display
-        /// </summary>
-        private float GradeDisplayX => AccuracyDisplay.X - 8;
-
-        /// <summary>
         ///     The scoreboard
         /// </summary>
         public Scoreboard Scoreboard { get; set; }
@@ -219,6 +214,9 @@ namespace Quaver.Shared.Screens.Gameplay
             HandlePlayCompletion(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
+
+            // Update the position and size of the grade display.
+            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
         }
 
         /// <inheritdoc />
@@ -281,10 +279,11 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
-                new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX)
+                new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX,
                 Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
             };
         }
@@ -297,10 +296,11 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0),
-                new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX)
+                new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX
             };
         }
 
@@ -322,14 +322,13 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create KPS display
-            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f),
-                SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX)
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f))
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight
+                Alignment = Alignment.TopRight,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX,
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY
             };
-
-            KpsDisplay.Y = AccuracyDisplay.Y + AccuracyDisplay.Digits[0].Height + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY;
         }
 
         /// <summary>
@@ -340,7 +339,8 @@ namespace Quaver.Shared.Screens.Gameplay
             Parent = Container,
             Size = new ScalableVector2(AccuracyDisplay.Digits[0].Width, AccuracyDisplay.Digits[0].Height),
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(GradeDisplayX, AccuracyDisplay.Y)
+            X = AccuracyDisplay.X - AccuracyDisplay.Width - 8,
+            Y = AccuracyDisplay.Y
         };
 
         /// <summary>

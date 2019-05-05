@@ -37,8 +37,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="startingValue"></param>
         /// <param name="imageScale"></param>
         /// <param name="position"></param>
-        internal KeysPerSecond(NumberDisplayType type, string startingValue, Vector2 imageScale, float position)
-            : base(type, startingValue, imageScale, position)
+        internal KeysPerSecond(NumberDisplayType type, string startingValue, Vector2 imageScale)
+            : base(type, startingValue, imageScale)
         {
         }
 
@@ -51,7 +51,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Time += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             CalculateKeysPerSecond();
-            X = -TotalWidth + SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].KpsDisplayPosX;
 
             base.Update(gameTime);
         }
