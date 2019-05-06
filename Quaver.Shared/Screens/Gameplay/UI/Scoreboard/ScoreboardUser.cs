@@ -243,7 +243,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (Type == ScoreboardUserType.Self)
             {
-                Score.Text = $"{RatingProcessor.CalculateRating(Processor.Accuracy):0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Score.Text = $"{StringHelper.RatingToString(RatingProcessor.CalculateRating(Processor.Accuracy))} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();

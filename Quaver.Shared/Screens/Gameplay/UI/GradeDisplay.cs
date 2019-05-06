@@ -5,7 +5,6 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -31,6 +30,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
                 _grade = value;
                 Image = Scoring.Failed ? SkinManager.Skin.Grades[Grade.F] : SkinManager.Skin.Grades[value];
+                UpdateWidth();
             }
         }
         /// <summary>
@@ -61,6 +61,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             Visible = Scoring.Score > 0;
             Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
+        }
+
+        /// <summary>
+        ///     Updates the width so that the grade image's aspect ratio is preserved.
+        /// </summary>
+        public void UpdateWidth()
+        {
+            Width = Height * ((float)Image.Width / Image.Height);
         }
     }
 }
