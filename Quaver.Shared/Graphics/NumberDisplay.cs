@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -72,28 +73,6 @@ namespace Quaver.Shared.Graphics
         internal List<Sprite> Digits { get; }
 
         /// <summary>
-        ///     The absolute width of the number display.
-        /// </summary>
-        internal float TotalWidth
-        {
-            get
-            {
-                float sum = 0;
-
-                foreach (var d in Digits)
-                {
-                    // Only calc width for actually visible digits.
-                    if (!d.Visible)
-                        continue;
-
-                    sum += d.Width;
-                }
-
-                return sum;
-            }
-        }
-
-        /// <summary>
         ///     The last time the value was changed
         ///     (Used for timing animations for example).
         /// </summary>
@@ -104,12 +83,6 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private Vector2 ImageScale { get; }
 
-        /// <summary>
-        ///     The initial position of the display, used to place it in the same position when
-        ///     the length of the numbers change
-        /// </summary>
-        private float InitialPosition { get; }
-
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -118,13 +91,13 @@ namespace Quaver.Shared.Graphics
         /// <param name="startingValue"></param>
         /// <param name="imageScale"></param>
         /// <param name="position"></param>
-        internal NumberDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale, float position)
+        internal NumberDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale)
         {
             ImageScale = imageScale;
             Value = startingValue;
-            InitialPosition = position;
             CurrentValue = 0;
             Type = type;
+            Alpha = 0;
 
             // First validate the initial value to see if everything is correct.
             Validate();
@@ -150,6 +123,7 @@ namespace Quaver.Shared.Graphics
                             (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 400f, 1));
                         break;
                     case NumberDisplayType.Combo:
+                    case NumberDisplayType.Rating:
                         CurrentValue = TargetValue;
                         break;
                     case NumberDisplayType.Accuracy:
@@ -180,6 +154,9 @@ namespace Quaver.Shared.Graphics
                     case NumberDisplayType.Accuracy:
                         Value = StringHelper.AccuracyToString((float) CurrentValue);
                         break;
+                    case NumberDisplayType.Rating:
+                        Value = StringHelper.RatingToString(CurrentValue);
+                        break;
                     case NumberDisplayType.SongTime:
                         break;
                     default:
@@ -187,32 +164,7 @@ namespace Quaver.Shared.Graphics
                 }
             }
 
-            SetXPosition();
             base.Update(gameTime);
-        }
-
-        private void SetXPosition()
-        {
-            switch (Alignment)
-            {
-                case Alignment.TopLeft:
-                case Alignment.MidLeft:
-                case Alignment.BotLeft:
-                    X = InitialPosition;
-                    break;
-                case Alignment.TopCenter:
-                case Alignment.MidCenter:
-                case Alignment.BotCenter:
-                    X = -TotalWidth / 2f;
-                    break;
-                case Alignment.TopRight:
-                case Alignment.MidRight:
-                case Alignment.BotRight:
-                    X = -TotalWidth + InitialPosition;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         /// <summary>
@@ -261,6 +213,9 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void InitializeDigits()
         {
+            var recomputeWidth = false;
+            var recomputeHeight = false;
+
             // Go through each character and either initialize/update the sprite with the correct
             // texture.
             for (var i = 0; i < Value.Length; i++)
@@ -276,34 +231,73 @@ namespace Quaver.Shared.Graphics
 
                     // Set size
                     Digits[i].Size = new ScalableVector2(Digits[i].Image.Width * ImageScale.X, Digits[i].Image.Height * ImageScale.Y);
+                    recomputeWidth = true;
+                    recomputeHeight = true;
+                }
+                // If the digit already exists, then we need to just update the texture of it.
+                else
+                {
+                    var previousSize = Digits[i].Size;
 
-                    // Set position
+                    Digits[i].Image = CharacterToTexture(Value[i]);
+                    Digits[i].Size = new ScalableVector2(Digits[i].Image.Width * ImageScale.X, Digits[i].Image.Height * ImageScale.Y);
+
+                    if (Digits[i].Size.X.Value != previousSize.X.Value)
+                        recomputeWidth = true;
+
+                    if (Digits[i].Size.Y.Value != previousSize.Y.Value)
+                        recomputeHeight = true;
+                }
+
+                // Reset the sprite to be visible.
+                if (!Digits[i].Visible)
+                {
+                    Digits[i].Visible = true;
+                    recomputeWidth = true;
+                    recomputeHeight = true;
+                }
+            }
+
+            // Now check if the length of the digits matches the one of the value,
+            // if it doesn't then we need to handle some of the extra lost digits.
+            if (Value.Length != Digits.Count)
+            {
+                for (var i = Value.Length; i < Digits.Count; i++)
+                {
+                    if (Digits[i].Visible)
+                    {
+                        Digits[i].Visible = false;
+                        recomputeWidth = true;
+                        recomputeHeight = true;
+                    }
+                }
+            }
+
+            if (recomputeWidth)
+            {
+                var totalWidth = 0f;
+
+                for (var i = 0; i < Digits.Count; i++)
+                {
+                    if (!Digits[i].Visible)
+                        break;
+
+                    totalWidth += Digits[i].Width;
+
                     // If it's the first image, set the x pos to 0.
                     if (i == 0)
                         Digits[i].X = 0;
                     // Otherwise, make it next to the previous one.
                     else
                         Digits[i].X = Digits[i - 1].X + Digits[i - 1].Width;
-
-                }
-                // If the digit already exists, then we need to just update the texture of it.
-                else
-                {
-                    Digits[i].Image = CharacterToTexture(Value[i]);
                 }
 
-                // Reset the sprite to be visible.
-                Digits[i].Visible = true;
+                // Update the width.
+                Width = totalWidth;
             }
 
-            // Now check if the length of the digits matches the one of the value,
-            // if it doesn't then we need to handle some of the extra lost digits.
-            if (Value.Length == Digits.Count)
-                return;
-
-            // Make the extra ones invisible.
-            for (var i = Value.Length; i < Digits.Count; i++)
-                Digits[i].Visible = false;
+            if (recomputeHeight)
+                Height = Digits.Where(x => x.Visible).Max(x => x.Height);
         }
 
         /// <summary>
@@ -324,6 +318,7 @@ namespace Quaver.Shared.Graphics
                 // 0
                 case '0' when Type == NumberDisplayType.Score:
                 case '0' when Type == NumberDisplayType.Accuracy:
+                case '0' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[0];
                 case '0' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[0];
@@ -332,6 +327,7 @@ namespace Quaver.Shared.Graphics
                 // 1
                 case '1' when Type == NumberDisplayType.Score:
                 case '1' when Type == NumberDisplayType.Accuracy:
+                case '1' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[1];
                 case '1' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[1];
@@ -340,6 +336,7 @@ namespace Quaver.Shared.Graphics
                 // 2
                 case '2' when Type == NumberDisplayType.Score:
                 case '2' when Type == NumberDisplayType.Accuracy:
+                case '2' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[2];
                 case '2' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[2];
@@ -348,6 +345,7 @@ namespace Quaver.Shared.Graphics
                 // 3
                 case '3' when Type == NumberDisplayType.Score:
                 case '3' when Type == NumberDisplayType.Accuracy:
+                case '3' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[3];
                 case '3' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[3];
@@ -356,6 +354,7 @@ namespace Quaver.Shared.Graphics
                 // 4
                 case '4' when Type == NumberDisplayType.Score:
                 case '4' when Type == NumberDisplayType.Accuracy:
+                case '4' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[4];
                 case '4' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[4];
@@ -364,6 +363,7 @@ namespace Quaver.Shared.Graphics
                 // 5
                 case '5' when Type == NumberDisplayType.Score:
                 case '5' when Type == NumberDisplayType.Accuracy:
+                case '5' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[5];
                 case '5' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[5];
@@ -372,6 +372,7 @@ namespace Quaver.Shared.Graphics
                 // 6
                 case '6' when Type == NumberDisplayType.Score:
                 case '6' when Type == NumberDisplayType.Accuracy:
+                case '6' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[6];
                 case '6' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[6];
@@ -380,6 +381,7 @@ namespace Quaver.Shared.Graphics
                 // 7
                 case '7' when Type == NumberDisplayType.Score:
                 case '7' when Type == NumberDisplayType.Accuracy:
+                case '7' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[7];
                 case '7' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[7];
@@ -388,6 +390,7 @@ namespace Quaver.Shared.Graphics
                 // 8
                 case '8' when Type == NumberDisplayType.Score:
                 case '8' when Type == NumberDisplayType.Accuracy:
+                case '8' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[8];
                 case '8' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[8];
@@ -396,6 +399,7 @@ namespace Quaver.Shared.Graphics
                 // 9
                 case '9' when Type == NumberDisplayType.Score:
                 case '9' when Type == NumberDisplayType.Accuracy:
+                case '9' when Type == NumberDisplayType.Rating:
                     return SkinManager.Skin.ScoreDisplayNumbers[9];
                 case '9' when Type == NumberDisplayType.Combo:
                     return SkinManager.Skin.ComboDisplayNumbers[9];
@@ -425,6 +429,7 @@ namespace Quaver.Shared.Graphics
         Score,
         Accuracy,
         Combo,
-        SongTime
+        SongTime,
+        Rating
     }
 }
