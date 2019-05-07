@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Server.Client.Handlers;
@@ -57,6 +58,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public new GameplayScreen Screen { get; }
 
         /// <summary>
+        ///     Handles calculating rating
+        /// </summary>
+        internal RatingProcessorKeys RatingProcessor { get; }
+
+        /// <summary>
         ///     The map's background.
         /// </summary>
         public BackgroundImage Background { get; private set; }
@@ -70,6 +76,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     The display for the user's score.
         /// </summary>
         private NumberDisplay ScoreDisplay { get; set; }
+
+        /// <summary>
+        ///     The display for the user's rating.
+        /// </summary>
+        private NumberDisplay RatingDisplay { get; set; }
 
         /// <summary>
         ///     The display for the user's accuracy
@@ -92,13 +103,9 @@ namespace Quaver.Shared.Screens.Gameplay
         private GradeDisplay GradeDisplay { get; set; }
 
         /// <summary>
-        ///     The x position of the grade display
-        /// </summary>
-        private float GradeDisplayX => AccuracyDisplay.X - 8;
-
-        /// <summary>
         ///     The scoreboard on the left side of the screern
         ///     (normal OR red team)
+        ///     The scoreboard
         /// </summary>
         public Scoreboard ScoreboardLeft { get; set; }
 
@@ -178,6 +185,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public GameplayScreenView(Screen screen) : base(screen)
         {
             Screen = (GameplayScreen)screen;
+            RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.Ruleset.ScoreProcessor.Mods));
 
             CreateBackground();
 
@@ -186,6 +194,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateProgressBar();
             CreateScoreDisplay();
+            CreateRatingDisplay();
             CreateAccuracyDisplay();
 
             if (ConfigManager.DisplayComboAlerts.Value)
@@ -254,10 +263,14 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
-            GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
+
+            // Update the position and size of the grade display.
+            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
+            GradeDisplay.Height = AccuracyDisplay.Height;
+            GradeDisplay.UpdateWidth();
         }
 
         /// <inheritdoc />
@@ -323,11 +336,29 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0),
-                new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX)
+                new Vector2(skin.ScoreDisplayScale / 100f, skin.ScoreDisplayScale / 100f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX,
                 Y = SkinManager.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
+            };
+        }
+
+        /// <summary>
+        ///     Creates the rating display sprite.
+        /// </summary>
+        private void CreateRatingDisplay()
+        {
+            var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+
+            RatingDisplay = new NumberDisplay(NumberDisplayType.Rating, StringHelper.RatingToString(0),
+                new Vector2(skin.RatingDisplayScale / 100f, skin.RatingDisplayScale / 100f))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosX,
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].RatingDisplayPosY
             };
         }
 
@@ -339,10 +370,12 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0),
-                new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f), SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX)
+                new Vector2(skin.AccuracyDisplayScale / 100f, skin.AccuracyDisplayScale / 100f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX,
+                Y = SkinManager.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY
             };
         }
 
@@ -353,6 +386,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
@@ -364,14 +398,13 @@ namespace Quaver.Shared.Screens.Gameplay
             var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
 
             // Create KPS display
-            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f),
-                SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX)
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(skin.KpsDisplayScale / 100f, skin.KpsDisplayScale / 100f))
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight
+                Alignment = Alignment.TopRight,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX,
+                Y = 40 + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY
             };
-
-            KpsDisplay.Y = AccuracyDisplay.Y + AccuracyDisplay.Digits[0].Height + SkinManager.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY;
         }
 
         /// <summary>
@@ -380,9 +413,9 @@ namespace Quaver.Shared.Screens.Gameplay
         private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
         {
             Parent = Container,
-            Size = new ScalableVector2(AccuracyDisplay.Digits[0].Width, AccuracyDisplay.Digits[0].Height),
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(GradeDisplayX, AccuracyDisplay.Y)
+            X = AccuracyDisplay.X - AccuracyDisplay.Width - 8,
+            Y = AccuracyDisplay.Y
         };
 
         /// <summary>

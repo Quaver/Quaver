@@ -286,7 +286,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                         rating = 0;
                 }
 
-                Score.Text = $"{rating:0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+                Score.Text = $"{StringHelper.RatingToString(rating)} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
+
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();

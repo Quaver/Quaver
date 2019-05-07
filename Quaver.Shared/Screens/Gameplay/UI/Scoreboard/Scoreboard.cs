@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The list of users on the scoreboard.
         /// </summary>
-        public List<ScoreboardUser> Users { get; }
+        public List<ScoreboardUser> Users { get; private set; }
 
         /// <summary>
         ///     Displays the banner for the scoreboard team
@@ -131,6 +131,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     user.CalculateScoreForNextObject(t == e.Judgements.Last());
                 }
             }
+
+            SetTargetYPositions();
         }
 
         /// <inheritdoc />
@@ -213,14 +215,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public void SetTargetYPositions()
         {
-            List<ScoreboardUser> users;
-
             if (Users.Count == 0)
                 return;
 
             if (Users.First().Processor.MultiplayerProcessor != null)
             {
-               users = Users
+               Users = Users
                     .OrderBy(x => x.HasQuit)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
@@ -230,7 +230,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
             else
             {
-                users = Users
+                Users = Users
                     .OrderBy(x => x.Processor.Health <= 0)
                     .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
                     .ThenByDescending(x => x.Processor.Accuracy)
@@ -241,35 +241,36 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             var selfPassed = false;
 
-            for (var i = 0; i < users.Count; i++)
+            for (var i = 0; i < Users.Count; i++)
             {
-                if (users[i].Type == ScoreboardUserType.Self)
+                if (Users[i].Type == ScoreboardUserType.Self)
                     selfPassed = true;
 
-                users[i].Rank = i + 1;
-                users[i].RankText.Text = users[i].Rank + ".";
+                Users[i].Rank = i + 1;
+                Users[i].RankText.Text = Users[i].Rank + ".";
 
                 var maxRank = selfPassed ? 5 : 4;
-                var previouslyShouldBeShown = users[i].ShouldBeShown;
-                users[i].ShouldBeShown = users[i].Rank <= maxRank || users[i].Type == ScoreboardUserType.Self;
+                var previouslyShouldBeShown = Users[i].ShouldBeShown;
+                Users[i].ShouldBeShown = Users[i].Rank <= maxRank || Users[i].Type == ScoreboardUserType.Self;
 
-                if (users[i].ShouldBeShown)
+                if (Users[i].ShouldBeShown)
                     lastVisibleIndex = i;
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
-                        ? Math.Min(users.Count, 5) * -users[i].Height / 2f
-                        : 4 * -users[i].Height / 2f + 14;
+                    Users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
+                        ? Math.Min(Users.Count, 5) * -Users[i].Height / 2f
+                        : 4 * -Users[i].Height / 2f + 14;
+
                     continue;
                 }
 
-                users[i].TargetYPosition = users[lastVisibleIndex - 1].TargetYPosition + users[i].Height + 4;
+                Users[i].TargetYPosition = Users[lastVisibleIndex - 1].TargetYPosition + Users[i].Height + 4;
 
-                if (!previouslyShouldBeShown && users[i].ShouldBeShown)
+                if (!previouslyShouldBeShown && Users[i].ShouldBeShown)
                 {
-                    users[i].Y = users[i].TargetYPosition;
+                    Users[i].Y = Users[i].TargetYPosition;
                 }
             }
         }
