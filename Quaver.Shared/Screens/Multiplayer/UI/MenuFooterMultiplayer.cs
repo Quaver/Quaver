@@ -55,6 +55,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnGameCountdownStart += OnCountdownStart;
             OnlineManager.Client.OnGameCountdownStop += OnCountdownStop;
             OnlineManager.Client.OnFreeModTypeChanged += OnFreeModTypeChanged;
+            OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
         }
 
         /// <inheritdoc />
@@ -67,6 +68,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnPlayerNotReady -= OnPlayerNotReady;
             OnlineManager.Client.OnGameCountdownStart -= OnCountdownStart;
             OnlineManager.Client.OnGameCountdownStop -= OnCountdownStop;
+            OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
             ReadyUp.Destroy();
             SelectMap.Destroy();
             base.Destroy();
@@ -214,6 +216,22 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 return;
 
             ReadyUp.ChangeText("START MATCH");
+            AlignRightItems(RightAligned);
+        }
+
+        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
+        {
+            if (e.Ruleset == MultiplayerGameRuleset.Team)
+            {
+                if (!RightAligned.Contains(ChangeTeam));
+                    RightAligned.Add(ChangeTeam);
+            }
+            else
+            {
+                RightAligned.Remove(ChangeTeam);
+                ChangeTeam.Parent = null;
+            }
+
             AlignRightItems(RightAligned);
         }
 
