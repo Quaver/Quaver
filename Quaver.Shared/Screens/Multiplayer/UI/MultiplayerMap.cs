@@ -256,6 +256,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Game.AllDifficultyRatings = e.AllDifficultyRatings;
             Game.GameMode = e.GameMode;
 
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Gameplay || game.CurrentScreen.Type == QuaverScreenType.Results)
+                return;
+
             UpdateContent();
         }
 
