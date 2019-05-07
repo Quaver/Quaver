@@ -219,6 +219,22 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             AlignRightItems(RightAligned);
         }
 
+        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
+        {
+            if (e.Ruleset == MultiplayerGameRuleset.Team)
+            {
+                if (!RightAligned.Contains(ChangeTeam));
+                    RightAligned.Add(ChangeTeam);
+            }
+            else
+            {
+                RightAligned.Remove(ChangeTeam);
+                ChangeTeam.Parent = null;
+            }
+
+            AlignRightItems(RightAligned);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
