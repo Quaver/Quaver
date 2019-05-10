@@ -526,6 +526,8 @@ namespace Quaver.Shared.Database.Maps
             return ratings;
         }
 
+        public int GetJudgementCount() => LongNoteCount * 2 + RegularNoteCount;
+
         public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }
 
