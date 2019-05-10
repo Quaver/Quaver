@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
@@ -538,11 +539,14 @@ namespace Quaver.Shared.Online
         /// <exception cref="NotImplementedException"></exception>
         private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
         {
-            foreach (var user in e.Users)
+            ThreadScheduler.Run(() =>
             {
-                OnlineUsers[user.Id] = new User(user);
-                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
-            }
+                foreach (var user in e.Users)
+                {
+                    OnlineUsers[user.Id] = new User(user);
+                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
+                }
+            });
         }
 
         /// <summary>
@@ -552,16 +556,19 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUserStatusReceived(object sender, UserStatusEventArgs e)
         {
-            foreach (var user in e.Statuses)
+            ThreadScheduler.Run(() =>
             {
-                if (!OnlineUsers.ContainsKey(user.Key))
-                    continue;
+                foreach (var user in e.Statuses)
+                {
+                    if (!OnlineUsers.ContainsKey(user.Key))
+                        continue;
 
-                var onlineUser = OnlineUsers[user.Key];
-                onlineUser.CurrentStatus = user.Value;
+                    var onlineUser = OnlineUsers[user.Key];
+                    onlineUser.CurrentStatus = user.Value;
 
-                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
-            }
+                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
+                }
+            });
         }
 
         /// <summary>
@@ -929,7 +936,7 @@ namespace Quaver.Shared.Online
 
             CurrentGame.Ruleset = e.Ruleset;
 
-            if (CurrentGame.Ruleset == MultiplayerGameRuleset.Free_For_All)
+            if (CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
             {
                 CurrentGame.RedTeamPlayers.Clear();
                 CurrentGame.BlueTeamPlayers.Clear();
@@ -1050,19 +1057,19 @@ namespace Quaver.Shared.Online
                 return 0;
 
             var currMods = (ModIdentifier) long.Parse(CurrentGame.Modifiers);
-            Console.WriteLine("GAME MODS: " + currMods);
+            // Console.WriteLine("GAME MODS: " + currMods);
 
             var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == userId);
 
             if (playerMods != null)
             {
-                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers);;
+                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers);
                 currMods |= pm;
 
-                Console.WriteLine("PLAYER MODS: " + pm);
+                // Console.WriteLine("PLAYER MODS: " + pm);
             }
 
-            Console.WriteLine("CURRENT MODS COMBINED: " + currMods);
+            // Console.WriteLine("CURRENT MODS COMBINED: " + currMods);
             return currMods;
         }
 
