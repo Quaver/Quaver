@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -122,14 +123,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (user == null)
                 return;
 
-            lock (user.Judgements)
-            lock (user.Processor.CurrentJudgements)
+            foreach (var t in e.Judgements)
             {
-                foreach (var t in e.Judgements)
-                {
-                    user.Judgements.Add(t);
-                    user.CalculateScoreForNextObject(t == e.Judgements.Last());
-                }
+                user.Judgements.Add(t);
+                user.CalculateScoreForNextObject(t == e.Judgements.Last());
             }
 
             SetTargetYPositions();
@@ -147,22 +144,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             // Tween to target Y positions
             Users.ForEach(user =>
             {
-                if (user.ShouldBeShown)
-                    user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
+                user.Y = MathHelper.Lerp(user.Y, user.TargetYPosition, (float) Math.Min(dt / 120, 1));
 
                 // Tween X Position based on if the scoreboard is hidden
                 if (ConfigManager.ScoreboardVisible.Value)
                 {
-                    if (user.ShouldBeShown)
-                    {
-                        var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - user.Width;
-                        user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 120, 1));
-                    }
-                    else
-                    {
-                        var target = Team == MultiplayerTeam.Red ? -user.Width - 10 : WindowManager.Width + user.Width + 10;
-                        user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 90, 1));
-                    }
+                    var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - user.Width;
+                    user.X = MathHelper.Lerp(user.X, target, (float) Math.Min(dt / 120, 1));
                 }
                 else
                 {
@@ -218,9 +206,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (Users.Count == 0)
                 return;
 
+            List<ScoreboardUser> users;
+
             if (Users.First().Processor.MultiplayerProcessor != null)
             {
-               Users = Users
+               users = Users
                     .OrderBy(x => x.HasQuit)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
@@ -230,48 +220,29 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
             else
             {
-                Users = Users
+                users = Users
                     .OrderBy(x => x.Processor.Health <= 0)
                     .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
                     .ThenByDescending(x => x.Processor.Accuracy)
                     .ToList();
             }
 
-            var lastVisibleIndex = 0;
-
-            var selfPassed = false;
-
-            for (var i = 0; i < Users.Count; i++)
+            for (var i = 0; i < users.Count; i++)
             {
-                if (Users[i].Type == ScoreboardUserType.Self)
-                    selfPassed = true;
-
-                Users[i].Rank = i + 1;
-                Users[i].RankText.Text = Users[i].Rank + ".";
-
-                var maxRank = selfPassed ? 5 : 4;
-                var previouslyShouldBeShown = Users[i].ShouldBeShown;
-                Users[i].ShouldBeShown = Users[i].Rank <= maxRank || Users[i].Type == ScoreboardUserType.Self;
-
-                if (Users[i].ShouldBeShown)
-                    lastVisibleIndex = i;
+                users[i].Rank = i + 1;
+                users[i].RankText.Text = users[i].Rank + ".";
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    Users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
-                        ? Math.Min(Users.Count, 5) * -Users[i].Height / 2f
-                        : 4 * -Users[i].Height / 2f + 14;
+                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
+                        ? Math.Min(users.Count, 5) * -users[i].Height / 2f
+                        : 4 * -users[i].Height / 2f + 14;
 
                     continue;
                 }
 
-                Users[i].TargetYPosition = Users[lastVisibleIndex - 1].TargetYPosition + Users[i].Height + 4;
-
-                if (!previouslyShouldBeShown && Users[i].ShouldBeShown)
-                {
-                    Users[i].Y = Users[i].TargetYPosition;
-                }
+                users[i].TargetYPosition = users[i - 1].TargetYPosition + users[i].Height + 4;
             }
         }
     }

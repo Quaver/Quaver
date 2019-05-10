@@ -155,6 +155,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             switch (e.Ruleset)
             {
                 case MultiplayerGameRuleset.Free_For_All:
+                case MultiplayerGameRuleset.Battle_Royale:
                     for (var i = 0; i < Pool.Count; i++)
                     {
                         var index = OnlineManager.CurrentGame.PlayerIds.FindIndex(x => x == Pool[i].Item.Id);
