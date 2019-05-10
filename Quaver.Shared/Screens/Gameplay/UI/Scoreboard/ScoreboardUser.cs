@@ -120,11 +120,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public bool HasQuit { get; private set; }
 
-        /// <summary>
-        ///     If the scoreboard should be shown
-        /// </summary>
-        public bool ShouldBeShown { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
