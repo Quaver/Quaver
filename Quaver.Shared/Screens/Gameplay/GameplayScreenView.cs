@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void CheckIfNewScoreboardUsers()
         {
-            if (StopCheckingForScoreboardUsers)
+            if (Screen.IsPlayTesting || StopCheckingForScoreboardUsers)
                 return;
 
             var mapScores = MapManager.Selected.Value.Scores.Value;
