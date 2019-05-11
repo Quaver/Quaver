@@ -313,22 +313,5 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
                 RightAligned.Add(ChangeTeam);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
-        {
-            if (e.Ruleset == MultiplayerGameRuleset.Team && !RightAligned.Contains(ChangeTeam))
-                RightAligned.Add(ChangeTeam);
-            else
-            {
-                ChangeTeam.Parent = null;
-                RightAligned.Remove(ChangeTeam);
-            }
-
-            AlignRightItems(RightAligned);
-        }
     }
 }
