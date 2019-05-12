@@ -86,7 +86,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             });
 
             if (OnlineManager.CurrentGame != null)
+            {
                 OnlineManager.Client.OnGameJudgements += OnGameJudgements;
+                OnlineManager.Client.OnPlayerBattleRoyaleEliminated += OnPlayerBattleRoyaleEliminated;
+            }
         }
 
         /// <summary>
@@ -94,7 +97,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public override void Destroy()
         {
             if (OnlineManager.CurrentGame != null)
+            {
                 OnlineManager.Client.OnGameJudgements -= OnGameJudgements;
+                OnlineManager.Client.OnPlayerBattleRoyaleEliminated -= OnPlayerBattleRoyaleEliminated;
+            }
 
             base.Destroy();
         }
@@ -129,6 +135,35 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 user.CalculateScoreForNextObject(t == e.Judgements.Last());
             }
 
+            SetTargetYPositions();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnPlayerBattleRoyaleEliminated(object sender, PlayerBattleRoyaleEliminatedEventArgs e)
+        {
+            ScoreboardUser user = null;
+
+            foreach (var u in Users)
+            {
+                if (u.LocalScore == null)
+                    continue;
+
+                if (u.LocalScore.PlayerId == e.UserId)
+                {
+                    user = u;
+                    break;
+                }
+            }
+
+            if (user == null)
+                return;
+
+            user.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated = true;
+            user.SetTintBasedOnHealth();
             SetTargetYPositions();
         }
 
