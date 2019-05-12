@@ -165,6 +165,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             user.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated = true;
             user.SetTintBasedOnHealth();
             SetTargetYPositions();
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen is GameplayScreen screen)
+                screen.SetRichPresence();
         }
 
         /// <inheritdoc />

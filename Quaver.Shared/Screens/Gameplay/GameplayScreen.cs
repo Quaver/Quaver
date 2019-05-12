@@ -19,6 +19,7 @@ using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -907,14 +908,28 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Sets rich presence based on which activity we're doing in gameplay.
         /// </summary>
-        private void SetRichPresence()
+        public void SetRichPresence()
         {
             DiscordHelper.Presence.Details = Map.ToString();
 
             if (OnlineManager.CurrentGame != null)
             {
-                DiscordHelper.Presence.State = $"{OnlineManager.CurrentGame.Name} " +
-                                               $"({OnlineManager.CurrentGame.Players.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+                {
+                    var view = View as GameplayScreenView;
+
+                    var alivePlayers = OnlineManager.CurrentGame.Players.Count;
+
+                    if (view?.ScoreboardLeft != null)
+                        alivePlayers = view.ScoreboardLeft.Users.FindAll(x => !x.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated).Count;
+
+                    DiscordHelper.Presence.State = $"Battle Royale - {alivePlayers} Left";
+                }
+                else
+                {
+                    DiscordHelper.Presence.State = $"{OnlineManager.CurrentGame.Name} " +
+                                                   $"({OnlineManager.CurrentGame.Players.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
+                }
             }
             else if (IsPlayTesting)
                 DiscordHelper.Presence.State = "Play Testing";
