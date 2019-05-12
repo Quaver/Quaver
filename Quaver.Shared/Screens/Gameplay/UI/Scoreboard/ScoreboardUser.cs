@@ -328,7 +328,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     Sets the text's color based on how much health the user has.
         /// </summary>
-        private void SetTintBasedOnHealth()
+        public void SetTintBasedOnHealth()
         {
             if (Processor.MultiplayerProcessor != null)
             {
