@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 {
                     case ScrollDirection.Down:
                         ReceptorPositionY[i] = WindowManager.Height - skin.ReceptorPosOffsetY - receptorOffset;
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.HitLightingY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] - skin.ColumnLightingOffsetY - skin.ColumnLightingScale * LaneSize * skin.ColumnLighting.Height / skin.ColumnLighting.Width;
                         HitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - hitObOffset;
                         HoldHitPositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY - holdHitObOffset;
                         TimingLinePositionY[i] = ReceptorPositionY[i] + skin.HitPosOffsetY;
@@ -227,7 +227,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                         ReceptorPositionY[i] = skin.ReceptorPosOffsetY;
                         HitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
                         HoldHitPositionY[i] = ReceptorPositionY[i] - skin.HitPosOffsetY + receptorOffset;
-                        ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.HitLightingY;
+                        ColumnLightingPositionY[i] = ReceptorPositionY[i] + receptorOffset + skin.ColumnLightingOffsetY;
                         TimingLinePositionY[i] = HitPositionY[i];
                         break;
                     default:
