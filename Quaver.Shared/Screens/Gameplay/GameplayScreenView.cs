@@ -582,6 +582,7 @@ namespace Quaver.Shared.Screens.Gameplay
             PauseScreen.Parent = Container;
 
             StopCheckingForScoreboardUsers = true;
+            Screen.SetRichPresence();
         }
 
         /// <summary>
