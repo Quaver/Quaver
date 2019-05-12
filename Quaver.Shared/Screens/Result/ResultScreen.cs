@@ -454,6 +454,7 @@ namespace Quaver.Shared.Screens.Result
                         }
 
                         replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
+                        Replay = replay;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
