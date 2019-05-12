@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
@@ -78,6 +79,29 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Alignment = Alignment.MidCenter,
                 FontSize = 17
             };
+
+            OnlineManager.Client.OnGameTeamWinCount += OnTeamWinCountChanged;
+        }
+
+        public override void Destroy()
+        {
+            OnlineManager.Client.OnGameTeamWinCount -= OnTeamWinCountChanged;
+            base.Destroy();
+        }
+
+        private void OnTeamWinCountChanged(object sender, TeamWinCountEventArgs e)
+        {
+            switch (Scoreboard.Team)
+            {
+                case MultiplayerTeam.Red:
+                    Points.Text = e.RedTeamWins.ToString();
+                    break;
+                case MultiplayerTeam.Blue:
+                    Points.Text = e.BlueTeamWins.ToString();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void UpdateAverageRating()

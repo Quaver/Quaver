@@ -30,6 +30,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
+using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multiplayer;
@@ -169,6 +170,10 @@ namespace Quaver.Shared.Screens.Gameplay
         private OffsetCalibratorTip Tip { get; set; }
 
         /// <summary>
+        /// </summary>
+        private MultiplayerEndGameWaitTime MultiplayerEndTime { get; set; }
+
+        /// <summary>
         ///     If true, the game will stop waiting for new scoreboard users
         /// </summary>
         private bool StopCheckingForScoreboardUsers { get; set; }
@@ -206,6 +211,15 @@ namespace Quaver.Shared.Screens.Gameplay
             CreateGradeDisplay();
 
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
+
+            if (Screen.IsMultiplayerGame)
+            {
+                MultiplayerEndTime = new MultiplayerEndGameWaitTime
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidLeft
+                };
+            }
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
@@ -247,6 +261,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
             Screen.Ruleset?.Update(gameTime);
@@ -463,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void CheckIfNewScoreboardUsers()
         {
-            if (StopCheckingForScoreboardUsers)
+            if (Screen.IsPlayTesting || StopCheckingForScoreboardUsers)
                 return;
 
             var mapScores = MapManager.Selected.Value.Scores.Value;
@@ -576,7 +591,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePlayCompletion(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPlayComplete)
+            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting)
                 return;
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -727,6 +742,25 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             return scoreboardUsers;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleWaitingForPlayersDialog()
+        {
+            if (MultiplayerEndTime == null)
+                return;
+
+            var previouslyVisible = MultiplayerEndTime.Visible;
+
+            MultiplayerEndTime.Visible = Screen.IsPlayComplete;
+
+            if (!previouslyVisible && MultiplayerEndTime.Visible)
+            {
+                MultiplayerEndTime.ClearAnimations();
+                MultiplayerEndTime.Alpha = 0;
+                MultiplayerEndTime.FadeTo(0.85f, Easing.Linear, 200);
+            }
         }
     }
 }

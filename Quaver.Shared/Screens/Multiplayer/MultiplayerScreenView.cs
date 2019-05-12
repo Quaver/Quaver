@@ -214,12 +214,6 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// <param name="e"></param>
         private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e)
         {
-            if (OnlineManager.CurrentGame == null)
-                return;
-
-            OnlineManager.CurrentGame.PlayerIds.Add(e.UserId);
-            OnlineManager.CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = "0"});
-
             var user = OnlineManager.OnlineUsers[e.UserId];
 
             // Add the player to the player list.
@@ -227,7 +221,6 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             var log = $"{( user.HasUserInfo ? user.OnlineUser.Username : $"User#{e.UserId}" )} has joined the game.";
             Logger.Important(log, LogType.Network);
-            // NotificationManager.Show(NotificationLevel.Success, log);
 
             Feed.AddItem(Color.Cyan, log);
             MultiplayerScreen.SetRichPresence();
@@ -243,18 +236,10 @@ namespace Quaver.Shared.Screens.Multiplayer
             if (OnlineManager.CurrentGame == null)
                 return;
 
-            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayersReady.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
-            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
-            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
-
             var user = OnlineManager.OnlineUsers[e.UserId];
 
             // Remove the player from the list
             MultiplayerScreen.RemovePlayer(user.OnlineUser);
-            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
 
             var log = $"{(user.HasUserInfo ? user.OnlineUser.Username : $"User#{e.UserId}")} has left the game.";
             Logger.Important(log, LogType.Network);

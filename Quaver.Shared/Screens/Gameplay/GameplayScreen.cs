@@ -238,7 +238,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The time that the judgements were last sent to the server
         /// </summary>
-        private long TimeJudgementsLastSentToServer { get; set; }
+        private double TimeSinceLastJudgementsSentToServer { get; set; }
 
         /// <summary>
         ///     If the current play session is a multiplayer game
@@ -292,6 +292,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (IsMultiplayerGame)
             {
+                OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
                 OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
                 OnlineManager.Client.OnAllPlayersLoaded += OnAllPlayersLoaded;
                 OnlineManager.Client.OnAllPlayersSkipped += OnAllPlayersSkipped;
@@ -343,6 +344,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            TimeSinceLastJudgementsSentToServer += gameTime.ElapsedGameTime.TotalMilliseconds;
             Timing.Update(gameTime);
 
             if (!Failed && !IsPlayComplete)
@@ -371,6 +373,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame)
             {
                 OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+                OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
                 OnlineManager.Client.OnAllPlayersLoaded -= OnAllPlayersLoaded;
                 OnlineManager.Client.OnAllPlayersSkipped -= OnAllPlayersSkipped;
             }
@@ -687,7 +690,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleQuickExit()
         {
-            if (InReplayMode && !Failed && !IsPlayComplete)
+            if (InReplayMode && !Failed && !IsPlayComplete || Exiting)
                 return;
 
             TimesRequestedToPause++;
@@ -705,8 +708,12 @@ namespace Quaver.Shared.Screens.Gameplay
 
                     if (IsMultiplayerGame)
                     {
-                        OnlineManager.LeaveGame();
-                        Exit(() => new LobbyScreen());
+                        Exit(() =>
+                        {
+                            OnlineManager.LeaveGame();
+                            return new LobbyScreen();
+                        });
+
                         return;
                     }
 
@@ -928,7 +935,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 else
                 {
                     DiscordHelper.Presence.State = $"{OnlineManager.CurrentGame.Name} " +
-                                                   $"({OnlineManager.CurrentGame.Players.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
+                                                   $"({OnlineManager.CurrentGame.PlayerIds.Count} of {OnlineManager.CurrentGame.MaxPlayers})";
                 }
             }
             else if (IsPlayTesting)
@@ -1022,10 +1029,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void SendJudgementsToServer()
         {
-            if (GameBase.Game.TimeRunning - TimeJudgementsLastSentToServer < 400 || OnlineManager.CurrentGame == null)
+            if (TimeSinceLastJudgementsSentToServer < 400 || OnlineManager.CurrentGame == null)
                 return;
 
-            TimeJudgementsLastSentToServer = GameBase.Game.TimeRunning;
+            TimeSinceLastJudgementsSentToServer = 0;
 
             if (Ruleset.ScoreProcessor.Stats.Count == 0)
                 return;
@@ -1038,8 +1045,10 @@ namespace Quaver.Shared.Screens.Gameplay
             for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.ScoreProcessor.Stats.Count; i++)
                 judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
 
-            OnlineManager.Client.SendGameJudgements(judgementsToGive);
             LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
+
+            if (OnlineManager.CurrentGame.InProgress)
+                OnlineManager.Client.SendGameJudgements(judgementsToGive);
         }
 
         /// <summary>
@@ -1049,15 +1058,11 @@ namespace Quaver.Shared.Screens.Gameplay
         private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
         {
             var view = (GameplayScreenView) View;
-
             view.ScoreboardLeft?.Users.Find(x => x.LocalScore?.PlayerId == e.UserId)?.QuitGame();
-            OnlineManager.CurrentGame.PlayerIds.Remove(e.UserId);
-            OnlineManager.CurrentGame.PlayersWithoutMap.Remove(e.UserId);
-            OnlineManager.CurrentGame.Players.Remove(OnlineManager.OnlineUsers[e.UserId].OnlineUser);
-            OnlineManager.CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
-            OnlineManager.CurrentGame.RedTeamPlayers.Remove(e.UserId);
-            OnlineManager.CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            SetRichPresence();
         }
+
+        private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e) => SetRichPresence();
 
         /// <summary>
         ///     Called when all players are ready to start.

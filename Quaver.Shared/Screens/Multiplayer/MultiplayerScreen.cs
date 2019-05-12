@@ -135,7 +135,13 @@ namespace Quaver.Shared.Screens.Multiplayer
             }
 
             MapManager.Selected.Value.Scores.Value = GetScoresFromMultiplayerUsers();
-            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+            Exit(() =>
+            {
+                // Make sure map is absolutely correct before going to map loading screen.
+                view.Map.UpdateContent();
+
+                return new MapLoadingScreen(MapManager.Selected.Value.Scores.Value);
+            });
         }
 
         /// <summary>
