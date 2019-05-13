@@ -272,17 +272,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (setScoreboardValues && Type == ScoreboardUserType.Self)
             {
-                var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
-
-                if (Processor.MultiplayerProcessor != null)
-                {
-                    if (Processor.MultiplayerProcessor.IsRegeneratingHealth ||
-                        Processor.MultiplayerProcessor.IsEliminated)
-                        rating = 0;
-                }
-
+                var rating = CalculateRating();
                 Score.Text = $"{StringHelper.RatingToString(rating)} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
-
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
                 SetTintBasedOnHealth();
@@ -301,14 +292,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 SetTintBasedOnHealth();
 
-                var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
-
-                if (Processor.MultiplayerProcessor != null)
-                {
-                    if (Processor.MultiplayerProcessor.IsRegeneratingHealth ||
-                        Processor.MultiplayerProcessor.IsEliminated)
-                        rating = 0;
-                }
+                var rating = CalculateRating();
 
                 Score.Text = $"{rating:0.00} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
@@ -416,6 +400,23 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public double CalculateRating()
+        {
+            var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
+
+            if (Processor.MultiplayerProcessor != null)
+            {
+                if (OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Battle_Royale &&
+                    (Processor.MultiplayerProcessor.IsRegeneratingHealth || Processor.MultiplayerProcessor.IsEliminated))
+                    rating = 0;
+            }
+
+            return rating;
         }
     }
 }
