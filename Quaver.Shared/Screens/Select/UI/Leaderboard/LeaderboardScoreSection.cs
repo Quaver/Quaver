@@ -83,6 +83,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            Scores.ForEach(x => x.Destroy());
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the loading wheel that is displayed when looking for new scores.
         /// </summary>

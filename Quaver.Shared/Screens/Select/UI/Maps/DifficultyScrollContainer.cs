@@ -143,6 +143,12 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            DifficultyBuffer.ForEach(x => x.Destroy());
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Contains the buffer of DrawableDifficulties that'll be used to display the difficulties of the map.
         /// </summary>

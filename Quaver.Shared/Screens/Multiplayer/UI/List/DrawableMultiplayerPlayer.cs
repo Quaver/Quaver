@@ -194,6 +194,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
 
+            Button.Destroy();
             base.Destroy();
         }
 
