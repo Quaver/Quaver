@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             OnlineManager.CurrentGame.CountdownStartTime = -1;
 
             var view = (MultiplayerScreenView) View;
-            view.PlayerList.Pool.ForEach(x => x.UpdateContent(x.Item, x.Index));
+            // view.PlayerList.Pool.ForEach(x => x.UpdateContent(x.Item, x.Index));
 
             if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
             {

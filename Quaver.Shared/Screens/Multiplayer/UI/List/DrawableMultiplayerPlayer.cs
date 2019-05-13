@@ -14,6 +14,7 @@ using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.List
 {
@@ -159,6 +160,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <param name="index"></param>
         public override void UpdateContent(OnlineUser item, int index)
         {
+            if (!OnlineManager.OnlineUsers.ContainsKey(item.Id))
+            {
+                Logger.Error($"{item.Id} not found in online users when trying to update content.", LogType.Network);
+                return;
+            }
+
             if (OnlineManager.OnlineUsers[item.Id].HasUserInfo)
             {
                 var stats = OnlineManager.OnlineUsers[Item.Id].Stats;
@@ -187,6 +194,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
 
+            Button.Destroy();
             base.Destroy();
         }
 

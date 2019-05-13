@@ -149,10 +149,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             foreach (var u in Users)
             {
-                if (u.LocalScore == null)
-                    continue;
+                if (u.Type == ScoreboardUserType.Self && e.UserId == OnlineManager.Self.OnlineUser.Id)
+                {
+                    user = u;
+                    break;
+                }
 
-                if (u.LocalScore.PlayerId == e.UserId)
+                if (u.LocalScore != null && u.LocalScore.PlayerId == e.UserId)
                 {
                     user = u;
                     break;
@@ -163,6 +166,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             user.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated = true;
+            user.Rank = e.Rank;
             user.SetTintBasedOnHealth();
             SetTargetYPositions();
 
@@ -269,7 +273,19 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             for (var i = 0; i < users.Count; i++)
             {
-                users[i].Rank = i + 1;
+                if (OnlineManager.CurrentGame == null
+                    || OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Battle_Royale
+                    || (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
+                        !users[i].Processor.MultiplayerProcessor.IsEliminated))
+                {
+                    users[i].Rank = i + 1;
+                }
+            }
+
+            users = Users.OrderBy(x => x.Rank).ToList();
+
+            for (var i = 0; i < users.Count; i++)
+            {
                 users[i].RankText.Text = users[i].Rank + ".";
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.

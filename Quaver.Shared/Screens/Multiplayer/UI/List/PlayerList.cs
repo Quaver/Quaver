@@ -40,6 +40,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         public override void Destroy()
         {
+            Pool.ForEach(x => x.Destroy());
+
             OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
             OnlineManager.Client.OnGamePlayerTeamChanged -= OnGamePlayerTeamChanged;
             OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;

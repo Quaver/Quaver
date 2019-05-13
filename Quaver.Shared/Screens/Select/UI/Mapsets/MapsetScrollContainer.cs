@@ -145,6 +145,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             BackgroundHelper.Blurred -= OnBackgroundBlurred;
 
+            MapsetBuffer.ForEach(x => x.Destroy());
             base.Destroy();
         }
 
