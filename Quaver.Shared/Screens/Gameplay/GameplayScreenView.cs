@@ -178,6 +178,14 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private bool StopCheckingForScoreboardUsers { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private BattleRoyaleBackgroundAlerter BattleRoyaleBackgroundAlerter { get; }
+
+        /// <summary>
+        /// </summary>
+        public ScoreboardUser SelfScoreboard { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -188,6 +196,9 @@ namespace Quaver.Shared.Screens.Gameplay
             RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.Ruleset.ScoreProcessor.Mods));
 
             CreateBackground();
+
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+                BattleRoyaleBackgroundAlerter = new BattleRoyaleBackgroundAlerter(this);
 
             if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
                 CreateScoreboards();
@@ -264,6 +275,7 @@ namespace Quaver.Shared.Screens.Gameplay
             HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
+            BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
 
@@ -282,6 +294,7 @@ namespace Quaver.Shared.Screens.Gameplay
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
             Background.Draw(gameTime);
+            BattleRoyaleBackgroundAlerter?.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
@@ -429,15 +442,14 @@ namespace Quaver.Shared.Screens.Gameplay
             var selfAvatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
                 : UserInterface.UnknownAvatar;
 
-            var users = new List<ScoreboardUser>
+            SelfScoreboard = new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar,
+                ModManager.Mods)
             {
-                // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar, ModManager.Mods)
-                {
-                    Parent = Container,
-                    Alignment = Alignment.MidLeft
-                }
+                Parent = Container,
+                Alignment = Alignment.MidLeft
             };
+
+            var users = new List<ScoreboardUser> {SelfScoreboard};
 
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
             {
@@ -579,7 +591,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // again.
             if (ProgressBar != null)
                 ProgressBar.Parent = Container;
-            
+
             Transitioner.Parent = Container;
             PauseScreen.Parent = Container;
 
