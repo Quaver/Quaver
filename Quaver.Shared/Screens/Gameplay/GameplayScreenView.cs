@@ -577,7 +577,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Re-change the transitioner and pause screen's parent so that they appear on top of the scoreboard
             // again.
-            ProgressBar.Parent = Container;
+            if (ProgressBar != null)
+                ProgressBar.Parent = Container;
+            
             Transitioner.Parent = Container;
             PauseScreen.Parent = Container;
 
