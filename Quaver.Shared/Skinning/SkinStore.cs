@@ -192,6 +192,16 @@ namespace Quaver.Shared.Skinning
         internal List<Texture2D> ComboAlerts { get; private set; }
 
         /// <summary>
+        ///     Displayed when being eliminated from battle royale
+        /// </summary>
+        internal Texture2D BattleRoyaleEliminated { get; private set; }
+
+        /// <summary>
+        ///     Displayed when in danger of being eliminated
+        /// </summary>
+        internal Texture2D BattleRoyaleWarning { get; private set; }
+
+        /// <summary>
         ///     Sound effect elements.
         /// </summary>
         internal AudioSample SoundHit { get; private set; }
@@ -264,6 +274,7 @@ namespace Quaver.Shared.Skinning
             LoadHealthBar();
             LoadSkip();
             LoadComboAlert();
+            LoadMultiplayerElements();
             LoadSoundEffects();
         }
 
@@ -569,6 +580,19 @@ namespace Quaver.Shared.Skinning
                 ComboAlerts.Add(LoadSingleTexture($"{comboAlertFolder}/{comboAlert}-{i + 1}",
                     $"Quaver.Resources/Textures/Skins/Shared/Combo/{comboAlert}-{i + 1}.png"));
             }
+        }
+
+        private void LoadMultiplayerElements()
+        {
+            var multiplayerFolder = $"{Dir}/Multiplayer/";
+            const string battleRoyaleEliminated = "eliminated";
+
+            BattleRoyaleEliminated = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleEliminated}"
+                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleEliminated}.png");
+
+            const string battleRoyaleWarning = "warning";
+            BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
+                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
         }
 
         /// <summary>

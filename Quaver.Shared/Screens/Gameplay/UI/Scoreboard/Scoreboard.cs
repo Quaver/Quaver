@@ -20,6 +20,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -160,6 +161,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 if (u.Type == ScoreboardUserType.Self && e.UserId == OnlineManager.Self.OnlineUser.Id)
                 {
                     user = u;
+                    SkinManager.Skin.SoundFailure.CreateChannel().Play();
                     break;
                 }
 

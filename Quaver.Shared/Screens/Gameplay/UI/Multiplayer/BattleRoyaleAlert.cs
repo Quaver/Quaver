@@ -1,20 +1,18 @@
-
-
 using System;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
-using Wobble.Assets;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
-using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 {
-    public class BattleRoyaleBackgroundAlerter : Sprite
+    public class BattleRoyaleAlert : Sprite
     {
-        private GameplayScreenView View { get; }
+        private GameplayScreen Screen { get; }
+
+        private GameplayScreenView View => (GameplayScreenView) Screen.View;
 
         private ScoreboardUser SelfScoreboard => View.SelfScoreboard;
 
@@ -24,17 +22,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 
         private bool HandlingLastPlaceWarning { get; set; }
 
-        private Color WarningColor { get; } = new Color(253,193,0);
-
-        private Color EliminatedColor { get; } = new Color(145, 0, 0);
-
-        public BattleRoyaleBackgroundAlerter(GameplayScreenView view)
+        public BattleRoyaleAlert(GameplayScreen screen)
         {
-            View = view;
-            Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
-            Tint = WarningColor;
+            Screen = screen;
             Alpha = 0;
-            Image = UserInterface.BattleRoyaleGradient;
+            Image = SkinManager.Skin.BattleRoyaleEliminated;
         }
 
         public override void Update(GameTime gameTime)
@@ -43,6 +35,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
             {
                 if (SelfScoreboard.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated && !DeathAnimationHandled)
                 {
+                    Image = SkinManager.Skin.BattleRoyaleEliminated;
                     HandleDeathAnimation();
                     DeathAnimationHandled = true;
                 }
@@ -56,8 +49,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
         private void HandleDeathAnimation()
         {
             ClearAnimations();
-            FadeTo(0.4f, Easing.Linear, 800);
-            FadeToColor(EliminatedColor, Easing.Linear, 800);
+            FadeTo(1f, Easing.Linear, 800);
         }
 
         private void HandleLastPlaceAnimation(double dt)
@@ -66,8 +58,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
             {
                 if (Animations.Count == 0)
                 {
-                    var target = LastPlaceAnimationFadingIn ? 0.4f : 0;
-                    FadeToColor(WarningColor, Easing.Linear, 800);
+                    Image = SkinManager.Skin.BattleRoyaleWarning;
+                    var target = LastPlaceAnimationFadingIn ? 1f : 0;
+
                     FadeTo(target, Easing.Linear, 800);
                     LastPlaceAnimationFadingIn = !LastPlaceAnimationFadingIn;
                 }

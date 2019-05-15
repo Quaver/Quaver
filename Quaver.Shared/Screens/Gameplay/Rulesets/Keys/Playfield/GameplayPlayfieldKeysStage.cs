@@ -11,14 +11,18 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
+using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Skinning;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -130,6 +134,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private SongInformation SongInfo { get; set; }
 
         /// <summary>
+        ///     Displays last place/elimination alerts for battle royale
+        /// </summary>
+        private BattleRoyaleAlert BattleRoyaleAlert { get; set; }
+
+        /// <summary>
         ///     Make a quicker and shorter reference to the game skin
         /// </summary>
         private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
@@ -175,6 +184,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitError();
                 CreateHitLighting();
                 CreateJudgementHitBurst();
+
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale && ConfigManager.EnableBattleRoyaleAlerts.Value)
+                    CreateBattleRoyaleAlert();
+
                 CreateSongInfo();
             }
             else
@@ -183,6 +196,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitError();
                 CreateJudgementHitBurst();
                 CreateHitLighting();
+
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale && ConfigManager.EnableBattleRoyaleAlerts.Value)
+                    CreateBattleRoyaleAlert();
+
                 CreateSongInfo();
                 CreateLaneCoverOverlay();
             }
@@ -515,6 +532,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Alignment = Alignment.MidCenter,
             Y = -200
         };
+
+        /// <summary>
+        ///     Creates the sprite that displays battle royale alerts
+        /// </summary>
+        private void CreateBattleRoyaleAlert()
+        {
+            var size = new Vector2(480, 480) * Skin.JudgementHitBurstScale / 480;
+
+            BattleRoyaleAlert = new BattleRoyaleAlert(Screen)
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                Position = new ScalableVector2(Skin.BattleRoyaleAlertPosX, Skin.BattleRoyaleAlertPosY),
+                Size = new ScalableVector2(size.X, size.Y),
+            };
+        }
 
         /// <summary>
         ///     Updates the given receptor and column lighting activity
