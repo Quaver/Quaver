@@ -538,7 +538,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateBattleRoyaleAlert()
         {
-            var size = new Vector2(480, 480) * Skin.JudgementHitBurstScale / 480;
+            var width = SkinManager.Skin.BattleRoyaleWarning.Width;
+            var height = SkinManager.Skin.BattleRoyaleWarning.Height;
+            var size = new Vector2(width, height) * Skin.BattleRoyaleAlertScale / height;
 
             BattleRoyaleAlert = new BattleRoyaleAlert(Screen)
             {

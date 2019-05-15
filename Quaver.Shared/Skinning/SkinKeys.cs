@@ -399,7 +399,7 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
                     BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
                     break;
                 case DefaultSkins.Arrow:
@@ -463,7 +463,7 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
                     BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
                     break;
                 default:
@@ -542,7 +542,7 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
                     BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
                     break;
                 case DefaultSkins.Arrow:
@@ -610,7 +610,7 @@ namespace Quaver.Shared.Skinning
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
                     BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
                     break;
                 default:
