@@ -197,8 +197,11 @@ namespace Quaver.Shared.Screens.Gameplay
 
             CreateBackground();
 
-            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale
+                                                  && ConfigManager.EnableBattleRoyaleBackgroundFlashing.Value)
+            {
                 BattleRoyaleBackgroundAlerter = new BattleRoyaleBackgroundAlerter(this);
+            }
 
             if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
                 CreateScoreboards();

@@ -356,6 +356,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> LobbyFilterHasFriends { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableBattleRoyaleBackgroundFlashing { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableBattleRoyaleAlerts { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -625,6 +633,8 @@ namespace Quaver.Shared.Config
             LobbyFilterFullGame = ReadValue(@"LobbyFilterFullGame", false, data);
             LobbyFilterOwnsMap = ReadValue(@"LobbyFilterOwnsMap", false, data);
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
+            EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
+            EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -728,6 +738,8 @@ namespace Quaver.Shared.Config
                     LobbyFilterFullGame.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterOwnsMap.ValueChanged += AutoSaveConfiguration;
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
+                    EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
+                    EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

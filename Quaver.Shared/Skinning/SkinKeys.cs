@@ -151,6 +151,12 @@ namespace Quaver.Shared.Skinning
 
         internal Color DeadNoteColor { get; private set; }
 
+        internal int BattleRoyaleAlertPosX { get; private set; }
+
+        internal int BattleRoyaleAlertPosY { get; private set; }
+
+        internal int BattleRoyaleAlertScale { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -392,6 +398,9 @@ namespace Quaver.Shared.Skinning
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
+                    BattleRoyaleAlertPosX = 0;
+                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertPosY = -150;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -453,6 +462,9 @@ namespace Quaver.Shared.Skinning
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
+                    BattleRoyaleAlertPosX = 0;
+                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertPosY = -150;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -529,6 +541,9 @@ namespace Quaver.Shared.Skinning
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
+                    BattleRoyaleAlertPosX = 0;
+                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertPosY = -150;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -594,6 +609,9 @@ namespace Quaver.Shared.Skinning
                     KpsDisplayScale = 45;
                     SongTimeProgressScale = 60;
                     DeadNoteColor = new Color(50, 50, 50);
+                    BattleRoyaleAlertPosX = 0;
+                    BattleRoyaleAlertScale = 90;
+                    BattleRoyaleAlertPosY = -150;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -671,6 +689,9 @@ namespace Quaver.Shared.Skinning
             KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);
             SongTimeProgressScale = ConfigHelper.ReadInt32(SongTimeProgressScale, ini["SongTimeProgressScale"]);
             DeadNoteColor = ConfigHelper.ReadColor(DeadNoteColor, ini["DeadNoteColor"]);
+            BattleRoyaleAlertPosX = ConfigHelper.ReadInt32(BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
+            BattleRoyaleAlertPosY = ConfigHelper.ReadInt32(BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
+            BattleRoyaleAlertScale = ConfigHelper.ReadInt32(BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
         }
 
         /// <summary>
