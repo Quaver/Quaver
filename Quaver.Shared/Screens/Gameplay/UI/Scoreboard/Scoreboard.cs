@@ -53,6 +53,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public ScoreboardTeamBanner TeamBanner { get; }
 
+        /// <summary>
+        ///     The amount of players left in the battle royale game
+        /// </summary>
+        public int BatlteRoyalePlayersLeft { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -89,6 +94,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 OnlineManager.Client.OnGameJudgements += OnGameJudgements;
                 OnlineManager.Client.OnPlayerBattleRoyaleEliminated += OnPlayerBattleRoyaleEliminated;
+
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+                    BatlteRoyalePlayersLeft = MapManager.Selected.Value.Scores.Value.Count + 1;
             }
         }
 
@@ -166,6 +174,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             user.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated = true;
+            BatlteRoyalePlayersLeft--;
+
             user.Rank = e.Rank;
             user.SetTintBasedOnHealth();
             SetTargetYPositions();

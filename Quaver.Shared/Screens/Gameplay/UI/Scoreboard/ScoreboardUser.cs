@@ -411,7 +411,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             if (Processor.MultiplayerProcessor != null)
             {
-                if (OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Battle_Royale &&
+                if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Battle_Royale &&
                     (Processor.MultiplayerProcessor.IsRegeneratingHealth || Processor.MultiplayerProcessor.IsEliminated))
                     rating = 0;
             }

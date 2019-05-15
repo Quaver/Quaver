@@ -65,10 +65,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D MenuBackgroundRaw { get; private set; }
         public static Texture2D Scrollbar { get; private set; }
         public static Texture2D LobbyCreateGame { get; private set; }
-
         public static Texture2D TeamBannerRed { get; private set; }
-
         public static Texture2D TeamBannerBlue { get; private set; }
+        public static Texture2D BattleRoyaleGradient { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -128,6 +127,7 @@ namespace Quaver.Shared.Assets
             LobbyCreateGame = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/create-game.png"));
             TeamBannerRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-red.png"));
             TeamBannerBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-blue.png"));
+            BattleRoyaleGradient = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/battle-royale-gradient.png"));
 ;        }
     }
 }
