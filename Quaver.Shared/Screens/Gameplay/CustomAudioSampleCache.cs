@@ -6,6 +6,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using Quaver.Shared.Database.Maps;
 using Wobble.Audio.Samples;
 
@@ -49,7 +50,42 @@ namespace Quaver.Shared.Screens.Gameplay
 
             Samples = new List<AudioSample>();
             foreach (var info in map.Qua.CustomAudioSamples)
-                Samples.Add(new AudioSample(MapManager.GetCustomAudioSamplePath(map, info.Path)));
+            {
+                // If the path is missing an extension or the file doesn't exist, we need to try some other extensions
+                // for compatibility with osu!.
+                var pathWithoutExt = info.Path;
+                var extensions = new List<string> {"wav", "ogg", "mp3"};
+
+                var dotIndex = info.Path.LastIndexOf('.');
+                if (dotIndex > 0)
+                {
+                    pathWithoutExt = info.Path.Substring(0, dotIndex);
+                    extensions.Insert(0, info.Path.Substring(dotIndex + 1));
+                }
+                else
+                {
+                    extensions.Insert(0, "");
+                }
+
+                var found = false;
+                foreach (var ext in extensions)
+                {
+                    try
+                    {
+                        Samples.Add(new AudioSample(MapManager.GetCustomAudioSamplePath(map, pathWithoutExt + '.' + ext)));
+                        found = true;
+                        break;
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // Ignored.
+                    }
+                }
+
+                // If none of the filenames worked, create a silent sample.
+                if (!found)
+                    Samples.Add(new AudioSample());
+            }
         }
 
         /// <summary>
