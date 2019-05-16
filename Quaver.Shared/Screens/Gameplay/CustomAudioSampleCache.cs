@@ -27,6 +27,11 @@ namespace Quaver.Shared.Screens.Gameplay
         private List<AudioSample> Samples { get; set; } = new List<AudioSample>();
 
         /// <summary>
+        ///     Whether the corresponding audio samples are unaffected by rate.
+        /// </summary>
+        private List<bool> UnaffectedByRate { get; set; } = new List<bool>();
+
+        /// <summary>
         ///     Currently playing channels.
         /// </summary>
         private List<AudioSampleChannel> Channels { get; set; } = new List<AudioSampleChannel>();
@@ -51,8 +56,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 sample.Dispose();
 
             Samples = new List<AudioSample>();
+            UnaffectedByRate = new List<bool>();
             foreach (var info in map.Qua.CustomAudioSamples)
             {
+                UnaffectedByRate.Add(info.UnaffectedByRate);
+
                 // If the path is missing an extension or the file doesn't exist, we need to try some other extensions
                 // for compatibility with osu!.
                 var pathWithoutExt = info.Path;
@@ -97,7 +105,8 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="volume">Volume between 0 and 100.</param>
         public void Play(int index, int volume = 100)
         {
-            var channel = Samples[index].CreateChannel(ConfigManager.Pitched.Value, AudioEngine.Track.Rate);
+            var channel = Samples[index].CreateChannel(
+                ConfigManager.Pitched.Value, UnaffectedByRate[index] ? 1f : AudioEngine.Track.Rate);
             channel.Volume *= volume / 100f;
             channel.Play();
 
