@@ -321,6 +321,7 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsScrollDirection(this, "Scroll Direction 7K", ConfigManager.ScrollDirection7K),
                     new SettingsBool(this, "Blur Background In Gameplay", ConfigManager.BlurBackgroundInGameplay),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                    new SettingsBool(this, "Enable Keysounds", ConfigManager.EnableKeysounds),
                     new SettingsBool(this, "Display Timing Lines", ConfigManager.DisplayTimingLines),
                     new SettingsBool(this, "Display Song Time Progress", ConfigManager.DisplaySongTimeProgress),
                     new SettingsBool(this, "Display Song Time Progress Numbers", ConfigManager.DisplaySongTimeProgressNumbers),
@@ -341,6 +342,7 @@ namespace Quaver.Shared.Screens.Settings
                 {
                     new SettingsEditorSnapColors(this),
                     new SettingsBool(this, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds),
+                    new SettingsBool(this, "Enable Keysounds", ConfigManager.EditorEnableKeysounds),
                     new SettingsBool(this, "Enable Metronome", ConfigManager.EditorPlayMetronome),
                     new SettingsBool(this, "Play Metronome Half-Beats", ConfigManager.EditorMetronomePlayHalfBeats),
                     new SettingsBool(this, "Show Lane Divider Lines", ConfigManager.EditorShowLaneDividerLines),

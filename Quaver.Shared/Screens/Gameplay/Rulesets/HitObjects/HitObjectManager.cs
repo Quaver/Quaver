@@ -90,6 +90,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         }
 
         /// <summary>
+        ///     Plays the correct keysounds based on the note index of the HitObjectPool.
+        /// </summary>
+        public static void PlayObjectKeySounds(HitObjectInfo hitObject)
+        {
+            foreach (var keySound in hitObject.KeySounds)
+                GameplayScreen.CustomAudioSampleCache.Play(keySound - 1);
+        }
+
+        /// <summary>
         ///     Returns color of note beatsnap
         /// </summary>
         /// <param name="info"></param>

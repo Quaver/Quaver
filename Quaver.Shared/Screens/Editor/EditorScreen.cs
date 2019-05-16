@@ -627,8 +627,13 @@ namespace Quaver.Shared.Screens.Editor
                 {
                     var view = (EditorScreenView) View;
 
-                    if (ConfigManager.EditorEnableHitsounds.Value && !view.LayerCompositor.ScrollContainer.AvailableItems[obj.EditorLayer].Hidden)
-                        HitObjectManager.PlayObjectHitSounds(obj);
+                    if (!view.LayerCompositor.ScrollContainer.AvailableItems[obj.EditorLayer].Hidden)
+                    {
+                        if (ConfigManager.EditorEnableHitsounds.Value)
+                            HitObjectManager.PlayObjectHitSounds(obj);
+                        if (ConfigManager.EditorEnableKeysounds.Value)
+                            HitObjectManager.PlayObjectKeySounds(obj);
+                    }
 
                     HitSoundObjectIndex = i + 1;
                 }
