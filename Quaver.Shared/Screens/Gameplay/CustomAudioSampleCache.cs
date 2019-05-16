@@ -93,7 +93,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         /// <param name="index">Index of a sample to play, same as into the Qua.CustomAudioSamples array.</param>
         /// <param name="volume">Volume between 0 and 100.</param>
-        public void Play(int index, int volume)
+        public void Play(int index, int volume = 100)
         {
             var channel = Samples[index].CreateChannel();
             channel.Volume *= volume / 100f;
