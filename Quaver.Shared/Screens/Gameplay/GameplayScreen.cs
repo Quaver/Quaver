@@ -226,6 +226,16 @@ namespace Quaver.Shared.Screens.Gameplay
         public Metronome Metronome { get; }
 
         /// <summary>
+        ///     Loads and caches the custom audio samples.
+        /// </summary>
+        public static CustomAudioSampleCache CustomAudioSampleCache { get; } = new CustomAudioSampleCache();
+
+        /// <summary>
+        ///     Index of the next sound effect to play.
+        /// </summary>
+        private int NextSoundEffectIndex { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -259,6 +269,13 @@ namespace Quaver.Shared.Screens.Gameplay
             IsCalibratingOffset = isCalibratingOffset;
 
             Timing = new GameplayAudioTiming(this);
+
+            // Initialize the custom audio sample cache and the sound effect index.
+            if (!IsCalibratingOffset)
+                CustomAudioSampleCache.LoadSamples(MapManager.Selected.Value, MapHash);
+
+            NextSoundEffectIndex = 0;
+            UpdateNextSoundEffectIndex();
 
             // Remove paused modifier if enabled.
             if (ModManager.IsActivated(ModIdentifier.Paused))
@@ -303,6 +320,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             HandleInput(gameTime);
+            HandleSoundEffects();
             HandleFailure();
             ReplayCapturer.Capture(gameTime);
             // Metronome?.Update(gameTime);
@@ -480,6 +498,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     AudioEngine.Track.Seek(PlayTestAudioTime);
                 }
 
+                CustomAudioSampleCache.StopAll();
+
                 Exit(() => new EditorScreen(OriginalEditorMap));
             }
 
@@ -584,6 +604,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     // ignored
                 }
 
+                CustomAudioSampleCache.PauseAll();
+
                 DiscordHelper.Presence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time";
                 DiscordHelper.Presence.EndTimestamp = 0;
                 DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
@@ -685,6 +707,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     // ignored
                 }
+
+                CustomAudioSampleCache.ResumeAll();
             }
         }
 
@@ -706,6 +730,8 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // ignored
             }
+
+            CustomAudioSampleCache.StopAll();
 
             // Play failure sound.
             SkinManager.Skin.SoundFailure.CreateChannel().Play();
@@ -774,6 +800,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
             SkinManager.Skin.SoundRetry.CreateChannel().Play();
+            CustomAudioSampleCache.StopAll();
 
             // Use ChangeScreen here to give instant feedback. Can't be threaded
             if (IsPlayTesting)
@@ -815,7 +842,21 @@ namespace Quaver.Shared.Screens.Gameplay
                     var inputManager = (KeysInputManager)Ruleset.InputManager;
                     inputManager.ReplayInputManager.HandleSkip();
                 }
+
+                // Stop all playing sound effects and move NextSoundEffectIndex ahead.
+                CustomAudioSampleCache.StopAll();
+                UpdateNextSoundEffectIndex();
             }
+        }
+
+        /// <summary>
+        ///     Increments NextSoundEffectIndex to point at the next sound effect to be played according to current time.
+        /// </summary>
+        private void UpdateNextSoundEffectIndex()
+        {
+            while (NextSoundEffectIndex < Map.SoundEffects.Count &&
+                   Map.SoundEffects[NextSoundEffectIndex].StartTime <= Timing.Time)
+                NextSoundEffectIndex++;
         }
 
         /// <summary>
@@ -910,6 +951,23 @@ namespace Quaver.Shared.Screens.Gameplay
 
             NotificationManager.Show(NotificationLevel.Error, "A global audio offset could not be suggested. Please try again!");
             OffsetConfirmDialog.Exit(this);
+        }
+
+        private void HandleSoundEffects()
+        {
+            if (NextSoundEffectIndex == Map.SoundEffects.Count)
+                return;
+
+            var info = Map.SoundEffects[NextSoundEffectIndex];
+            while (info.StartTime <= Timing.Time)
+            {
+                CustomAudioSampleCache.Play(info.Sample - 1, info.Volume);
+
+                if (++NextSoundEffectIndex == Map.SoundEffects.Count)
+                    break;
+
+                info = Map.SoundEffects[NextSoundEffectIndex];
+            }
         }
     }
 }

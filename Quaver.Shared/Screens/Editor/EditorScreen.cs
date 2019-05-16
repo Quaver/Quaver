@@ -173,6 +173,8 @@ namespace Quaver.Shared.Screens.Editor
             if (!LoadAudioTrack())
                 return;
 
+            GameplayScreen.CustomAudioSampleCache.LoadSamples(MapManager.Selected.Value, MapManager.Selected.Value.Md5Checksum);
+
             SetHitSoundObjectIndex();
 
             GameBase.Game.IsMouseVisible = true;

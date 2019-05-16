@@ -50,6 +50,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Screen.IsPlayTesting)
                 {
                     AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    Time = AudioEngine.Track.Time;
                     return;
                 }
             }
