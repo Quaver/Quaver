@@ -226,11 +226,6 @@ namespace Quaver.Shared.Screens.Gameplay
         public Metronome Metronome { get; }
 
         /// <summary>
-        ///     Loads and caches the custom audio samples.
-        /// </summary>
-        public static CustomAudioSampleCache CustomAudioSampleCache { get; } = new CustomAudioSampleCache();
-
-        /// <summary>
         ///     Index of the next sound effect to play.
         /// </summary>
         private int NextSoundEffectIndex { get; set; }

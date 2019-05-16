@@ -7,41 +7,40 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Wobble.Audio.Samples;
 
-namespace Quaver.Shared.Screens.Gameplay
+namespace Quaver.Shared.Audio
 {
-    public class CustomAudioSampleCache
+    public static class CustomAudioSampleCache
     {
         /// <summary>
         ///     MD5 hash of the map where the sound samples are from.
         /// </summary>
-        private string MapMd5 { get; set; }
+        private static string MapMd5 { get; set; }
 
         /// <summary>
         ///     The cached audio samples.
         /// </summary>
-        private List<AudioSample> Samples { get; set; } = new List<AudioSample>();
+        private static List<AudioSample> Samples { get; set; } = new List<AudioSample>();
 
         /// <summary>
         ///     Whether the corresponding audio samples are unaffected by rate.
         /// </summary>
-        private List<bool> UnaffectedByRate { get; set; } = new List<bool>();
+        private static List<bool> UnaffectedByRate { get; set; } = new List<bool>();
 
         /// <summary>
         ///     Currently playing channels.
         /// </summary>
-        private List<AudioSampleChannel> Channels { get; set; } = new List<AudioSampleChannel>();
+        private static List<AudioSampleChannel> Channels { get; set; } = new List<AudioSampleChannel>();
 
         /// <summary>
         ///     Loads audio samples for the specified map into the cache.
         /// </summary>
         /// <param name="map"></param>
         /// <param name="md5"></param>
-        public void LoadSamples(Map map, string md5)
+        public static void LoadSamples(Map map, string md5)
         {
             // Always clean up the left-over channels.
             StopAll();
@@ -103,7 +102,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         /// <param name="index">Index of a sample to play, same as into the Qua.CustomAudioSamples array.</param>
         /// <param name="volume">Volume between 0 and 100.</param>
-        public void Play(int index, int volume = 100)
+        public static void Play(int index, int volume = 100)
         {
             var channel = Samples[index].CreateChannel(
                 ConfigManager.Pitched.Value, UnaffectedByRate[index] ? 1f : AudioEngine.Track.Rate);
@@ -116,7 +115,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Pauses all playing samples.
         /// </summary>
-        public void PauseAll()
+        public static void PauseAll()
         {
             for (var i = Channels.Count - 1; i >= 0; i--)
             {
@@ -133,7 +132,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Resumes all samples.
         /// </summary>
-        public void ResumeAll()
+        public static void ResumeAll()
         {
             foreach (var channel in Channels)
                 channel.Play();
@@ -142,7 +141,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Stops and frees all playing samples without the ability to resume them.
         /// </summary>
-        public void StopAll()
+        public static void StopAll()
         {
             foreach (var channel in Channels)
                 channel.Stop();

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 
@@ -95,7 +96,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         public static void PlayObjectKeySounds(HitObjectInfo hitObject)
         {
             foreach (var keySound in hitObject.KeySounds)
-                GameplayScreen.CustomAudioSampleCache.Play(keySound - 1);
+                CustomAudioSampleCache.Play(keySound - 1);
         }
 
         /// <summary>
