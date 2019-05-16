@@ -7,6 +7,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Wobble.Audio.Samples;
 
@@ -95,7 +97,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="volume">Volume between 0 and 100.</param>
         public void Play(int index, int volume = 100)
         {
-            var channel = Samples[index].CreateChannel();
+            var channel = Samples[index].CreateChannel(ConfigManager.Pitched.Value, AudioEngine.Track.Rate);
             channel.Volume *= volume / 100f;
             channel.Play();
 
