@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Helpers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
@@ -304,7 +305,7 @@ namespace Quaver.Shared.Screens.Select
         /// <returns></returns>
         private static float GetNextRate(bool faster)
         {
-            var current = AudioEngine.Track.Rate;
+            var current = ModHelper.GetRateFromMods(ModManager.Mods);
             var adjustment = 0.1f;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -476,7 +477,8 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         public void ExitToEditor() => Exit(() =>
         {
-            AudioEngine.Track?.Pause();
+            if (!AudioEngine.Track.IsDisposed)
+                AudioEngine.Track?.Pause();
 
             try
             {
