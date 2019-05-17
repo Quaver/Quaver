@@ -48,6 +48,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
 using Wobble;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -172,6 +173,8 @@ namespace Quaver.Shared.Screens.Editor
 
             if (!LoadAudioTrack())
                 return;
+
+            CustomAudioSampleCache.LoadSamples(MapManager.Selected.Value, MapManager.Selected.Value.Md5Checksum);
 
             SetHitSoundObjectIndex();
 
@@ -408,17 +411,17 @@ namespace Quaver.Shared.Screens.Editor
         {
             try
             {
-                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused && !AudioEngine.Track.IsPreview)
+                if (AudioEngine.Track != null && AudioEngine.Track.IsPaused)
                     return true;
 
-                AudioEngine.LoadCurrentTrack();
+                AudioEngine.LoadCurrentTrack(false, WorkingMap.Length + 60000);
                 return true;
             }
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Audio track was unable to be loaded for this map.");
                 Exit(() => new MenuScreen());
-                return false;
+                return true;
             }
         }
 
@@ -625,8 +628,13 @@ namespace Quaver.Shared.Screens.Editor
                 {
                     var view = (EditorScreenView) View;
 
-                    if (ConfigManager.EditorEnableHitsounds.Value && !view.LayerCompositor.ScrollContainer.AvailableItems[obj.EditorLayer].Hidden)
-                        HitObjectManager.PlayObjectHitSounds(obj);
+                    if (!view.LayerCompositor.ScrollContainer.AvailableItems[obj.EditorLayer].Hidden)
+                    {
+                        if (ConfigManager.EditorEnableHitsounds.Value)
+                            HitObjectManager.PlayObjectHitSounds(obj);
+                        if (ConfigManager.EditorEnableKeysounds.Value)
+                            HitObjectManager.PlayObjectKeySounds(obj);
+                    }
 
                     HitSoundObjectIndex = i + 1;
                 }
@@ -708,7 +716,10 @@ namespace Quaver.Shared.Screens.Editor
                 if (AudioEngine.Track != null)
                     AudioEngine.Track.Rate = 1.0f;
 
-                AudioEngine.Track?.Fade(0, 100);
+                var track = AudioEngine.Track;
+
+                if (track is AudioTrack t)
+                    t?.Fade(0, 100);
 
                 return new SelectScreen();
             });

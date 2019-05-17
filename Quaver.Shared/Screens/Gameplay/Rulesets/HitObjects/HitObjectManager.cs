@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
 
@@ -87,6 +88,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
                 SkinManager.Skin.SoundHitFinish.CreateChannel().Play();
+        }
+
+        /// <summary>
+        ///     Plays the correct keysounds based on the note index of the HitObjectPool.
+        /// </summary>
+        public static void PlayObjectKeySounds(HitObjectInfo hitObject)
+        {
+            foreach (var keySound in hitObject.KeySounds)
+                CustomAudioSampleCache.Play(keySound - 1);
         }
 
         /// <summary>

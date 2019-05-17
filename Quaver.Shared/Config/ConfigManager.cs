@@ -227,6 +227,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableHitsounds { get; private set; }
 
         /// <summary>
+        ///     If true, keysounds in gameplay will be played.
+        /// </summary>
+        internal static Bindable<bool> EnableKeysounds { get; private set; }
+
+        /// <summary>
         ///     If enabled, the user's background will be blurred in gameplay.
         /// </summary>
         internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
@@ -284,6 +289,11 @@ namespace Quaver.Shared.Config
         ///     Whether or not to play hitsounds in the editor.
         /// </summary>
         internal static Bindable<bool> EditorEnableHitsounds { get; private set; }
+
+        /// <summary>
+        ///     Whether or not to play keysounds in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorEnableKeysounds { get; private set; }
 
         /// <summary>
         ///     The type of beat snap colors that'll be displayed in the editor.
@@ -576,6 +586,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
             KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
             KeyNavigateUp = ReadValue(@"KeyNavigateUp", Keys.Up, data);
@@ -611,6 +622,7 @@ namespace Quaver.Shared.Config
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
+            EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
             EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
@@ -680,6 +692,7 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
+                    EnableKeysounds.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
