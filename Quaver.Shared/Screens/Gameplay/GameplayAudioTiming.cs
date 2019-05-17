@@ -49,7 +49,6 @@ namespace Quaver.Shared.Screens.Gameplay
                 else
                 {
                     AudioEngine.LoadCurrentTrack();
-                    AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModManager.Mods);
                 }
 
                 if (Screen.IsPlayTesting)
