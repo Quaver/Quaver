@@ -171,6 +171,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Play the HitSounds of closest hit object.
             if (ConfigManager.EnableHitsounds.Value)
                 HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
+            if (ConfigManager.EnableKeysounds.Value)
+                HitObjectManager.PlayObjectKeySounds(gameplayHitObject.Info);
 
             // Get Judgement and references
             var time = (int)manager.CurrentAudioPosition;

@@ -100,5 +100,23 @@ namespace Quaver.Shared.Database.Maps
 
             return null;
         }
+
+        ///     Gets a map's custom audio sample path taking into account the game.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="samplePath"></param>
+        /// <returns></returns>
+        public static string GetCustomAudioSamplePath(Map map, string samplePath)
+        {
+            switch (map.Game)
+            {
+                case MapGame.Osu:
+                    return OsuSongsFolder + "/" + map.Directory + "/" + samplePath;
+                case MapGame.Quaver:
+                    return ConfigManager.SongDirectory + "/" + map.Directory + "/" + samplePath;
+                default:
+                    return "";
+            }
+        }
     }
 }

@@ -317,7 +317,7 @@ namespace Quaver.Shared.Screens.Select
         /// <returns></returns>
         private static float GetNextRate(bool faster)
         {
-            var current = AudioEngine.Track.Rate;
+            var current = ModHelper.GetRateFromMods(ModManager.Mods);
             var adjustment = 0.1f;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -559,6 +559,9 @@ namespace Quaver.Shared.Screens.Select
                 NotificationManager.Show(NotificationLevel.Error, "You cannot use the editor while in a multiplayer game!");
                 return;
             }
+
+            if (!AudioEngine.Track.IsDisposed)
+                AudioEngine.Track?.Pause();
 
             Exit(() =>
             {
