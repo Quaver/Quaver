@@ -23,12 +23,7 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     The cached audio samples.
         /// </summary>
-        private static List<AudioSample> Samples { get; set; } = new List<AudioSample>();
-
-        /// <summary>
-        ///     Whether the corresponding audio samples are unaffected by rate.
-        /// </summary>
-        private static List<bool> UnaffectedByRate { get; set; } = new List<bool>();
+        private static List<GameplayAudioSample> Samples { get; set; } = new List<GameplayAudioSample>();
 
         /// <summary>
         ///     Currently playing channels.
@@ -54,12 +49,9 @@ namespace Quaver.Shared.Audio
             foreach (var sample in Samples)
                 sample.Dispose();
 
-            Samples = new List<AudioSample>();
-            UnaffectedByRate = new List<bool>();
+            Samples = new List<GameplayAudioSample>();
             foreach (var info in map.Qua.CustomAudioSamples)
             {
-                UnaffectedByRate.Add(info.UnaffectedByRate);
-
                 // If the path is missing an extension or the file doesn't exist, we need to try some other extensions
                 // for compatibility with osu!.
                 var pathWithoutExt = info.Path;
@@ -81,7 +73,8 @@ namespace Quaver.Shared.Audio
                 {
                     try
                     {
-                        Samples.Add(new AudioSample(MapManager.GetCustomAudioSamplePath(map, pathWithoutExt + '.' + ext)));
+                        Samples.Add(new GameplayAudioSample(new AudioSample(MapManager.GetCustomAudioSamplePath(
+                            map, pathWithoutExt + '.' + ext)), info.UnaffectedByRate));
                         found = true;
                         break;
                     }
@@ -93,7 +86,7 @@ namespace Quaver.Shared.Audio
 
                 // If none of the filenames worked, create a silent sample.
                 if (!found)
-                    Samples.Add(new AudioSample());
+                    Samples.Add(new GameplayAudioSample(new AudioSample(), info.UnaffectedByRate));
             }
         }
 
@@ -104,8 +97,9 @@ namespace Quaver.Shared.Audio
         /// <param name="volume">Volume between 0 and 100.</param>
         public static void Play(int index, int volume = 100)
         {
-            var channel = Samples[index].CreateChannel(
-                ConfigManager.Pitched.Value, UnaffectedByRate[index] ? 1f : AudioEngine.Track.Rate);
+            var sample = Samples[index];
+            var channel = sample.Sample.CreateChannel(
+                ConfigManager.Pitched.Value, sample.UnaffectedByRate ? 1f : AudioEngine.Track.Rate);
             channel.Volume *= volume / 100f;
             channel.Play();
 
