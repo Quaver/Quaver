@@ -25,7 +25,7 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     The AudioTrack for the currently selected map.
         /// </summary>
-        public static AudioTrack Track { get; internal set; }
+        public static IAudioTrack Track { get; internal set; }
 
         /// <summary>
         ///     The map the loaded AudioTrack is for.
@@ -40,7 +40,7 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     Loads the track for the currently selected map.
         /// </summary>
-        public static void LoadCurrentTrack(bool preview = false)
+        public static void LoadCurrentTrack(bool preview = false, int time = 300000)
         {
             Source.Cancel();
             Source.Dispose();
@@ -67,11 +67,13 @@ namespace Quaver.Shared.Audio
             }
             catch (OperationCanceledException e)
             {
-                // ignored
             }
             catch (Exception e)
             {
-                //Logger.Error(e, LogType.Runtime);
+                if (Track != null && !Track.IsDisposed)
+                    Track.Dispose();
+
+                Track = new AudioTrackVirtual(time);
             }
         }
 

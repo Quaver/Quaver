@@ -476,7 +476,8 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         public void ExitToEditor() => Exit(() =>
         {
-            AudioEngine.Track?.Pause();
+            if (!AudioEngine.Track.IsDisposed)
+                AudioEngine.Track?.Pause();
 
             try
             {
