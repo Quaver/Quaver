@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 
         private void HandleLastPlaceAnimation(double dt)
         {
-            if (!DeathAnimationHandled && SelfScoreboard.Rank == SelfScoreboard.Scoreboard.BatlteRoyalePlayersLeft && SelfScoreboard.Rank != 1)
+            if (!DeathAnimationHandled && SelfScoreboard.Rank == SelfScoreboard.Scoreboard.BattleRoyalePlayersLeft.Value && SelfScoreboard.Rank != 1)
             {
                 if (Animations.Count == 0)
                 {

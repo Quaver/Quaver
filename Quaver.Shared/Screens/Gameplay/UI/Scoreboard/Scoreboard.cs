@@ -23,6 +23,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -55,9 +56,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public ScoreboardTeamBanner TeamBanner { get; }
 
         /// <summary>
+        ///     Displays the players left/time left for battle royale
+        /// </summary>
+        public ScoreboardBattleRoyaleBanner BattleRoyaleBanner { get; }
+
+        /// <summary>
         ///     The amount of players left in the battle royale game
         /// </summary>
-        public int BatlteRoyalePlayersLeft { get; private set; }
+        public Bindable<int> BattleRoyalePlayersLeft { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,6 +72,20 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             Type = type;
             Team = team;
+
+            if (OnlineManager.CurrentGame != null)
+            {
+                OnlineManager.Client.OnGameJudgements += OnGameJudgements;
+                OnlineManager.Client.OnPlayerBattleRoyaleEliminated += OnPlayerBattleRoyaleEliminated;
+
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+                {
+                    BattleRoyalePlayersLeft = new Bindable<int>(0)
+                    {
+                        Value = MapManager.Selected.Value.Scores.Value.Count + 1
+                    };
+                }
+            }
 
             if (Type == ScoreboardType.Teams)
             {
@@ -79,6 +99,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     TeamBanner.X = WindowManager.Width - TeamBanner.Width;
             }
 
+            if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale)
+            {
+                BattleRoyaleBanner = new ScoreboardBattleRoyaleBanner(this)
+                {
+                    Parent = this,
+                    Y = 235
+                };
+            }
+
             Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy)).ToList();
             SetTargetYPositions();
 
@@ -90,15 +119,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 if (Team == MultiplayerTeam.Blue)
                     x.X = WindowManager.Width;
             });
-
-            if (OnlineManager.CurrentGame != null)
-            {
-                OnlineManager.Client.OnGameJudgements += OnGameJudgements;
-                OnlineManager.Client.OnPlayerBattleRoyaleEliminated += OnPlayerBattleRoyaleEliminated;
-
-                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale)
-                    BatlteRoyalePlayersLeft = MapManager.Selected.Value.Scores.Value.Count + 1;
-            }
         }
 
         /// <summary>
@@ -176,7 +196,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 return;
 
             user.Processor.MultiplayerProcessor.IsBattleRoyaleEliminated = true;
-            BatlteRoyalePlayersLeft--;
+            BattleRoyalePlayersLeft.Value--;
 
             user.Rank = e.Rank;
             user.SetTintBasedOnHealth();
@@ -303,7 +323,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll
+                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
                         ? Math.Min(users.Count, 5) * -users[i].Height / 2f
                         : 4 * -users[i].Height / 2f + 14;
 
