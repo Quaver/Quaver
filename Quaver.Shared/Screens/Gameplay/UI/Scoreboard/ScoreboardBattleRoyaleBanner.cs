@@ -90,11 +90,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 var nextKnockoutJudgement = GetEliminationInterval() - judgementCount % GetEliminationInterval();
                 nextKnockoutJudgement = judgementCount + nextKnockoutJudgement - 1;
 
-                Console.WriteLine(nextKnockoutJudgement);
                 if (PreviousEliminationJudgementIndex != nextKnockoutJudgement)
                     LastEliminationObject = screen.Map.GetHitObjectAtJudgementIndex(nextKnockoutJudgement);
 
-                Console.WriteLine(LastEliminationObject == null);
                 PreviousEliminationJudgementIndex = nextKnockoutJudgement;
             }
 
