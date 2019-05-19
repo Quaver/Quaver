@@ -240,16 +240,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             // Lerp team banner in and out
             if (TeamBanner != null)
             {
-                if (ConfigManager.ScoreboardVisible.Value)
-                {
-                    var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - TeamBanner.Width;
-                    TeamBanner.X = MathHelper.Lerp(TeamBanner.X, target, (float) Math.Min(dt / 120, 1));
-                }
-                else
-                {
-                    var target = Team == MultiplayerTeam.Red ? -TeamBanner.Width - 10 : WindowManager.Width + TeamBanner.Width + 10;
-                    TeamBanner.X = MathHelper.Lerp(TeamBanner.X, target, (float) Math.Min(dt / 90, 1));
-                }
+                var target = Team == MultiplayerTeam.Red ? 0 : WindowManager.Width - TeamBanner.Width;
+                TeamBanner.X = MathHelper.Lerp(TeamBanner.X, target, (float) Math.Min(dt / 120, 1));
             }
 
             base.Update(gameTime);

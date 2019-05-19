@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
@@ -28,6 +29,7 @@ using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 {
@@ -252,6 +254,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 FontSize = 15,
                 X = -5
             };
+        }
+
+        public override void DrawToSpriteBatch()
+        {
+            if (RectangleF.Intersects(ScreenRectangle, WindowManager.Rectangle))
+                base.DrawToSpriteBatch();
         }
 
         /// <inheritdoc />
