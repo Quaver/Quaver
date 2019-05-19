@@ -22,6 +22,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
         private SpriteTextBitmap TimeLeft { get; }
 
+        private HitObjectInfo LastEliminationObject { get; set; }
+
+        private int PreviousEliminationJudgementIndex { get; set; } = -1;
+
         public ScoreboardBattleRoyaleBanner(Scoreboard scoreboard)
         {
             Scoreboard = scoreboard;
@@ -74,22 +78,30 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (OnlineManager.CurrentGame == null)
                 return;
 
-            HitObjectInfo elimObject;
-
             var judgementCount = Scoreboard.Users.First().Processor.TotalJudgementCount;
 
             var game = (QuaverGame) GameBase.Game;
             var screen = (GameplayScreen) game.CurrentScreen;
 
             if (Scoreboard.BattleRoyalePlayersLeft.Value == 2)
-                elimObject = screen.Map.HitObjects.Last();
+                LastEliminationObject = screen.Map.HitObjects.Last();
             else
             {
                 var nextKnockoutJudgement = GetEliminationInterval() - judgementCount % GetEliminationInterval();
-                elimObject = screen.Map.HitObjects[judgementCount + nextKnockoutJudgement - 1];
+                nextKnockoutJudgement = judgementCount + nextKnockoutJudgement - 1;
+
+                Console.WriteLine(nextKnockoutJudgement);
+                if (PreviousEliminationJudgementIndex != nextKnockoutJudgement)
+                    LastEliminationObject = screen.Map.GetHitObjectAtJudgementIndex(nextKnockoutJudgement);
+
+                Console.WriteLine(LastEliminationObject == null);
+                PreviousEliminationJudgementIndex = nextKnockoutJudgement;
             }
 
-            var time = elimObject.StartTime - screen.Timing.Time;
+            if (LastEliminationObject == null)
+                LastEliminationObject = screen.Map.HitObjects.Last();
+
+            var time = LastEliminationObject.StartTime - screen.Timing.Time;
 
             if (time < 0)
                 time = 0;

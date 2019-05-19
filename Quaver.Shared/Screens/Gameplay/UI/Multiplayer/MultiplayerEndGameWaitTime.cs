@@ -18,18 +18,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 
         public MultiplayerEndGameWaitTime()
         {
-            Tint = Color.Black;
-            Size = new ScalableVector2(WindowManager.Width, 134);
-            Alpha = 0;
+            Tint = Colors.MainAccentInactive;
+            Size = new ScalableVector2(450, 134);
+            Alpha = 1;
             SetChildrenAlpha = true;
-
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, 2),
-                Tint = Colors.MainAccent
-            };
 
             Icon = new Sprite
             {
@@ -49,15 +41,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alignment = Alignment.TopCenter
             };
 
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, 2),
-                Tint = Colors.MainAccent,
-                Alignment = Alignment.BotLeft
-            };
-
             LoadingWheel = new Sprite()
             {
                 Parent = this,
@@ -66,6 +49,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alignment = Alignment.TopCenter,
                 Y = text.Y + text.Height + 10
             };
+
+            AddBorder(Colors.MainAccent, 2);
+            Border.Alpha = 0;
         }
 
         public override void Update(GameTime gameTime)
