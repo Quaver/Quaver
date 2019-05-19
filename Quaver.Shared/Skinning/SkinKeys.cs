@@ -157,6 +157,10 @@ namespace Quaver.Shared.Skinning
 
         internal int BattleRoyaleAlertScale { get; private set; }
 
+        internal int BattleRoyaleEliminatedPosX { get; private set; }
+
+        internal int BattleRoyaleEliminatedPosY { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -401,6 +405,8 @@ namespace Quaver.Shared.Skinning
                     BattleRoyaleAlertPosX = 0;
                     BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
+                    BattleRoyaleEliminatedPosX = 0;
+                    BattleRoyaleEliminatedPosY = -115;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -465,6 +471,8 @@ namespace Quaver.Shared.Skinning
                     BattleRoyaleAlertPosX = 0;
                     BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
+                    BattleRoyaleEliminatedPosX = 0;
+                    BattleRoyaleEliminatedPosY = -115;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -544,6 +552,8 @@ namespace Quaver.Shared.Skinning
                     BattleRoyaleAlertPosX = 0;
                     BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
+                    BattleRoyaleEliminatedPosX = 0;
+                    BattleRoyaleEliminatedPosY = -115;
                     break;
                 case DefaultSkins.Arrow:
                     StageReceptorPadding = 10;
@@ -612,6 +622,8 @@ namespace Quaver.Shared.Skinning
                     BattleRoyaleAlertPosX = 0;
                     BattleRoyaleAlertScale = 110;
                     BattleRoyaleAlertPosY = -150;
+                    BattleRoyaleEliminatedPosX = 0;
+                    BattleRoyaleEliminatedPosY = -115;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -692,6 +704,8 @@ namespace Quaver.Shared.Skinning
             BattleRoyaleAlertPosX = ConfigHelper.ReadInt32(BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
             BattleRoyaleAlertPosY = ConfigHelper.ReadInt32(BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
             BattleRoyaleAlertScale = ConfigHelper.ReadInt32(BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
+            BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
+            BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
         }
 
         /// <summary>
