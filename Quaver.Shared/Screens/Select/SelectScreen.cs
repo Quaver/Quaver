@@ -565,8 +565,6 @@ namespace Quaver.Shared.Screens.Select
 
             Exit(() =>
             {
-                AudioEngine.Track?.Pause();
-
                 try
                 {
                     return new EditorScreen(MapManager.Selected.Value.LoadQua(false));

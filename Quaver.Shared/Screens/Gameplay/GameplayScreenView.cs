@@ -231,7 +231,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 MultiplayerEndTime = new MultiplayerEndGameWaitTime
                 {
                     Parent = Container,
-                    Alignment = Alignment.MidLeft
+                    Alignment = Alignment.MidCenter
                 };
             }
 
@@ -776,7 +776,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 MultiplayerEndTime.ClearAnimations();
                 MultiplayerEndTime.Alpha = 0;
-                MultiplayerEndTime.FadeTo(0.85f, Easing.Linear, 200);
+                MultiplayerEndTime.FadeTo(1, Easing.Linear, 400);
             }
         }
     }

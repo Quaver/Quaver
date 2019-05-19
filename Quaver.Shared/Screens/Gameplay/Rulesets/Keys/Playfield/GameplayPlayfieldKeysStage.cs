@@ -144,6 +144,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
 
         /// <summary>
+        /// </summary>
+        private BattleRoyalePlayerEliminated BattleRoyalePlayerEliminated { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -185,8 +189,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitLighting();
                 CreateJudgementHitBurst();
 
-                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale && ConfigManager.EnableBattleRoyaleAlerts.Value)
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
+                    ConfigManager.EnableBattleRoyaleAlerts.Value)
+                {
                     CreateBattleRoyaleAlert();
+                    CreateBattleRoyaleEliminated();
+                }
+
 
                 CreateSongInfo();
             }
@@ -197,8 +206,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateJudgementHitBurst();
                 CreateHitLighting();
 
-                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale && ConfigManager.EnableBattleRoyaleAlerts.Value)
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
+                    ConfigManager.EnableBattleRoyaleAlerts.Value)
+                {
                     CreateBattleRoyaleAlert();
+                    CreateBattleRoyaleEliminated();
+                }
 
                 CreateSongInfo();
                 CreateLaneCoverOverlay();
@@ -550,6 +563,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Size = new ScalableVector2(size.X, size.Y),
             };
         }
+
+        private void CreateBattleRoyaleEliminated() => BattleRoyalePlayerEliminated = new BattleRoyalePlayerEliminated(Screen)
+        {
+            Parent = Playfield.ForegroundContainer,
+            Alignment = Alignment.MidCenter,
+            Position = new ScalableVector2(Skin.BattleRoyaleEliminatedPosX, Skin.BattleRoyaleEliminatedPosY)
+        };
 
         /// <summary>
         ///     Updates the given receptor and column lighting activity
