@@ -2,6 +2,7 @@ using System.Drawing;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -18,9 +19,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
 
         public MultiplayerEndGameWaitTime()
         {
-            Tint = Colors.MainAccentInactive;
+            Image = UserInterface.WaitingPanel;
             Size = new ScalableVector2(450, 134);
-            Alpha = 1;
+            Alpha = 0;
             SetChildrenAlpha = true;
 
             Icon = new Sprite
@@ -49,9 +50,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alignment = Alignment.TopCenter,
                 Y = text.Y + text.Height + 10
             };
-
-            AddBorder(Colors.MainAccent, 2);
-            Border.Alpha = 0;
         }
 
         public override void Update(GameTime gameTime)
