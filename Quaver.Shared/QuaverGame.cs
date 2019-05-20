@@ -275,16 +275,17 @@ namespace Quaver.Shared
             MapsetImporter.WatchForChanges();
 
             // Initially set the global volume.
-            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
-            AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value;
+            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeMusic.Value / 100f;
+            AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value * ConfigManager.VolumeEffect.Value / 100f;
 
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
             {
-                AudioTrack.GlobalVolume = e.Value;
-            };;
+                AudioTrack.GlobalVolume = e.Value * ConfigManager.VolumeMusic.Value / 100f;
+                AudioSample.GlobalVolume = e.Value * ConfigManager.VolumeEffect.Value / 100f;
+            };
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value * e.Value / 100f;
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value * e.Value / 100f;
 
-            ConfigManager.VolumeMusic.ValueChanged += (sender, e) => { if (AudioEngine.Track != null) AudioEngine.Track.Volume = e.Value;  };
-            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ApplyRate(e.Value);
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
