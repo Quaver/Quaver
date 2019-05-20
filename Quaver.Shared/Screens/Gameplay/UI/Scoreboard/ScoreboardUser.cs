@@ -122,6 +122,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// </summary>
         public bool HasQuit { get; private set; }
 
+        public bool IsOneVersusOne => OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All
+                                      && MapManager.Selected.Value?.Scores?.Value?.Count == 1;
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -387,6 +389,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                                 break;
                         }
                     }
+                    else if (IsOneVersusOne)
+                        Image = SkinManager.Skin.ScoreboardRedTeam;
                     break;
                 case ScoreboardUserType.Other:
                     Image = SkinManager.Skin.ScoreboardOther;
@@ -404,6 +408,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                                 break;
                         }
                     }
+                    else if (IsOneVersusOne)
+                        Image = UserInterface.ScoreboardBlueMirrored;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

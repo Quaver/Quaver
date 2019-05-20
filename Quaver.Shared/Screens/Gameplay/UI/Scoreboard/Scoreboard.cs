@@ -61,9 +61,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public ScoreboardBattleRoyaleBanner BattleRoyaleBanner { get; }
 
         /// <summary>
+        ///     Displays the win count in a 1v1
+        /// </summary>
+        public ScoreboardOneVsOneWins OneVsOneWinsBanner { get; }
+
+        /// <summary>
         ///     The amount of players left in the battle royale game
         /// </summary>
-        public Bindable<int> BattleRoyalePlayersLeft { get; private set; }
+        public Bindable<int> BattleRoyalePlayersLeft { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -102,6 +107,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale)
             {
                 BattleRoyaleBanner = new ScoreboardBattleRoyaleBanner(this)
+                {
+                    Parent = this,
+                    Y = 235
+                };
+            }
+            else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All &&
+                     MapManager.Selected.Value.Scores.Value.Count == 1)
+            {
+                Console.WriteLine(MapManager.Selected.Value.Scores.Value.Count == 1);
+                OneVsOneWinsBanner = new ScoreboardOneVsOneWins(this)
                 {
                     Parent = this,
                     Y = 235
@@ -315,7 +330,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = Type == ScoreboardType.FreeForAll &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
+                    users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && MapManager.Selected.Value.Scores.Value.Count != 1)
+                                               &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
                         ? Math.Min(users.Count, 5) * -users[i].Height / 2f
                         : 4 * -users[i].Height / 2f + 14;
 

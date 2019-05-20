@@ -70,6 +70,8 @@ namespace Quaver.Shared.Assets
         public static Texture2D BattleRoyaleGradient { get; private set; }
         public static Texture2D BattleRoyalePanel { get; private set; }
         public static Texture2D WaitingPanel { get; private set; }
+        public static Texture2D WinsPanel { get; private set; }
+        public static Texture2D ScoreboardBlueMirrored { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -132,6 +134,8 @@ namespace Quaver.Shared.Assets
             BattleRoyaleGradient = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/battle-royale-gradient.png"));
             BattleRoyalePanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/battle-royale-panel.png"));
             WaitingPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/waiting-panel.png"));
-;        }
+            WinsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/wins-panel.png"));
+            ScoreboardBlueMirrored = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/scoreboard-blue-mirrored.png"));
+        }
     }
 }
