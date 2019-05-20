@@ -115,7 +115,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All &&
                      MapManager.Selected.Value.Scores.Value.Count == 1)
             {
-                Console.WriteLine(MapManager.Selected.Value.Scores.Value.Count == 1);
                 OneVsOneWinsBanner = new ScoreboardOneVsOneWins(this)
                 {
                     Parent = this,
