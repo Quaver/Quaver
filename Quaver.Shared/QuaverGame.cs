@@ -137,6 +137,9 @@ namespace Quaver.Shared
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
 
+            DevicePeriod = ConfigManager.DevicePeriod.Value;
+            DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
+
             base.Initialize();
         }
 

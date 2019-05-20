@@ -309,7 +309,12 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsSlider(this, "Effect Volume", ConfigManager.VolumeEffect, x => $"{x}%"),
                     new SettingsBool(this, "Pitch Audio With Rate", ConfigManager.Pitched),
                     new SettingsSlider(this, "Global Audio Offset", ConfigManager.GlobalAudioOffset, x => $"{x} ms"),
-                    new SettingsCalibrateOffset(this, "Calibrate Offset")
+                    new SettingsCalibrateOffset(this, "Calibrate Offset"),
+                    new SettingsSlider(this, "Audio Device Period", ConfigManager.DevicePeriod, x => $"{x} ms"),
+                    new SettingsSliderAudioBufferLength(this, "Audio Device Buffer Length",
+                                ConfigManager.DeviceBufferLengthMultiplier,
+                                ConfigManager.DevicePeriod,
+                                (multiplier, period) => $"{multiplier * period} ms")
                 }),
                 // Gameplay
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "Gameplay", new List<Drawable>
