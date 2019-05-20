@@ -8,12 +8,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
@@ -255,6 +258,23 @@ namespace Quaver.Shared.Screens.Settings
                     WindowManager.ChangeScreenResolution(NewQueuedScreenResolution);
 
                     dismissDalog = false;
+                }
+
+                // Handle device period and buffer length changes.
+                if (ConfigManager.DevicePeriod.Value != Bass.GetConfig(Configuration.DevicePeriod)
+                    || ConfigManager.DeviceBufferLengthMultiplier.Value !=
+                        Bass.GetConfig(Configuration.DeviceBufferLength) / Bass.GetConfig(Configuration.DevicePeriod))
+                {
+                    DialogManager.Show(new ConfirmCancelDialog(
+                        "The game must be restarted to apply the new audio device properties. Exit the game now?",
+                        (sender, args) =>
+                        {
+                            // Make sure the config is saved.
+                            Task.Run(ConfigManager.WriteConfigFileAsync).Wait();
+
+                            var game = GameBase.Game as QuaverGame;
+                            game?.Exit();
+                        }));
                 }
 
                 if (dismissDalog)
