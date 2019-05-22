@@ -20,12 +20,12 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <summary>
         ///     The value that the slider is binded to.
         /// </summary>
-        private BindableInt Bindable { get; }
+        protected BindableInt Bindable { get; }
 
         /// <summary>
         ///     Displays the value of the bindable
         /// </summary>
-        private SpriteText Value { get; }
+        protected SpriteText Value { get; }
 
         /// <summary>
         ///     Converts the bindable value to string for displaying.
