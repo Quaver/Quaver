@@ -56,7 +56,6 @@ namespace Quaver.Shared.Audio
 
                 var newTrack = new AudioTrack(MapManager.CurrentAudioPath, preview)
                 {
-                    Volume = ConfigManager.VolumeMusic.Value,
                     Rate = ModHelper.GetRateFromMods(ModManager.Mods),
                 };
 
