@@ -501,7 +501,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
                         AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
                         AudioEngine.Track.Volume = 0;
                         AudioEngine.Track.Play();
-                        AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 800);
+                        AudioEngine.Track.Fade(100, 800);
                     }
                     catch (Exception)
                     {

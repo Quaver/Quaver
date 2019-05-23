@@ -86,7 +86,10 @@ namespace Quaver.Shared.Audio
 
                 // If none of the filenames worked, create a silent sample.
                 if (!found)
-                    Samples.Add(new GameplayAudioSample(new AudioSample(), info.UnaffectedByRate));
+                {
+                    // Applying rate to an empty sample results in a crash.
+                    Samples.Add(new GameplayAudioSample(new AudioSample(), true));
+                }
             }
         }
 

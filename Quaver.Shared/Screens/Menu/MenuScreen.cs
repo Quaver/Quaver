@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Menu
             GameBase.Game.GlobalUserInterface.Cursor.Show(1);
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
-            AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+            AudioEngine.Track?.Fade(100, 500);
 
             base.OnFirstUpdate();
         }
