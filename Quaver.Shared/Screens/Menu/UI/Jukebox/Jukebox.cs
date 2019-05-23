@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             if (AudioEngine.Track != null && AudioEngine.Track.IsPaused)
             {
                 AudioEngine.Track.Play();
-                AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 300);
+                AudioEngine.Track.Fade(100, 300);
             }
         }
 

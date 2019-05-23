@@ -427,7 +427,7 @@ namespace Quaver.Shared.Screens.Select
                     MapsetScrollContainer.LoadNewAudioTrackIfNecessary();
                 }
                 else
-                    AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 500);
+                    AudioEngine.Track.Fade(100, 500);
 
                 return;
             }

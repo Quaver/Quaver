@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IniFileParser;
 using IniFileParser.Model;
+using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
@@ -99,6 +100,16 @@ namespace Quaver.Shared.Config
         ///     The Music volume of the gamne.
         /// </summary>
         internal static BindableInt VolumeMusic { get; private set; }
+
+        /// <summary>
+        ///     The BASS device period.
+        /// </summary>
+        internal static BindableInt DevicePeriod { get; private set; }
+
+        /// <summary>
+        ///     The BASS device buffer length divided by DevicePeriod.
+        /// </summary>
+        internal static BindableInt DeviceBufferLengthMultiplier { get; private set; }
 
         /// <summary>
         ///     The dim for backgrounds during gameplay
@@ -552,6 +563,8 @@ namespace Quaver.Shared.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
+            DevicePeriod = ReadInt(@"DevicePeriod", Bass.GetConfig(Configuration.DevicePeriod), 1, 100, data);
+            DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", Bass.GetConfig(Configuration.DeviceBufferLength) / DevicePeriod.Value, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
@@ -661,6 +674,8 @@ namespace Quaver.Shared.Config
                     VolumeGlobal.ValueChanged += AutoSaveConfiguration;
                     VolumeEffect.ValueChanged += AutoSaveConfiguration;
                     VolumeMusic.ValueChanged += AutoSaveConfiguration;
+                    DevicePeriod.ValueChanged += AutoSaveConfiguration;
+                    DeviceBufferLengthMultiplier.ValueChanged += AutoSaveConfiguration;
                     BackgroundBrightness.ValueChanged += AutoSaveConfiguration;
                     WindowHeight.ValueChanged += AutoSaveConfiguration;
                     WindowWidth.ValueChanged += AutoSaveConfiguration;
