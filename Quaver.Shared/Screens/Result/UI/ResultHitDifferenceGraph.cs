@@ -20,6 +20,7 @@ using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -97,8 +98,6 @@ namespace Quaver.Shared.Screens.Result.UI
 
             // Make some fake hits for debugging.
             // CreateFakeHitStats();
-
-            // Draw the dots if there are any.
             if (Processor.Stats != null)
             {
                 FilterHitStats();
@@ -162,6 +161,13 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static ScoreProcessor GetScoreProcessor(ResultScreen screen)
         {
+            // Draw the dots if there are any.
+            if (screen.Gameplay != null && screen.Gameplay.InReplayMode)
+            {
+                var im = screen.Gameplay.Ruleset.InputManager as KeysInputManager;
+                return im?.ReplayInputManager.VirtualPLayer.ScoreProcessor;
+            }
+
             // If we already have stats (for example, this is a result screen right after a player finished playing a map), use them.
             if (screen.ScoreProcessor.Stats != null)
                 return screen.ScoreProcessor;

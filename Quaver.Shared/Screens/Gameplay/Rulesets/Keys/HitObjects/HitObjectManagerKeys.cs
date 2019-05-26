@@ -18,6 +18,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
@@ -326,7 +327,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.StartTime, Judgement.Miss,
                                             int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
-                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                    var im = Ruleset.InputManager as KeysInputManager;
+
+                    if (im?.ReplayInputManager == null)
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
                     var view = (GameplayScreenView)Ruleset.Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();
@@ -341,7 +346,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (hitObject.Info.IsLongNote)
                     {
                         KillPoolObject(hitObject);
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                        if (im?.ReplayInputManager == null)
+                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
                         view.UpdateScoreAndAccuracyDisplays();
                         Ruleset.ScoreProcessor.Stats.Add(stat);
@@ -386,7 +393,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, Judgement.Okay,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                     Ruleset.ScoreProcessor.Stats.Add(stat);
-                    Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+
+                    var im = Ruleset.InputManager as KeysInputManager;
+
+                    if (im?.ReplayInputManager == null)
+                        Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;

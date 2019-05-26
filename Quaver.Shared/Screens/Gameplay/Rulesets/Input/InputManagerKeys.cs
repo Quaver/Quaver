@@ -175,7 +175,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int)manager.CurrentAudioPosition;
             var hitDifference = gameplayHitObject.Info.StartTime - time;
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, ReplayInputManager == null);
             var lane = gameplayHitObject.Info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var hitDifference = (int)(manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - manager.CurrentAudioPosition);
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
@@ -301,7 +301,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     Ruleset.ScoreProcessor.Accuracy,
                     Ruleset.ScoreProcessor.Health
             ));
-            Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+
+            if (ReplayInputManager == null)
+                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
             var view = (GameplayScreenView) Ruleset.Screen.View;
