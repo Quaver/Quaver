@@ -94,14 +94,28 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             foreach (var activeLane in currentActive)
             {
-                if (!previousActive.Contains(activeLane))
-                    UniquePresses[activeLane] = true;
+                try
+                {
+                    if (!previousActive.Contains(activeLane))
+                        UniquePresses[activeLane] = true;
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
 
             foreach (var activeLane in previousActive)
             {
-                if (!currentActive.Contains(activeLane))
-                    UniqueReleases[activeLane] = true;
+                try
+                {
+                    if (!currentActive.Contains(activeLane))
+                        UniqueReleases[activeLane] = true;
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
 
             CurrentFrame++;

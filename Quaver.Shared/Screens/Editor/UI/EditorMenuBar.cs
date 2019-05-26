@@ -284,6 +284,8 @@ namespace Quaver.Shared.Screens.Editor.UI
 
             if (ImGui.MenuItem("Enable Hitsounds", null, ConfigManager.EditorEnableHitsounds.Value))
                 ConfigManager.EditorEnableHitsounds.Value = !ConfigManager.EditorEnableHitsounds.Value;
+            if (ImGui.MenuItem("Enable Keysounds", null, ConfigManager.EditorEnableKeysounds.Value))
+                ConfigManager.EditorEnableKeysounds.Value = !ConfigManager.EditorEnableKeysounds.Value;
 
             ImGui.EndMenu();
         }
