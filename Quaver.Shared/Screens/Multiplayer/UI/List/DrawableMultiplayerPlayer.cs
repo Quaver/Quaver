@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -23,11 +25,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public sealed override int HEIGHT { get; } = 48;
+        public sealed override int HEIGHT { get; } = 60;
 
         /// <summary>
         /// </summary>
-        private DrawableMultiplayerPlayerButton Button { get; }
+        public DrawableMultiplayerPlayerButton Button { get; }
 
         /// <summary>
         /// </summary>
@@ -53,6 +55,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// </summary>
         private Sprite Flag { get; }
 
+        /// <summary>
+        /// </summary>
+        private SpriteTextBitmap Wins { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -67,11 +73,24 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
             Button = new DrawableMultiplayerPlayerButton(this) {Parent = this};
 
+            Ready = new Sprite
+            {
+                Parent = Button,
+                Alignment = Alignment.MidLeft,
+                X = 16,
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_check_mark),
+                Size = new ScalableVector2(18, 18),
+                Alpha = OnlineManager.CurrentGame.PlayersReady.Contains(Item.Id) ? 1 :  0.35f,
+                Tint = Color.LimeGreen
+            };
+
             Avatar = new Sprite
             {
                 Parent = Button,
-                Size = new ScalableVector2(Button.Height, Button.Height),
-                Alpha = 0
+                Size = new ScalableVector2(36, 36),
+                X = Ready.X + Ready.Width + 16,
+                Alignment = Alignment.MidLeft,
+                Alpha = 0,
             };
 
             Avatar.AddBorder(GetPlayerColor(), 2);
@@ -80,7 +99,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             {
                 Parent = Button,
                 Alignment = Alignment.MidLeft,
-                X = Avatar.X + Avatar.Width + 12,
+                X = Avatar.X + Avatar.Width + 16,
                 Image = item.CountryFlag == null ? Flags.Get("XX") : Flags.Get(item.CountryFlag),
                 Size = new ScalableVector2(26, 26)
             };
@@ -105,26 +124,25 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Tint = Color.Gold
             };
 
-            Ready = new Sprite
-            {
-                Parent = Button,
-                Alignment = Alignment.MidRight,
-                X = -10,
-                Image = FontAwesome.Get(FontAwesomeIcon.fa_check_mark),
-                Size = new ScalableVector2(18, 18),
-                Alpha = OnlineManager.CurrentGame.PlayersReady.Contains(Item.Id) ? 1 :  0.35f,
-                Tint = Color.LimeGreen
-            };
-
             NoMapIcon = new Sprite()
             {
                 Parent = Button,
-                Alignment = Alignment.MidRight,
-                X = Ready.X - Ready.Width - 10,
+                Alignment = Alignment.MidLeft,
+                X = Ready.X,
                 Size = Ready.Size,
                 Tint = Color.Red,
                 Visible = OnlineManager.CurrentGame.PlayersWithoutMap.Contains(Item.Id),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_times)
+            };
+
+            Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0W")
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -16,
+                FontSize = 16,
+                Tint = Colors.SecondaryAccent,
+                Y = -2
             };
 
             OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
@@ -135,6 +153,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnPlayerReady += OnGamePlayerReady;
             OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
             OnlineManager.Client.OnUserStats += OnUserStats;
+            OnlineManager.Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
             if (!OnlineManager.OnlineUsers[item.Id].HasUserInfo)
@@ -151,6 +171,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             // Request user stats if necessary
             if (OnlineManager.OnlineUsers[item.Id].Stats.Count == 0)
                 OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Ready.Visible = !NoMapIcon.Visible;
+
+            if (OnlineManager.CurrentGame != null)
+                Wins.Visible = OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team;
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -173,8 +203,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
                 Username.Text = item.Username + rank;
                 HostCrown.X = Username.Width + 12;
+
+                var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
+                Wins.Text = mpWins != null ? $"{mpWins.Wins}W" : $"0W";
             }
 
+            Image = GetPlayerPanel();
             HostCrown.Visible = OnlineManager.CurrentGame.HostId == Item.Id;
         }
 
@@ -193,6 +227,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnPlayerReady -= OnGamePlayerReady;
             OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
+            OnlineManager.Client.OnGamePlayerWinCount -= OnGamePlayerWinCount;
 
             Button.Destroy();
             base.Destroy();
@@ -306,14 +341,27 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             Ready.Alpha = 0.35f;
         }
 
+        private void OnGamePlayerWinCount(object sender, PlayerWinCountEventArgs e)
+            => UpdateContent(Item, Index);
+
         public Color GetPlayerColor()
         {
             if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(Item.Id))
                 return Color.Crimson;
             if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(Item.Id))
-                return ColorHelper.HexToColor($"#4cb0f7");
+                return new Color(25, 104, 249);
 
             return Color.White;
+        }
+
+        public Texture2D GetPlayerPanel()
+        {
+            if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(Item.Id))
+                return UserInterface.UserPanelRed;
+            if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(Item.Id))
+                return UserInterface.UserPanelBlue;
+
+            return UserInterface.UserPanelFFA;
         }
     }
 }

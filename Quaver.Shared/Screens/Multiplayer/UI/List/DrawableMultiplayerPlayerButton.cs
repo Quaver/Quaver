@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Skinning;
+using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -13,6 +15,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
     {
         private PlayerList Container { get; }
 
+        private Sprite HoverArea { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -21,12 +25,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         {
             Container = player.Container as PlayerList;
 
-            Tint = Color.Black;
-            Alpha = 0.75f;
-            Size = new ScalableVector2(player.Width, player.HEIGHT * 0.85f);
+            Image = player.GetPlayerPanel();
+            Size = new ScalableVector2(player.Width, player.HEIGHT * 0.90f);
 
-            AddBorder(Color.White, 2);
-            Border.Alpha = 0.45f;
+            HoverArea = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width - 2, Height - 2),
+                Alpha = 0
+            };
         }
 
         /// <inheritdoc />
@@ -35,10 +43,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.20f : 0.75f,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
-
-            Border.Alpha = MathHelper.Lerp(Border.Alpha, IsHovered ? 0f : 0.45f,
+            HoverArea.Alpha = MathHelper.Lerp(HoverArea.Alpha, IsHovered ? 0.4f : 0f,
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
 
             base.Update(gameTime);
