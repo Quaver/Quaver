@@ -14,6 +14,7 @@ using Quaver.API.Replays;
 using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -129,11 +130,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
                 if (hom?.CurrentAudioPosition >= VirtualPLayer.ScoreProcessor.Stats[i].SongPosition)
                 {
-                    ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(VirtualPLayer.ScoreProcessor.Stats[i].Judgement);
+                    var judgement = VirtualPLayer.ScoreProcessor.Stats[i].Judgement;
+
+                    ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(judgement);
 
                     // Update Scoreboard
                     var view = (GameplayScreenView) Screen.View;
                     view.UpdateScoreAndAccuracyDisplays();
+
+                    var playfield = (GameplayPlayfieldKeys)Screen.Ruleset.Playfield;
+                    playfield.Stage.ComboDisplay.MakeVisible();
+
+                    if (judgement != Judgement.Miss)
+                        playfield.Stage.HitError.AddJudgement(judgement, VirtualPLayer.ScoreProcessor.Stats[i].HitDifference);
+
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
 
                     CurrentVirtualReplayStat++;
                 }

@@ -206,9 +206,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Update Playfield
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-            playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - manager.CurrentAudioPosition);
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+            if (ReplayInputManager == null)
+            {
+                playfield.Stage.ComboDisplay.MakeVisible();
+                playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - manager.CurrentAudioPosition);
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+            }
 
             // Update Object Pooling
             switch (judgement)
@@ -273,9 +277,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
                 // Update Playfield
-                playfield.Stage.ComboDisplay.MakeVisible();
-                playfield.Stage.HitError.AddJudgement(judgement, (int)(gameplayHitObject.Info.EndTime - manager.CurrentAudioPosition));
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                if (ReplayInputManager == null)
+                {
+                    playfield.Stage.ComboDisplay.MakeVisible();
+                    playfield.Stage.HitError.AddJudgement(judgement, (int)(gameplayHitObject.Info.EndTime - manager.CurrentAudioPosition));
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                }
 
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
@@ -313,7 +320,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             view.UpdateScoreAndAccuracyDisplays();
 
             // Perform hit burst animation
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+            if (ReplayInputManager == null)
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
             // Update Object Pool
             manager.KillHoldPoolObject(gameplayHitObject);
