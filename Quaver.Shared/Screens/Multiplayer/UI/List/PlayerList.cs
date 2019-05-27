@@ -122,6 +122,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                     return;
 
                 player.Avatar.Border.Tint = player.GetPlayerColor();
+                player.Button.Image = player.GetPlayerPanel();
                 OrderByTeam(false);
             }
         }
@@ -165,6 +166,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
                         var player = Pool[i] as DrawableMultiplayerPlayer;
                         player.Avatar.Border.Tint = player.GetPlayerColor();
+                        player.Button.Image = player.GetPlayerPanel();
                     }
 
                     Pool = Pool.OrderBy(x => x.Index).ToList();

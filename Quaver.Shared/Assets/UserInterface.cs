@@ -72,6 +72,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D WaitingPanel { get; private set; }
         public static Texture2D WinsPanel { get; private set; }
         public static Texture2D ScoreboardBlueMirrored { get; private set; }
+        public static Texture2D UserPanelFFA { get; private set; }
+        public static Texture2D UserPanelRed { get; private set; }
+        public static Texture2D UserPanelBlue { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -136,6 +139,9 @@ namespace Quaver.Shared.Assets
             WaitingPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/waiting-panel.png"));
             WinsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/wins-panel.png"));
             ScoreboardBlueMirrored = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/scoreboard-blue-mirrored.png"));
+            UserPanelFFA = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-ffa.png"));
+            UserPanelRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-red.png"));
+            UserPanelBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-blue.png"));
         }
     }
 }
