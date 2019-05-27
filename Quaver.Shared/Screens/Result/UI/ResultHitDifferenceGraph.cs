@@ -20,6 +20,7 @@ using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -162,6 +163,15 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static ScoreProcessor GetScoreProcessor(ResultScreen screen)
         {
+            // Handles the case when watching a replay in its entirety. This uses the preprocessed
+            // ScoreProcessor/Replay from gameplay to get a 100% accurate score output.
+            // Also avoids having to process the replay again (as done below).
+            if (screen.Gameplay != null && screen.Gameplay.InReplayMode)
+            {
+                var im = screen.Gameplay.Ruleset.InputManager as KeysInputManager;
+                return im?.ReplayInputManager.VirtualPlayer.ScoreProcessor;
+            }
+
             // If we already have stats (for example, this is a result screen right after a player finished playing a map), use them.
             if (screen.ScoreProcessor.Stats != null)
                 return screen.ScoreProcessor;

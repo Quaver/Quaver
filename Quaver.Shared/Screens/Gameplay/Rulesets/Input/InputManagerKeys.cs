@@ -177,7 +177,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Get Judgement and references
             var time = (int)manager.CurrentAudioPosition;
             var hitDifference = gameplayHitObject.Info.StartTime - time;
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Press, ReplayInputManager == null);
             var lane = gameplayHitObject.Info.Lane - 1;
 
             // Ignore Ghost Taps
@@ -206,9 +206,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Update Playfield
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
-            playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - manager.CurrentAudioPosition);
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+            if (ReplayInputManager == null)
+            {
+                playfield.Stage.ComboDisplay.MakeVisible();
+                playfield.Stage.HitError.AddJudgement(judgement, gameplayHitObject.Info.StartTime - manager.CurrentAudioPosition);
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+            }
 
             // Update Object Pooling
             switch (judgement)
@@ -244,7 +248,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var hitDifference = (int)(manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - manager.CurrentAudioPosition);
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release);
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
@@ -273,9 +277,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
 
                 // Update Playfield
-                playfield.Stage.ComboDisplay.MakeVisible();
-                playfield.Stage.HitError.AddJudgement(judgement, (int)(gameplayHitObject.Info.EndTime - manager.CurrentAudioPosition));
-                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                if (ReplayInputManager == null)
+                {
+                    playfield.Stage.ComboDisplay.MakeVisible();
+                    playfield.Stage.HitError.AddJudgement(judgement, (int)(gameplayHitObject.Info.EndTime - manager.CurrentAudioPosition));
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                }
 
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
@@ -303,7 +310,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     Ruleset.ScoreProcessor.Accuracy,
                     Ruleset.ScoreProcessor.Health
             ));
-            Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+
+            if (ReplayInputManager == null)
+                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
             var view = (GameplayScreenView) Ruleset.Screen.View;
@@ -311,7 +320,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             view.UpdateScoreAndAccuracyDisplays();
 
             // Perform hit burst animation
-            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+            if (ReplayInputManager == null)
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
             // Update Object Pool
             manager.KillHoldPoolObject(gameplayHitObject);

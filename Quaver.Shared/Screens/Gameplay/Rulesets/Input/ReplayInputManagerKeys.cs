@@ -8,9 +8,13 @@
 using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
+using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -47,6 +51,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         internal List<bool> UniqueReleases { get; } = new List<bool>();
 
         /// <summary>
+        ///     Virtually plays replay frames
+        /// </summary>
+        public VirtualReplayPlayer VirtualPlayer { get; }
+
+        /// <summary>
+        ///     The current frame being played in the virtual replay player
+        /// </summary>
+        private int CurrentVirtualReplayStat { get; set; } = -1;
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="screen"></param>
@@ -54,6 +68,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         {
             Screen = screen;
             Replay = Screen.LoadedReplay;
+
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map);
+            VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.
             for (var i = 0; i < screen.Map.GetKeyCount(); i++)
@@ -68,6 +85,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         internal void HandleInput()
         {
+            HandleScoring();
+
             if (CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
                 return;
 
@@ -101,6 +120,37 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             }
 
             CurrentFrame++;
+        }
+
+        private void HandleScoring()
+        {
+            for (var i = CurrentVirtualReplayStat + 1; i < VirtualPlayer.ScoreProcessor.Stats.Count; i++)
+            {
+                var hom = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
+
+                if (hom?.CurrentAudioPosition >= VirtualPlayer.ScoreProcessor.Stats[i].SongPosition)
+                {
+                    var judgement = VirtualPlayer.ScoreProcessor.Stats[i].Judgement;
+
+                    ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(judgement);
+
+                    // Update Scoreboard
+                    var view = (GameplayScreenView) Screen.View;
+                    view.UpdateScoreAndAccuracyDisplays();
+
+                    var playfield = (GameplayPlayfieldKeys)Screen.Ruleset.Playfield;
+                    playfield.Stage.ComboDisplay.MakeVisible();
+
+                    if (judgement != Judgement.Miss)
+                        playfield.Stage.HitError.AddJudgement(judgement, VirtualPlayer.ScoreProcessor.Stats[i].HitDifference);
+
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+                    CurrentVirtualReplayStat++;
+                }
+                else
+                    break;
+            }
         }
 
         internal void HandleSkip()
