@@ -98,6 +98,8 @@ namespace Quaver.Shared.Screens.Result.UI
 
             // Make some fake hits for debugging.
             // CreateFakeHitStats();
+
+            // Draw the dots if there are any.
             if (Processor.Stats != null)
             {
                 FilterHitStats();
@@ -161,11 +163,10 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static ScoreProcessor GetScoreProcessor(ResultScreen screen)
         {
-            // Draw the dots if there are any.
             if (screen.Gameplay != null && screen.Gameplay.InReplayMode)
             {
                 var im = screen.Gameplay.Ruleset.InputManager as KeysInputManager;
-                return im?.ReplayInputManager.VirtualPLayer.ScoreProcessor;
+                return im?.ReplayInputManager.VirtualPlayer.ScoreProcessor;
             }
 
             // If we already have stats (for example, this is a result screen right after a player finished playing a map), use them.

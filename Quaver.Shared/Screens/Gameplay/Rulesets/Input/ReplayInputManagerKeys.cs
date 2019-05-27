@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     Virtually plays replay frames
         /// </summary>
-        public VirtualReplayPlayer VirtualPLayer { get; }
+        public VirtualReplayPlayer VirtualPlayer { get; }
 
         /// <summary>
         ///     The current frame being played in the virtual replay player
@@ -69,8 +69,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            VirtualPLayer = new VirtualReplayPlayer(Replay, Screen.Map);
-            VirtualPLayer.PlayAllFrames();
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map);
+            VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.
             for (var i = 0; i < screen.Map.GetKeyCount(); i++)
@@ -124,13 +124,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
         private void HandleScoring()
         {
-            for (var i = CurrentVirtualReplayStat + 1; i < VirtualPLayer.ScoreProcessor.Stats.Count; i++)
+            for (var i = CurrentVirtualReplayStat + 1; i < VirtualPlayer.ScoreProcessor.Stats.Count; i++)
             {
                 var hom = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;
 
-                if (hom?.CurrentAudioPosition >= VirtualPLayer.ScoreProcessor.Stats[i].SongPosition)
+                if (hom?.CurrentAudioPosition >= VirtualPlayer.ScoreProcessor.Stats[i].SongPosition)
                 {
-                    var judgement = VirtualPLayer.ScoreProcessor.Stats[i].Judgement;
+                    var judgement = VirtualPlayer.ScoreProcessor.Stats[i].Judgement;
 
                     ((ScoreProcessorKeys)Screen.Ruleset.ScoreProcessor).CalculateScore(judgement);
 
@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     playfield.Stage.ComboDisplay.MakeVisible();
 
                     if (judgement != Judgement.Miss)
-                        playfield.Stage.HitError.AddJudgement(judgement, VirtualPLayer.ScoreProcessor.Stats[i].HitDifference);
+                        playfield.Stage.HitError.AddJudgement(judgement, VirtualPlayer.ScoreProcessor.Stats[i].HitDifference);
 
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
 
