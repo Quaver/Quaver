@@ -163,6 +163,9 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private static ScoreProcessor GetScoreProcessor(ResultScreen screen)
         {
+            // Handles the case when watching a replay in its entirety. This uses the preprocessed
+            // ScoreProcessor/Replay from gameplay to get a 100% accurate score output.
+            // Also avoids having to process the replay again (as done below).
             if (screen.Gameplay != null && screen.Gameplay.InReplayMode)
             {
                 var im = screen.Gameplay.Ruleset.InputManager as KeysInputManager;
