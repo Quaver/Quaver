@@ -112,8 +112,8 @@ namespace Quaver.Shared.Screens.Multiplayer
             });
 
             PlayerList = new PlayerList(players, int.MaxValue, 0,
-                new ScalableVector2(PlayerListHeader.Width, 594),
-                new ScalableVector2(PlayerListHeader.Width, 594))
+                new ScalableVector2(PlayerListHeader.Width, 600),
+                new ScalableVector2(PlayerListHeader.Width, 600))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -201,7 +201,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
         /// <summary>
         /// </summary>
-        private void CreateMap() => Map = new MultiplayerMap(MultiplayerScreen.Game)
+        private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
             Position = new ScalableVector2(24, Header.Height + 20)

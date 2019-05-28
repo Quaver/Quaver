@@ -17,6 +17,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         private Sprite HoverArea { get; }
 
+        public bool IsDisplayed { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -33,7 +35,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(Width - 2, Height - 2),
-                Alpha = 0
+                Alpha = 0,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -58,6 +61,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         {
             var newRect = RectangleF.Intersection(ScreenRectangle, Container.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+        }
+
+        public bool IsVisibleInContainer()
+        {
+            return RectangleF.Intersects(ScreenRectangle, Container.ContentContainer.ScreenRectangle);
         }
     }
 }
