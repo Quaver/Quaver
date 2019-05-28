@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using osu_database_reader.Components.HitObjects;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
@@ -10,19 +13,33 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Importing;
 using Wobble;
+using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Screens;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI
 {
-    public class MultiplayerMap : Sprite
+    public class MultiplayerMap : ScrollContainer
     {
+        /// <summary>
+        /// </summary>
+        private MultiplayerScreen Screen { get; }
+
         /// <summary>
         /// </summary>
         private MultiplayerGame Game { get; }
@@ -53,27 +70,41 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
-        public MultiplayerMap(MultiplayerGame game)
+        private ImageButton DownloadButton { get; }
+
+        /// <summary>
+        ///     The current mapset download instance
+        /// </summary>
+        private MapsetDownload CurrentDownload { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public MultiplayerMap(MultiplayerScreen screen, MultiplayerGame game) : base(new ScalableVector2(682, 86), new ScalableVector2(682, 86))
         {
+            Screen = screen;
             Game = game;
-            Size = new ScalableVector2(620, 80);
-            Tint = Color.Black;
-            Alpha = 0.75f;
+            Size = new ScalableVector2(682, 86);
+            Image = UserInterface.MapPanel;
+
+            DownloadButton = new ImageButton(UserInterface.BlankBox, OnDownloadButtonClicked)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width - 4, Height - 4),
+                Alpha = 0
+            };
 
             Background = new Sprite
             {
                 Parent = this,
-                Size = new ScalableVector2(Height * 1.75f, Height),
-                Alpha = 0
+                Size = new ScalableVector2(Height * 1.75f, Height - 4),
+                Alignment = Alignment.MidLeft,
+                X = 2,
+                Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture: UserInterface.MenuBackground,
+                Alpha = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? 1 : 0
             };
 
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
-            {
-                Parent = this,
-                Size = new ScalableVector2(2, Height),
-                X = Background.Width,
-            };
+            AddContainedDrawable(Background);
 
             var diffName = GetDifficultyName();
 
@@ -85,22 +116,28 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 FontSize = 16
             };
 
+            AddContainedDrawable(ArtistTitle);
+
             Mode = new SpriteTextBitmap(FontsBitmap.GothamRegular, "["  + ModeHelper.ToShortHand((GameMode) game.GameMode) + "]")
             {
                 Parent = this,
                 X = ArtistTitle.X,
-                Y = ArtistTitle.Y + ArtistTitle.Height + 5,
+                Y = ArtistTitle.Y + ArtistTitle.Height + 8,
                 FontSize = 14
             };
+
+            AddContainedDrawable(Mode);
 
             DifficultyRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{game.DifficultyRating:0.00}")
             {
                 Parent = this,
-                X = Mode.X + Mode.Width + 10,
+                X = Mode.X + Mode.Width + 8,
                 Y = Mode.Y,
                 FontSize = 14,
                 Tint = ColorHelper.DifficultyToColor((float) game.DifficultyRating)
             };
+
+            AddContainedDrawable(DifficultyRating);
 
             DifficultyName = new SpriteTextBitmap(FontsBitmap.GothamRegular, " - \"" + diffName + "\"")
             {
@@ -110,21 +147,35 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 FontSize = 14,
             };
 
+            AddContainedDrawable(DifficultyName);
+
             Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Mods: None")
             {
                 Parent = this,
                 X = Mode.X,
-                Y = DifficultyRating.Y + DifficultyRating.Height + 5,
+                Y = DifficultyRating.Y + DifficultyRating.Height + 8,
                 FontSize = DifficultyRating.FontSize
             };
 
-            AddBorder(Color.White, 2);
+            AddContainedDrawable(Creator);
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers += OnChangedModifiers;
+            ModManager.ModsChanged += OnModsChanged;
 
             UpdateContent();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
+                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -135,6 +186,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers -= OnChangedModifiers;
+            ModManager.ModsChanged -= OnModsChanged;
+
+            if (CurrentDownload != null)
+            {
+                // ReSharper disable twice DelegateSubtraction
+                CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
+                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+            }
+
             base.Destroy();
         }
 
@@ -163,43 +223,53 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         public void UpdateContent()
         {
+            Map map;
+
+            if (MapManager.Selected.Value?.Md5Checksum == Game.MapMd5)
+                map = MapManager.Selected.Value;
+            else
+            {
+                map = MapManager.FindMapFromMd5(Game.MapMd5);
+                MapManager.Selected.Value = map;
+            }
+
             var diffName = GetDifficultyName();
 
             ArtistTitle.Text = Game.Map.Replace($"[{diffName}]", "");
             Mode.Text = $"[{ModeHelper.ToShortHand((GameMode) Game.GameMode)}]";
+            Creator.Tint = Color.White;
 
-            DifficultyRating.Text = $"{Game.DifficultyRating:0.00}";
-            DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) Game.DifficultyRating);
+            DifficultyRating.Text = map != null ? $"{map.DifficultyFromMods(ModManager.Mods):0.00}" : $"{Game.DifficultyRating:0.00}";
+            DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) (map?.DifficultyFromMods(ModManager.Mods) ?? Game.DifficultyRating));
+            DifficultyRating.X = Mode.X + Mode.Width + 8;
+            DifficultyName.X = DifficultyRating.X + DifficultyRating.Width + 2;
 
             DifficultyName.Text = " - \"" + diffName + "\"";
 
             var game = (QuaverGame) GameBase.Game;
 
-            if (game.CurrentScreen.Type == QuaverScreenType.Select)
-                return;
-
-            // Find the map
-            var map = MapManager.FindMapFromMd5(Game.MapMd5);
-            MapManager.Selected.Value = map;
-
             if (map != null)
             {
                 ArtistTitle.Tint = Color.White;
-                Creator.Text = $"By: {map.Creator}";
+
+                var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
+                var time = length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
+
+                Creator.Text = $"[Length: {time}] - By: {map.Creator} ";
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                     OnlineManager.Client.HasMultiplayerGameMap();
 
-                if (map != BackgroundHelper.Map)
-                    Background.Alpha = 0;
-
-
                 if (game.CurrentScreen.Type == QuaverScreenType.Lobby || game.CurrentScreen.Type == QuaverScreenType.Multiplayer
                                                                       || QuaverScreenManager.QueuedScreen.Type == QuaverScreenType.Multiplayer
                                                                       || AudioEngine.Map != map)
                 {
-                    BackgroundHelper.Load(MapManager.Selected.Value);
+                    if (BackgroundHelper.Map != MapManager.Selected.Value)
+                    {
+                        Background.Alpha = 0;
+                        BackgroundHelper.Load(MapManager.Selected.Value);
+                    }
 
                     ThreadScheduler.Run(() =>
                     {
@@ -213,7 +283,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                         }
                         catch (Exception e)
                         {
-
+                            // ignored
                         }
                     });
                 }
@@ -222,9 +292,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             else
             {
                 ArtistTitle.Tint = Color.Red;
-                Creator.Text = "You don't have this map!";
 
-                OnlineManager.Client.DontHaveMultiplayerGameMap();
+                Creator.Text = Game.MapId != -1 ? "You don't have this map. Click to download!" : "You don't have this map. Download not available!";
+                Creator.Tint = Colors.SecondaryAccent;
+
+                if (!OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
+                    OnlineManager.Client.DontHaveMultiplayerGameMap();
 
                 if (!AudioEngine.Track.IsStopped)
                     AudioEngine.Track.Stop();
@@ -278,6 +351,66 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.CurrentGame.DifficultyRating = e.DifficultyRating;
             OnlineManager.CurrentGame.Modifiers = e.Modifiers.ToString();
             UpdateContent();
+        }
+
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent();
+
+        /// <summary>
+        ///     Called when the download button has been clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadButtonClicked(object sender, EventArgs e)
+        {
+            if (Game.MapsetId == -1 || !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
+                return;
+
+            if (CurrentDownload != null)
+            {
+                if (CurrentDownload.MapsetId == Game.MapsetId)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "The mapset is already downloading. Slow down!");
+                    return;
+                }
+
+                // ReSharper disable twice DelegateSubtraction
+                CurrentDownload.Progress.ValueChanged -= OnDownloadProgressChanged;
+                CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
+            }
+
+            CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId);
+            CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
+            CurrentDownload.Completed.ValueChanged += OnDownloadCompleted;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDownloadProgressChanged(object sender, BindableValueChangedEventArgs<DownloadProgressChangedEventArgs> e)
+        {
+            if (CurrentDownload.MapsetId == Game.MapsetId)
+                Creator.Text = $"Downloading Map: {e.Value.ProgressPercentage}%";
+        }
+
+        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<AsyncCompletedEventArgs> e)
+        {
+            CurrentDownload.Dispose();
+
+            if (e.Value.Error != null)
+                NotificationManager.Show(NotificationLevel.Error, "Download Failed!");
+
+            if (CurrentDownload.MapsetId == Game.MapsetId)
+            {
+                NotificationManager.Show(NotificationLevel.Success, "Download Complete!");
+
+                var game = GameBase.Game as QuaverGame;
+
+                if (game?.CurrentScreen.Type == QuaverScreenType.Multiplayer || game?.CurrentScreen.Type == QuaverScreenType.Select)
+                    game?.CurrentScreen.Exit(() => new ImportingScreen(Screen), 0, QuaverScreenChangeType.AddToStack);
+            }
+
+            CurrentDownload = null;
         }
     }
 }
