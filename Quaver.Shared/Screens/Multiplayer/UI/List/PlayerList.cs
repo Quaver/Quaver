@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -9,6 +10,8 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.List
 {
@@ -35,9 +38,29 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 OrderByTeam(true);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && DialogManager.Dialogs.Count == 0;
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         protected override PoolableSprite<OnlineUser> CreateObject(OnlineUser item, int index) =>
             new DrawableMultiplayerPlayer(this, item, index);
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Pool.ForEach(x => x.Destroy());
@@ -52,15 +75,18 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// </summary>
         public void AddOrUpdatePlayer(OnlineUser p)
         {
-            var index = Pool.FindIndex(x => x.Item.Id == p.Id);
-
-            if (index == -1)
+            lock (Pool)
             {
-                AddObjectToBottom(p, false);
-                return;
-            }
+                var index = Pool.FindIndex(x => x.Item.Id == p.Id);
 
-            Pool[index].UpdateContent(p, index);
+                if (index == -1)
+                {
+                    AddObjectToBottom(p, false);
+                    return;
+                }
+
+                Pool[index].UpdateContent(p, index);
+            }
         }
 
         /// <summary>
@@ -77,20 +103,25 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         {
             var drawable = (DrawableMultiplayerPlayer) Pool.Find(x => x.Item.Id == obj.Id);
 
-            AvailableItems.Remove(obj);
-            AvailableItems.Remove(drawable.Item);
-            drawable.Destroy();
-
-            RemoveContainedDrawable(drawable);
-            Pool.Remove(drawable);
-
-            for (var i = 0; i < Pool.Count; i++)
+            lock (AvailableItems)
+            lock (Pool)
             {
-                Pool[i].MoveToY((PoolStartingIndex + i) * drawable.HEIGHT, Easing.OutQuint, 600);
-                Pool[i].Index = i;
-            }
+                AvailableItems.Remove(obj);
+                AvailableItems.Remove(drawable.Item);
 
-            RecalculateContainerHeight();
+                drawable.Destroy();
+
+                RemoveContainedDrawable(drawable);
+                Pool.Remove(drawable);
+
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].MoveToY((PoolStartingIndex + i) * drawable.HEIGHT, Easing.OutQuint, 600);
+                    Pool[i].Index = i;
+                }
+
+                RecalculateContainerHeight();
+            }
         }
 
         /// <summary>
