@@ -9,7 +9,7 @@ using Wobble.Graphics.Animations;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
 {
-    public class MultiplayerFeed : Sprite
+    public class MultiplayerFeed : Container
     {
         /// <summary>
         ///     All the items in the feed.
@@ -21,7 +21,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
         public MultiplayerFeed()
         {
             Size = new ScalableVector2(588, 150);
-            Alpha = 0;
 
             var chat = ChatManager.JoinedChatChannels.Find(x => x.Name.StartsWith("#multiplayer"));
 
