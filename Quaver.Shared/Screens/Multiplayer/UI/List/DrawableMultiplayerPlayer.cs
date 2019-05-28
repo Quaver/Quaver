@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -10,6 +11,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Assets;
@@ -59,6 +61,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// </summary>
         private SpriteTextBitmap Wins { get; }
 
+        /// <summary>
+        /// </summary>
+        private SpriteTextBitmap Mods { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -71,7 +77,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             Tint = Color.White;
             Size = new ScalableVector2(container.Width, HEIGHT);
 
-            Button = new DrawableMultiplayerPlayerButton(this) {Parent = this};
+            Button = new DrawableMultiplayerPlayerButton(this)
+            {
+                Parent = this,
+                UsePreviousSpriteBatchOptions = true
+            };
 
             Ready = new Sprite
             {
@@ -81,7 +91,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_check_mark),
                 Size = new ScalableVector2(18, 18),
                 Alpha = OnlineManager.CurrentGame.PlayersReady.Contains(Item.Id) ? 1 :  0.35f,
-                Tint = Color.LimeGreen
+                Tint = Color.LimeGreen,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Avatar = new Sprite
@@ -91,6 +102,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 X = Ready.X + Ready.Width + 16,
                 Alignment = Alignment.MidLeft,
                 Alpha = 0,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Avatar.AddBorder(GetPlayerColor(), 2);
@@ -101,7 +113,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Alignment = Alignment.MidLeft,
                 X = Avatar.X + Avatar.Width + 16,
                 Image = item.CountryFlag == null ? Flags.Get("XX") : Flags.Get(item.CountryFlag),
-                Size = new ScalableVector2(26, 26)
+                Size = new ScalableVector2(26, 26),
+                UsePreviousSpriteBatchOptions = true
             };
 
             Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.IsNullOrEmpty(item.Username) ? $"Loading..." : item.Username)
@@ -109,7 +122,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
                 X = Flag.Width + 6,
-                FontSize = 16
+                FontSize = 16,
+                UsePreviousSpriteBatchOptions = true
             };
 
             HostCrown = new Sprite
@@ -121,7 +135,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Size = new ScalableVector2(16, 16),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_vintage_key_outline),
                 SpriteEffect = SpriteEffects.FlipHorizontally,
-                Tint = Color.Gold
+                Tint = Color.Gold,
+                UsePreviousSpriteBatchOptions = true
             };
 
             NoMapIcon = new Sprite()
@@ -132,7 +147,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Size = Ready.Size,
                 Tint = Color.Red,
                 Visible = OnlineManager.CurrentGame.PlayersWithoutMap.Contains(Item.Id),
-                Image = FontAwesome.Get(FontAwesomeIcon.fa_times)
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_times),
+                UsePreviousSpriteBatchOptions = true
             };
 
             Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0W")
@@ -142,7 +158,19 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 X = -16,
                 FontSize = 16,
                 Tint = Colors.SecondaryAccent,
-                Y = -2
+                Y = -2,
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, "")
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = Avatar.X + Avatar.Width + 16,
+                FontSize = 14,
+                Y = 8,
+                UsePreviousSpriteBatchOptions = true,
+                Tint = Colors.MainAccent
             };
 
             OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
@@ -154,6 +182,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
             OnlineManager.Client.OnUserStats += OnUserStats;
             OnlineManager.Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+            OnlineManager.Client.OnPlayerChangedModifiers += OnPlayerChangedModifiers;
+            OnlineManager.Client.OnChangedModifiers += OnGameChangedModifiers;
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
@@ -173,6 +203,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
         }
 
+        private void OnGameChangedModifiers(object sender, ChangeModifiersEventArgs e)
+            => UpdateContent(Item, Index);
+
         public override void Update(GameTime gameTime)
         {
             Ready.Visible = !NoMapIcon.Visible;
@@ -180,7 +213,18 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             if (OnlineManager.CurrentGame != null)
                 Wins.Visible = OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team;
 
+            if (!Button.IsVisibleInContainer())
+                return;
+
             base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (!Button.IsVisibleInContainer())
+                return;
+
+            base.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -206,6 +250,18 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
                 var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
                 Wins.Text = mpWins != null ? $"{mpWins.Wins}W" : $"0W";
+
+                var playerMods = OnlineManager.CurrentGame.PlayerMods.Find(x => x.UserId == item.Id);
+                var mods = (ModIdentifier) long.Parse(OnlineManager.CurrentGame.Modifiers);
+
+                if (mods == ModIdentifier.None)
+                    mods = 0;
+
+                if (playerMods != null)
+                    mods |= (ModIdentifier) long.Parse(playerMods.Modifiers);
+
+                Mods.Text = mods  == 0 ? "" : ModHelper.GetModsString(mods);
+                Flag.Y = mods == 0 ? 0 : -8;
             }
 
             Image = GetPlayerPanel();
@@ -228,6 +284,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
             OnlineManager.Client.OnGamePlayerWinCount -= OnGamePlayerWinCount;
+            OnlineManager.Client.OnPlayerChangedModifiers -= OnPlayerChangedModifiers;
+            OnlineManager.Client.OnChangedModifiers -= OnGameChangedModifiers;
 
             Button.Destroy();
             base.Destroy();
@@ -342,6 +400,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         }
 
         private void OnGamePlayerWinCount(object sender, PlayerWinCountEventArgs e)
+            => UpdateContent(Item, Index);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlayerChangedModifiers(object sender, PlayerChangedModifiersEventArgs e)
             => UpdateContent(Item, Index);
 
         public Color GetPlayerColor()
