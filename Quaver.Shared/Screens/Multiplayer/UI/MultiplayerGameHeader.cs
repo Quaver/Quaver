@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         private SpriteTextBitmap RoomName { get; }
 
         public MultiplayerGameHeader()
-            : base(new ScalableVector2(382, 42), new ScalableVector2(382, 42))
+            : base(new ScalableVector2(650, 42), new ScalableVector2(382, 42))
         {
             Alpha = 0;
 

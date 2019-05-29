@@ -164,6 +164,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnChangedModifiers += OnChangedModifiers;
             ModManager.ModsChanged += OnModsChanged;
 
+            BackgroundHelper.Load(MapManager.Selected.Value);
             UpdateContent();
         }
 
@@ -268,7 +269,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     if (BackgroundHelper.Map != MapManager.Selected.Value)
                     {
                         Background.Alpha = 0;
-                        BackgroundHelper.Load(MapManager.Selected.Value);
+
+                        var view = Screen.View as MultiplayerScreenView;
+                        view?.FadeBackgroundOut();
+                        BackgroundHelper.Load(map);
                     }
 
                     ThreadScheduler.Run(() =>

@@ -8,6 +8,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -138,6 +139,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
             OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
             OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            BackgroundHelper.Blurred += OnBackgroundBlurred;
         }
 
         /// <inheritdoc />
@@ -153,6 +155,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.CornflowerBlue);
+            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 
@@ -164,13 +167,13 @@ namespace Quaver.Shared.Screens.Multiplayer
             OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
             OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
             OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            BackgroundHelper.Blurred -= OnBackgroundBlurred;
             Container?.Destroy();
         }
 
-
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 50, true)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 45, true)
         {
             Parent = Container
         };
@@ -219,7 +222,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
-            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 6)
+            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 3)
         };
 
          /// <summary>
@@ -287,6 +290,37 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             Feed.AddItem(color, $"{prefix} {e.Message.SenderName}: " +
                          $"{string.Concat(e.Message.Message.Take(40))}{(e.Message.Message.Length >= 40 ? "..." : "")}" );
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
+        {
+            Background.Image = e.Texture;
+            FadeBackgroundIn();
+        }
+
+        /// <summary>
+        ///     Fades the background in upon load.
+        /// </summary>
+        public void FadeBackgroundIn()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 0.65f, 200));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void FadeBackgroundOut()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 1f, 200));
         }
     }
 }
