@@ -22,8 +22,10 @@ using Quaver.Shared.Screens.Multiplayer.UI.List;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
@@ -70,6 +72,10 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public MultiplayerFeed Feed { get; }
 
+        /// <summary>
+        /// </summary>
+        public MultiplayerGameHeader GameTitleHeader { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -94,13 +100,15 @@ namespace Quaver.Shared.Screens.Multiplayer
                 x.Alpha = 0.30f;
             });
 
+            CreateGameTitleHeader();
             CreateMap();
 
             PlayerListHeader = new PlayerListHeader(MultiplayerScreen.Game)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-Map.X, Map.Y + 5)
+                X = -24,
+                Y = Header.Height + 20
             };
 
             // Get a list of all the online users in the game from the player ids.
@@ -117,7 +125,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(PlayerListHeader.X, PlayerListHeader.Y + PlayerListHeader.Height + 10)
+                Position = new ScalableVector2(-24, PlayerListHeader.Y + PlayerListHeader.Height + 10)
             };
 
             Feed = new MultiplayerFeed()
@@ -199,12 +207,19 @@ namespace Quaver.Shared.Screens.Multiplayer
             Footer.MoveToY(0, Easing.OutQuint, 600);
         }
 
+        private void CreateGameTitleHeader() => GameTitleHeader = new MultiplayerGameHeader()
+        {
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            Y = Header.Height + 20
+        };
+
         /// <summary>
         /// </summary>
         private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
-            Position = new ScalableVector2(24, Header.Height + 20)
+            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 6)
         };
 
          /// <summary>
