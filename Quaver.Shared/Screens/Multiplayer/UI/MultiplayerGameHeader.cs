@@ -4,6 +4,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -17,28 +18,38 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         private SpriteTextBitmap RoomName { get; }
 
         public MultiplayerGameHeader()
-            : base(new ScalableVector2(650, 42), new ScalableVector2(382, 42))
+            : base(new ScalableVector2(650, 36), new ScalableVector2(650, 36))
         {
             Alpha = 0;
 
-            GameMode = new SpriteTextBitmap(FontsBitmap.GothamBold, GetRulesetName(OnlineManager.CurrentGame.Ruleset))
+            GameMode = new SpriteTextBitmap(FontsBitmap.GothamRegular, GetRulesetName(OnlineManager.CurrentGame.Ruleset))
             {
                 Parent = this,
-                X = 24,
-                FontSize = 14,
+                Alignment = Alignment.TopRight,
+                X = 0,
+                FontSize = 16,
                 Tint = Color.White
             };
 
             RoomName = new SpriteTextBitmap(FontsBitmap.GothamRegular, OnlineManager.CurrentGame.Name)
             {
                 Parent = this,
-                X = 24,
+                Alignment = Alignment.TopLeft,
                 FontSize = 16,
-                Tint = Colors.SecondaryAccent,
-                Y = GameMode.Y + GameMode.Height + 4
+                Tint = Colors.SecondaryAccent
             };
 
             AddContainedDrawable(RoomName);
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(Width, 2),
+                Y = -6,
+                Alpha = 0.85f
+            };
 
             OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
             OnlineManager.Client.OnGameNameChanged += OnGameNameChanged;

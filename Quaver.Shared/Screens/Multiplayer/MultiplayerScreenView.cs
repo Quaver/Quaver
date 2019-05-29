@@ -214,6 +214,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Parent = Container,
             Alignment = Alignment.TopLeft,
+            X = 24,
             Y = Header.Height + 20
         };
 
@@ -222,7 +223,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
-            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 3)
+            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 11)
         };
 
          /// <summary>
