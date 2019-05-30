@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             Screen = screen;
             Game = game;
-            Size = new ScalableVector2(682, 86);
+            Size = new ScalableVector2(650, 86);
             Image = UserInterface.MapPanel;
 
             DownloadButton = new ImageButton(UserInterface.BlankBox, OnDownloadButtonClicked)
@@ -97,7 +97,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Background = new Sprite
             {
                 Parent = this,
-                Size = new ScalableVector2(Height * 1.75f, Height - 4),
+                Size = new ScalableVector2(Height * 1.70f, Height - 4),
                 Alignment = Alignment.MidLeft,
                 X = 2,
                 Image = MapManager.Selected.Value == BackgroundHelper.Map && MapManager.Selected.Value.Md5Checksum == Game.MapMd5 ? BackgroundHelper.RawTexture: UserInterface.MenuBackground,
@@ -164,6 +164,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnChangedModifiers += OnChangedModifiers;
             ModManager.ModsChanged += OnModsChanged;
 
+            BackgroundHelper.Load(MapManager.Selected.Value);
             UpdateContent();
         }
 
@@ -268,7 +269,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     if (BackgroundHelper.Map != MapManager.Selected.Value)
                     {
                         Background.Alpha = 0;
-                        BackgroundHelper.Load(MapManager.Selected.Value);
+
+                        var view = Screen.View as MultiplayerScreenView;
+                        view?.FadeBackgroundOut();
+                        BackgroundHelper.Load(map);
                     }
 
                     ThreadScheduler.Run(() =>

@@ -30,6 +30,11 @@ namespace Quaver.Shared.Graphics.Containers
         public int PoolSize { get; }
 
         /// <summary>
+        ///     The amount of padding from the top that the scroll container will have
+        /// </summary>
+        protected int PaddingTop { get; set; }
+
+        /// <summary>
         ///     The items that are available to use for the drawables.
         ///     Essentially what the drawable represents.
         /// </summary>
@@ -112,7 +117,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         protected void RecalculateContainerHeight()
         {
-            var totalUserHeight = DrawableHeight * AvailableItems.Count;
+            var totalUserHeight = DrawableHeight * AvailableItems.Count + PaddingTop;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -186,7 +191,7 @@ namespace Quaver.Shared.Graphics.Containers
             {
                 var drawable = CreateObject(AvailableItems[index], index);
                 drawable.DestroyIfParentIsNull = false;
-                drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT;
+                drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT + PaddingTop;
 
                 drawable.UpdateContent(AvailableItems[index], index);
                 Pool.Add(drawable);

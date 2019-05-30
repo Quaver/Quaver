@@ -8,6 +8,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -19,11 +20,14 @@ using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Multiplayer.UI;
 using Quaver.Shared.Screens.Multiplayer.UI.Feed;
 using Quaver.Shared.Screens.Multiplayer.UI.List;
+using Quaver.Shared.Screens.Multiplayer.UI.Settings;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
@@ -70,6 +74,14 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public MultiplayerFeed Feed { get; }
 
+        /// <summary>
+        /// </summary>
+        public MultiplayerGameHeader GameTitleHeader { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public MultiplayerSettings Settings { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -94,13 +106,16 @@ namespace Quaver.Shared.Screens.Multiplayer
                 x.Alpha = 0.30f;
             });
 
+            CreateGameTitleHeader();
             CreateMap();
+            CreateSettings();
 
             PlayerListHeader = new PlayerListHeader(MultiplayerScreen.Game)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-Map.X, Map.Y + 5)
+                X = -24,
+                Y = Header.Height + 20
             };
 
             // Get a list of all the online users in the game from the player ids.
@@ -117,19 +132,20 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(PlayerListHeader.X, PlayerListHeader.Y + PlayerListHeader.Height + 10)
+                Position = new ScalableVector2(-24, PlayerListHeader.Y + PlayerListHeader.Height + 10)
             };
 
             Feed = new MultiplayerFeed()
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
-                Position = new ScalableVector2(20, -Footer.Height - 14)
+                Position = new ScalableVector2(24, -Footer.Height - 24)
             };
 
             OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
             OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
             OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            BackgroundHelper.Blurred += OnBackgroundBlurred;
         }
 
         /// <inheritdoc />
@@ -145,6 +161,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.CornflowerBlue);
+            BackgroundHelper.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 
@@ -156,13 +173,13 @@ namespace Quaver.Shared.Screens.Multiplayer
             OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
             OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
             OnlineManager.Client.OnChatMessageReceived -= OnChatMessageReceived;
+            BackgroundHelper.Blurred -= OnBackgroundBlurred;
             Container?.Destroy();
         }
 
-
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 50, true)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 100, true)
         {
             Parent = Container
         };
@@ -187,6 +204,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 new ButtonText(FontsBitmap.GothamRegular, "leave game", 14, (o, e) => MultiplayerScreen.LeaveGame()),
                 new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
                 new MenuFooterButtonGameChat(FontsBitmap.GothamRegular, "game chat", 14, (o, e) => ChatManager.ToggleChatOverlay(true)),
+                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!"))
             }, new List<ButtonText>
             {
             }, ColorHelper.HexToColor("#f95186"))
@@ -199,12 +217,54 @@ namespace Quaver.Shared.Screens.Multiplayer
             Footer.MoveToY(0, Easing.OutQuint, 600);
         }
 
+        private void CreateGameTitleHeader() => GameTitleHeader = new MultiplayerGameHeader()
+        {
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            X = 24,
+            Y = Header.Height + 20
+        };
+
         /// <summary>
         /// </summary>
         private void CreateMap() => Map = new MultiplayerMap((MultiplayerScreen) Screen, MultiplayerScreen.Game)
         {
             Parent = Container,
-            Position = new ScalableVector2(24, Header.Height + 20)
+            Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 11)
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateSettings() => Settings = new MultiplayerSettings(new List<MultiplayerSettingsContainer>
+        {
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+        })
+        {
+            Parent = Container,
+            Position = new ScalableVector2(Map.X, Map.Y + Map.Height + 20)
         };
 
          /// <summary>
@@ -272,6 +332,37 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             Feed.AddItem(color, $"{prefix} {e.Message.SenderName}: " +
                          $"{string.Concat(e.Message.Message.Take(40))}{(e.Message.Message.Length >= 40 ? "..." : "")}" );
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
+        {
+            Background.Image = e.Texture;
+            FadeBackgroundIn();
+        }
+
+        /// <summary>
+        ///     Fades the background in upon load.
+        /// </summary>
+        public void FadeBackgroundIn()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 0.65f, 200));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void FadeBackgroundOut()
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha,
+                Easing.Linear, Background.BrightnessSprite.Alpha, 1f, 200));
         }
     }
 }

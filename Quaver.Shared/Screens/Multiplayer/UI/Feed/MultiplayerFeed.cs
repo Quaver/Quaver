@@ -1,15 +1,19 @@
-﻿using Wobble.Graphics;
+﻿using System;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Wobble.Assets;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
 {
-    public class MultiplayerFeed : Container
+    public class MultiplayerFeed : Sprite
     {
         /// <summary>
         ///     All the items in the feed.
@@ -17,10 +21,24 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
         private List<MultiplayerFeedItem> FeedItems { get; } = new List<MultiplayerFeedItem>();
 
         /// <summary>
+        ///     Button to open the chat (and also highlight the box)
+        /// </summary>
+        private ImageButton OpenChatButton { get; }
+
+        /// <summary>
         /// </summary>
         public MultiplayerFeed()
         {
-            Size = new ScalableVector2(588, 150);
+            Size = new ScalableVector2(650, 125);
+            Image = UserInterface.FeedPanel;
+
+            OpenChatButton = new ImageButton(UserInterface.BlankBox, (o, e) => ChatManager.ToggleChatOverlay(true))
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width - 4, Height - 4),
+                Alpha = 0
+            };
 
             var chat = ChatManager.JoinedChatChannels.Find(x => x.Name.StartsWith("#multiplayer"));
 
@@ -40,6 +58,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
             }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            OpenChatButton.Alpha = MathHelper.Lerp(OpenChatButton.Alpha, OpenChatButton.IsHovered ? 0.4f : 0f,
+                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         ///     Adds an item to the feed
         /// </summary>
@@ -50,7 +76,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
             var item = new MultiplayerFeedItem(color, text)
             {
                 Parent = this,
-                Alignment = Alignment.BotLeft
+                Alignment = Alignment.BotLeft,
+                X = 10
             };
 
             FeedItems.Add(item);
@@ -67,7 +94,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
                 var feedItem = FeedItems[i];
 
                 feedItem.ClearAnimations();
-                feedItem.MoveToY(-20 * (FeedItems.Count - i - 1), Easing.OutQuint, 200);
+                feedItem.MoveToY(-22 * (FeedItems.Count - i - 1) - 11, Easing.OutQuint, 200);
             }
         }
     }
