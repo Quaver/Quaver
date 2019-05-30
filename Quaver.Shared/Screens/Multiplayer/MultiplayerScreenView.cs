@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
-                Position = new ScalableVector2(20, -Footer.Height - 14)
+                Position = new ScalableVector2(24, -Footer.Height - 24)
             };
 
             OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
@@ -173,7 +173,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
         /// <summary>
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 45, true)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundRaw, 100, true)
         {
             Parent = Container
         };
