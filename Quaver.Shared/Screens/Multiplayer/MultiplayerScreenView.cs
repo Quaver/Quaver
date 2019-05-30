@@ -20,6 +20,7 @@ using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Multiplayer.UI;
 using Quaver.Shared.Screens.Multiplayer.UI.Feed;
 using Quaver.Shared.Screens.Multiplayer.UI.List;
+using Quaver.Shared.Screens.Multiplayer.UI.Settings;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
@@ -77,6 +78,10 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public MultiplayerGameHeader GameTitleHeader { get; set; }
 
+        /// <summary>
+        /// </summary>
+        public MultiplayerSettings Settings { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -103,6 +108,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             CreateGameTitleHeader();
             CreateMap();
+            CreateSettings();
 
             PlayerListHeader = new PlayerListHeader(MultiplayerScreen.Game)
             {
@@ -225,6 +231,40 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Parent = Container,
             Position = new ScalableVector2(24, GameTitleHeader.Y + GameTitleHeader.Height + 11)
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateSettings() => Settings = new MultiplayerSettings(new List<MultiplayerSettingsContainer>
+        {
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsContainer(null),
+        })
+        {
+            Parent = Container,
+            Position = new ScalableVector2(Map.X, Map.Y + Map.Height + 20)
         };
 
          /// <summary>
