@@ -198,6 +198,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 new ButtonText(FontsBitmap.GothamRegular, "leave game", 14, (o, e) => MultiplayerScreen.LeaveGame()),
                 new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
                 new MenuFooterButtonGameChat(FontsBitmap.GothamRegular, "game chat", 14, (o, e) => ChatManager.ToggleChatOverlay(true)),
+                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!"))
             }, new List<ButtonText>
             {
             }, ColorHelper.HexToColor("#f95186"))
