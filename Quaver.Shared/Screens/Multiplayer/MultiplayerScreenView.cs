@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects;
@@ -21,6 +22,7 @@ using Quaver.Shared.Screens.Multiplayer.UI;
 using Quaver.Shared.Screens.Multiplayer.UI.Feed;
 using Quaver.Shared.Screens.Multiplayer.UI.List;
 using Quaver.Shared.Screens.Multiplayer.UI.Settings;
+using Quaver.Shared.Screens.Multiplayer.UI.Settings.Items;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
@@ -235,32 +237,18 @@ namespace Quaver.Shared.Screens.Multiplayer
 
         /// <summary>
         /// </summary>
-        private void CreateSettings() => Settings = new MultiplayerSettings(new List<MultiplayerSettingsContainer>
+        private void CreateSettings() => Settings = new MultiplayerSettings(new List<IMultiplayerSettingsItem>
         {
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
-            new MultiplayerSettingsContainer(null),
+            new MultiplayerSettingsRuleset("Game Mode", OnlineManager.CurrentGame.Ruleset.ToString().Replace("_", " ")),
+            new MultiplayerSettingsMaxPlayers("Max Players", OnlineManager.CurrentGame.MaxPlayers.ToString()),
+            new MultiplayerSettingsAutoHostRotation("Auto Host Rotation", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.HostRotation)),
+            new MultiplayerSettingsAllowedGameModes("Allowed Game Modes", MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),
+            new MultiplayerSettingsFreeModType("Free Mod Type", MultiplayerSettingsFreeModType.FreeModTypeToString(OnlineManager.CurrentGame.FreeModType)),
+            new MultiplayerSettingsHealthType("Health Type", ((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType).ToString().Replace("_", " ")),
+            new MultiplayerSettingsLives("Lives", OnlineManager.CurrentGame.Lives.ToString()),
+            new MultiplayerSettingsMaximumSongLength("Maximum Song Length", MultiplayerSettingsMaximumSongLength.ToString(OnlineManager.CurrentGame.MaximumSongLength)),
+            new MultiplayerSettingsDifficultyRange("Difficulty Range", MultiplayerSettingsDifficultyRange.ToString(OnlineManager.CurrentGame.MinimumDifficultyRating, OnlineManager.CurrentGame.MaximumDifficultyRating)),
+            new MultiplayerSettingsLongNotePercentage("Long Note % Range", MultiplayerSettingsLongNotePercentage.ToString(OnlineManager.CurrentGame.MinimumLongNotePercentage, OnlineManager.CurrentGame.MaximumLongNotePercentage))
         })
         {
             Parent = Container,

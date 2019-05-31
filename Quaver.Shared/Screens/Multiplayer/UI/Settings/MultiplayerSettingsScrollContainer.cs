@@ -13,9 +13,9 @@ using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
 {
-    public class MultiplayerSettingsScrollContainer : PoolableScrollContainer<MultiplayerSettingsContainer>
+    public class MultiplayerSettingsScrollContainer : PoolableScrollContainer<IMultiplayerSettingsItem>
     {
-        public MultiplayerSettingsScrollContainer(List<MultiplayerSettingsContainer> availableItems) : base(availableItems, int.MaxValue, 0,
+        public MultiplayerSettingsScrollContainer(List<IMultiplayerSettingsItem> availableItems) : base(availableItems, int.MaxValue, 0,
             new ScalableVector2(646, 334), new ScalableVector2(650, 334))
         {
             Scrollbar.Tint = ColorHelper.HexToColor("#eeeeee");
@@ -37,16 +37,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && DialogManager.Dialogs.Count == 0;
-            
+
             base.Update(gameTime);
         }
 
-        protected override PoolableSprite<MultiplayerSettingsContainer> CreateObject(MultiplayerSettingsContainer item, int index)
-        {
-            if (item.Value is string)
-                return new MultiplayerSettingsItemTextbox(this, item, index);
-
-            return new MultiplayerSettingsItemBlank(this, item, index);
-        }
+        protected override PoolableSprite<IMultiplayerSettingsItem> CreateObject(IMultiplayerSettingsItem item, int index)
+            => new MultiplayerSettingsItem(this, item, index);
     }
 }

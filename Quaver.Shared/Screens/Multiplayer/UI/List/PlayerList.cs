@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
                 if (index == -1)
                 {
-                    AddObjectToBottom(p, false);
+                    AddObjectToBottom(p, false, true);
                     return;
                 }
 
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                     Pool[i].Index = i;
                 }
 
-                RecalculateContainerHeight();
+                RecalculateContainerHeight(true);
             }
         }
 
