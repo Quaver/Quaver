@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
     {
         public MultiplayerSettingsScrollContainer ScrollContainer { get; }
 
-        public MultiplayerSettings(List<MultiplayerSettingsContainer> settingsContainer)
+        public MultiplayerSettings(List<IMultiplayerSettingsItem> settingsContainer)
         {
             Image = UserInterface.MultiplayerSettingaPanel;
             Size = new ScalableVector2(650, 338);

@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0W")
+            Wins = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0 Wins")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 HostCrown.X = Username.Width + 12;
 
                 var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
-                Wins.Text = mpWins != null ? $"{mpWins.Wins}W" : $"0W";
+                Wins.Text = mpWins != null ? $"{mpWins.Wins} Wins" : $"0 Wins";
 
                 var playerMods = OnlineManager.CurrentGame.PlayerMods.Find(x => x.UserId == item.Id);
                 var mods = (ModIdentifier) long.Parse(OnlineManager.CurrentGame.Modifiers);
@@ -260,8 +260,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 if (playerMods != null)
                     mods |= (ModIdentifier) long.Parse(playerMods.Modifiers);
 
-                Mods.Text = mods  == 0 ? "" : ModHelper.GetModsString(mods);
-                Flag.Y = mods == 0 ? 0 : -8;
+                Mods.Text = mods <= 0 ? "" : ModHelper.GetModsString(mods);
+                Flag.Y = mods <= 0 ? 0 : -8;
             }
 
             Image = GetPlayerPanel();

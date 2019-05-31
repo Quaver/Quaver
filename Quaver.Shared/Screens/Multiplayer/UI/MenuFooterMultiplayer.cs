@@ -244,6 +244,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             OnlineManager.CurrentGame.FreeModType = e.Type;
 
+
             switch (e.Type)
             {
                 case MultiplayerFreeModType.None:
@@ -253,13 +254,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                         SelectModifiers.Parent = null;
                     }
                     break;
-                case MultiplayerFreeModType.Regular:
-                case MultiplayerFreeModType.Rate:
+                default:
                     if (!RightAligned.Contains(SelectModifiers))
                         RightAligned.Add(SelectModifiers);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             AlignRightItems(RightAligned);
