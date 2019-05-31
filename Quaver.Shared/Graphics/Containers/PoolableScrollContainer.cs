@@ -115,9 +115,11 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Makes sure that the content container's height is up to date
         /// </summary>
-        protected void RecalculateContainerHeight()
+        protected void RecalculateContainerHeight(bool usePoolCount = false)
         {
-            var totalUserHeight = DrawableHeight * AvailableItems.Count + PaddingTop;
+            var count = usePoolCount ? Pool.Count : AvailableItems.Count;
+
+            var totalUserHeight = DrawableHeight * count + PaddingTop;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -205,7 +207,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="scrollTo"></param>
-        protected void AddObjectToBottom(T obj, bool scrollTo)
+        protected void AddObjectToBottom(T obj, bool scrollTo, bool usePoolCount = false)
         {
             lock (AvailableItems)
             lock (Pool)
@@ -216,7 +218,7 @@ namespace Quaver.Shared.Graphics.Containers
                 if (Pool.Count < PoolSize)
                     AddContainedDrawable(AddObject(AvailableItems.Count - 1));
 
-                RecalculateContainerHeight();
+                RecalculateContainerHeight(usePoolCount);
 
                 if (scrollTo)
                     ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
