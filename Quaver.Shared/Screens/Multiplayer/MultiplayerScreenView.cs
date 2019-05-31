@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Multiplayer.UI.Settings;
 using Quaver.Shared.Screens.Multiplayer.UI.Settings.Items;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
+using Steamworks;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -206,7 +207,8 @@ namespace Quaver.Shared.Screens.Multiplayer
                 new ButtonText(FontsBitmap.GothamRegular, "leave game", 14, (o, e) => MultiplayerScreen.LeaveGame()),
                 new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
                 new MenuFooterButtonGameChat(FontsBitmap.GothamRegular, "game chat", 14, (o, e) => ChatManager.ToggleChatOverlay(true)),
-                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!"))
+                new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!")),
+                new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => SteamFriends.ActivateGameOverlayToWebPage("https://gist.github.com/Swan/f0a0b5beb581190ce1a267511f60ac98"))
             }, new List<ButtonText>
             {
             }, ColorHelper.HexToColor("#f95186"))
