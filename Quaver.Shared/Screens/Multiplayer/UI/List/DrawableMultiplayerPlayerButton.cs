@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.Shared.Screens.Multiplayer.UI.Dialogs;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
@@ -16,8 +18,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         private PlayerList Container { get; }
 
         private Sprite HoverArea { get; }
-
-        public bool IsDisplayed { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -38,6 +38,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Alpha = 0,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            Clicked += (o, e) => DialogManager.Show(new MultiplayerPlayerOptionsDialog(player.Item));
         }
 
         /// <inheritdoc />
