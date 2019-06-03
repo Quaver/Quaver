@@ -13,8 +13,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         private MultiplayerPlayerOptionsDialog Dialog { get; }
 
         public MultiplayerPlayerOptionsContainer(MultiplayerPlayerOptionsDialog dialog, List<IMultiplayerPlayerOption> availableItems) : base(availableItems,
-            int.MaxValue, 0, new ScalableVector2(446, 130),
-            new ScalableVector2(446, 130))
+            int.MaxValue, 0, new ScalableVector2(446, 188),
+            new ScalableVector2(446, 188))
         {
             Dialog = dialog;
             Alpha = 0;
@@ -24,14 +24,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             ScrollSpeed = 150;
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
-            
+
             CreatePool();
         }
 
         public override void Update(GameTime gameTime)
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position);
-            
+
             base.Update(gameTime);
         }
 

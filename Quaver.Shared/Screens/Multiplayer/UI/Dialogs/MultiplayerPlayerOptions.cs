@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Quaver.Server.Common.Objects;
@@ -8,6 +9,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Steamworks;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
@@ -37,8 +39,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             Dialog = dialog;
             User = user;
 
-            Image = UserInterface.WaitingPanel;
-            Size = new ScalableVector2(450, 134);
+            Image = UserInterface.PlayerOptionsPanel;
+            Size = new ScalableVector2(450, 192);
 
             CreateContainer();
         }
@@ -73,13 +75,33 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                     options = options.Concat(new List<IMultiplayerPlayerOption>
                     {
                         new MultiplayerPlayerOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id)),
-                        new MultiplayerPlayerOption("Give Host", () => NotificationManager.Show(NotificationLevel.Info, "Gave host")),
+                        new MultiplayerPlayerOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id)),
                     }).ToList();
 
                     if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
-                        options.Add(new MultiplayerPlayerOption("Change Team", () => NotificationManager.Show(NotificationLevel.Info, "Change Team")));
+                    {
+                        options.Add(new MultiplayerPlayerOption("Change Team", () =>
+                        {
+                            var team = OnlineManager.GetTeam(User.Id);
+
+                            switch (team)
+                            {
+                                case MultiplayerTeam.Red:
+                                    team = MultiplayerTeam.Blue;
+                                    break;
+                                case MultiplayerTeam.Blue:
+                                    team = MultiplayerTeam.Red;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
+                            OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team);
+                        }));
+                    }
                 }
             }
+
             options.Add(new MultiplayerPlayerOption("Close", () => DialogManager.Dismiss(Dialog)));
 
             Container = new MultiplayerPlayerOptionsContainer(Dialog, options)

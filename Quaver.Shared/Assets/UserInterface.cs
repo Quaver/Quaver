@@ -78,6 +78,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D MapPanel { get; private set; }
         public static Texture2D FeedPanel { get; private set; }
         public static Texture2D MultiplayerSettingaPanel { get; private set; }
+        public static Texture2D PlayerOptionsPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -148,6 +149,7 @@ namespace Quaver.Shared.Assets
             MapPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/map-panel.png"));
             FeedPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/feed-panel.png"));
             MultiplayerSettingaPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/settings-panel.png"));
+            PlayerOptionsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/player-options-panel.png"));
         }
     }
 }
