@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -8,11 +9,11 @@ using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
 {
-    public class MultiplayerPlayerOptionsContainer : PoolableScrollContainer<IMultiplayerPlayerOption>
+    public class MultiplayerPlayerOptionsContainer : PoolableScrollContainer<IMenuDialogOption>
     {
         private MultiplayerPlayerOptionsDialog Dialog { get; }
 
-        public MultiplayerPlayerOptionsContainer(MultiplayerPlayerOptionsDialog dialog, List<IMultiplayerPlayerOption> availableItems) : base(availableItems,
+        public MultiplayerPlayerOptionsContainer(MultiplayerPlayerOptionsDialog dialog, List<IMenuDialogOption> availableItems) : base(availableItems,
             int.MaxValue, 0, new ScalableVector2(446, 188),
             new ScalableVector2(446, 188))
         {
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// <param name="item"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        protected override PoolableSprite<IMultiplayerPlayerOption> CreateObject(IMultiplayerPlayerOption item, int index)
+        protected override PoolableSprite<IMenuDialogOption> CreateObject(IMenuDialogOption item, int index)
             => new MultiplayerPlayerOptionItem(Dialog, this, item, index);
 
         public override void Destroy()

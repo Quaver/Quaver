@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
@@ -217,13 +218,13 @@ namespace Quaver.Shared
 
             BackgroundManager.Update(gameTime);
             BackgroundHelper.Update(gameTime);
-            NotificationManager.Update(gameTime);
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
 
             QuaverScreenManager.Update(gameTime);
+            NotificationManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
             SkinManager.HandleSkinReloading();

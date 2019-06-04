@@ -2,15 +2,14 @@ using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
-using Quaver.Shared.Graphics.Dialogs.Menu;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
+namespace Quaver.Shared.Graphics.Dialogs.Menu
 {
-    public class MultiplayerPlayerOptionItem : PoolableSprite<IMenuDialogOption>
+    public class MenuDialogItem : PoolableSprite<IMenuDialogOption>
     {
         /// <inheritdoc />
         /// <summary>
@@ -32,13 +31,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// <param name="container"></param>
         /// <param name="item"></param>
         /// <param name="index"></param>
-        public MultiplayerPlayerOptionItem(MultiplayerPlayerOptionsDialog dialog, PoolableScrollContainer<IMenuDialogOption> container, IMenuDialogOption item, int index)
+        public MenuDialogItem(MenuDialog dialog, PoolableScrollContainer<IMenuDialogOption> container, IMenuDialogOption item, int index)
             : base(container, item, index)
         {
             Size = new ScalableVector2(Container.Width, HEIGHT);
             Alpha = 0;
 
-            Button = new ImageButton(UserInterface.BlankBox, (o, e) =>
+            Button = new MenuDialogItemButton(Container, (o, e) =>
             {
                 Item.ClickAction();
                 DialogManager.Dismiss(dialog);
@@ -68,10 +67,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             Button.Alpha = MathHelper.Lerp(Button.Alpha, Button.IsHovered ? 0.4f : 0f,
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
 
-
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Button.Destroy();

@@ -41,6 +41,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            Pool.ForEach(x => x.Destroy());
+            base.Destroy();
+        }
+
         protected override PoolableSprite<IMultiplayerSettingsItem> CreateObject(IMultiplayerSettingsItem item, int index)
             => new MultiplayerSettingsItem(this, item, index);
     }

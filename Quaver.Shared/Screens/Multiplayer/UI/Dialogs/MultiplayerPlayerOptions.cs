@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -47,16 +49,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
 
         private void CreateContainer()
         {
-            var options = new List<IMultiplayerPlayerOption>
+            var options = new List<IMenuDialogOption>
             {
-                new MultiplayerPlayerOption("View Profile", () => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.Id}")),
-                new MultiplayerPlayerOption("Steam Profile", () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{User.SteamId}")),
+                new MenuDialogOption("View Profile", () => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.Id}")),
+                new MenuDialogOption("Steam Profile", () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{User.SteamId}")),
             };
 
             // Other Player Actions
             if (User.Id != OnlineManager.Self.OnlineUser.Id)
             {
-                options.Add(new MultiplayerPlayerOption("Private Chat", () =>
+                options.Add(new MenuDialogOption("Private Chat", () =>
                 {
                     var list = new List<string>()
                     {
@@ -72,37 +74,35 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                 // We're the host, so add some host actions
                 if (OnlineManager.Self.OnlineUser.Id == OnlineManager.CurrentGame.HostId)
                 {
-                    options = options.Concat(new List<IMultiplayerPlayerOption>
+                    options = options.Concat(new List<IMenuDialogOption>
                     {
-                        new MultiplayerPlayerOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id)),
-                        new MultiplayerPlayerOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id)),
+                        new MenuDialogOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id), Color.Crimson),
+                        new MenuDialogOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id), Color.Lime),
                     }).ToList();
 
                     if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
                     {
-                        options.Add(new MultiplayerPlayerOption("Change Team", () =>
+                        var team = OnlineManager.GetTeam(User.Id);
+
+                        switch (team)
                         {
-                            var team = OnlineManager.GetTeam(User.Id);
+                            case MultiplayerTeam.Red:
+                                team = MultiplayerTeam.Blue;
+                                break;
+                            case MultiplayerTeam.Blue:
+                                team = MultiplayerTeam.Red;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
 
-                            switch (team)
-                            {
-                                case MultiplayerTeam.Red:
-                                    team = MultiplayerTeam.Blue;
-                                    break;
-                                case MultiplayerTeam.Blue:
-                                    team = MultiplayerTeam.Red;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-
-                            OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team);
-                        }));
+                        var color = team == MultiplayerTeam.Red ? Color.Crimson : new Color(25, 104, 249);
+                        options.Add(new MenuDialogOption($"Change Team ({team})", () =>  OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team), color));
                     }
                 }
             }
 
-            options.Add(new MultiplayerPlayerOption("Close", () => DialogManager.Dismiss(Dialog)));
+            options.Add(new MenuDialogOption("Close", () => DialogManager.Dismiss(Dialog)));
 
             Container = new MultiplayerPlayerOptionsContainer(Dialog, options)
             {

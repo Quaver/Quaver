@@ -244,10 +244,11 @@ namespace Quaver.Shared.Screens.Multiplayer
             new MultiplayerSettingsRuleset("Game Mode", OnlineManager.CurrentGame.Ruleset.ToString().Replace("_", " ")),
             new MultiplayerSettingsMaxPlayers("Max Players", OnlineManager.CurrentGame.MaxPlayers.ToString()),
             new MultiplayerSettingsAutoHostRotation("Auto Host Rotation", MultiplayerSettingsText.BooleanToYesOrNo(OnlineManager.CurrentGame.HostRotation)),
-            new MultiplayerSettingsAllowedGameModes("Allowed Game Modes", MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),
-            new MultiplayerSettingsFreeModType("Free Mod Type", MultiplayerSettingsFreeModType.FreeModTypeToString(OnlineManager.CurrentGame.FreeModType)),
+            new MultiplayerSettingsFreeModType("Free Mod", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Regular), MultiplayerFreeModType.Regular),
+            new MultiplayerSettingsFreeModType("Free Rate", MultiplayerSettingsFreeModType.FreeModTypeToString(MultiplayerFreeModType.Rate), MultiplayerFreeModType.Rate),
             new MultiplayerSettingsHealthType("Health Type", ((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType).ToString().Replace("_", " ")),
             new MultiplayerSettingsLives("Lives", OnlineManager.CurrentGame.Lives.ToString()),
+            new MultiplayerSettingsAllowedGameModes("Allowed Game Modes", MultiplayerSettingsAllowedGameModes.AllowedModesToString(OnlineManager.CurrentGame.AllowedGameModes)),
             new MultiplayerSettingsMaximumSongLength("Maximum Song Length", MultiplayerSettingsMaximumSongLength.ToString(OnlineManager.CurrentGame.MaximumSongLength)),
             new MultiplayerSettingsDifficultyRange("Difficulty Range", MultiplayerSettingsDifficultyRange.ToString(OnlineManager.CurrentGame.MinimumDifficultyRating, OnlineManager.CurrentGame.MaximumDifficultyRating)),
             new MultiplayerSettingsLongNotePercentage("Long Note % Range", MultiplayerSettingsLongNotePercentage.ToString(OnlineManager.CurrentGame.MinimumLongNotePercentage, OnlineManager.CurrentGame.MaximumLongNotePercentage))

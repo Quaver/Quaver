@@ -1,33 +1,35 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Server.Client.Structures;
-using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
-namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
+namespace Quaver.Shared.Graphics.Dialogs.Menu
 {
-    public class MultiplayerPlayerOptionsDialog : DialogScreen
+    public class MenuDialog : DialogScreen
     {
         /// <summary>
         /// </summary>
-        private OnlineUser User { get; }
+        private MenuDialogBox DialogBox { get; set; }
 
         /// <summary>
         /// </summary>
-        private MultiplayerPlayerOptions Options { get; set; }
+        public List<IMenuDialogOption> Options { get; }
+
+        /// <summary>
+        /// </summary>
+        private string Name { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="user"></param>
-        public MultiplayerPlayerOptionsDialog(OnlineUser user) : base(0.85f)
+        public MenuDialog(string name, List<IMenuDialogOption> options) : base(0.85f)
         {
-            User = user;
+            Name = name;
+            Options = options;
             CreateContent();
         }
 
@@ -36,25 +38,19 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// </summary>
         public sealed override void CreateContent()
         {
-            Options = new MultiplayerPlayerOptions(this, User)
+            DialogBox = new MenuDialogBox(this)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular,$"Options for {User.Username ?? "Loading..."}")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, Name)
             {
-                Parent = Options,
+                Parent = DialogBox,
                 Y = -25,
                 FontSize = 16,
             };
-        }
-
-        public override void Destroy()
-        {
-            ButtonManager.Remove(this);
-            base.Destroy();
         }
 
         /// <inheritdoc />
