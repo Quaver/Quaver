@@ -3,6 +3,7 @@ using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
@@ -12,6 +13,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
         public MultiplayerSettingsAllowedGameModes(string name, string value) : base(name, value)
         {
             OnlineManager.Client.OnAllowedModesChanged += OnAllowedModesChanged;
+
+            CreateDialog = () =>
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Use the \"!mp allowmode\" or \"!mp disallowmode\" command to change this setting!");
+                return null;
+            };
         }
 
         public override void Destroy()

@@ -1,4 +1,5 @@
 using Quaver.Server.Client.Handlers;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
@@ -7,6 +8,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
     {
         public MultiplayerSettingsLongNotePercentage(string name, string value) : base(name, value)
         {
+            CreateDialog = () =>
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Use the \"!mp lnmin\" or \"!mp lnmax\" command to change this setting!");
+                return null;
+            };
+
             OnlineManager.Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
         }
 

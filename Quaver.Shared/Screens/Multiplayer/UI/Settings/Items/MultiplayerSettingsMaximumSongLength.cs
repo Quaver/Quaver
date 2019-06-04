@@ -1,5 +1,6 @@
 using System;
 using Quaver.Server.Client.Handlers;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
@@ -8,6 +9,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
     {
         public MultiplayerSettingsMaximumSongLength(string name, string value) : base(name, value)
         {
+            CreateDialog = () =>
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Use the \"!mp maxlength\" command to change this setting!");
+                return null;
+            };
+
             OnlineManager.Client.OnMaxSongLengthChanged += OnMaxSongLengthChanged;
         }
 

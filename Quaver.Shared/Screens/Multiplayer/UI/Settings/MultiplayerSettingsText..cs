@@ -17,7 +17,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
 
         /// <summary>
         /// </summary>
-        public Func<MenuDialog> CreateDialog { get; }
+        public Func<MenuDialog> CreateDialog { get; protected set; }
 
         /// <summary>
         /// </summary>

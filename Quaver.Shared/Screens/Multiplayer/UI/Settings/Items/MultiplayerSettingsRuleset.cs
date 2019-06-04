@@ -1,19 +1,22 @@
 using System.Collections.Generic;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Multiplayer.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
 {
     public class MultiplayerSettingsRuleset : MultiplayerSettingsText
     {
         public MultiplayerSettingsRuleset(string name, string value) : base(name, value,
-            () => new MenuDialog("Change Game Mode", new List<IMenuDialogOption>
+            () => new MenuDialogMultiplayer("Change Game Mode", new List<IMenuDialogOption>
             {
-                new MenuDialogOption("Free For All", () => NotificationManager.Show(NotificationLevel.Info, "FFA")),
-                new MenuDialogOption("Team", () => NotificationManager.Show(NotificationLevel.Info, "Team")),
-                new MenuDialogOption("Battle Royale", () => NotificationManager.Show(NotificationLevel.Info, "BR"))
+                new MenuDialogOption("Free For All", () => OnlineManager.Client?.ChangeGameRuleset(MultiplayerGameRuleset.Free_For_All)),
+                new MenuDialogOption("Team", () => OnlineManager.Client?.ChangeGameRuleset(MultiplayerGameRuleset.Team)),
+                new MenuDialogOption("Battle Royale", () => OnlineManager.Client?.ChangeGameRuleset(MultiplayerGameRuleset.Battle_Royale)),
+                new MenuDialogOption("Close", () => {})
             }))
         {
             OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;

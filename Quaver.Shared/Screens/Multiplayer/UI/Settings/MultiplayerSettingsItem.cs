@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -38,8 +40,20 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
 
             Button = new MultiplayerSettingsItemButton(Container, (o, e) =>
             {
-                if (Item.CreateDialog != null)
-                    DialogManager.Show(Item.CreateDialog());
+                // Only allow host to change settings
+                if (OnlineManager.CurrentGame.HostId != OnlineManager.Self.OnlineUser.Id)
+                    return;
+
+                if (OnlineManager.CurrentGame.InProgress)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Wait until the match has finished before changing settings!");
+                    return;
+                }
+
+                var dialog = Item.CreateDialog?.Invoke();
+
+                if (dialog != null)
+                    DialogManager.Show(dialog);
             })
             {
                 Parent = this,
