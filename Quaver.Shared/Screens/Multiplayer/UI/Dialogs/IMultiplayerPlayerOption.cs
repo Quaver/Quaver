@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
 {
@@ -13,5 +14,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         ///     The action that gets performed when clicking on it
         /// </summary>
         Action ClickAction { get; }
+
+        /// <summary>
+        ///     The color of the text
+        /// </summary>
+        Color Color { get; }
     }
 }

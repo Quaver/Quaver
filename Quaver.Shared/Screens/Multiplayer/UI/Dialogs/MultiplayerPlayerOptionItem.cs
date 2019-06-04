@@ -53,7 +53,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 15,
-                FontSize = 14
+                FontSize = 14,
+                Tint = Item.Color
             };
         }
 

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -39,6 +40,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new SpriteTextBitmap(FontsBitmap.GothamRegular,$"Options for {User.Username ?? "Loading..."}")
+            {
+                Parent = Options,
+                Y = -25,
+                FontSize = 16,
             };
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -74,30 +75,28 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
                 {
                     options = options.Concat(new List<IMultiplayerPlayerOption>
                     {
-                        new MultiplayerPlayerOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id)),
-                        new MultiplayerPlayerOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id)),
+                        new MultiplayerPlayerOption("Kick Player", () => OnlineManager.Client.KickMultiplayerGamePlayer(User.Id), Color.Crimson),
+                        new MultiplayerPlayerOption("Give Host", () => OnlineManager.Client.TransferMultiplayerGameHost(User.Id), Color.Lime),
                     }).ToList();
 
                     if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
                     {
-                        options.Add(new MultiplayerPlayerOption("Change Team", () =>
+                        var team = OnlineManager.GetTeam(User.Id);
+
+                        switch (team)
                         {
-                            var team = OnlineManager.GetTeam(User.Id);
+                            case MultiplayerTeam.Red:
+                                team = MultiplayerTeam.Blue;
+                                break;
+                            case MultiplayerTeam.Blue:
+                                team = MultiplayerTeam.Red;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
 
-                            switch (team)
-                            {
-                                case MultiplayerTeam.Red:
-                                    team = MultiplayerTeam.Blue;
-                                    break;
-                                case MultiplayerTeam.Blue:
-                                    team = MultiplayerTeam.Red;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-
-                            OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team);
-                        }));
+                        var color = team == MultiplayerTeam.Red ? Color.Crimson : new Color(25, 104, 249);
+                        options.Add(new MultiplayerPlayerOption($"Change Team ({team})", () =>  OnlineManager.Client.ChangeOtherPlayerTeam(User.Id, team), color));
                     }
                 }
             }
