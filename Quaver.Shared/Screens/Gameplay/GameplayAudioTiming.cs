@@ -7,7 +7,9 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Modifiers;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
@@ -45,11 +47,15 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (Screen.IsCalibratingOffset)
                     AudioEngine.Track = new AudioTrack(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/Offset/offset.mp3"));
                 else
+                {
                     AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModManager.Mods);
+                }
 
                 if (Screen.IsPlayTesting)
                 {
                     AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    Time = AudioEngine.Track.Time;
                     return;
                 }
             }

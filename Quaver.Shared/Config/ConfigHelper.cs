@@ -9,8 +9,6 @@ using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
-using Quaver.Shared.Screens.Gameplay.UI.Health;
 
 namespace Quaver.Shared.Config
 {
@@ -225,37 +223,15 @@ namespace Quaver.Shared.Config
         }
 
         /// <summary>
-        ///     Reads a DefaultSkin
+        ///     Reads an enum.
         /// </summary>
-        /// <param name="defaultSkins"></param>
-        /// <param name="s"></param>
+        /// <param name="defaultVal"></param>
         /// <param name="newVal"></param>
+        /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-        internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkins, string newVal)
+        internal static TEnum ReadEnum<TEnum>(TEnum defaultVal, string newVal) where TEnum: struct
         {
-            return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkins;
-        }
-
-        /// <summary>
-        ///     Reads a HealtHBarType
-        /// </summary>
-        /// <param name="defaultType"></param>
-        /// <param name="newVal"></param>
-        /// <returns></returns>
-        internal static HealthBarType ReadHealthBarType(HealthBarType defaultType, string newVal)
-        {
-            return Enum.TryParse(newVal, out HealthBarType newOne) ? newOne : defaultType;
-        }
-
-        /// <summary>
-        ///     Reads a HealtHBarType
-        /// </summary>
-        /// <param name="defaultType"></param>
-        /// <param name="newVal"></param>
-        /// <returns></returns>
-        internal static HealthBarKeysAlignment ReadHealthBarKeysAlignment(HealthBarKeysAlignment defaultType, string newVal)
-        {
-            return Enum.TryParse(newVal, out HealthBarKeysAlignment newOne) ? newOne : defaultType;
+            return Enum.TryParse(newVal, out TEnum newOne) ? newOne : defaultVal;
         }
     }
 }

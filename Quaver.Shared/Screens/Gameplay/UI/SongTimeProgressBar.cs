@@ -59,19 +59,21 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (ConfigManager.DisplaySongTimeProgressNumbers.Value)
             {
                 CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(skin.SongTimeProgressScale / 100f,
-                    skin.SongTimeProgressScale / 100f), 10)
+                    skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
                     Alignment = Alignment.TopLeft,
-                    Y = -Height - 25,
+                    X = 10,
+                    Y = -Height - 25
                 };
 
                 var startText = (new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue)).ToString("mm:ss");
                 TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-" + startText, new Vector2(skin.SongTimeProgressScale / 100f,
-                    skin.SongTimeProgressScale / 100f), -10)
+                    skin.SongTimeProgressScale / 100f))
                 {
                     Parent = this,
                     Alignment = Alignment.TopRight,
+                    X = -10,
                     Y = CurrentTime.Y
                 };
             }
@@ -108,15 +110,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 {
                     var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int)Bindable.MaxValue - Bindable.Value);
 
-                    // Get the old value.
-                    var oldValue = TimeLeft.Value;
-
                     // Set the new value.
                     TimeLeft.Value = "-" + timeLeft.ToString("mm:ss");
-
-                    // Check if we need to reposition it since it's on the right side of the screen.
-                    if (oldValue.Length != TimeLeft.Value.Length)
-                        TimeLeft.X = -TimeLeft.TotalWidth - 10;
                 }
             }
 

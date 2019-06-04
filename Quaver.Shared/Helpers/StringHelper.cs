@@ -21,6 +21,13 @@ namespace Quaver.Shared.Helpers
         internal static string ScoreToString(int score) => score.ToString("0000000");
 
         /// <summary>
+        /// Converts rating to string
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <returns></returns>
+        internal static string RatingToString(double rating) => rating.ToString("0.00");
+
+        /// <summary>
         ///     Converts an accuracy percentage into a string.
         /// </summary>
         /// <param name="accuracy"></param>

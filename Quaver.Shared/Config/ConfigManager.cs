@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IniFileParser;
 using IniFileParser.Model;
+using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
@@ -99,6 +100,16 @@ namespace Quaver.Shared.Config
         ///     The Music volume of the gamne.
         /// </summary>
         internal static BindableInt VolumeMusic { get; private set; }
+
+        /// <summary>
+        ///     The BASS device period.
+        /// </summary>
+        internal static BindableInt DevicePeriod { get; private set; }
+
+        /// <summary>
+        ///     The BASS device buffer length divided by DevicePeriod.
+        /// </summary>
+        internal static BindableInt DeviceBufferLengthMultiplier { get; private set; }
 
         /// <summary>
         ///     The dim for backgrounds during gameplay
@@ -227,6 +238,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableHitsounds { get; private set; }
 
         /// <summary>
+        ///     If true, keysounds in gameplay will be played.
+        /// </summary>
+        internal static Bindable<bool> EnableKeysounds { get; private set; }
+
+        /// <summary>
         ///     If enabled, the user's background will be blurred in gameplay.
         /// </summary>
         internal static Bindable<bool> BlurBackgroundInGameplay { get; private set; }
@@ -284,6 +300,11 @@ namespace Quaver.Shared.Config
         ///     Whether or not to play hitsounds in the editor.
         /// </summary>
         internal static Bindable<bool> EditorEnableHitsounds { get; private set; }
+
+        /// <summary>
+        ///     Whether or not to play keysounds in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorEnableKeysounds { get; private set; }
 
         /// <summary>
         ///     The type of beat snap colors that'll be displayed in the editor.
@@ -542,6 +563,8 @@ namespace Quaver.Shared.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
+            DevicePeriod = ReadInt(@"DevicePeriod", Bass.GetConfig(Configuration.DevicePeriod), 1, 100, data);
+            DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", Bass.GetConfig(Configuration.DeviceBufferLength) / DevicePeriod.Value, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
@@ -568,6 +591,7 @@ namespace Quaver.Shared.Config
             DisplayTimingLines = ReadValue(@"DisplayTimingLines", true, data);
             DisplayMenuAudioVisualizer = ReadValue(@"DisplayMenuAudioVisualizer", true, data);
             EnableHitsounds = ReadValue(@"EnableHitsounds", true, data);
+            EnableKeysounds = ReadValue(@"EnableKeysounds", true, data);
             KeyNavigateLeft = ReadValue(@"KeyNavigateLeft", Keys.Left, data);
             KeyNavigateRight = ReadValue(@"KeyNavigateRight", Keys.Right, data);
             KeyNavigateUp = ReadValue(@"KeyNavigateUp", Keys.Up, data);
@@ -603,6 +627,7 @@ namespace Quaver.Shared.Config
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
             KeyEditorIncreaseAudioRate = ReadValue(@"KeyEditorIncreaseAudioRate", Keys.OemPlus, data);
             EditorEnableHitsounds = ReadValue(@"EditorEnableHitsounds", true, data);
+            EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
             EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
@@ -649,6 +674,8 @@ namespace Quaver.Shared.Config
                     VolumeGlobal.ValueChanged += AutoSaveConfiguration;
                     VolumeEffect.ValueChanged += AutoSaveConfiguration;
                     VolumeMusic.ValueChanged += AutoSaveConfiguration;
+                    DevicePeriod.ValueChanged += AutoSaveConfiguration;
+                    DeviceBufferLengthMultiplier.ValueChanged += AutoSaveConfiguration;
                     BackgroundBrightness.ValueChanged += AutoSaveConfiguration;
                     WindowHeight.ValueChanged += AutoSaveConfiguration;
                     WindowWidth.ValueChanged += AutoSaveConfiguration;
@@ -670,6 +697,7 @@ namespace Quaver.Shared.Config
                     DisplayTimingLines.ValueChanged += AutoSaveConfiguration;
                     DisplayMenuAudioVisualizer.ValueChanged += AutoSaveConfiguration;
                     EnableHitsounds.ValueChanged += AutoSaveConfiguration;
+                    EnableKeysounds.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateLeft.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateRight.ValueChanged += AutoSaveConfiguration;
                     KeyNavigateUp.ValueChanged += AutoSaveConfiguration;
