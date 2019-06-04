@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
+namespace Quaver.Shared.Graphics.Dialogs.Menu
 {
-    public interface IMultiplayerPlayerOption
+    public interface IMenuDialogOption
     {
         /// <summary>
         ///     The name of the option

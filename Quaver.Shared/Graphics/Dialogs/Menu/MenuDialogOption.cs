@@ -1,18 +1,21 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
+namespace Quaver.Shared.Graphics.Dialogs.Menu
 {
-    public class MultiplayerPlayerOption : IMultiplayerPlayerOption
+    public class MenuDialogOption : IMenuDialogOption
     {
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public string Name { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public Action ClickAction { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public Color Color { get; }
@@ -22,7 +25,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// <param name="name"></param>
         /// <param name="clickAction"></param>
         /// <param name="color"></param>
-        public MultiplayerPlayerOption(string name, Action clickAction)
+        public MenuDialogOption(string name, Action clickAction)
         {
             Name = name;
             ClickAction = clickAction;
@@ -34,7 +37,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// <param name="name"></param>
         /// <param name="clickAction"></param>
         /// <param name="color"></param>
-        public MultiplayerPlayerOption(string name, Action clickAction, Color color)
+        public MenuDialogOption(string name, Action clickAction, Color color)
         {
             Name = name;
             ClickAction = clickAction;
