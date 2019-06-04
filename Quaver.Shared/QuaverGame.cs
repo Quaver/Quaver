@@ -227,13 +227,6 @@ namespace Quaver.Shared
             NotificationManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.A))
-            {
-                DialogManager.Show(new MenuDialog(new List<IMenuDialogOption>()
-                {
-                    new MenuDialogOption("Close", () => NotificationManager.Show(NotificationLevel.Info, "HI!"))
-                }));
-            }
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
         }
