@@ -67,7 +67,6 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             Button.Alpha = MathHelper.Lerp(Button.Alpha, Button.IsHovered ? 0.4f : 0f,
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
 
-
             base.Update(gameTime);
         }
 
