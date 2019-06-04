@@ -37,7 +37,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             Size = new ScalableVector2(Container.Width, HEIGHT);
             Alpha = 0;
 
-            Button = new ImageButton(UserInterface.BlankBox, (o, e) =>
+            Button = new MenuDialogItemButton(Container, (o, e) =>
             {
                 Item.ClickAction();
                 DialogManager.Dismiss(dialog);

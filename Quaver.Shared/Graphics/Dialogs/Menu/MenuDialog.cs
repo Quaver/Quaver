@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -17,11 +19,16 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         /// </summary>
         public List<IMenuDialogOption> Options { get; }
 
+        /// <summary>
+        /// </summary>
+        private string Name { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public MenuDialog(List<IMenuDialogOption> options) : base(0.85f)
+        public MenuDialog(string name, List<IMenuDialogOption> options) : base(0.85f)
         {
+            Name = name;
             Options = options;
             CreateContent();
         }
@@ -35,6 +42,14 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, Name)
+            {
+                Parent = DialogBox,
+                Y = -25,
+                FontSize = 16,
             };
         }
 
