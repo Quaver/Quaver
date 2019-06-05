@@ -36,6 +36,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -576,18 +577,24 @@ namespace Quaver.Shared.Screens.Gameplay
                 PauseCount++;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
-                if (!InReplayMode)
+                // Exit right away if playing a replay.
+                if (InReplayMode)
                 {
-                    // Show notification to the user that their score is invalid.
-                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+                    CustomAudioSampleCache.StopAll();
+                    ModManager.RemoveAllMods();
+                    Exit(() => new SelectScreen());
+                    return;
+                }
 
-                    // Add the pause mod to their score.
-                    if (!ModManager.IsActivated(ModIdentifier.Paused))
-                    {
-                        ModManager.AddMod(ModIdentifier.Paused);
-                        ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
-                        Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
-                    }
+                // Show notification to the user that their score is invalid.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+
+                // Add the pause mod to their score.
+                if (!ModManager.IsActivated(ModIdentifier.Paused))
+                {
+                    ModManager.AddMod(ModIdentifier.Paused);
+                    ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
+                    Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
                 }
 
                 try
