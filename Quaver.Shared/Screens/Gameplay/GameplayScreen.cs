@@ -485,34 +485,34 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+            if (!(KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
+                return;
+
+            // Go back to editor if we're currently play testing.
+            if (IsPlayTesting)
             {
-                // Go back to editor if we're currently play testing.
-                if (IsPlayTesting)
+                if (AudioEngine.Track.IsPlaying)
                 {
-                    if (AudioEngine.Track.IsPlaying)
-                    {
-                        AudioEngine.Track.Pause();
-                        AudioEngine.Track.Seek(PlayTestAudioTime);
-                    }
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
 
                 CustomAudioSampleCache.StopAll();
 
                 Exit(() => new EditorScreen(OriginalEditorMap));
             }
 
-                if (IsCalibratingOffset)
-                    OffsetConfirmDialog.Exit(this);
+            if (IsCalibratingOffset)
+                OffsetConfirmDialog.Exit(this);
 
-                // Exit back to selector if we're in a replay.
-                if (InReplayMode)
-                    Exit(() => new SelectScreen());
-            }
+            // Exit back to selector if we're in a replay.
+            if (InReplayMode)
+                Exit(() => new SelectScreen());
 
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
                 Pause(gameTime);
             // The user wants to resume their play.
-            else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            else if (IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
             {
                 if (ChatManager.IsActive)
                 {
