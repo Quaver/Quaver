@@ -469,7 +469,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             var view = (EditorScreenView) View;
 
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || view.LayerCompositor.ScrollContainer.InputEnabled ||
+            if (IsStoppedDisposedAndInputEnabled ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
@@ -485,7 +485,7 @@ namespace Quaver.Shared.Screens.Editor
         {
             var view = (EditorScreenView) View;
 
-            if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || view.LayerCompositor.ScrollContainer.InputEnabled ||
+            if (IsStoppedDisposedAndInputEnabled ||
                 !((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift)) &&
                 (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
@@ -1096,6 +1096,18 @@ namespace Quaver.Shared.Screens.Editor
             {
                 AudioEngine.SeekTrackToNearestSnap(WorkingMap, Direction.Forward, beatSnapValue);
                 SetHitSoundObjectIndex();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private bool IsStoppedDisposedAndInputEnabled
+        {
+            get
+            {
+                var view = (EditorScreenView) View;
+
+                return AudioEngine.Track.IsStopped || AudioEngine.Track.IsDisposed || view.LayerCompositor.ScrollContainer.InputEnabled;
             }
         }
     }
