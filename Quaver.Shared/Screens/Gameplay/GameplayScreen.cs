@@ -485,31 +485,28 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePauseInput(GameTime gameTime)
         {
-            // Go back to editor if we're currently play testing.
-            if (IsPlayTesting && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
             {
-                if (AudioEngine.Track.IsPlaying)
+                // Go back to editor if we're currently play testing.
+                if (IsPlayTesting)
                 {
-                    AudioEngine.Track.Pause();
-                    AudioEngine.Track.Seek(PlayTestAudioTime);
-                }
+                    if (AudioEngine.Track.IsPlaying)
+                    {
+                        AudioEngine.Track.Pause();
+                        AudioEngine.Track.Seek(PlayTestAudioTime);
+                    }
 
                 CustomAudioSampleCache.StopAll();
 
                 Exit(() => new EditorScreen(OriginalEditorMap));
             }
 
-            if (IsCalibratingOffset && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) ||
-                                         KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
-            {
-                OffsetConfirmDialog.Exit(this);
-            }
+                if (IsCalibratingOffset)
+                    OffsetConfirmDialog.Exit(this);
 
-            // Exit back to selector if we're in a replay.
-            if (InReplayMode && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
-            {
-                Exit(() => new SelectScreen());
-                return;
+                // Exit back to selector if we're in a replay.
+                if (InReplayMode)
+                    Exit(() => new SelectScreen());
             }
 
             if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
