@@ -354,10 +354,24 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             OnlineManager.CurrentGame.DifficultyRating = e.DifficultyRating;
             OnlineManager.CurrentGame.Modifiers = e.Modifiers.ToString();
+
+            var game = GameBase.Game as QuaverGame;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Select || QuaverScreenManager.QueuedScreen?.Type == QuaverScreenType.Select)
+                return;
+
             UpdateContent();
         }
 
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            var game = GameBase.Game as QuaverGame;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Select || QuaverScreenManager.QueuedScreen?.Type == QuaverScreenType.Select)
+                return;
+
+            UpdateContent();
+        }
 
         /// <summary>
         ///     Called when the download button has been clicked
