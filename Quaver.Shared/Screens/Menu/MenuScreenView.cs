@@ -269,7 +269,7 @@ namespace Quaver.Shared.Screens.Menu
                 UserInterface.ThumbnailCompetitive, OnCompetitivePanelClicked),
 
             // Custom Games
-            new Panel("Custom Games", "Play multiplayer games with your friends",
+            new Panel("Multiplayer", "Play custom online matches with other players",
                 UserInterface.ThumbnailCustomGames, OnCustomGamesPanelClicked),
 
             // Editor

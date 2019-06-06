@@ -203,8 +203,8 @@ namespace Quaver.Shared.Screens.Lobby
         /// </summary>
         private void CreateHeader()
         {
-            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "CUSTOM", "GAMES",
-                "find or create a multiplayer match", Colors.MainAccent) { Parent = Container };
+            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "MULTIPLAYER", "LOBBY",
+                "find or create an online match", Colors.MainAccent) { Parent = Container };
 
             Header.Y = -Header.Height;
             Header.MoveToY(0, Easing.OutQuint, 600);
