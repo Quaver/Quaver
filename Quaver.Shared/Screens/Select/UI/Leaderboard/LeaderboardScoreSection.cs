@@ -176,9 +176,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     var isPersonalBest = scoreStore.PersonalBest != null && i == 0;
                     var rank = scoreStore.PersonalBest != null ? (isPersonalBest ? -1 : i) : i + 1;
 
-                    var drawable = new DrawableLeaderboardScore(score, rank)
+                    var drawable = new DrawableLeaderboardScore(this, score, rank)
                     {
-                        Parent = this,
+
                         Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
                         X = -DrawableLeaderboardScore.WIDTH,
                     };

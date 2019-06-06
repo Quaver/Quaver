@@ -33,6 +33,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
     public class DrawableLeaderboardScore : Button
     {
         /// <summary>
+        ///     The score section/scroll container for the leaderboard
+        /// </summary>
+        public LeaderboardScoreSection ScoreSection { get; }
+
+        /// <summary>
         ///     The score this drawable represents.
         /// </summary>
         public Score Score { get; }
@@ -90,8 +95,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableLeaderboardScore(Score score = null, int rank = -1)
+        public DrawableLeaderboardScore(LeaderboardScoreSection section, Score score = null, int rank = -1)
         {
+            ScoreSection = section;
             Score = score;
             Rank = rank;
 
@@ -296,8 +302,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, Parent.ScreenRectangle);
-            return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
+            return RectangleF.Intersects(ScreenRectangle, ScoreSection.ScreenRectangle);
         }
 
         /// <summary>
