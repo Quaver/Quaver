@@ -15,6 +15,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
@@ -32,6 +33,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 {
     public class DrawableLeaderboardScore : Button
     {
+        /// <summary>
+        ///     The score section/scroll container for the leaderboard
+        /// </summary>
+        public LeaderboardScoreSection ScoreSection { get; }
+
         /// <summary>
         ///     The score this drawable represents.
         /// </summary>
@@ -90,8 +96,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableLeaderboardScore(Score score = null, int rank = -1)
+        public DrawableLeaderboardScore(LeaderboardScoreSection section, Score score = null, int rank = -1)
         {
+            ScoreSection = section;
             Score = score;
             Rank = rank;
 
@@ -110,6 +117,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
             Clicked += (sender, args) =>
             {
+                if (OnlineManager.CurrentGame != null)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot view this score while in a multiplayer game!");
+                    return;
+                }
+                
                 var game = GameBase.Game as QuaverGame;
                 var screen = game.CurrentScreen as SelectScreen;
                 screen.ExitToResults(Score);
@@ -296,7 +309,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, Parent.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 

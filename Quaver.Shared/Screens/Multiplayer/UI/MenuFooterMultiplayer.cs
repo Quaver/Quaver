@@ -56,6 +56,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnGameCountdownStop += OnCountdownStop;
             OnlineManager.Client.OnFreeModTypeChanged += OnFreeModTypeChanged;
             OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
+            OnlineManager.Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
         }
 
         /// <inheritdoc />
@@ -69,6 +70,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             OnlineManager.Client.OnGameCountdownStart -= OnCountdownStart;
             OnlineManager.Client.OnGameCountdownStop -= OnCountdownStop;
             OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
+            OnlineManager.Client.OnGamePlayerNoMap -= OnGamePlayerNoMap;
             ReadyUp.Destroy();
             SelectMap.Destroy();
             base.Destroy();
@@ -219,6 +221,26 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             AlignRightItems(RightAligned);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGamePlayerNoMap(object sender, PlayerGameNoMapEventArgs e)
+        {
+            if (e.UserId != OnlineManager.Self.OnlineUser.Id)
+                return;
+
+            if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
+                return;
+
+            ReadyUp.ChangeText("READY UP");
+            AlignRightItems(RightAligned);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
         {
             if (e.Ruleset == MultiplayerGameRuleset.Team)
@@ -267,7 +289,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateModifiersButton()
         {
-            SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Select Modifiers", 14, (o, e) =>
+            SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Modifiers", 14, (o, e) =>
             {
                 DialogManager.Show(new ModifiersDialog());
             })

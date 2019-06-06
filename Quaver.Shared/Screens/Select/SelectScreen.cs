@@ -457,7 +457,7 @@ namespace Quaver.Shared.Screens.Select
         {
             IsExitingToGameplay = true;
 
-            if (MultiplayerScreen != null)
+            if (OnlineManager.CurrentGame != null)
             {
                 var map = MapManager.Selected.Value;
 

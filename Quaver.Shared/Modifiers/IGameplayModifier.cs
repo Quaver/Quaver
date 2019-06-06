@@ -42,6 +42,11 @@ namespace Quaver.Shared.Modifiers
         bool AllowedInMultiplayer { get; set; }
 
         /// <summary>
+        ///     Dictates if only the host of the multiplayer game can change this modifier
+        /// </summary>
+        bool OnlyMultiplayerHostCanCanChange { get; set; }
+
+        /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
         ModIdentifier[] IncompatibleMods { get; set; }

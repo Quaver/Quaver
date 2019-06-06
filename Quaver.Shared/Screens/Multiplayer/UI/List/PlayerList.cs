@@ -154,6 +154,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
                 player.Avatar.Border.Tint = player.GetPlayerColor();
                 player.Button.Image = player.GetPlayerPanel();
+                player.UpdateContent(player.Item, player.Index);
                 OrderByTeam(false);
             }
         }

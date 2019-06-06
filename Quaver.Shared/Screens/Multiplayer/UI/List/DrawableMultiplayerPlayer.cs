@@ -182,6 +182,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
             OnlineManager.Client.OnUserStats += OnUserStats;
             OnlineManager.Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+            OnlineManager.Client.OnGameTeamWinCount += OnGameTeamWinCount;
             OnlineManager.Client.OnPlayerChangedModifiers += OnPlayerChangedModifiers;
             OnlineManager.Client.OnChangedModifiers += OnGameChangedModifiers;
 
@@ -203,15 +204,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
         }
 
+        private void OnGameTeamWinCount(object sender, TeamWinCountEventArgs e)
+            => UpdateContent(Item, Index);
+
         private void OnGameChangedModifiers(object sender, ChangeModifiersEventArgs e)
             => UpdateContent(Item, Index);
 
         public override void Update(GameTime gameTime)
         {
             Ready.Visible = !NoMapIcon.Visible;
-
-            if (OnlineManager.CurrentGame != null)
-                Wins.Visible = OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team;
 
             if (!Button.IsVisibleInContainer())
                 return;
@@ -248,8 +249,31 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Username.Text = item.Username + rank;
                 HostCrown.X = Username.Width + 12;
 
-                var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
-                Wins.Text = mpWins != null ? $"{mpWins.Wins} Wins" : $"0 Wins";
+                // Handle getting the amount of wins the player has
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                {
+                    var team = OnlineManager.GetTeam(Item.Id);
+                    int wins;
+
+                    switch (team)
+                    {
+                        case MultiplayerTeam.Red:
+                            wins = OnlineManager.CurrentGame.RedTeamWins;
+                            break;
+                        case MultiplayerTeam.Blue:
+                            wins = OnlineManager.CurrentGame.BlueTeamWins;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    Wins.Text = $"{wins} Wins";
+                }
+                else
+                {
+                    var mpWins = OnlineManager.CurrentGame.PlayerWins.Find(x => x.UserId == item.Id);
+                    Wins.Text = mpWins != null ? $"{mpWins.Wins} Wins" : $"0 Wins";
+                }
 
                 var playerMods = OnlineManager.CurrentGame.PlayerMods.Find(x => x.UserId == item.Id);
                 var mods = (ModIdentifier) long.Parse(OnlineManager.CurrentGame.Modifiers);
@@ -284,6 +308,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnUserStats -= OnUserStats;
             OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
             OnlineManager.Client.OnGamePlayerWinCount -= OnGamePlayerWinCount;
+            OnlineManager.Client.OnGameTeamWinCount -= OnGameTeamWinCount;
             OnlineManager.Client.OnPlayerChangedModifiers -= OnPlayerChangedModifiers;
             OnlineManager.Client.OnChangedModifiers -= OnGameChangedModifiers;
 

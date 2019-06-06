@@ -16,6 +16,8 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
+        public bool OnlyMultiplayerHostCanCanChange { get; set; }
+
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
 
         public void InitializeMod() {}

@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <summary>
         ///     Modifiers in this option list.
         /// </summary>
-        private IGameplayModifier[] Modifiers { get; }
+        public IGameplayModifier[] Modifiers { get; }
 
         /// <summary>
         ///     Description for when the OFF button is selected.

@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Lobby
             OnlineManager.JoinLobby();
 
             DiscordHelper.Presence.Details = "Finding a Game";
-            DiscordHelper.Presence.State = "In the Lobby";
+            DiscordHelper.Presence.State = "In the Multiplayer Lobby";
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 

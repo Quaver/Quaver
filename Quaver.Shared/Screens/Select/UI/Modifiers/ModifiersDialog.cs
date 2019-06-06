@@ -77,13 +77,19 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
             };
 
             if (OnlineManager.Client != null)
+            {
                 OnlineManager.Client.OnGameStarted += OnGameStarted;
+                OnlineManager.Client.OnGameHostChanged += OnGameHostChanged;
+            }
         }
 
         public override void Destroy()
         {
             if (OnlineManager.Client != null)
+            {
                 OnlineManager.Client.OnGameStarted -= OnGameStarted;
+                OnlineManager.Client.OnGameHostChanged -= OnGameHostChanged;
+            }
 
             base.Destroy();
         }
@@ -245,7 +251,20 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                 if (ModsList[i] is DrawableModifierBool mod)
                 {
                     if (!mod.Modifier.AllowedInMultiplayer && OnlineManager.CurrentGame != null)
+                    {
                         ModsList.Remove(ModsList[i]);
+                        continue;
+                    }
+                }
+
+                if (ModsList[i] is DrawableModifierModList modList)
+                {
+                    if (modList.Modifiers.Any(x => x.OnlyMultiplayerHostCanCanChange) &&
+                        OnlineManager.CurrentGame != null &&
+                        OnlineManager.CurrentGame.HostId != OnlineManager.Self.OnlineUser.Id)
+                    {
+                        ModsList.Remove(ModsList[i]);
+                    }
                 }
             }
 
@@ -290,6 +309,18 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                         rateMod = 0;
 
                     var activeModsWithoutRate = (long) ModManager.Mods - rateMod;
+                    ModIdentifier hostOnlyMods = 0;
+                    var onlyHostChangeableMods = ModManager.CurrentModifiersList.FindAll(x => x.OnlyMultiplayerHostCanCanChange);
+
+                    if (onlyHostChangeableMods.Count != 0)
+                    {
+                        onlyHostChangeableMods.ForEach(x =>
+                        {
+                            // ReSharper disable once AccessToModifiedClosure
+                            activeModsWithoutRate -= (long) x.ModIdentifier;
+                            hostOnlyMods |= x.ModIdentifier;
+                        });
+                    }
 
                     if (activeModsWithoutRate == -1)
                         activeModsWithoutRate = 0;
@@ -297,10 +328,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     // If we're on regular free mod mode, when we change the rate,
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (OnlineManager.CurrentGame.FreeModType == MultiplayerFreeModType.Regular &&
-                        ModHelper.GetRateFromMods(ModsWhenDialogOpen) != rateNow
+                        (ModHelper.GetRateFromMods(ModsWhenDialogOpen) != rateNow || hostOnlyMods != 0)
                         && OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                     {
-                        OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod, diffRating);
+                        OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod + (long) hostOnlyMods, diffRating);
 
                         // Change the mods of ourselves minus the mods rate (gets all other activated modes)
                         OnlineManager.Client?.MultiplayerChangePlayerModifiers(activeModsWithoutRate);
@@ -313,6 +344,9 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                         if (OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Regular)
                             && OnlineManager.CurrentGame.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
                         {
+                            if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                                OnlineManager.Client?.MultiplayerChangeGameModifiers((long) hostOnlyMods, diffRating);
+
                             OnlineManager.Client.MultiplayerChangePlayerModifiers((long) ModManager.Mods);
                         }
                         // Either Free Mod OR Free Rate
@@ -327,11 +361,14 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                                     OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) ModHelper.GetModsFromRate(rateNow));
                                     break;
                             }
+
+                            if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                                OnlineManager.Client?.MultiplayerChangeGameModifiers((long) hostOnlyMods, diffRating);
                         }
                     }
                     // We're host & free mod isn't enabled, so change the global game mods
                     else if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
-                        OnlineManager.Client?.MultiplayerChangeGameModifiers((long) ModManager.Mods, diffRating);
+                        OnlineManager.Client?.MultiplayerChangeGameModifiers((long) ModManager.Mods + (long) hostOnlyMods, diffRating);
                 }
             }
 
@@ -342,5 +379,13 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         }
 
         private void OnGameStarted(object sender, GameStartedEventArgs e) => Close(false);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnGameHostChanged(object sender, GameHostChangedEventArgs e)
+            => Close(false);
     }
 }

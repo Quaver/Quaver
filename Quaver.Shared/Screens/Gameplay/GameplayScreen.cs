@@ -39,6 +39,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -548,57 +549,56 @@ namespace Quaver.Shared.Screens.Gameplay
             if (OnlineManager.CurrentGame != null)
                 return;
 
-            // Go back to editor if we're currently play testing.
-            if (IsPlayTesting && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
+            // If the pause key is not pressed...
+            if (KeyboardManager.CurrentState.IsKeyUp(Keys.Escape) && KeyboardManager.CurrentState.IsKeyUp(ConfigManager.KeyPause.Value))
             {
-                if (AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track.Pause();
-                    AudioEngine.Track.Seek(PlayTestAudioTime);
-                }
-
-                CustomAudioSampleCache.StopAll();
-
-                Exit(() => new EditorScreen(OriginalEditorMap));
-            }
-
-            if (IsCalibratingOffset && (KeyboardManager.IsUniqueKeyPress(Keys.Escape) ||
-                                         KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value)))
-            {
-                OffsetConfirmDialog.Exit(this);
-            }
-
-            if (!IsPaused && (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
-                Pause(gameTime);
-            // The user wants to resume their play.
-            else if (IsPaused && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
-            {
-                if (ChatManager.IsActive)
-                {
-                    ChatManager.ToggleChatOverlay();
-                    return;
-                }
-
-                Pause();
-                TimePauseKeyHeld = 0;
-                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
-            }
-            else
-            {
-                TimePauseKeyHeld = 0;
-
-                var screenView = (GameplayScreenView) View;
-
                 if (Failed || IsPlayComplete || IsPaused)
                     return;
 
-                // Properly fade in now.
+                // Remove the pause fade.
+                var screenView = (GameplayScreenView) View;
                 if (!screenView.FadingOnRestartKeyPress)
                 {
                     screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 0,
                         (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
                 }
+
+                return;
             }
+
+            // If the pause key was just pressed...
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            {
+                // Go back to editor if we're currently play testing.
+                if (IsPlayTesting)
+                {
+                    if (AudioEngine.Track.IsPlaying)
+                    {
+                        AudioEngine.Track.Pause();
+                        AudioEngine.Track.Seek(PlayTestAudioTime);
+                    }
+
+                    CustomAudioSampleCache.StopAll();
+                    Exit(() => new EditorScreen(OriginalEditorMap));
+                }
+                // Exit the offset calibration.
+                else if (IsCalibratingOffset)
+                {
+                    OffsetConfirmDialog.Exit(this);
+                }
+                // Resume the play if paused, or pause.
+                else
+                {
+                    TimePauseKeyHeld = 0;
+                    Pause(gameTime);
+                }
+
+                return;
+            }
+
+            // Otherwise (the pause key is held but wasn't just pressed), call Pause() to advance the hold to pause timer.
+            if (!IsPaused)
+                Pause(gameTime);
         }
 
         /// <summary>
@@ -640,18 +640,24 @@ namespace Quaver.Shared.Screens.Gameplay
                 PauseCount++;
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
-                if (!InReplayMode)
+                // Exit right away if playing a replay.
+                if (InReplayMode)
                 {
-                    // Show notification to the user that their score is invalid.
-                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+                    CustomAudioSampleCache.StopAll();
+                    ModManager.RemoveAllMods();
+                    Exit(() => new SelectScreen());
+                    return;
+                }
 
-                    // Add the pause mod to their score.
-                    if (!ModManager.IsActivated(ModIdentifier.Paused))
-                    {
-                        ModManager.AddMod(ModIdentifier.Paused);
-                        ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
-                        Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
-                    }
+                // Show notification to the user that their score is invalid.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+
+                // Add the pause mod to their score.
+                if (!ModManager.IsActivated(ModIdentifier.Paused))
+                {
+                    ModManager.AddMod(ModIdentifier.Paused);
+                    ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
+                    Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
                 }
 
                 try
@@ -699,6 +705,7 @@ namespace Quaver.Shared.Screens.Gameplay
             screenView.PauseScreen.Deactivate();
             SetRichPresence();
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
         }
 
         /// <summary>
