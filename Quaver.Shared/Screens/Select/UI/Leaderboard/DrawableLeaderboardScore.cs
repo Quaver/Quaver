@@ -15,6 +15,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
@@ -116,6 +117,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
             Clicked += (sender, args) =>
             {
+                if (OnlineManager.CurrentGame != null)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot view this score while in a multiplayer game!");
+                    return;
+                }
+                
                 var game = GameBase.Game as QuaverGame;
                 var screen = game.CurrentScreen as SelectScreen;
                 screen.ExitToResults(Score);
@@ -302,7 +309,8 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            return RectangleF.Intersects(ScreenRectangle, ScoreSection.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle);
+            return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 
         /// <summary>
