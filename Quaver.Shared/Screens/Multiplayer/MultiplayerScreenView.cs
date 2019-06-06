@@ -204,8 +204,8 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             Footer = new MenuFooterMultiplayer(new List<ButtonText>
             {
-                new ButtonText(FontsBitmap.GothamRegular, "leave game", 14, (o, e) => MultiplayerScreen.LeaveGame()),
-                new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
+                new ButtonText(FontsBitmap.GothamRegular, "leave", 14, (o, e) => MultiplayerScreen.LeaveGame()),
+                new ButtonText(FontsBitmap.GothamRegular, "options", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
                 new MenuFooterButtonGameChat(FontsBitmap.GothamRegular, "game chat", 14, (o, e) => ChatManager.ToggleChatOverlay(true)),
                 new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!")),
                 new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => SteamFriends.ActivateGameOverlayToWebPage("https://gist.github.com/Swan/f0a0b5beb581190ce1a267511f60ac98"))

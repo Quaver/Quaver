@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateModifiersButton()
         {
-            SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Select Modifiers", 14, (o, e) =>
+            SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Modifiers", 14, (o, e) =>
             {
                 DialogManager.Show(new ModifiersDialog());
             })
