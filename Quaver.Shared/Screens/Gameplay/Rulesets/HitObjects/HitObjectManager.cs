@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         public static void PlayObjectKeySounds(HitObjectInfo hitObject)
         {
             foreach (var keySound in hitObject.KeySounds)
-                CustomAudioSampleCache.Play(keySound - 1);
+                CustomAudioSampleCache.Play(keySound.Sample - 1, keySound.Volume);
         }
 
         /// <summary>
