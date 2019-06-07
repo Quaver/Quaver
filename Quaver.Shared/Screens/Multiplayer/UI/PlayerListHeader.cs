@@ -36,7 +36,21 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private double LastNearestSecond { get; set; }
 
+        /// <summary>
+        /// </summary>
         private bool CompletedThisInterval { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private int LastPlayerCount { get; set; } = -1;
+
+        /// <summary>
+        /// </summary>
+        private int LastMaxPlayerCount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool HostSelectingMapInLastFrame { get; set; }
 
         /// <summary>
         /// </summary>
@@ -82,7 +96,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             if (OnlineManager.CurrentGame != null)
             {
-                if (OnlineManager.CurrentGame.CountdownStartTime == -1)
+                if (OnlineManager.CurrentGame.HostSelectingMap)
+                {
+                    if (!HostSelectingMapInLastFrame)
+                        Status.Text = "Host is selecting a map.";
+                }
+                else if (OnlineManager.CurrentGame.CountdownStartTime == -1)
                 {
                     Status.Tint = Color.White;
 
@@ -109,26 +128,32 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 }
                 else
                 {
-                    var countdownTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - OnlineManager.CurrentGame.CountdownStartTime;
-                    var nearestSecond = Math.Ceiling(countdownTime / 1000f) * 1000;
+                    var targetTime = OnlineManager.CurrentGame.CountdownStartTime + 5000;
+                    var timeLeft = (int) ((DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - targetTime) / 1000);
 
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if (LastNearestSecond != nearestSecond)
+                    if (LastNearestSecond != timeLeft)
                         CompletedThisInterval = false;
 
-                    if (countdownTime >= LastNearestSecond && !CompletedThisInterval)
+                    if (timeLeft >= LastNearestSecond && !CompletedThisInterval)
                     {
                         SkinManager.Skin.SoundHover.CreateChannel().Play();
                         CompletedThisInterval = true;
                     }
 
-                    LastNearestSecond = nearestSecond;
-                    Status.Text = $"Match is now starting: {Math.Abs((int) LastNearestSecond - 5000) / 1000 + 1}";
+                    LastNearestSecond = timeLeft;
+                    Status.Text = $"Match is now starting: {Math.Abs(timeLeft) + 1}";
                 }
 
-                Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
+                if (Game.PlayerIds.Count != LastPlayerCount || Game.MaxPlayers != LastMaxPlayerCount)
+                    Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
             }
 
+            LastPlayerCount = Game.PlayerIds.Count;
+            LastMaxPlayerCount = Game.MaxPlayers;
+
+            // ReSharper disable once PossibleNullReferenceException
+            HostSelectingMapInLastFrame = OnlineManager.CurrentGame.HostSelectingMap;
             base.Update(gameTime);
         }
     }

@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 {
     public class MultiplayerGameHeader : ScrollContainer
     {
-        private SpriteTextBitmap GameMode { get; }
+        private PausePlayButton PausePlayButton { get; }
 
         private SpriteTextBitmap RoomName { get; }
 
@@ -22,13 +22,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             Alpha = 0;
 
-            GameMode = new SpriteTextBitmap(FontsBitmap.GothamRegular, GetRulesetName(OnlineManager.CurrentGame.Ruleset))
+            PausePlayButton = new PausePlayButton
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                X = 0,
-                FontSize = 16,
-                Tint = Color.White
+                Size = new ScalableVector2(20, 20)
             };
 
             RoomName = new SpriteTextBitmap(FontsBitmap.GothamRegular, OnlineManager.CurrentGame.Name)
@@ -51,34 +49,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Alpha = 0.85f
             };
 
-            OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
             OnlineManager.Client.OnGameNameChanged += OnGameNameChanged;
         }
 
         public override void Destroy()
         {
-            OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
             OnlineManager.Client.OnGameNameChanged -= OnGameNameChanged;
             base.Destroy();
         }
 
-        private string GetRulesetName(MultiplayerGameRuleset ruleset)
-        {
-            switch (ruleset)
-            {
-                case MultiplayerGameRuleset.Free_For_All:
-                    return "Free For All";
-                case MultiplayerGameRuleset.Team:
-                    return "Team Versus";
-                case MultiplayerGameRuleset.Battle_Royale:
-                    return "Battle Royale";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         private void OnGameNameChanged(object sender, GameNameChangedEventArgs e) => RoomName.Text = e.Name;
-
-        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e) => GameMode.Text = GetRulesetName(e.Ruleset);
     }
 }

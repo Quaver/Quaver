@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                         rateMod = 0;
 
                     var activeModsWithoutRate = (long) ModManager.Mods - rateMod;
-                    ModIdentifier hostOnlyMods = 0;
+                    ModIdentifier hostOnlyMods = 0L;
                     var onlyHostChangeableMods = ModManager.CurrentModifiersList.FindAll(x => x.OnlyMultiplayerHostCanCanChange);
 
                     if (onlyHostChangeableMods.Count != 0)
@@ -325,12 +325,15 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     if (activeModsWithoutRate == -1)
                         activeModsWithoutRate = 0;
 
+                    Console.WriteLine(rateMod + " " + hostOnlyMods + " " + activeModsWithoutRate);
+
                     // If we're on regular free mod mode, when we change the rate,
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (OnlineManager.CurrentGame.FreeModType == MultiplayerFreeModType.Regular &&
                         (ModHelper.GetRateFromMods(ModsWhenDialogOpen) != rateNow || hostOnlyMods != 0)
                         && OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                     {
+
                         OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod + (long) hostOnlyMods, diffRating);
 
                         // Change the mods of ourselves minus the mods rate (gets all other activated modes)
@@ -347,7 +350,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                             if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                                 OnlineManager.Client?.MultiplayerChangeGameModifiers((long) hostOnlyMods, diffRating);
 
-                            OnlineManager.Client.MultiplayerChangePlayerModifiers((long) ModManager.Mods);
+                            OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) ModManager.Mods);
                         }
                         // Either Free Mod OR Free Rate
                         else
@@ -363,12 +366,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                             }
 
                             if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
-                                OnlineManager.Client?.MultiplayerChangeGameModifiers((long) hostOnlyMods, diffRating);
+                                OnlineManager.Client?.MultiplayerChangeGameModifiers(activeModsWithoutRate + (long) hostOnlyMods, diffRating);
                         }
                     }
                     // We're host & free mod isn't enabled, so change the global game mods
                     else if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
-                        OnlineManager.Client?.MultiplayerChangeGameModifiers((long) ModManager.Mods + (long) hostOnlyMods, diffRating);
+                        OnlineManager.Client?.MultiplayerChangeGameModifiers((long) ModManager.Mods, diffRating);
                 }
             }
 
