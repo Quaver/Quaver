@@ -99,7 +99,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 if (OnlineManager.CurrentGame.HostSelectingMap)
                 {
                     if (!HostSelectingMapInLastFrame)
-                        Status.Text = "Host is selecting a map...";
+                        Status.Text = "Host is selecting a map.";
                 }
                 else if (OnlineManager.CurrentGame.CountdownStartTime == -1)
                 {
