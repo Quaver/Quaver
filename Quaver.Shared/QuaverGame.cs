@@ -337,17 +337,17 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(Fonts.Exo2SemiBold, 16)
+            var fpsCounter = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
                 TextFps =
                 {
-                    Tint = Color.LimeGreen
+                    Tint = Color.White
                 },
-                X = -10,
-                Y = -25,
+                X = -5,
+                Y = -36,
                 Alpha = 0
             };
 
