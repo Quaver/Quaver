@@ -36,7 +36,17 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private double LastNearestSecond { get; set; }
 
+        /// <summary>
+        /// </summary>
         private bool CompletedThisInterval { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private int LastPlayerCount { get; set; } = -1;
+
+        /// <summary>
+        /// </summary>
+        private int LastMaxPlayerCount { get; set; }
 
         /// <summary>
         /// </summary>
@@ -126,9 +136,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     Status.Text = $"Match is now starting: {Math.Abs(timeLeft) + 1}";
                 }
 
-                Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
+                if (Game.PlayerIds.Count != LastPlayerCount || Game.MaxPlayers != LastMaxPlayerCount)
+                    Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
             }
 
+            LastPlayerCount = Game.PlayerIds.Count;
+            LastMaxPlayerCount = Game.MaxPlayers;
             base.Update(gameTime);
         }
     }
