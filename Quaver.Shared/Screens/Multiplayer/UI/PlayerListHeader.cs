@@ -147,13 +147,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 if (Game.PlayerIds.Count != LastPlayerCount || Game.MaxPlayers != LastMaxPlayerCount)
                     Count.Text = $"({Game.PlayerIds.Count}/{Game.MaxPlayers}) Players";
+
+                if (Game.InProgress)
+                    Status.Text = "Match in progress. Please wait until the next one!";
+
+                LastPlayerCount = Game.PlayerIds.Count;
+                LastMaxPlayerCount = Game.MaxPlayers;
+                HostSelectingMapInLastFrame = OnlineManager.CurrentGame.HostSelectingMap;
             }
 
-            LastPlayerCount = Game.PlayerIds.Count;
-            LastMaxPlayerCount = Game.MaxPlayers;
-
-            // ReSharper disable once PossibleNullReferenceException
-            HostSelectingMapInLastFrame = OnlineManager.CurrentGame.HostSelectingMap;
             base.Update(gameTime);
         }
     }

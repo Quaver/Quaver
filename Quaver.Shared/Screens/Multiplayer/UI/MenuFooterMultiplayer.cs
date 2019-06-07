@@ -83,6 +83,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             ReadyUp = new ButtonText(FontsBitmap.GothamRegular,
                 OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser ? "start match" : "ready up", 14, (o, e) =>
                 {
+                    if (OnlineManager.CurrentGame.InProgress)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before performing this action.");
+                        return;
+                    }
+
                     // We're host, so start/stop the match countdown
                     if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                     {
@@ -100,6 +106,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     // Not host, so the button should be a ready toggle.
                     else if (!OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                     {
+                        if (OnlineManager.CurrentGame.InProgress)
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before readying up.");
+                            return;
+                        }
+
                         if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                             NotificationManager.Show(NotificationLevel.Error, "You cannot ready up if you do not have the map!");
                         else
@@ -121,6 +133,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             SelectMap = new ButtonText(FontsBitmap.GothamRegular, "select map", 14, (o, e) =>
             {
+                if (OnlineManager.CurrentGame.InProgress)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before selecting another map.");
+                    return;
+                }
+
                 if (OnlineManager.CurrentGame.Host != OnlineManager.Self.OnlineUser)
                 {
                     NotificationManager.Show(NotificationLevel.Error, "You cannot select the map if you aren't host!");
@@ -266,7 +284,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             OnlineManager.CurrentGame.FreeModType = e.Type;
 
-
             switch (e.Type)
             {
                 case MultiplayerFreeModType.None:
@@ -291,6 +308,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         {
             SelectModifiers = new ButtonText(FontsBitmap.GothamRegular, "Modifiers", 14, (o, e) =>
             {
+                if (OnlineManager.CurrentGame.InProgress)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "Please wait until the match finishes before selecting mods.");
+                    return;
+                }
+
                 DialogManager.Show(new ModifiersDialog());
             })
             {
