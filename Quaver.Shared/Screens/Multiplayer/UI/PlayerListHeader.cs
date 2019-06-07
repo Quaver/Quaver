@@ -50,6 +50,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
+        private bool HostSelectingMapInLastFrame { get; set; }
+
+        /// <summary>
+        /// </summary>
         public PlayerListHeader(MultiplayerGame game)
         {
             Game = game;
@@ -92,7 +96,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             if (OnlineManager.CurrentGame != null)
             {
-                if (OnlineManager.CurrentGame.CountdownStartTime == -1)
+                if (OnlineManager.CurrentGame.HostSelectingMap)
+                {
+                    if (!HostSelectingMapInLastFrame)
+                        Status.Text = "Host is selecting a map...";
+                }
+                else if (OnlineManager.CurrentGame.CountdownStartTime == -1)
                 {
                     Status.Tint = Color.White;
 
@@ -142,6 +151,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             LastPlayerCount = Game.PlayerIds.Count;
             LastMaxPlayerCount = Game.MaxPlayers;
+
+            // ReSharper disable once PossibleNullReferenceException
+            HostSelectingMapInLastFrame = OnlineManager.CurrentGame.HostSelectingMap;
             base.Update(gameTime);
         }
     }

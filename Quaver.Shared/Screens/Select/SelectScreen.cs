@@ -112,6 +112,10 @@ namespace Quaver.Shared.Screens.Select
                 DiscordHelper.Presence.State = "In the menus";
                 DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
             }
+            else
+            {
+                OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
+            }
 
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             ConfigManager.DisplayFailedLocalScores.ValueChanged += OnDisplayFailedScoresChanged;
@@ -532,6 +536,7 @@ namespace Quaver.Shared.Screens.Select
             {
                 var view = (MultiplayerScreenView) MultiplayerScreen.View;
                 view.Map.UpdateContent();
+                OnlineManager.Client.SetGameCurrentlySelectingMap(false);
 
                 RemoveTopScreen(MultiplayerScreen);
                 return;

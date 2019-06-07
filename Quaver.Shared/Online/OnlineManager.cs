@@ -192,6 +192,7 @@ namespace Quaver.Shared.Online
             Client.OnGameStarted += OnGameStarted;
             Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
             Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
+            Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
         }
 
         /// <summary>
@@ -1077,6 +1078,14 @@ namespace Quaver.Shared.Online
 
             if (CurrentGame.PlayersWithoutMap.Contains(e.UserId))
                 CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+        }
+
+        private static void OnGameHostSelectingMap(object sender, GameHostSelectingMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.HostSelectingMap = e.IsSelecting;
         }
 
         /// <summary>
