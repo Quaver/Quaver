@@ -507,6 +507,7 @@ namespace Quaver.Shared.Screens.Select
                 OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId, map.MapSetId, map.ToString(), (byte) map.Mode,
                     map.DifficultyFromMods(ModManager.Mods), map.GetDifficultyRatings(), map.GetJudgementCount());
 
+                OnlineManager.Client.SetGameCurrentlySelectingMap(false);
                 RemoveTopScreen(MultiplayerScreen);
                 return;
             }
