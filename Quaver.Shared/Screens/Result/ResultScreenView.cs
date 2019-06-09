@@ -5,10 +5,15 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Menu;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Result.UI;
+using TagLib.Riff;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -19,6 +24,14 @@ namespace Quaver.Shared.Screens.Result
     public class ResultScreenView : ScreenView
     {
         /// <summary>
+        /// </summary>
+        private MenuHeader MenuHeader { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MenuFooter MenuFooter { get; set; }
+
+        /// <summary>
         ///     Displays the information for the map & score
         /// </summary>
         private ResultMapInformation MapInformation { get; set; }
@@ -28,11 +41,6 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         private ResultScoreContainer ScoreContainer { get; set; }
 
-        /// <summary>
-        ///     Container for displaying buttons on the screen
-        /// </summary>
-        public ResultButtonContainer ButtonContainer { get; private set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -41,13 +49,10 @@ namespace Quaver.Shared.Screens.Result
         {
             CreateMapInformation();
             CreateScoreContainer();
-            CreateButtonContainer();
+            CreateMenuHeader();
+            CreateMenuFooter();
+
             BackgroundHelper.Blurred += OnBackgroundBlurred;
-
-            var quaverScreen = Screen as QuaverScreen;
-
-            // ReSharper disable once PossibleNullReferenceException
-            quaverScreen.ScreenExiting += OnScreenExiting;
         }
 
         /// <inheritdoc />
@@ -74,11 +79,6 @@ namespace Quaver.Shared.Screens.Result
         public override void Destroy()
         {
             BackgroundHelper.Blurred -= OnBackgroundBlurred;
-
-            var quaverScreen = Screen as QuaverScreen;
-
-            // ReSharper disable once PossibleNullReferenceException
-            quaverScreen.ScreenExiting -= OnScreenExiting;
 
             Container?.Destroy();
         }
@@ -111,6 +111,42 @@ namespace Quaver.Shared.Screens.Result
         }
 
         /// <summary>
+        /// </summary>
+        private void CreateMenuHeader()
+        {
+            MenuHeader = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), "score", "results",
+                "View in-depth results of a play", ColorHelper.HexToColor("#69acc5"))
+            {
+                Parent = Container
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMenuFooter()
+        {
+            var screen = (ResultScreen) Screen;
+
+            var rightButtons = new List<ButtonText>();
+
+            if (screen.Gameplay == null || (screen.Gameplay != null && !screen.Gameplay.IsMultiplayerGame))
+            {
+                rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Retry", 14, (sender, args) => screen.ExitToRetryMap()));
+                rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Watch Replay", 14, (sender, args) => screen.ExitToRetryMap()));
+            }
+
+            MenuFooter = new ResultMenuFooter(new List<ButtonText>()
+            {
+                new ButtonText(FontsBitmap.GothamRegular, "BACK", 14, (sender, args) => screen.ExitToMenu()),
+                new ButtonText(FontsBitmap.GothamRegular, "EXPORT REPLAY", 14, (sender, args) => screen.ExportReplay())
+            }, rightButtons)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft,
+            };
+        }
+
+        /// <summary>
         ///     Creates the sprite that displays the map information
         /// </summary>
         private void CreateMapInformation()
@@ -122,7 +158,7 @@ namespace Quaver.Shared.Screens.Result
             };
 
             MapInformation.Y = -MapInformation.Height;
-            MapInformation.MoveToY(28, Easing.OutQuint, 800);
+            MapInformation.MoveToY(46 + 20, Easing.OutQuint, 800);
         }
 
         /// <summary>
@@ -133,44 +169,12 @@ namespace Quaver.Shared.Screens.Result
             ScoreContainer = new ResultScoreContainer(Screen as ResultScreen)
             {
                 Parent = Container,
-                Alignment = Alignment.TopCenter,
-                Y = 28 + MapInformation.Height + 30
+                Alignment = Alignment.BotCenter,
+                Y = -46 - 20
             };
 
             ScoreContainer.X = -ScoreContainer.Width - 100;
             ScoreContainer.MoveToX(0, Easing.OutQuint, 800);
-        }
-
-        /// <summary>
-        ///     Creates the sprite that contains all of the navigation buttons for the screen
-        /// </summary>
-        private void CreateButtonContainer()
-        {
-            ButtonContainer = new ResultButtonContainer(Screen as ResultScreen)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopCenter,
-            };
-
-            ButtonContainer.Y = ScoreContainer.Y + ScoreContainer.Height + 20 + ButtonContainer.Height;
-            ButtonContainer.MoveToY((int) (ButtonContainer.Y - ButtonContainer.Height + 10), Easing.OutQuint, 600);
-        }
-
-        /// <summary>
-        ///     Called when the screen is exiting
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
-        {
-            MapInformation.ClearAnimations();
-            MapInformation.MoveToY((int)-MapInformation.Height, Easing.OutQuint, 600);
-
-            ButtonContainer.ClearAnimations();
-            ButtonContainer.MoveToY((int) (ScoreContainer.Y + ScoreContainer.Height + 50 + ButtonContainer.Height), Easing.OutQuint, 600);
-
-            ScoreContainer.ClearAnimations();
-            ScoreContainer.MoveToX(ScoreContainer.Width + 100, Easing.OutQuint, 600);
         }
     }
 }

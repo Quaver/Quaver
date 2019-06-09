@@ -21,12 +21,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     The key or "Heading"
         /// </summary>
-        public SpriteText TextKey { get; private set; }
+        public SpriteTextBitmap TextKey { get; private set; }
 
         /// <summary>
         ///     The value this text represents
         /// </summary>
-        public SpriteText TextValue { get; private set; }
+        public SpriteTextBitmap TextValue { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -58,11 +58,12 @@ namespace Quaver.Shared.Screens.Result.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTextKey(string key) => TextKey = new SpriteText(Fonts.SourceSansProSemiBold, key, 13)
+        private void CreateTextKey(string key) => TextKey = new SpriteTextBitmap(FontsBitmap.GothamRegular, key)
         {
             Parent = this,
             Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
-            Tint = Colors.SecondaryAccent
+            Tint = Colors.SecondaryAccent,
+            FontSize = 15
         };
 
         /// <summary>
@@ -71,11 +72,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <param name="value"></param>
         private void CreateTextValue(string value)
         {
-            TextValue = new SpriteText(Fonts.SourceSansProSemiBold, value, 13)
+            TextValue = new SpriteTextBitmap(FontsBitmap.GothamRegular, value)
             {
                 Parent = this,
                 Alignment = Type == ResultKeyValueItemType.Vertical ? Alignment.TopCenter : Alignment.TopLeft,
-                Y = Type == ResultKeyValueItemType.Vertical ? TextKey.Height + 5 : 0,
+                Y = Type == ResultKeyValueItemType.Vertical ? TextKey.Height + 8 : 0,
+                FontSize = 15
             };
 
             if (Type == ResultKeyValueItemType.Horizontal)
