@@ -237,15 +237,6 @@ namespace Quaver.Shared.Screens.Result
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 ExitToMenu();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
-                view?.ButtonContainer.ChangeSelectedButton(Direction.Backward);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
-                view?.ButtonContainer.ChangeSelectedButton(Direction.Forward);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
-                view?.ButtonContainer.SelectedButton.FireButtonClickEvent();
         }
 
         /// <inheritdoc />

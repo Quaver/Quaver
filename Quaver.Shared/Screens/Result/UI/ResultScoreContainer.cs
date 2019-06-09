@@ -15,6 +15,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     The header text that displays "Score Results"
         /// </summary>
-        private SpriteText TextScoreResults { get; set; }
+        private SpriteTextBitmap TextScoreResults { get; set; }
 
         /// <summary>
         ///     The divider line at the bottom of the box.
@@ -51,7 +52,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     The header text that displays "Statistcs"
         /// </summary>
-        private SpriteText TextStatistics { get; set; }
+        private SpriteTextBitmap TextStatistics { get; set; }
 
         /// <summary>
         ///     Table header background
@@ -96,9 +97,7 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             Screen = screen;
             Size = new ScalableVector2(WindowManager.Width - 56, 450);
-            Tint = Color.Black;
-            Alpha = 0.45f;
-            AddBorder(Color.White, 2);
+            Image = UserInterface.ResultScorePanel;
 
             CreateTopHorizontalDividerLine();
             CreateHeaderBackground();
@@ -129,11 +128,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private void CreateHeaderBackground() => HeaderBackground = new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width - Border.Thickness * 2, TopHorizontalDividerLine.Y - TopHorizontalDividerLine.Height),
+            Size = new ScalableVector2(Width - 2 * 2, TopHorizontalDividerLine.Y - TopHorizontalDividerLine.Height),
             Tint = Color.Black,
             Alpha = 0.45f,
-            Y = Border.Thickness,
-            X = Border.Thickness
+            Y = 2,
+            X = 2,
         };
 
         /// <summary>
@@ -172,11 +171,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateScoreResultsText()
         {
-            TextScoreResults = new SpriteText(Fonts.Exo2Medium, "RESULTS", 16)
+            TextScoreResults = new SpriteTextBitmap(FontsBitmap.GothamRegular, "RESULTS")
             {
                 Parent = this,
                 Y = TopHorizontalDividerLine.Y / 2f,
                 X = VerticalDividerLine.X / 2f,
+                FontSize = 18
             };
 
             TextScoreResults.Y -= TextScoreResults.Height / 2f;
@@ -188,11 +188,12 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreateStatisticsText()
         {
-            TextStatistics = new SpriteText(Fonts.Exo2Medium, "STATISTICS", 16)
+            TextStatistics = new SpriteTextBitmap(FontsBitmap.GothamRegular, "STATISTICS")
             {
                 Parent = this,
                 Y = TopHorizontalDividerLine.Y / 2f,
                 X = VerticalDividerLine.X + (Width - VerticalDividerLine.X)  / 2f,
+                FontSize = 18
             };
 
             TextStatistics.Y -= TextStatistics.Height / 2f;
@@ -257,7 +258,7 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             Parent = this,
             Y = ResultKeyValueItemDividerLine.Y + ResultKeyValueItemDividerLine.Height,
-            X = Border.Thickness
+            X = 2
         };
 
         /// <summary>
@@ -266,7 +267,7 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             Parent = this,
             Y = BottomHorizontalDividerLine.Y,
-            X = Border.Thickness
+            X = 2
         };
 
         /// <summary>

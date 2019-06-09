@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     The text that displays that the user is currently submitting their score
         /// </summary>
-        private SpriteText TextSubmittingScore { get; set; }
+        private SpriteTextBitmap TextSubmittingScore { get; set; }
 
         /// <summary>
         ///     The loading wheel that shows the user is submitting a score
@@ -60,8 +60,8 @@ namespace Quaver.Shared.Screens.Result.UI
             Screen = screen;
             Container = container;
 
-            Size = new ScalableVector2(Container.Width - Container.Border.Thickness * 2,
-                Container.Height - Container.BottomHorizontalDividerLine.Y - Container.Border.Thickness);
+            Size = new ScalableVector2(Container.Width - 2 * 2,
+                Container.Height - Container.BottomHorizontalDividerLine.Y - 2);
 
             ContentContainer.Size = Size;
             Alpha = 0;
@@ -127,10 +127,11 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ScoreProcessor.TotalJudgementCount == Screen.ScoreProcessor.CurrentJudgements[Judgement.Miss])
                 return;
 
-            TextSubmittingScore = new SpriteText(Fonts.SourceSansProSemiBold, "SUBMITTING SCORE", 14)
+            TextSubmittingScore = new SpriteTextBitmap(FontsBitmap.GothamRegular, "SUBMITTING SCORE")
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
+                FontSize = 18
             };
 
             SubmittingLoadingWheel = new Sprite()
