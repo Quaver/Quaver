@@ -96,8 +96,9 @@ namespace Quaver.Shared.Screens.Result.UI
         public ResultScoreContainer(ResultScreen screen)
         {
             Screen = screen;
-            Size = new ScalableVector2(WindowManager.Width - 56, 450);
+            Size = new ScalableVector2(WindowManager.Width - 56, 490);
             Image = UserInterface.ResultScorePanel;
+            DestroyIfParentIsNull = false;
 
             CreateTopHorizontalDividerLine();
             CreateHeaderBackground();
@@ -111,6 +112,14 @@ namespace Quaver.Shared.Screens.Result.UI
 
             // Create the graph but don't set a constructor, as we need to draw it to a RenderTarget2D
             HitDifferenceGraphRaw = new ResultHitDifferenceGraph(new ScalableVector2(Width - VerticalDividerLine.X - 30, 200), Screen);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (!Visible)
+                return;
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -140,7 +149,8 @@ namespace Quaver.Shared.Screens.Result.UI
         private void CreateTopHorizontalDividerLine() => TopHorizontalDividerLine = new Sprite
         {
             Parent = this,
-            Size = new ScalableVector2(Width, 1),
+            Size = new ScalableVector2(Width - 4, 1),
+            X = 2,
             Y = 50,
             Alpha = 1
         };
@@ -161,7 +171,8 @@ namespace Quaver.Shared.Screens.Result.UI
         private void CreateBottomHorizontalDividerLine() => BottomHorizontalDividerLine = new Sprite()
         {
             Parent = this,
-            Size = new ScalableVector2(Width, 1),
+            Size = new ScalableVector2(Width - 4, 1),
+            X = 2,
             Y = Height - 50,
             Alpha = 0.60f,
         };

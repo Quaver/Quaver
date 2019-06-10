@@ -12,12 +12,17 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Result.UI;
+using Quaver.Shared.Screens.Result.UI.Multiplayer;
 using TagLib.Riff;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Result
 {
@@ -32,6 +37,12 @@ namespace Quaver.Shared.Screens.Result
         private MenuFooter MenuFooter { get; set; }
 
         /// <summary>
+        ///     Contains <see cref="MapInformation"/> and <see cref="ScoreContainer"/>
+        ///     Used to move the container in and out of the screen for multiplayer
+        /// </summary>
+        public Container MainContainer { get; private set; }
+
+        /// <summary>
         ///     Displays the information for the map & score
         /// </summary>
         private ResultMapInformation MapInformation { get; set; }
@@ -39,7 +50,16 @@ namespace Quaver.Shared.Screens.Result
         /// <summary>
         ///     Container for displaying everything about the achieved score
         /// </summary>
-        private ResultScoreContainer ScoreContainer { get; set; }
+        public ResultScoreContainer ScoreContainer { get; private set; }
+
+        /// <summary>
+        ///     Displays score results in multiplayer
+        /// </summary>
+        private ResultMultiplayerContainer MultiplayerContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public Bindable<ScoreboardUser> SelectedMultiplayerUser { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -47,8 +67,10 @@ namespace Quaver.Shared.Screens.Result
         /// <param name="screen"></param>
         public ResultScreenView(Screen screen) : base(screen)
         {
+            MainContainer = new Container() { Parent = Container};
             CreateMapInformation();
             CreateScoreContainer();
+            CreateMultiplayerContainer();
             CreateMenuHeader();
             CreateMenuFooter();
 
@@ -79,6 +101,7 @@ namespace Quaver.Shared.Screens.Result
         public override void Destroy()
         {
             BackgroundHelper.Blurred -= OnBackgroundBlurred;
+            SelectedMultiplayerUser?.Dispose();
 
             Container?.Destroy();
         }
@@ -132,7 +155,7 @@ namespace Quaver.Shared.Screens.Result
             if (screen.Gameplay == null || (screen.Gameplay != null && !screen.Gameplay.IsMultiplayerGame))
             {
                 rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Retry", 14, (sender, args) => screen.ExitToRetryMap()));
-                rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Watch Replay", 14, (sender, args) => screen.ExitToRetryMap()));
+                rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Watch Replay", 14, (sender, args) => screen.ExitToWatchReplay()));
             }
 
             MenuFooter = new ResultMenuFooter(new List<ButtonText>()
@@ -168,13 +191,70 @@ namespace Quaver.Shared.Screens.Result
         {
             ScoreContainer = new ResultScoreContainer(Screen as ResultScreen)
             {
-                Parent = Container,
+                Parent = MainContainer,
                 Alignment = Alignment.BotCenter,
                 Y = -46 - 20
             };
 
             ScoreContainer.X = -ScoreContainer.Width - 100;
             ScoreContainer.MoveToX(0, Easing.OutQuint, 800);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMultiplayerContainer()
+        {
+            if (OnlineManager.CurrentGame == null)
+                return;
+
+            SelectedMultiplayerUser = new Bindable<ScoreboardUser>(null);
+            SelectedMultiplayerUser.ValueChanged += OnSelectedMultiplayerUserChanged;
+
+            var screen = (ResultScreen) Screen;
+
+            if (screen.MultiplayerScores == null)
+                return;
+
+            MultiplayerContainer = new ResultMultiplayerContainer(screen)
+            {
+                Parent = Container
+            };
+
+            MainContainer.X = -WindowManager.Width;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedMultiplayerUserChanged(object sender, BindableValueChangedEventArgs<ScoreboardUser> e)
+        {
+            MultiplayerContainer.ClearAnimations();
+            MainContainer.ClearAnimations();
+
+            var animationTime = 500;
+
+            var screen = (ResultScreen) Screen;
+
+            if (e.Value == null)
+            {
+                MultiplayerContainer.MoveToX(0, Easing.OutQuint, animationTime);
+                MainContainer.MoveToX(-WindowManager.Width, Easing.OutQuint, animationTime);
+            }
+            else
+            {
+                MultiplayerContainer.MoveToX(WindowManager.Width, Easing.OutQuint, animationTime);
+                MainContainer.MoveToX(0, Easing.OutQuint, animationTime);
+
+                // Get rid of the old container
+                ScoreContainer.Visible = false;
+
+                // Swap for the new container
+                ScoreContainer = screen.CachedScoreContainers[e.Value];
+                ScoreContainer.Alignment = Alignment.BotCenter;
+                ScoreContainer.Y = -66;
+                ScoreContainer.Visible = true;
+            }
         }
     }
 }

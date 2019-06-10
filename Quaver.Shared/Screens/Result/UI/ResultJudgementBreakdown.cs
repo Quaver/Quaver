@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 var judgementName = new SpriteTextBitmap(FontsBitmap.GothamRegular, j.ToString().ToUpper())
                 {
                     Parent = this,
-                    Y = i * 42 + 18,
+                    Y = i * 50 + 24,
                     X = 15,
                     Tint = color,
                     FontSize = 16

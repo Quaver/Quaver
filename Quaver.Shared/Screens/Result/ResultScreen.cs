@@ -119,11 +119,15 @@ namespace Quaver.Shared.Screens.Result
        /// <summary>
        ///     Multiplayer scores (if in a multiplayer match)
        /// </summary>
-        private List<ScoreboardUser> MultiplayerScores { get; }
+        public List<ScoreboardUser> MultiplayerScores { get; }
 
         /// <summary>
         /// </summary>
         private MultiplayerScreen MultiplayerScreen { get; }
+
+        /// <summary>
+        /// </summary>
+        public Dictionary<ScoreboardUser, ResultScoreContainer> CachedScoreContainers { get; set; }
 
         /// <summary>
         /// </summary>
@@ -165,6 +169,7 @@ namespace Quaver.Shared.Screens.Result
             }
 
             View = new ResultScreenView(this);
+            CacheMultiplayerScoreContainers();
         }
 
         /// <summary>
@@ -180,6 +185,7 @@ namespace Quaver.Shared.Screens.Result
 
             InitializeIfScoreType();
             View = new ResultScreenView(this);
+            CacheMultiplayerScoreContainers();
         }
 
         /// <summary>
@@ -195,6 +201,7 @@ namespace Quaver.Shared.Screens.Result
             ChangeDiscordPresence();
 
             View = new ResultScreenView(this);
+            CacheMultiplayerScoreContainers();
         }
 
         /// <summary>
@@ -232,8 +239,6 @@ namespace Quaver.Shared.Screens.Result
         {
             if (DialogManager.Dialogs.Count != 0 || Exiting)
                 return;
-
-            var view = View as ResultScreenView;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 ExitToMenu();
@@ -329,7 +334,7 @@ namespace Quaver.Shared.Screens.Result
 
             // Don't submit scores at all if the user has ALL misses for their judgements.
             // They basically haven't actually played the map.
-            if (ScoreProcessor.CurrentJudgements[Judgement.Miss] == ScoreProcessor.TotalJudgementCount)
+            if (Gameplay.Ruleset.ScoreProcessor.CurrentJudgements[Judgement.Miss] == Gameplay.Ruleset.ScoreProcessor.TotalJudgementCount)
                 return;
 
             ThreadScheduler.Run(SaveLocalScore);
@@ -340,7 +345,7 @@ namespace Quaver.Shared.Screens.Result
 
             if (Gameplay.IsMultiplayerGame)
             {
-                if (ScoreProcessor.MultiplayerProcessor.HasFailed)
+                if (Gameplay.Ruleset.ScoreProcessor.MultiplayerProcessor.HasFailed)
                 {
                     Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
                     return;
@@ -358,7 +363,7 @@ namespace Quaver.Shared.Screens.Result
                 Logger.Important($"Beginning to submit score on map: {Gameplay.MapHash}", LogType.Network);
 
                 OnlineManager.Client?.Submit(new OnlineScore(Gameplay.MapHash, Gameplay.ReplayCapturer.Replay,
-                    ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                    Gameplay.Ruleset.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
                     SteamManager.PTicket));
             });
         }
@@ -372,7 +377,7 @@ namespace Quaver.Shared.Screens.Result
 
             try
             {
-                var localScore = Score.FromScoreProcessor(ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                var localScore = Score.FromScoreProcessor(Gameplay.Ruleset.ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
                     Gameplay.PauseCount, Gameplay.Map.RandomizeModifierSeed);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
@@ -380,7 +385,7 @@ namespace Quaver.Shared.Screens.Result
                 if (ScoreProcessor.Failed)
                     localScore.PerformanceRating = 0;
                 else
-                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(ScoreProcessor.Mods)).CalculateRating(ScoreProcessor.Accuracy);
+                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(Gameplay.Ruleset.ScoreProcessor.Mods)).CalculateRating(Gameplay.Ruleset.ScoreProcessor.Accuracy);
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
@@ -411,6 +416,14 @@ namespace Quaver.Shared.Screens.Result
 
             if (OnlineManager.CurrentGame != null)
             {
+                var view = View as ResultScreenView;
+
+                if (view?.SelectedMultiplayerUser?.Value != null)
+                {
+                    view.SelectedMultiplayerUser.Value = null;
+                    return;
+                }
+
                 Exit(() => MultiplayerScreen ?? new MultiplayerScreen(OnlineManager.CurrentGame));
                 MultiplayerScreen.SetRichPresence();
                 return;
@@ -697,6 +710,35 @@ namespace Quaver.Shared.Screens.Result
             return sum / users.Count;
         }
 
+        /// <summary>
+        ///     Creates and caches score containers for
+        /// </summary>
+        private void CacheMultiplayerScoreContainers()
+        {
+            if (MultiplayerScores == null)
+                return;
 
+            CachedScoreContainers = new Dictionary<ScoreboardUser, ResultScoreContainer>();
+
+            var self = MultiplayerScores.Find(x => x.Type == ScoreboardUserType.Self);
+
+            var view = (ResultScreenView) View;
+            CachedScoreContainers.Add(self, view.ScoreContainer);
+
+            foreach (var s in MultiplayerScores)
+            {
+                if (s.Type == ScoreboardUserType.Self)
+                    continue;
+
+                ScoreProcessor = s.Processor;
+                CachedScoreContainers.Add(s, new ResultScoreContainer(this)
+                {
+                    Parent = view.MainContainer,
+                    Visible = s.Type == ScoreboardUserType.Self
+                });
+            }
+
+            ScoreProcessor = self.Processor;
+        }
     }
 }
