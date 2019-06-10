@@ -717,7 +717,7 @@ namespace Quaver.Shared.Screens.Result
         {
             if (MultiplayerScores == null)
                 return;
-            
+
             CachedScoreContainers = new Dictionary<ScoreboardUser, ResultScoreContainer>();
 
             var self = MultiplayerScores.Find(x => x.Type == ScoreboardUserType.Self);
