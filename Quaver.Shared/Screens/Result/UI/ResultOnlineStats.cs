@@ -156,8 +156,8 @@ namespace Quaver.Shared.Screens.Result.UI
                 return;
 
             var rotation = MathHelper.ToDegrees(SubmittingLoadingWheel.Rotation);
-            SubmittingLoadingWheel.ClearAnimations();
-            SubmittingLoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+            SubmittingLoadingWheel?.ClearAnimations();
+            SubmittingLoadingWheel?.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <param name="e"></param>
         private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
-            SubmittingLoadingWheel.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, SubmittingLoadingWheel.Alpha, 0, 100));
+            SubmittingLoadingWheel?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, SubmittingLoadingWheel.Alpha, 0, 100));
             TextSubmittingScore.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TextSubmittingScore.Alpha, 0, 100));
 
             if (e.Response == null)

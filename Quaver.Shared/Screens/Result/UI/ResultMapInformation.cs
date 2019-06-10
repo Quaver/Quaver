@@ -13,6 +13,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -70,7 +71,7 @@ namespace Quaver.Shared.Screens.Result.UI
         public ResultMapInformation(ResultScreen screen)
         {
             Screen = screen;
-            Size = new ScalableVector2(WindowManager.Width - 56, 160);
+            Size = new ScalableVector2(WindowManager.Width - 56, 126);
             Image = UserInterface.ResultHeaderPanel;
 
             CreateThumbnail();
@@ -93,7 +94,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 10,
-                Size = new ScalableVector2(256, 144),
+                Size = new ScalableVector2(222, 110),
                 Alpha = 0
             };
 
@@ -127,7 +128,7 @@ namespace Quaver.Shared.Screens.Result.UI
             {
                 Parent = this,
                 X = Thumbnail.X + Thumbnail.Width + 14,
-                Y = 28,
+                Y = 14,
                 FontSize = 17
             };
         }
@@ -169,7 +170,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private void CreatePlayerName()
         {
-            var text = $"Played By: {Screen.Replay.PlayerName} on";
+            var text = OnlineManager.CurrentGame != null ? "Match Played on" : $"Played By: {Screen.Replay.PlayerName} on";
 
             switch (Screen.ResultsType)
             {
@@ -194,6 +195,8 @@ namespace Quaver.Shared.Screens.Result.UI
                 Y = MapCreator.Y + MapCreator.Height + 10,
                 FontSize = 17
             };
+
+            PlayedBy.Visible = true;
         }
 
         /// <summary>
@@ -225,7 +228,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -50,
-                Size = new ScalableVector2(100, 100),
+                Size = new ScalableVector2(66, 66),
                 Image = image
             };
         }
