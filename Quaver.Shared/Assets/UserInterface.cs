@@ -82,6 +82,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultHeaderPanel { get; private set; }
         public static Texture2D ResultScorePanel { get; private set; }
         public static Texture2D ResultMultiplayerPanel { get; private set; }
+        public static Texture2D ResultMultiplayerTeamPanel { get; private set; }
+        public static Texture2D ResultRedTeam { get; private set; }
+        public static Texture2D ResultBlueTeam { get; private set; }
+        public static Texture2D ResultNoTeam { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -156,6 +160,10 @@ namespace Quaver.Shared.Assets
             ResultHeaderPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-header-panel.png"));
             ResultScorePanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-score-panel.png"));
             ResultMultiplayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-multiplayer-panel.png"));
+            ResultMultiplayerTeamPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-multiplayer-team-panel.png"));
+            ResultRedTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-red-team.png"));
+            ResultBlueTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-blue-team.png"));
+            ResultNoTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-no-team.png"));
         }
     }
 }

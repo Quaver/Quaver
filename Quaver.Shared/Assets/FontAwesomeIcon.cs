@@ -136,6 +136,7 @@ namespace Quaver.Shared.Assets
         fa_credit_card,
         fa_crop_symbol,
         fa_cross_mark_on_a_black_circle_background,
+        fa_crown,
         fa_css_3_logo,
         fa_cursor,
         fa_cut,

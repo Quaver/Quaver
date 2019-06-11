@@ -1,3 +1,5 @@
+using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Result.UI.Multiplayer
@@ -14,10 +16,24 @@ namespace Quaver.Shared.Screens.Result.UI.Multiplayer
 
         /// <summary>
         /// </summary>
+        private ResultMultiplayerTeamPanel TeamPanel { get; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="screen"></param>
         public ResultMultiplayerContainer(ResultScreen screen)
         {
             Screen = screen;
+
+            if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+            {
+                TeamPanel = new ResultMultiplayerTeamPanel(screen)
+                {
+                    Parent = this,
+                    Alignment = Alignment.TopCenter,
+                    Y = 208
+                };
+            }
 
             Scoreboard = new ResultMultiplayerScoreboard(screen.MultiplayerScores)
             {
@@ -25,6 +41,9 @@ namespace Quaver.Shared.Screens.Result.UI.Multiplayer
                 Alignment = Alignment.TopCenter,
                 Y = 212
             };
+
+            if (TeamPanel != null)
+                Scoreboard.Y = TeamPanel.Y + TeamPanel.Height + 16;
         }
     }
 }

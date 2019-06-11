@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Result.UI.Multiplayer
                 {"Rating", item.CalculateRating().ToString("00.00")},
                 {"Grade", ""},
                 {"Accuracy", StringHelper.AccuracyToString(item.Processor.Accuracy)},
-                {"Max Combo", item.Combo.Text},
+                {"Max Combo", item.Processor.MaxCombo + "x"},
                 {"Marv", item.Processor.CurrentJudgements[Judgement.Marv].ToString()},
                 {"Perf", item.Processor.CurrentJudgements[Judgement.Perf].ToString()},
                 {"Great", item.Processor.CurrentJudgements[Judgement.Great].ToString()},
