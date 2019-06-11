@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
