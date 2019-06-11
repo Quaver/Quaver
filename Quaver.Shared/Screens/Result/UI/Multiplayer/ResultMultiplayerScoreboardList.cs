@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
@@ -53,15 +55,15 @@ namespace Quaver.Shared.Screens.Result.UI.Multiplayer
                         switch (Pool[i].Item.Scoreboard.Team)
                         {
                             case MultiplayerTeam.Red:
-                                Pool[i].Tint = ColorHelper.HexToColor("#832121");
+                                Pool[i].Image = UserInterface.ResultRedTeam;
                                 break;
                             case MultiplayerTeam.Blue:
-                                Pool[i].Tint = ColorHelper.HexToColor("#212683");
+                                Pool[i].Image = UserInterface.ResultBlueTeam;
                                 break;
                         }
                         break;
                     default:
-                        Pool[i].Tint = i % 2 == 0 ? ColorHelper.HexToColor("#2a2a2a") : ColorHelper.HexToColor("#0f0f0f");
+                        Pool[i].Image = UserInterface.ResultNoTeam;
                         break;
                 }
             }
