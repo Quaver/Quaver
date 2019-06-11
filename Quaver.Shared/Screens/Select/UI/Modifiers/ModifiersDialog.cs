@@ -325,15 +325,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                     if (activeModsWithoutRate == -1)
                         activeModsWithoutRate = 0;
 
-                    Console.WriteLine(rateMod + " " + hostOnlyMods + " " + activeModsWithoutRate);
-
                     // If we're on regular free mod mode, when we change the rate,
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (OnlineManager.CurrentGame.FreeModType == MultiplayerFreeModType.Regular &&
                         (ModHelper.GetRateFromMods(ModsWhenDialogOpen) != rateNow || hostOnlyMods != 0)
                         && OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
                     {
-
                         OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod + (long) hostOnlyMods, diffRating);
 
                         // Change the mods of ourselves minus the mods rate (gets all other activated modes)
