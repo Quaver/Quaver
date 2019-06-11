@@ -1126,6 +1126,10 @@ namespace Quaver.Shared.Online
                 return 0;
 
             var currMods = (ModIdentifier) long.Parse(CurrentGame.Modifiers);
+
+            if (currMods < 0)
+                currMods = 0;
+
             // Console.WriteLine("GAME MODS: " + currMods);
 
             var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == userId);
@@ -1133,6 +1137,10 @@ namespace Quaver.Shared.Online
             if (playerMods != null)
             {
                 var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers);
+
+                if (pm < 0)
+                    pm = 0;
+
                 currMods |= pm;
 
                 // Console.WriteLine("PLAYER MODS: " + pm);

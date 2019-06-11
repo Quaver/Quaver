@@ -282,7 +282,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                     mods = 0;
 
                 if (playerMods != null)
-                    mods |= (ModIdentifier) long.Parse(playerMods.Modifiers);
+                {
+                    var pmods = long.Parse(playerMods.Modifiers);
+
+                    if (pmods < 0)
+                        pmods = 0;
+
+                    mods |= (ModIdentifier) pmods;
+                }
 
                 Mods.Text = mods <= 0 ? "" : ModHelper.GetModsString(mods);
                 Flag.Y = mods <= 0 ? 0 : -8;
