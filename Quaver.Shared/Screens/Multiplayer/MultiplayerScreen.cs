@@ -13,6 +13,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
@@ -130,7 +131,15 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Game started, but we don't have the map!");
+                NotificationManager.Show(NotificationLevel.Warning, "Match started, but we don't have the map!");
+                return;
+            }
+
+            if (OnlineManager.CurrentGame.RefereeUserId == OnlineManager.Self.OnlineUser.Id)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
+                    (o, args) => BrowserHelper.OpenURL("https://quavergame.com/"));
+
                 return;
             }
 
@@ -153,6 +162,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             var playingUsers = OnlineManager.OnlineUsers.ToList().FindAll(x =>
                 OnlineManager.CurrentGame.PlayerIds.Contains(x.Key) &&
                 !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(x.Key) &&
+                 OnlineManager.CurrentGame.RefereeUserId != x.Key &&
                 x.Value != OnlineManager.Self);
 
             var scores = new List<Score>();

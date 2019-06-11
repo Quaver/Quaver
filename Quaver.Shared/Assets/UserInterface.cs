@@ -75,6 +75,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D UserPanelFFA { get; private set; }
         public static Texture2D UserPanelRed { get; private set; }
         public static Texture2D UserPanelBlue { get; private set; }
+        public static Texture2D UserPanelReferee{ get; private set; }
         public static Texture2D MapPanel { get; private set; }
         public static Texture2D FeedPanel { get; private set; }
         public static Texture2D MultiplayerSettingaPanel { get; private set; }
@@ -153,6 +154,7 @@ namespace Quaver.Shared.Assets
             UserPanelFFA = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-ffa.png"));
             UserPanelRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-red.png"));
             UserPanelBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-blue.png"));
+            UserPanelReferee = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-referee.png"));
             MapPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/map-panel.png"));
             FeedPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/feed-panel.png"));
             MultiplayerSettingaPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/settings-panel.png"));

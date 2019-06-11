@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
@@ -18,6 +19,7 @@ using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Input;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.List
@@ -64,6 +66,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// <summary>
         /// </summary>
         private SpriteTextBitmap Mods { get; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextBitmap Referee { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -173,6 +179,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Tint = Colors.MainAccent
             };
 
+            Referee = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Referee")
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -16,
+                FontSize = 16,
+                Y = -2,
+                UsePreviousSpriteBatchOptions = true
+            };
+
             OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
             OnlineManager.Client.OnGameHostChanged += OnGameHostChanged;
             OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
@@ -185,6 +201,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGameTeamWinCount += OnGameTeamWinCount;
             OnlineManager.Client.OnPlayerChangedModifiers += OnPlayerChangedModifiers;
             OnlineManager.Client.OnChangedModifiers += OnGameChangedModifiers;
+            OnlineManager.Client.OnGameSetReferee += OnGameSetReferee;
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
 
@@ -204,6 +221,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 OnlineManager.Client.RequestUserStats(new List<int> { item.Id});
         }
 
+        private void OnGameSetReferee(object sender, GameSetRefereeEventArgs e)
+            => UpdateContent(Item, Index);
+
         private void OnGameTeamWinCount(object sender, TeamWinCountEventArgs e)
             => UpdateContent(Item, Index);
 
@@ -213,6 +233,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         public override void Update(GameTime gameTime)
         {
             Ready.Visible = !NoMapIcon.Visible;
+            Wins.Visible = !IsReferee();
+            Referee.Visible = IsReferee();
 
             if (!Button.IsVisibleInContainer())
                 return;
@@ -240,6 +262,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Logger.Error($"{item.Id} not found in online users when trying to update content.", LogType.Network);
                 return;
             }
+
+            Avatar.Border.Tint = GetPlayerColor();
+            Button.Image = GetPlayerPanel();
 
             if (OnlineManager.OnlineUsers[item.Id].HasUserInfo)
             {
@@ -295,7 +320,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 Flag.Y = mods <= 0 ? 0 : -8;
             }
 
-            Image = GetPlayerPanel();
             HostCrown.Visible = OnlineManager.CurrentGame.HostId == Item.Id;
         }
 
@@ -318,6 +342,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGameTeamWinCount -= OnGameTeamWinCount;
             OnlineManager.Client.OnPlayerChangedModifiers -= OnPlayerChangedModifiers;
             OnlineManager.Client.OnChangedModifiers -= OnGameChangedModifiers;
+            OnlineManager.Client.OnGameSetReferee -= OnGameSetReferee;
 
             Button.Destroy();
             base.Destroy();
@@ -443,6 +468,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         public Color GetPlayerColor()
         {
+            if (IsReferee())
+                return Color.White;
+
             if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(Item.Id))
                 return Color.Crimson;
             if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(Item.Id))
@@ -453,6 +481,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
         public Texture2D GetPlayerPanel()
         {
+            if (IsReferee())
+                return UserInterface.UserPanelReferee;
+
             if (OnlineManager.CurrentGame.RedTeamPlayers.Contains(Item.Id))
                 return UserInterface.UserPanelRed;
             if (OnlineManager.CurrentGame.BlueTeamPlayers.Contains(Item.Id))
@@ -460,5 +491,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
 
             return UserInterface.UserPanelFFA;
         }
+
+        /// <summary>
+        ///     Returns if the player is the referee of the match
+        /// </summary>
+        /// <returns></returns>
+        public bool IsReferee() => OnlineManager.CurrentGame?.RefereeUserId == Item.Id;
     }
 }
