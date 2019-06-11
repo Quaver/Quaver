@@ -242,6 +242,14 @@ namespace Quaver.Shared.Screens.Result
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 ExitToMenu();
+
+            if (MouseManager.IsUniqueClick(MouseButton.Right))
+            {
+                var view = View as ResultScreenView;
+
+                if (view?.SelectedMultiplayerUser?.Value != null)
+                    view.SelectedMultiplayerUser.Value = null;
+            }
         }
 
         /// <inheritdoc />
@@ -676,17 +684,17 @@ namespace Quaver.Shared.Screens.Result
         /// <param name="team"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private double GetTeamAverage(MultiplayerTeam team)
+        public double GetTeamAverage(MultiplayerTeam team)
         {
             List<ScoreboardUser> users;
 
             switch (team)
             {
                 case MultiplayerTeam.Red:
-                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Red);
+                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Red && !x.HasQuit);
                     break;
                 case MultiplayerTeam.Blue:
-                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Blue);
+                    users = MultiplayerScores.FindAll(x => x.Scoreboard.Team == MultiplayerTeam.Blue && !x.HasQuit);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(team), team, null);
