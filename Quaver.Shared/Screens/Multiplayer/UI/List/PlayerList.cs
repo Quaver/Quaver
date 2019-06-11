@@ -32,10 +32,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
             OnlineManager.Client.OnGamePlayerTeamChanged += OnGamePlayerTeamChanged;
             OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
+            OnlineManager.Client.OnGameSetReferee += OnGameSetReferee;
             CreatePool();
 
             if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
                 OrderByTeam(true);
+            else
+                OrderFreeForAllPlayers();
         }
 
         /// <inheritdoc />
@@ -68,6 +71,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
             OnlineManager.Client.OnGamePlayerTeamChanged -= OnGamePlayerTeamChanged;
             OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
+            OnlineManager.Client.OnGameSetReferee -= OnGameSetReferee;
             base.Destroy();
         }
 
@@ -82,6 +86,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
                 if (index == -1)
                 {
                     AddObjectToBottom(p, false, true);
+                    OrderFreeForAllPlayers();
                     return;
                 }
 
@@ -163,7 +168,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
         /// </summary>
         private void OrderByTeam(bool orderInstantly)
         {
-            Pool = Pool.OrderBy(x => OnlineManager.GetTeam(x.Item.Id)).ToList();
+            Pool = Pool
+                .OrderBy(x => OnlineManager.CurrentGame.RefereeUserId == x.Item.Id)
+                .ThenBy(x => OnlineManager.GetTeam(x.Item.Id)).ToList();
 
             for (var i = 0; i < Pool.Count; i++)
             {
@@ -191,28 +198,41 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.List
             {
                 case MultiplayerGameRuleset.Free_For_All:
                 case MultiplayerGameRuleset.Battle_Royale:
-                    for (var i = 0; i < Pool.Count; i++)
-                    {
-                        var index = OnlineManager.CurrentGame.PlayerIds.FindIndex(x => x == Pool[i].Item.Id);
-                        Pool[i].Index = index;
-
-                        var player = Pool[i] as DrawableMultiplayerPlayer;
-                        player.Avatar.Border.Tint = player.GetPlayerColor();
-                        player.Button.Image = player.GetPlayerPanel();
-                    }
-
-                    Pool = Pool.OrderBy(x => x.Index).ToList();
-
-                    for (var i = 0; i < Pool.Count; i++)
-                    {
-                        Pool[i].ClearAnimations();
-                        Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 400);
-                    }
+                    OrderFreeForAllPlayers();
                     break;
                 case MultiplayerGameRuleset.Team:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void OnGameSetReferee(object sender, GameSetRefereeEventArgs e)
+        {
+            if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                OrderByTeam(false);
+            else
+                OrderFreeForAllPlayers();
+        }
+
+        private void OrderFreeForAllPlayers()
+        {
+            Pool = Pool.OrderBy(x => x.Item.Id == OnlineManager.CurrentGame.RefereeUserId).ThenBy(x => x.Index).ToList();
+
+            foreach (var item in Pool)
+            {
+                var index = OnlineManager.CurrentGame.PlayerIds.FindIndex(x => x == item.Item.Id);
+                item.Index = index;
+
+                var player = item as DrawableMultiplayerPlayer;
+                player.Avatar.Border.Tint = player.GetPlayerColor();
+                player.Button.Image = player.GetPlayerPanel();
+            }
+
+            for (var i = 0; i < Pool.Count; i++)
+            {
+                Pool[i].ClearAnimations();
+                Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 400);
             }
         }
     }

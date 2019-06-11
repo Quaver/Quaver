@@ -193,6 +193,7 @@ namespace Quaver.Shared.Online
             Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
             Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
             Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
+            Client.OnGameSetReferee += OnGameSetReferee;
         }
 
         /// <summary>
@@ -1086,6 +1087,16 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.HostSelectingMap = e.IsSelecting;
+        }
+
+        private static void OnGameSetReferee(object sender, GameSetRefereeEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.RefereeUserId = e.UserId;
+            CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            CurrentGame.RedTeamPlayers.Remove(e.UserId);
         }
 
         /// <summary>
