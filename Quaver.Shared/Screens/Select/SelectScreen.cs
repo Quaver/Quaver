@@ -23,6 +23,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -504,11 +505,18 @@ namespace Quaver.Shared.Screens.Select
                     return;
                 }
 
-                OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId, map.MapSetId, map.ToString(), (byte) map.Mode,
-                    map.DifficultyFromMods(ModManager.Mods), map.GetDifficultyRatings(), map.GetJudgementCount());
+                // Start the fade out early to make it look like the screen is loading
+                Transitioner.FadeIn();
 
-                OnlineManager.Client.SetGameCurrentlySelectingMap(false);
-                RemoveTopScreen(MultiplayerScreen);
+                ThreadScheduler.Run(() =>
+                {
+                    OnlineManager.Client.ChangeMultiplayerGameMap(map.Md5Checksum, map.MapId, map.MapSetId, map.ToString(), (byte) map.Mode,
+                        map.DifficultyFromMods(ModManager.Mods), map.GetDifficultyRatings(), map.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
+
+                    OnlineManager.Client.SetGameCurrentlySelectingMap(false);
+                    RemoveTopScreen(MultiplayerScreen);
+                });
+
                 return;
             }
 

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
@@ -527,6 +528,23 @@ namespace Quaver.Shared.Database.Maps
         }
 
         public int GetJudgementCount() => LongNoteCount * 2 + RegularNoteCount;
+
+        /// <summary>
+        ///     If the map is non-Quaver, then the map needs to be converted
+        /// </summary>
+        /// <returns></returns>
+        public string GetAlternativeMd5()
+        {
+            if (Game == MapGame.Quaver)
+                return Md5Checksum;
+
+            // The map needs to be converted to .qua format and hashed
+            var qua = LoadQua();
+
+            var quaStr = qua.Save(null, true);
+
+            return CryptoHelper.StringToMd5(quaStr);
+        }
 
         public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }

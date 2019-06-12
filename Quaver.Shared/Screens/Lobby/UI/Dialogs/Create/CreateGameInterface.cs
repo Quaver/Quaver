@@ -241,18 +241,21 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 return;
             }
 
-            var game = MultiplayerGame.CreateCustom(MultiplayerGameType.Friendly,
-                GameName.Textbox.RawText, Password.Textbox.RawText,
-                int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
-                MapManager.Selected.Value.MapId,
-                MapManager.Selected.Value.MapSetId, Enum.Parse<MultiplayerGameRuleset>(Ruleset.Selector.SelectedItemText.Text.Replace("-", "_")),
-                AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
-                MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum,
-                MapManager.Selected.Value.GetDifficultyRatings(), MapManager.Selected.Value.GetJudgementCount());
-
             DialogManager.Show(new JoiningGameDialog(JoiningGameDialogType.Creating));
 
-            ThreadScheduler.RunAfter(() => OnlineManager.Client.CreateMultiplayerGame(game), 800);
+            ThreadScheduler.Run(() =>
+            {
+                var game = MultiplayerGame.CreateCustom(MultiplayerGameType.Friendly,
+                    GameName.Textbox.RawText, Password.Textbox.RawText,
+                    int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
+                    MapManager.Selected.Value.MapId,
+                    MapManager.Selected.Value.MapSetId, Enum.Parse<MultiplayerGameRuleset>(Ruleset.Selector.SelectedItemText.Text.Replace("-", "_")),
+                    AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
+                    MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum,
+                    MapManager.Selected.Value.GetDifficultyRatings(), MapManager.Selected.Value.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
+
+                OnlineManager.Client.CreateMultiplayerGame(game);
+            });
 
             Dialog.Close();
         }
