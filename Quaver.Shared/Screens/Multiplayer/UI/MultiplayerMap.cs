@@ -231,6 +231,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             else
             {
                 map = MapManager.FindMapFromMd5(Game.MapMd5);
+
+                // In the event that we don't have the correct version, try to find the
+                // alternative one. This is commonly used for situations where one has osu!
+                // beatmaps auto-loaded and someone downloads and converts the file to .qua format
+                if (map == null && Game.MapMd5 != Game.AlternativeMd5)
+                    map = MapManager.FindMapFromMd5(Game.AlternativeMd5);
+
                 MapManager.Selected.Value = map;
             }
 
@@ -331,6 +338,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Game.PlayersWithoutMap.Clear();
 
             Game.MapMd5 = e.MapMd5;
+            Game.AlternativeMd5 = e.AlternativeMd5;
             Game.MapId = e.MapId;
             Game.MapsetId = e.MapsetId;
             Game.Map = e.Map;
