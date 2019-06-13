@@ -21,7 +21,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         /// <param name="dialog"></param>
         /// <param name="availableItems"></param>
         public MenuDialogScrollContainer(MenuDialog dialog, List<IMenuDialogOption> availableItems) : base(availableItems,
-            int.MaxValue, 0, new ScalableVector2(446, 188), new ScalableVector2(446, 188))
+            int.MaxValue, 0, new ScalableVector2(446, 346), new ScalableVector2(446, 346))
         {
             Dialog = dialog;
             Alpha = 0;
