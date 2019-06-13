@@ -298,6 +298,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                         {
                             if (AudioEngine.Map != map)
                             {
+                                if (!HasMap)
+                                    return;
+
                                 AudioEngine.LoadCurrentTrack();
                                 AudioEngine.Track.Play();
                             }
