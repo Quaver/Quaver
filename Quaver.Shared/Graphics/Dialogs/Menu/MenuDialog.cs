@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -31,8 +33,9 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             Name = name;
             Options = options;
             CreateContent();
-        }
 
+            Clicked += OnClicked;
+        }
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -60,6 +63,16 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         public override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                DialogManager.Dismiss(this);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClicked(object sender, EventArgs e)
+        {
+            if (!RectangleF.Contains(DialogBox.ScreenRectangle, MouseManager.CurrentState.Position))
                 DialogManager.Dismiss(this);
         }
     }

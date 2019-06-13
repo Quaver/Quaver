@@ -1,5 +1,7 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
@@ -29,6 +31,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         {
             User = user;
             CreateContent();
+            Clicked += OnClicked;
         }
 
         /// <inheritdoc />
@@ -64,6 +67,16 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         public override void HandleInput(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                DialogManager.Dismiss(this);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClicked(object sender, EventArgs e)
+        {
+            if (!RectangleF.Contains(Options.ScreenRectangle, MouseManager.CurrentState.Position))
                 DialogManager.Dismiss(this);
         }
     }
