@@ -602,7 +602,8 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Exit(() => new ImportingScreen());
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Exit(
+            () => new ImportingScreen(MultiplayerScreen), 0, QuaverScreenChangeType.AddToStack);
 
         /// <summary>
         ///     Called when the user changes the option for displaying failed scores.
