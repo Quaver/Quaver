@@ -236,7 +236,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                     {
                         if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                             AudioEngine.Track.Pause();
-                        
+
                         return;
                     }
 
