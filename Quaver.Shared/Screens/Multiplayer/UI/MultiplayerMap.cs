@@ -273,7 +273,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
                 var time = length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
 
-                Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} | LN%: {map.LNPercentage}";
+                Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} | LN%: {(int) map.LNPercentage}";
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
