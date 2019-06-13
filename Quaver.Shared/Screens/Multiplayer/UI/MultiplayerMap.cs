@@ -22,6 +22,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Select;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -76,6 +77,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         ///     The current mapset download instance
         /// </summary>
         private MapsetDownload CurrentDownload { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool HasMap { get; set; }
 
         /// <summary>
         /// </summary>
@@ -173,8 +178,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            if (!HasMap || OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
+            {
+                DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            }
 
             base.Update(gameTime);
         }
@@ -240,6 +248,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 MapManager.Selected.Value = map;
             }
+
+            HasMap = map != null;
 
             var diffName = GetDifficultyName();
 
@@ -388,6 +398,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// <param name="e"></param>
         private void OnDownloadButtonClicked(object sender, EventArgs e)
         {
+            // Go to song select if host
+            if (OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
+            {
+                var game = (QuaverGame) GameBase.Game;
+                var screen = game.CurrentScreen as MultiplayerScreen;
+                screen?.Exit(() => new SelectScreen(screen), 0, QuaverScreenChangeType.AddToStack);
+                return;
+            }
+
             if (Game.MapsetId == -1 || !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                 return;
 
