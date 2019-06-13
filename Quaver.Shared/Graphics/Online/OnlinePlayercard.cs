@@ -25,6 +25,10 @@ namespace Quaver.Shared.Graphics.Online
     {
         /// <summary>
         /// </summary>
+        private Sprite Background { get; }
+
+        /// <summary>
+        /// </summary>
         private Sprite Avatar { get; }
 
         /// <summary>
@@ -57,6 +61,15 @@ namespace Quaver.Shared.Graphics.Online
         {
             Size = new ScalableVector2(520, 66);
             Image = UserInterface.PlayercardBackground;
+
+            Background = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width - 4, Height - 4),
+                Image = UserInterface.PlayercardCoverDefault,
+                Alpha = 0.65f
+            };
 
             Button = new ImageButton(UserInterface.BlankBox)
             {
