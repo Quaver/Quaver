@@ -87,6 +87,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultRedTeam { get; private set; }
         public static Texture2D ResultBlueTeam { get; private set; }
         public static Texture2D ResultNoTeam { get; private set; }
+        public static Texture2D JukeboxPanel { get; private set; }
+        public static Texture2D PlayercardBackground { get; private set; }
+        public static Texture2D MenuBackgroundNormal { get; private set; }
+        public static Texture2D PlayercardCoverDefault { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -166,6 +170,10 @@ namespace Quaver.Shared.Assets
             ResultRedTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-red-team.png"));
             ResultBlueTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-blue-team.png"));
             ResultNoTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-no-team.png"));
+            JukeboxPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/jukebox-panel.png"));
+            PlayercardBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-background.png"));
+            MenuBackgroundNormal = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-normal.jpg"));
+            PlayercardCoverDefault = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-cover-default.png"));
         }
     }
 }

@@ -9,6 +9,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -31,12 +32,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
         /// <summary>
         ///     The title of the panel.
         /// </summary>
-        public SpriteText Title { get; private set; }
+        public SpriteTextBitmap Title { get; private set; }
 
         /// <summary>
         ///     The description of the panel.
         /// </summary>
-        public SpriteText Description { get; private set; }
+        public SpriteTextBitmap Description { get; private set; }
 
         /// <summary>
         ///     The original size of the panel.
@@ -59,7 +60,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
             CreateTitleText(title);
             CreateDescriptionText(description);
 
-            AddBorder(Color.White, 0);
+            AddBorder(Color.White, 2);
         }
 
         /// <inheritdoc />
@@ -96,30 +97,32 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
                 Width = MathHelper.Lerp(Width, OriginalSize.X.Value, (float) Math.Min(dt / 30, 1));
                 Height = MathHelper.Lerp(Height, OriginalSize.Y.Value, (float) Math.Min(dt / 30, 1));
 
-                Border.Thickness = MathHelper.Lerp(Border.Thickness, 0, (float) Math.Min(dt / 30, 1));
-                Border.FadeToColor(Color.Transparent, dt, 30);
+                Border.Thickness = MathHelper.Lerp(Border.Thickness, 2, (float) Math.Min(dt / 30, 1));
+                Border.FadeToColor(Color.White, dt, 30);
             }
 
             // Always make sure thumbnail is at the correct size
             Thumbnail.Width = Width;
-            Thumbnail.Height = Height - 100;
+            Thumbnail.Height = Height;
 
             // Always make sure heading container is at the correct size.
             HeadingContainer.Width = Width;
             HeadingContainer.Height = 100;
-            HeadingContainer.Y = Thumbnail.Height;
         }
 
         /// <summary>
         ///     Creates the thumbnail sprite.
         /// </summary>
         /// <param name="image"></param>
-        private void CreateThumbnail(Texture2D image) => Thumbnail = new Sprite()
+        private void CreateThumbnail(Texture2D image)
         {
-            Parent = this,
-            Size = new ScalableVector2(Width, Height - 100),
-            Image = image,
-        };
+            Thumbnail = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(Width, OriginalSize.Y.Value),
+                Image = image,
+            };
+        }
 
         /// <summary>
         ///     Creates the heading container sprite.
@@ -127,36 +130,41 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
         private void CreateHeadingContainer() => HeadingContainer = new Sprite()
         {
             Parent = this,
+            Alignment = Alignment.BotLeft,
             Size = new ScalableVector2(Width, 100),
-            Y = Thumbnail.Height,
-            Tint = ColorHelper.HexToColor("#EEEEEE")
+            Tint = ColorHelper.HexToColor("#0f0f0f"),
+            Alpha = 0.6f
         };
 
         /// <summary>
         ///     Creates the text that displays the title of the panel.
         /// </summary>
         /// <param name="title"></param>
-        private void CreateTitleText(string title) => Title = new SpriteText(Fonts.Exo2BoldItalic, title.ToUpper(), 22, (int)Width)
+        private void CreateTitleText(string title) => Title = new SpriteTextBitmap(FontsBitmap.GothamBold, title.ToUpper())
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
-            X = 10,
-            Y = 6,
-            Tint = ColorHelper.HexToColor("#383939")
+            X = 12,
+            Y = 10,
+            Tint = Color.White,
+            FontSize = 24,
+            MaxWidth = (int)Width
         };
 
         /// <summary>
         ///     Creates the text that displays the description of the panel.
         /// </summary>
         /// <param name="description"></param>
-        private void CreateDescriptionText(string description) => Description = new SpriteText(Fonts.Exo2BoldItalic,
-            description, 12, (int) Width - 15)
+        private void CreateDescriptionText(string description) => Description = new SpriteTextBitmap(FontsBitmap.GothamRegular,
+            description)
         {
             Parent = HeadingContainer,
             Alignment = Alignment.TopLeft,
-            X = 15,
-            Y = Title.Y + Title.Height + 0,
-            Tint = ColorHelper.HexToColor("#383939")
+            X = 12,
+            Y = Title.Y + Title.Height + 8,
+            Tint = Color.White,
+            FontSize = 16,
+            MaxWidth = (int) Width - 30
         };
     }
 }

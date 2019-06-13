@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
-        private bool HasMap { get; set; }
+        public bool HasMap { get; private set; }
 
         /// <summary>
         /// </summary>

@@ -19,6 +19,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that says "Now Playing"
         /// </summary>
-        public SpriteText NowPlayingText { get; set; }
+        public SpriteTextBitmap NowPlayingText { get; set; }
 
         /// <summary>
         ///     Button to select the previous track.
@@ -71,7 +72,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     The text that displays the song title.
         /// </summary>
-        public SpriteText SongTitleText { get; set; }
+        public SpriteTextBitmap SongTitleText { get; set; }
 
         /// <summary>
         ///     The song time progress bar.
@@ -130,8 +131,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             }
 
             Size = new ScalableVector2(614, 40);
-            Tint = Color.Black;
-            Alpha = 0.55f;
+            Image = UserInterface.JukeboxPanel;
 
             CreateTitleBackground();
             CreateNowPlayingText();
@@ -142,7 +142,6 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             SongTitleContainer.AddContainedDrawable(SongTitleText);
 
             CreateControlButtons();
-            AddBorder(Color.White, 2);
 
             // Make sure the audio is playing and add a fade effect.
             if (AudioEngine.Track != null && AudioEngine.Track.IsPaused)
@@ -296,20 +295,22 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         private void CreateTitleBackground() => TitleBackground = new Sprite
         {
             Parent = this,
-            Alignment = Alignment.TopLeft,
-            Size = new ScalableVector2(130, Height),
-            Tint = Color.Black,
-            Alpha = 0.45f
+            Alignment = Alignment.MidLeft,
+            Size = new ScalableVector2(130, Height - 4),
+            X = 2,
+            Tint = Color.White,
+            Alpha = 0,
         };
 
         /// <summary>
         ///     Creates the text that says "Now Playing"
         /// </summary>
-        private void CreateNowPlayingText() => NowPlayingText = new SpriteText(Fonts.Exo2SemiBold, "Now Playing", 13)
+        private void CreateNowPlayingText() => NowPlayingText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Now Playing")
         {
             Parent = TitleBackground,
             Alignment = Alignment.MidCenter,
-            X = 2
+            X = 0,
+            FontSize = 16
         };
 
         /// <summary>
@@ -325,10 +326,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 Alpha = 0
             };
 
-            SongTitleText = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+            SongTitleText = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Y = 2,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                FontSize = 15
             };
 
             UpdateSongTitleText();

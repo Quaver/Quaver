@@ -230,6 +230,16 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 try
                 {
+                    var view = (MultiplayerScreenView) View;
+
+                    if (!view.Map.HasMap)
+                    {
+                        if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+                            AudioEngine.Track.Pause();
+
+                        return;
+                    }
+
                     AudioEngine.LoadCurrentTrack();
                     AudioEngine.Track?.Play();
                 }
