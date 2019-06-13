@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             if (OnlineManager.CurrentGame.RefereeUserId == OnlineManager.Self.OnlineUser.Id)
             {
                 NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
-                    (o, args) => BrowserHelper.OpenURL("https://quavergame.com/"));
+                    (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}"));
 
                 return;
             }
