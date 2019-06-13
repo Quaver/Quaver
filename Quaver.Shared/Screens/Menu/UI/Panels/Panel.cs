@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Panels
             Alignment = Alignment.BotLeft,
             Size = new ScalableVector2(Width, 100),
             Tint = ColorHelper.HexToColor("#0f0f0f"),
-            Alpha = 0.85f
+            Alpha = 0.6f
         };
 
         /// <summary>

@@ -322,12 +322,26 @@ namespace Quaver.Shared.Screens.Menu
 
         private void CreateMenuHeader()
         {
-            Header = new MenuHeader(UserInterface.QuaverLogoStylish, "Main", "Menu", "",
+            Header = new MenuHeader(UserInterface.QuaverLogoStylish, "Main", "Menu", "Find something to play, or use the editor",
                 Colors.MainAccent)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft
             };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = Header,
+                Alignment = Alignment.MidLeft,
+                X = Header.Icon.X,
+                Image = UserInterface.QuaverLogoFull,
+                Size = new ScalableVector2(138, 30)
+            };
+
+            Header.Icon.Visible = false;
+            Header.Title.Visible = false;
+            Header.Title2.Visible = false;
         }
 
         /// <summary>

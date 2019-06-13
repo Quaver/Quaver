@@ -13,15 +13,15 @@ namespace Quaver.Shared.Graphics.Menu
     {
         /// <summary>
         /// </summary>
-        private Sprite Icon { get; }
+        public Sprite Icon { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Title { get; }
+        public SpriteTextBitmap Title { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextBitmap Title2 { get; }
+        public SpriteTextBitmap Title2 { get; }
 
         /// <summary>
         /// </summary>
