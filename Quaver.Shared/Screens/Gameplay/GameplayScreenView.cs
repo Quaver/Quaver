@@ -738,8 +738,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="e"></param>
         private void OnGameEnded(object sender, GameEndedEventArgs e)
         {
+            Screen.IsPaused = true;
+
             var screen = new MultiplayerScreen(OnlineManager.CurrentGame, true);
-            Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers(), screen), 2000);
+            Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers(), screen));
         }
 
         private List<ScoreboardUser> GetScoreboardUsers()
