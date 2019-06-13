@@ -18,25 +18,12 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings.Items
 
             CreateDialog = () =>
             {
-                var options = new List<IMenuDialogOption>
-                {
-                    new MenuDialogOption("Yes", () =>
-                    {
-                        if (OnlineManager.CurrentGame.FreeModType.HasFlag(Type))
-                            return;
+                if (OnlineManager.CurrentGame.FreeModType.HasFlag(Type))
+                    OnlineManager.Client?.ChangeGameFreeModType((MultiplayerFreeModType) (OnlineManager.CurrentGame.FreeModType - Type));
+                else
+                    OnlineManager.Client?.ChangeGameFreeModType(OnlineManager.CurrentGame.FreeModType | Type);
 
-                        OnlineManager.Client?.ChangeGameFreeModType(OnlineManager.CurrentGame.FreeModType | Type);
-                    }),
-                    new MenuDialogOption("No", () =>
-                    {
-                        if (!OnlineManager.CurrentGame.FreeModType.HasFlag(Type))
-                            return;
-
-                        OnlineManager.Client?.ChangeGameFreeModType((MultiplayerFreeModType) (OnlineManager.CurrentGame.FreeModType - Type));
-                    })
-                };
-
-                return new MenuDialogMultiplayer("Change Free Mod Type", options);
+                return null;
             };
 
             OnlineManager.Client.OnFreeModTypeChanged += OnFreeModTypeChanged;

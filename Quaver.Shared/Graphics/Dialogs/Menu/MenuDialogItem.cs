@@ -14,7 +14,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public sealed override int HEIGHT { get; } = 38;
+        public sealed override int HEIGHT { get; } = 44;
 
         /// <summary>
         /// </summary>

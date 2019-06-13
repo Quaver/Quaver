@@ -24,7 +24,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             Dialog = dialog;
 
             Image = UserInterface.PlayerOptionsPanel;
-            Size = new ScalableVector2(450, 192);
+            Size = new ScalableVector2(450, 354);
 
             CreateContainer();
         }

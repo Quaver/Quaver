@@ -42,7 +42,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             User = user;
 
             Image = UserInterface.PlayerOptionsPanel;
-            Size = new ScalableVector2(450, 192);
+            Size = new ScalableVector2(450, 354);
 
             CreateContainer();
         }

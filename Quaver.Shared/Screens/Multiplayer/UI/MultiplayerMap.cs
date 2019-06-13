@@ -22,6 +22,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Select;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -76,6 +77,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         ///     The current mapset download instance
         /// </summary>
         private MapsetDownload CurrentDownload { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool HasMap { get; set; }
 
         /// <summary>
         /// </summary>
@@ -162,6 +167,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers += OnChangedModifiers;
+            OnlineManager.Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
             ModManager.ModsChanged += OnModsChanged;
 
             BackgroundHelper.Load(MapManager.Selected.Value);
@@ -173,8 +179,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
-                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            if (!HasMap || OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
+            {
+                DownloadButton.Alpha = MathHelper.Lerp(DownloadButton.Alpha, DownloadButton.IsHovered ? 0.3f : 0f,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            }
 
             base.Update(gameTime);
         }
@@ -187,6 +196,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers -= OnChangedModifiers;
+            OnlineManager.Client.OnGameHostSelectingMap -= OnGameHostSelectingMap;
             ModManager.ModsChanged -= OnModsChanged;
 
             if (CurrentDownload != null)
@@ -241,18 +251,30 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 MapManager.Selected.Value = map;
             }
 
-            var diffName = GetDifficultyName();
+            HasMap = map != null;
 
-            ArtistTitle.Text = Game.Map.Replace($"[{diffName}]", "");
-            Mode.Text = $"[{ModeHelper.ToShortHand((GameMode) Game.GameMode)}]";
-            Creator.Tint = Color.White;
+            if (OnlineManager.CurrentGame.HostSelectingMap)
+            {
+                ArtistTitle.Text = "Host is currently selecting a map!";
+                Mode.Text = "Please wait...";
+                Creator.Text = "";
+                DifficultyName.Text = "";
+                DifficultyRating.Text = "";
+            }
+            else
+            {
+                var diffName = GetDifficultyName();
 
-            DifficultyRating.Text = map != null ? $"{map.DifficultyFromMods(ModManager.Mods):0.00}" : $"{Game.DifficultyRating:0.00}";
-            DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) (map?.DifficultyFromMods(ModManager.Mods) ?? Game.DifficultyRating));
-            DifficultyRating.X = Mode.X + Mode.Width + 8;
-            DifficultyName.X = DifficultyRating.X + DifficultyRating.Width + 2;
+                ArtistTitle.Text = Game.Map.Replace($"[{diffName}]", "");
+                Mode.Text = $"[{ModeHelper.ToShortHand((GameMode) Game.GameMode)}]";
+                Creator.Tint = Color.White;
 
-            DifficultyName.Text = " - \"" + diffName + "\"";
+                DifficultyRating.Text = map != null ? $"{map.DifficultyFromMods(ModManager.Mods):0.00}" : $"{Game.DifficultyRating:0.00}";
+                DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) (map?.DifficultyFromMods(ModManager.Mods) ?? Game.DifficultyRating));
+                DifficultyRating.X = Mode.X + Mode.Width + 8;
+                DifficultyName.X = DifficultyRating.X + DifficultyRating.Width + 2;
+                DifficultyName.Text = " - \"" + diffName + "\"";
+            }
 
             var game = (QuaverGame) GameBase.Game;
 
@@ -263,7 +285,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
                 var time = length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
 
-                Creator.Text = $"[Length: {time}] - By: {map.Creator} ";
+                if (OnlineManager.CurrentGame.HostSelectingMap)
+                    Creator.Text = "";
+                else
+                    Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} " +
+                                   $"| LNs: {(int) map.LNPercentage}%";
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -288,6 +314,9 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                         {
                             if (AudioEngine.Map != map)
                             {
+                                if (!HasMap)
+                                    return;
+
                                 AudioEngine.LoadCurrentTrack();
                                 AudioEngine.Track.Play();
                             }
@@ -371,6 +400,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             UpdateContent();
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameHostSelectingMap(object sender, GameHostSelectingMapEventArgs e)
+            => UpdateContent();
+
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
             var game = GameBase.Game as QuaverGame;
@@ -388,6 +424,15 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// <param name="e"></param>
         private void OnDownloadButtonClicked(object sender, EventArgs e)
         {
+            // Go to song select if host
+            if (OnlineManager.CurrentGame?.HostId == OnlineManager.Self.OnlineUser.Id)
+            {
+                var game = (QuaverGame) GameBase.Game;
+                var screen = game.CurrentScreen as MultiplayerScreen;
+                screen?.Exit(() => new SelectScreen(screen), 0, QuaverScreenChangeType.AddToStack);
+                return;
+            }
+
             if (Game.MapsetId == -1 || !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                 return;
 
