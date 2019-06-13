@@ -18,6 +18,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -84,6 +85,9 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                     LeaveGame();
+
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && OnlineManager.CurrentGame?.FreeModType != MultiplayerFreeModType.None)
+                    DialogManager.Show(new ModifiersDialog());
             }
 
             KeepPlayingAudioTrack();

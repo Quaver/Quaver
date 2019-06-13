@@ -356,14 +356,17 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
                             {
                                 case MultiplayerFreeModType.Regular:
                                     OnlineManager.Client?.MultiplayerChangePlayerModifiers(activeModsWithoutRate);
+
+                                    if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                                        OnlineManager.Client?.MultiplayerChangeGameModifiers(rateMod + (long) hostOnlyMods, diffRating);
                                     break;
                                 case MultiplayerFreeModType.Rate:
                                     OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) ModHelper.GetModsFromRate(rateNow));
+
+                                    if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
+                                        OnlineManager.Client?.MultiplayerChangeGameModifiers(activeModsWithoutRate + (long) hostOnlyMods, diffRating);
                                     break;
                             }
-
-                            if (OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser)
-                                OnlineManager.Client?.MultiplayerChangeGameModifiers(activeModsWithoutRate + (long) hostOnlyMods, diffRating);
                         }
                     }
                     // We're host & free mod isn't enabled, so change the global game mods
