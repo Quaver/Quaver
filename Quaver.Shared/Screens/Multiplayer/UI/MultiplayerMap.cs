@@ -167,6 +167,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers += OnChangedModifiers;
+            OnlineManager.Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
             ModManager.ModsChanged += OnModsChanged;
 
             BackgroundHelper.Load(MapManager.Selected.Value);
@@ -195,6 +196,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
             OnlineManager.Client.OnChangedModifiers -= OnChangedModifiers;
+            OnlineManager.Client.OnGameHostSelectingMap -= OnGameHostSelectingMap;
             ModManager.ModsChanged -= OnModsChanged;
 
             if (CurrentDownload != null)
@@ -251,18 +253,28 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             HasMap = map != null;
 
-            var diffName = GetDifficultyName();
+            if (OnlineManager.CurrentGame.HostSelectingMap)
+            {
+                ArtistTitle.Text = "Host is currently selecting a map!";
+                Mode.Text = "Please wait...";
+                Creator.Text = "";
+                DifficultyName.Text = "";
+                DifficultyRating.Text = "";
+            }
+            else
+            {
+                var diffName = GetDifficultyName();
 
-            ArtistTitle.Text = Game.Map.Replace($"[{diffName}]", "");
-            Mode.Text = $"[{ModeHelper.ToShortHand((GameMode) Game.GameMode)}]";
-            Creator.Tint = Color.White;
+                ArtistTitle.Text = Game.Map.Replace($"[{diffName}]", "");
+                Mode.Text = $"[{ModeHelper.ToShortHand((GameMode) Game.GameMode)}]";
+                Creator.Tint = Color.White;
 
-            DifficultyRating.Text = map != null ? $"{map.DifficultyFromMods(ModManager.Mods):0.00}" : $"{Game.DifficultyRating:0.00}";
-            DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) (map?.DifficultyFromMods(ModManager.Mods) ?? Game.DifficultyRating));
-            DifficultyRating.X = Mode.X + Mode.Width + 8;
-            DifficultyName.X = DifficultyRating.X + DifficultyRating.Width + 2;
-
-            DifficultyName.Text = " - \"" + diffName + "\"";
+                DifficultyRating.Text = map != null ? $"{map.DifficultyFromMods(ModManager.Mods):0.00}" : $"{Game.DifficultyRating:0.00}";
+                DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) (map?.DifficultyFromMods(ModManager.Mods) ?? Game.DifficultyRating));
+                DifficultyRating.X = Mode.X + Mode.Width + 8;
+                DifficultyName.X = DifficultyRating.X + DifficultyRating.Width + 2;
+                DifficultyName.Text = " - \"" + diffName + "\"";
+            }
 
             var game = (QuaverGame) GameBase.Game;
 
@@ -273,7 +285,11 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
                 var time = length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
 
-                Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} | LNs: {(int) map.LNPercentage}%";
+                if (OnlineManager.CurrentGame.HostSelectingMap)
+                    Creator.Text = "";
+                else
+                    Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} " +
+                                   $"| LNs: {(int) map.LNPercentage}%";
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
@@ -383,6 +399,13 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             UpdateContent();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameHostSelectingMap(object sender, GameHostSelectingMapEventArgs e)
+            => UpdateContent();
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
