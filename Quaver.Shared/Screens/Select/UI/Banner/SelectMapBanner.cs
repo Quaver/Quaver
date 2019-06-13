@@ -290,6 +290,9 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <param name="map"></param>
         private void UpdateText(Map map)
         {
+            if (map == null)
+                return;
+            
             MapDifficultyName.Text = $"\"{map.DifficultyName}\"";
             SongTitle.Text = map.Title;
             SongArtist.Text = map.Artist;
