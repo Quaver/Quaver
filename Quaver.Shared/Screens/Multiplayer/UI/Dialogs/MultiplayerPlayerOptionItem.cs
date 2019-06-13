@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public sealed override int HEIGHT { get; } = 38;
+        public sealed override int HEIGHT { get; } = 44;
 
         /// <summary>
         /// </summary>

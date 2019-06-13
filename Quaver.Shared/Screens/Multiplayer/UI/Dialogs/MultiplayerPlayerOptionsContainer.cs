@@ -14,8 +14,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         private MultiplayerPlayerOptionsDialog Dialog { get; }
 
         public MultiplayerPlayerOptionsContainer(MultiplayerPlayerOptionsDialog dialog, List<IMenuDialogOption> availableItems) : base(availableItems,
-            int.MaxValue, 0, new ScalableVector2(446, 188),
-            new ScalableVector2(446, 188))
+            int.MaxValue, 0, new ScalableVector2(446, 350),
+            new ScalableVector2(446, 350))
         {
             Dialog = dialog;
             Alpha = 0;
