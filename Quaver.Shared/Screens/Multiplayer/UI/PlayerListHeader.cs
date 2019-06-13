@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     }
 
                     LastNearestSecond = timeLeft;
-                    Status.Text = $"Match is now starting: {Math.Abs(timeLeft) + 1}";
+                    Status.Text = timeLeft > 0 ? $"Waiting for server" : $"Match is now starting: {Math.Abs(timeLeft) + 1}";
                 }
 
                 if (Game.PlayerIds.Count != LastPlayerCount || Game.MaxPlayers != LastMaxPlayerCount)
