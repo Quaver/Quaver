@@ -292,7 +292,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         {
             if (map == null)
                 return;
-            
+
             MapDifficultyName.Text = $"\"{map.DifficultyName}\"";
             SongTitle.Text = map.Title;
             SongArtist.Text = map.Artist;

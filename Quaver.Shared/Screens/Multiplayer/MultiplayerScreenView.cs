@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 new ButtonText(FontsBitmap.GothamRegular, "options", 14, (o, e) => DialogManager.Show(new SettingsDialog())),
                 new MenuFooterButtonGameChat(FontsBitmap.GothamRegular, "game chat", 14, (o, e) => ChatManager.ToggleChatOverlay(true)),
                 new ButtonText(FontsBitmap.GothamRegular, "match history", 14, (o, e) => NotificationManager.Show(NotificationLevel.Error, "Not implemented yet!")),
-                new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => SteamFriends.ActivateGameOverlayToWebPage("https://gist.github.com/Swan/f0a0b5beb581190ce1a267511f60ac98"))
+                new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => BrowserHelper.OpenURL("https://gist.github.com/Swan/f0a0b5beb581190ce1a267511f60ac98"))
             }, new List<ButtonText>
             {
             }, ColorHelper.HexToColor("#f95186"))
