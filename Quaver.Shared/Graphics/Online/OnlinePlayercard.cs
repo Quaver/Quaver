@@ -239,7 +239,7 @@ namespace Quaver.Shared.Graphics.Online
             if (OnlineManager.Status.Value == ConnectionStatus.Connected)
             {
                 options.Add(new MenuDialogOption("View Profile", () =>
-                    BrowserHelper.OpenURL($"https://quavergame.com/profile/{OnlineManager.Self.OnlineUser.Id}")));
+                    BrowserHelper.OpenURL($"https://quavergame.com/profile/{OnlineManager.Self.OnlineUser.Id}?mode={(int) ConfigManager.SelectedGameMode.Value}")));
 
                 options.Add(new MenuDialogOption("Steam Profile", () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{OnlineManager.Self.OnlineUser.SteamId}")));
             }
