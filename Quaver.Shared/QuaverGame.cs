@@ -83,10 +83,6 @@ namespace Quaver.Shared
                                         AssemblyName.Version.Build != 0;
 
         /// <summary>
-        /// </summary>
-        public List<Action> ScheduledRenderTargetDraws { get; } = new List<Action>();
-
-        /// <summary>
         ///     Stringified version name of the client.
         /// </summary>
         public string Version
@@ -239,12 +235,6 @@ namespace Quaver.Shared
         {
             if (!IsReadyToUpdate)
                 return;
-
-            for (var i = ScheduledRenderTargetDraws.Count - 1; i >= 0; i--)
-            {
-                ScheduledRenderTargetDraws[i]?.Invoke();
-                ScheduledRenderTargetDraws.Remove(ScheduledRenderTargetDraws[i]);
-            }
 
             base.Draw(gameTime);
 
