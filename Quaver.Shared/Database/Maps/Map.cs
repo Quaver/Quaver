@@ -533,18 +533,7 @@ namespace Quaver.Shared.Database.Maps
         ///     If the map is non-Quaver, then the map needs to be converted
         /// </summary>
         /// <returns></returns>
-        public string GetAlternativeMd5()
-        {
-            if (Game == MapGame.Quaver)
-                return Md5Checksum;
-
-            // The map needs to be converted to .qua format and hashed
-            var qua = LoadQua();
-
-            var quaStr = qua.Save(null, true);
-
-            return CryptoHelper.StringToMd5(quaStr);
-        }
+        public string GetAlternativeMd5() => Game == MapGame.Quaver ? Md5Checksum : CryptoHelper.StringToMd5(LoadQua().Serialize());
 
         public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }
