@@ -9,12 +9,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Download.UI.Drawable
 {
@@ -32,12 +35,12 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DownloadScrollContainer(DownloadScreenView view): base(new ScalableVector2(900, 635), new ScalableVector2(900, 635))
+        public DownloadScrollContainer(DownloadScreenView view): base(new ScalableVector2(900, 650), new ScalableVector2(806, 650))
         {
             View = view;
-            Tint = Color.Black;
-            Alpha = 0.35f;
             Mapsets = new List<DownloadableMapset>();
+
+            Tint = ColorHelper.HexToColor($"#0f0f0f");
 
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
@@ -46,6 +49,8 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             ScrollSpeed = 150;
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1500;
+
+            AddBorder(ColorHelper.HexToColor("#69acc5"), 2);
         }
 
         /// <inheritdoc />
@@ -94,7 +99,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
                     continue;
 
                 Mapsets[i].X = -Mapsets[i].Width;
-                Mapsets[i].Y = i * DownloadableMapset.HEIGHT + i * 5;
+                Mapsets[i].Y = i * DownloadableMapset.HEIGHT;
 
                 if (addToBottom)
                     Mapsets[i].MoveToX(0, Easing.OutQuint, 300 + mapsets.FindIndex(x => x == Mapsets[i]) * 100);
@@ -104,7 +109,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
                 AddContainedDrawable(Mapsets[i]);
             }
 
-            var totalUserHeight = DownloadableMapset.HEIGHT * Mapsets.Count + Mapsets.Count * 5;
+            var totalUserHeight = DownloadableMapset.HEIGHT * Mapsets.Count;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -133,9 +138,9 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             var totalUserHeight = DownloadableMapset.HEIGHT * Mapsets.Count + Mapsets.Count * 5;
 
             if (totalUserHeight > Height)
-                ContentContainer.Height = totalUserHeight;
+                ContentContainer.Height = totalUserHeight - 4;
             else
-                ContentContainer.Height = Height;
+                ContentContainer.Height = Height - 4;
         }
 
         /// <summary>
