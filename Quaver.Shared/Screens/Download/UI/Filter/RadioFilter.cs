@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
 
         /// <summary>
         /// </summary>
-        private SpriteText FilterName { get; set; }
+        private SpriteTextBitmap FilterName { get; set; }
 
         /// <summary>
         /// </summary>
@@ -60,7 +60,11 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
 
         /// <summary>
         /// </summary>
-        private void CreateFilterName() => FilterName = new SpriteText(Fonts.SourceSansProBold, Name, 13) { Parent = this };
+        private void CreateFilterName() => FilterName = new SpriteTextBitmap(FontsBitmap.GothamRegular, Name)
+        {
+            Parent = this,
+            FontSize = 16
+        };
 
         /// <summary>
         /// </summary>

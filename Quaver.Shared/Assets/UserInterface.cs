@@ -91,6 +91,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D PlayercardBackground { get; private set; }
         public static Texture2D MenuBackgroundNormal { get; private set; }
         public static Texture2D PlayercardCoverDefault { get; private set; }
+        public static Texture2D DownloadSearchPanel { get; private set; }
+        public static Texture2D DownloadContainer { get; private set; }
+        public static Texture2D DownloadItem { get; private set; }
+        public static Texture2D DownloadMapsetInfo { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -174,6 +178,10 @@ namespace Quaver.Shared.Assets
             PlayercardBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-background.png"));
             MenuBackgroundNormal = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-normal.jpg"));
             PlayercardCoverDefault = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-cover-default.png"));
+            DownloadSearchPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-search.png"));
+            DownloadContainer = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-container.png"));
+            DownloadItem = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-item.png"));
+            DownloadMapsetInfo = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/mapset-info.png"));
         }
     }
 }
