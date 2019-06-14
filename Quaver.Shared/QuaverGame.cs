@@ -182,7 +182,7 @@ namespace Quaver.Shared
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new AlphaScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
         /// <inheritdoc />
