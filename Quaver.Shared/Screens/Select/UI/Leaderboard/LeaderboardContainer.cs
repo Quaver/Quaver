@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays that there are no scores available.
         /// </summary>
-        private SpriteText NoScoresAvailableText { get; set; }
+        private SpriteTextBitmap NoScoresAvailableText { get; set; }
 
         /// <summary>
         ///     To cancel tasks.
@@ -93,11 +93,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays that there are no scores available.
         /// </summary>
-        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
         {
             Parent = this,
             Alignment = Alignment.MidCenter,
-            Visible = false
+            Visible = false,
+            FontSize = 16
         };
 
         /// <summary>

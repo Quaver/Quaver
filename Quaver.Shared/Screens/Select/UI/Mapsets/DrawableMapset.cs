@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -86,7 +87,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-10, Artist.Y + Artist.Height + 2),
+                Position = new ScalableVector2(-10, Artist.Y + Artist.Height + 6),
                 FontSize = 14
             };
 
@@ -114,7 +115,8 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             // Change the width of the set outwards to appear it as selected.
             Animations.Clear();
             ChangeWidthTo(500, Easing.OutQuint, 600);
-            FadeToColor(new Color(68, 174, 221), Easing.OutQuint, 300);
+
+            Image = UserInterface.SelectedMapset;
 
             Title.Animations.Clear();
             Artist.Animations.Clear();
@@ -132,7 +134,8 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         {
             Animations.Clear();
             ChangeWidthTo(410,Easing.OutQuint, 600);
-            FadeToColor(Color.Black, Easing.OutQuint, 300);
+
+            Image = UserInterface.DeselectedMapset;
 
             Title.Animations.Clear();
             Artist.Animations.Clear();
