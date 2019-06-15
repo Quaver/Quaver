@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -126,7 +127,7 @@ namespace Quaver.Shared.Screens.Select
         public SelectScreenView(Screen screen) : base(screen)
         {
             // CreateBackground();
-            BackgroundHelper.Background.Dim = 40;
+            BackgroundHelper.Background.Dim = 65;
 
             CreateHeader();
             CreateAudioVisualizer();
@@ -134,14 +135,12 @@ namespace Quaver.Shared.Screens.Select
             CreateMapsetScrollContainer();
             CreateDifficultyScrollContainer();
             CreateMapsetSearchContainer();
-            /*CreateLeaderboardSelector();
+            CreateLeaderboardSelector();
             CreateLeaderboard();
-            CreateBottomNavbar();*/
             CreateMenuFooter();
 
-
-            //var selectScreen = Screen as SelectScreen;
-            //selectScreen.ScreenExiting += OnScreenExiting;
+            var selectScreen = Screen as SelectScreen;
+            selectScreen.ScreenExiting += OnScreenExiting;
 
             // Needs to be called last so it's above the entire UI
             //CreateUserProfile();
@@ -174,48 +173,6 @@ namespace Quaver.Shared.Screens.Select
 
             Container?.Destroy();
         }
-
-        /// <summary>
-        ///     Creates the navbar for this screen.
-        /// </summary>
-        private void CreateNavbar() => Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
-        {
-            new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
-            new NavbarItem("Home", false, OnHomeButtonClicked),
-            new NavbarItem("Select Song", true),
-        }, new List<NavbarItem>
-        {
-            new NavbarItemUser(this),
-            new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
-        })
-        { Parent = Container };
-
-        /// <summary>
-        ///     Called when the home button is clicked in the navbar.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnHomeButtonClicked(object sender, EventArgs e)
-        {
-            var screen = Screen as SelectScreen;
-            screen.ExitToMenu();
-        }
-
-        /// <summary>
-        ///     Creates the background for the screen
-        /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20) { Parent = Container };
-
-        /// <summary>
-        ///     Creates the user profile container.
-        /// </summary>
-        private void CreateUserProfile() => UserProfile = new UserProfileContainer(this)
-        {
-            Parent = Container,
-            Alignment = Alignment.TopRight,
-            Y = Navbar.Line.Y + Navbar.Line.Thickness,
-            X = -28
-        };
 
         /// <summary>
         ///     Creates the audio visaulizer container for the screen
@@ -320,7 +277,7 @@ namespace Quaver.Shared.Screens.Select
                 return;
 
             const int time = 400;
-            const int targetX = -28;
+            const int targetX = -18;
 
             MapsetScrollContainer.ClearAnimations();
             DifficultyScrollContainer.ClearAnimations();
@@ -348,8 +305,8 @@ namespace Quaver.Shared.Screens.Select
 
             ActiveContainer = container;
             SearchContainer.Parent = Container;
-            UserProfile.Parent = Container;
             Banner.Parent = Container;
+            Footer.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
         }
 
@@ -369,8 +326,6 @@ namespace Quaver.Shared.Screens.Select
             Banner.MoveToX(-Banner.Width, Easing.OutQuint, 400);
             LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 400);
             Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 400);
-            Navbar.Exit();
-            BottomNavbar.Exit();
         }
 
         /// <summary>
@@ -396,7 +351,7 @@ namespace Quaver.Shared.Screens.Select
             {
                 new ButtonText(FontsBitmap.GothamRegular, "Back", 14, (sender, args) => screen.ExitToMenu()),
                 new ButtonText(FontsBitmap.GothamRegular, "Options", 14,(sender, args) => DialogManager.Show(new SettingsDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "Community Chat", 14, (sender, args) =>
+                new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
                     {
@@ -406,106 +361,64 @@ namespace Quaver.Shared.Screens.Select
 
                     ChatManager.ToggleChatOverlay(true);
                 }),
+                new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
+                {
+                    if (OnlineManager.Status.Value != ConnectionStatus.Connected)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You must be online to download maps!");
+                        return;
+                    }
+
+                    if (OnlineManager.CurrentGame != null)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You cannot download maps while in multiplayer!");
+                        return;
+                    }
+
+                    screen.Exit(() => new DownloadScreen());
+                }),
+                new ButtonText(FontsBitmap.GothamRegular, "Profile", 14, (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/profile/{ConfigManager.Username.Value}?mode={(int) ConfigManager.SelectedGameMode.Value}")),
+            };
+
+            var rightButtons = new List<ButtonText>()
+            {
                 new ButtonText(FontsBitmap.GothamRegular, "Modifiers", 14, (sender, args) => DialogManager.Show(new ModifiersDialog())),
+                new ButtonText(FontsBitmap.GothamRegular, "Export", 14, (sender, args) =>
+                {
+                    if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error,
+                            "Slow down! You can only export a set every 2 seconds.");
+                        return;
+                    }
+
+                    LastExportTime = GameBase.Game.TimeRunning;
+
+                    ThreadScheduler.Run(() =>
+                    {
+                        NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to file...");
+                        MapManager.Selected.Value.Mapset.ExportToZip();
+                        NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
+                    });
+                }),
+                new ButtonText(FontsBitmap.GothamRegular, "Delete", 14, ((sender, args) =>
+                {
+                    if (MapManager.Selected.Value == null)
+                        return;
+
+                    screen.DeleteSelected();
+                }))
             };
 
             if (OnlineManager.CurrentGame == null)
-                leftButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Edit", 14, (sender, args) => screen.ExitToEditor()));
+                rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Edit", 14, (sender, args) => screen.ExitToEditor()));
 
-            leftButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Export", 14, (sender, args) =>
-            {
-                if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
-                {
-                    NotificationManager.Show(NotificationLevel.Error,
-                        "Slow down! You can only export a set every 2 seconds.");
-                    return;
-                }
+            rightButtons.Add(new ButtonText(FontsBitmap.GothamRegular, "Random", 14, (sender, args) => screen.SelectRandomMap()));
 
-                LastExportTime = GameBase.Game.TimeRunning;
-
-                ThreadScheduler.Run(() =>
-                {
-                    NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to file...");
-                    MapManager.Selected.Value.Mapset.ExportToZip();
-                    NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
-                });
-            }));
-
-            Footer = new MenuFooter(leftButtons, new List<ButtonText>()
-            {
-                new ButtonText(FontsBitmap.GothamRegular, "Play", 14, (sender, args) => screen.ExitToGameplay()),
-            }, Colors.MainAccent)
+            Footer = new MenuFooter(leftButtons, rightButtons, Colors.MainAccent)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft
-            };
-        }
-
-        /// <summary>
-        ///     Creates the navbar at the bottom of the screen
-        /// </summary>
-        private void CreateBottomNavbar()
-        {
-            var items = new List<NavbarItem>
-            {
-                new NavbarItem("Modifiers", false, (o, e) => DialogManager.Show(new ModifiersDialog()), true, false,
-                    true)
-            };
-
-            if (OnlineManager.CurrentGame == null)
-            {
-                items.Add(new NavbarItem("Edit", false, (o, e) =>
-                {
-                    var screen = Screen as SelectScreen;
-                    screen?.ExitToEditor();
-                }, true, false, true));
-            }
-
-            items.Add(new NavbarItem("Export", false, (o, e) =>
-            {
-                if (Math.Abs(GameBase.Game.TimeRunning - LastExportTime) < 2000)
-                {
-                    NotificationManager.Show(NotificationLevel.Error,
-                        "Slow down! You can only export a set every 2 seconds.");
-                    return;
-                }
-
-                LastExportTime = GameBase.Game.TimeRunning;
-
-                ThreadScheduler.Run(() =>
-                {
-                    NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to file...");
-                    MapManager.Selected.Value.Mapset.ExportToZip();
-                    NotificationManager.Show(NotificationLevel.Success, "Successfully exported mapset!");
-                });
-            }, true, false, true));
-
-
-            BottomNavbar = new Navbar(items, new List<NavbarItem>()
-            {
-                // Play
-                new NavbarItem("Play", false, (o, e) =>
-                {
-                    switch (ActiveContainer)
-                    {
-                        case SelectContainerStatus.Mapsets:
-                            SwitchToContainer(SelectContainerStatus.Difficulty);
-                            break;
-                        case SelectContainerStatus.Difficulty:
-                            var screen = Screen as SelectScreen;
-                            screen?.ExitToGameplay();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }, true, false, true),
-
-                // Game Options
-                new NavbarItem("Options", false, (o, e) => DialogManager.Show(new SettingsDialog()), true, false, true)
-            }, true)
-            {
-                Parent = Container,
-                Alignment = Alignment.TopLeft,
             };
         }
     }
