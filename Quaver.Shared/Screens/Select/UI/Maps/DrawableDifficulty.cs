@@ -95,6 +95,10 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         /// <summary />
         public override void Destroy()
         {
+            DifficultyName.Destroy();
+            TextDifficultyRating.Destroy();
+            Creator.Destroy();
+
             ModManager.ModsChanged -= OnModsChanged;
             base.Destroy();
         }

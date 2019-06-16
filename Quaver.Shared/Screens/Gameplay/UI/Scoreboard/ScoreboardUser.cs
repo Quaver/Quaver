@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
-            RankText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "?.")
+            RankText = new SpriteTextBitmap(FontsBitmap.GothamRegular, "?.", false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -248,7 +248,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Processor.Combo:N0}x")
+            Combo = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Processor.Combo:N0}x", false)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

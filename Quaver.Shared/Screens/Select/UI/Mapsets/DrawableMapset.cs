@@ -94,6 +94,15 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             Clicked += OnClicked;
         }
 
+        public override void Destroy()
+        {
+            Artist.Destroy();
+            Title.Destroy();
+            Creator.Destroy();
+
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Updates the mapset this drawable represents.
         /// </summary>
