@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00")
+            Score = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00", false)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
