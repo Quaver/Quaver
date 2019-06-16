@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Screens.Editor.UI.Hitsounds;
+using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Assets;
 
@@ -98,6 +99,8 @@ namespace Quaver.Shared.Assets
         public static Texture2D SelectedMapset { get; private set; }
         public static Texture2D DeselectedMapset { get; private set; }
         public static Texture2D SelectSearchPanel { get; private set; }
+        public static Texture2D LeaderboardScore { get; private set; }
+        public static Texture2D LeaderboardPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -188,6 +191,8 @@ namespace Quaver.Shared.Assets
             SelectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/selected-mapset.png"));
             DeselectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/deselected-mapset.png"));
             SelectSearchPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/search-panel.png"));
+            LeaderboardPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/leaderboard-panel.png"));
+            LeaderboardScore = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/leaderboard-score.png"));
         }
     }
 }

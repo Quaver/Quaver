@@ -251,7 +251,7 @@ namespace Quaver.Shared.Screens.Select
         private void CreateLeaderboard() => Leaderboard = new LeaderboardContainer(this)
         {
             Parent = Container,
-            Position = new ScalableVector2(28 - Banner.Border.Thickness, LeaderboardSelector.Y + LeaderboardSelector.Height)
+            Position = new ScalableVector2(28 - Banner.Border.Thickness, LeaderboardSelector.Y + LeaderboardSelector.Height + 10)
         };
 
         /// <summary>

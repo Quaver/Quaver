@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             Tint = Color.Black;
 
             Size = new ScalableVector2(620, 234);
-            AddBorder(Color.White, 2);
+            AddBorder(ColorHelper.HexToColor("#69acc5"), 2);
 
             Mask = new SpriteMaskContainer()
             {

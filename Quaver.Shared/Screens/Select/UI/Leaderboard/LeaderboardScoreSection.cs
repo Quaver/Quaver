@@ -47,22 +47,22 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The scores that are displayed.
         /// </summary>
-        private List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
+        public List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="leaderboard"></param>
         protected LeaderboardScoreSection(LeaderboardContainer leaderboard) : base(
-            new ScalableVector2(leaderboard.Width, leaderboard.Height),
-            new ScalableVector2(leaderboard.Width, leaderboard.Height))
+            new ScalableVector2(leaderboard.Width - 2, leaderboard.Height - 4),
+            new ScalableVector2(leaderboard.Width - 2, leaderboard.Height - 4))
         {
             Leaderboard = leaderboard;
             Alpha = 0;
             Tint = Color.CornflowerBlue;
 
             InputEnabled = true;
-            Scrollbar.Tint = ColorHelper.HexToColor("#212121");
+            Scrollbar.Tint = Color.White;
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
             ScrollSpeed = 150;
@@ -134,7 +134,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         public void ClearScores()
         {
-            Scores.ForEach(x => x.Destroy());
+            Scores.ForEach(x =>
+            {
+                x.Visible = false;
+            });
+
             Scores.Clear();
         }
 
@@ -155,7 +159,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 var scoreCount = scoreStore.PersonalBest != null ? scoreStore.Scores.Count + 1 : scoreStore.Scores.Count;
 
                 // Calculate the height of the scroll container based on how many scores there are.
-                var totalUserHeight =  scoreCount * DrawableLeaderboardScore.HEIGHT + 10 * (scoreCount - 1);
+                var totalUserHeight =  scoreCount * DrawableLeaderboardScore.HEIGHT;
 
                 if (totalUserHeight > Height)
                     ContentContainer.Height = totalUserHeight;
@@ -179,7 +183,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     var drawable = new DrawableLeaderboardScore(this, score, rank)
                     {
 
-                        Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
+                        Y = i * DrawableLeaderboardScore.HEIGHT,
                         X = -DrawableLeaderboardScore.WIDTH,
                     };
 
