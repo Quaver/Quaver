@@ -450,6 +450,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
                 case QuaverScreenType.Editor:
+                case QuaverScreenType.Multiplayer:
+                case QuaverScreenType.Lobby:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }
