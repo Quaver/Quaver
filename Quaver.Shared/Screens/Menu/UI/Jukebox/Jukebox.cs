@@ -330,7 +330,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
             {
                 Y = 2,
                 Alignment = Alignment.MidLeft,
-                FontSize = 15
+                FontSize = 16
             };
 
             UpdateSongTitleText();

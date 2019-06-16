@@ -83,10 +83,6 @@ namespace Quaver.Shared
                                         AssemblyName.Version.Build != 0;
 
         /// <summary>
-        /// </summary>
-        public List<Action> ScheduledRenderTargetDraws { get; } = new List<Action>();
-
-        /// <summary>
         ///     Stringified version name of the client.
         /// </summary>
         public string Version
@@ -182,7 +178,7 @@ namespace Quaver.Shared
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new AlphaScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -239,12 +235,6 @@ namespace Quaver.Shared
         {
             if (!IsReadyToUpdate)
                 return;
-
-            for (var i = ScheduledRenderTargetDraws.Count - 1; i >= 0; i--)
-            {
-                ScheduledRenderTargetDraws[i]?.Invoke();
-                ScheduledRenderTargetDraws.Remove(ScheduledRenderTargetDraws[i]);
-            }
 
             base.Draw(gameTime);
 
@@ -460,6 +450,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
                 case QuaverScreenType.Editor:
+                case QuaverScreenType.Multiplayer:
+                case QuaverScreenType.Lobby:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }

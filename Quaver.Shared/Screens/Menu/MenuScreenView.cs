@@ -286,7 +286,7 @@ namespace Quaver.Shared.Screens.Menu
                     }));
                 }),
                 new ButtonText(FontsBitmap.GothamRegular, "Options", 14, (sender, args) => DialogManager.Show(new SettingsDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "Community Chat", 14, (sender, args) =>
+                new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
                     {
@@ -295,9 +295,7 @@ namespace Quaver.Shared.Screens.Menu
                     }
 
                     ChatManager.ToggleChatOverlay(true);
-                })
-            }, new List<ButtonText>()
-            {
+                }),
                 new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
@@ -309,6 +307,8 @@ namespace Quaver.Shared.Screens.Menu
                     var screen = (QuaverScreen) Screen;
                     screen.Exit(() => new DownloadScreen());
                 }),
+            }, new List<ButtonText>()
+            {
                 new ButtonText(FontsBitmap.GothamRegular, "Report Bugs", 14, (sender, args) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
                 new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
                 new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
@@ -377,6 +377,12 @@ namespace Quaver.Shared.Screens.Menu
 
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    screen?.Exit(() => new DownloadScreen());
+                    return;
+                }
+
                 NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
                 return;
             }
@@ -416,6 +422,19 @@ namespace Quaver.Shared.Screens.Menu
             }
 
             var screen = (QuaverScreen) Screen;
+
+            if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    screen?.Exit(() => new DownloadScreen());
+                    return;
+                }
+
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                return;
+            }
+
             screen.Exit(() => new LobbyScreen());
         }
 

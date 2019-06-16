@@ -16,6 +16,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -38,7 +39,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays that there are no scores available.
         /// </summary>
-        private SpriteText NoScoresAvailableText { get; set; }
+        private SpriteTextBitmap NoScoresAvailableText { get; set; }
 
         /// <summary>
         ///     To cancel tasks.
@@ -53,7 +54,8 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         {
             View = view;
             Size = new ScalableVector2(View.Banner.Width, 356);
-            Alpha = 0;
+            Alpha = 1;
+            Image = UserInterface.LeaderboardPanel;
 
             CreateNoScoresAvailableText();
             CreateSections();
@@ -93,11 +95,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays that there are no scores available.
         /// </summary>
-        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
         {
             Parent = this,
             Alignment = Alignment.MidCenter,
-            Visible = false
+            Visible = false,
+            FontSize = 16
         };
 
         /// <summary>
@@ -105,9 +108,26 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         private void CreateSections()
         {
-            Sections[LeaderboardType.Local] = new LeaderboardScoreSectionLocal(this) {Parent = this};
-            Sections[LeaderboardType.Global] = new LeaderboardScoreSectionGlobal(this) {Parent = this};
-            Sections[LeaderboardType.Mods] = new LeaderboardScoreSectionMods(this) { Parent = this};
+            Sections[LeaderboardType.Local] = new LeaderboardScoreSectionLocal(this)
+            {
+                Parent = this,
+                Y = 2,
+                X = 2
+            };
+
+            Sections[LeaderboardType.Global] = new LeaderboardScoreSectionGlobal(this)
+            {
+                Parent = this,
+                Y = 2,
+                X = 2
+            };
+
+            Sections[LeaderboardType.Mods] = new LeaderboardScoreSectionMods(this)
+            {
+                Parent = this,
+                Y = 2,
+                X = 2
+            };
         }
 
         /// <summary>
@@ -190,23 +210,20 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 cancellationToken.ThrowIfCancellationRequested();
                 section.IsFetching = false;
 
-                lock (NoScoresAvailableText)
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (scores.Scores.Count == 0 && scores.PersonalBest == null)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
+                    NoScoresAvailableText.Alpha = 0;
+                    NoScoresAvailableText.Visible = true;
 
-                    if (scores.Scores.Count == 0 && scores.PersonalBest == null)
-                    {
-                        NoScoresAvailableText.Text = section.GetNoScoresAvailableString(map);
-                        NoScoresAvailableText.Alpha = 0;
-                        NoScoresAvailableText.Visible = true;
-
-                        NoScoresAvailableText.ClearAnimations();
-                        NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 150));
-                    }
-                    else
-                    {
-                        NoScoresAvailableText.Visible = false;
-                    }
+                    NoScoresAvailableText.ClearAnimations();
+                    NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 150));
+                }
+                else
+                {
+                    NoScoresAvailableText.Visible = false;
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();

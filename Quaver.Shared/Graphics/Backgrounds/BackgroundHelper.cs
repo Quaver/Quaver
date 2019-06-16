@@ -71,7 +71,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// </summary>
         public static void Initialize()
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground, 0);
+            Background = new BackgroundImage(UserInterface.MenuBackground, 0, false);
             Source = new CancellationTokenSource();
         }
 
@@ -97,8 +97,8 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     // ignored
                 }
 
-                var blur = new GaussianBlur(0.1f);
-                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture))));
+                var blur = new GaussianBlur(0.3f);
+                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture)));
                 ShouldBlur = false;
                 Blurred?.Invoke(typeof(BackgroundHelper), new BackgroundBlurredEventArgs(Map, BlurredTexture));
             }
@@ -161,7 +161,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static void FadeIn()
         {
             Background.BrightnessSprite.ClearAnimations();
-            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 250));
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.65f, 250));
         }
 
         /// <summary>

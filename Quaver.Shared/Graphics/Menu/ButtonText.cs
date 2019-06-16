@@ -31,7 +31,7 @@ namespace Quaver.Shared.Graphics.Menu
                 FontSize = fontSize
             };
 
-            Size = Text.Size;
+            Size = new ScalableVector2(Text.Width, 44);
             Tint = Color.Transparent;
 
             if (onClicked != null)

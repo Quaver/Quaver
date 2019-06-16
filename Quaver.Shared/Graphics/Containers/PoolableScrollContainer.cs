@@ -90,6 +90,12 @@ namespace Quaver.Shared.Graphics.Containers
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            Pool.ForEach(x => x.Destroy());
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Begins creation of the pool. This should be called last in the constructor when the pool
         ///     is ready to be created

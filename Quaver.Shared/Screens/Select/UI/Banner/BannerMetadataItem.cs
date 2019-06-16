@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using MonoGame.Extended.BitmapFonts;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -16,12 +17,12 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     Text that displays the key of the metadata item
         /// </summary>
-        private SpriteText Key { get; }
+        private SpriteTextBitmap Key { get; }
 
         /// <summary>
         ///     Text that displays the value of the metadata item.
         /// </summary>
-        private SpriteText Value { get; }
+        private SpriteTextBitmap Value { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -30,15 +31,20 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <param name="fontSize"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public BannerMetadataItem(string font, int fontSize, string key, string value)
+        public BannerMetadataItem(BitmapFont font, int fontSize, string key, string value)
         {
-            Key = new SpriteText(font, key + ":", fontSize) { Parent = this, };
-
-            Value = new SpriteText(font, value, fontSize)
+            Key = new SpriteTextBitmap(font, key + ":")
             {
                 Parent = this,
-                X = Key.Width + 2,
-                Tint = Colors.SecondaryAccent
+                FontSize = fontSize
+            };
+
+            Value = new SpriteTextBitmap(font, value)
+            {
+                Parent = this,
+                X = Key.Width + 5,
+                Tint = Colors.SecondaryAccent,
+                FontSize = fontSize
             };
 
             Size = new ScalableVector2(Key.Width + Value.Width + 2, Key.Height);

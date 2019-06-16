@@ -184,7 +184,7 @@ namespace Quaver.Shared.Screens.Select
             HandleKeyPressTab();
             HandleKeyPressDel();
             HandleKeyPressF1();
-            // HandleKeyPressF2(); // disabled for now, till the container issue is resolved.
+            HandleKeyPressF2();
             HandleMousePressRight();
         }
 
@@ -641,6 +641,7 @@ namespace Quaver.Shared.Screens.Select
                     } while (randomMapsetIndex == selectedMapsetIndex);
 
                     view.MapsetScrollContainer.SelectMapset(randomMapsetIndex);
+                    view.MapsetScrollContainer.InitializeWithNewSets();
                     break;
 
                 case SelectContainerStatus.Difficulty:
@@ -663,7 +664,7 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Starts the deleting process.
         /// </summary>
-        private void DeleteSelected()
+        public void DeleteSelected()
         {
             // Externally loaded map check.
             if (MapManager.Selected.Value.Game != MapGame.Quaver)

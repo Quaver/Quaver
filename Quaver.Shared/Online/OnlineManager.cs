@@ -210,11 +210,11 @@ namespace Quaver.Shared.Online
 
             var game = (QuaverGame) GameBase.Game;
 
-            if (game.CurrentScreen.Type == QuaverScreenType.Lobby || CurrentGame != null)
+            if (game.CurrentScreen?.Type == QuaverScreenType.Lobby || CurrentGame != null)
             {
                 LeaveLobby();
                 CurrentGame = null;
-                game.CurrentScreen.Exit(() => new MenuScreen());
+                game.CurrentScreen?.Exit(() => new MenuScreen());
             }
         }
 

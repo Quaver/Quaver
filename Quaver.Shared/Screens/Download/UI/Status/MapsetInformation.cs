@@ -123,6 +123,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
             };
 
             MapBanner.AddBorder(Colors.MainAccent);
+            MapBanner.Border.Alpha = 0;
         }
 
         /// <summary>
