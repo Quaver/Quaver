@@ -238,7 +238,7 @@ namespace Quaver.Shared.Screens.Select
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(580, Header.Height + 2),
+            Position = new ScalableVector2(580, Header.Height),
             Animations =
             {
                 new Animation(AnimationProperty.X, Easing.OutBounce, 580, -18, 1200)

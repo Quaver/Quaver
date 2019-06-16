@@ -97,6 +97,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D DownloadMapsetInfo { get; private set; }
         public static Texture2D SelectedMapset { get; private set; }
         public static Texture2D DeselectedMapset { get; private set; }
+        public static Texture2D SelectSearchPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -186,6 +187,7 @@ namespace Quaver.Shared.Assets
             DownloadMapsetInfo = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/mapset-info.png"));
             SelectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/selected-mapset.png"));
             DeselectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/deselected-mapset.png"));
+            SelectSearchPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/search-panel.png"));
         }
     }
 }
