@@ -139,6 +139,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 x.Visible = false;
             });
 
+            Scores.ForEach(x => x.Destroy());
             Scores.Clear();
         }
 
