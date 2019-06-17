@@ -32,7 +32,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The skin.ini file.
         /// </summary>
-        internal IniData Config { get; private set;  }
+        internal IniData Config { get; private set; }
 
         /// <summary>
         ///     Dictionary that contains both skins for 4K & 7K
@@ -343,7 +343,7 @@ namespace Quaver.Shared.Skinning
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
                 return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
-;
+
             return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                 GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
         }
@@ -561,7 +561,7 @@ namespace Quaver.Shared.Skinning
             var skipFolder = $"/Skip/";
             const string skip = "skip";
 
-            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 31);
+            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 42);
         }
 
         /// <summary>
