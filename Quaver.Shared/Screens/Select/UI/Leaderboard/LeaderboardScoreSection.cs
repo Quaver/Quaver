@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using TagLib.Riff;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -49,6 +50,10 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         public List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
 
+        /// <summary>
+        /// </summary>
+        public List<DrawableLeaderboardScore> ScoresToDestroy { get; } = new List<DrawableLeaderboardScore>();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -80,6 +85,14 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0;
             HandleLoadingWheelAnimations();
+
+            if (ScoresToDestroy.Count != 0)
+            {
+                var destroyingObjects = new List<DrawableLeaderboardScore>(ScoresToDestroy);
+                destroyingObjects.ForEach(x => x.Destroy());
+                ScoresToDestroy.Clear();
+            }
+
             base.Update(gameTime);
         }
 
@@ -137,9 +150,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             Scores.ForEach(x =>
             {
                 x.Visible = false;
+                ScoresToDestroy.Add(x);
             });
 
-            Scores.ForEach(x => x.Destroy());
             Scores.Clear();
         }
 
@@ -193,10 +206,6 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     Scores.Add(drawable);
                     AddContainedDrawable(drawable);
                 }
-
-                // This is a hack... It's to place the leaderboard selector on top so that the
-                // buttons are technically on top of the leaderboard score ones.
-                Leaderboard.View.LeaderboardSelector.Parent = Leaderboard.View.Container;
             }
             catch (Exception e)
             {
