@@ -89,6 +89,9 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 Source = null;
             }
 
+            foreach (var section in Sections.Values)
+                section.Destroy();
+
             base.Destroy();
         }
 

@@ -8,14 +8,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using IniFileParser;
+using IniFileParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
+using Wobble;
 
 namespace Quaver.Shared.Skinning
 {
@@ -67,9 +72,26 @@ namespace Quaver.Shared.Skinning
 
         internal bool ReceptorsOverHitObjects { get; private set; }
 
-        internal SortedDictionary<Judgement, Color> JudgeColors { get; private set; }
+        internal SortedDictionary<Judgement, Color> JudgeColors { get; private set; } = new SortedDictionary<Judgement, Color>()
+        {
+            {Judgement.Marv, new Color(255, 255, 200)},
+            {Judgement.Perf, new Color(255, 255, 0)},
+            {Judgement.Great, new Color(0, 255, 0)},
+            {Judgement.Good, new Color(0, 168, 255)},
+            {Judgement.Okay, new Color(255, 0, 255)},
+            {Judgement.Miss, new Color(255, 0, 0)}
+        };
 
-        internal List<Color> ColumnColors { get; private set; } = new List<Color>();
+        internal List<Color> ColumnColors { get; private set; } = new List<Color>()
+        {
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+        };
 
         internal float BgMaskAlpha { get; private set;  }
 
@@ -285,349 +307,11 @@ namespace Quaver.Shared.Skinning
             Store = store;
             Mode = mode;
 
-            switch (Mode)
-            {
-                case GameMode.Keys4:
-                    ShortName = "4k";
-                    SetDefault4KConfig();
-                    break;
-                case GameMode.Keys7:
-                    ShortName = "7k";
-                    SetDefault7KConfig();
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException($"SkinKeys can only be instantiated with: {GameMode.Keys4} or {GameMode.Keys7}. Got {Mode}");
-            }
-
             // Set the generic config variables, and THEN try to read from
             // skin.ini.
-            SetGenericConfig();
-            ReadConfig();
+            ReadConfig(true);
+            ReadConfig(false);
             LoadTextures();
-        }
-
-        /// <summary>
-        ///     Sets config values based on the selected default skin.
-        /// </summary>
-        private void SetGenericConfig()
-        {
-            switch (ConfigManager.DefaultSkin.Value)
-            {
-                case DefaultSkins.Arrow:
-                    ResourceFilePrepender = "arrow";
-                    break;
-                case DefaultSkins.Bar:
-                    ResourceFilePrepender = "bar";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            JudgeColors = new SortedDictionary<Judgement, Color>
-            {
-                {Judgement.Marv, new Color(255, 255, 200)},
-                {Judgement.Perf, new Color(255, 255, 0)},
-                {Judgement.Great, new Color(0, 255, 0)},
-                {Judgement.Good, new Color(0, 168, 255)},
-                {Judgement.Okay, new Color(255, 0, 255)},
-                {Judgement.Miss, new Color(255, 0, 0)}
-            };
-        }
-
-        /// <summary>
-        ///     Sets all of the default values for 4K.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void SetDefault4KConfig()
-        {
-            switch (ConfigManager.DefaultSkin.Value)
-            {
-                case DefaultSkins.Bar:
-                    StageReceptorPadding = 0;
-                    HitPosOffsetY = 15;
-                    NotePadding = 0;
-                    TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1f;
-                    ColumnLightingOffsetY = 0;
-                    ColumnSize = 110;
-                    ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 0;
-                    ColorObjectsBySnapDistance = false;
-                    JudgementHitBurstScale = 150;
-                    ReceptorsOverHitObjects = true;
-                    ColumnColors = new List<Color>()
-                    {
-                        Color.DarkGray,
-                        Colors.MainAccentInactive,
-                        Colors.MainAccentInactive,
-                        Color.DarkGray
-                    };
-                    BgMaskAlpha = 1f;
-                    FlipNoteImagesOnUpscroll = true;
-                    FlipNoteEndImagesOnUpscroll = true;
-                    HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
-                    ScoreDisplayPosX = 10;
-                    ScoreDisplayPosY = 5;
-                    RatingDisplayPosX = 10;
-                    RatingDisplayPosY = 5;
-                    AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 5;
-                    KpsDisplayPosX = -10;
-                    KpsDisplayPosY = 10;
-                    ComboPosX = 0;
-                    ComboPosY = -40;
-                    JudgementBurstPosY = 108;
-                    HealthBarType = HealthBarType.Vertical;
-                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
-                    HitErrorPosX = 0;
-                    HitErrorPosY = 55;
-                    HitErrorHeight = 10;
-                    HitErrorChevronSize = 8;
-                    TimingLineColor = Color.White;
-                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
-                    SongTimeProgressActiveColor = Color.Red;
-                    JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.White;
-                    JudgementCounterSize = 40;
-                    DrawLongNoteEnd = true;
-                    ScoreDisplayScale = 45;
-                    RatingDisplayScale = 45;
-                    AccuracyDisplayScale = 45;
-                    ComboDisplayScale = 100;
-                    KpsDisplayScale = 45;
-                    SongTimeProgressScale = 60;
-                    DeadNoteColor = new Color(50, 50, 50);
-                    BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 110;
-                    BattleRoyaleAlertPosY = -150;
-                    BattleRoyaleEliminatedPosX = 0;
-                    BattleRoyaleEliminatedPosY = -115;
-                    break;
-                case DefaultSkins.Arrow:
-                    StageReceptorPadding = 10;
-                    HitPosOffsetY = 105;
-                    NotePadding = 8;
-                    TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.0f;
-                    ColumnLightingOffsetY = 0;
-                    ColumnSize = 105;
-                    ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 0;
-                    ColorObjectsBySnapDistance = true;
-                    JudgementHitBurstScale = 150;
-                    ReceptorsOverHitObjects = false;
-                    ColumnColors = new List<Color>
-                    {
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255)
-                    };
-                    BgMaskAlpha = 0.9f;
-                    FlipNoteImagesOnUpscroll = false;
-                    FlipNoteEndImagesOnUpscroll = true;
-                    HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
-                    ScoreDisplayPosX = 10;
-                    ScoreDisplayPosY = 5;
-                    RatingDisplayPosX = 10;
-                    RatingDisplayPosY = 5;
-                    AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 5;
-                    KpsDisplayPosX = -10;
-                    KpsDisplayPosY = 10;
-                    ComboPosX = 0;
-                    ComboPosY = -40;
-                    JudgementBurstPosY = 108;
-                    HealthBarType = HealthBarType.Vertical;
-                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
-                    HitErrorPosX = 0;
-                    HitErrorPosY = 55;
-                    HitErrorHeight = 10;
-                    HitErrorChevronSize = 8;
-                    TimingLineColor = Color.White;
-                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
-                    SongTimeProgressActiveColor = Color.Red;
-                    JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.White;
-                    JudgementCounterSize = 40;
-                    DrawLongNoteEnd = true;
-                    ScoreDisplayScale = 45;
-                    RatingDisplayScale = 45;
-                    AccuracyDisplayScale = 45;
-                    ComboDisplayScale = 100;
-                    KpsDisplayScale = 45;
-                    SongTimeProgressScale = 60;
-                    DeadNoteColor = new Color(50, 50, 50);
-                    BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 110;
-                    BattleRoyaleAlertPosY = -150;
-                    BattleRoyaleEliminatedPosX = 0;
-                    BattleRoyaleEliminatedPosY = -115;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        /// <summary>
-        ///     Sets all of the default values for 7K
-        /// </summary>
-        private void SetDefault7KConfig()
-        {
-            switch (ConfigManager.DefaultSkin.Value)
-            {
-                case DefaultSkins.Bar:
-                    StageReceptorPadding = 0;
-                    HitPosOffsetY = 15;
-                    NotePadding = 0;
-                    TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1f;
-                    ColumnLightingOffsetY = 0;
-                    ColumnSize = 85;
-                    ReceptorPosOffsetY = 0;
-                    ColumnAlignment = 0;
-                    ColorObjectsBySnapDistance = false;
-                    JudgementHitBurstScale = 150;
-                    ReceptorsOverHitObjects = true;
-                    ColumnColors = new List<Color>
-                    {
-                        Color.DarkGray,
-                        Colors.MainAccentInactive,
-                        Color.DarkGray,
-                        Colors.SecondaryAccentInactive,
-                        Color.DarkGray,
-                        Colors.MainAccentInactive,
-                        Color.DarkGray,
-                    };
-                    BgMaskAlpha = 1f;
-                    FlipNoteImagesOnUpscroll = true;
-                    FlipNoteEndImagesOnUpscroll = true;
-                    HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
-                    ScoreDisplayPosX = 10;
-                    ScoreDisplayPosY = 5;
-                    RatingDisplayPosX = 10;
-                    RatingDisplayPosY = 5;
-                    AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 5;
-                    KpsDisplayPosX = -10;
-                    KpsDisplayPosY = 10;
-                    ComboPosX = 0;
-                    ComboPosY = -40;
-                    JudgementBurstPosY = 108;
-                    HealthBarType = HealthBarType.Vertical;
-                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
-                    HitErrorPosX = 0;
-                    HitErrorPosY = 55;
-                    HitErrorHeight = 10;
-                    HitErrorChevronSize = 8;
-                    TimingLineColor = Color.White;
-                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
-                    SongTimeProgressActiveColor = Color.Red;
-                    JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.White;
-                    JudgementCounterSize = 40;
-                    DrawLongNoteEnd = true;
-                    ScoreDisplayScale = 45;
-                    RatingDisplayScale = 45;
-                    AccuracyDisplayScale = 45;
-                    ComboDisplayScale = 100;
-                    KpsDisplayScale = 45;
-                    SongTimeProgressScale = 60;
-                    DeadNoteColor = new Color(50, 50, 50);
-                    BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 110;
-                    BattleRoyaleAlertPosY = -150;
-                    BattleRoyaleEliminatedPosX = 0;
-                    BattleRoyaleEliminatedPosY = -115;
-                    break;
-                case DefaultSkins.Arrow:
-                    StageReceptorPadding = 10;
-                    HitPosOffsetY = 86;
-                    NotePadding = 8;
-                    TimingBarPixelSize = 2;
-                    ColumnLightingScale = 1.0f;
-                    ColumnLightingOffsetY = 0;
-                    ColumnSize = 85;
-                    ReceptorPosOffsetY = 10;
-                    ColumnAlignment = 0;
-                    ColorObjectsBySnapDistance = true;
-                    JudgementHitBurstScale = 150;
-                    ReceptorsOverHitObjects = false;
-                    ColumnColors = new List<Color>
-                    {
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255),
-                        new Color(255, 255, 255)
-                    };
-                    BgMaskAlpha = 0.9f;
-                    FlipNoteImagesOnUpscroll = false;
-                    FlipNoteEndImagesOnUpscroll = true;
-                    HitLightingY = 0;
-                    HitLightingX = 0;
-                    HitLightingFps = 60;
-                    HoldLightingFps = 60;
-                    HitLightingWidth = 0;
-                    HitLightingHeight = 0;
-                    ScoreDisplayPosX = 10;
-                    ScoreDisplayPosY = 5;
-                    RatingDisplayPosX = 10;
-                    RatingDisplayPosY = 5;
-                    AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 5;
-                    KpsDisplayPosX = -10;
-                    KpsDisplayPosY = 10;
-                    ComboPosX = 0;
-                    ComboPosY = -40;
-                    JudgementBurstPosY = 108;
-                    HealthBarType = HealthBarType.Vertical;
-                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
-                    HitErrorPosX = 0;
-                    HitErrorPosY = 55;
-                    HitErrorHeight = 10;
-                    HitErrorChevronSize = 8;
-                    TimingLineColor = Color.White;
-                    SongTimeProgressInactiveColor = new Color(136, 136, 136);
-                    SongTimeProgressActiveColor = Color.Red;
-                    JudgementCounterAlpha = 1;
-                    JudgementCounterFontColor = Color.White;
-                    JudgementCounterSize = 40;
-                    DrawLongNoteEnd = true;
-                    ScoreDisplayScale = 45;
-                    RatingDisplayScale = 45;
-                    AccuracyDisplayScale = 45;
-                    ComboDisplayScale = 100;
-                    KpsDisplayScale = 45;
-                    SongTimeProgressScale = 60;
-                    DeadNoteColor = new Color(50, 50, 50);
-                    BattleRoyaleAlertPosX = 0;
-                    BattleRoyaleAlertScale = 110;
-                    BattleRoyaleAlertPosY = -150;
-                    BattleRoyaleEliminatedPosX = 0;
-                    BattleRoyaleEliminatedPosY = -115;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         /// <summary>
@@ -636,12 +320,24 @@ namespace Quaver.Shared.Skinning
         ///     REMEMBER TO SET YOUR DEFAULTS FOR BOTH 4K AND 7K
         ///     AND ALL DEFAULT SKINS (BARS/ARROWS)
         /// </summary>
-        private void ReadConfig()
+        private void ReadConfig(bool loadFromResources)
         {
-            if (Store.Config == null)
-                return;
+            IniData config;
 
-            var ini = Store.Config[ShortName.ToUpper()];
+            if (loadFromResources)
+            {
+                using (var stream = new StreamReader(GameBase.Game.Resources.GetStream($"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value}/skin.ini")))
+                    config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadData(stream);
+            }
+            else
+            {
+                if (Store.Config == null)
+                    return;
+
+                config = Store.Config;
+            }
+
+            var ini = config[ModeHelper.ToShortHand(Mode).ToUpper()];
 
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
@@ -755,8 +451,8 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                               $"/{Mode.ToString()}/{GetResourcePath(element)}.png";
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                               $"/{GetResourcePath(element)}.png";
             }
 
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
@@ -782,8 +478,8 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{folder.ToString()}" +
-                           $"/{Mode.ToString()}/{GetResourcePath(element)}";
+                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                           $"/{GetResourcePath(element)}";
             }
 
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
@@ -859,7 +555,7 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private string GetResourcePath(string element) => $"{ResourceFilePrepender}-{ShortName}-{element}";
+        private string GetResourcePath(string element) => $"{element}";
 
         /// <summary>
         ///     Loads elements that rely on the lane.
@@ -873,7 +569,7 @@ namespace Quaver.Shared.Skinning
 
                 // Column Colors
                 if (Store.Config != null)
-                    ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
+                    ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
                 LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
