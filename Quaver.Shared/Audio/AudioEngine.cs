@@ -14,6 +14,7 @@ using Quaver.API.Maps;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Scheduling;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -83,9 +84,9 @@ namespace Quaver.Shared.Audio
         {
             try
             {
-                LoadCurrentTrack();
-                Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                Track.Play();
+                LoadCurrentTrack(true);
+                Track?.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                Track?.Play();
             }
             catch (Exception e)
             {

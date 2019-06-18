@@ -675,7 +675,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     {
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
                             ModManager.RemoveMod(ModIdentifier.Paused);
-                        
+
                         return new SelectScreen();
                     }
 
