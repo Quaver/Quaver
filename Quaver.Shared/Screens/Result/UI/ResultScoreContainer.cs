@@ -132,6 +132,13 @@ namespace Quaver.Shared.Screens.Result.UI
             base.Draw(gameTime);
         }
 
+        public override void Destroy()
+        {
+            HitDifferenceGraph.Image?.Dispose();
+
+            base.Destroy();
+        }
+
         /// <summary>
         /// </summary>
         private void CreateHeaderBackground() => HeaderBackground = new Sprite
