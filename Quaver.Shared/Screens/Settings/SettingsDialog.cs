@@ -261,20 +261,23 @@ namespace Quaver.Shared.Screens.Settings
                 }
 
                 // Handle device period and buffer length changes.
-                if (ConfigManager.DevicePeriod.Value != Bass.GetConfig(Configuration.DevicePeriod)
-                    || ConfigManager.DeviceBufferLengthMultiplier.Value !=
-                        Bass.GetConfig(Configuration.DeviceBufferLength) / Bass.GetConfig(Configuration.DevicePeriod))
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
                 {
-                    DialogManager.Show(new ConfirmCancelDialog(
-                        "The game must be restarted to apply the new audio device properties. Exit the game now?",
-                        (sender, args) =>
-                        {
-                            // Make sure the config is saved.
-                            Task.Run(ConfigManager.WriteConfigFileAsync).Wait();
+                    if (ConfigManager.DevicePeriod.Value != Bass.GetConfig(Configuration.DevicePeriod)
+                        || ConfigManager.DeviceBufferLengthMultiplier.Value !=
+                        Bass.GetConfig(Configuration.DeviceBufferLength) / Bass.GetConfig(Configuration.DevicePeriod))
+                    {
+                        DialogManager.Show(new ConfirmCancelDialog(
+                            "The game must be restarted to apply the new audio device properties. Exit the game now?",
+                            (sender, args) =>
+                            {
+                                // Make sure the config is saved.
+                                Task.Run(ConfigManager.WriteConfigFileAsync).Wait();
 
-                            var game = GameBase.Game as QuaverGame;
-                            game?.Exit();
-                        }));
+                                var game = GameBase.Game as QuaverGame;
+                                game?.Exit();
+                            }));
+                    }
                 }
 
                 if (dismissDalog)
