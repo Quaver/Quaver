@@ -329,10 +329,18 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && MapManager.Selected.Value.Scores.Value.Count != 1)
-                                               &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
-                        ? Math.Min(users.Count, 5) * -users[i].Height / 2f
-                        : 4 * -users[i].Height / 2f + 14;
+                    try
+                    {
+                        users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && MapManager.Selected.Value?.Scores?.Value?.Count != 1)
+                                                   &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
+                            ? Math.Min(users.Count, 5) * -users[i].Height / 2f
+                            : 4 * -users[i].Height / 2f + 14;
+
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
 
                     continue;
                 }

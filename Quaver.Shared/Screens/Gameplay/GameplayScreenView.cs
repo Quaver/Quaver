@@ -672,7 +672,13 @@ namespace Quaver.Shared.Screens.Gameplay
                 Screen.Exit(() =>
                 {
                     if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
+                    {
+                        if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
+                            ModManager.RemoveMod(ModIdentifier.Paused);
+
                         return new SelectScreen();
+                    }
+
 
                     return new ResultScreen(Screen);
                 }, 500);

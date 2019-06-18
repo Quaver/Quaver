@@ -489,23 +489,26 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
 
             ThreadScheduler.Run(() =>
             {
-                lock (AudioEngine.Track)
+                if (AudioEngine.Track != null)
                 {
-                    try
+                    lock (AudioEngine.Track)
                     {
-                        AudioEngine.LoadCurrentTrack();
+                        try
+                        {
+                            AudioEngine.LoadCurrentTrack(true);
 
-                        if (AudioEngine.Track == null)
-                            return;
+                            if (AudioEngine.Track == null)
+                                return;
 
-                        AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                        AudioEngine.Track.Volume = 0;
-                        AudioEngine.Track.Play();
-                        AudioEngine.Track.Fade(100, 800);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored.
+                            AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                            AudioEngine.Track.Volume = 0;
+                            AudioEngine.Track.Play();
+                            AudioEngine.Track.Fade(100, 800);
+                        }
+                        catch (Exception)
+                        {
+                            // ignored.
+                        }
                     }
                 }
             });

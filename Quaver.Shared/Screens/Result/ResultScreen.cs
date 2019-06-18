@@ -232,6 +232,17 @@ namespace Quaver.Shared.Screens.Result
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            if (CachedScoreContainers != null)
+            {
+                foreach (var container in CachedScoreContainers)
+                    container.Value.Destroy();
+            }
+
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Handles input for the entire screen.
         /// </summary>

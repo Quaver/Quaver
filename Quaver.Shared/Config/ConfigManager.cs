@@ -999,6 +999,7 @@ namespace Quaver.Shared.Config
     {
         Bar,
         Arrow,
-        Circle
+        Circle,
+        Barv2
     }
 }

@@ -109,41 +109,50 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     Queues a load of the background for a map
         /// </summary>
-        public static void Load(Map map) => ThreadScheduler.Run(() =>
+        public static void Load(Map map) => ThreadScheduler.Run(async () =>
         {
-            Task.Run(async () =>
-            {
-                Source.Cancel();
-                Source.Dispose();
-                Source = new CancellationTokenSource();
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
 
-                Map = map;
-                var token = Source.Token;
+            Map = map;
+            var token = Source.Token;
+
+            token.ThrowIfCancellationRequested();
+
+            try
+            {
+                var oldRawTexture = RawTexture;
+                var oldBlurredTexture = BlurredTexture;
+
+                var path = MapManager.GetBackgroundPath(map);
+
+                var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
+                RawTexture = tex;
+
+                ThreadScheduler.RunAfter(() =>
+                {
+                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    {
+                        oldRawTexture?.Dispose();
+                        oldBlurredTexture?.Dispose();
+                    }
+                }, 500);
 
                 token.ThrowIfCancellationRequested();
 
-                try
-                {
-                    var path = MapManager.GetBackgroundPath(map);
-
-                    var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
-                    RawTexture = tex;
-
-                    token.ThrowIfCancellationRequested();
-
-                    await Task.Delay(100, token);
-                    ShouldBlur = true;
-                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
-                }
-                catch (OperationCanceledException e)
-                {
-                    // ignored
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            });
+                await Task.Delay(100, token);
+                ShouldBlur = true;
+                Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
+            }
+            catch (OperationCanceledException e)
+            {
+                // ignored
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         });
 
         /// <summary>
