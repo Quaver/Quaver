@@ -130,11 +130,14 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
                 RawTexture = tex;
 
-                if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                ThreadScheduler.RunAfter(() =>
                 {
-                    oldRawTexture?.Dispose();
-                    oldBlurredTexture?.Dispose();
-                }
+                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    {
+                        oldRawTexture?.Dispose();
+                        oldBlurredTexture?.Dispose();
+                    }
+                }, 500);
 
                 token.ThrowIfCancellationRequested();
 
