@@ -349,7 +349,7 @@ namespace Quaver.Shared.Skinning
             JudgeColors[Judgement.Miss] = ConfigHelper.ReadColor(JudgeColors[Judgement.Miss], ini["JudgeColorMiss"]);
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
-            FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImageOnUpscroll"]);
+            FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImagesOnUpscroll"]);
             HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
             HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
             HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
