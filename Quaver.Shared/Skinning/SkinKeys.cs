@@ -36,16 +36,6 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private GameMode Mode { get; }
 
-        /// <summary>
-        ///    The string that's prepended before each file name.
-        /// </summary>
-        private string ShortName { get; }
-
-        /// <summary>
-        ///     Value thats prepended before file names in the resource store.
-        /// </summary>
-        private string ResourceFilePrepender { get; set; }
-
 #region SKIN.INI VALUES
 
         internal int StageReceptorPadding { get; private set; }
@@ -455,7 +445,7 @@ namespace Quaver.Shared.Skinning
                                $"/{GetResourcePath(element)}.png";
             }
 
-            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
+            var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode)}/{folder.ToString()}";
             return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
 
@@ -482,7 +472,7 @@ namespace Quaver.Shared.Skinning
                            $"/{GetResourcePath(element)}";
             }
 
-            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+            var folderName = shared ? folder.ToString() : $"/{ModeHelper.ToShortHand(Mode)}/{folder.ToString()}/";
             return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
 
@@ -533,22 +523,6 @@ namespace Quaver.Shared.Skinning
 
             hitObjects.Insert(index, objectsList);
         }
-
-        /// <summary>
-        ///     Gets a skin element's path.
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <param name="element"></param>
-        /// <param name="ext"></param>
-        /// <returns></returns>
-        private string GetElementPath(SkinKeysFolder folder, string element, string ext) => $"{SkinStore.Dir}/{ShortName}/{folder}/{element}{ext}";
-
-        /// <summary>
-        ///     Gets a file name in our resource store that is shared between all keys modes.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        private string GetModeSharedResourcePath(string element) => $"{ResourceFilePrepender}-{element}";
 
         /// <summary>
         ///     Gets a file name in our resource store.
