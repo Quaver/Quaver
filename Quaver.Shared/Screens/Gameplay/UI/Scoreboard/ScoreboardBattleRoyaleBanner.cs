@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 X = 52
             };
 
-            TimeLeft = new SpriteTextBitmap(FontsBitmap.GothamRegular, "-00:00")
+            TimeLeft = new SpriteTextBitmap(FontsBitmap.GothamRegular, "-00:00", false)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
