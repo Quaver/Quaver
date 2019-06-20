@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
         {
             Screen = screen;
 
-            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
+            Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ", false)
             {
                 Parent = this,
                 Tint = Color.Crimson,
@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
                 Alpha = 0
             };
 
-            Eliminated = new SpriteTextBitmap(FontsBitmap.GothamRegular, " has been eliminated!")
+            Eliminated = new SpriteTextBitmap(FontsBitmap.GothamRegular, " has been eliminated!", false)
             {
                 Parent = this,
                 FontSize = 20,
