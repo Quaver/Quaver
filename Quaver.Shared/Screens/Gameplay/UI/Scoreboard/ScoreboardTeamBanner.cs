@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             ratingContainer.X = Scoreboard.Team == MultiplayerTeam.Blue ? -Width + 1 + ratingContainer.Width : 0;
 
-            TeamRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00")
+            TeamRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, "0.00", false)
             {
                 Parent = ratingContainer,
                 Alignment = Alignment.MidCenter,
