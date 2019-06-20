@@ -7,13 +7,17 @@
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
     <ProjectReference Include="..\Quaver.Dependencies\TimeAgo\TimeAgo\TimeAgo.csproj" />
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
     <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
     <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>Quaver.Server.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Quaver.Server.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>Quaver.Server.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Steamworks.NET">
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
