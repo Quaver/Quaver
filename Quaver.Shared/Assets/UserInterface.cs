@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Screens.Editor.UI.Hitsounds;
+using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Assets;
 
@@ -65,6 +66,41 @@ namespace Quaver.Shared.Assets
         public static Texture2D MenuBackgroundRaw { get; private set; }
         public static Texture2D Scrollbar { get; private set; }
         public static Texture2D LobbyCreateGame { get; private set; }
+        public static Texture2D TeamBannerRed { get; private set; }
+        public static Texture2D TeamBannerBlue { get; private set; }
+        public static Texture2D BattleRoyaleGradient { get; private set; }
+        public static Texture2D BattleRoyalePanel { get; private set; }
+        public static Texture2D WaitingPanel { get; private set; }
+        public static Texture2D WinsPanel { get; private set; }
+        public static Texture2D ScoreboardBlueMirrored { get; private set; }
+        public static Texture2D UserPanelFFA { get; private set; }
+        public static Texture2D UserPanelRed { get; private set; }
+        public static Texture2D UserPanelBlue { get; private set; }
+        public static Texture2D UserPanelReferee{ get; private set; }
+        public static Texture2D MapPanel { get; private set; }
+        public static Texture2D FeedPanel { get; private set; }
+        public static Texture2D MultiplayerSettingaPanel { get; private set; }
+        public static Texture2D PlayerOptionsPanel { get; private set; }
+        public static Texture2D ResultHeaderPanel { get; private set; }
+        public static Texture2D ResultScorePanel { get; private set; }
+        public static Texture2D ResultMultiplayerPanel { get; private set; }
+        public static Texture2D ResultMultiplayerTeamPanel { get; private set; }
+        public static Texture2D ResultRedTeam { get; private set; }
+        public static Texture2D ResultBlueTeam { get; private set; }
+        public static Texture2D ResultNoTeam { get; private set; }
+        public static Texture2D JukeboxPanel { get; private set; }
+        public static Texture2D PlayercardBackground { get; private set; }
+        public static Texture2D MenuBackgroundNormal { get; private set; }
+        public static Texture2D PlayercardCoverDefault { get; private set; }
+        public static Texture2D DownloadSearchPanel { get; private set; }
+        public static Texture2D DownloadContainer { get; private set; }
+        public static Texture2D DownloadItem { get; private set; }
+        public static Texture2D DownloadMapsetInfo { get; private set; }
+        public static Texture2D SelectedMapset { get; private set; }
+        public static Texture2D DeselectedMapset { get; private set; }
+        public static Texture2D SelectSearchPanel { get; private set; }
+        public static Texture2D LeaderboardScore { get; private set; }
+        public static Texture2D LeaderboardPanel { get; private set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -122,6 +158,41 @@ namespace Quaver.Shared.Assets
             MenuBackgroundRaw = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-raw.jpg"));
             Scrollbar = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Elements/scrollbar.png"));
             LobbyCreateGame = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/create-game.png"));
-;        }
+            TeamBannerRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-red.png"));
+            TeamBannerBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/team-banner-blue.png"));
+            BattleRoyaleGradient = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/battle-royale-gradient.png"));
+            BattleRoyalePanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/battle-royale-panel.png"));
+            WaitingPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/waiting-panel.png"));
+            WinsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/wins-panel.png"));
+            ScoreboardBlueMirrored = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/scoreboard-blue-mirrored.png"));
+            UserPanelFFA = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-ffa.png"));
+            UserPanelRed = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-red.png"));
+            UserPanelBlue = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-blue.png"));
+            UserPanelReferee = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/user-panel-referee.png"));
+            MapPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/map-panel.png"));
+            FeedPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/feed-panel.png"));
+            MultiplayerSettingaPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/settings-panel.png"));
+            PlayerOptionsPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Multiplayer/player-options-panel.png"));
+            ResultHeaderPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-header-panel.png"));
+            ResultScorePanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-score-panel.png"));
+            ResultMultiplayerPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-multiplayer-panel.png"));
+            ResultMultiplayerTeamPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-multiplayer-team-panel.png"));
+            ResultRedTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-red-team.png"));
+            ResultBlueTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-blue-team.png"));
+            ResultNoTeam = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Results/result-no-team.png"));
+            JukeboxPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/MainMenu/jukebox-panel.png"));
+            PlayercardBackground = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-background.png"));
+            MenuBackgroundNormal = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Menu/menu-background-normal.jpg"));
+            PlayercardCoverDefault = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/Playercard/playercard-cover-default.png"));
+            DownloadSearchPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-search.png"));
+            DownloadContainer = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-container.png"));
+            DownloadItem = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/download-item.png"));
+            DownloadMapsetInfo = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/mapset-info.png"));
+            SelectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/selected-mapset.png"));
+            DeselectedMapset = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/deselected-mapset.png"));
+            SelectSearchPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/search-panel.png"));
+            LeaderboardPanel = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/leaderboard-panel.png"));
+            LeaderboardScore = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get("Quaver.Resources/Textures/UI/SongSelect/leaderboard-score.png"));
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
 
         /// <summary>
         /// </summary>
-        private SpriteText TextFilter { get; set; }
+        private SpriteTextBitmap TextFilter { get; set; }
 
         /// <summary>
         ///     The filter to change the game mode.
@@ -43,24 +43,22 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
         {
             View = view;
             Size = new ScalableVector2(400, 120);
-            Tint = Color.Black;
-            Alpha = 0.75f;
+            Image = UserInterface.DownloadSearchPanel;
 
             CreateTextFilters();
             CreateGameModeFilter();
             CreateRankedStatusFilter();
-
-            AddBorder(Color.White);
         }
 
         /// <summary>
         /// </summary>
-        private void CreateTextFilters() => TextFilter = new SpriteText(Fonts.Exo2Bold, "Filter", 14)
+        private void CreateTextFilters() => TextFilter = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Filter")
         {
             Parent = this,
             Y = 15,
             X = 15,
-            Tint = Colors.MainAccent
+            Tint = Colors.MainAccent,
+            FontSize = 18
         };
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
         }, OnGameModeFilterChanged)
         {
             Parent = this,
-            Y = TextFilter.Y + TextFilter.Height + 5,
+            Y = TextFilter.Y + TextFilter.Height + 8,
             X = TextFilter.X
         };
 
@@ -85,7 +83,7 @@ namespace Quaver.Shared.Screens.Download.UI.Filter
         }, OnRankedStatusFilterChanged)
         {
             Parent = this,
-            Y = GameModeFilter.Y + GameModeFilter.Height + 15,
+            Y = GameModeFilter.Y + GameModeFilter.Height + 20,
             X = TextFilter.X
         };
 

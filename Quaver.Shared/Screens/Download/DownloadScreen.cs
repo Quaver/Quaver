@@ -11,7 +11,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Config;
+using Quaver.Shared.Discord;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download.UI.Drawable;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
@@ -77,6 +81,10 @@ namespace Quaver.Shared.Screens.Download
             var view = View as DownloadScreenView;
             view?.SearchBox.SearchForMapsets("", CurrentGameMode, CurrentRankedStatus, false);
 
+            DiscordHelper.Presence.Details = "Downloading Maps";
+            DiscordHelper.Presence.State = "In the Menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
             base.OnFirstUpdate();
         }
 
@@ -105,6 +113,6 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => null;
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte) ConfigManager.SelectedGameMode.Value, "", 0);
     }
 }

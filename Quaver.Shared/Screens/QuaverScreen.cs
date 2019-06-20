@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens
         /// <summary>
         ///     Dictates if the screen is currently exiting.
         /// </summary>
-        public bool Exiting { get; private set; }
+        public bool Exiting { get; set; }
 
         /// <summary>
         ///     Event invoked when the screen is about to exit.
@@ -64,7 +64,7 @@ namespace Quaver.Shared.Screens
         /// <summary>
         ///     Called to begin the exit to a new screen
         /// </summary>
-        public virtual void Exit(Func<QuaverScreen> screen, int delay = 0)
+        public virtual void Exit(Func<QuaverScreen> screen, int delay = 0, QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
         {
             Exiting = true;
             Button.IsGloballyClickable = false;
@@ -72,12 +72,18 @@ namespace Quaver.Shared.Screens
             ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
 
             if (delay > 0)
-                QuaverScreenManager.ScheduleScreenChange(screen, delay);
+                QuaverScreenManager.ScheduleScreenChange(screen, delay, type);
             else
-                QuaverScreenManager.ScheduleScreenChange(screen);
+                QuaverScreenManager.ScheduleScreenChange(screen, false, type);
 
             ScreenExiting = null;
         }
+
+        /// <summary>
+        ///     Exits and removes the top screen
+        /// </summary>
+        /// <param name="screen"></param>
+        public void RemoveTopScreen(QuaverScreen screen) => Exit(() => screen, 0, QuaverScreenChangeType.RemoveTopScreen);
 
         /// <summary>
         ///   Creates a user client status for this screen.

@@ -71,11 +71,11 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             Y = -Banner.Border.Thickness;
             Alpha = 0.45f;
 
-            Mode = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "Mode", "4K") { Parent = this, Alignment = Alignment.MidLeft };
-            Bpm = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "BPM", "240") { Parent = this, Alignment = Alignment.MidLeft };
-            Length = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "Length", "0:00") { Parent = this, Alignment = Alignment.MidLeft };
-            Difficulty = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "Difficulty", "13.22") { Parent = this, Alignment = Alignment.MidLeft };
-            LNPercentage = new BannerMetadataItem(Fonts.Exo2SemiBold, 13, "LNs", "10%") { Parent = this, Alignment = Alignment.MidLeft };
+            Mode = new BannerMetadataItem(FontsBitmap.GothamRegular, 16, "Mode", "4K") { Parent = this, Alignment = Alignment.MidLeft };
+            Bpm = new BannerMetadataItem(FontsBitmap.GothamRegular, 16, "BPM", "240") { Parent = this, Alignment = Alignment.MidLeft };
+            Length = new BannerMetadataItem(FontsBitmap.GothamRegular, 16, "Length", "0:00") { Parent = this, Alignment = Alignment.MidLeft };
+            Difficulty = new BannerMetadataItem(FontsBitmap.GothamRegular, 16, "Difficulty", "13.22") { Parent = this, Alignment = Alignment.MidLeft };
+            LNPercentage = new BannerMetadataItem(FontsBitmap.GothamRegular, 16, "LNs", "10%") { Parent = this, Alignment = Alignment.MidLeft };
 
             Items = new List<BannerMetadataItem>
             {
@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
                 }
 
                 var previous = Items[i - 1];
-                metadata.X = previous.X + previous.Width + 5 + 5;
+                metadata.X = previous.X + previous.Width + 5 + 30;
             }
 
             Items.ForEach(x => x.X += (Banner.Width - Items.Last().X) / Items.Count / 2);

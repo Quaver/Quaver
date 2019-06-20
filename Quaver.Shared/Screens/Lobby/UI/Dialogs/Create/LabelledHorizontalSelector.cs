@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
         /// <param name="width"></param>
         /// <param name="label"></param>
         /// <param name="options"></param>
-        public LabelledHorizontalSelector(float width, string label, List<string> options)
+        public LabelledHorizontalSelector(float width, string label, List<string> options, int selectedIndex = 0)
         {
             Size = new ScalableVector2(width, 62);
             Alpha = 0;
@@ -34,7 +34,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
             };
 
             Selector = new QuaverHorizontalSelector(options, new ScalableVector2(186, 26), Fonts.SourceSansProSemiBold, 13,
-                new ScalableVector2(20, 15), (s, i) => { })
+                new ScalableVector2(20, 15), (s, i) => { }, selectedIndex)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,

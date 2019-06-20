@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
 {
     public sealed class DrawableModifierBool : DrawableModifier
     {
-        private IGameplayModifier Modifier { get; }
+        public IGameplayModifier Modifier { get; }
 
         public DrawableModifierBool(ModifiersDialog dialog, IGameplayModifier modifier)
             : base(dialog, modifier)

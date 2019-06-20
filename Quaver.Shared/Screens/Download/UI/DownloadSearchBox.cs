@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Download.UI
 
         /// <summary>
         /// </summary>
-        private SpriteText TextSearch { get; set; }
+        private SpriteTextBitmap TextSearch { get; set; }
 
         /// <summary>
         /// </summary>
@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Download.UI
 
         /// <summary>
         /// </summary>
-        private SpriteText TextMapsetsFound{ get; set; }
+        private SpriteTextBitmap TextMapsetsFound{ get; set; }
 
         /// <summary>
         ///     Dictates if we're currently in the middle of searching for sets.
@@ -67,15 +67,12 @@ namespace Quaver.Shared.Screens.Download.UI
         {
             View = view;
             Size = new ScalableVector2(400, 120);
-            Tint = Color.Black;
-            Alpha = 0.75f;
+            Image = UserInterface.DownloadSearchPanel;
             IsSearching = new Bindable<bool>(false);
 
             CreateTextSearch();
             CreateSearchBox();
             CreateTextMapsetsFound();
-
-            AddBorder(Color.White);
 
             Source?.Cancel();
             Source?.Dispose();
@@ -94,12 +91,13 @@ namespace Quaver.Shared.Screens.Download.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTextSearch() => TextSearch = new SpriteText(Fonts.Exo2Bold, "Search", 14)
+        private void CreateTextSearch() => TextSearch = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Search")
         {
             Parent = this,
             Y = 15,
             X = 15,
-            Tint = Colors.MainAccent
+            Tint = Colors.MainAccent,
+            FontSize = 18
         };
 
         /// <summary>
@@ -111,7 +109,7 @@ namespace Quaver.Shared.Screens.Download.UI
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 X = TextSearch.X,
-                Y = TextSearch.Y + TextSearch.Height + 5,
+                Y = TextSearch.Y + TextSearch.Height + 10,
                 Tint = Colors.DarkGray,
             };
 
@@ -138,11 +136,12 @@ namespace Quaver.Shared.Screens.Download.UI
 
         /// <summary>
         /// </summary>
-        private void CreateTextMapsetsFound() => TextMapsetsFound = new SpriteText(Fonts.SourceSansProBold, "Searching...", 13)
+        private void CreateTextMapsetsFound() => TextMapsetsFound = new SpriteTextBitmap(FontsBitmap.GothamRegular,  "Searching...")
         {
             Parent = this,
             X = TextSearch.X,
             Y = SearchBox.Y + SearchBox.Height + 8,
+            FontSize = 16
         };
 
         /// <summary>

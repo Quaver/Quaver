@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         public CurrentlySearchingInterface(DownloadScreenView view, DownloadScrollContainer container)
         {
             View = view;
-            Size = new ScalableVector2(container.Width, 100);
+            Size = new ScalableVector2(container.Width - 4, 100);
             Tint = Color.Black;
             Alpha = 0.85f;
             SetChildrenAlpha = false;

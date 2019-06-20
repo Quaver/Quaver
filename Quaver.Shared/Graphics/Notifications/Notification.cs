@@ -33,7 +33,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         ///     The notification content text.
         /// </summary>
-        private SpriteText Content { get; }
+        private SpriteTextBitmap Content { get; }
 
         /// <summary>
         ///     The avatar sprite of the notification, depending on the type.
@@ -85,12 +85,13 @@ namespace Quaver.Shared.Graphics.Notifications
                 Image = image
             };
 
-            Content = new SpriteText(Fonts.SourceSansProSemiBold, text, 12, (int) (Width - Avatar.Width - 5))
+            Content = new SpriteTextBitmap(FontsBitmap.GothamRegular, text)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.TopLeft,
                 X = Avatar.X + Avatar.Width + 5,
+                FontSize = 15,
+                MaxWidth = (int)(Width - Avatar.Width - 15),
                 Y = 10
             };
 

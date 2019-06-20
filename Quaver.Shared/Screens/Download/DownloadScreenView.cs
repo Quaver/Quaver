@@ -15,6 +15,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Download.UI;
 using Quaver.Shared.Screens.Download.UI.Drawable;
@@ -75,6 +77,14 @@ namespace Quaver.Shared.Screens.Download
         /// </summary>
         public MapsetInformation MapsetInformationBox { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        public MenuHeader Header { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public MenuFooter Footer { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -82,14 +92,13 @@ namespace Quaver.Shared.Screens.Download
         public DownloadScreenView(Screen screen) : base(screen)
         {
             CreateBackground();
-            CreateNavbar();
-            CreateBottomLine();
+            CreateMenuHeader();
+            CreateMenuFooter();
             CreateDownloadSearchBox();
             CreateDownloadSearchFilter();
             CreateDownloadScrollContainer();
             CreateCurrentlySearchingInterface();
             CreateDownloadStatusBox();
-            CreateUserProfile();
         }
 
         /// <inheritdoc />
@@ -114,72 +123,39 @@ namespace Quaver.Shared.Screens.Download
         public override void Destroy() => Container?.Destroy();
 
         /// <summary>
-        ///    Creates the navigation bar for the screen.
         /// </summary>
-        private void CreateNavbar() => Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
-            {
-                new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
-                new NavbarItem("Home", false, OnHomeButtonClicked),
-            }, new List<NavbarItem>
-            {
-                new NavbarItemUser(this),
-                new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
-            })
-            { Parent = Container };
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundNormal, 45)
+        {
+            Parent = Container,
+        };
 
         /// <summary>
-        ///     Called when the home button is clicked in the navbar.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnHomeButtonClicked(object sender, EventArgs e)
+        private void CreateMenuHeader()
         {
-            var screen = Screen as DownloadScreen;
-
-            screen?.Exit(() =>
-            {
-                if (AudioEngine.Track != null)
-                {
-                    lock (AudioEngine.Track)
-                        AudioEngine.Track?.Fade(10, 300);
-                }
-
-                return new MenuScreen();
-            });
-        }
-
-        /// <summary>
-        ///     Creates the top and bottom lines.
-        /// </summary>
-        private void CreateBottomLine()
-        {
-            BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
+            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), "Download", "Maps",
+                "Download new maps to play", Colors.MainAccent)
             {
                 Parent = Container,
-                Position = new ScalableVector2(28, WindowManager.Height - 54),
-                Alpha = 0.90f
+                Alignment = Alignment.TopLeft
             };
-
-            BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
         }
 
-        /// <summary>
-        ///     Creates the container for user profiles.
-        /// </summary>
-        private void CreateUserProfile() => UserProfile = new UserProfileContainer(this)
+        private void CreateMenuFooter()
         {
-            Parent = Container,
-            Alignment = Alignment.TopRight,
-            Y = Navbar.Line.Y + Navbar.Line.Thickness,
-            X = -28
-        };
-
-        /// <summary>
-        /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20)
-        {
-            Parent = Container,
-        };
+            Footer = new MenuFooter(new List<ButtonText>()
+            {
+                new ButtonText(FontsBitmap.GothamRegular, "Back", 14, (sender, args) =>
+                {
+                    var screen = Screen as DownloadScreen;
+                    screen?.Exit(() => new MenuScreen());
+                })
+            }, new List<ButtonText>(), Colors.MainAccent)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft
+            };
+        }
 
         /// <summary>
         /// </summary>
@@ -188,11 +164,11 @@ namespace Quaver.Shared.Screens.Download
             SearchBox = new DownloadSearchBox(this)
             {
                 Parent = Container,
-                Y = Navbar.Line.Y + Navbar.Line.Thickness + 20,
+                Y = Header.Height + 20,
             };
 
             SearchBox.X = -SearchBox.Width;
-            SearchBox.MoveToX(Navbar.Line.X, Easing.OutQuint, 600);
+            SearchBox.MoveToX(25, Easing.OutQuint, 600);
         }
         /// <summary>
         /// </summary>
@@ -206,7 +182,7 @@ namespace Quaver.Shared.Screens.Download
             };
 
             Filters.X = -Filters.Width;
-            Filters.MoveToX(Navbar.Line.X, Easing.OutQuint, 800);
+            Filters.MoveToX(25, Easing.OutQuint, 800);
         }
 
         /// <summary>
@@ -215,7 +191,7 @@ namespace Quaver.Shared.Screens.Download
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
-            X = -Navbar.Line.X,
+            X = -25,
             Y = SearchBox.Y
         };
 
@@ -238,7 +214,7 @@ namespace Quaver.Shared.Screens.Download
             };
 
             MapsetInformationBox.X = -MapsetInformationBox.Width;
-            MapsetInformationBox.MoveToX(Navbar.Line.X, Easing.OutQuint, 1000);
+            MapsetInformationBox.MoveToX(25, Easing.OutQuint, 1000);
         }
     }
 }

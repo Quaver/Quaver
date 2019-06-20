@@ -49,5 +49,26 @@ namespace Quaver.Shared.Screens.Download
 
             return download;
         }
+
+        public static MapsetDownload Download(int id)
+        {
+            // Require login in order to download.
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download mapsets!");
+                return null;
+            }
+
+            if (CurrentDownloads.Count >= MAX_CONCURRENT_DOWNLOADS)
+            {
+                NotificationManager.Show(NotificationLevel.Error, $"Slow down! You can only download {MAX_CONCURRENT_DOWNLOADS} at a time!");
+                return null;
+            }
+
+            var download = new MapsetDownload(id);
+            CurrentDownloads.Add(download);
+
+            return download;
+        }
     }
 }

@@ -22,8 +22,18 @@ namespace Quaver.Shared.Graphics.Menu
 
         /// <summary>
         /// </summary>
+        protected List<ButtonText> LeftAligned { get; }
+
+        /// <summary>
+        /// </summary>
+        protected List<ButtonText> RightAligned { get; }
+
+        /// <summary>
+        /// </summary>
         public MenuFooter(List<ButtonText> leftAligned, List<ButtonText> rightAlighed, Color colorTheme)
         {
+            LeftAligned = leftAligned;
+            RightAligned = rightAlighed;
             Size = new ScalableVector2(WindowManager.Width, 44);
             Tint = ColorHelper.HexToColor("#181818");
             Alpha = 1;
@@ -45,8 +55,8 @@ namespace Quaver.Shared.Graphics.Menu
 
             ForegroundLine.X = Width - ForegroundLine.Width;
 
-            AlignLeftItems(leftAligned);
-            AlignRightItems(rightAlighed);
+            AlignLeftItems(LeftAligned);
+            AlignRightItems(RightAligned);
         }
 
         /// <inheritdoc />
@@ -74,7 +84,7 @@ namespace Quaver.Shared.Graphics.Menu
 
         /// <summary>
         /// </summary>
-        private void AlignLeftItems(IReadOnlyList<ButtonText> buttons)
+        protected void AlignLeftItems(IReadOnlyList<ButtonText> buttons)
         {
             for (var i = 0; i < buttons.Count; i++)
             {
@@ -93,7 +103,7 @@ namespace Quaver.Shared.Graphics.Menu
 
         /// <summary>
         /// </summary>
-        private void AlignRightItems(IReadOnlyList<ButtonText> buttons)
+        protected void AlignRightItems(IReadOnlyList<ButtonText> buttons)
         {
             for (var i = 0; i < buttons.Count; i++)
             {

@@ -103,11 +103,11 @@ namespace Quaver.Shared.Database.Scores
         /// </summary>
         [Ignore]
         public int RandomizeModifierSeed { get; set; } = -1;
-        
+
         /// <summary>
         ///     Bitwise sum of the mods used in the play
         /// </summary>
-        public ModIdentifier Mods { get; set; }
+        public long Mods { get; set; }
 
         /// <summary>
         ///     The game mode for this local score.
@@ -152,6 +152,18 @@ namespace Quaver.Shared.Database.Scores
         public long SteamId { get; set; }
 
         /// <summary>
+        ///     If the user's score is a multiplayer score
+        /// </summary>
+        [Ignore]
+        public bool IsMultiplayer { get; set; }
+
+        /// <summary>
+        ///     The user id of the person that submitted the score
+        /// </summary>
+        [Ignore]
+        public int PlayerId { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -179,7 +191,7 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = processor.CurrentJudgements[Judgement.Good],
                 CountOkay = processor.CurrentJudgements[Judgement.Okay],
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
-                Mods = processor.Mods,
+                Mods = (long) processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 PauseCount =  pauseCount,
                 RandomizeModifierSeed = seed,
@@ -220,7 +232,7 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = score.CountGood,
                 CountOkay = score.CountOkay,
                 CountMiss = score.CountMiss,
-                Mods = score.Mods
+                Mods = (long) score.Mods
             };
 
             return localScore;
@@ -230,7 +242,7 @@ namespace Quaver.Shared.Database.Scores
         ///     Converts the score object into a blank replay.
         /// </summary>
         /// <returns></returns>
-        public Replay ToReplay() => new Replay(Mode, Name, Mods, MapMd5)
+        public Replay ToReplay() => new Replay(Mode, Name, (ModIdentifier) Mods, MapMd5)
         {
             Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),
             Score = TotalScore,

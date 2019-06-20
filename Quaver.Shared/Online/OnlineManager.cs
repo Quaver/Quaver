@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using Microsoft.Xna.Framework;
+using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
@@ -26,10 +29,14 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
@@ -40,6 +47,7 @@ using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using static Quaver.Shared.Online.OnlineManager;
 
 namespace Quaver.Shared.Online
 {
@@ -105,7 +113,6 @@ namespace Quaver.Shared.Online
                 return;
 
             Logger.Important($"Attempting to log into the Quaver server...", LogType.Network);
-            NotificationManager.Show(NotificationLevel.Error, "You can only log into the server on the official Steam build.");
 
             if (!SteamManager.AuthSessionTicketValidated)
             {
@@ -160,6 +167,33 @@ namespace Quaver.Shared.Online
             Client.OnGameHostChanged += OnGameHostChanged;
             Client.OnGameDisbanded += OnGameDisbanded;
             Client.OnJoinGameFailed += OnJoinGameFailed;
+            Client.OnDifficultyRangeChanged += OnDifficultyRangeChanged;
+            Client.OnMaxSongLengthChanged += OnMaxSongLengthChanged;
+            Client.OnAllowedModesChanged += OnAllowedModesChanged;
+            Client.OnChangedModifiers += OnChangedModifiers;
+            Client.OnFreeModTypeChanged += OnFreeModTypeChanged;
+            Client.OnPlayerChangedModifiers += OnPlayerChangedModifiers;
+            Client.OnGameKicked += OnGameKicked;
+            Client.OnGameNameChanged += OnGameNameChanged;
+            Client.OnGameInvite += OnGameInvite;
+            Client.OnGameHealthTypeChanged += OnGameHealthTypeChanged;
+            Client.OnGameLivesChanged += OnGameLivesChanged;
+            Client.OnGameHostRotationChanged += OnGameHostRotationChanged;
+            Client.OnGamePlayerTeamChanged += OnGamePlayerTeamChanged;
+            Client.OnGameRulesetChanged += OnGameRulesetChanged;
+            Client.OnGameLongNotePercentageChanged += OnGameLongNotePercentageChanged;
+            Client.OnGameMaxPlayersChanged += OnGameMaxPlayersChanged;
+            Client.OnGameTeamWinCount += OnGameTeamWinCountChanged;
+            Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+            Client.OnUserStats += OnUserStats;
+            Client.OnUserJoinedGame += OnUserJoinedGame;
+            Client.OnUserLeftGame += OnUserLeftGame;
+            Client.OnGameEnded += OnGameEnded;
+            Client.OnGameStarted += OnGameStarted;
+            Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
+            Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
+            Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
+            Client.OnGameSetReferee += OnGameSetReferee;
         }
 
         /// <summary>
@@ -176,16 +210,11 @@ namespace Quaver.Shared.Online
 
             var game = (QuaverGame) GameBase.Game;
 
-            switch (game.CurrentScreen.Type)
+            if (game.CurrentScreen?.Type == QuaverScreenType.Lobby || CurrentGame != null)
             {
-                case QuaverScreenType.Lobby:
-                case QuaverScreenType.Multiplayer:
-                    LeaveLobby();
-                    game.CurrentScreen.Exit(() => new MenuScreen());
-                    break;
-                case QuaverScreenType.Gameplay:
-                    var screen = (GameplayScreen) game.CurrentScreen;
-                    break;
+                LeaveLobby();
+                CurrentGame = null;
+                game.CurrentScreen?.Exit(() => new MenuScreen());
             }
         }
 
@@ -253,7 +282,7 @@ namespace Quaver.Shared.Online
                     return;
                 // Authentication Failed
                 case 1002:
-                    NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate user to the server.");
+                    NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate to the server");
                     return;
             }
         }
@@ -270,9 +299,18 @@ namespace Quaver.Shared.Online
             ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
             ChatManager.Dialog.OnlineUserList.ClearAllUsers();
 
-            // Request to join chats if we are already in them upon logging in (for reconnections)
-            foreach (var chan in ChatManager.JoinedChatChannels)
+            for (var i = ChatManager.JoinedChatChannels.Count - 1; i >= 0; i--)
+            {
+                var chan = ChatManager.JoinedChatChannels[i];
+
+                if (chan.IsPrivate)
+                    continue;
+
+                if (chan.Name.StartsWith("#multi"))
+                    ChatManager.OnLeftChatChannel(null, new LeftChatChannelEventArgs(chan.Name));
+
                 Client?.JoinChatChannel(chan.Name);
+            }
 
             lock (OnlineUsers)
             {
@@ -283,13 +321,8 @@ namespace Quaver.Shared.Online
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
 
-            DiscordHelper.Presence = new DiscordRpc.RichPresence
-            {
-                LargeImageKey = "quaver",
-                LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4),
-                EndTimestamp = 0
-            };
-
+            DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Send client status update packet.
@@ -438,13 +471,8 @@ namespace Quaver.Shared.Online
 
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
 
-            DiscordHelper.Presence = new DiscordRpc.RichPresence
-            {
-                LargeImageKey = "quaver",
-                LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode),
-                EndTimestamp = 0
-            };
-
+            DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
+            DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
@@ -510,11 +538,14 @@ namespace Quaver.Shared.Online
         /// <exception cref="NotImplementedException"></exception>
         private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
         {
-            foreach (var user in e.Users)
+            ThreadScheduler.Run(() =>
             {
-                OnlineUsers[user.Id] = new User(user);
-                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
-            }
+                foreach (var user in e.Users)
+                {
+                    OnlineUsers[user.Id] = new User(user);
+                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
+                }
+            });
         }
 
         /// <summary>
@@ -524,16 +555,19 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUserStatusReceived(object sender, UserStatusEventArgs e)
         {
-            foreach (var user in e.Statuses)
+            ThreadScheduler.Run(() =>
             {
-                if (!OnlineUsers.ContainsKey(user.Key))
-                    continue;
+                foreach (var user in e.Statuses)
+                {
+                    if (!OnlineUsers.ContainsKey(user.Key))
+                        continue;
 
-                var onlineUser = OnlineUsers[user.Key];
-                onlineUser.CurrentStatus = user.Value;
+                    var onlineUser = OnlineUsers[user.Key];
+                    onlineUser.CurrentStatus = user.Value;
 
-                ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
-            }
+                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
+                }
+            });
         }
 
         /// <summary>
@@ -586,6 +620,8 @@ namespace Quaver.Shared.Online
 
             CurrentGame = MultiplayerGames[e.GameId];
             CurrentGame.Players.Add(Self.OnlineUser);
+            CurrentGame.PlayerIds.Add(Self.OnlineUser.Id);
+            CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = Self.OnlineUser.Id, Modifiers = "0"});
 
             // Get the current screen
             var game = (QuaverGame) GameBase.Game;
@@ -603,6 +639,9 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnGameHostChanged(object sender, GameHostChangedEventArgs e)
         {
+            if (CurrentGame == null)
+                return;
+
             if (!OnlineUsers.ContainsKey(e.UserId))
             {
                 Logger.Warning($"Game host changed to user: {e.UserId}, but they are not online!", LogType.Network);
@@ -610,6 +649,7 @@ namespace Quaver.Shared.Online
             }
 
             CurrentGame.Host = OnlineUsers[e.UserId].OnlineUser;
+            CurrentGame.HostId = e.UserId;
 
             if (CurrentGame.Host == Self.OnlineUser)
                 NotificationManager.Show(NotificationLevel.Success, "You are now the host of the game!");
@@ -673,14 +713,403 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
-        ///     Leaves the current multiplayer game if any
         /// </summary>
-        public static void LeaveGame()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnDifficultyRangeChanged(object sender, DifficultyRangeChangedEventArgs e)
         {
             if (CurrentGame == null)
                 return;
 
-            Client.LeaveGame();
+            CurrentGame.MinimumDifficultyRating = e.MinimumDifficulty;
+            CurrentGame.MaximumDifficultyRating = e.MaximumDifficulty;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnMaxSongLengthChanged(object sender, MaxSongLengthChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.MaximumSongLength = e.Seconds;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnAllowedModesChanged(object sender, AllowedModesChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.AllowedGameModes = e.Modes;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnChangedModifiers(object sender, ChangeModifiersEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.Modifiers = e.Modifiers.ToString();
+            CurrentGame.DifficultyRating = e.DifficultyRating;
+
+            if (ModManager.Mods != (ModIdentifier) e.Modifiers)
+                MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnFreeModTypeChanged(object sender, FreeModTypeChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.FreeModType = e.Type;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnPlayerChangedModifiers(object sender, PlayerChangedModifiersEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == e.UserId);
+
+            if (playerMods == null)
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = e.Modifiers.ToString()});
+            else
+            {
+                playerMods.Modifiers = e.Modifiers.ToString();
+
+                if (playerMods.UserId == Self.OnlineUser.Id)
+                    MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnGameKicked(object sender, KickedEventArgs e)
+        {
+            LeaveGame(true);
+            NotificationManager.Show(NotificationLevel.Error, "You have been kicked from the game!");
+
+            var game = (QuaverGame) GameBase.Game;
+            game.GlobalUserInterface.Cursor.Alpha = 1;
+            game.CurrentScreen.Exit(() => new LobbyScreen());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnGameNameChanged(object sender, GameNameChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.Name = e.Name;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameInvite(object sender, GameInviteEventArgs e)
+            => NotificationManager.Show(NotificationLevel.Info, $"{e.Sender} invited you to a game. Click here to join!",
+            (o, args) =>
+            {
+                if (CurrentGame != null)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You already in a multiplayer game. Please leave it before joining another.");
+                    return;
+                }
+
+                var game = (QuaverGame) GameBase.Game;
+                var screen = game.CurrentScreen;
+
+                switch (screen.Type)
+                {
+                    case QuaverScreenType.Menu:
+                    case QuaverScreenType.Results:
+                    case QuaverScreenType.Select:
+                    case QuaverScreenType.Download:
+                    case QuaverScreenType.Lobby:
+                        DialogManager.Show(new JoiningGameDialog(JoiningGameDialogType.Joining));
+                        ThreadScheduler.RunAfter(() => Client?.AcceptGameInvite(e.MatchId), 800);
+                        break;
+                    default:
+                        NotificationManager.Show(NotificationLevel.Error, "Finish what you're doing before accepting this game invite.");
+                        break;
+                }
+            });
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameHealthTypeChanged(object sender, HealthTypeChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.HealthType = e.HealthType;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameLivesChanged(object sender, LivesChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.Lives = e.Lives;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameHostRotationChanged(object sender, HostRotationChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.HostRotation = e.HostRotation;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OnGamePlayerTeamChanged(object sender, PlayerTeamChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            lock (CurrentGame.RedTeamPlayers)
+            lock (CurrentGame.BlueTeamPlayers)
+            {
+                switch (e.Team)
+                {
+                    case MultiplayerTeam.Red:
+                        CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+                        CurrentGame.RedTeamPlayers.Add(e.UserId);
+                        break;
+                    case MultiplayerTeam.Blue:
+                        CurrentGame.RedTeamPlayers.Remove(e.UserId);
+                        CurrentGame.BlueTeamPlayers.Add(e.UserId);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.Ruleset = e.Ruleset;
+
+            if (CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+            {
+                CurrentGame.RedTeamPlayers.Clear();
+                CurrentGame.BlueTeamPlayers.Clear();
+
+                // Leave the team chat if we're in one
+                for (var i = ChatManager.JoinedChatChannels.Count - 1; i >= 0; i--)
+                {
+                    var chan = ChatManager.JoinedChatChannels[i];
+
+                    if (chan.IsPrivate)
+                        continue;
+
+                    if (chan.Name.StartsWith("#multi_team"))
+                        ChatManager.OnLeftChatChannel(null, new LeftChatChannelEventArgs(chan.Name));
+                }
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameLongNotePercentageChanged(object sender, LongNotePercentageChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.MinimumLongNotePercentage = e.Minimum;
+            CurrentGame.MaximumLongNotePercentage = e.Maximum;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameMaxPlayersChanged(object sender, MaxPlayersChangedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            Console.WriteLine($"NEW PLAYHER COUJNT: " + e.MaxPlayers);
+            CurrentGame.MaxPlayers = e.MaxPlayers;
+        }
+
+        private static void OnGameTeamWinCountChanged(object sender, TeamWinCountEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.RedTeamWins = e.RedTeamWins;
+            CurrentGame.BlueTeamWins = e.BlueTeamWins;
+
+            Logger.Important($"Team Win Count Updated: Red: {e.RedTeamWins} | Blue: {e.BlueTeamWins}", LogType.Network);
+        }
+
+        private static void OnGamePlayerWinCount(object sender, PlayerWinCountEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            Logger.Important($"Received updated win count for #{e.UserId}: {e.Wins}", LogType.Network);
+
+            var playerWins = CurrentGame.PlayerWins.Find(x => x.UserId == e.UserId);
+
+            if (playerWins != null)
+            {
+                playerWins.Wins = e.Wins;
+                return;
+            }
+
+            CurrentGame.PlayerWins.Add(new MultiplayerPlayerWins() { UserId = e.UserId, Wins = e.Wins});
+        }
+
+        private static void OnUserStats(object sender, UserStatsEventArgs e)
+        {
+            foreach (var user in e.Stats)
+            {
+                foreach (var stats in user.Value)
+                    OnlineUsers[user.Key].Stats[(GameMode) stats.Key] = stats.Value;
+            }
+        }
+
+        private static void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (CurrentGame.Players.Any(x => x.Id != e.UserId))
+                CurrentGame.Players.Add(OnlineUsers[e.UserId].OnlineUser);
+
+            if (!CurrentGame.PlayerIds.Contains(e.UserId))
+                CurrentGame.PlayerIds.Add(e.UserId);
+
+            if (CurrentGame.PlayerMods.All(x => x.UserId != e.UserId))
+                CurrentGame.PlayerMods.Add(new MultiplayerPlayerMods { UserId = e.UserId, Modifiers = "0"});
+        }
+
+        private static void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.PlayerIds.Remove(e.UserId);
+            CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+            CurrentGame.PlayersReady.Remove(e.UserId);
+            CurrentGame.PlayerMods.RemoveAll(x => x.UserId == e.UserId);
+            CurrentGame.RedTeamPlayers.Remove(e.UserId);
+            CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
+        }
+
+        private static void OnGameEnded(object sender, GameEndedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.InProgress = false;
+        }
+
+        private static void OnGameStarted(object sender, GameStartedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.InProgress = true;
+        }
+
+        private static void OnGamePlayerNoMap(object sender, PlayerGameNoMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (!CurrentGame.PlayersWithoutMap.Contains(e.UserId))
+                CurrentGame.PlayersWithoutMap.Add(e.UserId);
+        }
+
+        private static void OnGamePlayerHasMap(object sender, GamePlayerHasMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (CurrentGame.PlayersWithoutMap.Contains(e.UserId))
+                CurrentGame.PlayersWithoutMap.Remove(e.UserId);
+        }
+
+        private static void OnGameHostSelectingMap(object sender, GameHostSelectingMapEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.HostSelectingMap = e.IsSelecting;
+        }
+
+        private static void OnGameSetReferee(object sender, GameSetRefereeEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.RefereeUserId = e.UserId;
+            CurrentGame.BlueTeamPlayers.Remove(e.UserId);
+            CurrentGame.RedTeamPlayers.Remove(e.UserId);
+        }
+
+        /// <summary>
+        ///     Leaves the current multiplayer game if any
+        /// </summary>
+        public static void LeaveGame(bool dontSendPacket = false)
+        {
+            if (CurrentGame == null)
+                return;
+
+            if (!dontSendPacket)
+                Client.LeaveGame();
+
             MultiplayerGames.Clear();
             CurrentGame = null;
         }
@@ -695,6 +1124,64 @@ namespace Quaver.Shared.Online
         {
             Client?.LeaveLobby();
             MultiplayerGames.Clear();
+        }
+
+        /// <summary>
+        ///     Gets a user's activated mods in the current game.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static ModIdentifier GetUserActivatedMods(int userId)
+        {
+            if (CurrentGame == null)
+                return 0;
+
+            var currMods = (ModIdentifier) long.Parse(CurrentGame.Modifiers);
+
+            if (currMods < 0)
+                currMods = 0;
+
+            // Console.WriteLine("GAME MODS: " + currMods);
+
+            var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == userId);
+
+            if (playerMods != null)
+            {
+                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers);
+
+                if (pm < 0)
+                    pm = 0;
+
+                currMods |= pm;
+
+                // Console.WriteLine("PLAYER MODS: " + pm);
+            }
+
+            // Console.WriteLine("CURRENT MODS COMBINED: " + currMods);
+            return currMods;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public static ModIdentifier GetSelfActivatedMods() => GetUserActivatedMods(Self.OnlineUser.Id);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static MultiplayerTeam GetTeam(int userId)
+        {
+            if (CurrentGame == null || CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+                return MultiplayerTeam.Red;
+
+            if (CurrentGame.RedTeamPlayers.Contains(userId))
+                return MultiplayerTeam.Red;
+
+            if (CurrentGame.BlueTeamPlayers.Contains(userId))
+                return MultiplayerTeam.Blue;
+
+            return MultiplayerTeam.Red;
         }
     }
 }

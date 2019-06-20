@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         /// </summary>
-        public int MapsetId => (int) Mapset["id"];
+        public int MapsetId { get; }
 
         /// <summary>
         /// </summary>
@@ -44,7 +44,18 @@ namespace Quaver.Shared.Screens.Download
         public MapsetDownload(JToken mapset)
         {
             Mapset = mapset;
+            MapsetId = (int) Mapset["id"];
+            Download();
+        }
 
+        public MapsetDownload(int id)
+        {
+            MapsetId = id;
+            Download();
+        }
+
+        private void Download()
+        {
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
             var dir = $"{ConfigManager.DataDirectory.Value}/Downloads";

@@ -22,6 +22,7 @@ namespace Quaver.Shared.Assets
         public static BitmapFont CodeProRegular { get; private set; }
         public static BitmapFont CodeProBold { get; private set; }
         public static BitmapFont GothamRegular { get; private set; }
+        public static BitmapFont GothamBold { get; private set; }
 
         public static void Load()
         {
@@ -32,6 +33,7 @@ namespace Quaver.Shared.Assets
             CodeProRegular = GameBase.Game.Content.Load<BitmapFont>("code-pro");
             CodeProBold = GameBase.Game.Content.Load<BitmapFont>("code-pro-bold");
             GothamRegular = GameBase.Game.Content.Load<BitmapFont>("gotham");
+            GothamBold = GameBase.Game.Content.Load<BitmapFont>("gotham-bold");
         }
     }
 }

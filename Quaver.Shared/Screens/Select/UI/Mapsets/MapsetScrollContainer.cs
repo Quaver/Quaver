@@ -86,8 +86,8 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         /// </summary>
         /// <param name="view"></param>
         public MapsetScrollContainer(SelectScreenView view) : base(
-            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2),
-            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2))
+            new ScalableVector2(575, WindowManager.Height - 36 * 2 - 2),
+            new ScalableVector2(575, WindowManager.Height - 36 * 2 - 2))
         {
             View = view;
             OriginalContainerSize = Size;
@@ -145,6 +145,7 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
             BackgroundHelper.Blurred -= OnBackgroundBlurred;
 
+            MapsetBuffer.ForEach(x => x.Destroy());
             base.Destroy();
         }
 
@@ -488,23 +489,26 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
 
             ThreadScheduler.Run(() =>
             {
-                lock (AudioEngine.Track)
+                if (AudioEngine.Track != null)
                 {
-                    try
+                    lock (AudioEngine.Track)
                     {
-                        AudioEngine.LoadCurrentTrack();
+                        try
+                        {
+                            AudioEngine.LoadCurrentTrack(true);
 
-                        if (AudioEngine.Track == null)
-                            return;
+                            if (AudioEngine.Track == null)
+                                return;
 
-                        AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                        AudioEngine.Track.Volume = 0;
-                        AudioEngine.Track.Play();
-                        AudioEngine.Track.Fade(100, 800);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored.
+                            AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                            AudioEngine.Track.Volume = 0;
+                            AudioEngine.Track.Play();
+                            AudioEngine.Track.Fade(100, 800);
+                        }
+                        catch (Exception)
+                        {
+                            // ignored.
+                        }
                     }
                 }
             });

@@ -12,11 +12,15 @@ using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Dialogs;
+using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Online;
 using Quaver.Shared.Graphics.Online.Playercard;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
@@ -109,7 +113,15 @@ namespace Quaver.Shared.Screens.Menu
         /// <summary>
         ///     The currently logged in user's playercard.
         /// </summary>
-        public UserPlayercard Playercard { get; set; }
+        public OnlinePlayercard Playercard { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public MenuFooter Footer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public MenuHeader Header { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -119,14 +131,13 @@ namespace Quaver.Shared.Screens.Menu
         {
             CreateBackground();
             CreateAudioVisualizer();
-            CreateNavbar();
-            CreateLines();
+            CreateMenuFooter();
+            CreateMenuHeader();
             CreateMiddleContainer();
-            CreateMenuTip();
-            CreateToolButtons();
             CreatePanelContainer();
+            CreateMenuTip();
             CreateJukebox();
-            CreateUserProfile();
+            CreatePlayercard();
         }
 
         /// <inheritdoc />
@@ -153,48 +164,20 @@ namespace Quaver.Shared.Screens.Menu
         /// <summary>
         ///     Create
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground, 20)
+        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackgroundNormal, 45)
         {
             Parent = Container,
         };
 
         /// <summary>
-        ///     Creates the navbar.
-        /// </summary>
-        private void CreateNavbar() => Navbar = Navbar = new NavbarMain((QuaverScreen) Screen, new List<NavbarItem>
-        {
-            new NavbarItem(UserInterface.QuaverLogoFull, false, (o, e) => BrowserHelper.OpenURL(OnlineClient.WEBSITE_URL), false),
-            new NavbarItem("Home", true),
-        }, new List<NavbarItem>
-        {
-            new NavbarItemUser(this),
-            new NavbarItem("Report Bugs", false, (o, e) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
-        }) { Parent = Container };
-
-        /// <summary>
-        ///     Creates the top and bottom lines.
-        /// </summary>
-        private void CreateLines()
-        {
-            BottomLine = new Line(Vector2.Zero, Color.LightGray, 2)
-            {
-                Parent = Container,
-                Position = new ScalableVector2(28, WindowManager.Height - 54),
-                Alpha = 0.90f
-            };
-
-            BottomLine.EndPosition = new Vector2(WindowManager.Width - BottomLine.X, BottomLine.AbsolutePosition.Y);
-        }
-
-        /// <summary>
         ///     Creates a ScrollContainer for all of the content int he middle of the screen.
         /// </summary>
         private void CreateMiddleContainer() => MiddleContainer = new ScrollContainer(
-                new ScalableVector2(Navbar.Line.EndPosition.X - Navbar.Line.X, BottomLine.Y - Navbar.Line.Y),
-                new ScalableVector2(Navbar.Line.EndPosition.X - Navbar.Line.X, BottomLine.Y - Navbar.Line.Y))
+                new ScalableVector2(WindowManager.Width - 50, 44),
+                new ScalableVector2(WindowManager.Width - 50, 44))
         {
             Parent = Container,
-            Position = new ScalableVector2(Navbar.Line.X, Navbar.Line.Y),
+            Alignment = Alignment.MidCenter,
             Alpha = 0,
         };
 
@@ -205,54 +188,11 @@ namespace Quaver.Shared.Screens.Menu
         {
             Tip = new MenuTip
             {
-                Parent = MiddleContainer,
+                Parent = Container,
                 Alignment = Alignment.BotLeft,
-                Y = -5,
+                Y = -Footer.Height - 20,
+                X = 25
             };
-        }
-
-        /// <summary>
-        ///     Creates tool buttons to the bottom right of the screen.
-        /// </summary>
-        private void CreateToolButtons()
-        {
-            const int targetY = -5;
-            const int animationTime = 1100;
-
-            PowerButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_power_button_off), (o, e) =>
-            {
-                DialogManager.Show(new ConfirmCancelDialog("Are you sure you want to exit Quaver?",(sender, args) =>
-                {
-                    var game = GameBase.Game as QuaverGame;
-                    game?.Exit();
-                }));
-            })
-            {
-                Alignment = Alignment.BotRight,
-            };
-
-            PowerButton.Y = PowerButton.Height;
-
-            // Add Animation to move it up.
-            PowerButton.Animations.Add(new Animation(AnimationProperty.Y, Easing.OutQuint,
-                PowerButton.Y, targetY, animationTime));
-
-            MiddleContainer.AddContainedDrawable(PowerButton);
-
-            // Create settings button
-            SettingsButton = new ToolButton(FontAwesome.Get(FontAwesomeIcon.fa_settings), (o, e) => DialogManager.Show(new SettingsDialog()))
-            {
-                Parent = MiddleContainer,
-                Alignment = Alignment.BotRight,
-                Y = PowerButton.Y,
-                X = PowerButton.X - PowerButton.Width - 5,
-                Animations =
-                {
-                    new Animation(AnimationProperty.Y, Easing.OutQuint, PowerButton.Y, targetY, animationTime)
-                }
-            };
-
-            MiddleContainer.AddContainedDrawable(SettingsButton);
         }
 
         /// <summary>
@@ -269,11 +209,11 @@ namespace Quaver.Shared.Screens.Menu
                 UserInterface.ThumbnailCompetitive, OnCompetitivePanelClicked),
 
             // Custom Games
-            new Panel("Custom Games", "Play multiplayer games with your friends",
+            new Panel("Multiplayer", "Play custom online matches with other players",
                 UserInterface.ThumbnailCustomGames, OnCustomGamesPanelClicked),
 
             // Editor
-            new Panel("Editor", "Create or edit a map to any song you'd like",
+            new Panel("Editor", "Create or edit a map to any song you would like",
                 UserInterface.ThumbnailEditor, OnEditorPanelClicked),
         })
         {
@@ -307,9 +247,9 @@ namespace Quaver.Shared.Screens.Menu
         private void CreateJukebox() => Jukebox = new Jukebox
         {
             Parent = Container,
-            Alignment = Alignment.TopRight,
-            Y = Navbar.Line.Y + 20,
-            X = -44
+            Alignment = Alignment.TopLeft,
+            Y = Header.Y + Header.Height + 20 + 16,
+            X = 25
         };
 
         /// <summary>
@@ -318,7 +258,8 @@ namespace Quaver.Shared.Screens.Menu
         private void CreateAudioVisualizer() => Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 400, 150, 5)
         {
             Parent = Container,
-            Alignment = Alignment.BotLeft
+            Alignment = Alignment.BotLeft,
+            Y = -44
         };
 
         /// <summary>
@@ -332,15 +273,85 @@ namespace Quaver.Shared.Screens.Menu
             X = -28
         };
 
+        private void CreateMenuFooter()
+        {
+            Footer = new MenuFooter(new List<ButtonText>()
+            {
+                new ButtonText(FontsBitmap.GothamRegular, "Quit Game", 14, (sender, args) =>
+                {
+                    DialogManager.Show(new ConfirmCancelDialog("Are you sure you want to exit Quaver?", (o, ex) =>
+                    {
+                        var game = GameBase.Game as QuaverGame;
+                        game?.Exit();
+                    }));
+                }),
+                new ButtonText(FontsBitmap.GothamRegular, "Options", 14, (sender, args) => DialogManager.Show(new SettingsDialog())),
+                new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
+                {
+                    if (OnlineManager.Status.Value != ConnectionStatus.Connected)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You must be logged in to use the chat!");
+                        return;
+                    }
+
+                    ChatManager.ToggleChatOverlay(true);
+                }),
+                new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
+                {
+                    if (OnlineManager.Status.Value != ConnectionStatus.Connected)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download maps!");
+                        return;
+                    }
+
+                    var screen = (QuaverScreen) Screen;
+                    screen.Exit(() => new DownloadScreen());
+                }),
+            }, new List<ButtonText>()
+            {
+                new ButtonText(FontsBitmap.GothamRegular, "Report Bugs", 14, (sender, args) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
+                new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
+                new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
+                new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com"))
+            }, Colors.MainAccent)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft
+            };
+        }
+
+        private void CreateMenuHeader()
+        {
+            Header = new MenuHeader(UserInterface.QuaverLogoStylish, "Main", "Menu", "Find something to play, or use the editor",
+                Colors.MainAccent)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = Header,
+                Alignment = Alignment.MidLeft,
+                X = Header.Icon.X,
+                Image = UserInterface.QuaverLogoFull,
+                Size = new ScalableVector2(138, 30)
+            };
+
+            Header.Icon.Visible = false;
+            Header.Title.Visible = false;
+            Header.Title2.Visible = false;
+        }
+
         /// <summary>
         ///     Creates the playercard container
         /// </summary>
-        private void CreatePlayercard() => Playercard = new UserPlayercard(PlayercardType.Self, OnlineManager.Self, OnlineManager.Connected)
+        private void CreatePlayercard() => Playercard = new OnlinePlayercard()
         {
             Parent = Container,
-            Alignment = Alignment.TopLeft,
-            X = 44,
-            Y = Jukebox.Y,
+            Alignment = Alignment.TopRight,
+            Position = new ScalableVector2(-Jukebox.X, Jukebox.Y - 16)
         };
 
         /// <summary>
@@ -366,6 +377,12 @@ namespace Quaver.Shared.Screens.Menu
 
             if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
             {
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    screen?.Exit(() => new DownloadScreen());
+                    return;
+                }
+
                 NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
                 return;
             }
@@ -405,6 +422,19 @@ namespace Quaver.Shared.Screens.Menu
             }
 
             var screen = (QuaverScreen) Screen;
+
+            if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    screen?.Exit(() => new DownloadScreen());
+                    return;
+                }
+
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                return;
+            }
+
             screen.Exit(() => new LobbyScreen());
         }
 

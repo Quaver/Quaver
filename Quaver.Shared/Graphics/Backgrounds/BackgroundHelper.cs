@@ -71,7 +71,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// </summary>
         public static void Initialize()
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground, 0);
+            Background = new BackgroundImage(UserInterface.MenuBackground, 0, false);
             Source = new CancellationTokenSource();
         }
 
@@ -97,8 +97,8 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     // ignored
                 }
 
-                var blur = new GaussianBlur(0.1f);
-                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture))));
+                var blur = new GaussianBlur(0.3f);
+                BlurredTexture = blur.PerformGaussianBlur(blur.PerformGaussianBlur(blur.PerformGaussianBlur(RawTexture)));
                 ShouldBlur = false;
                 Blurred?.Invoke(typeof(BackgroundHelper), new BackgroundBlurredEventArgs(Map, BlurredTexture));
             }
@@ -109,42 +109,50 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     Queues a load of the background for a map
         /// </summary>
-        public static void Load(Map map) => ThreadScheduler.Run(() =>
+        public static void Load(Map map) => ThreadScheduler.Run(async () =>
         {
-            Task.Run(async () =>
-            {
-                Source.Cancel();
-                Source.Dispose();
-                Source = new CancellationTokenSource();
+            Source.Cancel();
+            Source.Dispose();
+            Source = new CancellationTokenSource();
 
-                Map = map;
-                var token = Source.Token;
+            Map = map;
+            var token = Source.Token;
+
+            token.ThrowIfCancellationRequested();
+
+            try
+            {
+                var oldRawTexture = RawTexture;
+                var oldBlurredTexture = BlurredTexture;
+
+                var path = MapManager.GetBackgroundPath(map);
+
+                var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackgroundRaw;
+                RawTexture = tex;
+
+                ThreadScheduler.RunAfter(() =>
+                {
+                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    {
+                        oldRawTexture?.Dispose();
+                        oldBlurredTexture?.Dispose();
+                    }
+                }, 500);
 
                 token.ThrowIfCancellationRequested();
 
-                try
-                {
-                    var path = MapManager.GetBackgroundPath(map);
-
-                    var tex = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : UserInterface.MenuBackground;
-                    RawTexture = tex;
-
-                    token.ThrowIfCancellationRequested();
-
-                    await Task.Delay(100, token);
-                    ShouldBlur = true;
-                    Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
-                }
-                catch (OperationCanceledException e)
-                {
-                    // ignored
-                    Console.WriteLine(e);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, LogType.Runtime);
-                }
-            });
+                await Task.Delay(100, token);
+                ShouldBlur = true;
+                Loaded?.Invoke(typeof(BackgroundHelper), new BackgroundLoadedEventArgs(map, tex));
+            }
+            catch (OperationCanceledException e)
+            {
+                // ignored
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         });
 
         /// <summary>
@@ -162,7 +170,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static void FadeIn()
         {
             Background.BrightnessSprite.ClearAnimations();
-            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.30f, 250));
+            Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, 0.65f, 250));
         }
 
         /// <summary>

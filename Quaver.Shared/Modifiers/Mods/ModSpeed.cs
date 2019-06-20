@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
@@ -27,6 +28,10 @@ namespace Quaver.Shared.Modifiers.Mods
         public string Description { get; set; } = "Change the audio playback rate of the song.";
 
         public bool Ranked { get; set; } = true;
+
+        public bool AllowedInMultiplayer { get; set; } = true;
+
+        public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
@@ -59,7 +64,14 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public void InitializeMod()
         {
-            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);
+            try
+            {
+                AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
 
             // Remove the incoming mod from the list of incompatible ones.
             var im = IncompatibleMods.ToList();

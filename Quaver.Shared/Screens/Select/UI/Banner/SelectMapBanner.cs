@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -44,22 +45,22 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     The name of the difficulty of themap.
         /// </summary>
-        private SpriteText MapDifficultyName { get; set; }
+        private SpriteTextBitmap MapDifficultyName { get; set; }
 
         /// <summary>
         ///     Displays the title of the song.
         /// </summary>
-        private SpriteText SongTitle { get; set; }
+        private SpriteTextBitmap SongTitle { get; set; }
 
         /// <summary>
         ///     Displays the artist of the song.
         /// </summary>
-        private SpriteText SongArtist { get; set; }
+        private SpriteTextBitmap SongArtist { get; set; }
 
         /// <summary>
         ///     Displays the creator of the map.
         /// </summary>
-        private SpriteText MapCreator { get; set; }
+        private SpriteTextBitmap MapCreator { get; set; }
 
         /// <summary>
         ///     The flag that shows the ranked status of the map.
@@ -74,7 +75,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     Displays the currently activated mods.
         /// </summary>
-        private SpriteText Mods { get; set; }
+        private SpriteTextBitmap Mods { get; set; }
 
         /// <summary>
         ///     The container in which the metadata will be housed in.
@@ -91,7 +92,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             Tint = Color.Black;
 
             Size = new ScalableVector2(620, 234);
-            AddBorder(Color.White, 2);
+            AddBorder(ColorHelper.HexToColor("#69acc5"), 2);
 
             Mask = new SpriteMaskContainer()
             {
@@ -189,31 +190,33 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         }
 
         /// <summary>
-        ///     Creates the SpriteText that displays the difficulty name of the map.
+        ///     Creates the SpriteTextBitmap that displays the difficulty name of the map.
         /// </summary>
         private void CreateMapDifficultyName()
         {
-            MapDifficultyName = new SpriteText(Fonts.Exo2Bold, " ", 13)
+            MapDifficultyName = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
             {
                 Alignment = Alignment.TopLeft,
                 X = 22,
-                Y = 50
+                Y = 50,
+                FontSize = 18
             };
 
             Container.AddContainedDrawable(MapDifficultyName);
         }
 
         /// <summary>
-        ///    Creates the SpriteText that displays the title of the song.
+        ///    Creates the SpriteTextBitmap that displays the title of the song.
         /// </summary>
         private void CreateSongTitle()
         {
-            SongTitle = new SpriteText(Fonts.Exo2Bold, " ", 14)
+            SongTitle = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 X = MapDifficultyName.X,
-                Y = MapDifficultyName.Y + MapDifficultyName.Height + 8
+                Y = MapDifficultyName.Y + MapDifficultyName.Height + 15,
+                FontSize = 16,
             };
 
             Container.AddContainedDrawable(SongTitle);
@@ -224,12 +227,13 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateSongArtist()
         {
-            SongArtist = new SpriteText(Fonts.Exo2SemiBold, " ", 14)
+            SongArtist = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 X = SongTitle.X,
-                Y = SongTitle.Y + SongTitle.Height + 8
+                Y = SongTitle.Y + SongTitle.Height + 15,
+                FontSize = 16
             };
 
             Container.AddContainedDrawable(SongArtist);
@@ -240,12 +244,13 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         private void CreateMapCreator()
         {
-            MapCreator = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+            MapCreator = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 X = SongTitle.X,
-                Y = SongArtist.Y + SongArtist.Height + 8
+                Y = SongArtist.Y + SongArtist.Height + 15,
+                FontSize = 16
             };
 
             Container.AddContainedDrawable(MapCreator);
@@ -276,12 +281,13 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     Creates the text that displays the mods.
         /// </summary>
-        private void CreateMods() => Mods = new SpriteText(Fonts.Exo2Bold, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 12)
+        private void CreateMods() => Mods = new SpriteTextBitmap(FontsBitmap.GothamBold, "Mods: " + ModHelper.GetModsString(ModManager.Mods))
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
             X = MapDifficultyName.X,
-            Y = 15
+            Y = 15,
+            FontSize = 16
         };
 
         /// <summary>
@@ -290,6 +296,9 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <param name="map"></param>
         private void UpdateText(Map map)
         {
+            if (map == null)
+                return;
+
             MapDifficultyName.Text = $"\"{map.DifficultyName}\"";
             SongTitle.Text = map.Title;
             SongArtist.Text = map.Artist;

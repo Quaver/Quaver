@@ -22,12 +22,17 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The pool of sprites to be used within the container
         /// </summary>
-        public List<PoolableSprite<T>> Pool { get; private set; }
+        public List<PoolableSprite<T>> Pool { get; protected set; }
 
         /// <summary>
         ///     The size of the object pool
         /// </summary>
         public int PoolSize { get; }
+
+        /// <summary>
+        ///     The amount of padding from the top that the scroll container will have
+        /// </summary>
+        protected int PaddingTop { get; set; }
 
         /// <summary>
         ///     The items that are available to use for the drawables.
@@ -85,6 +90,12 @@ namespace Quaver.Shared.Graphics.Containers
             base.Update(gameTime);
         }
 
+        public override void Destroy()
+        {
+            Pool.ForEach(x => x.Destroy());
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Begins creation of the pool. This should be called last in the constructor when the pool
         ///     is ready to be created
@@ -110,9 +121,11 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Makes sure that the content container's height is up to date
         /// </summary>
-        protected void RecalculateContainerHeight()
+        protected void RecalculateContainerHeight(bool usePoolCount = false)
         {
-            var totalUserHeight = DrawableHeight * AvailableItems.Count;
+            var count = usePoolCount ? Pool.Count : AvailableItems.Count;
+
+            var totalUserHeight = DrawableHeight * count + PaddingTop;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;
@@ -182,14 +195,17 @@ namespace Quaver.Shared.Graphics.Containers
         /// <returns></returns>
         private PoolableSprite<T> AddObject(int index)
         {
-            var drawable = CreateObject(AvailableItems[index], index);
-            drawable.DestroyIfParentIsNull = false;
-            drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT;
+            lock (AvailableItems)
+            {
+                var drawable = CreateObject(AvailableItems[index], index);
+                drawable.DestroyIfParentIsNull = false;
+                drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT + PaddingTop;
 
-            drawable.UpdateContent(AvailableItems[index], index);
-            Pool.Add(drawable);
+                drawable.UpdateContent(AvailableItems[index], index);
+                Pool.Add(drawable);
 
-            return drawable;
+                return drawable;
+            }
         }
 
         /// <summary>
@@ -197,18 +213,22 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="scrollTo"></param>
-        protected void AddObjectToBottom(T obj, bool scrollTo)
+        protected void AddObjectToBottom(T obj, bool scrollTo, bool usePoolCount = false)
         {
-            AvailableItems.Add(obj);
+            lock (AvailableItems)
+            lock (Pool)
+            {
+                AvailableItems.Add(obj);
 
-            // Need another drawable to use
-            if (Pool.Count < PoolSize)
-                AddContainedDrawable(AddObject(AvailableItems.Count - 1));
+                // Need another drawable to use
+                if (Pool.Count < PoolSize)
+                    AddContainedDrawable(AddObject(AvailableItems.Count - 1));
 
-            RecalculateContainerHeight();
+                RecalculateContainerHeight(usePoolCount);
 
-            if (scrollTo)
-                ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+                if (scrollTo)
+                    ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+            }
         }
 
         /// <summary>
