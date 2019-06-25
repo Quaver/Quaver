@@ -55,7 +55,7 @@ namespace Quaver.Shared.Audio
                 if (Track != null && !Track.IsDisposed)
                     Track.Dispose();
 
-                var newTrack = new AudioTrack(MapManager.CurrentAudioPath, preview)
+                var newTrack = new AudioTrack(MapManager.CurrentAudioPath, false)
                 {
                     Rate = ModHelper.GetRateFromMods(ModManager.Mods),
                 };
