@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         private void CreateHeader()
         {
             Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "MULTIPLAYER", "GAME",
-                "play a match together in real-time with others", ColorHelper.HexToColor("#f95186")) { Parent = Container };
+                "play a match in real-time with others", Colors.MainAccent) { Parent = Container };
 
             Header.Y = -Header.Height;
             Header.MoveToY(0, Easing.OutQuint, 600);
@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 new ButtonText(FontsBitmap.GothamRegular, "commands", 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/wiki/Multiplayer/Commands"))
             }, new List<ButtonText>
             {
-            }, ColorHelper.HexToColor("#f95186"))
+            }, Colors.MainAccent)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft
