@@ -16,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver
 {
@@ -51,6 +52,7 @@ namespace Quaver
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            NativeAssemblies.Copy();
             ConfigManager.Initialize();
             SteamManager.Initialize();
 
