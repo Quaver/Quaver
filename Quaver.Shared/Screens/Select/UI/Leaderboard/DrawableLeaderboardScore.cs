@@ -140,6 +140,14 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             base.Update(gameTime);
         }
 
+        public override void Draw(GameTime gameTime)
+        {
+            if (RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle).IsEmpty)
+                return;
+            
+            base.Draw(gameTime);
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -155,7 +163,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         private void CreateNoPersonalBestScore()
         {
-            var nopbSet = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score")
+            var nopbSet = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score", false)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -188,7 +196,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the user's rank.
         /// </summary>
-        private void CreateTextRank() => TextRank = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{( Rank == -1 ? "PB" : $"{Rank}." )}")
+        private void CreateTextRank() => TextRank = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{( Rank == -1 ? "PB" : $"{Rank}." )}", false)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -255,7 +263,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays the user's username.
         /// </summary>
-        private void CreateUsername() => Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, Score.Name)
+        private void CreateUsername() => Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, Score.Name, false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
@@ -267,7 +275,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
         private void CreateTextScoreAndCombo() => TextScore = new SpriteTextBitmap(FontsBitmap.GothamRegular,
-            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x")
+            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
@@ -278,7 +286,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModHelper.GetModsString((ModIdentifier) Score.Mods))
+        private void CreateModsUsed() => Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModHelper.GetModsString((ModIdentifier) Score.Mods), false)
         {
             Parent = this,
             Alignment = Alignment.TopRight,
@@ -306,7 +314,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 timeAgo = "1 minute ago";
             }
 
-            TimeAgo = new SpriteTextBitmap(FontsBitmap.GothamRegular, timeAgo)
+            TimeAgo = new SpriteTextBitmap(FontsBitmap.GothamRegular, timeAgo, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
