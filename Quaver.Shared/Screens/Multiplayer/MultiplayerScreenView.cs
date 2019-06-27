@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         private void CreateHeader()
         {
             Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), "MULTIPLAYER", "GAME",
-                "play a match together in real-time with others", Colors.MainAccent) { Parent = Container };
+                "play a match in real-time with others", Colors.MainAccent) { Parent = Container };
 
             Header.Y = -Header.Height;
             Header.MoveToY(0, Easing.OutQuint, 600);
