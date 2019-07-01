@@ -105,10 +105,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Topic
         /// <param name="channel"></param>
         public void UpdateTopicText(ChatChannel channel)
         {
-            ChannelName.Text = channel.Name;
-            ChannelName.X = 15;
+            if (channel.Name.StartsWith("#multiplayer"))
+            {
+                ChannelName.Text = "#multiplayer";
+                ChannelDescription.Text = "Multiplayer Game Chat Discussion";
+            }
+            else if (channel.Name.StartsWith("#multi_team"))
+            {
+                ChannelName.Text = "#multiplayer-team";
+                ChannelDescription.Text = $"Multiplayer Team Chat";
+            }
+            else
+            {
+                ChannelName.Text = channel.Name;
+                ChannelDescription.Text = channel.Description;
+            }
 
-            ChannelDescription.Text = channel.Description;
+            ChannelName.X = 15;
             ChannelDescription.X = 15;
 
             // Make the close channel button both visible and clickable.

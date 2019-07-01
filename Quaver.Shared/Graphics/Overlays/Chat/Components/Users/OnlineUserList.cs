@@ -191,8 +191,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                     // Update the user's information and y position.
                     firstUser.Y = (PoolStartingIndex + MAX_USERS_SHOWN) * DrawableOnlineUser.HEIGHT;
 
-                    lock (AvailableUsers)
-                        firstUser.UpdateUser(AvailableUsers[PoolStartingIndex + MAX_USERS_SHOWN]);
+                    firstUser.UpdateUser(AvailableUsers[PoolStartingIndex + MAX_USERS_SHOWN]);
 
                     // Circuluarly Shift the list forward one.
                     UserBuffer.RemoveFirst();
@@ -215,8 +214,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                     lastUser.Y = (PoolStartingIndex - 1) * DrawableOnlineUser.HEIGHT;
 
-                    lock (AvailableUsers)
-                        lastUser.UpdateUser(AvailableUsers[PoolStartingIndex - 1]);
+                    lastUser.UpdateUser(AvailableUsers[PoolStartingIndex - 1]);
 
                     UserBuffer.RemoveLast();
                     UserBuffer.AddFirst(lastUser);
@@ -235,34 +233,31 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <param name="users"></param>
         public void HandleNewOnlineUsers(IEnumerable<User> users)
         {
-            lock (AvailableUsers)
+            var incomingAvailableUsers = users.Where(CheckIfUserShouldBeDrawn).ToList();
+            var allAvailableUsers = new List<User>(AvailableUsers);
+
+            // Concatenate the old list of available users with the new one, and order it properly.
+            AvailableUsers = allAvailableUsers
+                .Concat(incomingAvailableUsers)
+                .ToList();
+
+            SortUsers();
+            RecalculateContainerHeight();
+
+            Logger.Debug($"There are now {AvailableUsers.Count} total available users.", LogType.Runtime);
+
+            // If we already have enough buffered objects, then just update all of the current buffered users.
+            if (UserBufferObjectsUsed == MAX_USERS_SHOWN)
             {
-                var incomingAvailableUsers = users.Where(CheckIfUserShouldBeDrawn).ToList();
-                var allAvailableUsers = new List<User>(AvailableUsers);
-
-                // Concatenate the old list of available users with the new one, and order it properly.
-                AvailableUsers = allAvailableUsers
-                    .Concat(incomingAvailableUsers)
-                    .ToList();
-
-                SortUsers();
-                RecalculateContainerHeight();
-
-                Logger.Debug($"There are now {AvailableUsers.Count} total available users.", LogType.Runtime);
-
-                // If we already have enough buffered objects, then just update all of the current buffered users.
-                if (UserBufferObjectsUsed == MAX_USERS_SHOWN)
-                {
-                    UpdateBufferUsers();
-                    return;
-                }
-
-                // Based on how many new available users we have, we can add that many new contained drawables.
-                for (var i = 0; i < incomingAvailableUsers.Count && UserBufferObjectsUsed != MAX_USERS_SHOWN; i++)
-                    UserBufferObjectsUsed++;
-
                 UpdateBufferUsers();
+                return;
             }
+
+            // Based on how many new available users we have, we can add that many new contained drawables.
+            for (var i = 0; i < incomingAvailableUsers.Count && UserBufferObjectsUsed != MAX_USERS_SHOWN; i++)
+                UserBufferObjectsUsed++;
+
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -270,14 +265,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public void ClearAllUsers()
         {
-            lock (AvailableUsers)
-            {
-                AvailableUsers.Clear();
+            AvailableUsers.Clear();
 
-                SortUsers();
-                RecalculateContainerHeight();
-                UpdateBufferUsers();
-            }
+            SortUsers();
+            RecalculateContainerHeight();
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -285,14 +277,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public void HandleDisconnectingUser(int userId)
         {
-            lock (AvailableUsers)
-            {
-                AvailableUsers.RemoveAll(x => x.OnlineUser.Id == userId);
+            AvailableUsers.RemoveAll(x => x.OnlineUser.Id == userId);
 
-                SortUsers();
-                RecalculateContainerHeight();
-                UpdateBufferUsers();
-            }
+            SortUsers();
+            RecalculateContainerHeight();
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -327,29 +316,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         public void UpdateUserInfo(User user)
         {
-            lock (UserBuffer)
+            for (var i = 0; i < UserBuffer.Count; i++)
             {
-                for (var i = 0; i < UserBuffer.Count; i++)
-                {
-                    var item = UserBuffer.ElementAt(i);
+                var item = UserBuffer.ElementAt(i);
 
-                    if (item.User == null || item.User.OnlineUser.Id != user.OnlineUser.Id)
-                        continue;
+                if (item.User == null || item.User.OnlineUser.Id != user.OnlineUser.Id)
+                    continue;
 
-                    item.UpdateUser(OnlineManager.OnlineUsers[user.OnlineUser.Id]);
+                item.UpdateUser(OnlineManager.OnlineUsers[user.OnlineUser.Id]);
 
-                    var index = AvailableUsers.FindIndex(x => x.OnlineUser.Id == item.User.OnlineUser.Id);
+                var index = AvailableUsers.FindIndex(x => x.OnlineUser.Id == item.User.OnlineUser.Id);
 
-                    if (index == -1)
-                        continue;
+                if (index == -1)
+                    continue;
 
-                    AvailableUsers[index] = item.User;
-
-                    SortUsers();
-                    RecalculateContainerHeight();
-                    UpdateBufferUsers();
-                }
+                AvailableUsers[index] = item.User;
             }
+
+            SortUsers();
+            RecalculateContainerHeight();
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -370,30 +356,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void FilterUsers()
         {
-            lock (AvailableUsers)
-            lock (OnlineManager.OnlineUsers)
+            switch (ConfigManager.SelectedOnlineUserFilterType.Value)
             {
-                switch (ConfigManager.SelectedOnlineUserFilterType.Value)
-                {
-                    case OnlineUserFilterType.All:
-                        AvailableUsers = OnlineManager.OnlineUsers.Values.ToList();
-                        break;
-                    case OnlineUserFilterType.Friends:
-                        AvailableUsers = new List<User>();
-                        break;
-                    case OnlineUserFilterType.Country:
-                        AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
-                            .Where(x => x.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag)
-                            .ToList();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                SortUsers();
-                RecalculateContainerHeight();
-                UpdateBufferUsers();
+                case OnlineUserFilterType.All:
+                    AvailableUsers = OnlineManager.OnlineUsers.Values.ToList();
+                    break;
+                case OnlineUserFilterType.Friends:
+                    AvailableUsers = new List<User>();
+                    break;
+                case OnlineUserFilterType.Country:
+                    AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
+                        .Where(x => x.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag)
+                        .ToList();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
+            SortUsers();
+            RecalculateContainerHeight();
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -402,24 +384,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// <param name="text"></param>
         public void FilterUsers(string text)
         {
-            lock (AvailableUsers)
-            lock (OnlineManager.OnlineUsers)
+            // If the user searches for nothing, re-filter the user's by what's in config.
+            if (string.IsNullOrEmpty(text))
             {
-                // If the user searches for nothing, re-filter the user's by what's in config.
-                if (string.IsNullOrEmpty(text))
-                {
-                    FilterUsers();
-                    return;
-                }
-
-                AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
-                    .Where(x => x.HasUserInfo && x.OnlineUser.Username.ToLower().Contains(text.ToLower()))
-                    .ToList();
-
-                SortUsers();
-                RecalculateContainerHeight();
-                UpdateBufferUsers();
+                FilterUsers();
+                return;
             }
+
+            AvailableUsers = OnlineManager.OnlineUsers.Values.ToList()
+                .Where(x => x.HasUserInfo && x.OnlineUser.Username.ToLower().Contains(text.ToLower()))
+                .ToList();
+
+            SortUsers();
+            RecalculateContainerHeight();
+            UpdateBufferUsers();
         }
 
         /// <summary>
@@ -427,11 +405,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void PeriodicallyRequestClientStatuses()
         {
-            if (GameBase.Game.TimeRunning - LastStatusRequestTime < 15000)
+            if (GameBase.Game.TimeRunning - LastStatusRequestTime < 5000 && LastStatusRequestTime != 0)
                 return;
 
             // Get all the users in the buffer.
             var userIds = new List<int>();
+            var userInfoIds = new List<int>();
 
             for (var i = 0; i < UserBuffer.Count; i++)
             {
@@ -439,14 +418,21 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
 
                 if (user.User != null && AvailableUsers.Contains(user.User) && !userIds.Contains(user.User.OnlineUser.Id))
                     userIds.Add(user.User.OnlineUser.Id);
+
+                if (user.User != null && !user.User.HasUserInfo && AvailableUsers.Contains(user.User) && !userInfoIds.Contains(user.User.OnlineUser.Id))
+                    userInfoIds.Add(user.User.OnlineUser.Id);
             }
 
             LastStatusRequestTime = GameBase.Game.TimeRunning;
 
-            if (userIds.Count == 0)
+            if (userInfoIds.Count != 0)
+            {
+                OnlineManager.Client?.RequestUserInfo(userInfoIds);
                 return;
+            }
 
-            OnlineManager.Client?.RequestUserStatuses(userIds);
+            if (userIds.Count != 0)
+                OnlineManager.Client?.RequestUserStatuses(userIds);
         }
     }
 }

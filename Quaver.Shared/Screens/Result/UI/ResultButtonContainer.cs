@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
+using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -61,10 +62,14 @@ namespace Quaver.Shared.Screens.Result.UI
             Buttons = new List<SelectableBorderedTextButton>
             {
                 CreateButton("Back", true, (o, e) => Screen.ExitToMenu()),
-                CreateButton("Export Replay", false, (o, e) => Screen.ExportReplay()),
-                CreateButton("Watch Replay", false, (o, e) => Screen.ExitToWatchReplay()),
-                CreateButton("Retry", false, (o, e) => Screen.ExitToRetryMap()),
+                CreateButton("Export Replay", false, (o, e) => Screen.ExportReplay())
             };
+
+            if (Screen.Gameplay == null || (Screen.Gameplay != null && !Screen.Gameplay.IsMultiplayerGame))
+            {
+                Buttons.Add(CreateButton("Watch Replay", false, (o, e) => Screen.ExitToWatchReplay()));
+                Buttons.Add(CreateButton("Retry", false, (o, e) => Screen.ExitToRetryMap()));
+            }
 
             // Go through each button and initialize the sprite further.
             for (var i = 0; i < Buttons.Count; i++)

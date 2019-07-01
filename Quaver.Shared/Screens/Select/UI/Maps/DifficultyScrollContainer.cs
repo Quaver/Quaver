@@ -93,8 +93,8 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         /// </summary>
         /// <param name="view"></param>
         public DifficultyScrollContainer(SelectScreenView view) : base(
-            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2),
-            new ScalableVector2(575, WindowManager.Height - 54 * 2 - 2))
+            new ScalableVector2(575, WindowManager.Height - 36 * 2 - 2),
+            new ScalableVector2(575, WindowManager.Height - 36 * 2 - 2))
         {
             View = view;
             OriginalContainerSize = Size;
@@ -141,6 +141,12 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             }
 
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            DifficultyBuffer.ForEach(x => x.Destroy());
+            base.Destroy();
         }
 
         /// <summary>

@@ -14,10 +14,13 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
+using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
@@ -27,17 +30,21 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
+using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -96,9 +103,16 @@ namespace Quaver.Shared.Screens.Gameplay
         private GradeDisplay GradeDisplay { get; set; }
 
         /// <summary>
+        ///     The scoreboard on the left side of the screern
+        ///     (normal OR red team)
         ///     The scoreboard
         /// </summary>
-        public Scoreboard Scoreboard { get; set; }
+        public Scoreboard ScoreboardLeft { get; set; }
+
+        /// <summary>
+        ///     The scoreboard on the right side of the screen
+        /// </summary>
+        public Scoreboard ScoreboardRight { get; set; }
 
         /// <summary>
         ///     The display to skip the map.
@@ -155,6 +169,23 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private OffsetCalibratorTip Tip { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private MultiplayerEndGameWaitTime MultiplayerEndTime { get; set; }
+
+        /// <summary>
+        ///     If true, the game will stop waiting for new scoreboard users
+        /// </summary>
+        private bool StopCheckingForScoreboardUsers { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private BattleRoyaleBackgroundAlerter BattleRoyaleBackgroundAlerter { get; }
+
+        /// <summary>
+        /// </summary>
+        public ScoreboardUser SelfScoreboard { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -165,6 +196,16 @@ namespace Quaver.Shared.Screens.Gameplay
             RatingProcessor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.Ruleset.ScoreProcessor.Mods));
 
             CreateBackground();
+
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Battle_Royale
+                                                  && ConfigManager.EnableBattleRoyaleBackgroundFlashing.Value)
+            {
+                BattleRoyaleBackgroundAlerter = new BattleRoyaleBackgroundAlerter(this);
+            }
+
+            if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
+                CreateScoreboards();
+
             CreateProgressBar();
             CreateScoreDisplay();
             CreateRatingDisplay();
@@ -175,15 +216,24 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Create judgement status display
             if (ConfigManager.DisplayJudgementCounter.Value)
-                JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            {
+                if (OnlineManager.CurrentGame == null || OnlineManager.CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+                    JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
+            }
 
             CreateKeysPerSecondDisplay();
             CreateGradeDisplay();
 
-            if (!Screen.IsPlayTesting && !Screen.IsCalibratingOffset)
-                CreateScoreboard();
-
             SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
+
+            if (Screen.IsMultiplayerGame)
+            {
+                MultiplayerEndTime = new MultiplayerEndGameWaitTime
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidCenter
+                };
+            }
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
@@ -214,6 +264,9 @@ namespace Quaver.Shared.Screens.Gameplay
                     Alignment = Alignment.MidCenter
                 };
             }
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 
         /// <inheritdoc />
@@ -222,8 +275,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            HandleWaitingForPlayersDialog();
             CheckIfNewScoreboardUsers();
             HandlePlayCompletion(gameTime);
+            BattleRoyaleBackgroundAlerter?.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
 
@@ -242,6 +297,7 @@ namespace Quaver.Shared.Screens.Gameplay
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
             Background.Draw(gameTime);
+            BattleRoyaleBackgroundAlerter?.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
         }
@@ -251,6 +307,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public override void Destroy()
         {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameEnded -= OnGameEnded;
+
             Screen.Ruleset?.Destroy();
             Container?.Destroy();
         }
@@ -378,44 +437,71 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Creates the scoreboard for the game.
         /// </summary>
-        private void CreateScoreboard()
+        private void CreateScoreboards()
         {
             // Use the replay's name for the scoreboard if we're watching one.
             var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
 
-            var selfAatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
+            var selfAvatar = ConfigManager.Username.Value == scoreboardName ? SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID]
                 : UserInterface.UnknownAvatar;
 
-            var users = new List<ScoreboardUser>
+            SelfScoreboard = new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAvatar,
+                ModManager.Mods)
             {
-                // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, selfAatar,
-                    ModManager.Mods)
-                {
-                    Parent = Container,
-                    Alignment = Alignment.MidLeft
-                }
+                Parent = Container,
+                Alignment = Alignment.MidLeft
             };
 
-            Scoreboard = new Scoreboard(users) { Parent = Container };
+            var users = new List<ScoreboardUser> {SelfScoreboard};
+
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+            {
+                // Blue Team
+                ScoreboardRight = new Scoreboard(ScoreboardType.Teams,
+                    OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Blue ? users : new List<ScoreboardUser>(), MultiplayerTeam.Blue)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.TopLeft,
+                };
+            }
+
+            var scoreboardType = OnlineManager.CurrentGame != null &&
+                                 OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team
+                                ? ScoreboardType.Teams
+                                : ScoreboardType.FreeForAll;
+
+            // Red team/normal leaderboard
+            ScoreboardLeft = new Scoreboard(scoreboardType,
+                OnlineManager.CurrentGame == null || OnlineManager.GetTeam(OnlineManager.Self.OnlineUser.Id) == MultiplayerTeam.Red ?
+                    users : new List<ScoreboardUser>()) { Parent = Container };
+
+            ScoreboardLeft?.Users.ForEach(x => x.SetImage());
+            ScoreboardRight?.Users.ForEach(x => x.SetImage());
         }
 
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>
-        public void UpdateScoreboardUsers() => Scoreboard?.CalculateScores();
+        public void UpdateScoreboardUsers()
+        {
+            ScoreboardLeft?.CalculateScores();
+            ScoreboardRight?.CalculateScores();
+        }
 
         /// <summary>
         ///     Checks if there are new scoreboard users.
         /// </summary>
         private void CheckIfNewScoreboardUsers()
         {
-            var mapScores = MapManager.Selected.Value.Scores.Value;
-
-            if (mapScores == null || mapScores.Count <= 0 || Scoreboard?.Users?.Count != 1)
+            if (Screen.IsPlayTesting || StopCheckingForScoreboardUsers)
                 return;
 
-            for (var i = 0; i < 4 && i < mapScores.Count; i++)
+            var mapScores = MapManager.Selected.Value.Scores.Value;
+
+            if (mapScores == null || mapScores.Count <= 0 || (ScoreboardLeft.Users?.Count < 1 && ScoreboardRight != null && ScoreboardRight.Users.Count < 1))
+                return;
+
+            for (var i = 0; i < (OnlineManager.CurrentGame == null ? 4 : mapScores.Count) && i < mapScores.Count; i++)
             {
                 ScoreboardUser user;
 
@@ -424,13 +510,24 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (mapScores[i].IsOnline)
                 {
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        new List<Judgement>(), UserInterface.UnknownAvatar, mapScores[i].Mods, mapScores[i])
+                        new List<Judgement>(), UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
                     };
 
-                    user.Scoreboard = Scoreboard;
+                    if (OnlineManager.CurrentGame != null &&
+                        OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team && OnlineManager.GetTeam(user.LocalScore.PlayerId) == MultiplayerTeam.Blue)
+                    {
+                        user.Scoreboard = ScoreboardRight;
+                        user.X = WindowManager.Width;
+                    }
+                    else
+                    {
+                        user.Scoreboard = ScoreboardLeft;
+                    }
+
+                    user.SetImage();
 
                     var processor = user.Processor as ScoreProcessorKeys;
                     processor.Accuracy = (float) mapScores[i].Accuracy;
@@ -453,13 +550,23 @@ namespace Quaver.Shared.Screens.Gameplay
                         judgements.Add((Judgement)int.Parse(hit.ToString()));
 
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        judgements, UserInterface.UnknownAvatar, mapScores[i].Mods, mapScores[i])
+                        judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
                     };
 
-                    user.Scoreboard = Scoreboard;
+                    if (OnlineManager.CurrentGame != null &&
+                        OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team && OnlineManager.GetTeam(user.LocalScore.PlayerId) == MultiplayerTeam.Blue)
+                    {
+                        user.Scoreboard = ScoreboardRight;
+                    }
+                    else
+                    {
+                        user.Scoreboard = ScoreboardLeft;
+                    }
+
+                    user.SetImage();
 
                     // Make sure the user's score is updated with the current user.
                     for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < judgements.Count; j++)
@@ -467,18 +574,32 @@ namespace Quaver.Shared.Screens.Gameplay
                         var processor = user.Processor as ScoreProcessorKeys;
                         processor?.CalculateScore(judgements[i]);
                     }
-
                 }
 
-                Scoreboard.Users.Add(user);
+                if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team &&
+                    OnlineManager.GetTeam(user.LocalScore.PlayerId) == MultiplayerTeam.Blue)
+                {
+                    ScoreboardRight.Users.Add(user);
+                }
+                else
+                {
+                    ScoreboardLeft.Users.Add(user);
+                }
             }
 
-            Scoreboard.SetTargetYPositions();
+            ScoreboardLeft.SetTargetYPositions();
+            ScoreboardRight?.SetTargetYPositions();
 
             // Re-change the transitioner and pause screen's parent so that they appear on top of the scoreboard
             // again.
+            if (ProgressBar != null)
+                ProgressBar.Parent = Container;
+
             Transitioner.Parent = Container;
             PauseScreen.Parent = Container;
+
+            StopCheckingForScoreboardUsers = true;
+            Screen.SetRichPresence();
         }
 
         /// <summary>
@@ -487,7 +608,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePlayCompletion(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPlayComplete)
+            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting)
                 return;
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -524,10 +645,40 @@ namespace Quaver.Shared.Screens.Gameplay
                     return;
                 }
 
+                // In a multiplayer match
+                if (OnlineManager.CurrentGame != null)
+                {
+                    try
+                    {
+                        var playingUsers = GetScoreboardUsers();
+
+                        var allPlayersFinished = playingUsers.All(x => x.Processor.TotalJudgementCount == Screen.Ruleset.ScoreProcessor.TotalJudgementCount);
+
+                        if (Screen.LastJudgementIndexSentToServer == Screen.Ruleset.ScoreProcessor.TotalJudgementCount - 1 && allPlayersFinished)
+                        {
+                            OnlineManager.Client.FinishMultiplayerGameSession();
+                            ResultsScreenLoadInitiated = true;
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
+
+                    return;
+                }
+
                 Screen.Exit(() =>
                 {
                     if (Screen.HasQuit && ConfigManager.SkipResultsScreenAfterQuit.Value)
+                    {
+                        if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
+                            ModManager.RemoveMod(ModIdentifier.Paused);
+
                         return new SelectScreen();
+                    }
+
 
                     return new ResultScreen(Screen);
                 }, 500);
@@ -585,6 +736,56 @@ namespace Quaver.Shared.Screens.Gameplay
                 (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
 
             BackgroundManager.Background.BrightnessSprite.Animations.Add(t);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameEnded(object sender, GameEndedEventArgs e)
+        {
+            Screen.IsPaused = true;
+
+            var screen = new MultiplayerScreen(OnlineManager.CurrentGame, true);
+            Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers(), screen));
+        }
+
+        private List<ScoreboardUser> GetScoreboardUsers()
+        {
+            var scoreboardUsers = new List<ScoreboardUser>();
+
+            if (ScoreboardLeft.Users.Count != 0)
+            {
+                var users = ScoreboardLeft.Users.Where(x => !x.HasQuit);
+                scoreboardUsers.AddRange(users);
+            }
+
+            if (ScoreboardRight != null && ScoreboardRight.Users.Count != 0)
+            {
+                var users = ScoreboardRight.Users.Where(x => !x.HasQuit);
+                scoreboardUsers.AddRange(users);
+            }
+
+            return scoreboardUsers;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleWaitingForPlayersDialog()
+        {
+            if (MultiplayerEndTime == null)
+                return;
+
+            var previouslyVisible = MultiplayerEndTime.Visible;
+
+            MultiplayerEndTime.Visible = Screen.IsPlayComplete;
+
+            if (!previouslyVisible && MultiplayerEndTime.Visible)
+            {
+                MultiplayerEndTime.ClearAnimations();
+                MultiplayerEndTime.Alpha = 0;
+                MultiplayerEndTime.FadeTo(1, Easing.Linear, 400);
+            }
         }
     }
 }

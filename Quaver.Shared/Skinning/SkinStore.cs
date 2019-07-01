@@ -32,7 +32,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The skin.ini file.
         /// </summary>
-        internal IniData Config { get; private set;  }
+        internal IniData Config { get; private set; }
 
         /// <summary>
         ///     Dictionary that contains both skins for 4K & 7K
@@ -152,6 +152,26 @@ namespace Quaver.Shared.Skinning
         internal Texture2D ScoreboardOther { get; private set; }
 
         /// <summary>
+        ///     The scoreboard for the red team
+        /// </summary>
+        internal Texture2D ScoreboardRedTeam { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the red team (other players)
+        /// </summary>
+        internal Texture2D ScoreboardRedTeamOther { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the blue team
+        /// </summary>
+        internal Texture2D ScoreboardBlueTeam { get; set; }
+
+        /// <summary>
+        ///     The scoreboard for the blue team (other players)
+        /// </summary>
+        internal Texture2D ScoreboardBlueTeamOther { get; set; }
+
+        /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; private set; }
@@ -170,6 +190,16 @@ namespace Quaver.Shared.Skinning
         ///     Displayed when the user achieves high combos
         /// </summary>
         internal List<Texture2D> ComboAlerts { get; private set; }
+
+        /// <summary>
+        ///     Displayed when being eliminated from battle royale
+        /// </summary>
+        internal Texture2D BattleRoyaleEliminated { get; private set; }
+
+        /// <summary>
+        ///     Displayed when in danger of being eliminated
+        /// </summary>
+        internal Texture2D BattleRoyaleWarning { get; private set; }
 
         /// <summary>
         ///     Sound effect elements.
@@ -244,6 +274,7 @@ namespace Quaver.Shared.Skinning
             LoadHealthBar();
             LoadSkip();
             LoadComboAlert();
+            LoadMultiplayerElements();
             LoadSoundEffects();
         }
 
@@ -312,7 +343,7 @@ namespace Quaver.Shared.Skinning
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
                 return new List<Texture2D> { LoadSingleTexture( $"{dir}/{element}", resource + ".png")};
-;
+
             return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(
                 GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png")), rows, columns);
         }
@@ -492,6 +523,18 @@ namespace Quaver.Shared.Skinning
 
             const string scoreboardOther = "scoreboard-other";
             ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardOther}.png");
+
+            const string scoreboardRedTeam = "scoreboard-red-team";
+            ScoreboardRedTeam = LoadSingleTexture($"{scoreboardFolder}/{scoreboardRedTeam}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardRedTeam}.png");
+
+            const string scoreboardRedTeamOther = "scoreboard-red-team-other";
+            ScoreboardRedTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardRedTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardRedTeamOther}.png");
+
+            const string scoreboardBlueTeam = "scoreboard-blue-team";
+            ScoreboardBlueTeam = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeam}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeam}.png");
+
+            const string scoreboardBlueTeamOther = "scoreboard-blue-team-other";
+            ScoreboardBlueTeamOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardBlueTeamOther}", $"Quaver.Resources/Textures/Skins/Shared/Scoreboard/{scoreboardBlueTeamOther}.png");
         }
 
         /// <summary>
@@ -518,7 +561,7 @@ namespace Quaver.Shared.Skinning
             var skipFolder = $"/Skip/";
             const string skip = "skip";
 
-            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 31);
+            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 42);
         }
 
         /// <summary>
@@ -537,6 +580,19 @@ namespace Quaver.Shared.Skinning
                 ComboAlerts.Add(LoadSingleTexture($"{comboAlertFolder}/{comboAlert}-{i + 1}",
                     $"Quaver.Resources/Textures/Skins/Shared/Combo/{comboAlert}-{i + 1}.png"));
             }
+        }
+
+        private void LoadMultiplayerElements()
+        {
+            var multiplayerFolder = $"{Dir}/Multiplayer/";
+            const string battleRoyaleEliminated = "eliminated";
+
+            BattleRoyaleEliminated = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleEliminated}"
+                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleEliminated}.png");
+
+            const string battleRoyaleWarning = "warning";
+            BattleRoyaleWarning = LoadSingleTexture($"{multiplayerFolder}/{battleRoyaleWarning}"
+                ,$"Quaver.Resources/Textures/Skins/Shared/Multiplayer/{battleRoyaleWarning}.png");
         }
 
         /// <summary>

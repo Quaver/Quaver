@@ -12,6 +12,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Shared.Helpers;
+using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -31,7 +32,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Text that prompts the user to search
         /// </summary>
-        private SpriteText TextSearch { get; set; }
+        private SpriteTextBitmap TextSearch { get; set; }
 
         /// <summary>
         ///     The box to search for mapsets.
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Text that says "Filter by:"
         /// </summary>
-        private SpriteText OrderBy { get; set; }
+        private SpriteTextBitmap OrderBy { get; set; }
 
         /// <summary>
         ///     The button to order by artist.
@@ -66,7 +67,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     The amount of mapsets that are found.
         /// </summary>
-        private SpriteText TextMapsetsFound { get; set; }
+        private SpriteTextBitmap TextMapsetsFound { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -76,8 +77,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             View = view;
             Size = new ScalableVector2(620, 90);
 
-            Alpha = 0.80f;
-            Image = UserInterface.SelectSearchBackground;
+            Image = UserInterface.SelectSearchPanel;
 
             CreateTextSearch();
             CreateSearchBox();
@@ -87,27 +87,6 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             CreateOrderByCreatorButton();
             CreateOrderByDateAddedButton();
             CreateTextMapsetsFound();
-
-            var leftLine = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(2, Height),
-            };
-
-            var rightLine = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(2, Height),
-                Alignment = Alignment.TopRight,
-            };
-
-            // Line displayed at the bottom of the container.
-            var bottomline = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(Width, 2),
-                Alignment = Alignment.BotLeft,
-            };
 
             ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsByChanged;
         }
@@ -136,11 +115,12 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Creates the heading text that says "search"
         /// </summary>
-        private void CreateTextSearch() => TextSearch = new SpriteText(Fonts.Exo2SemiBold, "Search:", 13)
+        private void CreateTextSearch() => TextSearch = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Search:")
         {
             Parent = this,
             X = 15,
             Y = 15,
+            FontSize = 16
         };
 
         /// <summary>
@@ -151,7 +131,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             SearchBox = new Textbox(new ScalableVector2(518, 30), Fonts.Exo2Bold, 13)
             {
                 Parent = TextSearch,
-                Position = new ScalableVector2(TextSearch.Width + 5, 0),
+                Position = new ScalableVector2(TextSearch.Width + 15, 0),
                 Alignment = Alignment.MidLeft,
                 Tint = Colors.DarkGray,
                 Alpha = 0.75f,
@@ -195,11 +175,12 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// <summary>
         ///     Creates the text that displays "Order By:"
         /// </summary>
-        private void CreateTextOrderBy() => OrderBy = new SpriteText(Fonts.Exo2SemiBold, "Order By:", 13)
+        private void CreateTextOrderBy() => OrderBy = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Order By:")
         {
             Parent = this,
             X = TextSearch.X,
-            Y = TextSearch.Y + TextSearch.Height + 15,
+            Y = TextSearch.Y + TextSearch.Height + 24,
+            FontSize = 16
         };
 
         /// <summary>
@@ -211,7 +192,8 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Artist)
             {
                 Parent = OrderBy,
-                X = OrderBy.Width + 3,
+                X = OrderBy.Width + 15,
+                Y = -2,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -253,6 +235,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             {
                 Parent = OrderBy,
                 X = ButtonOrderByArtist.X + ButtonOrderByArtist.Width - 5,
+                Y = ButtonOrderByArtist.Y,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -294,6 +277,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             {
                 Parent = OrderBy,
                 X = ButtonOrderByTitle.X + ButtonOrderByTitle.Width - 5,
+                Y = ButtonOrderByArtist.Y,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -335,6 +319,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
             {
                 Parent = OrderBy,
                 X = ButtonOrderByCreator.X + ButtonOrderByCreator.Width - 5,
+                Y = ButtonOrderByArtist.Y,
                 Text =
                 {
                     Font = Fonts.Exo2SemiBold,
@@ -371,12 +356,13 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateTextMapsetsFound()
         {
-            TextMapsetsFound = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+            TextMapsetsFound = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 X = -10,
-                Y = OrderBy.Y
+                Y = OrderBy.Y,
+                FontSize = 16
             };
 
             UpdateMapsetsFoundText();

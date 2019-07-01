@@ -158,10 +158,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
             }
             else
             {
-                // If we don't have user information, request it to the server to obtain it.
-                if (ChatManager.IsActive)
-                    OnlineManager.Client.RequestUserInfo(new List<int>() { User.OnlineUser.Id });
-
                 Username.Text = $"User#{User.OnlineUser.Id}";
                 Avatar.Border.Tint = Color.White;
                 Username.Tint = Color.White;
@@ -199,6 +195,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
                     break;
                 case ClientStatus.InLobby:
                     statusText = "Finding a Match";
+                    break;
+                case ClientStatus.Multiplayer:
+                    statusText = "Playing Multiplayer";
                     break;
             }
 

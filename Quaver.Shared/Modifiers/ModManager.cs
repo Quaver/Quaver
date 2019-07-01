@@ -33,10 +33,10 @@ namespace Quaver.Shared.Modifiers
         {
             get
             {
-                var mods = 0;
+                var mods = 0L;
 
                 foreach (var mod in CurrentModifiersList)
-                    mods += (int) mod.ModIdentifier;
+                    mods += (long) mod.ModIdentifier;
 
                 return (ModIdentifier) mods;
             }

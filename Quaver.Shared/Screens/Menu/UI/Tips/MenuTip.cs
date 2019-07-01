@@ -21,12 +21,12 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// <summary>
         ///     The bolded text that says "Tip:"
         /// </summary>
-        public SpriteText TextTip { get; private set; }
+        public SpriteTextBitmap TextTip { get; private set; }
 
         /// <summary>
         ///     The actual content of the tip.
         /// </summary>
-        public SpriteText TextTipContent { get; private set; }
+        public SpriteTextBitmap TextTipContent { get; private set; }
 
         /// <summary>
         ///     The amount of time this tip has been active.
@@ -75,7 +75,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         {
             RNG = new Random();
             Tint = Color.Black;
-            Alpha = 0.25f;
+            Alpha = 0.45f;
 
             CreateTextTip();
             CreateTextTipContent();
@@ -115,10 +115,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteText(Fonts.Exo2BoldItalic, "TIP:", 13)
+            TextTip = new SpriteTextBitmap(FontsBitmap.GothamBold, "TIP:")
             {
                 Alignment = Alignment.MidLeft,
                 X = 5,
+                FontSize = 16
             };
 
             AddContainedDrawable(TextTip);
@@ -129,9 +130,10 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         /// </summary>
         private void CreateTextTipContent()
         {
-            TextTipContent = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
+            TextTipContent = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
             {
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                FontSize = 14
             };
 
             AddContainedDrawable(TextTipContent);
@@ -144,9 +146,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Tips
         public void UpdateTip(string tip)
         {
             TextTipContent.Text = tip;
-            TextTipContent.X = TextTip.X + TextTip.Width + 1;
+            TextTipContent.X = TextTip.X + TextTip.Width + 6;
 
-            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 10, 45);
+            ContentContainer.Size = new ScalableVector2(TextTip.Width + TextTipContent.Width + 20, 45);
 
             Animations.Add(new Animation(AnimationProperty.Width, Easing.Linear,
                 Width, ContentContainer.Width, 400));

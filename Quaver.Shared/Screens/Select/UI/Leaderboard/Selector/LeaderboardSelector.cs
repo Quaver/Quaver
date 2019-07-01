@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -56,7 +57,8 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard.Selector
             Parent = this,
             Alignment = Alignment.BotLeft,
             Size = new ScalableVector2(Width, 2),
-            Alpha = 0.90f
+            Alpha = 0.90f,
+            Tint = ColorHelper.HexToColor("#69acc5")
         };
 
         /// <summary>

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -39,17 +40,17 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         /// <summary>
         ///    The title of the song.
         /// </summary>
-        public SpriteText Title { get; }
+        public SpriteTextBitmap Title { get; }
 
         /// <summary>
         ///     The artist of the song
         /// </summary>
-        public SpriteText Artist { get; }
+        public SpriteTextBitmap Artist { get; }
 
         /// <summary>
         ///     The creator of the mapset.
         /// </summary>
-        public SpriteText Creator { get; }
+        public SpriteTextBitmap Creator { get; }
 
         /// <summary>
         ///     The height of the drawable mapset.
@@ -66,28 +67,40 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
-            Title = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+            Title = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(15, 12)
+                Position = new ScalableVector2(15, 12),
+                FontSize = 18
             };
 
-            Artist = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
+            Artist = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 3)
+                Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 3),
+                FontSize = 16
             };
 
-            Creator = new SpriteText(Fonts.Exo2Medium, " ", 10)
+            Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-10, Artist.Y + Artist.Height + 2)
+                Position = new ScalableVector2(-10, Artist.Y + Artist.Height + 6),
+                FontSize = 14
             };
 
             Clicked += OnClicked;
+        }
+
+        public override void Destroy()
+        {
+            Artist.Destroy();
+            Title.Destroy();
+            Creator.Destroy();
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -111,7 +124,8 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
             // Change the width of the set outwards to appear it as selected.
             Animations.Clear();
             ChangeWidthTo(500, Easing.OutQuint, 600);
-            FadeToColor(new Color(68, 174, 221), Easing.OutQuint, 300);
+
+            Image = UserInterface.SelectedMapset;
 
             Title.Animations.Clear();
             Artist.Animations.Clear();
@@ -129,7 +143,8 @@ namespace Quaver.Shared.Screens.Select.UI.Mapsets
         {
             Animations.Clear();
             ChangeWidthTo(410,Easing.OutQuint, 600);
-            FadeToColor(Color.Black, Easing.OutQuint, 300);
+
+            Image = UserInterface.DeselectedMapset;
 
             Title.Animations.Clear();
             Artist.Animations.Clear();

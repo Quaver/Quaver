@@ -22,6 +22,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
@@ -80,10 +81,6 @@ namespace Quaver.Shared
         /// </summary>
         public bool IsDeployedBuild => AssemblyName.Version.Major != 0 || AssemblyName.Version.Minor != 0 || AssemblyName.Version.Revision != 0 ||
                                         AssemblyName.Version.Build != 0;
-
-        /// <summary>
-        /// </summary>
-        public List<Action> ScheduledRenderTargetDraws { get; } = new List<Action>();
 
         /// <summary>
         ///     Stringified version name of the client.
@@ -181,7 +178,7 @@ namespace Quaver.Shared
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new AlphaScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
         }
 
         /// <inheritdoc />
@@ -217,13 +214,13 @@ namespace Quaver.Shared
 
             BackgroundManager.Update(gameTime);
             BackgroundHelper.Update(gameTime);
-            NotificationManager.Update(gameTime);
             ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
 
             QuaverScreenManager.Update(gameTime);
+            NotificationManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
             SkinManager.HandleSkinReloading();
@@ -238,12 +235,6 @@ namespace Quaver.Shared
         {
             if (!IsReadyToUpdate)
                 return;
-
-            for (var i = ScheduledRenderTargetDraws.Count - 1; i >= 0; i--)
-            {
-                ScheduledRenderTargetDraws[i]?.Invoke();
-                ScheduledRenderTargetDraws.Remove(ScheduledRenderTargetDraws[i]);
-            }
 
             base.Draw(gameTime);
 
@@ -336,17 +327,17 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(Fonts.Exo2SemiBold, 16)
+            var fpsCounter = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
                 TextFps =
                 {
-                    Tint = Color.LimeGreen
+                    Tint = Color.White
                 },
-                X = -10,
-                Y = -25,
+                X = -5,
+                Y = -36,
                 Alpha = 0
             };
 
@@ -459,6 +450,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
                 case QuaverScreenType.Editor:
+                case QuaverScreenType.Multiplayer:
+                case QuaverScreenType.Lobby:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }

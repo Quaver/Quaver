@@ -20,6 +20,10 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
         /// </summary>
         private JoiningGameDialogType Type { get; }
 
+        private Sprite Icon { get; set; }
+
+        private Sprite LoadingWheel { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -38,30 +42,19 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
         /// </summary>
         public sealed override void CreateContent()
         {
-            var background = new Sprite
+            var container = new Sprite()
             {
                 Parent = this,
+                Image = UserInterface.WaitingPanel,
                 Alignment = Alignment.MidCenter,
-                Tint = Color.Black,
-                Size = new ScalableVector2(WindowManager.Width, 100),
-                Alpha = 0,
-                SetChildrenAlpha = true
+                Size = new ScalableVector2(450, 134),
+                Alpha = 1,
+                SetChildrenAlpha = true,
             };
 
-            background.FadeTo(1, Easing.Linear, 150);
-
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
+            Icon = new Sprite
             {
-                Parent = background,
-                Size = new ScalableVector2(Width, 2),
-                Tint = Colors.MainAccent,
-                Alpha = 0
-            };
-
-            var icon = new Sprite
-            {
-                Parent = background,
+                Parent = container,
                 Alignment = Alignment.TopCenter,
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_information_button),
                 Y = 18,
@@ -85,20 +78,19 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
             // ReSharper disable once ObjectCreationAsStatement
             var text = new SpriteTextBitmap(FontsBitmap.AllerRegular, str)
             {
-                Parent = background,
+                Parent = container,
                 FontSize = 20,
-                Y = icon.Y + icon.Height + 15,
-                Alignment = Alignment.TopCenter,
-                Alpha = 1
+                Y = Icon.Y + Icon.Height + 10,
+                Alignment = Alignment.TopCenter
             };
 
-            // ReSharper disable once ObjectCreationAsStatement
-            new Sprite
+            LoadingWheel = new Sprite()
             {
-                Parent = background,
-                Size = new ScalableVector2(Width, 2),
-                Tint = Colors.MainAccent,
-                Alignment = Alignment.BotLeft
+                Parent = container,
+                Size = new ScalableVector2(40, 40),
+                Image = UserInterface.LoadingWheel,
+                Alignment = Alignment.TopCenter,
+                Y = text.Y + text.Height + 10
             };
         }
 
@@ -111,6 +103,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
             if (!OnlineManager.Connected)
                 DialogManager.Dismiss(this);
 
+            PerformLoadingWheelRotation();
             base.Update(gameTime);
         }
 
@@ -131,6 +124,19 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
+        }
+
+        /// <summary>
+        ///     Rotates the loading wheel endlessly
+        /// </summary>
+        private void PerformLoadingWheelRotation()
+        {
+            if (LoadingWheel.Animations.Count != 0)
+                return;
+
+            var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
+            LoadingWheel.ClearAnimations();
+            LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
         }
 
         private void OnJoinedGame(object sender, JoinedGameEventArgs e) => DialogManager.Dismiss(this);

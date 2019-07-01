@@ -84,6 +84,23 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Finds a map based on the md5 hash
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <returns></returns>
+        public static Map FindMapFromMd5(string md5)
+        {
+            foreach (var set in Mapsets)
+            {
+                var found = set.Maps.Find(x => x.Md5Checksum == md5);
+
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
+
         ///     Gets a map's custom audio sample path taking into account the game.
         /// </summary>
         /// <param name="map"></param>

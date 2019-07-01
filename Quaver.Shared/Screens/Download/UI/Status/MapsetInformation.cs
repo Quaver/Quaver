@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
 
         /// <summary>
         /// </summary>
-        private SpriteText Status { get; set; }
+        private SpriteTextBitmap Status { get; set; }
 
         /// <summary>
         /// </summary>
@@ -39,15 +39,15 @@ namespace Quaver.Shared.Screens.Download.UI.Status
 
         /// <summary>
         /// </summary>
-        private SpriteText Title { get; set; }
+        private SpriteTextBitmap Title { get; set; }
 
         /// <summary>
         /// </summary>
-        private SpriteText Artist { get; set; }
+        private SpriteTextBitmap Artist { get; set; }
 
         /// <summary>
         /// </summary>
-        private SpriteText Creator { get; set; }
+        private SpriteTextBitmap Creator { get; set; }
 
         /// <summary>
         /// </summary>
@@ -65,13 +65,11 @@ namespace Quaver.Shared.Screens.Download.UI.Status
         /// <summary>
         /// </summary>
         /// <param name="view"></param>
-        public MapsetInformation(DownloadScreenView view) : base(new ScalableVector2(400, 334), new ScalableVector2(400, 334))
+        public MapsetInformation(DownloadScreenView view) : base(new ScalableVector2(400, 370), new ScalableVector2(400, 370))
         {
             View = view;
-            Size = new ScalableVector2(400, 334);
-            Tint = Color.Black;
-            Alpha = 0.75f;
-            AddBorder(Color.White);
+            Size = new ScalableVector2(400, 370);
+            Image = UserInterface.DownloadMapsetInfo;
 
             CreateTextDownloadStatus();
             CreateMapBanner();
@@ -101,54 +99,64 @@ namespace Quaver.Shared.Screens.Download.UI.Status
 
         /// <summary>
         /// </summary>
-        private void CreateTextDownloadStatus() => Status = new SpriteText(Fonts.Exo2Bold, "Mapset Information", 14)
+        private void CreateTextDownloadStatus() => Status = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Mapset Information")
         {
             Parent = this,
             Y = 15,
             X = 15,
-            Tint = Colors.MainAccent
+            Tint = Colors.MainAccent,
+            FontSize = 18
         };
 
         /// <summary>
         /// </summary>
-        private void CreateMapBanner() => MapBanner = new Sprite
+        private void CreateMapBanner()
         {
-            Parent = this,
-            Alignment = Alignment.TopCenter,
-            Y = Status.Y + Status.Height + 10,
-            Size = new ScalableVector2(368, 80),
-            SetChildrenAlpha = true,
-            Alpha = 0
-        };
+            MapBanner = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Y = Status.Y + Status.Height + 10,
+                Size = new ScalableVector2(368, 80),
+                SetChildrenAlpha = true,
+                Alpha = 0
+            };
+
+            MapBanner.AddBorder(Colors.MainAccent);
+            MapBanner.Border.Alpha = 0;
+        }
 
         /// <summary>
         /// </summary>
-        private void CreateTextTitle() => Title = new SpriteText(Fonts.SourceSansProBold, "Title", 13)
-        {
-            Parent = this,
-            X = Status.X,
-            Y = MapBanner.Y + MapBanner.Height + 10,
-            Alpha = 0
-        };
-
-        /// <summary>
-        /// </summary>
-        private void CreateTextArtist() => Artist = new SpriteText(Fonts.SourceSansProBold, "Artist", 13)
+        private void CreateTextTitle() => Title = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Title")
         {
             Parent = this,
             X = Status.X,
-            Y = Title.Y + Title.Height + 2,
-            Alpha = 0
+            Y = MapBanner.Y + MapBanner.Height + 15,
+            Alpha = 0,
+            FontSize = 14
         };
 
         /// <summary>
         /// </summary>
-        private void CreateTextCreator() => Creator = new SpriteText(Fonts.SourceSansProSemiBold, "Created By: ", 13)
+        private void CreateTextArtist() => Artist = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Artist")
         {
             Parent = this,
             X = Status.X,
-            Y = Artist.Y + Artist.Height + 2,
-            Alpha = 0
+            Y = Title.Y + Title.Height + 15,
+            Alpha = 0,
+            FontSize = 14
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateTextCreator() => Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Created By: ")
+        {
+            Parent = this,
+            X = Status.X,
+            Y = Artist.Y + Artist.Height + 15,
+            Alpha = 0,
+            FontSize = 14
         };
 
         /// <summary>
@@ -159,7 +167,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 20,
+                Y = Creator.Y + Creator.Height + 30,
                 X = Status.X,
                 Text = { Font = Fonts.SourceSansProSemiBold },
                 SetChildrenAlpha = true,
@@ -210,7 +218,7 @@ namespace Quaver.Shared.Screens.Download.UI.Status
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Y = DownloadButton.Y + DownloadButton.Height + 15,
+                Y = DownloadButton.Y + DownloadButton.Height + 20,
                 Size = new ScalableVector2(210, 35),
                 Text = {Font = Fonts.SourceSansProSemiBold},
                 SetChildrenAlpha = true,

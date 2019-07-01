@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     The text that displays that the user is currently submitting their score
         /// </summary>
-        private SpriteText TextSubmittingScore { get; set; }
+        private SpriteTextBitmap TextSubmittingScore { get; set; }
 
         /// <summary>
         ///     The loading wheel that shows the user is submitting a score
@@ -60,8 +60,8 @@ namespace Quaver.Shared.Screens.Result.UI
             Screen = screen;
             Container = container;
 
-            Size = new ScalableVector2(Container.Width - Container.Border.Thickness * 2,
-                Container.Height - Container.BottomHorizontalDividerLine.Y - Container.Border.Thickness);
+            Size = new ScalableVector2(Container.Width - 2 * 2,
+                Container.Height - Container.BottomHorizontalDividerLine.Y - 2);
 
             ContentContainer.Size = Size;
             Alpha = 0;
@@ -127,10 +127,11 @@ namespace Quaver.Shared.Screens.Result.UI
             if (Screen.ScoreProcessor.TotalJudgementCount == Screen.ScoreProcessor.CurrentJudgements[Judgement.Miss])
                 return;
 
-            TextSubmittingScore = new SpriteText(Fonts.SourceSansProSemiBold, "SUBMITTING SCORE", 14)
+            TextSubmittingScore = new SpriteTextBitmap(FontsBitmap.GothamRegular, "SUBMITTING SCORE")
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
+                FontSize = 18
             };
 
             SubmittingLoadingWheel = new Sprite()
@@ -155,8 +156,8 @@ namespace Quaver.Shared.Screens.Result.UI
                 return;
 
             var rotation = MathHelper.ToDegrees(SubmittingLoadingWheel.Rotation);
-            SubmittingLoadingWheel.ClearAnimations();
-            SubmittingLoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+            SubmittingLoadingWheel?.ClearAnimations();
+            SubmittingLoadingWheel?.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
         }
 
         /// <summary>
@@ -166,20 +167,27 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <param name="e"></param>
         private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
         {
-            SubmittingLoadingWheel.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, SubmittingLoadingWheel.Alpha, 0, 100));
-            TextSubmittingScore.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TextSubmittingScore.Alpha, 0, 100));
-
-            if (e.Response == null)
-                return;
-
-            switch (e.Response.Status)
+            try
             {
-                case 200:
-                    AddStatsAfterSubmission(e.Response);
-                    break;
-                case 400:
-                    Logger.Warning($"Map unranked", LogType.Network);
-                    break;
+                SubmittingLoadingWheel?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, SubmittingLoadingWheel.Alpha, 0, 100));
+                TextSubmittingScore?.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, TextSubmittingScore.Alpha, 0, 100));
+
+                if (e.Response == null)
+                    return;
+
+                switch (e.Response.Status)
+                {
+                    case 200:
+                        AddStatsAfterSubmission(e.Response);
+                        break;
+                    case 400:
+                        Logger.Warning($"Map unranked", LogType.Network);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored
             }
         }
 

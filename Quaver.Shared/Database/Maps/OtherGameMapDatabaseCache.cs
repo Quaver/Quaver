@@ -32,8 +32,24 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Dictates if we need to update the
         /// </summary>
-        public static bool NeedsSync => ConfigManager.AutoLoadOsuBeatmaps.Value && (MapsToCache[OtherGameCacheAction.Delete]?.Count > 0 ||
-                                               MapsToCache[OtherGameCacheAction.Add]?.Count > 0 || MapsToCache[OtherGameCacheAction.Update]?.Count > 0);
+        public static bool NeedsSync
+        {
+            get
+            {
+                try
+                {
+                    return ConfigManager.AutoLoadOsuBeatmaps.Value &&
+                           (MapsToCache[OtherGameCacheAction.Delete]?.Count > 0 ||
+                            MapsToCache[OtherGameCacheAction.Add]?.Count > 0 ||
+                            MapsToCache[OtherGameCacheAction.Update]?.Count > 0);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    return false;
+                }
+            }
+        }
 
         /// <summary>
         ///     The thread that the sync will take place on

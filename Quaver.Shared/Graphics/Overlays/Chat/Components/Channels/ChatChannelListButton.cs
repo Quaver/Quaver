@@ -51,6 +51,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Channels
 
             Alpha = 0;
 
+            if (channel.Name.StartsWith("#multiplayer"))
+                Text.Text = "#multiplayer";
+            else if (channel.Name.StartsWith("#multi_team"))
+                Text.Text = $"#multiplayer-team";
+
             Text.Alignment = Alignment.MidLeft;
             Text.TextAlignment = Alignment.MidLeft;
             Text.X = 10;

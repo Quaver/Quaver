@@ -203,8 +203,8 @@ namespace Quaver.Shared.Screens.Lobby
         /// </summary>
         private void CreateHeader()
         {
-            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "CUSTOM", "GAMES",
-                "find or create a multiplayer match", Colors.MainAccent) { Parent = Container };
+            Header = new MenuHeader(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), "MULTIPLAYER", "LOBBY",
+                "find or create an online match", Colors.MainAccent) { Parent = Container };
 
             Header.Y = -Header.Height;
             Header.MoveToY(0, Easing.OutQuint, 600);
@@ -216,12 +216,12 @@ namespace Quaver.Shared.Screens.Lobby
         {
             Footer = new MenuFooter(new List<ButtonText>
             {
-                new ButtonText(FontsBitmap.GothamRegular, "back to menu", 14, (o, e) => LobbyScreen.ExitToMenu())
+                new ButtonText(FontsBitmap.GothamRegular, "back to menu", 14, (o, e) => LobbyScreen.ExitToMenu()),
+                new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog()))
             }, new List<ButtonText>
             {
                 new ButtonText(FontsBitmap.GothamRegular, "quick match", 14, (o, e) => { }),
                 new ButtonText(FontsBitmap.GothamRegular, "create match", 14, (o, e) => DialogManager.Show(new CreateGameDialog())),
-                new ButtonText(FontsBitmap.GothamRegular, "options menu", 14, (o, e) => DialogManager.Show(new SettingsDialog()))
             }, Colors.MainAccent)
             {
                 Parent = Container,

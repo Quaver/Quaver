@@ -14,6 +14,10 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public bool Ranked { get; set; } = false;
 
+        public bool AllowedInMultiplayer { get; set; } = true;
+
+        public bool OnlyMultiplayerHostCanCanChange { get; set; } = true;
+
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.NoLongNotes, ModIdentifier.FullLN };
 
         public void InitializeMod() {}

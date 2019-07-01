@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -178,29 +179,20 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 Y = GameName.Y + GameName.Height + spacing,
                 Textbox =
                 {
-                    MaxCharacters = 100
+                    MaxCharacters = 100,
+                    AllowedCharacters = new Regex("^.{1,100}$")
                 }
             };
 
-            GameType = new LabelledHorizontalSelector(width - 50, "Game Type", new List<string>
+            Ruleset = new LabelledHorizontalSelector(width - 50, "Game Mode", new List<string>
             {
-                "Friendly",
-                "Competitive"
+                "Free-For-All",
+                "Team",
+                "Battle-Royale"
             })
             {
                 Parent = this,
                 Y = Password.Y + Password.Height + spacing,
-                X = 16
-            };
-
-            Ruleset = new LabelledHorizontalSelector(width - 50, "Ruleset", new List<string>
-            {
-                "Free-For-All",
-                "Team"
-            })
-            {
-                Parent = this,
-                Y = GameType.Y + GameType.Height + spacing,
                 X = 16
             };
 
@@ -214,7 +206,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 "12",
                 "14",
                 "16"
-            })
+            }, 7)
             {
                 Parent = this,
                 Y = Ruleset.Y + Ruleset.Height + spacing,
@@ -249,17 +241,21 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 return;
             }
 
-            var game = MultiplayerGame.CreateCustom(Enum.Parse<MultiplayerGameType>(GameType.Selector.SelectedItemText.Text),
-                GameName.Textbox.RawText, Password.Textbox.RawText,
-                int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
-                MapManager.Selected.Value.MapId,
-                MapManager.Selected.Value.MapSetId, MultiplayerGameRuleset.Free_For_All,
-                AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
-                MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum, new List<double>());
-
             DialogManager.Show(new JoiningGameDialog(JoiningGameDialogType.Creating));
 
-            ThreadScheduler.RunAfter(() => OnlineManager.Client.CreateMultiplayerGame(game), 800);
+            ThreadScheduler.Run(() =>
+            {
+                var game = MultiplayerGame.CreateCustom(MultiplayerGameType.Friendly,
+                    GameName.Textbox.RawText, Password.Textbox.RawText,
+                    int.Parse(MaxPlayers.Selector.SelectedItemText.Text), MapManager.Selected.Value.ToString(),
+                    MapManager.Selected.Value.MapId,
+                    MapManager.Selected.Value.MapSetId, Enum.Parse<MultiplayerGameRuleset>(Ruleset.Selector.SelectedItemText.Text.Replace("-", "_")),
+                    AutoHostRotation.Selector.SelectedItemText.Text == "Yes", (byte) MapManager.Selected.Value.Mode,
+                    MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods), MapManager.Selected.Value.Md5Checksum,
+                    MapManager.Selected.Value.GetDifficultyRatings(), MapManager.Selected.Value.GetJudgementCount(), MapManager.Selected.Value.GetAlternativeMd5());
+
+                OnlineManager.Client.CreateMultiplayerGame(game);
+            });
 
             Dialog.Close();
         }

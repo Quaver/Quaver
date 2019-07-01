@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Counter
 
             var skin = SkinManager.Skin.Keys[parentDisplay.Screen.Map.Mode];
 
-            SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j))
+            SpriteText = new SpriteTextBitmap(FontsBitmap.AllerRegular, JudgementHelper.JudgementToShortName(j), false)
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,

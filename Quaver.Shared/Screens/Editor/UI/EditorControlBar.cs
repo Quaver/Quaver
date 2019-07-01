@@ -239,7 +239,7 @@ namespace Quaver.Shared.Screens.Editor.UI
         /// </summary>
         private void CreateTextAudioTime()
         {
-            TextAudioTime = new SpriteTextBitmap(FontsBitmap.MuliBold, "00:00.000")
+            TextAudioTime = new SpriteTextBitmap(FontsBitmap.MuliBold, "00:00.000", false)
             {
                 Parent = this,
                 X = ButtonRestartTrack.X + ButtonRestartTrack.Width + 15,
@@ -248,7 +248,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 Alignment = Alignment.MidLeft
             };
 
-            TextAudioTimeLeft = new SpriteTextBitmap(FontsBitmap.MuliBold, "-00:00.000")
+            TextAudioTimeLeft = new SpriteTextBitmap(FontsBitmap.MuliBold, "-00:00.000", false)
             {
                 Parent = this,
                 Y = -2,

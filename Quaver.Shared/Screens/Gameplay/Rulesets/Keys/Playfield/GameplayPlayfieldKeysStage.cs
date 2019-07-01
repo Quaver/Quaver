@@ -11,14 +11,18 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Health;
+using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Skinning;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
@@ -130,9 +134,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private SongInformation SongInfo { get; set; }
 
         /// <summary>
+        ///     Displays last place/elimination alerts for battle royale
+        /// </summary>
+        private BattleRoyaleAlert BattleRoyaleAlert { get; set; }
+
+        /// <summary>
         ///     Make a quicker and shorter reference to the game skin
         /// </summary>
         private SkinKeys Skin => SkinManager.Skin.Keys[Screen.Map.Mode];
+
+        /// <summary>
+        /// </summary>
+        private BattleRoyalePlayerEliminated BattleRoyalePlayerEliminated { get; set; }
 
         /// <summary>
         ///     Ctor
@@ -175,6 +188,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitError();
                 CreateHitLighting();
                 CreateJudgementHitBurst();
+
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
+                    ConfigManager.EnableBattleRoyaleAlerts.Value)
+                {
+                    CreateBattleRoyaleAlert();
+                    CreateBattleRoyaleEliminated();
+                }
+
+
                 CreateSongInfo();
             }
             else
@@ -183,6 +205,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitError();
                 CreateJudgementHitBurst();
                 CreateHitLighting();
+
+                if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Battle_Royale &&
+                    ConfigManager.EnableBattleRoyaleAlerts.Value)
+                {
+                    CreateBattleRoyaleAlert();
+                    CreateBattleRoyaleEliminated();
+                }
+
                 CreateSongInfo();
                 CreateLaneCoverOverlay();
             }
@@ -514,6 +544,31 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Parent = Playfield.ForegroundContainer,
             Alignment = Alignment.MidCenter,
             Y = -200
+        };
+
+        /// <summary>
+        ///     Creates the sprite that displays battle royale alerts
+        /// </summary>
+        private void CreateBattleRoyaleAlert()
+        {
+            var width = SkinManager.Skin.BattleRoyaleWarning.Width;
+            var height = SkinManager.Skin.BattleRoyaleWarning.Height;
+            var size = new Vector2(width, height) * Skin.BattleRoyaleAlertScale / height;
+
+            BattleRoyaleAlert = new BattleRoyaleAlert(Screen)
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                Position = new ScalableVector2(Skin.BattleRoyaleAlertPosX, Skin.BattleRoyaleAlertPosY),
+                Size = new ScalableVector2(size.X, size.Y),
+            };
+        }
+
+        private void CreateBattleRoyaleEliminated() => BattleRoyalePlayerEliminated = new BattleRoyalePlayerEliminated(Screen)
+        {
+            Parent = Playfield.ForegroundContainer,
+            Alignment = Alignment.MidCenter,
+            Position = new ScalableVector2(Skin.BattleRoyaleEliminatedPosX, Skin.BattleRoyaleEliminatedPosY)
         };
 
         /// <summary>

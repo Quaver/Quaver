@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
@@ -489,6 +490,50 @@ namespace Quaver.Shared.Database.Maps
                 NotificationManager.Show(NotificationLevel.Error, "An error occurred while opening the file.");
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public List<double> GetDifficultyRatings()
+        {
+            var ratings = new List<double>
+            {
+                Difficulty05X,
+                Difficulty055X,
+                Difficulty06X,
+                Difficulty065X,
+                Difficulty07X,
+                Difficulty075X,
+                Difficulty08X,
+                Difficulty085X,
+                Difficulty09X,
+                Difficulty095X,
+                Difficulty10X,
+                Difficulty11X,
+                Difficulty12X,
+                Difficulty13X,
+                Difficulty14X,
+                Difficulty15X,
+                Difficulty16X,
+                Difficulty17X,
+                Difficulty18X,
+                Difficulty19X,
+                Difficulty20X
+            };
+
+            for (var i = 0; i < ratings.Count; i++)
+                ratings[i] = Math.Round(ratings[i], 2);
+
+            return ratings;
+        }
+
+        public int GetJudgementCount() => LongNoteCount * 2 + RegularNoteCount;
+
+        /// <summary>
+        ///     If the map is non-Quaver, then the map needs to be converted
+        /// </summary>
+        /// <returns></returns>
+        public string GetAlternativeMd5() => Game == MapGame.Quaver ? Md5Checksum : CryptoHelper.StringToMd5(LoadQua().Serialize());
 
         public override string ToString() => $"{Artist} - {Title} [{DifficultyName}]";
     }

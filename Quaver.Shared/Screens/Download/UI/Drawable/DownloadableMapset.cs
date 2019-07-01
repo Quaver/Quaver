@@ -28,6 +28,7 @@ using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Color = Microsoft.Xna.Framework.Color;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Download.UI.Drawable
 {
@@ -57,19 +58,19 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
 
         /// <summary>
         /// </summary>
-        private SpriteText Artist { get; }
+        private SpriteTextBitmap Artist { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteText Title { get; }
+        private SpriteTextBitmap Title { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteText Modes { get;  }
+        private SpriteTextBitmap Modes { get;  }
 
         /// <summary>
         /// </summary>
-        private SpriteText Creator { get; }
+        private SpriteTextBitmap Creator { get; }
 
         /// <summary>
         ///     Displays the progress of the download.
@@ -79,11 +80,11 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
         /// <summary>
         ///     Displays if the mapset is already owned.
         /// </summary>
-        private SpriteText AlreadyOwned { get; }
+        private SpriteTextBitmap AlreadyOwned { get; }
 
         /// <summary>
         /// </summary>
-        public static int HEIGHT { get; } = 80;
+        public static int HEIGHT { get; } = 82;
 
         /// <summary>
         ///     Sees if the mapset is already owned.
@@ -99,9 +100,8 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             Mapset = mapset;
             MapsetId = (int) Mapset["id"];
 
-            Size = new ScalableVector2(container.Width, HEIGHT);
-            Tint = Color.Black;
-            Alpha = IsAlreadyOwned ? 0.25f : 0.45f;
+            Size = new ScalableVector2(container.Width - 2, HEIGHT);
+            Image = UserInterface.DownloadItem;
 
             Banner = new Sprite
             {
@@ -112,11 +112,12 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
                 Alpha = 0
             };
 
-            AlreadyOwned = new SpriteText(Fonts.SourceSansProBold, "Already Owned", 13)
+            AlreadyOwned = new SpriteTextBitmap(FontsBitmap.GothamRegular, "Already Owned")
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                FontSize = 14
             };
 
             // Check if the mapset is already owned.
@@ -124,31 +125,22 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             IsAlreadyOwned = set != null;
             AlreadyOwned.Alpha = IsAlreadyOwned ? 1 : 0;
 
-            Progress = new ProgressBar(new Vector2(Width - Banner.Width, Height), 0, 100, 0, Color.Transparent, Colors.MainAccent)
-            {
-                Parent = this,
-                X = Banner.X + Banner.Width,
-                ActiveBar =
-                {
-                    UsePreviousSpriteBatchOptions = true,
-                    Alpha = 0.60f
-                },
-            };
-
-            Title = new SpriteText(Fonts.SourceSansProBold, $"{Mapset["title"]}", 13)
+            Title = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Mapset["title"]}")
             {
                 Parent = this,
                 X = Banner.X + Banner.Width + 15,
-                Y = 6,
+                Y = 10,
                 Alpha = IsAlreadyOwned ? 0.65f : 1,
+                FontSize = 16
             };
 
-            Artist = new SpriteText(Fonts.SourceSansProBold, $"{Mapset["artist"]}", 12)
+            Artist = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Mapset["artist"]}")
             {
                 Parent = this,
                 X = Title.X,
-                Y = Title.Y + Title.Height,
+                Y = Title.Y + Title.Height + 5,
                 Alpha = IsAlreadyOwned ? 0.65f : 1,
+                FontSize = 14
             };
 
             var gameModes = Mapset["game_modes"].ToList();
@@ -160,22 +152,50 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             if (gameModes.Contains(2))
                 modes.Add("7K");
 
-            Modes = new SpriteText(Fonts.SourceSansProBold, string.Join(" & ", modes), 11)
+            Modes = new SpriteTextBitmap(FontsBitmap.GothamRegular, string.Join(" & ", modes) + " | ")
             {
                 Parent = this,
                 X = Artist.X,
-                Y = Artist.Y + Artist.Height + 2,
+                Y = Artist.Y + Artist.Height + 5,
                 Alpha = IsAlreadyOwned ? 0.65f : 1,
+                FontSize = 14
             };
 
-            Creator = new SpriteText(Fonts.SourceSansProSemiBold, $"Created By: {Mapset["creator_username"]}", 11)
+            Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Created By: {Mapset["creator_username"]}")
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
                 Position = new ScalableVector2(-10, -5),
                 Alpha = IsAlreadyOwned ? 0.65f : 1,
+                FontSize = 14
             };
 
+            var lowestDiff = Mapset["difficulty_range"].ToList().Min();
+            var highestDiff = Mapset["difficulty_range"].ToList().Max();
+
+            // ReSharper disable once ObjectCreationAsStatement
+            var low = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{lowestDiff:0.00}")
+            {
+                Parent = this,
+                X = Modes.X + Modes.Width + 2,
+                Y = Modes.Y,
+                Alpha = IsAlreadyOwned ? 0.65f : 1,
+                FontSize = 14,
+                Tint = ColorHelper.DifficultyToColor((float) lowestDiff)
+            };
+
+            if (lowestDiff != highestDiff)
+            {
+                var high = new SpriteTextBitmap(FontsBitmap.GothamRegular, $" - {highestDiff:0.00}")
+                {
+                    Parent = this,
+                    X = low.X + low.Width + 2,
+                    Y = Modes.Y,
+                    Alpha = IsAlreadyOwned ? 0.65f : 1,
+                    FontSize = 14,
+                    Tint = ColorHelper.DifficultyToColor((float) highestDiff)
+                };
+            }
             var badge = new BannerRankedStatus
             {
                 Parent = this,
@@ -187,6 +207,26 @@ namespace Quaver.Shared.Screens.Download.UI.Drawable
             var screen = (DownloadScreen) container.View.Screen;
             badge.UpdateMap(new Map { RankedStatus = screen.CurrentRankedStatus});
             FetchMapsetBanner();
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(Width, 1),
+                Alpha = 0.65f
+            };
+
+            Progress = new ProgressBar(new Vector2(Width - Banner.Width, Height), 0, 100, 0, Color.Transparent, Colors.MainAccent)
+            {
+                Parent = this,
+                X = Banner.X + Banner.Width,
+                ActiveBar =
+                {
+                    UsePreviousSpriteBatchOptions = true,
+                    Alpha = 0.60f
+                },
+            };
 
             Clicked += (sender, args) => OnClicked();
         }

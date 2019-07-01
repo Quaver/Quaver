@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Result.UI
             Container = container;
             Processor = processor;
 
-            Size = new ScalableVector2(container.VerticalDividerLine.X - container.Border.Thickness * 2, 268);
+            Size = new ScalableVector2(container.VerticalDividerLine.X - 2 * 2, 268);
             Tint = Color.Black;
             Alpha = 0;
 
@@ -58,12 +58,13 @@ namespace Quaver.Shared.Screens.Result.UI
 
                 var color = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[j];
 
-                var judgementName = new SpriteText(Fonts.SourceSansProSemiBold, j.ToString().ToUpper(), 13)
+                var judgementName = new SpriteTextBitmap(FontsBitmap.GothamRegular, j.ToString().ToUpper())
                 {
                     Parent = this,
-                    Y = i * 42 + 18,
+                    Y = i * 50 + 24,
                     X = 15,
-                    Tint = color
+                    Tint = color,
+                    FontSize = 16
                 };
 
                 var percentage = Processor.CurrentJudgements[j] == 0 ? 0 : (float)Processor.CurrentJudgements[j] / Processor.TotalJudgementCount;
@@ -81,12 +82,13 @@ namespace Quaver.Shared.Screens.Result.UI
                 if (progressBar.Width <= 1)
                     progressBar.Width = 1;
 
-                var judgementAmount = new SpriteText(Fonts.SourceSansProSemiBold, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)", 13)
+                var judgementAmount = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)")
                 {
                     Parent = progressBar,
                     Alignment = Alignment.MidLeft,
                     Tint = color,
-                    X = progressBar.Width + 10
+                    X = progressBar.Width + 10,
+                    FontSize = 15
                 };
 
                 i++;

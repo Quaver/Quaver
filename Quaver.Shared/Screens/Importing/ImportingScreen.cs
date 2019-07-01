@@ -5,11 +5,14 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System.Linq;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics.UI.Dialogs;
@@ -25,10 +28,19 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override QuaverScreenType Type { get; } = QuaverScreenType.Importing;
 
+        /// <summary>
+        /// </summary>
+        private MultiplayerScreen MultiplayerScreen { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public sealed override ScreenView View { get; protected set; }
+
+        /// <summary>
+        ///     The selected map when the screen was initialied
+        /// </summary>
+        private Map PreviouslySelectedMap { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -36,10 +48,14 @@ namespace Quaver.Shared.Screens.Importing
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => null;
 
-
         /// <summary>
         /// </summary>
-        public ImportingScreen() => View = new ImportingScreenView(this);
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null)
+        {
+            MultiplayerScreen = multiplayerScreen;
+            PreviouslySelectedMap = MapManager.Selected.Value;
+            View = new ImportingScreenView(this);
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -76,11 +92,31 @@ namespace Quaver.Shared.Screens.Importing
             if (SelectScreen.PreviousSearchTerm != "")
                 SelectScreen.PreviousSearchTerm = "";
 
-            Exit(() =>
+            if (OnlineManager.CurrentGame != null && MultiplayerScreen != null)
             {
-                AudioEngine.Track?.Fade(10, 300);
-                return new SelectScreen();
-            });
+                MapManager.Selected.Value = PreviouslySelectedMap;
+
+                var selectScreen = ScreenManager.Screens.ToList().Find(x => x is SelectScreen) as SelectScreen;
+                var selectScreenView = selectScreen?.View as SelectScreenView;
+
+                if (selectScreen != null)
+                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(MapManager.Mapsets);
+
+                selectScreenView?.MapsetScrollContainer.InitializeWithNewSets();
+
+                RemoveTopScreen(MultiplayerScreen);
+
+                var view = (MultiplayerScreenView) MultiplayerScreen.View;
+                view.Map.UpdateContent();
+            }
+            else
+            {
+                Exit(() =>
+                {
+                    AudioEngine.Track?.Fade(10, 300);
+                    return new SelectScreen(MultiplayerScreen);
+                });
+            }
         }
     }
 }

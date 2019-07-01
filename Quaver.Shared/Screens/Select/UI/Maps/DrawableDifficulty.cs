@@ -37,17 +37,17 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         /// <summary>
         ///     The name of the difficulty.
         /// </summary>
-        private SpriteText DifficultyName { get; }
+        private SpriteTextBitmap DifficultyName { get; }
 
         /// <summary>
         ///     Displays the actual difficulty rating.
         /// </summary>
-        private SpriteText TextDifficultyRating { get; }
+        private SpriteTextBitmap TextDifficultyRating { get; }
 
         /// <summary>
         ///     Displays the creator of the map.
         /// </summary>
-        private SpriteText Creator { get; }
+        private SpriteTextBitmap Creator { get; }
 
         /// <summary>
         ///     The height of the drawable mapset.
@@ -65,24 +65,27 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
             Size = new ScalableVector2(410, HEIGHT);
             Image = UserInterface.SelectButtonBackground;
 
-            DifficultyName = new SpriteText(Fonts.Exo2SemiBold, " ", 13)
+            DifficultyName = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
-                Position = new ScalableVector2(15, 12)
+                Position = new ScalableVector2(15, 12),
+                FontSize = 18
             };
 
-            TextDifficultyRating = new SpriteText(Fonts.Exo2SemiBold, " ", 12)
+            TextDifficultyRating = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Position = new ScalableVector2(DifficultyName.X, DifficultyName.Y + DifficultyName.Height + 4),
-                Tint = ColorHelper.DifficultyToColor(19.12f)
+                Tint = ColorHelper.DifficultyToColor(19.12f),
+                FontSize = 16
             };
 
-            Creator = new SpriteText(Fonts.Exo2SemiBold, " ", 10)
+            Creator = new SpriteTextBitmap(FontsBitmap.GothamRegular, " ")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Position = new ScalableVector2(-5, TextDifficultyRating.Y + TextDifficultyRating.Height + 3)
+                Position = new ScalableVector2(-5, TextDifficultyRating.Y + TextDifficultyRating.Height + 6),
+                FontSize = 14
             };
 
             Clicked += OnClicked;
@@ -92,6 +95,10 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         /// <summary />
         public override void Destroy()
         {
+            DifficultyName.Destroy();
+            TextDifficultyRating.Destroy();
+            Creator.Destroy();
+
             ModManager.ModsChanged -= OnModsChanged;
             base.Destroy();
         }
@@ -120,7 +127,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         {
             Animations.Clear();
             ChangeWidthTo(500, Easing.OutQuint, 400);
-            FadeToColor(new Color(68, 174, 221), Easing.OutQuint, 300);
+            Image = UserInterface.SelectedMapset;
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();
@@ -138,7 +145,7 @@ namespace Quaver.Shared.Screens.Select.UI.Maps
         {
             Animations.Clear();
             ChangeWidthTo(410, Easing.OutQuint, 400);
-            FadeToColor(Color.Black, Easing.OutQuint, 300);
+            Image = UserInterface.DeselectedMapset;
 
             DifficultyName.Animations.Clear();
             TextDifficultyRating.Animations.Clear();

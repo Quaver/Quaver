@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using TagLib.Riff;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -47,22 +48,26 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The scores that are displayed.
         /// </summary>
-        private List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
+        public List<DrawableLeaderboardScore> Scores { get; } = new List<DrawableLeaderboardScore>();
+
+        /// <summary>
+        /// </summary>
+        public List<DrawableLeaderboardScore> ScoresToDestroy { get; } = new List<DrawableLeaderboardScore>();
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="leaderboard"></param>
         protected LeaderboardScoreSection(LeaderboardContainer leaderboard) : base(
-            new ScalableVector2(leaderboard.Width, leaderboard.Height),
-            new ScalableVector2(leaderboard.Width, leaderboard.Height))
+            new ScalableVector2(leaderboard.Width - 2, leaderboard.Height - 4),
+            new ScalableVector2(leaderboard.Width - 2, leaderboard.Height - 4))
         {
             Leaderboard = leaderboard;
             Alpha = 0;
             Tint = Color.CornflowerBlue;
 
             InputEnabled = true;
-            Scrollbar.Tint = ColorHelper.HexToColor("#212121");
+            Scrollbar.Tint = Color.White;
             Scrollbar.Width = 5;
             Scrollbar.X += 10;
             ScrollSpeed = 150;
@@ -80,7 +85,21 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && DialogManager.Dialogs.Count == 0;
             HandleLoadingWheelAnimations();
+
+            if (ScoresToDestroy.Count != 0)
+            {
+                var destroyingObjects = new List<DrawableLeaderboardScore>(ScoresToDestroy);
+                destroyingObjects.ForEach(x => x.Destroy());
+                ScoresToDestroy.Clear();
+            }
+
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            Scores.ForEach(x => x.Destroy());
+            base.Destroy();
         }
 
         /// <summary>
@@ -128,7 +147,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         public void ClearScores()
         {
-            Scores.ForEach(x => x.Destroy());
+            Scores.ForEach(x =>
+            {
+                x.Visible = false;
+                ScoresToDestroy.Add(x);
+            });
+
             Scores.Clear();
         }
 
@@ -149,7 +173,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 var scoreCount = scoreStore.PersonalBest != null ? scoreStore.Scores.Count + 1 : scoreStore.Scores.Count;
 
                 // Calculate the height of the scroll container based on how many scores there are.
-                var totalUserHeight =  scoreCount * DrawableLeaderboardScore.HEIGHT + 10 * (scoreCount - 1);
+                var totalUserHeight =  scoreCount * DrawableLeaderboardScore.HEIGHT;
 
                 if (totalUserHeight > Height)
                     ContentContainer.Height = totalUserHeight;
@@ -170,10 +194,10 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     var isPersonalBest = scoreStore.PersonalBest != null && i == 0;
                     var rank = scoreStore.PersonalBest != null ? (isPersonalBest ? -1 : i) : i + 1;
 
-                    var drawable = new DrawableLeaderboardScore(score, rank)
+                    var drawable = new DrawableLeaderboardScore(this, score, rank)
                     {
-                        Parent = this,
-                        Y = i * DrawableLeaderboardScore.HEIGHT + i * 10,
+
+                        Y = i * DrawableLeaderboardScore.HEIGHT,
                         X = -DrawableLeaderboardScore.WIDTH,
                     };
 
@@ -182,10 +206,6 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     Scores.Add(drawable);
                     AddContainedDrawable(drawable);
                 }
-
-                // This is a hack... It's to place the leaderboard selector on top so that the
-                // buttons are technically on top of the leaderboard score ones.
-                Leaderboard.View.LeaderboardSelector.Parent = Leaderboard.View.Container;
             }
             catch (Exception e)
             {

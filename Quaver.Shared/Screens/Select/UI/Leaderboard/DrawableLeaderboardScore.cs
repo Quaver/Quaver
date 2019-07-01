@@ -8,18 +8,21 @@
 using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using MonoGame.Extended;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using TimeAgo;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -31,6 +34,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 {
     public class DrawableLeaderboardScore : Button
     {
+        /// <summary>
+        ///     The score section/scroll container for the leaderboard
+        /// </summary>
+        public LeaderboardScoreSection ScoreSection { get; }
+
         /// <summary>
         ///     The score this drawable represents.
         /// </summary>
@@ -44,7 +52,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The width of the score.
         /// </summary>
-        public static int WIDTH { get; } = 620;
+        public static int WIDTH { get; } = 616;
 
         /// <summary>
         ///     The rank of the score.
@@ -54,7 +62,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays the rank of the score.
         /// </summary>
-        private SpriteText TextRank { get; set; }
+        private SpriteTextBitmap TextRank { get; set; }
 
         /// <summary>
         ///     The score user's avatar.
@@ -69,34 +77,35 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Displays the username of the score user.
         /// </summary>
-        private SpriteText Username { get; set; }
+        private SpriteTextBitmap Username { get; set; }
 
         /// <summary>
         ///     Displays the user's score and max combo.
         /// </summary>
-        private SpriteText TextScore { get; set; }
+        private SpriteTextBitmap TextScore { get; set; }
 
         /// <summary>
         ///     Displays the modifiers used on the score.
         /// </summary>
-        private SpriteText Mods { get; set; }
+        private SpriteTextBitmap Mods { get; set; }
 
         /// <summary>
         ///     Displays how long ago the score took place.
         /// </summary>
-        private SpriteText TimeAgo { get; set; }
+        private SpriteTextBitmap TimeAgo { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DrawableLeaderboardScore(Score score = null, int rank = -1)
+        public DrawableLeaderboardScore(LeaderboardScoreSection section, Score score = null, int rank = -1)
         {
+            ScoreSection = section;
             Score = score;
             Rank = rank;
 
             Size = new ScalableVector2(WIDTH, HEIGHT);
-            Tint = Rank == -1 ? Colors.MainAccent : Color.Black;
-            Alpha = 0.60f;
+            Tint = Rank == -1 ? Colors.MainAccent : Color.White;
+            Image = UserInterface.LeaderboardScore;
 
             // If there is no score, then we'll consider this to be a "No personal Best" score.
             if (score == null)
@@ -109,6 +118,12 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
             Clicked += (sender, args) =>
             {
+                if (OnlineManager.CurrentGame != null)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "You cannot view this score while in a multiplayer game!");
+                    return;
+                }
+
                 var game = GameBase.Game as QuaverGame;
                 var screen = game.CurrentScreen as SelectScreen;
                 screen.ExitToResults(Score);
@@ -121,8 +136,16 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.40f : 0.60f, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
+            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.40f : 1.0f, (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 60, 1));
             base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            if (RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle).IsEmpty)
+                return;
+            
+            base.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -140,10 +163,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// </summary>
         private void CreateNoPersonalBestScore()
         {
-            var nopbSet = new SpriteText(Fonts.Exo2Bold, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score", 13)
+            var nopbSet = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"No Personal Best {ConfigManager.LeaderboardSection.Value} Score", false)
             {
                 Parent = this,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
+                FontSize = 18
             };
         }
 
@@ -159,17 +183,26 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             CreateTextScoreAndCombo();
             CreateModsUsed();
             CreateTimeAgo();
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(Width, 1),
+                Alpha = 0.45f
+            };
         }
 
         /// <summary>
         ///     Creates the text that displays the user's rank.
         /// </summary>
-        private void CreateTextRank() => TextRank = new SpriteText(Fonts.Exo2Bold, $"{( Rank == -1 ? "PB" : $"{Rank}." )}", 13)
+        private void CreateTextRank() => TextRank = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"{( Rank == -1 ? "PB" : $"{Rank}." )}", false)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = 18,
-            Tint = Rank == -1 ? Colors.SecondaryAccent : Color.White
+            Tint = Rank == -1 ? Colors.SecondaryAccent : Color.White,
+            FontSize = 18
         };
 
         /// <summary>
@@ -230,33 +263,36 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     The text that displays the user's username.
         /// </summary>
-        private void CreateUsername() => Username = new SpriteText(Fonts.Exo2Bold, Score.Name, 13)
+        private void CreateUsername() => Username = new SpriteTextBitmap(FontsBitmap.GothamRegular, Score.Name, false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
-            Position = new ScalableVector2(Grade.X + Grade.Width + 15, 3),
+            Position = new ScalableVector2(Grade.X + Grade.Width + 15, 6),
+            FontSize = 18
         };
 
         /// <summary>
         ///     Creates the text that displays the user's score and combo.
         /// </summary>
-        private void CreateTextScoreAndCombo() => TextScore = new SpriteText(Fonts.Exo2Bold,
-            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", 11)
+        private void CreateTextScoreAndCombo() => TextScore = new SpriteTextBitmap(FontsBitmap.GothamRegular,
+            $"{StringHelper.AccuracyToString((float) Score.PerformanceRating).Replace("%", "")} / {Score.TotalScore:n0} / {StringHelper.AccuracyToString((float) Score.Accuracy)} / {Score.MaxCombo:n0}x", false)
         {
             Parent = this,
             Alignment = Alignment.TopLeft,
-            Position = new ScalableVector2(Username.X, Username.Y + Username.Height + 3)
+            Position = new ScalableVector2(Username.X, Username.Y + Username.Height + 6),
+            FontSize = 15
         };
 
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteText(Fonts.Exo2Bold, ModHelper.GetModsString(Score.Mods), 11)
+        private void CreateModsUsed() => Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModHelper.GetModsString((ModIdentifier) Score.Mods), false)
         {
             Parent = this,
             Alignment = Alignment.TopRight,
-            X = -5,
-            Y = Username.Y + 2
+            X = -12,
+            Y = Username.Y + 2,
+            FontSize = 16
         };
 
         /// <summary>
@@ -278,13 +314,14 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 timeAgo = "1 minute ago";
             }
 
-            TimeAgo = new SpriteText(Fonts.Exo2Bold, timeAgo, 11)
+            TimeAgo = new SpriteTextBitmap(FontsBitmap.GothamRegular, timeAgo, false)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 X = Mods.X,
                 Y = TextScore.Y + 2,
-                Tint = (long)timeDifference.TotalMilliseconds < 60 * 60 * 1000 ? Colors.MainAccent : Color.White
+                Tint = (long)timeDifference.TotalMilliseconds < 60 * 60 * 1000 ? Colors.MainAccent : Color.White,
+                FontSize = 15
             };
         }
 
@@ -295,7 +332,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <returns></returns>
         protected override bool IsMouseInClickArea()
         {
-            var newRect = RectangleF.Intersect(ScreenRectangle, Parent.ScreenRectangle);
+            var newRect = RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle);
             return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
 

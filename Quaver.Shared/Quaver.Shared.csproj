@@ -12,10 +12,10 @@
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Quaver.Server.Client">
+    <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>Quaver.Server.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Quaver.Server.Common">
+    <Reference Include="Quaver.Server.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>Quaver.Server.Common.dll</HintPath>
     </Reference>
     <Reference Include="Steamworks.NET">
@@ -96,6 +96,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\gotham_0.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\gotham-bold.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\gotham-bold_0.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

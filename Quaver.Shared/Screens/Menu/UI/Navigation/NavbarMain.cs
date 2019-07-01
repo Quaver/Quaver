@@ -43,8 +43,11 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
             : base(leftAlignedItems, rightAlignedItems, isUpsideDown)
         {
             // Add community chat button
-            DownloadMapsButton = new NavbarItem("Download", screen.Type == QuaverScreenType.Download) { DestroyIfParentIsNull = false };
-            DownloadMapsButton.Clicked += (o, e) => OnDownloadMapsButtonClicked();
+            if (OnlineManager.CurrentGame == null)
+            {
+                DownloadMapsButton = new NavbarItem("Download", screen.Type == QuaverScreenType.Download) { DestroyIfParentIsNull = false };
+                DownloadMapsButton.Clicked += (o, e) => OnDownloadMapsButtonClicked();
+            }
 
             // Add community chat button
             OpenChatButton = new NavbarItem("Community Chat") { DestroyIfParentIsNull = false };
@@ -54,7 +57,9 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
             if (OnlineManager.Status.Value == ConnectionStatus.Connected ||
                 OnlineManager.Status.Value == ConnectionStatus.Reconnecting)
             {
-                LeftAlignedItems.Add(DownloadMapsButton);
+                if (OnlineManager.CurrentGame == null)
+                    LeftAlignedItems.Add(DownloadMapsButton);
+
                 LeftAlignedItems.Add(OpenChatButton);
                 AlignLeftItems();
             }
