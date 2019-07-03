@@ -480,6 +480,12 @@ namespace Quaver.Shared.Helpers
                 case Keys.OemPlus:
                     keyStr = "+";
                     return keyStr;
+                case Keys.Asterisk:
+                    keyStr = "*";
+                    return keyStr;
+                case Keys.Squared:
+                    keyStr = "²";
+                    return keyStr;
                 case Keys.Back:
                     keyStr = "Back";
                     return keyStr;
@@ -586,16 +592,28 @@ namespace Quaver.Shared.Helpers
                     return ".";
                 case Keys.OemComma:
                     return ",";
+                case Keys.OemColon:
+                    return ":";
                 case Keys.OemSemicolon:
                     return ";";
                 case Keys.OemQuotes:
                     return "'";
+                case Keys.OemCloseParenthesis:
+                    return ")";
                 case Keys.OemCloseBrackets:
                     return "]";
                 case Keys.OemOpenBrackets:
                     return "[";
                 case Keys.OemQuestion:
                     return "?";
+                case Keys.OemExclamationMark:
+                    return "!";
+                case Keys.Caret:
+                    return "^";
+                case Keys.DollarSign:
+                    return "$";
+                case Keys.PunctuatedU:
+                    return "ù";
                 default:
                     return key.ToString();
             }
