@@ -302,7 +302,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     y = Playfield.ReceptorPositionY.First() + offsetY - Skin.HitPosOffsetY;
                     break;
                 case ScrollDirection.Split:
-                    return;
+                    y = Playfield.ReceptorPositionY.First() - sizeY + Skin.HitPosOffsetY;
+                    width = Playfield.Width / 2;
+
+                    var splitHitPositionOverlay = new Sprite
+                    {
+                        Parent = Playfield.ForegroundContainer,
+                        Image = Skin.StageHitPositionOverlay,
+                        Rotation = 180,
+                        Size = new ScalableVector2(width, sizeY),
+                        X = width,
+                        Y = Playfield.ReceptorPositionY.Last() + offsetY - Skin.HitPosOffsetY
+                    };
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
