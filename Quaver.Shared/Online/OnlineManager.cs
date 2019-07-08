@@ -126,6 +126,11 @@ namespace Quaver.Shared.Online
         public static bool IsBeingSpectated => Client != null && Status.Value == ConnectionStatus.Connected && Spectators.Count != 0;
 
         /// <summary>
+        ///     If the client is currently spectating someone
+        /// </summary>
+        public static bool IsSpectatingSomeone => Client != null & Status.Value == ConnectionStatus.Connected && SpectatorClients.Count != 0;
+
+        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
@@ -1142,6 +1147,9 @@ namespace Quaver.Shared.Online
             if (!SpectatorClients[e.UserId].Player.HasUserInfo)
                 Client?.RequestUserInfo(new List<int>() { e.UserId });
 
+            if (SpectatorClients.Count == 1)
+                NotificationManager.Show(NotificationLevel.Info, $"You are now spectating {SpectatorClients[e.UserId].Player.OnlineUser.Username}");
+
             Logger.Important($"Starting spectating player: {e.UserId}", LogType.Network);
         }
 
@@ -1151,6 +1159,8 @@ namespace Quaver.Shared.Online
                 return;
 
             SpectatorClients.Remove(e.UserId);
+
+            NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating.");
 
             Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);
         }

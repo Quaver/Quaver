@@ -154,6 +154,9 @@ namespace Quaver.Shared.Screens.Editor
         /// </summary>
         public EditorScreen(Qua map)
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             OriginalMap = map;
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
             FixInvalidHitObjectLayers();

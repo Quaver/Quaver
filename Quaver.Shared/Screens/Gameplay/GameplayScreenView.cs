@@ -47,6 +47,7 @@ using Wobble.Graphics.UI;
 using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {
@@ -186,6 +187,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public ScoreboardUser SelfScoreboard { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        private SpectatorDialog SpectatorDialog { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -235,6 +240,16 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
+            if (Screen.SpectatorClient != null)
+            {
+                SpectatorDialog = new SpectatorDialog
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidCenter,
+                    Alpha = 0
+                };
+            }
+
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
             {
@@ -250,7 +265,8 @@ namespace Quaver.Shared.Screens.Gameplay
             };
 
             // Create pause screen last.
-            PauseScreen = new PauseScreen(Screen) { Parent = Container };
+            if (Screen.SpectatorClient == null)
+                PauseScreen = new PauseScreen(Screen) { Parent = Container };
 
             // Notify the user if their local offset is actually set for this map.
             if (MapManager.Selected.Value.LocalOffset != 0)
@@ -286,6 +302,12 @@ namespace Quaver.Shared.Screens.Gameplay
             GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
             GradeDisplay.Height = AccuracyDisplay.Height;
             GradeDisplay.UpdateWidth();
+
+            if (SpectatorDialog != null)
+            {
+                SpectatorDialog.Alpha = MathHelper.Lerp(SpectatorDialog.Alpha, Screen.IsPaused ? 1 : 0,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 100, 1));
+            }
         }
 
         /// <inheritdoc />
@@ -596,7 +618,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 ProgressBar.Parent = Container;
 
             Transitioner.Parent = Container;
-            PauseScreen.Parent = Container;
+
+            if (PauseScreen != null)
+                PauseScreen.Parent = Container;
 
             StopCheckingForScoreboardUsers = true;
             Screen.SetRichPresence();

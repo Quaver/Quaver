@@ -8,7 +8,9 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Loading;
 using Wobble;
 
@@ -44,17 +46,12 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Handles when the client is beginning to play a new map
         /// </summary>
-        /// <param name="map"></param>
-        /// <param name="mods"></param>
         private void PlayNewMap()
         {
             // Try to find the new map from the player
             Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
 
-            // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
-            Replay = new Replay(Map.Mode, Player.OnlineUser.Username, (ModIdentifier) Player.CurrentStatus.Modifiers, Map.Md5Checksum);
-
-            // We don't have the map...
+            // Not in possession of the map
             if (Map == null)
             {
                 NotificationManager.Show(NotificationLevel.Error,"You do not have the map the spectating player is playing!");
@@ -62,10 +59,18 @@ namespace Quaver.Shared.Online
             }
 
             MapManager.Selected.Value = Map;
+            BackgroundHelper.Load(Map);
+
+            // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
+            Replay = new Replay(Map.Mode, Player.OnlineUser.Username, (ModIdentifier) Player.CurrentStatus.Modifiers, Map.Md5Checksum);
 
             // Load the map up and start the spectating session.
-            // TODO: Handle for multiple spectating clients (probably will want a base tourney screen & return the new gameplay screen for each client)
             var game = (QuaverGame) GameBase.Game;
+
+            // Don't interrupt importing
+            if (game.CurrentScreen.Type == QuaverScreenType.Importing)
+                return;
+
             game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), Replay, this));
         }
 
@@ -80,9 +85,11 @@ namespace Quaver.Shared.Online
         /// </summary>
         public void AddFrames(SpectatorReplayFramesEventArgs e)
         {
-            if (Replay == null)
+            if (e.Status == SpectatorClientStatus.NewSong || (Replay == null && e.Status == SpectatorClientStatus.Playing))
                 PlayNewMap();
 
+            // A second null check is required in this case
+            // because PlayNewMap() may not create a new replay instance depending on what the player is doing.
             if (Replay == null)
                 return;
 

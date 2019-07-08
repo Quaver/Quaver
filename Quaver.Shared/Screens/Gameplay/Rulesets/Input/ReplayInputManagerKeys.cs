@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Screen.SpectatorClient == null);
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Screen.SpectatorClient != null);
             VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.
@@ -134,7 +134,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (Screen.SpectatorClient == null)
                 return;
 
-            if (CurrentFrame >= Replay.Frames.Count || VirtualPlayer.CurrentFrame >= Replay.Frames.Count)
+            if (CurrentFrame >= Replay.Frames.Count)
             {
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Pause();
@@ -155,16 +155,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
         private void HandleScoring()
         {
-            Console.WriteLine("Got HERE!!! " + $"{VirtualPlayer.CurrentFrame} - {VirtualPlayer.Replay.Frames.Count}");
             if (VirtualPlayer.CurrentFrame < VirtualPlayer.Replay.Frames.Count)
-            {
                 VirtualPlayer.PlayAllFrames();
-                Console.WriteLine("Hello?");
-            }
-
-
-            Console.WriteLine(CurrentVirtualReplayStat + " " + VirtualPlayer.ScoreProcessor.Stats.Count + " " +
-                              VirtualPlayer.CurrentFrame + " " + VirtualPlayer.Replay.Frames.Count);
 
             for (var i = CurrentVirtualReplayStat + 1; i < VirtualPlayer.ScoreProcessor.Stats.Count; i++)
             {

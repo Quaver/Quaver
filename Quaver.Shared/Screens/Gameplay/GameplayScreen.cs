@@ -290,6 +290,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isPlayTesting"></param>
         /// <param name="playTestTime"></param>
         /// <param name="isCalibratingOffset"></param>
+        /// <param name="spectatorClient"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null)
         {
@@ -360,9 +361,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsCalibratingOffset)
                 Metronome = new Metronome(map);
 
-            if (OnlineManager.IsBeingSpectated)
-                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
-
             View = new GameplayScreenView(this);
         }
 
@@ -372,6 +370,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             if (IsMultiplayerGame)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
+
+            if (OnlineManager.IsBeingSpectated)
+                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             base.OnFirstUpdate();
         }
@@ -633,7 +634,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // Otherwise (the pause key is held but wasn't just pressed), call Pause() to advance the hold to pause timer.
-            if (!IsPaused)
+            if (!IsPaused || SpectatorClient != null)
                 Pause(gameTime);
         }
 
@@ -650,7 +651,8 @@ namespace Quaver.Shared.Screens.Gameplay
             var screenView = (GameplayScreenView)View;
 
             // Handle pause.
-            if (!IsPaused)
+            // Spectating is an exception here because we're not technically "paused"
+            if (!IsPaused || SpectatorClient != null)
             {
                 // Handle cases where someone (a developer) calls pause but there is not GameTime.
                 // shouldn't ever happen though.
@@ -681,6 +683,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     CustomAudioSampleCache.StopAll();
                     ModManager.RemoveAllMods();
+
+                    if (SpectatorClient != null)
+                        OnlineManager.Client?.StopSpectating();
+
                     Exit(() => new SelectScreen());
                     return;
                 }
@@ -718,10 +724,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 screenView.Transitioner.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
 
                 // Activate pause menu
-                screenView.PauseScreen.Activate();
+                screenView.PauseScreen?.Activate();
                 return;
             }
-
 
             if (IsResumeInProgress)
                 return;
@@ -738,7 +743,7 @@ namespace Quaver.Shared.Screens.Gameplay
             screenView.Transitioner.Animations.Add(alphaTransformation);
 
             // Deactivate pause screen.
-            screenView.PauseScreen.Deactivate();
+            screenView.PauseScreen?.Deactivate();
             SetRichPresence();
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
@@ -1019,14 +1024,20 @@ namespace Quaver.Shared.Screens.Gameplay
             else if (IsPlayTesting)
                 DiscordHelper.Presence.State = "Play Testing";
             else if (InReplayMode)
-                DiscordHelper.Presence.State = $"Watching {LoadedReplay.PlayerName}";
+            {
+                DiscordHelper.Presence.State = OnlineManager.IsSpectatingSomeone ? $"Spectating {LoadedReplay.PlayerName}" : $"Watching {LoadedReplay.PlayerName}";
+            }
             else
                 DiscordHelper.Presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
 
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var time = Convert.ToInt64((DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate) - epoch).TotalSeconds);
+            // Only set time if we're not spectating anywone
+            if (!OnlineManager.IsSpectatingSomeone)
+            {
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var time = Convert.ToInt64((DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate) - epoch).TotalSeconds);
+                DiscordHelper.Presence.EndTimestamp = time;
+            }
 
-            DiscordHelper.Presence.EndTimestamp = time;
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(Ruleset.Mode);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }

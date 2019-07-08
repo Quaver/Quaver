@@ -467,6 +467,9 @@ namespace Quaver.Shared.Screens.Select
         {
             IsExitingToGameplay = true;
 
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             if (OnlineManager.CurrentGame != null)
             {
                 var map = MapManager.Selected.Value;
