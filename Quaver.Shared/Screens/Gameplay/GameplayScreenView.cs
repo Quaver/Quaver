@@ -625,6 +625,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!ResultsScreenLoadInitiated)
             {
+                // Force all replay frames on failure
+                if (OnlineManager.IsBeingSpectated)
+                    Screen.SendReplayFramesToServer(true);
+
                 if (Screen.IsPlayTesting)
                 {
                     if (AudioEngine.Track.IsPlaying)
