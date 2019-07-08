@@ -561,7 +561,7 @@ namespace Quaver.Shared.Skinning
             var skipFolder = $"/Skip/";
             const string skip = "skip";
 
-            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 1, 42);
+            Skip = LoadSpritesheet(skipFolder, skip, $"Quaver.Resources/Textures/Skins/Shared/Skip/{skip}", 0, 0);
         }
 
         /// <summary>
