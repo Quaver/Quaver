@@ -31,7 +31,7 @@ namespace Quaver
         public static void Main()
         {
             Logger.Initialize();
-            
+
             // Log all unhandled exceptions.
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {

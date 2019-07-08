@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.API", "Quaver.API\Quaver.API\Quaver.API.csproj", "{80CC83DF-8CFF-47F1-A703-3FB8BC20B943}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.DesktopGL.Core", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj", "{BDCB1605-28B6-4773-AE12-DA4285821EDA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{077E5D47-6B11-478A-B5E1-754BB23D0282}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Resources", "Wobble\Wobble.Resources\Wobble.Resources.csproj", "{3219608F-6722-4AAB-AA66-EACBDF1296F9}"
@@ -21,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeAgo", "Quaver.Dependenc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{57D50BBE-44CF-4B6B-B2D0-E4C92355043F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.DesktopGL", "Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj", "{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,12 +34,6 @@ Global
 		{80CC83DF-8CFF-47F1-A703-3FB8BC20B943}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80CC83DF-8CFF-47F1-A703-3FB8BC20B943}.Test Server|Any CPU.ActiveCfg = Release|Any CPU
 		{80CC83DF-8CFF-47F1-A703-3FB8BC20B943}.Test Server|Any CPU.Build.0 = Release|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Test Server|Any CPU.ActiveCfg = Release|Any CPU
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA}.Test Server|Any CPU.Build.0 = Release|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077E5D47-6B11-478A-B5E1-754BB23D0282}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -76,15 +70,21 @@ Global
 		{5F2A9C79-F02A-45FC-82F3-F76C6A519163}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F2A9C79-F02A-45FC-82F3-F76C6A519163}.Test Server|Any CPU.ActiveCfg = Release|Any CPU
 		{5F2A9C79-F02A-45FC-82F3-F76C6A519163}.Test Server|Any CPU.Build.0 = Release|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BDCB1605-28B6-4773-AE12-DA4285821EDA} = {57D50BBE-44CF-4B6B-B2D0-E4C92355043F}
 		{077E5D47-6B11-478A-B5E1-754BB23D0282} = {57D50BBE-44CF-4B6B-B2D0-E4C92355043F}
 		{3219608F-6722-4AAB-AA66-EACBDF1296F9} = {57D50BBE-44CF-4B6B-B2D0-E4C92355043F}
 		{5F2A9C79-F02A-45FC-82F3-F76C6A519163} = {57D50BBE-44CF-4B6B-B2D0-E4C92355043F}
+		{8ABEFEF3-86E3-453F-9243-D75D09F7A95B} = {57D50BBE-44CF-4B6B-B2D0-E4C92355043F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5AAAF67-D9A5-4D04-8DB2-4446049C3599}
