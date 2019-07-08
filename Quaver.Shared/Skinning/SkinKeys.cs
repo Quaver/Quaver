@@ -44,8 +44,6 @@ namespace Quaver.Shared.Skinning
 
         internal int NotePadding { get; private set; }
 
-        internal int TimingBarPixelSize { get; private set; }
-
         internal float ColumnLightingScale { get; private set; }
 
         internal int ColumnLightingOffsetY { get; private set; }
@@ -332,7 +330,6 @@ namespace Quaver.Shared.Skinning
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
-            TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
