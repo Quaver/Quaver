@@ -9,7 +9,7 @@
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
     <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
     <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
-    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.Core.csproj" />
+    <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
     <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
