@@ -395,7 +395,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // Handles spectating clients
-            if (InReplayMode)
+            if (InReplayMode && OnlineManager.IsSpectatingSomeone)
             {
                 var inputManager = (KeysInputManager) Ruleset.InputManager;
                 inputManager.ReplayInputManager?.HandleSpectating();
@@ -1145,7 +1145,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SendReplayFramesToServer(bool force = false)
         {
-            if (!OnlineManager.IsBeingSpectated)
+            if (!OnlineManager.IsBeingSpectated || InReplayMode)
                 return;
 
             if (TimeSinceSpectatorFramesLastSent < 1000 && !force)
