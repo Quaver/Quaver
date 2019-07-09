@@ -31,7 +31,7 @@ namespace Quaver.Shared.Online.Chat
                 "/help - Display this message\n" +
                 "/online - Display all online users\n" +
                 "/chat <username> - Open a private chat with a user\n" +
-                "/join <channel name> - Request to join a chat channel.\n" +
+                "/join <channel name> - Request to join a chat channel.\n"
                 // "/spectate <username> - Start spectating a player");
         }
 
