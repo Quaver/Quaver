@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen.SpectatorClient != null)
             {
-                SpectatorDialog = new SpectatorDialog
+                SpectatorDialog = new SpectatorDialog(Screen.SpectatorClient)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidCenter,

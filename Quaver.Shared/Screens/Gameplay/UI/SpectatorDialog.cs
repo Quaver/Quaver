@@ -1,5 +1,9 @@
+using System;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -10,10 +14,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI
     {
         private Sprite Icon { get; }
 
-        private Sprite LoadingWheel { get;  }
+        private Sprite LoadingWheel { get; }
 
-        public SpectatorDialog()
+        private SpriteTextBitmap Text { get; }
+
+        private SpectatorClient SpectatorClient { get; }
+
+        public SpectatorDialog(SpectatorClient client)
         {
+            SpectatorClient = client;
+
             Image = UserInterface.WaitingPanel;
             Size = new ScalableVector2(450, 134);
             Alpha = 0;
@@ -29,7 +39,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            var text = new SpriteTextBitmap(FontsBitmap.AllerRegular, "Waiting for host...")
+            Text = new SpriteTextBitmap(FontsBitmap.AllerRegular, "Waiting for host!")
             {
                 Parent = this,
                 FontSize = 20,
@@ -43,14 +53,22 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Size = new ScalableVector2(40, 40),
                 Image = UserInterface.LoadingWheel,
                 Alignment = Alignment.TopCenter,
-                Y = text.Y + text.Height + 10
+                Y = Text.Y + Text.Height + 10
             };
+
+            OnlineManager.Client.OnUserStatusReceived += OnClientStatusReceived;
         }
 
         public override void Update(GameTime gameTime)
         {
             PerformLoadingWheelRotation();
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            OnlineManager.Client.OnUserStatusReceived -= OnClientStatusReceived;
+            base.Destroy();
         }
 
         /// <summary>
@@ -64,6 +82,25 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             var rotation = MathHelper.ToDegrees(LoadingWheel.Rotation);
             LoadingWheel.ClearAnimations();
             LoadingWheel.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear, rotation, rotation + 360, 1000));
+        }
+
+        private void OnClientStatusReceived(object sender, UserStatusEventArgs e)
+        {
+            if (!e.Statuses.ContainsKey(SpectatorClient.Player.OnlineUser.Id))
+                return;
+
+            switch (e.Statuses[SpectatorClient.Player.OnlineUser.Id].Status)
+            {
+                case ClientStatus.Selecting:
+                    Text.Text = $"The host is currently selecting a map!";
+                    break;
+                case ClientStatus.Paused:
+                    Text.Text = $"The host is currently paused!";
+                    break;
+                default:
+                    Text.Text = $"Waiting for host!";
+                    break;
+            }
         }
     }
 }
