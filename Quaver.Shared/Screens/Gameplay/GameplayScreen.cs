@@ -368,6 +368,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public override void OnFirstUpdate()
         {
+            var game = (QuaverGame) GameBase.Game;
+            game.InitializeFpsLimiting();
+
             if (IsMultiplayerGame)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
