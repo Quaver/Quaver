@@ -59,7 +59,9 @@ namespace Quaver.Shared.Online
             }
 
             MapManager.Selected.Value = Map;
-            BackgroundHelper.Load(Map);
+
+            if (Map != BackgroundHelper.Map)
+                BackgroundHelper.Load(Map);
 
             // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
             Replay = new Replay(Map.Mode, Player.OnlineUser.Username, (ModIdentifier) Player.CurrentStatus.Modifiers, Map.Md5Checksum);
