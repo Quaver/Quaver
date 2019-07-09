@@ -374,7 +374,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsMultiplayerGame)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
-            if (OnlineManager.IsBeingSpectated)
+            if (OnlineManager.IsBeingSpectated && !InReplayMode)
                 OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.NewSong, AudioEngine.Track.Time, new List<ReplayFrame>());
 
             base.OnFirstUpdate();
