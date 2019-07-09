@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -44,8 +45,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add a setting for this
-            Visible = OnlineManager.IsBeingSpectated;
+            Visible = OnlineManager.IsBeingSpectated && ConfigManager.ShowSpectators.Value;
 
             base.Update(gameTime);
         }
