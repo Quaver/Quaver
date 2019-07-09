@@ -1148,7 +1148,7 @@ namespace Quaver.Shared.Online
                 Client?.RequestUserInfo(new List<int>() { e.UserId });
 
             if (SpectatorClients.Count == 1)
-                NotificationManager.Show(NotificationLevel.Info, $"You are now spectating {SpectatorClients[e.UserId].Player.OnlineUser.Username}");
+                NotificationManager.Show(NotificationLevel.Info, $"You are now spectating {SpectatorClients[e.UserId].Player.OnlineUser.Username}!");
 
             Logger.Important($"Starting spectating player: {e.UserId}", LogType.Network);
         }
@@ -1160,7 +1160,12 @@ namespace Quaver.Shared.Online
 
             SpectatorClients.Remove(e.UserId);
 
-            NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating.");
+            NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating anymore!");
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Gameplay && SpectatorClients.Count == 0)
+                game.CurrentScreen.Exit(() => new MenuScreen());
 
             Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);
         }
