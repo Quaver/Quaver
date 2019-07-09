@@ -191,6 +191,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private SpectatorDialog SpectatorDialog { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private SpectatorCount SpectatorCount { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -249,6 +253,14 @@ namespace Quaver.Shared.Screens.Gameplay
                     Alpha = 0
                 };
             }
+
+            SpectatorCount = new SpectatorCount
+            {
+                Parent = Container,
+                Y = 120,
+                Alignment = Alignment.TopRight,
+                X = -10
+            };
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
