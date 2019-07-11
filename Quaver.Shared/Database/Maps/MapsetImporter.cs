@@ -285,6 +285,11 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
+
+                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
+                    if (info != null)
+                        map.RankedStatus = info.Map.RankedStatus;
+
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map, quaFile);
                     lastImported = map;
