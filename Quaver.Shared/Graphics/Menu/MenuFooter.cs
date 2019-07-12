@@ -35,7 +35,7 @@ namespace Quaver.Shared.Graphics.Menu
             LeftAligned = leftAligned;
             RightAligned = rightAlighed;
             Size = new ScalableVector2(WindowManager.Width, 44);
-            Tint = ColorHelper.HexToColor("#181818");
+            Tint = Colors.DarkGray;
             Alpha = 1;
 
             BackgroundLine = new Sprite

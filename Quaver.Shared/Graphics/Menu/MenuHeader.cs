@@ -44,7 +44,7 @@ namespace Quaver.Shared.Graphics.Menu
         public MenuHeader(Texture2D icon, string title, string title2, string subtitle, Color colorTheme)
         {
             Size = new ScalableVector2(WindowManager.Width, 44);
-            Tint = ColorHelper.HexToColor("#181818");
+            Tint = Colors.DarkGray;
             Alpha = 1f;
 
             Icon = new Sprite
