@@ -31,10 +31,9 @@ namespace Quaver.Shared.Graphics.Notifications
         private Sprite Container { get; }
 
         /// <summary>
-        ///     The container where the avatar will be drawn inside
+        ///     This container is used for centering and scaling the avatar sprite while maintaining a set width and height.
         ///
-        ///     This is done for extra width, without having to edit the texture to
-        ///     downscale or have extra space in the texture.
+        ///     This was done due to the fact that Texture2D can not be scaled without affecting the sprite's width and height values.
         /// </summary>
         private Container AvatarContainer { get; }
 
