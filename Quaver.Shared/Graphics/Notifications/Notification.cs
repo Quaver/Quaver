@@ -68,7 +68,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="onClick"></param>
         internal Notification(Texture2D image, string text, Color color, EventHandler onClick = null)
         {
-            BorderColor = Colors.MainAccent;
+            BorderColor = color;
             Size = new ScalableVector2(350, 80);
             Tint = Color.White;
             SetChildrenAlpha = true;
