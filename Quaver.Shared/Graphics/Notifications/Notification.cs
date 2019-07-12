@@ -31,6 +31,14 @@ namespace Quaver.Shared.Graphics.Notifications
         private Sprite Container { get; }
 
         /// <summary>
+        ///     The container where the avatar will be drawn inside
+        ///
+        ///     This is done for extra width, without having to edit the texture to
+        ///     downscale or have extra space in the texture.
+        /// </summary>
+        private Container AvatarContainer { get; }
+
+        /// <summary>
         ///     The notification content text.
         /// </summary>
         private SpriteTextBitmap Content { get; }
@@ -61,8 +69,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="onClick"></param>
         internal Notification(Texture2D image, string text, Color color, EventHandler onClick = null)
         {
-            BorderColor = color;
-
+            BorderColor = Colors.MainAccent;
             Size = new ScalableVector2(350, 80);
             Tint = Color.White;
             SetChildrenAlpha = true;
@@ -76,12 +83,19 @@ namespace Quaver.Shared.Graphics.Notifications
                 Position = new ScalableVector2(1, 1)
             };
 
-            Avatar = new Sprite
+            AvatarContainer = new Container
             {
                 Parent = this,
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(Container.Height, Container.Height),
                 X = 2,
+            };
+
+            Avatar = new Sprite
+            {
+                Parent = AvatarContainer,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(AvatarContainer.Height * 0.75f, AvatarContainer.Height * 0.75f),
                 Image = image
             };
 
@@ -89,11 +103,13 @@ namespace Quaver.Shared.Graphics.Notifications
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                X = Avatar.X + Avatar.Width + 5,
+                X = AvatarContainer.X + AvatarContainer.Width + 5,
                 FontSize = 15,
-                MaxWidth = (int)(Width - Avatar.Width - 15),
+                MaxWidth = (int)(Width - AvatarContainer.Width - 25),
                 Y = 10
             };
+
+            AdjustHeightIfRequired();
 
             Clicked += (o, e) => HasBeenClicked = true;
 
@@ -119,6 +135,7 @@ namespace Quaver.Shared.Graphics.Notifications
             if (!HasBeenClicked && TimeElapsedSinceShown >= 4000)
                 Alpha = MathHelper.Lerp(Alpha, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 400, 1));
 
+            Avatar.Alpha = Alpha;
             base.Update(gameTime);
         }
 
@@ -132,6 +149,15 @@ namespace Quaver.Shared.Graphics.Notifications
                 return;
 
             base.Draw(gameTime);
+        }
+
+        private void AdjustHeightIfRequired()
+        {
+            if (!(Content.Height > Height))
+                return;
+
+            Height = Content.Height + 10 + Content.Y;
+            Container.Height = Height - 2;
         }
     }
 }
