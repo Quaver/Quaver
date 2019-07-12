@@ -152,7 +152,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
         private void AdjustHeightIfRequired()
         {
-            if (!(Content.Height > Height))
+            if (Content.Height < Height)
                 return;
 
             Height = Content.Height + 10 + Content.Y;
