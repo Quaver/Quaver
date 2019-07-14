@@ -502,10 +502,17 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Only allow offset changes if the map hasn't started or if we're on a break
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
+                    var change = 5;
+                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                        KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    {
+                        change = 1;
+                    }
+
                     // Handle offset +
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                     {
-                        MapManager.Selected.Value.LocalOffset += 5;
+                        MapManager.Selected.Value.LocalOffset += change;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
@@ -513,7 +520,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     // Handle offset -
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                     {
-                        MapManager.Selected.Value.LocalOffset -= 5;
+                        MapManager.Selected.Value.LocalOffset -= change;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
