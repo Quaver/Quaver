@@ -10,16 +10,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Dialogs;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Wobble;
-using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Result.UI
@@ -128,6 +134,8 @@ namespace Quaver.Shared.Screens.Result.UI
             CreateScoreResultsText();
             CreateStatisticsText();
             CreateKeyValueItems();
+            CreateStatisticsKeyValueItems();
+            CreateOffsetFixButtons();
             CreateJudgementBreakdown();
             CreateOnlineStats();
 
@@ -292,6 +300,97 @@ namespace Quaver.Shared.Screens.Result.UI
         }
 
         /// <summary>
+        ///     Creates all of the statistics items.
+        /// </summary>
+        private void CreateStatisticsKeyValueItems()
+        {
+            var meanItem = new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "AVERAGE", $"{-HitStatistics.Mean:F} ms")
+            {
+                Parent = this,
+                Y = TopHorizontalDividerLine.Y + 15
+            };
+            var standardDeviationItem = new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "STANDARD DEVIATION", $"{HitStatistics.StandardDeviation:F} ms")
+            {
+                Parent = this,
+                Y = TopHorizontalDividerLine.Y + 15
+            };
+
+            var availableWidth = Width - VerticalDividerLine.X;
+            var padding = (availableWidth - meanItem.Width - standardDeviationItem.Width) / 3;
+
+            meanItem.X = VerticalDividerLine.X + padding;
+            standardDeviationItem.X = Width - padding - standardDeviationItem.Width;
+        }
+
+        /// <summary>
+        ///     Creates the local and global offset fix buttons.
+        /// </summary>
+        private void CreateOffsetFixButtons()
+        {
+            // Don't draw the buttons if we don't have the hit stats (and therefore don't know the
+            // values to adjust the offset by).
+            if (Processor.Stats == null)
+                return;
+
+            var availableWidth = Width - VerticalDividerLine.X;
+            var buttonPadding = 15;
+            var buttonWidth = (availableWidth - buttonPadding * 3) / 2;
+
+            var localOffsetButton = new BorderedTextButton("Fix Local Offset", Colors.MainAccent,
+                (o, e) =>
+                {
+                    // Local offset is scaled with rate, so the adjustment depends on the rate the
+                    // score was played on.
+                    var change = HitStatistics.Mean * ModHelper.GetRateFromMods(Processor.Mods);
+                    var newOffset = (int) Math.Round(ResultScreen.Map.LocalOffset - change);
+
+                    DialogManager.Show(new ConfirmCancelDialog($"Local offset will be changed from {ResultScreen.Map.LocalOffset} ms to {newOffset} ms.",
+                        (o_, e_) =>
+                        {
+                            ResultScreen.Map.LocalOffset = newOffset;
+                            MapDatabaseCache.UpdateMap(ResultScreen.Map);
+                            NotificationManager.Show(NotificationLevel.Success, $"Local offset was set to {ResultScreen.Map.LocalOffset} ms.");
+                        }));
+                })
+            {
+                Parent = this,
+                X = VerticalDividerLine.X + buttonPadding,
+                Y = BottomHorizontalDividerLine.Y - 15 - 25,
+                Height = 30,
+                Width = buttonWidth,
+                Text =
+                {
+                    Font = Fonts.SourceSansProSemiBold,
+                    FontSize = 13
+                }
+            };
+            var globalOffsetButton = new BorderedTextButton("Fix Global Offset", Colors.MainAccent,
+                (o, e) =>
+                {
+                    var newOffset = (int) Math.Round(ConfigManager.GlobalAudioOffset.Value + HitStatistics.Mean);
+
+                    DialogManager.Show(new ConfirmCancelDialog($"Global offset will be changed from {ConfigManager.GlobalAudioOffset.Value} ms to {newOffset} ms.",
+                        (o_, e_) =>
+                        {
+                            ConfigManager.GlobalAudioOffset.Value = newOffset;
+                            NotificationManager.Show(NotificationLevel.Success, $"Global offset was set to {ConfigManager.GlobalAudioOffset.Value} ms.");
+                        }));
+                })
+            {
+                Parent = this,
+                X = localOffsetButton.X + localOffsetButton.Width + buttonPadding,
+                Y = BottomHorizontalDividerLine.Y - 15 - 25,
+                Height = 30,
+                Width = buttonWidth,
+                Text =
+                {
+                    Font = Fonts.SourceSansProSemiBold,
+                    FontSize = 13
+                }
+            };
+        }
+
+        /// <summary>
         /// </summary>
         private void CreateJudgementBreakdown() => JudgementBreakdown = new ResultJudgementBreakdown(this, Screen.ScoreProcessor)
         {
@@ -348,7 +447,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 Image = outputTexture,
                 Size = HitDifferenceGraphRaw.Size,
                 X = VerticalDividerLine.X + (Width - VerticalDividerLine.X) / 2f - HitDifferenceGraphRaw.Width / 2f,
-                Y = BottomHorizontalDividerLine.Y - 15 - 200,
+                Y = BottomHorizontalDividerLine.Y - 15 - 200 - 15 - 25,
                 SpriteBatchOptions = new SpriteBatchOptions {BlendState = BlendState.AlphaBlend},
             };
         }
