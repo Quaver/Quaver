@@ -506,7 +506,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                     {
                         MapManager.Selected.Value.LocalOffset += 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
 
@@ -514,7 +514,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                     {
                         MapManager.Selected.Value.LocalOffset -= 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
                 }

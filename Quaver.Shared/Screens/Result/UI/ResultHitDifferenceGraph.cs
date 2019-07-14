@@ -204,7 +204,7 @@ namespace Quaver.Shared.Screens.Result.UI
             var unscaledLargestHitWindow = LargestHitWindow / ModHelper.GetRateFromMods(Processor.Mods);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Late (+{unscaledLargestHitWindow}ms)")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Late (+{unscaledLargestHitWindow} ms)")
             {
                 Parent = this,
                 X = 4,
@@ -213,7 +213,7 @@ namespace Quaver.Shared.Screens.Result.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Early (-{unscaledLargestHitWindow}ms)")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Early (-{unscaledLargestHitWindow} ms)")
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
