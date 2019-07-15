@@ -471,6 +471,10 @@ namespace Quaver.Shared.Online
 
             Self.Stats[e.Response.GameMode] = e.Response.Stats.ToUserStats(e.Response.GameMode);
 
+            // Unlock any achievements
+            if (e.Response.Achievements.Count > 0)
+                new SteamAchievements(e.Response.Achievements).Unlock();
+
             DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(e.Response.GameMode);
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
