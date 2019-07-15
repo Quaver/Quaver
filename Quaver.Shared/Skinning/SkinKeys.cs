@@ -6,6 +6,7 @@
 */
 
 using System;
+using Quaver.Shared.Graphics.Notifications;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -37,6 +38,8 @@ namespace Quaver.Shared.Skinning
         private GameMode Mode { get; }
 
 #region SKIN.INI VALUES
+
+        internal bool UseSameHitObjects { get; private set; }
 
         internal int StageReceptorPadding { get; private set; }
 
@@ -327,6 +330,7 @@ namespace Quaver.Shared.Skinning
 
             var ini = config[ModeHelper.ToShortHand(Mode).ToUpper()];
 
+            UseSameHitObjects = ConfigHelper.ReadBool(UseSameHitObjects, ini["UseSameHitObjects"]);
             StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
             HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
@@ -543,8 +547,16 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                if (UseSameHitObjects == true)
+                {
+                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                }
+                else
+                {
+                    LoadHitObjects(NoteHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
+
+                LoadHitObjects(NoteHoldHitObjects, $"note-hitobject-{i + 1}", i);
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
