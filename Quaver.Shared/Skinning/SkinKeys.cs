@@ -547,14 +547,10 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                if (UseSameHitObjects == true)
-                {
+                if (UseSameHitObjects)
                     LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                }
                 else
-                {
                     LoadHitObjects(NoteHitObjects, $"note-holdhitobject-{i + 1}", i);
-                }
 
                 LoadHitObjects(NoteHoldHitObjects, $"note-hitobject-{i + 1}", i);
 
