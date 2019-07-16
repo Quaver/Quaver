@@ -548,11 +548,11 @@ namespace Quaver.Shared.Skinning
 
                 // HitObjects
                 if (UseSameHitObjects)
-                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-hitobject-{i + 1}", i);
                 else
-                    LoadHitObjects(NoteHitObjects, $"note-holdhitobject-{i + 1}", i);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
 
-                LoadHitObjects(NoteHoldHitObjects, $"note-hitobject-{i + 1}", i);
+                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
