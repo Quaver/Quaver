@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Lobby.UI
         {
             View = view;
 
-            Tint = Colors.DarkGray;
+            Tint = Colors.BlueishDarkGray;
             Alpha = 0.75f;
             AllowSubmission = false;
             Image = UserInterface.SelectSearchBackground;

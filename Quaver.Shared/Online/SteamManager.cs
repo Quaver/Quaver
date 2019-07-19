@@ -115,6 +115,9 @@ namespace Quaver.Shared.Online
 
             InitializeCallbacks();
             StartAuthSession();
+
+            // DANGEROUS: Uncomment to reset all achievements
+            // SteamUserStats.ResetAllStats(true);
         }
 
         /// <summary>

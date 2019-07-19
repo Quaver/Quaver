@@ -244,7 +244,7 @@ namespace Quaver.Shared.Graphics.Online.Playercard
             User = user;
 
             FullCard = fullCard;
-            Tint = Colors.DarkGray;
+            Tint = Colors.BlueishDarkGray;
 
             Size = new ScalableVector2(426, FullCard ? 154 : 96);
             Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.GetStream("Quaver.Resources/Textures/UI/Playercard/playercard-bg.png"));

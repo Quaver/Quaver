@@ -160,7 +160,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             CreateStageLeft();
             CreateStageRight();
             CreateBgMask();
-            CreateHitPositionOverlay();
 
             // Depending on what the skin.ini's value is, we'll want to either initialize
             // the receptors first, or the playfield first.
@@ -169,10 +168,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
                 CreateReceptorsAndLighting();
+                CreateHitPositionOverlay();
             }
             else
             {
                 CreateReceptorsAndLighting();
+                CreateHitPositionOverlay();
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
             }
@@ -289,15 +290,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Create Stage HitPosition Overlay
             var sizeY = Skin.StageHitPositionOverlay.Height * Playfield.Width / Skin.StageHitPositionOverlay.Width;
             var offsetY = Playfield.LaneSize * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
+            var width = Playfield.Width;
+
+            float y;
+            switch (GameplayRulesetKeys.ScrollDirection)
+            {
+                case ScrollDirection.Down:
+                    y = Playfield.ReceptorPositionY.First() - sizeY + Skin.HitPosOffsetY;
+                    break;
+                case ScrollDirection.Up:
+                    y = Playfield.ReceptorPositionY.First() + offsetY - Skin.HitPosOffsetY;
+                    break;
+                case ScrollDirection.Split:
+                    y = Playfield.ReceptorPositionY.First() - sizeY + Skin.HitPosOffsetY;
+                    width = Playfield.Width / 2;
+
+                    var splitHitPositionOverlay = new Sprite
+                    {
+                        Parent = Playfield.ForegroundContainer,
+                        Image = Skin.StageHitPositionOverlay,
+                        Rotation = 180,
+                        Size = new ScalableVector2(width, sizeY),
+                        X = width,
+                        Y = Playfield.ReceptorPositionY.Last() + offsetY - Skin.HitPosOffsetY
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             HitPositionOverlay = new Sprite
             {
                 Parent = Playfield.ForegroundContainer,
                 Image = Skin.StageHitPositionOverlay,
-                Size = new ScalableVector2(Playfield.Width, sizeY),
-                // todo: case statement for scroll direction
-                Y = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Down) ? Playfield.ReceptorPositionY[0] + Skin.HitPosOffsetY
-                                                    : Playfield.ReceptorPositionY[0] + offsetY + sizeY - Skin.HitPosOffsetY,
+                Rotation = GameplayRulesetKeys.ScrollDirection.Equals(ScrollDirection.Up) ? 180 : 0,
+                Size = new ScalableVector2(width, sizeY),
+                Y = y
             };
         }
 
