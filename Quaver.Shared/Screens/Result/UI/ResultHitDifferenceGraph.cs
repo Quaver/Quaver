@@ -73,14 +73,14 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        /// <param name="screen"></param>
-        public ResultHitDifferenceGraph(ScalableVector2 size, ResultScreen screen)
+        /// <param name="processor"></param>
+        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor)
         {
             Tint = Color.Black;
             Alpha = 0.2f;
             Size = size;
 
-            Processor = screen.GetScoreProcessor();
+            Processor = processor;
             LargestHitWindow = Processor.JudgementWindow.Values.Max();
 
             CreateMiddleLine();
