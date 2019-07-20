@@ -11,6 +11,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Rating;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -90,6 +92,19 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private ResultHitDifferenceGraph HitDifferenceGraphRaw { get; }
 
+        /// <summary>
+        ///     A ScoreProcessor which is more likely to be filled with hit stats than the one in
+        ///     ResultScreen. For example, this one will have stats loaded from a replay.
+        ///
+        ///     TODO: this should really be the ResultScreen processor.
+        /// </summary>
+        private ScoreProcessor Processor { get; }
+
+        /// <summary>
+        ///     Hit statistics computed for the current score.
+        /// </summary>
+        private HitStatistics HitStatistics { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -99,6 +114,12 @@ namespace Quaver.Shared.Screens.Result.UI
             Size = new ScalableVector2(WindowManager.Width - 56, 490);
             Image = UserInterface.ResultScorePanel;
             DestroyIfParentIsNull = false;
+            Processor = Screen.GetScoreProcessor();
+
+            if (Processor.Stats != null)
+                HitStatistics = Processor.GetHitStatistics();
+            else
+                HitStatistics = new HitStatistics();
 
             CreateTopHorizontalDividerLine();
             CreateHeaderBackground();
