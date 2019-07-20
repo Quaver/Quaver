@@ -286,7 +286,7 @@ namespace Quaver.Shared.Screens.Result.UI
             {
                 Parent = this,
                 Y = firstItem.Y + firstItem.TextValue.Y + firstItem.TextValue.Height + 15,
-                Size = new ScalableVector2(VerticalDividerLine.X, 1),
+                Size = new ScalableVector2(Width, 1),
                 Alpha = 0.45f
             };
         }
