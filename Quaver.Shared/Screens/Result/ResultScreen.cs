@@ -7,11 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -19,6 +16,7 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
+using Quaver.API.Replays.Virtual;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
@@ -34,18 +32,16 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
 using Wobble;
-using Wobble.Discord;
-using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -758,6 +754,66 @@ namespace Quaver.Shared.Screens.Result
             }
 
             ScoreProcessor = self.Processor;
+        }
+
+        /// <summary>
+        ///     Returns the score processor to use. Loads hit stats from a replay if needed.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public ScoreProcessor GetScoreProcessor()
+        {
+            // Handles the case when watching a replay in its entirety. This uses the preprocessed
+            // ScoreProcessor/Replay from gameplay to get a 100% accurate score output.
+            // Also avoids having to process the replay again (as done below).
+            if (Gameplay != null && Gameplay.InReplayMode)
+            {
+                var im = Gameplay.Ruleset.InputManager as KeysInputManager;
+                return im?.ReplayInputManager.VirtualPlayer.ScoreProcessor;
+            }
+
+            // If we already have stats (for example, this is a result screen right after a player finished playing a map), use them.
+            if (ScoreProcessor.Stats != null)
+                return ScoreProcessor;
+
+            // Otherwise, get the stats from a replay.
+            Replay replay = null;
+
+            // FIXME: unify this logic with watching a replay from a ResultScreen.
+            try
+            {
+                switch (ResultsType)
+                {
+                    case ResultScreenType.Gameplay:
+                    case ResultScreenType.Replay:
+                        replay = Replay;
+                        break;
+                    case ResultScreenType.Score:
+                        // Don't do anything for online replays since they aren't downloaded yet.
+                        if (!Score.IsOnline)
+                            replay = new Replay($"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception e)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Unable to read replay file");
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            // Load a replay if we got one.
+            if (replay == null)
+                return ScoreProcessor;
+
+            var qua = Map.LoadQua();
+            qua.ApplyMods(replay.Mods);
+
+            var player = new VirtualReplayPlayer(replay, qua);
+            player.PlayAllFrames();
+
+            return player.ScoreProcessor;
         }
     }
 }
