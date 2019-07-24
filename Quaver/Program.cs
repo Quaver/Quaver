@@ -113,16 +113,23 @@ namespace Quaver
         /// </summary>
         private static void StartIpcServer()
         {
-            var s = new IpcServer();
-            s.Start(IpcPort);
-
-            Logger.Important($"Started IPC server on port: {IpcPort}", LogType.Runtime);
-
-            s.ReceivedRequest += (o, e) =>
+            try
             {
-                QuaverIpcHandler.HandleMessage(e.Request);
-                e.Handled = true;
-            };
+                var s = new IpcServer();
+                s.Start(IpcPort);
+
+                Logger.Important($"Started IPC server on port: {IpcPort}", LogType.Runtime);
+
+                s.ReceivedRequest += (o, e) =>
+                {
+                    QuaverIpcHandler.HandleMessage(e.Request);
+                    e.Handled = true;
+                };
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
@@ -131,9 +138,16 @@ namespace Quaver
         /// </summary>
         private static void SendToRunningInstanceIpc(string message)
         {
-            var c = new IpcClient();
-            c.Initialize(IpcPort);
-            c.Send(message);
+            try
+            {
+                var c = new IpcClient();
+                c.Initialize(IpcPort);
+                c.Send(message);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
     }
 }
