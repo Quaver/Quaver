@@ -33,5 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NSubsys" Version="0.7.0-build20180604-0047" />
+    <PackageReference Include="ZetaIpc" Version="1.0.0.9" />
   </ItemGroup>
 </Project>
