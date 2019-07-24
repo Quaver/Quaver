@@ -108,6 +108,7 @@
   <ItemGroup>
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.0" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.6.0-preview7.19362.9" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
