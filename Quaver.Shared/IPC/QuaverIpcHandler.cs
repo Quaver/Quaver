@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor;
@@ -27,7 +28,8 @@ namespace Quaver.Shared.IPC
             if (!message.StartsWith(protocolUriStarter))
                 return;
 
-            message = message.Replace(protocolUriStarter, "");
+            var regex = new Regex(@"quaver:\/\/");
+            message = regex.Replace(message, "", 1);
 
             // Highlighting notes within the editor
             if (message.StartsWith("editor/"))
