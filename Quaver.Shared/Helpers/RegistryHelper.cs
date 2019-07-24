@@ -10,6 +10,15 @@ namespace Quaver.Shared.Helpers
         private const string UriScheme = "quaver";
         private const string FriendlyName = "Quaver";
 
+        /// <summary>
+        ///     (Windows) Registers a URI scheme for quaver://
+        ///
+        ///     Assumes the user is on windows and has a Quaver.exe file when trying to open the game
+        ///
+        ///     NOTE: Using .net run  will not work in this case and should typically only be used in published builds.
+        ///           A workaround for this is to do a dotnet publish and have the Quaver.exe executable sitting in
+        ///           the same directory.
+        /// </summary>
         public static void RegisterUriScheme()
         {
             try
