@@ -133,9 +133,19 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
                 return;
             }
 
+            HighlightObjects(Input);
+            Hide();
+        }
+
+        /// <summary>
+        ///     Highlights objects in the editor
+        /// </summary>
+        /// <param name="data"></param>
+        public static void HighlightObjects(string data)
+        {
             // StartTime, Lane
             var objectList = new List<Tuple<int, int>>();
-            var splitInput = Input.Split(",");
+            var splitInput = data.Split(",");
 
             foreach (var input in splitInput)
             {
@@ -182,8 +192,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
             }
 
             screen?.SetHitSoundObjectIndex();
-
-            Hide();
         }
     }
 }
