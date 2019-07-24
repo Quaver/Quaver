@@ -14,6 +14,7 @@ using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Window;
 using Vector2 = System.Numerics.Vector2;
 
@@ -143,6 +144,10 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
         /// <param name="data"></param>
         public static void HighlightObjects(string data)
         {
+            var game = GameBase.Game as QuaverGame;
+            var screen = game?.CurrentScreen as EditorScreen;
+            var ruleset = screen?.Ruleset as EditorRulesetKeys;
+
             // StartTime, Lane
             var objectList = new List<Tuple<int, int>>();
             var splitInput = data.Split(",");
@@ -150,6 +155,36 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
             foreach (var input in splitInput)
             {
                 var split = input.Split("|");
+
+                // Only time in milliseconds was given to us
+                if (split.Length == 1 && splitInput.Length == 1)
+                {
+                    try
+                    {
+                        var time = int.Parse(split[0]);
+
+                        if (!AudioEngine.Track.IsDisposed)
+                        {
+                            if (AudioEngine.Track.IsPlaying)
+                                AudioEngine.Track.Pause();
+
+                            try
+                            {
+                                AudioEngine.Track.Seek(time);
+                            }
+                            catch (Exception)
+                            {
+                                // bad input - ignored
+                            }
+                        }
+
+                        screen?.SetHitSoundObjectIndex();
+                    }
+                    catch (Exception)
+                    {
+                        // ignored - bad input
+                    }
+                }
 
                 if (split.Length != 2)
                     continue;
@@ -163,10 +198,6 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo
                 {
                 }
             }
-
-            var game = GameBase.Game as QuaverGame;
-            var screen = game?.CurrentScreen as EditorScreen;
-            var ruleset = screen?.Ruleset as EditorRulesetKeys;
 
             new List<DrawableEditorHitObject>(ruleset.SelectedHitObjects).ForEach(x => ruleset.DeselectHitObject(x));
 
