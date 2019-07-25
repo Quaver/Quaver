@@ -105,6 +105,11 @@ namespace Quaver.Shared.Online
         public static MultiplayerGame CurrentGame { get; private set; }
 
         /// <summary>
+        ///     If the current user is a donator
+        /// </summary>
+        public static bool IsDonator => Connected && Self.OnlineUser.UserGroups.HasFlag(UserGroups.Donator);
+
+        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
