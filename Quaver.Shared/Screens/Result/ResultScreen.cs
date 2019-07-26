@@ -381,6 +381,30 @@ namespace Quaver.Shared.Screens.Result
             {
                 Logger.Important($"Beginning to submit score on map: {Gameplay.MapHash}", LogType.Network);
 
+                var map = Map;
+
+                // For any unsubmitted maps, ask the server if it has the .qua already cached
+                // if it doesn't, then we need to provide it.
+                if (map.RankedStatus == RankedStatus.NotSubmitted && OnlineManager.IsDonator)
+                {
+                    var md5 = map.GetAlternativeMd5();
+                    var info = OnlineManager.Client?.RetrieveMapInfo(md5);
+
+                    // Map is not uploaded, so we have to provide the server with it.
+                    if (info == null)
+                    {
+                        Logger.Important($"Unsubmitted map is not cached on the server. Need to provide!", LogType.Network);
+                        var success = OnlineManager.Client?.UploadUnsubmittedMap(Gameplay.Map, md5, map.Md5Checksum);
+
+                        // The map upload wasn't successful, so we can assume that our score shouldn't be submitted
+                        if (success != null && !success.Value)
+                        {
+                            Logger.Error($"Unsubmitted map upload was not successful. Skipping score submission", LogType.Network);
+                            return;
+                        }
+                    }
+                }
+
                 OnlineManager.Client?.Submit(new OnlineScore(Gameplay.MapHash, Gameplay.ReplayCapturer.Replay,
                     Gameplay.Ruleset.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
                     SteamManager.PTicket));

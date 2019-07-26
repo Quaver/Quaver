@@ -80,11 +80,19 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country && !OnlineManager.IsDonator)
                 return "Country leaderboards are a donator-only feature!";
 
+            var donatorNoScores = "No scores available. Scores for this map will be unranked!";
+
             switch (map.RankedStatus)
             {
                 case RankedStatus.NotSubmitted:
+                    if (OnlineManager.IsDonator)
+                        return donatorNoScores;
+
                     return "This map is not submitted online!";
                 case RankedStatus.Unranked:
+                    if (OnlineManager.IsDonator)
+                        return donatorNoScores;
+
                     return "This map is not ranked!";
                 case RankedStatus.Ranked:
                     return "No scores available. Be the first!";
