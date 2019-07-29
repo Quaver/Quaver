@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Events.Scores;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Online;
@@ -76,11 +77,22 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             if (map.NeedsOnlineUpdate)
                 return "Your map is outdated. Please update it!";
 
+            if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country && !OnlineManager.IsDonator)
+                return "Country leaderboards are a donator-only feature!";
+
+            var donatorNoScores = "No scores available. Scores for this map will be unranked!";
+
             switch (map.RankedStatus)
             {
                 case RankedStatus.NotSubmitted:
+                    if (OnlineManager.IsDonator)
+                        return donatorNoScores;
+
                     return "This map is not submitted online!";
                 case RankedStatus.Unranked:
+                    if (OnlineManager.IsDonator)
+                        return donatorNoScores;
+
                     return "This map is not ranked!";
                 case RankedStatus.Ranked:
                     return "No scores available. Be the first!";

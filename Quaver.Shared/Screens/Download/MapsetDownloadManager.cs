@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         ///    The amount of mapsets able to be downloaded at once.
         /// </summary>
-        public static int MAX_CONCURRENT_DOWNLOADS { get; } = 5;
+        public static int MAX_CONCURRENT_DOWNLOADS => OnlineManager.IsDonator ? 10 : 5;
 
         /// <summary>
         ///     Downloads an individual mapset.

@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Menu.UI;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
@@ -312,7 +313,8 @@ namespace Quaver.Shared.Screens.Menu
                 new ButtonText(FontsBitmap.GothamRegular, "Report Bugs", 14, (sender, args) => BrowserHelper.OpenURL("https://github.com/Quaver/Quaver/issues")),
                 new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
                 new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
-                new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com"))
+                new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com")),
+                new ButtonSupportQuaver()
             }, Colors.MainAccent)
             {
                 Parent = Container,
