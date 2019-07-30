@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 15, 0),
                 Alignment = Alignment.MidLeft,
-                Tint = Colors.DarkGray,
+                Tint = Colors.BlueishDarkGray,
                 Alpha = 0.75f,
                 AllowSubmission = false,
                 RawText = SelectScreen.PreviousSearchTerm,

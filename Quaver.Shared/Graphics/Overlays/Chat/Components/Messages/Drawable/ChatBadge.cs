@@ -103,6 +103,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
             if (groups.HasFlag(UserGroups.Contributor))
                 return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
 
+            if (groups.HasFlag(UserGroups.Donator))
+                return FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_silhouette);
+
             return null;
         }
 
@@ -136,6 +139,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Messages.Drawable
 
             if (groups.HasFlag(UserGroups.Contributor))
                 return "Contributor";
+
+            if (groups.HasFlag(UserGroups.Donator))
+                return "Donator";
 
             return null;
         }

@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Download.UI
                 Alignment = Alignment.TopLeft,
                 X = TextSearch.X,
                 Y = TextSearch.Y + TextSearch.Height + 10,
-                Tint = Colors.DarkGray,
+                Tint = Colors.BlueishDarkGray,
             };
 
             SearchBox.AddBorder(Colors.MainAccent, 2);

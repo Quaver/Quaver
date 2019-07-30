@@ -11,6 +11,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
     {
         Local,
         Global,
-        Mods
+        Mods,
+        Country
     }
 }

@@ -26,13 +26,14 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation.User
         /// <param name="text"></param>
         /// <param name="color"></param>
         /// <param name="clickAction"></param>
-        public BorderedTextButton(string text, Color color, EventHandler clickAction = null)
+        public BorderedTextButton(string text, Color color, EventHandler clickAction = null,
+                float borderThickness = 2)
             : base(UserInterface.BlankBox, Fonts.Exo2Medium, text, 13, clickAction)
         {
             OriginalColor = color;
             Size = new ScalableVector2(175, 35);
             Tint = Color.Transparent;
-            AddBorder(color, 2);
+            AddBorder(color, borderThickness);
         }
 
         /// <inheritdoc />

@@ -42,6 +42,11 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         private SpriteTextBitmap NoScoresAvailableText { get; set; }
 
         /// <summary>
+        ///     Tells people that they can become a donator to access
+        /// </summary>
+        private SpriteTextBitmap Donator { get; set; }
+
+        /// <summary>
         ///     To cancel tasks.
         /// </summary>
         private CancellationTokenSource Source { get; set; }
@@ -98,13 +103,26 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays that there are no scores available.
         /// </summary>
-        private void CreateNoScoresAvailableText() => NoScoresAvailableText = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
+        private void CreateNoScoresAvailableText()
         {
-            Parent = this,
-            Alignment = Alignment.MidCenter,
-            Visible = false,
-            FontSize = 16
-        };
+            NoScoresAvailableText = new SpriteTextBitmap(FontsBitmap.GothamBold, " ")
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Visible = false,
+                FontSize = 16,
+                Y = -15
+            };
+
+            Donator = new SpriteTextBitmap(FontsBitmap.GothamBold, "Consider becoming a donator to access leaderboards for all maps!")
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Y = NoScoresAvailableText.Y + NoScoresAvailableText.Height + 15,
+                Visible = false,
+                FontSize = 16
+            };
+        }
 
         /// <summary>
         ///     Creates all of the leaderboard sections that will be displayed.
@@ -126,6 +144,13 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             };
 
             Sections[LeaderboardType.Mods] = new LeaderboardScoreSectionMods(this)
+            {
+                Parent = this,
+                Y = 2,
+                X = 2
+            };
+
+            Sections[LeaderboardType.Country] = new LeaderboardScoreSectionCountry(this)
             {
                 Parent = this,
                 Y = 2,
@@ -187,6 +212,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
 
             section.IsFetching = true;
             NoScoresAvailableText.Visible = false;
+            Donator.Visible = false;
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -221,12 +247,29 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                     NoScoresAvailableText.Alpha = 0;
                     NoScoresAvailableText.Visible = true;
 
+                    Donator.Alpha = 0;
+
+                    if (!OnlineManager.IsDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
+                    {
+                        Donator.Visible = true;
+                        NoScoresAvailableText.Y = -15;
+                        Donator.Y = NoScoresAvailableText.Y + NoScoresAvailableText.Height + 15;
+                    }
+                    else
+                    {
+                        NoScoresAvailableText.Y = 0;
+                    }
+
+                    Donator.ClearAnimations();
+                    Donator.FadeTo(1, Easing.Linear, 150);
+
                     NoScoresAvailableText.ClearAnimations();
                     NoScoresAvailableText.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, 0, 1, 150));
                 }
                 else
                 {
                     NoScoresAvailableText.Visible = false;
+                    Donator.Visible = false;
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -236,6 +279,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
             {
                 section.IsFetching = true;
                 NoScoresAvailableText.Visible = false;
+                Donator.Visible = false;
             }
         });
 
