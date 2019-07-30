@@ -101,7 +101,15 @@ namespace Quaver
             NativeAssemblies.Copy();
             ConfigManager.Initialize();
             SteamManager.Initialize();
-            RegistryHelper.RegisterUriScheme();
+
+            try
+            {
+                Utils.NativeUtils.RegisterURIScheme("quaver", "Quaver");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
 
             using (var game = new QuaverGame())
                 game.Run();
