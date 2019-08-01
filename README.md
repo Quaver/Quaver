@@ -18,7 +18,7 @@ It is also being officially released on [Steam](https://store.steampowered.com/a
 
 ## Status
 
-This project is currently under heavy development and is in an alpha state, however it is extremely playable as a standalone game. Quaver still has a ton of development ahead of it and will continue to get better as time goes on with new features and bug fixes being added in each day.
+This project is currently under heavy development and is in an alpha state, however it is extremely playable as a standalone game. Quaver still has a ton of work ahead of it and will continue to get better as time goes on with new features and bug fixes being added each day.
 
 Occasionally we open registrations where you can join the Steam alpha and get exclusive access to all the features Quaver has to offer including online rankings, multiplayer, in-game chat, map downloading/uploading, and so much more. Registrations are **currently closed,** however you can still enjoy a limited version of Quaver by compiling the `develop` branch or by downloading one of the [GitHub Releases](https://github.com/Quaver/Quaver/releases).
 
