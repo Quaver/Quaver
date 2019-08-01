@@ -1,8 +1,6 @@
 # Quaver 
 
-[![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/develop/LICENSE) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr) <a href="https://twitter.com/intent/follow?screen_name=QuaverGame">
-        <img src="https://img.shields.io/twitter/follow/QuaverGame?style=social&logo=twitter"
-            alt="follow on Twitter"></a> [![stargazers](https://img.shields.io/github/stars/Quaver/Quaver?style=social)](#)
+[![Build Status](https://travis-ci.com/Quaver/Quaver.svg?branch=develop)](https://travis-ci.com/Quaver/Quaver) [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![license](https://img.shields.io/badge/license-Mozilla%20Public%20License%202.0-blue)](https://github.com/Quaver/Quaver/blob/develop/LICENSE)
 
 <p align="center"> 
   <img src="https://i.imgur.com/AohWq5l.png">
