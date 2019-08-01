@@ -40,7 +40,7 @@ Although there are many games like this, **Quaver** offers many unique features 
 
 * **Over 10+ Game Modifiers** - Switch up the way you play by activating in-game modifiers. Customize the speed of the song, get rid of all the long notes, or even randomize the entire map!
 
-* **Steam Achievements** - Become a master of **Quaver** by completing challenges and earning achievements!
+* **Steam Achievements** - Become a master of Quaver by completing challenges and earning achievements!
 
 * **Play Maps From Other Games** - Coming from a different game and miss all of your favorite maps? Quaver supports both .osz and .sm files out of the box - with support for more games to be added in the future!
 
