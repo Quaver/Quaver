@@ -30,7 +30,7 @@ Although there are many games like this, **Quaver** offers many unique features 
 
 * **Global & Country Leaderboards** - Compete with your country and the world for the highest scores and aim to be #1.
 
-* **Ranked & Casual Multiplayer** - Challenge up to 16 players in casual or competitive-oriented multiplayer battles. Multiplayer includes three game modes including Free-For-All, Teams, and Battle Royale
+* **Ranked & Casual Multiplayer** - Challenge up to 16 players in casual or competitive-oriented multiplayer battles. Multiplayer includes three game modes including Free-For-All, Teams, and Battle Royale.
 
 * **Map Editor** - Create your own maps to any of your favorite songs. Upload and share them with the world, and submit them for official ranking.
 
