@@ -25,12 +25,16 @@ namespace Quaver.Shared.IPC
         {
             Logger.Important($"Received IPC Message: {message}", LogType.Runtime);
 
-            if (!message.StartsWith(protocolUriStarter))
-                return;
+            if (message.StartsWith(protocolUriStarter))
+                HandleProtocolMessage(message.Substring(protocolUriStarter.Length));
+        }
 
-            var regex = new Regex(@"quaver:\/\/");
-            message = regex.Replace(message, "", 1);
-
+        /// <summary>
+        ///     Handles a quaver:// message.
+        ///     <param name="message">the IPC message with quaver:// stripped</param>
+        /// </summary>
+        public static void HandleProtocolMessage(string message)
+        {
             // Highlighting notes within the editor
             if (message.StartsWith("editor/"))
             {
