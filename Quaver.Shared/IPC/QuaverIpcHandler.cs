@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor;
@@ -27,6 +29,11 @@ namespace Quaver.Shared.IPC
 
             if (message.StartsWith(protocolUriStarter))
                 HandleProtocolMessage(message.Substring(protocolUriStarter.Length));
+            else
+            {
+                // Quaver was launched with a file path, try to import it.
+                MapsetImporter.ImportFile(message);
+            }
         }
 
         /// <summary>
