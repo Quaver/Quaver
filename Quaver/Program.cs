@@ -154,7 +154,7 @@ namespace Quaver
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
+                Console.WriteLine(e.ToString());
             }
         }
     }
