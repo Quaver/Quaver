@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor;
@@ -25,12 +27,21 @@ namespace Quaver.Shared.IPC
         {
             Logger.Important($"Received IPC Message: {message}", LogType.Runtime);
 
-            if (!message.StartsWith(protocolUriStarter))
-                return;
+            if (message.StartsWith(protocolUriStarter))
+                HandleProtocolMessage(message.Substring(protocolUriStarter.Length));
+            else
+            {
+                // Quaver was launched with a file path, try to import it.
+                MapsetImporter.ImportFile(message);
+            }
+        }
 
-            var regex = new Regex(@"quaver:\/\/");
-            message = regex.Replace(message, "", 1);
-
+        /// <summary>
+        ///     Handles a quaver:// message.
+        ///     <param name="message">the IPC message with quaver:// stripped</param>
+        /// </summary>
+        public static void HandleProtocolMessage(string message)
+        {
             // Highlighting notes within the editor
             if (message.StartsWith("editor/"))
             {
