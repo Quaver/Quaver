@@ -47,7 +47,7 @@ namespace Quaver
         public static void Main(string[] args)
         {
             // Prevents more than one instance of Quaver to run at a time
-            /*using(var mutex = new Mutex(false, "Global\\" + Guid))
+            using(var mutex = new Mutex(false, "Global\\" + Guid))
             {
                 if(!mutex.WaitOne(0, false))
                 {
@@ -61,11 +61,11 @@ namespace Quaver
                 }
 
                 Run();
-            }*/
+            }
 
             // Uncomment this and comment the above mutex to allow multiple instances of Quaver
             // to be run
-            Run();
+            // Run();
         }
 
         /// <summary>
