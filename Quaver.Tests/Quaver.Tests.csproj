@@ -15,6 +15,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
       <ProjectReference Include="..\Quaver.Shared\Quaver.Shared.csproj" />
+      <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
     </ItemGroup>
 
 </Project>

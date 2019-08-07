@@ -19,6 +19,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.IPC;
 using Quaver.Shared.Online;
 using Wobble;
+using Wobble.Extended.HotReload;
 using Wobble.Logging;
 using Wobble.Platform;
 using ZetaIpc.Runtime.Client;
@@ -46,7 +47,7 @@ namespace Quaver
         public static void Main(string[] args)
         {
             // Prevents more than one instance of Quaver to run at a time
-            using(var mutex = new Mutex(false, "Global\\" + Guid))
+            /*using(var mutex = new Mutex(false, "Global\\" + Guid))
             {
                 if(!mutex.WaitOne(0, false))
                 {
@@ -60,11 +61,11 @@ namespace Quaver
                 }
 
                 Run();
-            }
+            }*/
 
             // Uncomment this and comment the above mutex to allow multiple instances of Quaver
             // to be run
-            // Run();
+            Run();
         }
 
         /// <summary>
@@ -111,7 +112,11 @@ namespace Quaver
                 Logger.Error(e, LogType.Runtime);
             }
 
+#if VISUAL_TESTS
+            using (var game = new QuaverGame(new HotLoader("../../../../Quaver.Shared/")))
+#else
             using (var game = new QuaverGame())
+#endif
                 game.Run();
         }
 
