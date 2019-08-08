@@ -2,12 +2,17 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.1</LangVersion>
+    <Configurations>Debug;Release;Visual Tests</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
     <ProjectReference Include="..\Quaver.Dependencies\TimeAgo\TimeAgo\TimeAgo.csproj" />
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
     <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
+    <ProjectReference Include="..\Wobble\Wobble.Extended\Wobble.Extended.csproj" />
     <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
@@ -113,5 +118,8 @@
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Screens\Tests" />
   </ItemGroup>
 </Project>
