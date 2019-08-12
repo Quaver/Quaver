@@ -33,8 +33,10 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.Border;
+using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -515,7 +517,8 @@ namespace Quaver.Shared
 #if VISUAL_TESTS
         protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(new Dictionary<string, Type>()
         {
-            {"Menu Border", typeof(MenuBorderTestScreen)}
+            {"Menu Border", typeof(MenuBorderTestScreen)},
+            {"Select Filter Panel", typeof(FilterPanelTestScreen)}
         });
 #endif
     }

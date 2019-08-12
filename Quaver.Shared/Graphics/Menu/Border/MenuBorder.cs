@@ -20,7 +20,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
         /// <summary>
         ///     The line displayed at the top of the footer
         /// </summary>
-        private Sprite ForegroundLine { get; set; }
+        public Sprite ForegroundLine { get; private set; }
 
         /// <summary>
         ///     The line that animates within <see cref="ForegroundLine"/>

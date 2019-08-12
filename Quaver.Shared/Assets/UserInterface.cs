@@ -82,5 +82,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D Logo => TextureManager.Load("Quaver.Resources/Textures/UI/logo.png");
         public static Texture2D SessionTimeBackground => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/session-time-background.png");
         public static Texture2D MenuBorderBackground => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/menu-border-background.png");
+        public static Texture2D FilterPanelGradient => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/filter-panel-gradient.png");
     }
 }
