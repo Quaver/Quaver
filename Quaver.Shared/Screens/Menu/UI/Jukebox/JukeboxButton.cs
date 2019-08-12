@@ -8,17 +8,14 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Shared.Skinning;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 {
-    public class IconButton : ImageButton
+    public class JukeboxButton : ImageButton
     {
-        public IconButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
+        public JukeboxButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
         {
-            Hovered += OnHoverEnter;
-            Clicked += OnClicked;
         }
 
         /// <inheritdoc />
@@ -33,17 +30,5 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnHoverEnter(object sender, EventArgs e) => SkinManager.Skin?.SoundHover.CreateChannel().Play();
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnClicked(object sender, EventArgs e) => SkinManager.Skin?.SoundClick.CreateChannel().Play();
     }
 }

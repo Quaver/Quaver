@@ -12,7 +12,6 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
-using Wobble.Managers;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
@@ -227,7 +226,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateSearchTextbox()
         {
-            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 8)
+            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), Fonts.Exo2Regular, 8)
             {
                 Parent = TextSearch,
                 X = TextSearch.Width + 5,

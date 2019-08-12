@@ -17,7 +17,6 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
-using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chat.Components
 {
@@ -136,7 +135,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), FontManager.GetWobbleFont(Fonts.LatoSemiBold),
+            Textbox = new Textbox(new ScalableVector2(1100, Height * 0.60f), Fonts.Exo2Regular,
                 13, "", "Type to send a message", OnTextboxSubmit)
             {
                 Parent = this,

@@ -18,7 +18,7 @@ using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Editor.UI
 {
-    public class EditorControlButton : IconButton
+    public class EditorControlButton : JukeboxButton
     {
         /// <summary>
         ///     The tooltip used to show what the button does.

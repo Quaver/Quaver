@@ -9,7 +9,7 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 
 namespace Quaver.Shared.Graphics
 {
-    public class PausePlayButton : IconButton
+    public class PausePlayButton : JukeboxButton
     {
         public PausePlayButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
         {
