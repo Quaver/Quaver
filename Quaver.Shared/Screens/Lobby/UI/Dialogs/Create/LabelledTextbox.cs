@@ -3,6 +3,7 @@ using Quaver.Shared.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
 {
@@ -31,7 +32,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
                 FontSize = 17
             };
 
-            Textbox = new Textbox(new ScalableVector2(width, 30), Fonts.SourceSansProSemiBold, 13)
+            Textbox = new Textbox(new ScalableVector2(width, 30), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13)
             {
                 Parent = this,
                 Y = Label.Y + Label.Height + 14,

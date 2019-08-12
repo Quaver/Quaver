@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
 
         /// <summary>
         /// </summary>
-        private JukeboxButton ClearButton { get; set; }
+        private IconButton ClearButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Hitsounds
 
         /// <summary>
         /// </summary>
-        private void CreateClearButton() => ClearButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_double_sided_eraser),
+        private void CreateClearButton() => ClearButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_double_sided_eraser),
             (sender, args) =>
             {
                 var ruleset = (EditorRulesetKeys) Screen.Ruleset;

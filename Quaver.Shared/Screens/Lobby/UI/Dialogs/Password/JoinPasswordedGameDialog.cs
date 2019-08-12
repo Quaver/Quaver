@@ -14,6 +14,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Password
@@ -104,7 +105,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Password
                 Alignment = Alignment.BotLeft
             };
 
-            PasswordBox = new Textbox(new ScalableVector2(392, 36), Fonts.SourceSansProSemiBold, 13, "", "Enter Password",
+            PasswordBox = new Textbox(new ScalableVector2(392, 36), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13, "", "Enter Password",
                 (pw) =>
                 {
                     if (pw.Length == 0)

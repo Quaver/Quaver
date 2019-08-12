@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Settings.Elements;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
 {
@@ -37,7 +38,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs.Metadata
         /// <param name="initialValue"></param>
         public EditorMetadataTextbox(Drawable sprite, string name, string initialValue, Action<string> saveValue) : base(sprite, name, initialValue, saveValue)
         {
-            Textbox = new Textbox(new ScalableVector2(240, Height * 0.70f), Fonts.SourceSansProSemiBold, 13, InitialValue)
+            Textbox = new Textbox(new ScalableVector2(240, Height * 0.70f), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13, InitialValue)
             {
                 Parent = this,
                 X = -10,

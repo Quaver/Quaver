@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Select;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Lobby.UI
 {
@@ -21,7 +22,7 @@ namespace Quaver.Shared.Screens.Lobby.UI
         /// <param name="view"></param>
         /// <param name="size"></param>
         public LobbySearchBox(LobbyScreenView view, ScalableVector2 size)
-            : base(size, Fonts.SourceSansProSemiBold, 12, "", "Search For Games")
+            : base(size, FontManager.GetWobbleFont(Fonts.LatoSemiBold), 12, "", "Search For Games")
         {
             View = view;
 

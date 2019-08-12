@@ -33,6 +33,7 @@ namespace Quaver.Shared.Graphics
         public static readonly Color Negative = new Color(255, 152, 164);
         public static readonly Color NegativeInactive = new Color(119, 20, 31);
 
+        public static readonly Color MainBlue = new Color(9, 165, 200);
         #endregion
 
         /// <summary>
