@@ -12,9 +12,9 @@ using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 {
-    public class JukeboxButton : ImageButton
+    public class IconButton : ImageButton
     {
-        public JukeboxButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
+        public IconButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
         {
         }
 
