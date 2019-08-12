@@ -5,8 +5,11 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System.Collections.Generic;
 using Wobble;
 using Wobble.Graphics.BitmapFonts;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
 {
@@ -27,10 +30,20 @@ namespace Quaver.Shared.Assets
         public static string SourceSansProBold { get; } = "sspro-bold";
         public static string SourceSansProSemiBold { get; } = "sspro-semibold";
 
+        #region NEW_FONTS
+        public static string LatoRegular { get; } = "Lato-Regular";
+        public static string LatoSemiBold { get; } = "Lato-Semibold";
+        public static string LatoBold { get; } = "Lato-Bold";
+        public static string LatoLight { get; } = "Lato-Light";
+        public static string LatoHeavy { get; } = "Lato-Heavy";
+        public static string LatoBlack { get; } = "Lato-Black";
+
+        #endregion
+
         /// <summary>
         ///     Loads all bitmap fonts.
         /// </summary>
-        public static void Load()
+        public static void LoadGdiFonts()
         {
             BitmapFontFactory.AddFont(Exo2Bold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bold.ttf"));
             BitmapFontFactory.AddFont(Exo2BoldItalic, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/Exo2/exo2-bolditalic.ttf"));
@@ -46,6 +59,59 @@ namespace Quaver.Shared.Assets
             BitmapFontFactory.AddFont(SourceSansProRegular, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-regular.ttf"));
             BitmapFontFactory.AddFont(SourceSansProBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-bold.ttf"));
             BitmapFontFactory.AddFont(SourceSansProSemiBold, GameBase.Game.Resources.Get("Quaver.Resources/Fonts/SourceSansPro/sspro-semibold.ttf"));
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void LoadWobbleFonts()
+        {
+            const string folder = "Quaver.Resources/Fonts";
+
+            // Load fallback fonts or fonts that are used across multiple WobbleFonts
+            const string emojiString = "Emoji";
+            var emojiFont = GameBase.Game.Resources.Get($@"{folder}/Symbola-Emoji/symbola-emoji.ttf");
+
+            // Lato-Regular
+            FontManager.CacheWobbleFont(LatoRegular, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoRegular}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
+
+            // Lato-Semibold
+            FontManager.CacheWobbleFont(LatoSemiBold, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoSemiBold}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
+
+            // Lato-Bold
+            FontManager.CacheWobbleFont(LatoBold, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBold}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
+
+            // Lato-Light
+            FontManager.CacheWobbleFont(LatoLight, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoLight}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
+
+            // Lato-Heavy
+            FontManager.CacheWobbleFont(LatoHeavy, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoHeavy}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
+
+            // Lato-Black
+            FontManager.CacheWobbleFont(LatoBlack, new WobbleFontStore(20,
+                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBlack}.ttf"), new Dictionary<string, byte[]>
+                {
+                    {emojiString, emojiFont}
+                }));
         }
     }
 }

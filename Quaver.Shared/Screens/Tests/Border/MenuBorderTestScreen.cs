@@ -1,6 +1,6 @@
 using Wobble.Screens;
 
-namespace Quaver.Shared.Screens.Tests.Footer
+namespace Quaver.Shared.Screens.Tests.Border
 {
     public sealed class MenuBorderTestScreen : Screen
     {
