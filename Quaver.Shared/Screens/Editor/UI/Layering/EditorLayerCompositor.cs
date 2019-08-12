@@ -42,11 +42,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private JukeboxButton DeleteButton { get; set; }
+        private IconButton DeleteButton { get; set; }
 
         /// <summary>
         /// </summary>
-        private JukeboxButton AddButton { get; set; }
+        private IconButton AddButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateDeleteButton() => DeleteButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
+        private void CreateDeleteButton() => DeleteButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
             (sender, args) =>
             {
                 if (SelectedLayerIndex.Value == 0)
@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
 
         /// <summary>
         /// </summary>
-        private void CreateAddButton() => AddButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
+        private void CreateAddButton() => AddButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
             (sender, args) => Screen.Ruleset.ActionManager.AddLayer(Screen.WorkingMap, this,
                 new EditorLayerInfo {Name = $"Layer {ScrollContainer.AvailableItems.Count}"}))
         {
