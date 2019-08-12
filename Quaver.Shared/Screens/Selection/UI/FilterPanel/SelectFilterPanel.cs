@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         public SelectFilterPanel()
         {
-            Size = new ScalableVector2(WindowManager.Width, 82);
+            Size = new ScalableVector2(WindowManager.Width, 78);
             Tint = ColorHelper.HexToColor("#242424");
 
             Banner = new FilterPanelBanner(this)

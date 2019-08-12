@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public FilterPanelMapInfo() : base(new ScalableVector2(800, 74), new ScalableVector2(800, 74))
+        public FilterPanelMapInfo() : base(new ScalableVector2(800, 72), new ScalableVector2(800, 72))
         {
             Alpha = 0f;
             InputEnabled = false;
@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         {
             Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Artist", 22)
             {
-                Y = Title.Height + 5,
+                Y = Title.Height + 3,
             };
 
             AddContainedDrawable(Artist);
@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         {
             DifficultyMods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "[Difficulty] + Mods", 20)
             {
-                Y = Artist.Y + Artist.Height + 5
+                Y = Artist.Y + Artist.Height + 3
             };
 
             AddContainedDrawable(DifficultyMods);
