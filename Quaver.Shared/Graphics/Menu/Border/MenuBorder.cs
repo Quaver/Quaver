@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -46,7 +47,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             RightAlignedItems = rightAligned;
 
             Size = new ScalableVector2(WindowManager.Width, 56);
-            Tint = ColorHelper.HexToColor($"#1e1e1e");
+            Image = UserInterface.MenuBorderBackground;
 
             CreateForegroundLine();
             CreateAnimatedLine();
