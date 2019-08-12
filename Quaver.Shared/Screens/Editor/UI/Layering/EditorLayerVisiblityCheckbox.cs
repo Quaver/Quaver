@@ -13,7 +13,7 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 
 namespace Quaver.Shared.Screens.Editor.UI.Layering
 {
-    public class EditorLayerVisiblityCheckbox : IconButton
+    public class EditorLayerVisiblityCheckbox : JukeboxButton
     {
         /// <summary>
         /// </summary>

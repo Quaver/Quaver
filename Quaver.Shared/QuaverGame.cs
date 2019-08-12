@@ -34,7 +34,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Settings;
-using Quaver.Shared.Screens.Tests.Border;
+using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -130,7 +130,7 @@ namespace Quaver.Shared
         {
             PerformGameSetup();
 
-            WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
+            WindowManager.ChangeVirtualScreenSize(new Vector2(1366, 768));
             WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
             // Full-screen
@@ -161,8 +161,7 @@ namespace Quaver.Shared
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            Fonts.LoadGdiFonts();
-            Fonts.LoadWobbleFonts();
+            Fonts.Load();
 
             BackgroundHelper.Initialize();
 
@@ -515,7 +514,7 @@ namespace Quaver.Shared
 #if VISUAL_TESTS
         protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(new Dictionary<string, Type>()
         {
-            {"Menu Border", typeof(MenuBorderTestScreen)}
+            {"Menu Footer", typeof(MenuFooterTestScreen)}
         });
 #endif
     }

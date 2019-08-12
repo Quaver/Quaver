@@ -47,22 +47,22 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// <summary>
         ///     Button to select the previous track.
         /// </summary>
-        public IconButton PreviousButton { get; set; }
+        public JukeboxButton PreviousButton { get; set; }
 
         /// <summary>
         ///     The button to restart the track
         /// </summary>
-        public IconButton RestartButton { get; set; }
+        public JukeboxButton RestartButton { get; set; }
 
         /// <summary>
         ///     The button to pause/unpause the track.
         /// </summary>
-        public IconButton PauseResumeButton { get; set; }
+        public JukeboxButton PauseResumeButton { get; set; }
 
         /// <summary>
         ///     The button to select the next track.
         /// </summary>
-        public IconButton NextButton { get; set; }
+        public JukeboxButton NextButton { get; set; }
 
         /// <summary>
         ///     The container that holds the song title.
@@ -429,7 +429,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateNextSongButton()
         {
-            NextButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
+            NextButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -450,7 +450,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePauseResumeButton()
         {
-            PauseResumeButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
+            PauseResumeButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -488,7 +488,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreateRestartButton()
         {
-            RestartButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
+            RestartButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_undo_arrow))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -524,7 +524,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         /// </summary>
         private void CreatePreviousSongButton()
         {
-            PreviousButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
+            PreviousButton = new JukeboxButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
