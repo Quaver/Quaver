@@ -23,7 +23,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The list of mapsets that are currently loaded.
         /// </summary>
-        public static List<Mapset> Mapsets { get; set; }
+        public static List<Mapset> Mapsets { get; set; } = new List<Mapset>();
 
         /// <summary>
         ///     The osu! Songs folder path
