@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
     {
         private Random RNG { get; }
 
-        public FilterPanelTestScreenView(Screen screen) : base(screen)
+        public FilterPanelTestScreenView(FilterPanelTestScreen screen) : base(screen)
         {
             // ReSharper disable twice ObjectCreationAsStatement
             var header = new TestMenuBorderHeader {Parent = Container};
@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Alignment = Alignment.BotLeft
             };
 
-            new SelectFilterPanel
+            new SelectFilterPanel(screen.AvailableMapsets)
             {
                 Parent = Container,
                 Y = header.Height + header.ForegroundLine.Height
