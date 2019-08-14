@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble.Bindables;
+using Wobble.Extended.HotReload.Screens;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Tests.FilterPanel

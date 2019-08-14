@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.API.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Modifiers;
@@ -37,6 +38,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Y = header.Height + header.ForegroundLine.Height
             };
 
+
             RNG = new Random();
         }
 
@@ -64,6 +66,11 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 }
                 else
                     ModManager.RemoveAllMods();
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.D3))
+            {
+                Console.WriteLine(MapManager.Mapsets.Count);
             }
 
             Container?.Update(gameTime);
