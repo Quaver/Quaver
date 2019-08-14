@@ -4,8 +4,10 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -37,13 +39,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// <param name="initialText"></param>
         /// <param name="placeHolderText"></param>
         public FilterPanelSearchBox(Bindable<List<Mapset>> availableMapsets, string initialText, string placeHolderText)
-            : base(new ScalableVector2(533, 45), FontManager.GetWobbleFont(Fonts.LatoBlack),22, initialText, placeHolderText)
+            : base(new ScalableVector2(400, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),22, initialText, placeHolderText)
         {
             AvailableMapsets = availableMapsets;
 
             AllowSubmission = false;
-            Tint = ColorHelper.HexToColor("#242424");
-            AddBorder(ColorHelper.HexToColor("#363636"), 2);
+            Tint = Colors.DarkGray;
+            Image = UserInterface.SearchBox;
             AlwaysFocused = true;
 
             CreateSearchIcon();
@@ -74,7 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(20, 20),
                 X = -10,
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass)
             };
