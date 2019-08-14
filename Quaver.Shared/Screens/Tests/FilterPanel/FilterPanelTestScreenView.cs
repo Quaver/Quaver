@@ -39,8 +39,6 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Y = header.Height + header.ForegroundLine.Height
             };
 
-            new SelectJukebox() {Parent = Container};
-
             RNG = new Random();
         }
 
