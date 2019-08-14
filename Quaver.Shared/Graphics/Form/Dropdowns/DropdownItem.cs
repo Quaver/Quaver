@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -45,7 +46,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             Index = index;
 
             Size = Dropdown.Size;
-            Tint = Colors.DarkGray;
+            Tint = ColorHelper.HexToColor("#181818");
 
             CreateHoverSprite();
             CreateText();
