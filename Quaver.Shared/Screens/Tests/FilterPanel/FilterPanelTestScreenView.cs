@@ -8,6 +8,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -38,6 +39,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Y = header.Height + header.ForegroundLine.Height
             };
 
+            new SelectJukebox() {Parent = Container};
 
             RNG = new Random();
         }
