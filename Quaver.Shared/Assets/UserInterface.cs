@@ -83,5 +83,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D SessionTimeBackground => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/session-time-background.png");
         public static Texture2D MenuBorderBackground => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/menu-border-background.png");
         public static Texture2D FilterPanelGradient => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/filter-panel-gradient.png");
+        public static Texture2D DropdownClosed => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/dropdown-closed.png");
+        public static Texture2D DropdownOpen => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/dropdown-open.png");
+        public static Texture2D DropdownBottom => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/dropdown-bottom.png");
+        public static Texture2D SearchBox => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/search-box.png");
     }
 }
