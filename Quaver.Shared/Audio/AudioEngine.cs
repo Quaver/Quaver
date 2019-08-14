@@ -84,9 +84,29 @@ namespace Quaver.Shared.Audio
         {
             try
             {
-                LoadCurrentTrack(true);
-                Track?.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                Track?.Play();
+                if (MapManager.Selected?.Value == null)
+                    return;
+
+                if (Track != null)
+                {
+                    lock (Track)
+                        LoadCurrentTrack(true);
+                }
+                else
+                {
+                    LoadCurrentTrack(true);
+                }
+
+                if (Track == null)
+                    return;
+
+                lock (Track)
+                {
+                    Track?.Seek(MapManager.Selected.Value.AudioPreviewTime);
+
+                    if (!Track.IsPlaying)
+                        Track?.Play();
+                }
             }
             catch (Exception e)
             {

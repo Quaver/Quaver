@@ -33,7 +33,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The current path of the selected map's audio file
         /// </summary>
-        public static string CurrentAudioPath => GetAudioPath(Selected.Value);
+        public static string CurrentAudioPath => GetAudioPath(Selected?.Value);
 
         /// <summary>
         ///     The current background of the map.
@@ -72,6 +72,9 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         public static string GetAudioPath(Map map)
         {
+            if (map == null)
+                return "";
+
             switch (map.Game)
             {
                 case MapGame.Osu:
