@@ -12,6 +12,7 @@ namespace Quaver.Shared.Config
         Artist,
         Title,
         Creator,
-        DateAdded
+        DateAdded,
+        Status
     }
 }
