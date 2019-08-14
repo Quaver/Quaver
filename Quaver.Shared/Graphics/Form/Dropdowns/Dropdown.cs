@@ -92,7 +92,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <param name="fontSize"></param>
         /// <param name="color"></param>
         /// <param name="selectedIndex"></param>
-        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0) : base(WobbleAssets.WhiteBox)
+        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0) : base(UserInterface.DropdownClosed)
         {
             Options = options;
             SelectedIndex = selectedIndex;
@@ -167,6 +167,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = PaddingX,
+                Tint = HoverColor
             };
         }
 
@@ -213,7 +214,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
             for (var i = 0; i < Options.Count; i++)
             {
-                var item = new DropdownItem(this, i)
+                var item = new DropdownItem(this, i, i == Options.Count - 1 ? UserInterface.DropdownBottom : null)
                 {
                     Y = i * Height,
                 };
@@ -228,6 +229,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         public void Open(int time = 500)
         {
             Opened = true;
+
+            Image = UserInterface.DropdownOpen;
+            HoverSprite.Image = UserInterface.DropdownOpen;
 
             DividerLine.ClearAnimations();
             DividerLine.FadeTo(1, Easing.OutQuint, time / 2);
@@ -245,6 +249,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         public void Close(int time = 500)
         {
             Opened = false;
+
+            Image = UserInterface.DropdownClosed;
+            HoverSprite.Image = UserInterface.DropdownClosed;
 
             DividerLine.ClearAnimations();
             DividerLine.FadeTo(0, Easing.OutQuint, (int) (time * 2.5f));
