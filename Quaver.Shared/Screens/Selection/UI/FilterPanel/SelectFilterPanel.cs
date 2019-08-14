@@ -1,0 +1,163 @@
+using System.Collections.Generic;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
+using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
+using Wobble.Bindables;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+using Wobble.Window;
+
+namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
+{
+    public class SelectFilterPanel : Sprite
+    {
+        /// <summary>
+        ///     The mapsets that are currently available to play
+        /// </summary>
+        private Bindable<List<Mapset>> AvailableMapsets { get; }
+
+        /// <summary>
+        ///     The banner that displays the current map's background
+        /// </summary>
+        private FilterPanelBanner Banner { get; }
+
+        /// <summary>
+        ///     Displays the current map information
+        /// </summary>
+        private FilterPanelMapInfo MapInfo { get; }
+
+        /// <summary>
+        ///     Items that are aligned from right to left
+        /// </summary>
+        private List<Drawable> RightItems { get; }
+
+        /// <summary>
+        ///     The textbox to search for maps
+        /// </summary>
+        private FilterPanelSearchBox SearchBox { get; set; }
+
+        /// <summary>
+        ///     The text that displays how many maps are available
+        /// </summary>
+        private FilterPanelMapsAvailable MapsAvailable { get; set; }
+
+        /// <summary>
+        ///     The dropdown to sort maps
+        /// </summary>
+        private FilterDropdownSorting SortDropdown { get; set; }
+
+        /// <summary>
+        ///     The dropdown to group maps
+        /// </summary>
+        private FilterDropdownGroupBy SortGroupBy { get; set; }
+
+        /// <summary>
+        ///     The dropdown to sort by mode
+        /// </summary>
+        private FilterDropdownMode SortMode { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets)
+        {
+            AvailableMapsets = availableMapsets;
+
+            Size = new ScalableVector2(WindowManager.Width, 85);
+            Tint = ColorHelper.HexToColor("#242424");
+
+            Banner = new FilterPanelBanner(this)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft
+            };
+
+            MapInfo = new FilterPanelMapInfo
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = 25
+            };
+
+            RightItems = new List<Drawable>();
+
+            CreateSortDropdown();
+            CreateSortGroupBy();
+            CreateSortModeDropdown();
+            CreateSearchBox();
+            CreateMapsAvailable();
+
+            AlignRightItems();
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SortDropdown"/>
+        /// </summary>
+        private void CreateSortDropdown()
+        {
+            SortDropdown = new FilterDropdownSorting(AvailableMapsets) { Parent = this, };
+            RightItems.Add(SortDropdown);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SortGroupBy"/>
+        /// </summary>
+        private void CreateSortGroupBy()
+        {
+            SortGroupBy = new FilterDropdownGroupBy(AvailableMapsets) { Parent = this };
+            RightItems.Add(SortGroupBy);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SortMode"/>
+        /// </summary>
+        private void CreateSortModeDropdown()
+        {
+            SortMode = new FilterDropdownMode(AvailableMapsets) { Parent = this };
+            RightItems.Add(SortMode);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="MapsAvailable"/>
+        /// </summary>
+        private void CreateMapsAvailable()
+        {
+            MapsAvailable = new FilterPanelMapsAvailable(AvailableMapsets) { Parent = this };
+            RightItems.Add(MapsAvailable);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SearchBox"/>
+        /// </summary>
+        private void CreateSearchBox()
+        {
+            SearchBox = new FilterPanelSearchBox(AvailableMapsets, "", "Type to search...") { Parent = this };
+            RightItems.Add(SearchBox);
+        }
+
+        /// <summary>
+        ///     Aligns the items from right to left
+        /// </summary>
+        private void AlignRightItems()
+        {
+            for (var i = 0; i < RightItems.Count; i++)
+            {
+                var item = RightItems[i];
+
+                item.Parent = this;
+
+                item.Alignment = Alignment.MidRight;
+
+                const int padding = 25;
+                var spacing = 25;
+
+                if (i == 0)
+                    item.X = -padding;
+                else
+                    item.X = RightItems[i - 1].X - RightItems[i - 1].Width - spacing;
+            }
+        }
+    }
+}

@@ -119,7 +119,4 @@
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Screens\Tests" />
-  </ItemGroup>
 </Project>

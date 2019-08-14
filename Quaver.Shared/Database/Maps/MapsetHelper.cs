@@ -103,7 +103,7 @@ namespace Quaver.Shared.Database.Maps
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal static List<Mapset> OrderMapsetsByConfigValue(IEnumerable<Mapset> mapsets)
         {
-            switch (ConfigManager.SelectOrderMapsetsBy.Value)
+            switch (ConfigManager.SelectOrderMapsetsBy?.Value)
             {
                 case OrderMapsetsBy.Artist:
                     return OrderMapsetsByArtist(mapsets);
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Database.Maps
                 case OrderMapsetsBy.DateAdded:
                     return OrderMapsetsByDateAdded(mapsets);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return mapsets.ToList();
             }
         }
         /// <summary>
