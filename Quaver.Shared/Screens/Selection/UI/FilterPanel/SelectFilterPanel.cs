@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
@@ -8,6 +12,7 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
@@ -18,6 +23,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         ///     The mapsets that are currently available to play
         /// </summary>
         private Bindable<List<Mapset>> AvailableMapsets { get; }
+
+        /// <summary>
+        ///     The current search the user has had
+        /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; }
 
         /// <summary>
         ///     The banner that displays the current map's background
@@ -61,9 +71,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
 
         /// <summary>
         /// </summary>
-        public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets)
+        public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets, Bindable<string> currentSearchQuery)
         {
             AvailableMapsets = availableMapsets;
+            CurrentSearchQuery = currentSearchQuery;
 
             Size = new ScalableVector2(WindowManager.Width, 85);
             Tint = ColorHelper.HexToColor("#242424");
@@ -89,7 +100,30 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             CreateSearchBox();
             CreateMapsAvailable();
 
+            CurrentSearchQuery.ValueChanged += (sender, args) => FilterMapsets();
+
+            if (ConfigManager.SelectOrderMapsetsBy != null)
+                ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsChanged;
+
+            if (ConfigManager.SelectFilterGameModeBy != null)
+                ConfigManager.SelectFilterGameModeBy.ValueChanged += OnSelectFilterGameModeChanged;
+
             AlignRightItems();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable twice DelegateSubtraction
+            if (ConfigManager.SelectOrderMapsetsBy != null)
+                ConfigManager.SelectOrderMapsetsBy.ValueChanged -= OnSelectOrderMapsetsChanged;
+
+            if (ConfigManager.SelectFilterGameModeBy != null)
+                ConfigManager.SelectFilterGameModeBy.ValueChanged -= OnSelectFilterGameModeChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -133,7 +167,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new FilterPanelSearchBox(AvailableMapsets, "", "Type to search...") { Parent = this };
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableMapsets, "Type to search...") { Parent = this };
             RightItems.Add(SearchBox);
         }
 
@@ -159,5 +193,44 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                     item.X = RightItems[i - 1].X - RightItems[i - 1].Width - spacing;
             }
         }
+
+        /// <summary>
+        ///     Handles filtering mapsets for the screen
+        /// </summary>
+        private void FilterMapsets()
+        {
+            Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
+                LogType.Runtime, false);
+
+            AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value));
+
+            if (AvailableMapsets.Value.Count == 0)
+                return;
+
+            // Check if the map is in any of the mapsets
+            if (MapManager.Selected.Value != null)
+            {
+                foreach (var set in AvailableMapsets.Value)
+                {
+                    if (set.Maps.Any(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum))
+                        return;
+                }
+            }
+
+            MapManager.Selected.Value = AvailableMapsets.Value.First().Maps.First();
+            BackgroundHelper.Load(MapManager.Selected.Value);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectOrderMapsetsChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e) => FilterMapsets();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => FilterMapsets();
     }
 }
