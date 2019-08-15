@@ -69,11 +69,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
                 return;
 
             ConfigManager.SelectOrderMapsetsBy.Value = (OrderMapsetsBy) e.Index;
-
-            lock (AvailableMapsets.Value)
-            {
-                ThreadScheduler.Run(() => AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(AvailableMapsets.Value));
-            }
         }
     }
 }
