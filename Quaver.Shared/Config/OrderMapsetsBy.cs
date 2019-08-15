@@ -13,6 +13,7 @@ namespace Quaver.Shared.Config
         Title,
         Creator,
         DateAdded,
-        Status
+        Status,
+        BPM
     }
 }

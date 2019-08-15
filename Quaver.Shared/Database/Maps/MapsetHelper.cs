@@ -148,10 +148,21 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByDateAdded(mapsets);
                 case OrderMapsetsBy.Status:
                     return OrderMapsetsByStatus(mapsets);
+                case OrderMapsetsBy.BPM:
+                    return OrderMapsetsByBpm(mapsets);
                 default:
                     return mapsets.ToList();
             }
         }
+
+        /// <summary>
+        ///     Orders the mapsets by BPM
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByBpm(List<Mapset> mapsets)
+            => mapsets.OrderByDescending(x => x.Maps.First().Bpm).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+
         /// <summary>
         ///     Orders the map's mapsets by date added
         /// </summary>
