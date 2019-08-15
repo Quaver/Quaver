@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
@@ -42,6 +43,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <returns></returns>
         private static int GetSelectedIndex()
         {
+            if (ConfigManager.SelectFilterGameModeBy != null)
+                return (int) ConfigManager.SelectFilterGameModeBy.Value;
+
             return 0;
         }
 
@@ -51,6 +55,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <param name="e"></param>
         private void OnItemSelected(object sender, DropdownClickedEventArgs e)
         {
+            if (ConfigManager.SelectFilterGameModeBy == null)
+                return;
+
+            ConfigManager.SelectFilterGameModeBy.Value = (SelectFilterGameMode) e.Index;
         }
     }
 }

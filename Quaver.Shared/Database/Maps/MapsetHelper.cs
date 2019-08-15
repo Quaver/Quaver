@@ -7,14 +7,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
+using TagLib.Riff;
 using Wobble.Logging;
+using File = System.IO.File;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -101,8 +102,40 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="mapsets"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static List<Mapset> OrderMapsetsByConfigValue(IEnumerable<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets)
         {
+            var mapsetsToRemove = new List<Mapset>();
+
+            switch (ConfigManager.SelectFilterGameModeBy?.Value)
+            {
+                case SelectFilterGameMode.All:
+                    break;
+                // Remove any maps that aren't 7K
+                case SelectFilterGameMode.Keys4:
+                    mapsets.ForEach(x =>
+                    {
+                        x.Maps.RemoveAll(y => y.Mode != GameMode.Keys4);
+
+                        if (x.Maps.Count == 0)
+                            mapsetsToRemove.Add(x);
+                    });
+                    break;
+                // Remove any maps that aren't 7K
+                case SelectFilterGameMode.Keys7:
+                    mapsets.ForEach(x =>
+                    {
+                        x.Maps.RemoveAll(y => y.Mode != GameMode.Keys7);
+
+                        if (x.Maps.Count == 0)
+                            mapsetsToRemove.Add(x);
+                    });
+                    break;
+                default:
+                    break;
+            }
+
+            mapsetsToRemove.ForEach(x => mapsets.Remove(x));
+
             switch (ConfigManager.SelectOrderMapsetsBy?.Value)
             {
                 case OrderMapsetsBy.Artist:
@@ -113,6 +146,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByCreator(mapsets);
                 case OrderMapsetsBy.DateAdded:
                     return OrderMapsetsByDateAdded(mapsets);
+                case OrderMapsetsBy.Status:
+                    return OrderMapsetsByStatus(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -124,6 +159,14 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> OrderMapsetsByDateAdded(IEnumerable<Mapset> mapsets)
             => mapsets.OrderByDescending(x => x.Maps.First().DateAdded).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+
+        /// <summary>
+        ///     Orders mapsets by their ranked status
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByStatus(IEnumerable<Mapset> mapsets)
+            => mapsets.OrderByDescending(x => x.Maps.First().RankedStatus).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders the map's mapsets by difficulty.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble.Bindables;
 using Wobble.Extended.HotReload.Screens;
@@ -12,16 +13,39 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
     {
         public override ScreenView View { get; protected set; }
 
-        public Bindable<List<Mapset>> AvailableMapsets { get; }
+        public Bindable<List<Mapset>> AvailableMapsets { get; private set; }
+
+        public Bindable<string> CurrentSearchQuery { get; private set; }
 
         public FilterPanelTestScreen()
         {
-            AvailableMapsets = new Bindable<List<Mapset>>(null)
+            Setup();
+            SetView(false);
+        }
+
+        public FilterPanelTestScreen(bool customScreenView)
+        {
+            Setup();
+            SetView(customScreenView);
+        }
+
+        private void Setup()
+        {
+            CurrentSearchQuery = new Bindable<string>(null)
             {
-                Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, ""))
+                Value = FilterPanelSearchBox.PreviousSearchTerm
             };
 
-            View = new FilterPanelTestScreenView(this);
+            AvailableMapsets = new Bindable<List<Mapset>>(null)
+            {
+                Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value))
+            };
+        }
+
+        private void SetView(bool inheritedCustomScreenView)
+        {
+            if (!inheritedCustomScreenView)
+                View = new FilterPanelTestScreenView(this);
         }
 
         /// <inheritdoc />
@@ -30,6 +54,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
         public override void Destroy()
         {
             AvailableMapsets.Dispose();
+            CurrentSearchQuery.Dispose();
             base.Destroy();
         }
     }
