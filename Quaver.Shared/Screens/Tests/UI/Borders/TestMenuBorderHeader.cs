@@ -20,7 +20,6 @@ namespace Quaver.Shared.Screens.Tests.UI.Borders
             new List<Drawable>
             {
                 new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option)) { Size = new ScalableVector2(30, 30)},
-                new MenuBorderUser(),
                 new DrawableSessionTime()
             })
         {
