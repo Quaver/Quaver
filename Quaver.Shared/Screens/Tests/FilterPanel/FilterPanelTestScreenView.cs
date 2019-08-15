@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Alignment = Alignment.BotLeft
             };
 
-            new SelectFilterPanel(screen.AvailableMapsets)
+            new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery)
             {
                 Parent = Container,
                 Y = header.Height + header.ForegroundLine.Height
@@ -49,14 +49,16 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
         public override void Update(GameTime gameTime)
         {
             // Random map selection
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D1) && MapManager.Mapsets?.Count != 0)
+            if (KeyboardManager.IsUniqueKeyPress(Keys.PageUp) && MapManager.Mapsets?.Count != 0)
             {
-                MapManager.Selected.Value = MapManager.Mapsets?[RNG.Next(0, MapManager.Mapsets.Count - 1)].Maps?.First();
+                var screen = (FilterPanelTestScreen) Screen;
+
+                MapManager.Selected.Value = screen.AvailableMapsets?.Value[RNG.Next(0, screen.AvailableMapsets.Value.Count - 1)].Maps?.First();
                 BackgroundHelper.Load(MapManager.Selected.Value);
             }
 
             // Mods
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D2))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
             {
                 if (ModManager.Mods == 0)
                 {
