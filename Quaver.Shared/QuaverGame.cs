@@ -39,6 +39,7 @@ using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Dropdowns;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
+using Quaver.Shared.Screens.Tests.Mapsets;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -522,7 +523,8 @@ namespace Quaver.Shared
             {"Dropdowns", typeof(DropdownTestScreen)},
             {"Menu Border", typeof(MenuBorderTestScreen)},
             {"Select Filter Panel", typeof(FilterPanelTestScreen)},
-            {"Select Jukebox", typeof(TestSelectJukeboxScreen)}
+            {"Select Jukebox", typeof(TestSelectJukeboxScreen)},
+            {"Mapsets (Individual)", typeof(TestMapsetScreen)}
         });
 #endif
     }
