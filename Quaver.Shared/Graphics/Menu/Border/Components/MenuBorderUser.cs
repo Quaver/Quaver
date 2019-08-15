@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
@@ -16,7 +15,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Graphics.Menu.Border
+namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
     public class MenuBorderUser : ImageButton, IMenuBorderItem
     {

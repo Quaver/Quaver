@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Managers;

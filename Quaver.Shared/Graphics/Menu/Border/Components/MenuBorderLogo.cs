@@ -1,11 +1,8 @@
-using System;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
-using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Shared.Graphics.Menu.Border
+namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
     /// <summary>
     ///     Logo that goes in the left side of a menu header.
