@@ -23,6 +23,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
     public class FilterPanelSearchBox : Textbox
     {
         /// <summary>
+        ///     The current search term to be used
+        /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
         ///     The list of mapsets that are currently available.
         ///     In this case, we want to modify this list when the user searches for something new
         /// </summary>
@@ -32,15 +37,23 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// </summary>
         private Sprite SearchIcon { get; set; }
 
+        /// <summary>
+        ///     The search term used in all instances of this search box.
+        ///     Used so that we can save the search term across screen changes
+        /// </summary>
+        public static string PreviousSearchTerm { get; private set; } = "";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="currentSearchQuery"></param>
         /// <param name="availableMapsets"></param>
         /// <param name="initialText"></param>
         /// <param name="placeHolderText"></param>
-        public FilterPanelSearchBox(Bindable<List<Mapset>> availableMapsets, string initialText, string placeHolderText)
-            : base(new ScalableVector2(400, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),22, initialText, placeHolderText)
+        public FilterPanelSearchBox(Bindable<string> currentSearchQuery, Bindable<List<Mapset>> availableMapsets, string placeHolderText)
+            : base(new ScalableVector2(400, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),22, PreviousSearchTerm, placeHolderText)
         {
+            CurrentSearchQuery = currentSearchQuery;
             AvailableMapsets = availableMapsets;
 
             AllowSubmission = false;
@@ -99,13 +112,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         /// <param name="filter"></param>
         private void StoppedTyping(string filter)
         {
-            lock (AvailableMapsets.Value)
-            {
-                ThreadScheduler.Run(() =>
-                {
-                    AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, filter));
-                });
-            }
+            CurrentSearchQuery.Value = filter;
+            PreviousSearchTerm = filter;
         }
     }
 }
