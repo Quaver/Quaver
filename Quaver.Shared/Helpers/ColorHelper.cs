@@ -19,15 +19,23 @@ namespace Quaver.Shared.Helpers
         /// <returns></returns>
         internal static Color DifficultyToColor(float rating)
         {
+            // Beginner
+            if (rating < 2)
+                return HexToColor("#5EFFEE");
             // Easy
-            if (rating < 15)
-                return Color.Green;
-            // Medium
-            if (rating < 30)
-                return new Color(255, 255, 0);
-
+            if (rating < 5)
+                return HexToColor("#5EFF75");
+            // Normal
+            if (rating < 10)
+                return HexToColor("#5EC4FF");
             // Hard
-            return new Color(255, 0, 0);
+            if (rating < 20)
+                return HexToColor("#F5B25B");
+            // Insane
+            if (rating < 30)
+                return HexToColor("#F9645D");
+            // Expert
+            return HexToColor("#9B51E0");
         }
 
         /// <summary>
