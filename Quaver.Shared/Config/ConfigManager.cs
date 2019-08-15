@@ -203,6 +203,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
+        ///     Dictates how to filter song select mpas
+        /// </summary>
+        internal static Bindable<SelectFilterGameMode> SelectFilterGameModeBy { get; private set; }
+
+        /// <summary>
         ///     The currently selected game mode.
         /// </summary>
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
@@ -660,6 +665,7 @@ namespace Quaver.Shared.Config
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
+            SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -768,6 +774,7 @@ namespace Quaver.Shared.Config
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
+                    SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
