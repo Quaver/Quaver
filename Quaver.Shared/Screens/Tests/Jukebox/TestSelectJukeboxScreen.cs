@@ -4,6 +4,6 @@ namespace Quaver.Shared.Screens.Tests.Jukebox
 {
     public class TestSelectJukeboxScreen : FilterPanelTestScreen
     {
-        public TestSelectJukeboxScreen() => View = new TestSelectJukeboxScreenView(this);
+        public TestSelectJukeboxScreen() : base(true) => View = new TestSelectJukeboxScreenView(this);
     }
 }
