@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
@@ -16,7 +15,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Graphics.Menu.Border
+namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
     public class MenuBorderUser : ImageButton, IMenuBorderItem
     {
@@ -78,8 +77,8 @@ namespace Quaver.Shared.Graphics.Menu.Border
             CreateUsername();
             UpdateUser();
 
-            Alpha = 0.50f;
-            Tint = Colors.MainAccent;
+            Alpha = 0;
+            Tint = Color.White;
 
             Hovered += OnHover;
             LeftHover += OnHoverLeft;
@@ -98,8 +97,6 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 Image = UserInterface.UnknownAvatar,
                 X = 8
             };
-
-            Avatar.AddBorder(Color.White, 2);
         }
 
         /// <summary>
@@ -139,7 +136,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
         private void OnHover(object sender, EventArgs e)
         {
             SkinManager.Skin?.SoundHover.CreateChannel().Play();
-            
+
             ClearAnimations();
             FadeTo(0.70f, Easing.OutQuint, 300);
         }

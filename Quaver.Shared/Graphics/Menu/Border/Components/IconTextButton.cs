@@ -9,19 +9,19 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Shared.Graphics.Menu.Border
+namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
     public class IconTextButton : ImageButton
     {
         /// <summary>
         ///     The sprite that displays the icon
         /// </summary>
-        private Sprite Icon { get; }
+        public Sprite Icon { get; }
 
         /// <summary>
         ///     The displayed text
         /// </summary>
-        private SpriteTextPlus Text { get; }
+        public SpriteTextPlus Text { get; }
 
         /// <summary>
         ///     The spacing between the icon and text
@@ -37,6 +37,11 @@ namespace Quaver.Shared.Graphics.Menu.Border
         ///     The color when the button is hovered
         /// </summary>
         private Color HoveredColor { get; }
+
+        /// <summary>
+        ///     If the text tint should be set to the icon's
+        /// </summary>
+        public bool SetTextTint { get; set; } = true;
 
         /// <inheritdoc />
         /// <summary>
@@ -84,9 +89,15 @@ namespace Quaver.Shared.Graphics.Menu.Border
         public override void Update(GameTime gameTime)
         {
             Icon.FadeToColor(IsHovered ? HoveredColor : BaseColor, GameBase.Game.TimeSinceLastFrame, 30);
-            Text.Tint = Icon.Tint;
+
+            if (SetTextTint)
+                Text.Tint = Icon.Tint;
 
             base.Update(gameTime);
+        }
+
+        public override void DrawToSpriteBatch()
+        {
         }
 
         /// <summary>

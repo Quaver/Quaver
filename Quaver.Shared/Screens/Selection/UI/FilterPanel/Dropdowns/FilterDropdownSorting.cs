@@ -44,7 +44,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Title",
             "Creator",
             "Date Added",
-            "Status"
+            "Status",
+            "BPM"
         };
 
         /// <summary>

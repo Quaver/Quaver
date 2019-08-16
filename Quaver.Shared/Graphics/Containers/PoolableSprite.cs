@@ -46,7 +46,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
+            if (Container != null && RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
                 return;
 
             base.Draw(gameTime);

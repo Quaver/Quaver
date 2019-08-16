@@ -130,6 +130,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <param name="e"></param>
         private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
         {
+            if (MapManager.Selected?.Value != e.Map)
+                return;
+
             Background.Image = e.Texture;
             FadeIn();
         }

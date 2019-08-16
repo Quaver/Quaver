@@ -1,7 +1,11 @@
+using Microsoft.Xna.Framework.Media;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -15,17 +19,32 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// <summary>
         ///     Displays the title of the song
         /// </summary>
-        private SpriteTextPlus Title { get; set; }
-
-        /// <summary>
-        ///     Displays the artist of the song
-        /// </summary>
-        private SpriteTextPlus Artist { get; set; }
+        private SpriteTextPlus ArtistTitle { get; set; }
 
         /// <summary>
         ///     Displays the difficulty and mods
         /// </summary>
         private SpriteTextPlus DifficultyMods { get; set; }
+
+        /// <summary>
+        ///     Displays the game mode of the current map
+        /// </summary>
+        private FilterMetadataGameMode GameMode { get; set; }
+
+        /// <summary>
+        ///     Displays the length of the map
+        /// </summary>
+        private FilterMetadataLength Length { get; set; }
+
+        /// <summary>
+        ///     Displays the BPM of the map
+        /// </summary>
+        private FilterMetadataBpm Bpm { get; set; }
+
+        /// <summary>
+        ///     Displays the LN% of the map
+        /// </summary>
+        private FilterMetadataLongNotePercentage LongNotePercentage { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -35,9 +54,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             Alpha = 0f;
             InputEnabled = false;
 
-            CreateTitleText();
-            CreateArtistText();
+            CreateArtistTitleText();
             CreateDifficultyModsText();
+            CreateMetadata();
 
             UpdateText(MapManager.Selected.Value);
 
@@ -60,24 +79,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// <summary>
         ///     Creates the text that displays the title of the song
         /// </summary>
-        private void CreateTitleText()
+        private void CreateArtistTitleText()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Title", 22);
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Artist - Title", 20);
 
-            AddContainedDrawable(Title);
-        }
-
-        /// <summary>
-        ///     Creates the text that displays the song artist
-        /// </summary>
-        private void CreateArtistText()
-        {
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Artist", 22)
-            {
-                Y = Title.Height + 3,
-            };
-
-            AddContainedDrawable(Artist);
+            AddContainedDrawable(ArtistTitle);
         }
 
         /// <summary>
@@ -87,10 +93,43 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         {
             DifficultyMods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "[Difficulty] + Mods", 20)
             {
-                Y = Artist.Y + Artist.Height + 3
+                Y = ArtistTitle.Height + 6,
             };
 
             AddContainedDrawable(DifficultyMods);
+        }
+
+        private void CreateMetadata()
+        {
+            const int spacing = 25;
+
+            GameMode = new FilterMetadataGameMode
+            {
+                Parent = this,
+                Y = DifficultyMods.Y + DifficultyMods.Height + 6,
+                X = ArtistTitle.X
+            };
+
+            Length = new FilterMetadataLength
+            {
+                Parent = this,
+                Y = GameMode.Y,
+                X = GameMode.X + GameMode.Width + 25
+            };
+
+            Bpm = new FilterMetadataBpm
+            {
+                Parent = this,
+                Y = GameMode.Y,
+                X = Length.X + Length.Width + 25
+            };
+
+            LongNotePercentage = new FilterMetadataLongNotePercentage()
+            {
+                Parent = this,
+                Y = GameMode.Y,
+                X = Bpm.X + Bpm.Width + 25
+            };
         }
 
         /// <summary>
@@ -102,18 +141,14 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             if (map == null)
                 return;
 
-            Title.Text = map.Title;
-            Artist.Text = map.Artist;
+            ArtistTitle.Text = map.Artist + " - " + map.Title;
 
             var mods = ModManager.CurrentModifiersList.Count > 0 ? $" + {ModHelper.GetModsString(ModManager.Mods)}": "";
             DifficultyMods.Text = $"[{map.DifficultyName}]{mods}";
 
             //  Reset positions of the text
-            Title.ClearAnimations();
-            Title.X = 0;
-
-            Artist.ClearAnimations();
-            Artist.X = 0;
+            ArtistTitle.ClearAnimations();
+            ArtistTitle.X = 0;
 
             DifficultyMods.ClearAnimations();
             DifficultyMods.X = 0;

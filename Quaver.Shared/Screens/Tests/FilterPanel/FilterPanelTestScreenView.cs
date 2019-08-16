@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
             {
                 if (ModManager.Mods == 0)
                 {
-                    ModManager.AddMod(ModIdentifier.Speed05X);
+                    ModManager.AddMod(ModIdentifier.Speed075X);
                     ModManager.AddMod(ModIdentifier.Autoplay);
                     ModManager.AddMod(ModIdentifier.Mirror);
                 }

@@ -14,6 +14,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -39,6 +40,7 @@ using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Dropdowns;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
+using Quaver.Shared.Screens.Tests.Mapsets;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -114,6 +116,22 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
 #if VISUAL_TESTS
+        /// <summary>
+        ///     The visual screen type in the previous frame
+        /// </summary>
+        private Type LastVisualTestScreenType { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
+        {
+            {"Dropdown", typeof(DropdownTestScreen)},
+            {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
+            {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
+            {"DrawableMapset", typeof(TestMapsetScreen)}
+        };
+
         public QuaverGame(HotLoader hl) : base(hl)
 #else
         public QuaverGame()
@@ -237,6 +255,10 @@ namespace Quaver.Shared
             NotificationManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
+#if VISUAL_TESTS
+            SetVisualTestingPresence();
+#endif
+
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
         }
@@ -307,6 +329,10 @@ namespace Quaver.Shared
                 EndTimestamp = 0
             };
 
+#if VISUAL_TESTS
+            DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+            DiscordHelper.Presence.State = "Visual Testing";
+#endif
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Create bindable for selected map.
@@ -517,13 +543,29 @@ namespace Quaver.Shared
         }
 
 #if VISUAL_TESTS
-        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(new Dictionary<string, Type>()
+        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(VisualTests);
+
+        private void SetVisualTestingPresence()
         {
-            {"Dropdowns", typeof(DropdownTestScreen)},
-            {"Menu Border", typeof(MenuBorderTestScreen)},
-            {"Select Filter Panel", typeof(FilterPanelTestScreen)},
-            {"Select Jukebox", typeof(TestSelectJukeboxScreen)}
-        });
+            var view = HotLoaderScreen.View as HotLoaderScreenView;
+
+            var screen = view.HotLoader?.Screen;
+
+            if (screen == null)
+                return;
+
+            var type = screen?.GetType();
+
+            if (LastVisualTestScreenType == null || LastVisualTestScreenType != type)
+            {
+                var val = VisualTests.FirstOrDefault(x => x.Value.ToString() == type.ToString()).Key;
+
+                DiscordHelper.Presence.Details = val;
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+
+            LastVisualTestScreenType = type;
+        }
 #endif
     }
 }

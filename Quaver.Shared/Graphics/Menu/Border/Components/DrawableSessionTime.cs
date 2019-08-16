@@ -8,7 +8,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Graphics.Menu.Border
+namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
     public class DrawableSessionTime : Sprite, IMenuBorderItem
     {
@@ -52,7 +52,8 @@ namespace Quaver.Shared.Graphics.Menu.Border
         public DrawableSessionTime()
         {
             Size = new ScalableVector2(114, 30);
-            Image = UserInterface.SessionTimeBackground;
+            Image = UserInterface.DropdownClosed;
+            Tint = ColorHelper.HexToColor($"#363636");
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
 
