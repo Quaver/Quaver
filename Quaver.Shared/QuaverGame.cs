@@ -121,6 +121,17 @@ namespace Quaver.Shared
         /// </summary>
         private Type LastVisualTestScreenType { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
+        {
+            {"Dropdown", typeof(DropdownTestScreen)},
+            {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
+            {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
+            {"DrawableMapset", typeof(TestMapsetScreen)}
+        };
+
         public QuaverGame(HotLoader hl) : base(hl)
 #else
         public QuaverGame()
@@ -320,8 +331,8 @@ namespace Quaver.Shared
 
 #if VISUAL_TESTS
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+            DiscordHelper.Presence.State = "Visual Testing";
 #endif
-
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             // Create bindable for selected map.
@@ -532,14 +543,7 @@ namespace Quaver.Shared
         }
 
 #if VISUAL_TESTS
-        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(new Dictionary<string, Type>()
-        {
-            {"Dropdowns", typeof(DropdownTestScreen)},
-            {"Menu Border", typeof(MenuBorderTestScreen)},
-            {"Select Filter Panel", typeof(FilterPanelTestScreen)},
-            {"Select Jukebox", typeof(TestSelectJukeboxScreen)},
-            {"Mapsets (Individual)", typeof(TestMapsetScreen)}
-        });
+        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(VisualTests);
 
         private void SetVisualTestingPresence()
         {
@@ -554,15 +558,9 @@ namespace Quaver.Shared
 
             if (LastVisualTestScreenType == null || LastVisualTestScreenType != type)
             {
-                var str = type.ToString();
+                var val = VisualTests.FirstOrDefault(x => x.Value.ToString() == type.ToString()).Key;
 
-                int index = str.LastIndexOf(".");
-
-                if (index > 0)
-                    str = str.Substring(index + 1);
-
-                DiscordHelper.Presence.Details = str;
-                DiscordHelper.Presence.State = "Visual Testing";
+                DiscordHelper.Presence.Details = val;
                 DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
             }
 
