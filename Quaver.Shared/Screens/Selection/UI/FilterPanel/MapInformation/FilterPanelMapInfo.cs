@@ -101,6 +101,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
 
         private void CreateMetadata()
         {
+            const int spacing = 25;
+
             GameMode = new FilterMetadataGameMode
             {
                 Parent = this,
@@ -112,21 +114,21 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = GameMode.X + GameMode.Width + 35
+                X = GameMode.X + GameMode.Width + 25
             };
 
             Bpm = new FilterMetadataBpm
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = Length.X + Length.Width + 35
+                X = Length.X + Length.Width + 25
             };
 
             LongNotePercentage = new FilterMetadataLongNotePercentage()
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = Bpm.X + Bpm.Width + 35
+                X = Bpm.X + Bpm.Width + 25
             };
         }
 
