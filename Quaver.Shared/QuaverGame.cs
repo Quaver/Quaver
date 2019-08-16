@@ -14,6 +14,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
@@ -115,6 +116,11 @@ namespace Quaver.Shared
         private bool WindowActiveInPreviousFrame { get; set; }
 
 #if VISUAL_TESTS
+        /// <summary>
+        ///     The visual screen type in the previous frame
+        /// </summary>
+        private Type LastVisualTestScreenType { get; set; }
+
         public QuaverGame(HotLoader hl) : base(hl)
 #else
         public QuaverGame()
@@ -238,6 +244,10 @@ namespace Quaver.Shared
             NotificationManager.Update(gameTime);
             Transitioner.Update(gameTime);
 
+#if VISUAL_TESTS
+            SetVisualTestingPresence();
+#endif
+
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
         }
@@ -307,6 +317,10 @@ namespace Quaver.Shared
                 LargeImageText = ConfigManager.Username.Value,
                 EndTimestamp = 0
             };
+
+#if VISUAL_TESTS
+            DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+#endif
 
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
@@ -526,6 +540,34 @@ namespace Quaver.Shared
             {"Select Jukebox", typeof(TestSelectJukeboxScreen)},
             {"Mapsets (Individual)", typeof(TestMapsetScreen)}
         });
+
+        private void SetVisualTestingPresence()
+        {
+            var view = HotLoaderScreen.View as HotLoaderScreenView;
+
+            var screen = view.HotLoader?.Screen;
+
+            if (screen == null)
+                return;
+
+            var type = screen?.GetType();
+
+            if (LastVisualTestScreenType == null || LastVisualTestScreenType != type)
+            {
+                var str = type.ToString();
+
+                int index = str.LastIndexOf(".");
+
+                if (index > 0)
+                    str = str.Substring(index + 1);
+
+                DiscordHelper.Presence.Details = str;
+                DiscordHelper.Presence.State = "Visual Testing";
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+
+            LastVisualTestScreenType = type;
+        }
 #endif
     }
 }
