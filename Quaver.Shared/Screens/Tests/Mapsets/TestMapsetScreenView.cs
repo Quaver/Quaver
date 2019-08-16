@@ -26,7 +26,37 @@ namespace Quaver.Shared.Screens.Tests.Mapsets
 
         public TestMapsetScreenView(TestMapsetScreen screen) : base(screen)
         {
-            for (var i = 0; i < 5; i++)
+            // ReSharper disable once ObjectCreationAsStatement
+            new SelectJukebox() {Parent = Container};
+
+            SeedMapset(TestMapset, 6);
+
+            Drawable = new DrawableMapset(null, TestMapset, 0)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter
+            };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Home))
+            {
+                if (Drawable.IsSelected)
+                    Drawable.Deselect();
+                else
+                    Drawable.Select();
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Delete))
+                MapManager.Selected.Value = TestMapset.Maps.First();
+
+            base.Update(gameTime);
+        }
+
+        private void SeedMapset(Mapset mapset, int num)
+        {
+            for (var i = 0; i < num; i++)
             {
                 var difficulty = 0f;
 
@@ -52,7 +82,7 @@ namespace Quaver.Shared.Screens.Tests.Mapsets
                         break;
                 }
 
-                TestMapset.Maps.Add(new Map
+                mapset.Maps.Add(new Map
                 {
                     Id = 1,
                     Md5Checksum = "test",
@@ -72,31 +102,6 @@ namespace Quaver.Shared.Screens.Tests.Mapsets
                     LongNoteCount = 200
                 });
             }
-
-            // ReSharper disable once ObjectCreationAsStatement
-            new SelectJukebox() {Parent = Container};
-
-            Drawable = new DrawableMapset(null, TestMapset, 0)
-            {
-                Parent = Container,
-                Alignment = Alignment.MidCenter
-            };
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Home))
-            {
-                if (Drawable.IsSelected)
-                    Drawable.Deselect();
-                else
-                    Drawable.Select();
-            }
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Delete))
-                MapManager.Selected.Value = TestMapset.Maps.First();
-
-            base.Update(gameTime);
         }
     }
 }
