@@ -93,16 +93,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="index"></param>
         public override void UpdateContent(Mapset item, int index)
         {
+            // Make sure the mapset is properly selected/deselected when updating the content
             if (IsSelected)
                 Select();
             else
                 Deselect();
 
+            // Update all the values in the mapset
             DrawableContainer.UpdateContent(item, index);
 
+            // If any mapsets exist currently, then dispose of them properly
             Maps?.ForEach(x=> x.Destroy());
+
             Maps = new List<DrawableMap>();
 
+            // Add new mapsets
             for (var i = 0; i < Item.Maps.Count; i++)
             {
                 float height = HEIGHT;
@@ -120,7 +125,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Selects the mapset
+        ///     Selects the mapset and performs an animation
+        ///
+        ///     TODO: Add argument to change size immediately.
         /// </summary>
         public void Select()
         {
@@ -133,7 +140,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Deselects the mapset
+        ///     Deselects the mapset and performs an animation
+        ///
+        ///     TODO: Add argument to change size immediately.
         /// </summary>
         public void Deselect()
         {

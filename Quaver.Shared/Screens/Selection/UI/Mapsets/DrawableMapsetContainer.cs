@@ -12,6 +12,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
@@ -134,6 +135,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Alpha = 0,
                 Alignment = Alignment.MidCenter
             };
+
+            Button.Clicked += (sender, args) => OnMapsetClicked();
         }
 
         /// <summary>
@@ -314,6 +317,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public void Deselect()
         {
+        }
+
+        /// <summary>
+        ///     Called when the mapset has been clicked
+        /// </summary>
+        private void OnMapsetClicked()
+        {
+            // Mapset is already selected, so go play the current map.
+            if (ParentMapset.IsSelected)
+            {
+                Logger.Important($"User clicked on mapset to play: {MapManager.Selected.Value}", LogType.Runtime, false);
+                return;
+            }
+
+            Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
+            MapManager.Selected.Value = ParentMapset.Item.Maps.First();
         }
     }
 }
