@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Displays the map background/banner for the mapset
         /// </summary>
-        private Sprite Banner { get; set; }
+        private DrawableMapsetBanner Banner { get; set; }
 
         /// <summary>
         ///     The title of the map
@@ -143,13 +143,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateBannerImage()
         {
-            Banner = new Sprite
+            Banner = new DrawableMapsetBanner(ParentMapset)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(421, 82),
                 X = -Border.Thickness,
-                Image = UserInterface.MenuBackgroundNormal
             };
         }
 

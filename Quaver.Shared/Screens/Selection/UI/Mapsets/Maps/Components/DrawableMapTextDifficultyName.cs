@@ -4,7 +4,7 @@ using Quaver.Shared.Modifiers;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
 {
     public class DrawableMapTextDifficultyName : SpriteTextPlus
     {

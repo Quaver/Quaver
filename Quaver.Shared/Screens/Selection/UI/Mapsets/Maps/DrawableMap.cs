@@ -1,24 +1,19 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
-using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 {
     public class DrawableMap : ImageButton, IDrawableMapsetComponent, IDrawableMapMetadata
     {

@@ -9,6 +9,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
