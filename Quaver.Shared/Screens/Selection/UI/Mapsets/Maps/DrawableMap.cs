@@ -58,6 +58,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         private DrawableMapTextDifficultyRating DifficultyRating { get; set; }
 
         /// <summary>
+        ///     The button that allows the user to play
+        /// </summary>
+        private DrawableMapButtonPlay PlayButton { get; set; }
+
+        /// <summary>
+        ///     The button that sends the user to the editor
+        /// </summary>
+        private DrawableMapButtonEdit EditButton { get; set; }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="drawableMapset"></param>
@@ -76,6 +86,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             SetTint();
             CreateTextDifficulty();
             CreateTextRating();
+            CreateActionButtons();
 
             UpdateContent(Map, Index);
             MapManager.Selected.ValueChanged += OnMapChanged;
@@ -148,7 +159,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -Difficulty.X,
+                X = -15,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        private void CreateActionButtons()
+        {
+            PlayButton = new DrawableMapButtonPlay(Map)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = DifficultyRating.X,
+                Y = 18,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
+
+            EditButton = new DrawableMapButtonEdit(Map)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = PlayButton.X - PlayButton.Width - 10,
+                Y = PlayButton.Y,
                 Visible = false,
                 Alpha = 0,
                 SetChildrenAlpha = true
@@ -220,6 +259,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         {
             var width = DrawableMapset.Width - DrawableMapset.Border.Thickness * 2;
             var height = IsSelected ? SelectedHeight - DrawableMapset.Border.Thickness - 1 : DeselectedHeight;
+
+            if ((int) Width == (int) width && (int) Height == (int) height)
+                return;
 
             var size = new ScalableVector2(width, height);
 

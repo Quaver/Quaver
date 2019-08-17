@@ -194,6 +194,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (i != 0)
                     height = Maps[i - 1].Height + Maps[i - 1].Y;
 
+                if ((int) height == (int) Maps[i].Y)
+                    continue;
+
                 Maps[i].Y = height;
             }
         }
