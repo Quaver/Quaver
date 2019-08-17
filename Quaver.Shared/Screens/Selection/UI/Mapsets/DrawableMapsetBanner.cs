@@ -57,15 +57,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Loads the map's background under a separate thread
+        ///     Loads the map's background/banner under a separate thread
+        ///
         /// </summary>
         public void LoadBackground() => ThreadScheduler.Run(() =>
         {
             DisposeTextures();
 
+            // TODO: Banner Support
             var path = MapManager.GetBackgroundPath(Mapset.Item.Maps.First());
             MapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
 
+            // Default Banner
             if (MapTexture == DefaultBanner)
             {
                 Image = MapTexture;
@@ -73,6 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 return;
             }
 
+            // Mask the image and draw it to a RenderTarget
             GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
                 var scrollContainer = new ScrollContainer(new ScalableVector2(Width, Height),
@@ -81,8 +85,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 var maskedSprite = new Sprite()
                 {
                     Alignment = Alignment.MidCenter,
-                    Size = new ScalableVector2(1024, 576), // Small 16:9 resolution to make backgrounds look a bit better
-                    Y = 100, // Small y offset. Usually captures the best part of the image (such as faces or text)
+                    // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
+                    Size = new ScalableVector2(1024, 576),
+                    // This y offset usually captures the best part of the image (such as faces or text)
+                    Y = 100,
                     Image = MapTexture
                 };
 
