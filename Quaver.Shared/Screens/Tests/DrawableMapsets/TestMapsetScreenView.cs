@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Selection.Components;
-using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Tests.FilterPanel;
-using Wobble.Bindables;
 using Wobble.Input;
 using Alignment = Wobble.Graphics.Alignment;
 
-namespace Quaver.Shared.Screens.Tests.Mapsets
+namespace Quaver.Shared.Screens.Tests.DrawableMapset
 {
     public class TestMapsetScreenView : FilterPanelTestScreenView
     {
@@ -22,7 +19,7 @@ namespace Quaver.Shared.Screens.Tests.Mapsets
             Maps = new List<Map>()
         };
 
-        private DrawableMapset Drawable { get; }
+        private Selection.UI.Mapsets.DrawableMapset Drawable { get; }
 
         public TestMapsetScreenView(TestMapsetScreen screen) : base(screen)
         {
@@ -31,7 +28,7 @@ namespace Quaver.Shared.Screens.Tests.Mapsets
 
             SeedMapset(TestMapset, 6);
 
-            Drawable = new DrawableMapset(null, TestMapset, 0)
+            Drawable = new Selection.UI.Mapsets.DrawableMapset(null, TestMapset, 0)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter

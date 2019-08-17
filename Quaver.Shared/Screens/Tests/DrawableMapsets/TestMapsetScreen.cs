@@ -1,6 +1,6 @@
 using Quaver.Shared.Screens.Tests.FilterPanel;
 
-namespace Quaver.Shared.Screens.Tests.Mapsets
+namespace Quaver.Shared.Screens.Tests.DrawableMapset
 {
     public class TestMapsetScreen : FilterPanelTestScreen
     {
