@@ -38,6 +38,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
         private string GetLength()
         {
+            if (MapManager.Selected.Value == null)
+                return "00:00";
+
             var length = TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
             return length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
         }

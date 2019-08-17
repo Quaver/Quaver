@@ -33,6 +33,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
             => Value.Text = GetPercentage();
 
-        private string GetPercentage() => ((int) MapManager.Selected.Value.LNPercentage).ToString(CultureInfo.InvariantCulture) + "%";
+        private string GetPercentage()
+        {
+            if (MapManager.Selected.Value == null)
+                return "0%";
+
+            return ((int) MapManager.Selected.Value.LNPercentage).ToString(CultureInfo.InvariantCulture) + "%";
+        }
     }
 }
