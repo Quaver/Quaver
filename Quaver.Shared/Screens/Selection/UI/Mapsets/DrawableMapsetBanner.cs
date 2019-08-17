@@ -41,7 +41,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public DrawableMapsetBanner(DrawableMapset mapset)
         {
             Mapset = mapset;
+
             Alpha = 0;
+            Image = DefaultBanner;
             LoadBackground();
         }
 
