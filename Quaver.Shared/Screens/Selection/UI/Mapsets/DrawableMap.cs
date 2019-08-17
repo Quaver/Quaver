@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The map this represents
         /// </summary>
-        private Map Map { get; set; }
+        public Map Map { get; private set; }
 
         /// <summary>
         ///     The index this map is in the mapset
@@ -55,12 +55,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Displays the name of the difficulty
         /// </summary>
-        private SpriteTextPlus Difficulty { get; set; }
-
-        /// <summary>
-        ///     Displays all the metadata for the map
-        /// </summary>
-        private DrawableMapMetadataContainer MetadataContainer { get; set; }
+        private DrawableMapTextDifficultyName Difficulty { get; set; }
 
         /// <summary>
         ///
@@ -80,7 +75,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             SetSize(false);
             SetTint();
             CreateTextDifficulty();
-            CreateMetadataContainer();
 
             UpdateContent(Map, Index);
             MapManager.Selected.ValueChanged += OnMapChanged;
@@ -131,31 +125,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTextDifficulty()
         {
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Difficulty", 22)
+            Difficulty = new DrawableMapTextDifficultyName(this)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = 15,
+                X = DrawableMapset.DrawableContainer.Title.X,
                 Visible = false,
                 Alpha = 0,
                 SetChildrenAlpha = true
             };
         }
 
-        /// <summary>
-        ///     Creases <see cref="MetadataContainer"/>
-        /// </summary>
-        private void CreateMetadataContainer()
-        {
-            MetadataContainer = new DrawableMapMetadataContainer(this, new List<DrawableMapMetadata>
-            {
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map)
-            });
-        }
+
 
         /// <summary>
         /// </summary>
@@ -172,8 +153,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Difficulty.ClearAnimations();
             Difficulty.Wait(200);
             Difficulty.FadeTo(1, Easing.Linear, 250);
-
-            MetadataContainer.Open();
         }
 
         /// <summary>
@@ -192,8 +171,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Difficulty.ClearAnimations();
             Difficulty.Alpha = 0;
             Difficulty.Visible = false;
-
-            MetadataContainer.Close();
         }
 
         /// <inheritdoc />

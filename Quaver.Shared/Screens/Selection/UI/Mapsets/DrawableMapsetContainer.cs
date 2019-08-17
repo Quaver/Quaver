@@ -6,7 +6,6 @@ using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
-using TagLib.Ape;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -37,7 +36,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The title of the map
         /// </summary>
-        private SpriteTextPlus Title { get; set; }
+        public SpriteTextPlus Title { get; private set; }
 
         /// <summary>
         ///     Displays the artist of the song
@@ -217,7 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateRankedStatus()
         {
-            RankedStatusSprite = new Sprite()
+            RankedStatusSprite = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
