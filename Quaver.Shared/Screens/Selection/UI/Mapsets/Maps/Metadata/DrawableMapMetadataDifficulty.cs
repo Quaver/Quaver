@@ -1,12 +1,9 @@
-using System;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
     public class DrawableMapMetadataDifficulty : DrawableMapMetadata
     {

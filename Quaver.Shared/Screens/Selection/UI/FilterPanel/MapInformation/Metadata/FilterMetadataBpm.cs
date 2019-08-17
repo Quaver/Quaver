@@ -35,6 +35,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => Value.Text = GetBpm().ToString();
 
-        private int GetBpm() => (int) (MapManager.Selected.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods));
+        private int GetBpm()
+        {
+            if (MapManager.Selected.Value == null)
+                return 0;
+
+            return (int) (MapManager.Selected.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods));
+        }
     }
 }

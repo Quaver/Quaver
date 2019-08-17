@@ -1,16 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.BitmapFonts;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
     public class DrawableMapMetadata : IconTextButton, IDrawableMapMetadata
     {

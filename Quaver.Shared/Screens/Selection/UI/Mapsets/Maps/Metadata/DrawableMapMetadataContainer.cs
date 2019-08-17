@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
     public class DrawableMapMetadataContainer : IDrawableMapMetadata
     {

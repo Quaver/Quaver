@@ -1,24 +1,19 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
-using Quaver.Shared.Graphics.Menu;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
-using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
-using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 {
     public class DrawableMap : ImageButton, IDrawableMapsetComponent, IDrawableMapMetadata
     {
@@ -30,7 +25,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The map this represents
         /// </summary>
-        private Map Map { get; set; }
+        public Map Map { get; private set; }
 
         /// <summary>
         ///     The index this map is in the mapset
@@ -55,12 +50,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Displays the name of the difficulty
         /// </summary>
-        private SpriteTextPlus Difficulty { get; set; }
+        private DrawableMapTextDifficultyName Difficulty { get; set; }
 
         /// <summary>
-        ///     Displays all the metadata for the map
+        ///     Displays the difficulty rating of the map
         /// </summary>
-        private DrawableMapMetadataContainer MetadataContainer { get; set; }
+        private DrawableMapTextDifficultyRating DifficultyRating { get; set; }
+
+        /// <summary>
+        ///     The button that allows the user to play
+        /// </summary>
+        private DrawableMapButtonPlay PlayButton { get; set; }
+
+        /// <summary>
+        ///     The button that sends the user to the editor
+        /// </summary>
+        private DrawableMapButtonEdit EditButton { get; set; }
 
         /// <summary>
         ///
@@ -80,7 +85,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             SetSize(false);
             SetTint();
             CreateTextDifficulty();
-            CreateMetadataContainer();
+            CreateTextRating();
+            CreateActionButtons();
 
             UpdateContent(Map, Index);
             MapManager.Selected.ValueChanged += OnMapChanged;
@@ -124,6 +130,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Difficulty.Text = Map.DifficultyName;
             Difficulty.Tint = ColorHelper.DifficultyToColor((float) Map.DifficultyFromMods(ModManager.Mods));
+
+            DifficultyRating.UpdateText();
         }
 
         /// <summary>
@@ -131,11 +139,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateTextDifficulty()
         {
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Difficulty", 22)
+            Difficulty = new DrawableMapTextDifficultyName(this)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = 15,
+                X = DrawableMapset.DrawableContainer.Title.X,
                 Visible = false,
                 Alpha = 0,
                 SetChildrenAlpha = true
@@ -143,20 +151,50 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     Creases <see cref="MetadataContainer"/>
+        ///     Creates <see cref="DifficultyRating"/>
         /// </summary>
-        private void CreateMetadataContainer()
+        private void CreateTextRating()
         {
-            MetadataContainer = new DrawableMapMetadataContainer(this, new List<DrawableMapMetadata>
+            DifficultyRating = new DrawableMapTextDifficultyRating(Map)
             {
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map),
-                new DrawableMapMetadataDifficulty(Map)
-            });
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -15,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        private void CreateActionButtons()
+        {
+            PlayButton = new DrawableMapButtonPlay(Map)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = DifficultyRating.X,
+                Y = 18,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
+
+            EditButton = new DrawableMapButtonEdit(Map)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = PlayButton.X - PlayButton.Width - 10,
+                Y = PlayButton.Y,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
+        }
+
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Open()
@@ -168,14 +206,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             FadeTo(1, Easing.Linear, 250);
             Visible = true;
 
-            // Fade in difficulty text
-            Difficulty.ClearAnimations();
-            Difficulty.Wait(200);
-            Difficulty.FadeTo(1, Easing.Linear, 250);
-
-            MetadataContainer.Open();
+            Children.ForEach(x =>
+            {
+                if (x is IDrawableMapMetadata metadata)
+                    metadata.Open();
+            });
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Close()
@@ -188,12 +226,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Alpha = 0;
             Visible = false;
 
-            // Make difficulty text invisible
-            Difficulty.ClearAnimations();
-            Difficulty.Alpha = 0;
-            Difficulty.Visible = false;
-
-            MetadataContainer.Close();
+            Children.ForEach(x =>
+            {
+                if (x is IDrawableMapMetadata metadata)
+                    metadata.Close();
+            });
         }
 
         /// <inheritdoc />
@@ -222,6 +259,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             var width = DrawableMapset.Width - DrawableMapset.Border.Thickness * 2;
             var height = IsSelected ? SelectedHeight - DrawableMapset.Border.Thickness - 1 : DeselectedHeight;
+
+            if ((int) Width == (int) width && (int) Height == (int) height)
+                return;
 
             var size = new ScalableVector2(width, height);
 

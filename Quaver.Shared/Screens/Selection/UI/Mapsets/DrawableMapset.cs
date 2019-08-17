@@ -9,6 +9,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -31,7 +32,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Contains the actual mapset
         /// </summary>
-        private DrawableMapsetContainer DrawableContainer { get; }
+        public DrawableMapsetContainer DrawableContainer { get; }
 
         /// <summary>
         ///     If this mapset is currently selected
@@ -192,6 +193,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 if (i != 0)
                     height = Maps[i - 1].Height + Maps[i - 1].Y;
+
+                if ((int) height == (int) Maps[i].Y)
+                    continue;
 
                 Maps[i].Y = height;
             }
