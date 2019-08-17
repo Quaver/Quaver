@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Contains the actual mapset
         /// </summary>
-        private DrawableMapsetContainer DrawableContainer { get; }
+        public DrawableMapsetContainer DrawableContainer { get; }
 
         /// <summary>
         ///     If this mapset is currently selected
