@@ -53,6 +53,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         private DrawableMapTextDifficultyName Difficulty { get; set; }
 
         /// <summary>
+        ///     Displays the difficulty rating of the map
+        /// </summary>
+        private DrawableMapTextDifficultyRating DifficultyRating { get; set; }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="drawableMapset"></param>
@@ -70,6 +75,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             SetSize(false);
             SetTint();
             CreateTextDifficulty();
+            CreateTextRating();
 
             UpdateContent(Map, Index);
             MapManager.Selected.ValueChanged += OnMapChanged;
@@ -113,6 +119,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
             Difficulty.Text = Map.DifficultyName;
             Difficulty.Tint = ColorHelper.DifficultyToColor((float) Map.DifficultyFromMods(ModManager.Mods));
+
+            DifficultyRating.UpdateText();
         }
 
         /// <summary>
@@ -131,8 +139,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             };
         }
 
+        /// <summary>
+        ///     Creates <see cref="DifficultyRating"/>
+        /// </summary>
+        private void CreateTextRating()
+        {
+            DifficultyRating = new DrawableMapTextDifficultyRating(Map)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -Difficulty.X,
+                Visible = false,
+                Alpha = 0,
+                SetChildrenAlpha = true
+            };
+        }
 
-
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Open()
@@ -144,12 +167,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             FadeTo(1, Easing.Linear, 250);
             Visible = true;
 
-            // Fade in difficulty text
-            Difficulty.ClearAnimations();
-            Difficulty.Wait(200);
-            Difficulty.FadeTo(1, Easing.Linear, 250);
+            Children.ForEach(x =>
+            {
+                if (x is IDrawableMapMetadata metadata)
+                    metadata.Open();
+            });
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Close()
@@ -162,10 +187,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             Alpha = 0;
             Visible = false;
 
-            // Make difficulty text invisible
-            Difficulty.ClearAnimations();
-            Difficulty.Alpha = 0;
-            Difficulty.Visible = false;
+            Children.ForEach(x =>
+            {
+                if (x is IDrawableMapMetadata metadata)
+                    metadata.Close();
+            });
         }
 
         /// <inheritdoc />
