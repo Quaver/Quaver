@@ -37,6 +37,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.Border;
+using Quaver.Shared.Screens.Tests.DifficultyBars;
 using Quaver.Shared.Screens.Tests.DrawableMapsets;
 using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
 using Quaver.Shared.Screens.Tests.Dropdowns;
@@ -131,7 +132,8 @@ namespace Quaver.Shared
             {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
             {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
             {"DrawableMapset", typeof(TestMapsetScreen)},
-            {"DrawableMapset (Multiple)", typeof(TestMapsetsMultipleScreen)}
+            {"DrawableMapset (Multiple)", typeof(TestMapsetsMultipleScreen)},
+            {"DifficultyBarDisplay", typeof(TestScreenDifficultyBar)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

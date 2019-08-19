@@ -13,7 +13,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
 {
-    public class DrawableMapTextButton : ImageButton, IDrawableMapMetadata
+    public class DrawableMapTextButton : ImageButton, IDrawableMapComponent
     {
         /// <summary>
         /// </summary>
