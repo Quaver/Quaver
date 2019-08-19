@@ -20,10 +20,11 @@ namespace Quaver.Shared.Screens.Tests.DifficultyBars
                 Artist = "Swan",
                 Title = "Left Right",
                 DifficultyName = "Hard",
-                Difficulty10X = 27,
+                Difficulty10X = 32,
                 Difficulty15X = 23
             };
 
+            // ReSharper disable once ObjectCreationAsStatement
             new DifficultyBarDisplay(map)
             {
                 Parent = Container,
@@ -31,6 +32,7 @@ namespace Quaver.Shared.Screens.Tests.DifficultyBars
                 Y = -200
             };
 
+            // ReSharper disable once ObjectCreationAsStatement
             new CachedDifficultyBarDisplay(new DifficultyBarDisplay(map, false, true))
             {
                 Parent = Container,
