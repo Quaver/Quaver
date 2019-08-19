@@ -54,26 +54,33 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsets
             for (var i = 0; i < num; i++)
             {
                 var difficulty = 0f;
+                var name = "";
 
                 switch (i)
                 {
                     case 0:
                         difficulty = 1.5f;
+                        name = "Beginner";
                         break;
                     case 1:
                         difficulty = 4f;
+                        name = "Easy";
                         break;
                     case 2:
                         difficulty = 8f;
+                        name = "Normal";
                         break;
                     case 3:
                         difficulty = 15f;
+                        name = "Hard";
                         break;
                     case 4:
                         difficulty = 25f;
+                        name = "Insane";
                         break;
                     case 5:
                         difficulty = 30;
+                        name = "Expert";
                         break;
                 }
 
@@ -84,7 +91,7 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsets
                     Artist = "Swan",
                     Title = "Left Right",
                     Creator = "AiAe",
-                    DifficultyName = "Offset Calibrator " + (i + 1),
+                    DifficultyName = name,
                     AudioPreviewTime = 2000,
                     Bpm = 120,
                     DateAdded = DateTime.Now,
