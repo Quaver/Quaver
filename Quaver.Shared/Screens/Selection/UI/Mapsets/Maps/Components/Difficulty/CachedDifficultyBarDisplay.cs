@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
 
         /// <summary>
         /// </summary>
-        private Sprite Background { get; }
+        public Sprite Background { get; }
 
         /// <summary>
         ///     Displays the cached version of <see cref="DifficultyBar"/>

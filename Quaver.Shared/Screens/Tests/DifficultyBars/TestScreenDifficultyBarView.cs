@@ -36,7 +36,13 @@ namespace Quaver.Shared.Screens.Tests.DifficultyBars
             new CachedDifficultyBarDisplay(new DifficultyBarDisplay(map, false, true))
             {
                 Parent = Container,
-               Alignment = Alignment.MidCenter,
+                Alignment = Alignment.MidCenter,
+                Visible = true,
+                Background =
+                {
+                    Visible = true,
+                    Alpha = 1
+                }
             };
         }
 
