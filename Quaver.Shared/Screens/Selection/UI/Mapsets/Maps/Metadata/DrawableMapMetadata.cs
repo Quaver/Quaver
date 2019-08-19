@@ -9,7 +9,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
-    public class DrawableMapMetadata : IconTextButton, IDrawableMapMetadata
+    public class DrawableMapMetadata : IconTextButton, IDrawableMapComponent
     {
         /// <summary>
         /// </summary>

@@ -15,7 +15,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 {
-    public class DrawableMap : ImageButton, IDrawableMapsetComponent, IDrawableMapMetadata
+    public class DrawableMap : ImageButton, IDrawableMapsetComponent, IDrawableMapComponent
     {
         /// <summary>
         ///     The parent drawable mapset
@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
             Children.ForEach(x =>
             {
-                if (x is IDrawableMapMetadata metadata)
+                if (x is IDrawableMapComponent metadata)
                     metadata.Open();
             });
         }
@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
             Children.ForEach(x =>
             {
-                if (x is IDrawableMapMetadata metadata)
+                if (x is IDrawableMapComponent metadata)
                     metadata.Close();
             });
         }

@@ -3,7 +3,7 @@ using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
-    public class DrawableMapMetadataContainer : IDrawableMapMetadata
+    public class DrawableMapMetadataContainer : IDrawableMapComponent
     {
         /// <summary>
         /// </summary>

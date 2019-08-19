@@ -1,6 +1,6 @@
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
 {
-    public interface IDrawableMapMetadata
+    public interface IDrawableMapComponent
     {
         /// <summary>
         ///     Called when the mapset has opened

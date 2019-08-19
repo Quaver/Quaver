@@ -8,7 +8,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
 {
-    public class DrawableMapTextDifficultyName : SpriteTextPlus, IDrawableMapMetadata
+    public class DrawableMapTextDifficultyName : SpriteTextPlus, IDrawableMapComponent
     {
         /// <summary>
         /// </summary>
