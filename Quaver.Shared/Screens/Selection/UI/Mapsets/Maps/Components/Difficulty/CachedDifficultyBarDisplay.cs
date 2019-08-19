@@ -3,14 +3,16 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
 {
-    public class CachedDifficultyBarDisplay : CacheableContainer
+    public class CachedDifficultyBarDisplay : CacheableContainer, IDrawableMapComponent
     {
         /// <summary>
         /// </summary>
@@ -43,13 +45,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
             {
                 Parent = this,
                 Size = DifficultyBar.Size,
-                Image = UserInterface.DifficultyBarBackground
+                Image = UserInterface.DifficultyBarBackground,
+                SetChildrenVisibility = true,
+                SetChildrenAlpha = true,
+                Alpha = 0,
+                Visible = false
             };
 
             CachedSprite = new Sprite
             {
-                Parent = this,
-                Size = DifficultyBar.Size
+                Parent = Background,
+                Size = DifficultyBar.Size,
+                Alpha = 0,
+                Visible = false
             };
 
             var (pixelWidth, pixelHeight) = AbsoluteSize * WindowManager.ScreenScale;
@@ -66,10 +74,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            DifficultyBar.Update(gameTime);
+            if (Visible)
+            {
+                DifficultyBar.Update(gameTime);
 
-            if (DifficultyBar.Container.Animations.Count != 0)
-                NeedsToCache = true;
+                if (DifficultyBar.Container.Animations.Count != 0)
+                    NeedsToCache = true;
+            }
 
             base.Update(gameTime);
         }
@@ -99,6 +110,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
                 GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                 CachedSprite.Image = RenderTarget;
             });
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public void Open()
+        {
+            Background.ClearAnimations();
+            Background.Wait(200);
+            Background.FadeTo(1, Easing.Linear, 250);
+            Visible = true;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public void Close()
+        {
+            Background.ClearAnimations();
+            Background.Alpha = 0;
+            Background.Visible = false;
         }
     }
 }
