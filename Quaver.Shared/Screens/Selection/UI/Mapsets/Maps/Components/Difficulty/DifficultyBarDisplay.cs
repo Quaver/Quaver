@@ -52,14 +52,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
             Container.AddContainedDrawable(ProgressBar);
 
             SlideToDifficultyValue();
+
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Open()
+        public override void Destroy()
         {
+            ModManager.ModsChanged -= OnModsChanged;
+            base.Destroy();
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public void Open() => SlideToDifficultyValue();
 
         /// <inheritdoc />
         /// <summary>
@@ -79,8 +88,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
 
             var percent = diff / maxDiff;
 
+            var width = (int) (Width * percent);
+
+            if (width == (int) Container.Width)
+                return;
+
             Container.ClearAnimations();
-            Container.ChangeWidthTo((int) (Width * percent), Easing.OutQuint, 2000);
+            Container.ChangeWidthTo(width, Easing.OutQuint, 2000);
         }
+
+        /// <summary>
+        ///     Called when the modifiers have changed. Used to reset the
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => SlideToDifficultyValue();
     }
 }
