@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         {
             Map = map;
             Image = UserInterface.DifficultyBarBackground;
-            Size = halfSize ? new ScalableVector2(362, 21) : new ScalableVector2(724, 42);
+            Size = halfSize ? new ScalableVector2(352, 21) : new ScalableVector2(704, 42);
             Alpha = displayBackground ? 1 : 0;
 
             Container = new ScrollContainer(new ScalableVector2(0, Height), Size)
