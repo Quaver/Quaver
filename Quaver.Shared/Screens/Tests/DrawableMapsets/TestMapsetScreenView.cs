@@ -59,15 +59,15 @@ namespace Quaver.Shared.Screens.Tests.DrawableMapsets
                 switch (i)
                 {
                     case 0:
-                        difficulty = 1.5f;
+                        difficulty = 0.8f;
                         name = "Beginner";
                         break;
                     case 1:
-                        difficulty = 4f;
+                        difficulty = 2f;
                         name = "Easy";
                         break;
                     case 2:
-                        difficulty = 8f;
+                        difficulty = 7f;
                         name = "Normal";
                         break;
                     case 3:
