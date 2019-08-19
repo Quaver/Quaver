@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         /// <summary>
         ///     The height when the map is selected
         /// </summary>
-        public static int SelectedHeight { get; } = 90;
+        public static int SelectedHeight { get; } = 102;
 
         /// <summary>
         ///     The height when the map is deselected
