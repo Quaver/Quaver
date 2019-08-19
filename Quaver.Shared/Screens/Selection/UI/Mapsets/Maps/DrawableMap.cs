@@ -4,6 +4,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble;
 using Wobble.Assets;
@@ -68,6 +69,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         private DrawableMapButtonEdit EditButton { get; set; }
 
         /// <summary>
+        ///     Visual represnetation of the difficulty
+        /// </summary>
+        private CachedDifficultyBarDisplay DifficultyBar { get; set; }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="drawableMapset"></param>
@@ -86,6 +92,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             SetTint();
             CreateTextDifficulty();
             CreateTextRating();
+            CreateDifficultyBar();
             CreateActionButtons();
 
             UpdateContent(Map, Index);
@@ -159,10 +166,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -15,
+                X = -12,
                 Visible = false,
                 Alpha = 0,
                 SetChildrenAlpha = true
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="DifficultyBarDisplay"/>
+        /// </summary>
+        private void CreateDifficultyBar()
+        {
+            DifficultyBar = new CachedDifficultyBarDisplay(new DifficultyBarDisplay(Map, false, true))
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = DifficultyRating.X - 60,
+                Visible = false,
+                SetChildrenVisibility = true
             };
         }
 
@@ -176,7 +198,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = DifficultyRating.X,
-                Y = 18,
+                Y = 22,
                 Visible = false,
                 Alpha = 0,
                 SetChildrenAlpha = true
@@ -186,7 +208,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = PlayButton.X - PlayButton.Width - 10,
+                X = PlayButton.X - PlayButton.Width - 20,
                 Y = PlayButton.Y,
                 Visible = false,
                 Alpha = 0,
@@ -239,6 +261,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         public void Select()
         {
             Tint = ColorHelper.HexToColor("#293943");
+            DifficultyBar.Y = -18;
         }
 
         /// <inheritdoc />
@@ -248,6 +271,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         {
             if (!IsHovered)
                 Tint = GetDefaultcolor();
+
+            DifficultyBar.Y = 0;
         }
 
         /// <summary>
