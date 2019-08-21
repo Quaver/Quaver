@@ -108,6 +108,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             if (ConfigManager.SelectFilterGameModeBy != null)
                 ConfigManager.SelectFilterGameModeBy.ValueChanged += OnSelectFilterGameModeChanged;
 
+            MapManager.Selected.ValueChanged += OnMapChanged;
+
             AlignRightItems();
         }
 
@@ -122,6 +124,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
 
             if (ConfigManager.SelectFilterGameModeBy != null)
                 ConfigManager.SelectFilterGameModeBy.ValueChanged -= OnSelectFilterGameModeChanged;
+
+            MapManager.Selected.ValueChanged -= OnMapChanged;
 
             base.Destroy();
         }
@@ -232,5 +236,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => FilterMapsets();
+
+        /// <summary>
+        ///     Responsible for initiating the new banner load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+
+            if (MapManager.GetBackgroundPath(e.OldValue) != MapManager.GetBackgroundPath(e.Value))
+                BackgroundHelper.Load(e.Value);
+        }
     }
 }
