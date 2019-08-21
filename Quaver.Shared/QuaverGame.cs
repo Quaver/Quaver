@@ -43,6 +43,7 @@ using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
 using Quaver.Shared.Screens.Tests.Dropdowns;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
+using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -133,7 +134,8 @@ namespace Quaver.Shared
             {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
             {"DrawableMapset", typeof(TestMapsetScreen)},
             {"DrawableMapset (Multiple)", typeof(TestMapsetsMultipleScreen)},
-            {"DifficultyBarDisplay", typeof(TestScreenDifficultyBar)}
+            {"DifficultyBarDisplay", typeof(TestScreenDifficultyBar)},
+            {"MapsetScrollContainer", typeof(TestScreenMapsetScrollContainer)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
