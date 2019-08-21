@@ -52,6 +52,9 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         public static string GetBackgroundPath(Map map)
         {
+            if (map == null)
+                return "";
+
             switch (map.Game)
             {
                 case MapGame.Osu:

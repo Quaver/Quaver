@@ -36,13 +36,6 @@ namespace Quaver.Shared.Screens.Tests.MapsetScrollContainers
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
-
-            if (!Reordered)
-            {
-                ButtonManager.ReOrderByDepth();
-                Reordered = true;
-            }
         }
     }
 }
