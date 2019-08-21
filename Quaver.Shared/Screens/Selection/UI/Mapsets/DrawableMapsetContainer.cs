@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -16,7 +18,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class DrawableMapsetContainer : Sprite, IDrawableMapsetComponent
+    public class DrawableMapsetContainer : Sprite
     {
         /// <summary>
         ///     The parent mapset
@@ -80,9 +82,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             ParentMapset = mapset;
             Parent = ParentMapset;
 
-            Size = new ScalableVector2(1188, ParentMapset.HEIGHT);
-            Tint = ColorHelper.HexToColor("#242424");
-            AddBorder(ColorHelper.HexToColor("#0587e5"), 2);
+            Size = new ScalableVector2(1188, 86);
 
             CreateButton();
             CreateTitle();
@@ -92,6 +92,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateBannerImage();
             CreateRankedStatus();
             CreateGameModes();
+
+            UsePreviousSpriteBatchOptions = true;
         }
 
         /// <inheritdoc />
@@ -100,6 +102,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            Button.Width = Width;
+
             PerformHoverAnimation(gameTime);
             base.Update(gameTime);
         }
@@ -120,6 +124,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             RankedStatusSprite.Image = GetRankedStatusImage();
             GameModes.Image = GetGameModeImage();
+
+            if (ParentMapset.IsSelected)
+                Select(true);
+            else
+                Deselect(true);
+
+            Banner.UpdateContent(ParentMapset);
         }
 
         /// <summary>
@@ -132,7 +143,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Size = Size,
                 Alpha = 0,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Button.Clicked += (sender, args) => OnMapsetClicked();
@@ -148,7 +160,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(421, 82),
-                X = -Border.Thickness,
+                X = -2,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -160,7 +173,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
             {
                 Parent = this,
-                Position = new ScalableVector2(26, 18)
+                Position = new ScalableVector2(26, 18),
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -173,7 +187,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, Title.Y + Title.Height + 5),
-                Tint = ColorHelper.HexToColor("#0587e5")
+                Tint = ColorHelper.HexToColor("#0587e5"),
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -186,7 +201,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(Artist.X + Artist.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = ColorHelper.HexToColor("#808080")
+                Tint = ColorHelper.HexToColor("#808080"),
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -199,14 +215,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Parent = this,
                 Position = new ScalableVector2(DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = ColorHelper.HexToColor("#757575")
+                Tint = ColorHelper.HexToColor("#757575"),
+                UsePreviousSpriteBatchOptions = true
             };
 
             Creator = new SpriteTextPlus(Title.Font, "Creator", Artist.FontSize)
             {
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + ArtistCreatorSpacingX, Artist.Y),
-                Tint = Artist.Tint
+                Tint = Artist.Tint,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -221,7 +239,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(115, 28),
                 X = Banner.X - Banner.Width - 18,
-                Image = UserInterface.StatusPanel
+                Image = UserInterface.StatusPanel,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -235,7 +254,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(71, 28),
-                X = RankedStatusSprite.X - RankedStatusSprite.Width - 18
+                X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
+                UsePreviousSpriteBatchOptions = true
             };
         }
 
@@ -303,18 +323,86 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Select()
+        public void Select(bool instantSizeChange = false)
         {
+            Image = UserInterface.SelectedMapset;
+
+            var fade = 1f;
+            var time = 200;
+
+            Title.ClearAnimations();
+            Title.FadeTo(fade, Easing.Linear, time);
+
+            Artist.ClearAnimations();
+            Artist.FadeTo(fade, Easing.Linear, time);
+
+            DividerLine.ClearAnimations();
+            DividerLine.FadeTo(fade, Easing.Linear, time);
+
+            Creator.ClearAnimations();
+            Creator.FadeTo(fade, Easing.Linear, time);
+
+            RankedStatusSprite.ClearAnimations();
+            RankedStatusSprite.FadeTo(fade, Easing.Linear, time);
+
+            GameModes.ClearAnimations();
+            GameModes.FadeTo(fade, Easing.Linear, time);
+
+            if (Banner.HasBannerLoaded)
+            {
+                Banner.ClearAnimations();
+                Banner.FadeTo(1, Easing.Linear, time);
+            }
+
+            ClearAnimations();
+
+            if (instantSizeChange)
+                Width = ParentMapset.Width;
+            else
+                ChangeWidthTo((int) ParentMapset.Width, Easing.OutQuint, time + 400);
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Deselect()
+        public void Deselect(bool changeWidthInstantly = false)
         {
+            Image = UserInterface.DeselectedMapset;
+
+            var fade = 0.75f;
+            var time = 200;
+
+            Title.ClearAnimations();
+            Title.FadeTo(fade, Easing.Linear, time);
+
+            Artist.ClearAnimations();
+            Artist.FadeTo(fade, Easing.Linear, time);
+
+            DividerLine.ClearAnimations();
+            DividerLine.FadeTo(fade, Easing.Linear, time);
+
+            Creator.ClearAnimations();
+            Creator.FadeTo(fade, Easing.Linear, time);
+
+            RankedStatusSprite.ClearAnimations();
+            RankedStatusSprite.FadeTo(fade, Easing.Linear, time);
+
+            GameModes.ClearAnimations();
+            GameModes.FadeTo(fade, Easing.Linear, time);
+
+            if (Banner.HasBannerLoaded)
+            {
+                Banner.ClearAnimations();
+                Banner.FadeTo(0.45f, Easing.Linear, time);
+            }
+
+            ClearAnimations();
+
+            if (changeWidthInstantly)
+                Width = ParentMapset.Width - 50;
+            else
+                ChangeWidthTo((int) ParentMapset.Width - 50, Easing.OutQuint, time + 400);
         }
 
         /// <summary>
@@ -322,6 +410,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void OnMapsetClicked()
         {
+            if (ParentMapset.Container != null)
+            {
+                var container = (MapsetScrollContainer) ParentMapset.Container;
+                container.SelectedMapsetIndex = ParentMapset.Index;
+            }
+
+            
             // Mapset is already selected, so go play the current map.
             if (ParentMapset.IsSelected)
             {

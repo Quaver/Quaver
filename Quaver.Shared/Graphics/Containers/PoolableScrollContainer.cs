@@ -35,6 +35,11 @@ namespace Quaver.Shared.Graphics.Containers
         protected int PaddingTop { get; set; }
 
         /// <summary>
+        ///     The amount of padding from the bottom that the scroll container will have
+        /// </summary>
+        protected int PaddingBottom { get; set; }
+
+        /// <summary>
         ///     The items that are available to use for the drawables.
         ///     Essentially what the drawable represents.
         /// </summary>
@@ -92,7 +97,7 @@ namespace Quaver.Shared.Graphics.Containers
 
         public override void Destroy()
         {
-            Pool.ForEach(x => x.Destroy());
+            Pool?.ForEach(x => x?.Destroy());
             base.Destroy();
         }
 
@@ -125,7 +130,7 @@ namespace Quaver.Shared.Graphics.Containers
         {
             var count = usePoolCount ? Pool.Count : AvailableItems.Count;
 
-            var totalUserHeight = DrawableHeight * count + PaddingTop;
+            var totalUserHeight = DrawableHeight * count + PaddingTop + PaddingBottom;
 
             if (totalUserHeight > Height)
                 ContentContainer.Height = totalUserHeight;

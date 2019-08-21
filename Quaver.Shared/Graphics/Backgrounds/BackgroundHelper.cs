@@ -6,7 +6,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -16,10 +18,13 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Shaders;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Logging;
+using Wobble.Window;
 using Logger = Wobble.Logging.Logger;
 
 namespace Quaver.Shared.Graphics.Backgrounds
@@ -57,6 +62,20 @@ namespace Quaver.Shared.Graphics.Backgrounds
         private static CancellationTokenSource Source { get; set; }
 
         /// <summary>
+        ///     Banners to use throughout song select
+        /// </summary>
+        public static Dictionary<string, Texture2D> Banners { get; } = new Dictionary<string, Texture2D>();
+
+        /// <summary>
+        ///     A list of banners that are queued to be loaded on the load thread
+        /// </summary>
+        private static List<Mapset> MapsetBannersToLoad { get; } = new List<Mapset>();
+
+        /// <summary>
+        /// </summary>
+        private static Texture2D DefaultBanner => UserInterface.DefaultBanner;
+
+        /// <summary>
         ///     Event invoked when a new background has been loaded
         /// </summary>
         public static event EventHandler<BackgroundLoadedEventArgs> Loaded;
@@ -67,18 +86,28 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static event EventHandler<BackgroundBlurredEventArgs> Blurred;
 
         /// <summary>
+        ///     Event invoked when a new banner has loaded
+        /// </summary>
+        public static event EventHandler<BannerLoadedEventArgs> BannerLoaded;
+
+        /// <summary>
         ///     Initializes the background helper for the entire game.
         /// </summary>
         public static void Initialize()
         {
             Background = new BackgroundImage(UserInterface.MenuBackground, 0, false);
             Source = new CancellationTokenSource();
+
+            ThreadScheduler.Run(LoadBanners);
         }
 
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Update(GameTime gameTime) => Background?.Update(gameTime);
+        public static void Update(GameTime gameTime)
+        {
+            Background?.Update(gameTime);
+        }
 
         /// <summary>
         ///     Set per screen.
@@ -154,6 +183,93 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 Logger.Error(e, LogType.Runtime);
             }
         });
+
+        /// <summary>
+        ///     Loads all banners that are currently queued
+        /// </summary>
+        private static void LoadBanners()
+        {
+            while (true)
+            {
+                if (MapsetBannersToLoad.Count == 0)
+                    continue;
+
+                var bannersToRemove = new List<Mapset>();
+                for (var i = 0; i < MapsetBannersToLoad.Count; i++)
+                {
+                    var mapset = MapsetBannersToLoad[i];
+                    var path = MapManager.GetBackgroundPath(mapset.Maps.First());
+                    var mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
+
+                    // Default Banner
+                    if (mapTexture == DefaultBanner)
+                    {
+                        if (!Banners.ContainsKey(mapset.Directory))
+                            Banners.Add(mapset.Directory, mapTexture);
+
+                        BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, mapTexture));
+                        bannersToRemove.Add(mapset);
+                        continue;
+                    }
+
+                    // Mask the image and draw it to a RenderTarget
+                    GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+                    {
+                        var size = new ScalableVector2(421, 82);
+                        var scrollContainer = new ScrollContainer(size, size);
+
+                        var maskedSprite = new Sprite
+                        {
+                            Alignment = Alignment.MidCenter,
+                            // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
+                            Size = new ScalableVector2(1024, 576),
+                            // This y offset usually captures the best part of the image (such as faces or text)
+                            Y = 100,
+                            Image = mapTexture
+                        };
+
+                        scrollContainer.AddContainedDrawable(maskedSprite);
+
+                        // Only create a new RT if needed
+                        var (pixelWidth, pixelHeight) = scrollContainer.AbsoluteSize * WindowManager.ScreenScale;
+
+                        var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth,
+                            (int) pixelHeight, false,
+                            GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+                        GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
+                        GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+
+                        scrollContainer.Draw(new GameTime());
+                        GameBase.Game.SpriteBatch.End();
+
+                        GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+                        scrollContainer?.Destroy();
+                        maskedSprite?.Destroy();
+
+                        if (!Banners.ContainsKey(mapset.Directory))
+                            Banners.Add(mapset.Directory, renderTarget);
+
+                        BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, renderTarget));
+                    });
+
+                    bannersToRemove.Add(mapset);
+                }
+
+                for (var i = 0; i < bannersToRemove.Count; i++)
+                    MapsetBannersToLoad.Remove(bannersToRemove[i]);
+
+                Thread.Sleep(16);
+            }
+        }
+        /// <summary>
+        ///     Loads a background banner to use during song select
+        /// </summary>
+        /// <param name="mapset"></param>
+        public static void LoadBanner(Mapset mapset)
+        {
+            MapsetBannersToLoad.Add(mapset);
+        }
 
         /// <summary>
         ///     Fades the background brightness all the way to black
