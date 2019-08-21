@@ -23,20 +23,26 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
     {
         private Random RNG { get; }
 
+        protected SelectFilterPanel FilterPanel { get; }
+
+        protected TestMenuBorderHeader Header { get; }
+
+        protected TestMenuBorderFooter Footer { get; }
+
         public FilterPanelTestScreenView(FilterPanelTestScreen screen) : base(screen)
         {
             // ReSharper disable twice ObjectCreationAsStatement
-            var header = new TestMenuBorderHeader {Parent = Container};
-            new TestMenuBorderFooter
+            Header = new TestMenuBorderHeader {Parent = Container};
+            Footer = new TestMenuBorderFooter
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft
             };
 
-            new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery)
+            FilterPanel = new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery)
             {
                 Parent = Container,
-                Y = header.Height + header.ForegroundLine.Height
+                Y = Header.Height + Header.ForegroundLine.Height
             };
 
             RNG = new Random();
