@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -13,6 +14,8 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
@@ -21,19 +24,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
     {
         /// <summary>
         /// </summary>
-        private DrawableMapset Mapset { get; }
+        private DrawableMapset Mapset { get; set; }
 
         /// <summary>
         /// </summary>
-        private RenderTarget2D RenderTarget { get; set; }
+        private static Texture2D DefaultBanner => UserInterface.DefaultBanner;
+
+        /// <summary>
+        ///     The amount of time since a new banner load was requested
+        /// </summary>
+        private double TimeSinceLoadRequested { get; set; }
 
         /// <summary>
         /// </summary>
-        private Texture2D MapTexture { get; set; }
-
-        /// <summary>
-        /// </summary>
-        private Texture2D DefaultBanner => UserInterface.DefaultBanner;
+        public bool HasBannerLoaded { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -42,9 +46,51 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             Mapset = mapset;
 
-            Alpha = 0;
             Image = DefaultBanner;
-            LoadBackground();
+            BackgroundHelper.BannerLoaded += OnBannerLoaded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            TimeSinceLoadRequested += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (TimeSinceLoadRequested >= 250 && !HasBannerLoaded)
+            {
+                Alpha = 0;
+                BackgroundHelper.LoadBanner(Mapset.Item);
+                HasBannerLoaded = true;
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Updates the banner contents
+        /// </summary>
+        /// <param name="mapset"></param>
+        public void UpdateContent(DrawableMapset mapset)
+        {
+            Mapset = mapset;
+            Alpha = 0;
+            ClearAnimations();
+
+            if (BackgroundHelper.Banners.ContainsKey(Mapset.Item.Directory))
+            {
+                Logger.Debug($"SETTING background for: {Mapset.Item.Artist} - {Mapset.Item.Directory}", LogType.Runtime, false);
+
+                Image = BackgroundHelper.Banners[Mapset.Item.Directory];
+                Alpha = Mapset.IsSelected ? 1 : 0.45f;
+
+                HasBannerLoaded = true;
+                return;
+            }
+
+            HasBannerLoaded = false;
+            TimeSinceLoadRequested = 0;
         }
 
         /// <inheritdoc />
@@ -52,79 +98,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public override void Destroy()
         {
-            DisposeTextures();
+            BackgroundHelper.BannerLoaded -= OnBannerLoaded;
+
             base.Destroy();
-        }
-
-        /// <summary>
-        ///     Loads the map's background/banner under a separate thread
-        ///
-        /// </summary>
-        public void LoadBackground() => ThreadScheduler.Run(() =>
-        {
-            DisposeTextures();
-
-            // TODO: Banner Support
-            var path = MapManager.GetBackgroundPath(Mapset.Item.Maps.First());
-            MapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
-
-            // Default Banner
-            if (MapTexture == DefaultBanner)
-            {
-                Image = MapTexture;
-                FadeIn();
-                return;
-            }
-
-            // Mask the image and draw it to a RenderTarget
-            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
-            {
-                var scrollContainer = new ScrollContainer(new ScalableVector2(Width, Height),
-                    new ScalableVector2(Width, Height));
-
-                var maskedSprite = new Sprite()
-                {
-                    Alignment = Alignment.MidCenter,
-                    // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
-                    Size = new ScalableVector2(1024, 576),
-                    // This y offset usually captures the best part of the image (such as faces or text)
-                    Y = 100,
-                    Image = MapTexture
-                };
-
-                scrollContainer.AddContainedDrawable(maskedSprite);
-
-                var (pixelWidth, pixelHeight) = scrollContainer.AbsoluteSize * WindowManager.ScreenScale;
-
-                RenderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth, (int) pixelHeight, false,
-                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-                GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
-                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
-
-                scrollContainer.Draw(new GameTime());
-                GameBase.Game.SpriteBatch.End();
-
-                GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-                scrollContainer?.Destroy();
-                maskedSprite?.Destroy();
-
-                Image = RenderTarget;
-
-                FadeIn();
-            });
-        });
-
-        /// <summary>
-        ///     Disposes of the map textures
-        /// </summary>
-        public void DisposeTextures()
-        {
-            if (MapTexture != null && MapTexture != DefaultBanner)
-                MapTexture?.Dispose();
-
-
-            RenderTarget?.Dispose();
         }
 
         /// <summary>
@@ -134,7 +110,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             Alpha = 0;
             ClearAnimations();
-            FadeTo(1, Easing.OutQuint, 1000);
+
+            var alpha = Mapset.IsSelected ? 1 : 0.45f;
+            FadeTo(alpha, Easing.OutQuint, 700);
+        }
+
+        /// <summary>
+        ///     Called when a new banner has loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBannerLoaded(object sender, BannerLoadedEventArgs e)
+        {
+            if (e.Mapset.Directory != Mapset.Item.Directory)
+                return;
+
+            Alpha = 0;
+            Image = e.Banner;
+            FadeIn();
+            HasBannerLoaded = true;
         }
     }
 }
