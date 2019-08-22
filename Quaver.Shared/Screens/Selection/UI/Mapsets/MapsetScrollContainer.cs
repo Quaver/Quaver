@@ -114,7 +114,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void HandleInput()
         {
-            // Advance to next map
+            if (DialogManager.Dialogs.Count != 0 || KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
             {
                 if (SelectedMapsetIndex + 1 >= AvailableMapsets.Value.Count)
@@ -125,7 +128,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 ScrollToMapset();
             }
-            // Go back to previous map
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
             {
                 if (SelectedMapsetIndex - 1 < 0)
@@ -168,7 +170,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                     AvailableItems = e.Value;
 
-                    // RESET POOL STARTING INDEX
                     SelectedMapsetIndex = e.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
                     if (SelectedMapsetIndex == -1)
