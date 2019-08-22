@@ -115,7 +115,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public void UpdateContent(Mapset item, int index)
         {
             Title.Text = item.Title.ToUpper();
+
+            // Give title an elipsis
+            if (Title.Width > 500 && Title.Text.Length > 33)
+            {
+                Title.Text = Title.Text.Substring(0, 33);
+                Title.Text += "...";
+            }
+
             Artist.Text = $"{item.Artist}";
+
+            if (Artist.Width > 500 && Artist.Text.Length > 40)
+            {
+                Artist.Text = Artist.Text.Substring(0, 39);
+                Artist.Text += "...";
+            }
+
             Creator.Text = $"{item.Creator}";
 
             DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
@@ -416,7 +431,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 container.SelectedMapsetIndex = ParentMapset.Index;
             }
 
-            
             // Mapset is already selected, so go play the current map.
             if (ParentMapset.IsSelected)
             {
