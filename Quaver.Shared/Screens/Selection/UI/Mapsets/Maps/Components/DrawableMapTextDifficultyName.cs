@@ -1,7 +1,7 @@
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
@@ -12,12 +12,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
     {
         /// <summary>
         /// </summary>
-        private DrawableMap Map { get; }
+        private Map Map { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="map"></param>
-        public DrawableMapTextDifficultyName(DrawableMap map) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+        public DrawableMapTextDifficultyName(Map map) : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
         {
             Map = map;
             ModManager.ModsChanged += OnModsChanged;
@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
-            => Tint = ColorHelper.DifficultyToColor((float) Map.Map.DifficultyFromMods(ModManager.Mods));
+            => Tint = ColorHelper.DifficultyToColor((float) Map.DifficultyFromMods(ModManager.Mods));
 
         /// <inheritdoc />
         ///  <summary>

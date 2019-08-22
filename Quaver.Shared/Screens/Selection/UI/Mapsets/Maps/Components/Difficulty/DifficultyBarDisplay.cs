@@ -1,7 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;

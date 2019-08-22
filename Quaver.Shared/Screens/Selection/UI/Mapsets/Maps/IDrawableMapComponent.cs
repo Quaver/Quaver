@@ -1,4 +1,4 @@
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 {
     public interface IDrawableMapComponent
     {

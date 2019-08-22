@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
