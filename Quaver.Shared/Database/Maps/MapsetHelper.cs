@@ -161,7 +161,7 @@ namespace Quaver.Shared.Database.Maps
         /// <param name="mapsets"></param>
         /// <returns></returns>
         private static List<Mapset> OrderMapsetsByBpm(List<Mapset> mapsets)
-            => mapsets.OrderByDescending(x => x.Maps.First().Bpm).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+            => mapsets.OrderBy(x => x.Maps.First().Bpm).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
         ///     Orders the map's mapsets by date added
