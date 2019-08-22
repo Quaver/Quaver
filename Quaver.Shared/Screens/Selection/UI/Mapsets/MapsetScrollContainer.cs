@@ -214,7 +214,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void SnapToInitialMapset()
         {
-            ContentContainer.Y = SelectedMapsetIndex < 3 ? 0 : (-SelectedMapsetIndex + 5) * DrawableMapset.MapsetHeight + (-SelectedMapsetIndex - 3);
+            ContentContainer.Y = SelectedMapsetIndex < 7 ? 0 : (-SelectedMapsetIndex + 5) * DrawableMapset.MapsetHeight + (-SelectedMapsetIndex - 3);
 
             ContentContainer.Animations.Clear();
             PreviousContentContainerY = ContentContainer.Y;
