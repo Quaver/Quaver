@@ -159,7 +159,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Size = Size,
                 Alpha = 0,
                 Alignment = Alignment.MidCenter,
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Depth = 1
             };
 
             Button.Clicked += (sender, args) => OnMapsetClicked();
