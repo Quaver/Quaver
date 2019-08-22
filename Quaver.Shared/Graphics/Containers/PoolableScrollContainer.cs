@@ -48,13 +48,13 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    The index at which the object pool begins, so we'll be aware of where to scroll.
         /// </summary>
-        public int PoolStartingIndex { get; private set; }
+        public int PoolStartingIndex { get; protected set; }
 
         /// <summary>
         ///     Keeps track of the Y position of the content container in the previous frame
         ///     So we can know how to shift the pool.
         /// </summary>
-        private float PreviousContentContainerY { get; set; }
+        protected float PreviousContentContainerY { get; set; }
 
         /// <summary>
         ///    Quick way to get the drawable's height.
@@ -112,7 +112,7 @@ namespace Quaver.Shared.Graphics.Containers
             // Create enough objects to use for the pool and contain them inside the drawable.
             for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
             {
-                var drawable = AddObject(i);
+                var drawable = AddObject(PoolStartingIndex + i);
 
                 if (i >= AvailableItems.Count)
                     continue;
@@ -150,6 +150,9 @@ namespace Quaver.Shared.Graphics.Containers
                     if (PoolStartingIndex > AvailableItems.Count - 1 || PoolStartingIndex + PoolSize > AvailableItems.Count - 1)
                         return;
 
+                    if (Pool.Count == 0)
+                        return;
+
                     var firstDrawable = Pool.First();
 
                     // Check if the object is in the rect of the ScrollContainer.
@@ -170,6 +173,9 @@ namespace Quaver.Shared.Graphics.Containers
                     break;
                 case Direction.Backward:
                     if (PoolStartingIndex - 1 > AvailableItems.Count - 1 || PoolStartingIndex - 1 < 0)
+                        return;
+
+                    if (Pool.Count == 0)
                         return;
 
                     var lastDrawable = Pool.Last();

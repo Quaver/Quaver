@@ -241,6 +241,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
             ItemContainer.ClearAnimations();
             ItemContainer.ChangeHeightTo((int) Height * Options.Count, Easing.OutQuint, time);
+
+            Items.ForEach(x => x.IsClickable = true);
         }
 
         /// <summary>
@@ -261,6 +263,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
             ItemContainer.ClearAnimations();
             ItemContainer.ChangeHeightTo(0, Easing.OutQuint, time);
+
+            Items.ForEach(x => x.IsClickable = false);
         }
 
         /// <summary>
