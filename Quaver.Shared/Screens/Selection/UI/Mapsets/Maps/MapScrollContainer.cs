@@ -95,7 +95,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
             if (e.Value.Mapset == e.OldValue.Mapset)
+            {
+                ScrollToSelected();
                 return;
+            }
 
             DestroyAndClearPool();
 
