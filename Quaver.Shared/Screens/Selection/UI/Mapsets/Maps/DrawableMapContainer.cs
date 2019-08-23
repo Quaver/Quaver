@@ -277,6 +277,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         /// </summary>
         private void OnMapClicked()
         {
+            if (ParentMap.Container != null)
+            {
+                var container = (MapScrollContainer) ParentMap.Container;
+                container.SelectedIndex = ParentMap.Index;
+            }
+
             // Map is already selected. Second click should be to play the map
             if (ParentMap.IsSelected)
             {
