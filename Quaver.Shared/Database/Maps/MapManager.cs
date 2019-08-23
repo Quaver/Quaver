@@ -6,6 +6,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
@@ -66,6 +67,17 @@ namespace Quaver.Shared.Database.Maps
                 default:
                     return "";
             }
+        }
+
+        /// <summary>
+        ///     Returns the path of the banner file provided a mapset
+        /// </summary>
+        /// <param name="mapset"></param>
+        /// <returns></returns>
+        public static string GetBannerPath(Mapset mapset)
+        {
+            var map = mapset.Maps.First();
+            return (ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BannerPath).Replace("\\", "/");
         }
 
         /// <summary>

@@ -39,6 +39,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public bool HasBannerLoaded { get; private set; }
 
+        /// <summary>
+        /// </summary>
         public static float DeselectedAlpha { get; } = 0.75f;
 
         /// <summary>

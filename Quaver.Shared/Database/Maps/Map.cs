@@ -100,6 +100,11 @@ namespace Quaver.Shared.Database.Maps
         public string BackgroundPath { get; set; }
 
         /// <summary>
+        ///     The absolute path of the map's banner
+        /// </summary>
+        public string BannerPath { get; set; }
+
+        /// <summary>
         ///     The absolute path of the map's audio.
         /// </summary>
         public string AudioPath { get; set; }
@@ -265,6 +270,7 @@ namespace Quaver.Shared.Database.Maps
                 AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
+                BannerPath = qua.BannerFile,
                 Description = qua.Description,
                 MapId = qua.MapId,
                 MapSetId = qua.MapSetId,
