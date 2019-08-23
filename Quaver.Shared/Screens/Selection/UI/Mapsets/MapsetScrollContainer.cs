@@ -18,59 +18,32 @@ using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class MapsetScrollContainer : PoolableScrollContainer<Mapset>
+    public class MapsetScrollContainer : SongSelectContainer<Mapset>
     {
+        public override SelectScrollContainerType Type { get; } = SelectScrollContainerType.Mapsets;
+
         /// <summary>
         /// </summary>
         private Bindable<List<Mapset>> AvailableMapsets { get; }
 
         /// <summary>
+        ///     The currently active container in song select
         /// </summary>
-        private Sprite ScrollbarBackground { get; set; }
-
-        /// <summary>
-        ///     The index of the currently selected map
-        /// </summary>
-        public int SelectedMapsetIndex { get; set; }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="availableMapsets"></param>
-        public MapsetScrollContainer(Bindable<List<Mapset>> availableMapsets) : base(availableMapsets.Value, 12, 0,
-            new ScalableVector2(DrawableMapset.WIDTH, 880), new ScalableVector2(DrawableMapset.WIDTH, 1000))
-        {
-            AvailableMapsets = availableMapsets;
-            PaddingBottom = 10;
-
-            InputEnabled = true;
-            EasingType = Easing.OutQuint;
-            TimeToCompleteScroll = 1200;
-            ScrollSpeed = 320;
-
-            Alpha = 0;
-            CreateScrollbar();
-
-            SetPoolStartingIndex();
-            CreatePool();
-
-            MapManager.Selected.ValueChanged += OnMapChanged;
-            AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
-        }
+        public Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
+        /// <param name="availableMapsets"></param>
+        /// <param name="activeScrollContainer"></param>
+        public MapsetScrollContainer(Bindable<List<Mapset>> availableMapsets, Bindable<SelectScrollContainerType> activeScrollContainer)
+            : base(availableMapsets.Value, 12)
         {
-            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                           && DialogManager.Dialogs.Count == 0
-                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
-                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+            AvailableMapsets = availableMapsets;
+            ActiveScrollContainer = activeScrollContainer;
 
-            HandleInput();
-
-            base.Update(gameTime);
+            MapManager.Selected.ValueChanged += OnMapChanged;
+            AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
         }
 
         /// <summary>
@@ -82,25 +55,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             base.Destroy();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        private void CreateScrollbar()
-        {
-            ScrollbarBackground = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                X = 30,
-                Size = new ScalableVector2(4, Height - 50),
-                Tint = ColorHelper.HexToColor("#474747")
-            };
-
-            MinScrollBarY = -805 - (int) Scrollbar.Height / 2;
-            Scrollbar.Width = ScrollbarBackground.Width;
-            Scrollbar.Parent = ScrollbarBackground;
-            Scrollbar.Alignment = Alignment.BotCenter;
-            Scrollbar.Tint = Color.White;
-        }
+        /// <returns></returns>
+        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight + (-SelectedIndex - 3);
 
         /// <inheritdoc />
         /// <summary>
@@ -110,49 +69,43 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <returns></returns>
         protected override PoolableSprite<Mapset> CreateObject(Mapset item, int index) => new DrawableMapset(this, item, index);
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        private void HandleInput()
+        protected override void HandleInput(GameTime gameTime)
         {
-            if (DialogManager.Dialogs.Count != 0 || KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
-                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+            if (ActiveScrollContainer.Value != SelectScrollContainerType.Mapsets)
                 return;
 
+            // Move to the next mapset
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
             {
-                if (SelectedMapsetIndex + 1 >= AvailableMapsets.Value.Count)
+                if (SelectedIndex + 1 >= AvailableMapsets.Value.Count)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedMapsetIndex + 1].Maps.First();
-                SelectedMapsetIndex++;
+                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex + 1].Maps.First();
+                SelectedIndex++;
 
-                ScrollToMapset();
+                ScrollToSelected();
             }
+            // Move to the previous mapset
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
             {
-                if (SelectedMapsetIndex - 1 < 0)
+                if (SelectedIndex - 1 < 0)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedMapsetIndex - 1].Maps.First();
+                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex - 1].Maps.First();
 
-                SelectedMapsetIndex--;
-                ScrollToMapset();
+                SelectedIndex--;
+                ScrollToSelected();
             }
         }
 
         /// <summary>
         /// </summary>
-        private void ScrollToMapset()
-        {
-            if (SelectedMapsetIndex < 3)
-                return;
-
-            // Scroll the the place where the map is.
-            var targetScroll = (-SelectedMapsetIndex + 5) * DrawableMapset.MapsetHeight + (-SelectedMapsetIndex - 3);
-            ScrollTo(targetScroll, 1800);
-        }
-
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => ScrollToMapset();
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => ScrollToSelected();
 
         /// <summary>
         ///     Called when the list of available maps has changed
@@ -165,62 +118,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 lock (Pool)
                 {
-                    Pool.ForEach(x => x.Destroy());
-                    Pool.Clear();
+                    DestroyAndClearPool();
 
                     AvailableItems = e.Value;
 
-                    SelectedMapsetIndex = e.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+                    SelectedIndex = e.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-                    if (SelectedMapsetIndex == -1)
-                        SelectedMapsetIndex = 0;
+                    if (SelectedIndex == -1)
+                        SelectedIndex = 0;
 
-                    SetPoolStartingIndex();
+                    // Reset the starting index so we can be aware of the mapsets that are needed
+                    PoolStartingIndex = GetPoolStartingIndex();
 
+                    // Recreate the object pool
                     CreatePool();
+                    PositionAndContainPoolObjects();
 
-                    // Make sure the items are at the correct y position and inside the container
-                    for (var i = 0; i < Pool.Count; i++)
-                    {
-                        Pool[i].Y = (PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop;
-                        AddContainedDrawable(Pool[i]);
-                    }
-
-                    SnapToInitialMapset();
+                    // Snap to it immediately
+                    SnapToSelected();
                 }
             }, 250);
-        }
-
-        /// <summary>
-        ///    Based on the currently selected mapset, calculate starting index of which to update and draw
-        ///    the mapset buttons in the container.
-        /// </summary>
-        private void SetPoolStartingIndex()
-        {
-            const int maxMapsetsShown = 12;
-
-            if (SelectedMapsetIndex <= maxMapsetsShown / 2 + 1)
-                PoolStartingIndex = 0;
-            else if (SelectedMapsetIndex + maxMapsetsShown > AvailableMapsets.Value.Count)
-                PoolStartingIndex = AvailableMapsets.Value.Count - PoolSize;
-            else
-                PoolStartingIndex = SelectedMapsetIndex - maxMapsetsShown / 2 + 1;
-
-            if (PoolStartingIndex < 0)
-                PoolStartingIndex = 0;
-        }
-
-        /// <summary>
-        ///     Snaps the scroll container to the initial mapset.
-        /// </summary>
-        private void SnapToInitialMapset()
-        {
-            ContentContainer.Y = SelectedMapsetIndex < 7 ? 0 : (-SelectedMapsetIndex + 5) * DrawableMapset.MapsetHeight + (-SelectedMapsetIndex - 3);
-
-            ContentContainer.Animations.Clear();
-            PreviousContentContainerY = ContentContainer.Y;
-            TargetY = PreviousContentContainerY;
-            PreviousTargetY = PreviousContentContainerY;
         }
     }
 }

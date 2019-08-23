@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.Tests.MapsetScrollContainers
         {
             new SelectJukebox() {Parent = Container};
 
-            ScrollContainer  = new MapsetScrollContainer(screen.AvailableMapsets)
+            ScrollContainer  = new MapsetScrollContainer(screen.AvailableMapsets, null)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -54,9 +54,9 @@ namespace Quaver.Shared.Screens.Tests.MapsetScrollContainers
         private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
         {
             ScrollContainer.ClearAnimations();
-            ScrollContainer.MoveToX(ScrollContainer.Width + 50, Easing.OutQuint, 450);
+            ScrollContainer.MoveToX(ScrollContainer.Width + 50, Easing.OutQuint, 550);
             ScrollContainer.Wait(50);
-            ScrollContainer.MoveToX(-50, Easing.OutQuint, 450);
+            ScrollContainer.MoveToX(-50, Easing.OutQuint, 600);
         }
 
         public override void Draw(GameTime gameTime)
