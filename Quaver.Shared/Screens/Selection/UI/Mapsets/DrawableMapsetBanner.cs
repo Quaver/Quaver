@@ -39,6 +39,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public bool HasBannerLoaded { get; private set; }
 
+        public static float DeselectedAlpha { get; } = 0.75f;
+
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
@@ -80,10 +82,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (BackgroundHelper.Banners.ContainsKey(Mapset.Item.Directory))
             {
-                Logger.Debug($"SETTING background for: {Mapset.Item.Artist} - {Mapset.Item.Directory}", LogType.Runtime, false);
-
                 Image = BackgroundHelper.Banners[Mapset.Item.Directory];
-                Alpha = Mapset.IsSelected ? 1 : 0.45f;
+                Alpha = Mapset.IsSelected ? 1 : DeselectedAlpha;
 
                 HasBannerLoaded = true;
                 return;
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Alpha = 0;
             ClearAnimations();
 
-            var alpha = Mapset.IsSelected ? 1 : 0.45f;
+            var alpha = Mapset.IsSelected ? 1 : DeselectedAlpha;
             FadeTo(alpha, Easing.OutQuint, 700);
         }
 
