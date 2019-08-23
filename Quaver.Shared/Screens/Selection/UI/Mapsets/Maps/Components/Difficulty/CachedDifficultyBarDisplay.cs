@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
     {
         /// <summary>
         /// </summary>
-        private DifficultyBarDisplay DifficultyBar { get; }
+        public DifficultyBarDisplay DifficultyBar { get; }
 
         /// <summary>
         /// </summary>
@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         /// <summary>
         ///     Displays the cached version of <see cref="DifficultyBar"/>
         /// </summary>
-        private Sprite CachedSprite { get; }
+        public Sprite CachedSprite { get; }
 
         /// <summary>
         ///     The RenderTarget that draws the bar for <see cref="CachedSprite"/> to use
@@ -56,7 +56,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
                 Parent = Background,
                 Size = DifficultyBar.Size,
                 Alpha = 0,
-                Visible = false
+                Visible = false,
+                UsePreviousSpriteBatchOptions = true
             };
 
             var (pixelWidth, pixelHeight) = AbsoluteSize * WindowManager.ScreenScale;
@@ -100,14 +101,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         {
             GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
-                GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
-                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+                try
+                {
+                    if (RenderTarget.IsDisposed)
+                        return;
 
-                DifficultyBar.Draw(new GameTime());
-                GameBase.Game.SpriteBatch.End();
+                    GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
+                    GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
-                GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-                CachedSprite.Image = RenderTarget;
+                    DifficultyBar.Draw(new GameTime());
+                    GameBase.Game.SpriteBatch.End();
+
+                    GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+                    CachedSprite.Image = RenderTarget;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
             });
         }
 
