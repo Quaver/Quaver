@@ -195,13 +195,22 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     continue;
 
                 var bannersToRemove = new List<Mapset>();
+                
                 for (var i = 0; i < MapsetBannersToLoad.Count; i++)
                 {
                     var mapset = MapsetBannersToLoad[i];
-                    var path = MapManager.GetBackgroundPath(mapset.Maps.First());
+
+                    // Give custom banners first priority
+                    var path = MapManager.GetBannerPath(mapset);
+
+                    // Give map backgrounds second priority
+                    if (!File.Exists(path))
+                        path = MapManager.GetBackgroundPath(mapset.Maps.First());
+
+                    // Give the default banner last priority
                     var mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
 
-                    // Default Banner
+                    // The banner is the default, so there's no need to cache it to a RenderTarget
                     if (mapTexture == DefaultBanner)
                     {
                         if (!Banners.ContainsKey(mapset.Directory))

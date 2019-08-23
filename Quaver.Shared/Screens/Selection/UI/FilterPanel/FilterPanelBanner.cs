@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         ///     The current map's background
         /// </summary>
-        private BackgroundImage Background { get; set; }
+        public BackgroundImage Background { get; private set; }
 
         /// <summary>
         ///     A gradient overlay layer of the banner
@@ -44,7 +44,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             CreateGradientSprite();
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
-            MapManager.Selected.ValueChanged += OnMapChanged;
         }
 
         /// <inheritdoc />
@@ -53,10 +52,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         public override void Destroy()
         {
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
-
-            // ReSharper disable once DelegateSubtraction
-            MapManager.Selected.ValueChanged -= OnMapChanged;
-
             base.Destroy();
         }
 
@@ -136,13 +131,5 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             Background.Image = e.Texture;
             FadeIn();
         }
-
-        /// <summary>
-        ///     Called when the selected map has changed.
-        ///         * This will fade the background completely
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => FadeToBlack();
     }
 }

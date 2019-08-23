@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="index"></param>
         public void UpdateContent(Mapset item, int index)
         {
-            Title.Text = item.Title.ToUpper();
+            Title.Text = item.Title;
 
             // Give title an elipsis
             if (Title.Width > 500 && Title.Text.Length > 33)
@@ -386,7 +386,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             Image = UserInterface.DeselectedMapset;
 
-            var fade = 0.75f;
+            var fade = 0.85f;
             var time = 200;
 
             Title.ClearAnimations();
@@ -410,7 +410,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (Banner.HasBannerLoaded)
             {
                 Banner.ClearAnimations();
-                Banner.FadeTo(0.45f, Easing.Linear, time);
+                Banner.FadeTo(DrawableMapsetBanner.DeselectedAlpha, Easing.Linear, time);
             }
 
             ClearAnimations();
@@ -429,7 +429,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (ParentMapset.Container != null)
             {
                 var container = (MapsetScrollContainer) ParentMapset.Container;
-                container.SelectedMapsetIndex = ParentMapset.Index;
+                container.SelectedIndex = ParentMapset.Index;
+
+                // If a mapset is clicked, then we want to take the user to the maps container
+                if (container.ActiveScrollContainer != null && MapManager.Selected.Value == ParentMapset.Item.Maps.First())
+                    container.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
             }
 
             // Mapset is already selected, so go play the current map.

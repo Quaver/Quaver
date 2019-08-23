@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Metadata;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -12,7 +13,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
     {
         /// <summary>
         /// </summary>
-        private Map Map { get; }
+        public Map Map { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -80,7 +81,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         /// <summary>
         ///     Performs a sliding animation to the difficulty value
         /// </summary>
-        public void SlideToDifficultyValue()
+        public void SlideToDifficultyValue(bool instant = false)
         {
             var diff = Map.DifficultyFromMods(ModManager.Mods);
 
@@ -90,10 +91,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
 
             var width = (int) (Width * percent);
 
+            Container.ClearAnimations();
+
             if (width == (int) Container.Width)
                 return;
 
-            Container.ClearAnimations();
             Container.ChangeWidthTo(width, Easing.OutQuint, 2000);
         }
 
@@ -103,5 +105,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => SlideToDifficultyValue();
+
+        /// <summary>
+        ///     Changes the map this difficulty display represents
+        /// </summary>
+        /// <param name="map"></param>
+        public void ChangeMap(Map map)
+        {
+            Map = map;
+            SlideToDifficultyValue();
+        }
     }
 }
