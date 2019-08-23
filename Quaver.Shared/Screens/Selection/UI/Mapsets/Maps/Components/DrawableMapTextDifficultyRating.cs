@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
     {
         /// <summary>
         /// </summary>
-        private Map Map { get; }
+        private Map Map { get; set; }
 
         /// <summary>
         /// </summary>
@@ -87,10 +87,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (MapManager.Selected.Value == Map)
-                Y = -18;
-            else
-                Y = 0;
+        }
+
+        /// <summary>
+        ///     Changes the associated map with the text
+        /// </summary>
+        /// <param name="map"></param>
+        public void ChangeMap(Map map)
+        {
+            Map = map;
+            UpdateText();
         }
     }
 }
