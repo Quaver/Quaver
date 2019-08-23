@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="index"></param>
         public void UpdateContent(Mapset item, int index)
         {
-            Title.Text = item.Title.ToUpper();
+            Title.Text = item.Title;
 
             // Give title an elipsis
             if (Title.Width > 500 && Title.Text.Length > 33)
