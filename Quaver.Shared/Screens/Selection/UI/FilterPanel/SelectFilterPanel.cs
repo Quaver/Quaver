@@ -6,6 +6,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
@@ -244,9 +245,20 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
+            ThreadScheduler.Run(() =>
+            {
+                lock (Banner)
+                lock (Banner.Background.Image)
+                {
+                    // This has to be multi-threaded because MapManager.GetBackgroundPath
+                    // parses osu! maps to get the path of BG. It doesn't exist in the osu!db
+                    if (MapManager.GetBackgroundPath(e.OldValue) == MapManager.GetBackgroundPath(e.Value))
+                        return;
 
-            if (MapManager.GetBackgroundPath(e.OldValue) != MapManager.GetBackgroundPath(e.Value))
-                BackgroundHelper.Load(e.Value);
+                    Banner.FadeToBlack();
+                    BackgroundHelper.Load(e.Value);
+                }
+            });
         }
     }
 }
