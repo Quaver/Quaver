@@ -7,26 +7,28 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Quaver.Shared.Screens.Tests.FilterPanel;
+using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Input;
 using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Tests.MapScrollContainers
+namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
 {
-    public class TestScreenMapScrollContainerView : FilterPanelTestScreenView
+    public class TestLeaderboardWithMapsScreenView : FilterPanelTestScreenView
     {
         private MapsetScrollContainer MapsetContainer { get; }
 
         private MapScrollContainer MapContainer { get; }
 
         private Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
-
-        public TestScreenMapScrollContainerView(FilterPanelTestScreen screen) : base(screen)
+        
+        public TestLeaderboardWithMapsScreenView(FilterPanelTestScreen screen) : base(screen)
         {
             var visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 6)
             {
@@ -74,8 +76,16 @@ namespace Quaver.Shared.Screens.Tests.MapScrollContainers
             screen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
 
             ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChanged;
+            
+            new LeaderboardContainer()
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = 50,
+                Y = FilterPanel.Y + FilterPanel.Height + 24
+            };
         }
-
+        
         public override void Update(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
@@ -92,7 +102,7 @@ namespace Quaver.Shared.Screens.Tests.MapScrollContainers
 
             base.Update(gameTime);
         }
-
+        
         public override void Destroy()
         {
             var screen = (TestScreenMapScrollContainer) Screen;

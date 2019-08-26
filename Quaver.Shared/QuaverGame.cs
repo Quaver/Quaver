@@ -44,6 +44,8 @@ using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
 using Quaver.Shared.Screens.Tests.Dropdowns;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
+using Quaver.Shared.Screens.Tests.Leaderboards;
+using Quaver.Shared.Screens.Tests.LeaderboardWithMaps;
 using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
 using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Quaver.Shared.Skinning;
@@ -139,7 +141,9 @@ namespace Quaver.Shared
             {"DifficultyBarDisplay", typeof(TestScreenDifficultyBar)},
             {"MapsetScrollContainer", typeof(TestScreenMapsetScrollContainer)},
             {"DrawableMap", typeof(TestDrawableMapScreen)},
-            {"MapScrollContainer", typeof(TestScreenMapScrollContainer)}
+            {"MapScrollContainer", typeof(TestScreenMapScrollContainer)},
+            {"Leaderboard", typeof(TestLeaderboardScreen)},
+            {"Leaderboard + Maps", typeof(TestLeaderboardWithMapsScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
