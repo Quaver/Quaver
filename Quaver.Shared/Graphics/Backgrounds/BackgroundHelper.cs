@@ -140,17 +140,17 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// </summary>
         public static void Load(Map map) => ThreadScheduler.Run(async () =>
         {
-            Source.Cancel();
-            Source.Dispose();
-            Source = new CancellationTokenSource();
-
-            Map = map;
-            var token = Source.Token;
-
-            token.ThrowIfCancellationRequested();
-
             try
             {
+                Source.Cancel();
+                Source.Dispose();
+                Source = new CancellationTokenSource();
+
+                Map = map;
+                var token = Source.Token;
+
+                token.ThrowIfCancellationRequested();
+
                 var oldRawTexture = RawTexture;
                 var oldBlurredTexture = BlurredTexture;
 
@@ -195,7 +195,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     continue;
 
                 var bannersToRemove = new List<Mapset>();
-                
+
                 for (var i = 0; i < MapsetBannersToLoad.Count; i++)
                 {
                     var mapset = MapsetBannersToLoad[i];
