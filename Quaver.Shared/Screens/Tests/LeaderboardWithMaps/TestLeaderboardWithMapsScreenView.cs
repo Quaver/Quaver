@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
@@ -13,6 +15,7 @@ using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Input;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
@@ -81,6 +84,23 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
                 X = 50,
                 Y = FilterPanel.Y + FilterPanel.Height + 24
             };
+        }
+        
+        public override void Update(GameTime gameTime)
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            {
+                if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+            {
+                if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets)
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+            }
+
+            base.Update(gameTime);
         }
         
         public override void Destroy()
