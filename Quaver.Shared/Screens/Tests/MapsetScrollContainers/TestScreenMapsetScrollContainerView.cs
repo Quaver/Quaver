@@ -3,6 +3,7 @@ using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -11,6 +12,7 @@ using Wobble.Bindables;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Window;
 using Alignment = Wobble.Graphics.Alignment;
 
 namespace Quaver.Shared.Screens.Tests.MapsetScrollContainers
