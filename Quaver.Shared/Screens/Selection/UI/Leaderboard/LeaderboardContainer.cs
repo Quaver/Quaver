@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.Local:
                     return new ScoreFetcherLocal().Fetch(map);
                 case LeaderboardType.Global:
-                    return new ScoreFetcherLocal().Fetch(map);
+                    return new ScoreFetcherGlobal().Fetch(map);
                 case LeaderboardType.Mods:
                     return new ScoreFetcherLocal().Fetch(map);
                 case LeaderboardType.Country:
