@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 {
                     // The map isn't ranked, but the user is a donator, so they can access leaderboards on all maps
                     if (map.RankedStatus != RankedStatus.Ranked && isDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
-                        StatusText.Text = "No scores. Scores on this map will be unranked!".ToUpper();
+                        StatusText.Text = "Scores on this map will be unranked!".ToUpper();
                     else if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                     {
                         switch (map.RankedStatus)
