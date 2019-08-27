@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
@@ -79,6 +81,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChanged;
 
             ModManager.ModsChanged += OnModsChanged;
+            OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
 
             FetchScores();
         }
@@ -100,6 +103,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             }
 
             ModManager.ModsChanged -= OnModsChanged;
+
+            // ReSharper disable once DelegateSubtraction
+            OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
 
             base.Destroy();
         }
@@ -189,9 +195,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.Global:
                     return new ScoreFetcherGlobal().Fetch(map);
                 case LeaderboardType.Mods:
-                    return new ScoreFetcherLocal().Fetch(map);
+                    return new ScoreFetcherMods().Fetch(map);
                 case LeaderboardType.Country:
-                    return new ScoreFetcherLocal().Fetch(map);
+                    return new ScoreFetcherCountry().Fetch(map);
                 default:
                     return new FetchedScoreStore();
             }
@@ -258,5 +264,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             if (x is ILoadable loadable)
                 loadable.StopLoading();
         });
+
+        /// <summary>
+        ///     Whenever the user connects to the server in song select, it will automatically
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+        {
+            if (e.Value != ConnectionStatus.Connected || ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
+                return;
+
+            FetchScores();
+        }
     }
 }
