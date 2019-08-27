@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         public LeaderboardContainer()
         {
-            Size = new ScalableVector2(555, 838);
+            Size = new ScalableVector2(556, 838);
             Alpha = 0f;
 
             FetchScoreTask = new TaskHandler<Map, FetchedScoreStore>(FetchScores);
