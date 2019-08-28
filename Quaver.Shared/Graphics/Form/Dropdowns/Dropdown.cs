@@ -217,8 +217,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 var item = new DropdownItem(this, i, i == Options.Count - 1 ? UserInterface.DropdownBottom : null)
                 {
                     Y = i * Height,
+                    IsClickable = false
                 };
 
+                Items.Add(item);
                 ItemContainer.AddContainedDrawable(item);
             }
         }
