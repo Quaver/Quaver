@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
@@ -16,7 +17,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             new ScalableVector2(125, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
-
         }
 
         /// <summary>

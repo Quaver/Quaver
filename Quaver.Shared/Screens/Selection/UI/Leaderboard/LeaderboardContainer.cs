@@ -38,9 +38,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         private LeaderboardTypeDropdown TypeDropdown { get; set; }
 
         /// <summary>
+        ///     The background for <see cref="ScoresContainer"/>
+        /// </summary>
+        public Sprite ScoresContainerBackground { get; private set; }
+
+        /// <summary>
         ///     Displays the scores of the leaderboard
         /// </summary>
-        private LeaderboardScoresContainer ScoresContainer { get; set; }
+        public LeaderboardScoresContainer ScoresContainer { get; set; }
 
         /// <summary>
         ///     A header above the user's personal best score
@@ -61,7 +66,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         public LeaderboardContainer()
         {
-            Size = new ScalableVector2(556, 838);
+            Size = new ScalableVector2(564, 838);
             Alpha = 0f;
 
             FetchScoreTask = new TaskHandler<Map, FetchedScoreStore>(FetchScores);
@@ -73,7 +78,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             CreatePersonalBestHeader();
             CreatePersonalBestScore();
 
-            ListHelper.Swap(Children, Children.IndexOf(TypeDropdown), Children.IndexOf(ScoresContainer));
+            ListHelper.Swap(Children, Children.IndexOf(TypeDropdown), Children.IndexOf(ScoresContainerBackground));
 
             MapManager.Selected.ValueChanged += OnMapChanged;
 
@@ -140,11 +145,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         private void CreateScoresContainer()
         {
-            ScoresContainer = new LeaderboardScoresContainer(this)
+            ScoresContainerBackground = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Header.Y + Header.Height + 8
+                Y = Header.Y + Header.Height + 8,
+                Size = new ScalableVector2(Width,664),
+                Image = UserInterface.LeaderboardScoresPanel
+            };
+
+            ScoresContainer = new LeaderboardScoresContainer(this)
+            {
+                Parent = ScoresContainerBackground,
+                Alignment = Alignment.MidCenter
             };
         }
 
@@ -156,7 +169,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             PersonalBestHeader = new SpriteTextPlus(Header.Font, "PERSONAL BEST", Header.FontSize)
             {
                 Parent = this,
-                Y = ScoresContainer.Y + ScoresContainer.Height + 28
+                Y = ScoresContainerBackground.Y + ScoresContainerBackground.Height + 28
             };
         }
 
@@ -220,6 +233,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 if (x is IFetchedScoreHandler handler)
                     handler.HandleFetchedScores(e.Input, e.Result);
             });
+
+            ScoresContainer.HandleFetchedScores(e.Input, e.Result);
         }
 
         /// <summary>
@@ -255,6 +270,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         {
             if (x is ILoadable loadable)
                 loadable.StartLoading();
+
+            ScoresContainer.StartLoading();
         });
 
         /// <summary>
@@ -263,6 +280,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         {
             if (x is ILoadable loadable)
                 loadable.StopLoading();
+
+            ScoresContainer.StopLoading();
         });
 
         /// <summary>
