@@ -8,11 +8,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Modifiers.Mods;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Modifiers
 {
@@ -233,6 +235,48 @@ namespace Quaver.Shared.Modifiers
             {
                 // ignored.
             }
+        }
+
+        /// <summary>
+        ///     Converts a mod combination to
+        /// </summary>
+        /// <param name="mods"></param>
+        /// <returns></returns>
+        public static List<ModIdentifier> GetModsList(ModIdentifier mods)
+        {
+            var list = new List<ModIdentifier>();
+
+            for (var i = 0; i <= Math.Log(Math.Abs((long)mods), 2); i++)
+            {
+                var mod = (ModIdentifier)((long)Math.Pow(2, i));
+
+                if (!mods.HasFlag(mod))
+                    continue;
+
+                try
+                {
+                    list.Add(mod);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        ///     Gets a texture for an individual mod
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <returns></returns>
+        public static Texture2D GetTexture(ModIdentifier mod)
+        {
+            if (mod <= 0)
+                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/None.png");
+
+            return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/{ModHelper.GetModsString(mod)}.png");
         }
     }
 }
