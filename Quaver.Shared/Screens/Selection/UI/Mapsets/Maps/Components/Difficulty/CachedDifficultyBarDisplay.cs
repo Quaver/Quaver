@@ -62,6 +62,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
 
             var (pixelWidth, pixelHeight) = AbsoluteSize * WindowManager.ScreenScale;
 
+            if (pixelWidth == 0)
+                pixelWidth = 1;
+
+            if (pixelHeight == 0)
+                pixelHeight = 1;
+
             RenderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth, (int) pixelHeight, false,
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
 

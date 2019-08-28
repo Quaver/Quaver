@@ -336,7 +336,7 @@ namespace Quaver.Shared.Screens.Select
         /// <summary>
         ///     Handles when the user wants to increase/decrease the rate of the song.
         /// </summary>
-        private static void HandleKeyPressControlRateChange()
+        public static void HandleKeyPressControlRateChange()
         {
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))

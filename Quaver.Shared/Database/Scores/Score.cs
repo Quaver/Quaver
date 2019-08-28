@@ -164,6 +164,12 @@ namespace Quaver.Shared.Database.Scores
         public int PlayerId { get; set; }
 
         /// <summary>
+        ///     If the score is empty. Used in <see cref="DrawableLeaderboardScore"/>
+        /// </summary>
+        [Ignore]
+        public bool IsEmptyScore { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>

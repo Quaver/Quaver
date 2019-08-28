@@ -8,6 +8,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
@@ -27,17 +28,33 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private SpriteTextPlus NoPersonalBestScore { get; set; }
 
         /// <summary>
+        ///     The displayed score
+        /// </summary>
+        private DrawableLeaderboardScore Score { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="container"></param>
         public LeaderboardPersonalBestScore(LeaderboardContainer container)
         {
             Container = container;
-            Size = new ScalableVector2(Container.Width, 64);
+            Size = new ScalableVector2(Container.Width, 70);
 
             Image = UserInterface.PersonalBestScorePanel;
 
             CreateLoadingWheel();
             CreateNoPersonalBestScoreText();
+
+            Container.FetchScoreTask.OnCompleted += OnScoresFetched;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            Container.FetchScoreTask.OnCompleted -= OnScoresFetched;
+            base.Destroy();
         }
 
         /// <summary>
@@ -64,6 +81,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             NoPersonalBestScore.ClearAnimations();
             NoPersonalBestScore.FadeTo(0, Easing.Linear, 200);
+
+            Score?.Destroy();
         }
 
         /// <summary>
@@ -99,6 +118,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alignment = Alignment.MidCenter,
                 Alpha = 0
             };
+        }
+
+        private void OnScoresFetched(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
+        {
+            Score?.Destroy();
+
+            if (e.Result.PersonalBest == null)
+                return;
+
+            Score = new DrawableLeaderboardScore(null, e.Result.PersonalBest, 1, true)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter
+            };
+
+            Score.UpdateContent(e.Result.PersonalBest, 1);
         }
     }
 }

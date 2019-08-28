@@ -4,10 +4,13 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
+using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Quaver.Shared.Screens.Tests.FilterPanel;
@@ -27,7 +30,7 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
         private MapScrollContainer MapContainer { get; }
 
         private Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
-        
+
         public TestLeaderboardWithMapsScreenView(FilterPanelTestScreen screen) : base(screen)
         {
             var visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 6)
@@ -76,8 +79,8 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
             screen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
 
             ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChanged;
-            
-            new LeaderboardContainer()
+
+            var leaderboardContainer = new LeaderboardContainer()
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
@@ -85,7 +88,7 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
                 Y = FilterPanel.Y + FilterPanel.Height + 24
             };
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
@@ -100,9 +103,10 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
                     ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
             }
 
+            SelectScreen.HandleKeyPressControlRateChange();
             base.Update(gameTime);
         }
-        
+
         public override void Destroy()
         {
             var screen = (TestScreenMapScrollContainer) Screen;

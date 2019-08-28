@@ -23,6 +23,9 @@
     <Reference Include="Quaver.Server.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>Quaver.Server.Common.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=106.4.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <HintPath>RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Steamworks.NET">
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
@@ -113,6 +116,7 @@
   <ItemGroup>
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.0" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />

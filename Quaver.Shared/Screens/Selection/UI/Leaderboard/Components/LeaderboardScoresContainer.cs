@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -11,11 +12,15 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using TagLib.Ape;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Managers;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
@@ -41,17 +46,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private SpriteTextPlus StatusText { get; set; }
 
         /// <summary>
+        ///     The currently active tooltip that is displayed on top of the container
+        /// </summary>
+        private Tooltip ActiveTooltip { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="container"></param>
-        public LeaderboardScoresContainer(LeaderboardContainer container) : base(new List<Score>(), 10, 0,
-            new ScalableVector2(container.Width, 664), new ScalableVector2(container.Width, 664))
+        public LeaderboardScoresContainer(LeaderboardContainer container) : base(new List<Score>(), 12, 0,
+            new ScalableVector2(container.ScoresContainerBackground.Width - 4, container.ScoresContainerBackground.Height - 4),
+            new ScalableVector2(container.ScoresContainerBackground.Width - 4, container.ScoresContainerBackground.Height - 4))
         {
             Container = container;
-            Image = UserInterface.LeaderboardScoresPanel;
+            Alpha = 0;
+
+            InputEnabled = true;
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 1200;
+            ScrollSpeed = 220;
 
             CreateScrollbar();
             CreateLoadingWheel();
             CreateStatusText();
+
+            Container.FetchScoreTask.OnCompleted += OnScoresRetrieved;
         }
 
         /// <inheritdoc />
@@ -60,8 +78,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ScrollbarBackground.Visible = AvailableItems.Count != 0;
+            ScrollbarBackground.Visible = AvailableItems.Count > 10;
+
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && DialogManager.Dialogs.Count == 0
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            HandleTooltipAnimation();
+
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            Container.FetchScoreTask.OnCompleted -= OnScoresRetrieved;
+            base.Destroy();
         }
 
         /// <summary>
@@ -100,7 +134,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             };
         }
 
-        protected override PoolableSprite<Score> CreateObject(Score item, int index) => null;
+        protected override PoolableSprite<Score> CreateObject(Score item, int index) => new DrawableLeaderboardScore(this, item, index, false);
 
         /// <summary>
         ///     Fades the wheel in to make it appear as if it is loading
@@ -110,6 +144,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
             LoadingWheel.FadeTo(1, Easing.Linear, 250);
             FadeStatusTextOut();
+
+            Pool?.ForEach(x => x.Destroy());
+            Pool?.Clear();
+            ContentContainer.Height = Height;
+
+            SnapToTop();
+
+            AvailableItems.Clear();
+            ScrollbarBackground.Visible = false;
         }
 
         /// <summary>
@@ -162,7 +205,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 {
                     // The map isn't ranked, but the user is a donator, so they can access leaderboards on all maps
                     if (map.RankedStatus != RankedStatus.Ranked && isDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
-                        StatusText.Text = "No scores. Scores on this map will be unranked!".ToUpper();
+                        StatusText.Text = "Scores on this map will be unranked!".ToUpper();
                     else if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                     {
                         switch (map.RankedStatus)
@@ -240,6 +283,79 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             StatusText.ClearAnimations();
             StatusText.FadeTo(0, Easing.Linear, 250);
+        }
+
+        /// <summary>
+        ///     Called upon retrieving
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScoresRetrieved(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
+        {
+            Pool?.ForEach(x => x.Destroy());
+            Pool?.Clear();
+
+            SnapToTop();
+
+            AvailableItems = e.Result.Scores;
+
+            const int MAX_SHOWN_ITEMS = 10;
+
+            // We don't have enough scores in the leaderboard, so fill it with empty scores, so the leaderboard
+            // still preserves the table look
+            if (AvailableItems.Count < MAX_SHOWN_ITEMS && AvailableItems.Count != 0)
+            {
+                var count = MAX_SHOWN_ITEMS - AvailableItems.Count;
+
+                for (var i = 0; i < count; i++)
+                    AvailableItems.Add(new Score { IsEmptyScore = true});
+            }
+
+            CreatePool();
+            RecalculateRectangles();
+        }
+
+        /// <summary>
+        ///     Snaps to the top of the container
+        /// </summary>
+        private void SnapToTop()
+        {
+            // Snap to the top of the container
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y = 0;
+            PreviousContentContainerY = ContentContainer.Y;
+            TargetY = PreviousContentContainerY;
+            PreviousTargetY = PreviousContentContainerY;
+
+            PoolStartingIndex = 0;
+        }
+
+        /// <summary>
+        ///     Sets the active tooltip
+        /// </summary>
+        /// <param name="tooltip"></param>
+        public void ActivateTooltip(Tooltip tooltip)
+        {
+            if (ActiveTooltip != null)
+                ActiveTooltip.Parent = null;
+
+            ActiveTooltip = tooltip;
+            ActiveTooltip.Parent = this;
+
+            ActiveTooltip.Alpha = 0;
+            ActiveTooltip.ClearAnimations();
+            ActiveTooltip.FadeTo(1, Easing.Linear, 150);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleTooltipAnimation()
+        {
+            if (ActiveTooltip == null)
+                return;
+
+            ActiveTooltip.X = MouseManager.CurrentState.X - AbsolutePosition.X - ActiveTooltip.Width + 14;
+            ActiveTooltip.Y = MouseManager.CurrentState.Y - AbsolutePosition.Y - ActiveTooltip.Height - 2;
         }
     }
 }
