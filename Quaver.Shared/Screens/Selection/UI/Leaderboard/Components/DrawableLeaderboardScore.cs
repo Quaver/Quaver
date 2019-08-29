@@ -41,6 +41,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             IsPersonalBest = isPersonalBest;
             Size = new ScalableVector2(560, 66);
+            Alpha = 0;
 
             ChildContainer = new DrawableLeaderboardScoreContainer(this)
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -51,6 +52,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private Tooltip ActiveTooltip { get; set; }
 
         /// <summary>
+        ///     If the scores have finished loading
+        /// </summary>
+        private bool FinishedLoading { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="container"></param>
         public LeaderboardScoresContainer(LeaderboardContainer container) : base(new List<Score>(), 12, 0,
@@ -78,7 +84,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ScrollbarBackground.Visible = AvailableItems.Count > 10;
+            ScrollbarBackground.Visible = Pool.Count > 10;
 
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && DialogManager.Dialogs.Count == 0
@@ -86,6 +92,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
             HandleTooltipAnimation();
+
+            if (FinishedLoading && Pool.Count >= 10 && Pool.First().Parent != ContentContainer)
+            {
+                Pool.ForEach(x =>
+                {
+                    AddContainedDrawable(x);
+
+                    var score = x as DrawableLeaderboardScore;
+                    score?.ChildContainer.FadeIn();
+                });
+            }
 
             base.Update(gameTime);
         }
@@ -153,6 +170,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             AvailableItems.Clear();
             ScrollbarBackground.Visible = false;
+            FinishedLoading = false;
         }
 
         /// <summary>
@@ -163,6 +181,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
             LoadingWheel.FadeTo(0, Easing.Linear, 250);
             FadeStatusTextOut();
+            FinishedLoading = false;
         }
 
         /// <inheritdoc />
@@ -311,8 +330,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     AvailableItems.Add(new Score { IsEmptyScore = true});
             }
 
-            CreatePool();
-            RecalculateRectangles();
+            CreatePool(false);
+            FinishedLoading = true;
         }
 
         /// <summary>
