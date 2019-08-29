@@ -528,10 +528,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             var steamId = (ulong) Score.Item.SteamId;
 
-            if (Score.IsPersonalBest)
+            if (Score.IsPersonalBest && !Score.Item.IsOnline)
             {
                 Avatar.Alpha = 1;
                 Avatar.Image = UserInterface.UnknownAvatar;
+                return;
             }
 
             if (SteamManager.UserAvatars.ContainsKey(steamId))
