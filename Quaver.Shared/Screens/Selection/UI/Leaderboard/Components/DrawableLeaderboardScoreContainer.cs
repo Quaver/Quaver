@@ -361,7 +361,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Size = new ScalableVector2(12, 12)
             };
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 16)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 18)
             {
                 Parent = Clock,
                 Alignment = Alignment.MidLeft,
@@ -382,22 +382,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             var timeDifference = DateTime.Now - date;
 
             // Years
-            if (timeDifference.TotalDays > 365)
+            if ((int) timeDifference.TotalDays > 365)
                 Time.Text = $"{(int) (timeDifference.TotalDays / 365)}y";
             // Months
-            else if (timeDifference.TotalDays > 30)
+            else if ((int) timeDifference.TotalDays > 30)
                 Time.Text = $"{(int) (timeDifference.TotalDays / 30)}mo";
             // Weeks
-            else if (timeDifference.TotalDays > 7)
+            else if ((int) timeDifference.TotalDays > 7)
                 Time.Text = $"{(int) (timeDifference.TotalDays / 7)}w";
             // Days
-            else if (timeDifference.TotalDays > 0)
+            else if ((int) timeDifference.TotalDays > 0)
                 Time.Text = $"{(int) timeDifference.TotalDays}d";
             // Hours
-            else if (timeDifference.TotalHours > 0)
+            else if ((int) timeDifference.TotalHours > 0)
                 Time.Text = $"{(int) timeDifference.TotalHours}h";
             // Minutes
-            else if (timeDifference.TotalMinutes > 0)
+            else if ((int) timeDifference.TotalMinutes > 0)
                 Time.Text = $"{(int) timeDifference.TotalMinutes}m";
             // Seconds
             else
