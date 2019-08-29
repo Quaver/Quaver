@@ -593,7 +593,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
             }
 
-            Flag.Image = Flags.Get(Score.Item.Country);
+            try
+            {
+                Flag.Image = Flags.Get(Score.Item.Country);
+            }
+            catch (Exception)
+            {
+                Flag.Image = Flags.Get("XX");
+            }
         }
 
         /// <summary>
