@@ -528,6 +528,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             var steamId = (ulong) Score.Item.SteamId;
 
+            if (Score.IsPersonalBest)
+            {
+                Avatar.Alpha = 1;
+                Avatar.Image = UserInterface.UnknownAvatar;
+            }
+
             if (SteamManager.UserAvatars.ContainsKey(steamId))
             {
                 if (Avatar.Image == SteamManager.UserAvatars[steamId])
@@ -576,7 +582,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 {
                     var regionInfo = RegionInfo.CurrentRegion;
                     var name = regionInfo.Name;
-                    
+
                     Flag.Image = Flags.Get(name);
                 }
                 catch (Exception)
