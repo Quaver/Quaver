@@ -20,6 +20,7 @@ using TimeAgo;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
+using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -130,6 +131,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private Sprite Flag { get; set; }
 
         /// <summary>
+        ///     A blank texture2D image
+        /// </summary>
+        private Texture2D BlankImage { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="score"></param>
         public DrawableLeaderboardScoreContainer(DrawableLeaderboardScore score)
@@ -141,7 +147,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
 
             CreateButton();
-
             CreateAvatar();
 
             if (!Score.IsPersonalBest)
@@ -207,6 +212,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Destroy()
         {
             UnbeatableTooltip?.Destroy();
+            BlankImage?.Dispose();
 
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
@@ -248,6 +254,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateAvatar()
         {
+            BlankImage = new Texture2D(GameBase.Game.GraphicsDevice, 1, 1);
+
             Avatar = new Sprite
             {
                 Parent = this,
@@ -255,7 +263,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 X = PaddingLeft,
                 Size = new ScalableVector2(50, 50),
                 UsePreviousSpriteBatchOptions = true,
-                Image = UserInterface.UnknownAvatar,
+                Image = BlankImage,
                 Alpha = 0
             };
         }
@@ -530,7 +538,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             if (Score.IsPersonalBest && !Score.Item.IsOnline)
             {
-                Avatar.Alpha = 1;
                 Avatar.Image = UserInterface.UnknownAvatar;
                 return;
             }
@@ -548,6 +555,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
             }
 
+            Avatar.Image = BlankImage;
             SteamManager.SendAvatarRetrievalRequest(steamId);
             Avatar.ClearAnimations();
             Avatar.Alpha = 0;
@@ -613,6 +621,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (e.SteamId != (ulong) Score.Item.SteamId)
                 return;
 
+            Avatar.Alpha = 0;
+            Avatar.ClearAnimations();
+            Avatar.FadeTo(1, Easing.Linear, 400);
             Avatar.Image = e.Texture;
         }
 
