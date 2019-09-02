@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
             ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
 
             MapsetContainer.ClearAnimations();
-            MapsetContainer.MoveToX(MapsetContainer.Width + 50, Easing.OutQuint, 550);
+            MapsetContainer.MoveToX(MapsetContainer.Width + 50, Easing.OutQuint, 500);
             MapsetContainer.Wait(50);
             MapsetContainer.MoveToX(-50, Easing.OutQuint, 600);
         }
