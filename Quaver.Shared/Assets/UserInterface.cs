@@ -100,5 +100,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D PersonalBestScorePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/personal-best-score-panel.png");
         public static Texture2D WarningRed => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/warning-red.png");
         public static Texture2D Clock => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock.png");
+        public static Texture2D Triangles => TextureManager.Load(@"Quaver.Resources/Textures/UI/triangles.png");
     }
 }
