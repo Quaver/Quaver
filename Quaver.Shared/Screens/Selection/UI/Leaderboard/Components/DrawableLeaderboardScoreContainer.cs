@@ -147,12 +147,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 return;
 
             CreateButton();
+            CreateGrade();
             CreateAvatar();
 
             if (!Score.IsPersonalBest)
                 CreateRankText();
 
-            CreateGrade();
             CreateFlag();
             CreateUsername();
             CreatePerformanceRating();
@@ -240,10 +240,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateRankText()
         {
-            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "10.", 24)
+            Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "10.", 22)
             {
-                Parent = Avatar,
-                Alignment = Alignment.MidCenter,
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = PaddingLeft,
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0
             };
@@ -260,8 +261,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = PaddingLeft,
-                Size = new ScalableVector2(50, 50),
+                X = Grade.X + Grade.Width + 15,
+                Size = new ScalableVector2(45, 45),
                 UsePreviousSpriteBatchOptions = true,
                 Image = BlankImage,
                 Alpha = 0
@@ -277,8 +278,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(45, 45),
-                X = Avatar.X + Avatar.Width + 15,
+                Size = new ScalableVector2(40, 40),
+                X = Score.IsPersonalBest ? PaddingLeft : 60,
                 UsePreviousSpriteBatchOptions = true,
             };
         }
@@ -292,7 +293,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(Grade.X + Grade.Width + PaddingLeft / 2f, UsernameY + 4),
+                Position = new ScalableVector2(Avatar.X + Avatar.Width + PaddingLeft / 2f, UsernameY + 4),
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(24, 24),
                 Image = Flags.Get("XX")
@@ -464,28 +465,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             var color = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
             FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
-
-            if (Score.IsPersonalBest)
-                return;
-
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            const int animTime = 60;
-
-            if (Button.IsHovered || CantBeatAlert.IsHovered)
-            {
-                if (Avatar.Animations.Count == 0)
-                    Avatar.Alpha = Microsoft.Xna.Framework.MathHelper.Lerp(Avatar.Alpha, 0, (float) Math.Min(dt / animTime, 1));
-
-                Rank.Alpha = Microsoft.Xna.Framework.MathHelper.Lerp(Rank.Alpha, 1, (float) Math.Min(dt / animTime, 1));
-            }
-            else
-            {
-                if (Avatar.Animations.Count == 0)
-                    Avatar.Alpha = Microsoft.Xna.Framework.MathHelper.Lerp(Avatar.Alpha, 1, (float) Math.Min(dt / animTime, 1));
-
-                Rank.Alpha = Microsoft.Xna.Framework.MathHelper.Lerp(Rank.Alpha, 0, (float) Math.Min(dt / animTime, 1));
-            }
         }
 
         /// <summary>
@@ -507,15 +486,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 try
                 {
-                    const int width = 60;
-                    const int height = 30;
+                    const int width = 52;
+                    const int height = 26;
 
                     var mod = new DrawableModifier(modsList[i])
                     {
                         Parent = this,
                         Alignment = Alignment.BotLeft,
                         X = Flag.X + width * Modifiers.Count - 4,
-                        Y = AccuracyMaxCombo.Y + 5,
+                        Y = AccuracyMaxCombo.Y,
                         UsePreviousSpriteBatchOptions = true,
                         Size = new ScalableVector2(width, height),
                         Alpha = 1
@@ -647,6 +626,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 PerformanceRating.Alpha = 0;
                 AccuracyMaxCombo.Alpha = 0;
                 Flag.Alpha = 0;
+                Rank.Alpha = 0;
             }
 
             FadeTo(targetAlpha, easing, time);
@@ -660,6 +640,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 PerformanceRating.FadeTo(targetAlpha, easing, time);
                 AccuracyMaxCombo.FadeTo(targetAlpha, easing, time);
                 Flag.FadeTo(targetAlpha, easing, time);
+                Rank.FadeTo(targetAlpha, easing, time);
 
                 Modifiers.ForEach(x =>
                 {
