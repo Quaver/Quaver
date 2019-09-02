@@ -63,10 +63,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
             SubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Customize gameplay to your heart's desire".ToUpper(), 18)
             {
                 Parent = this,
-                Alignment = Alignment.TopRight
+                Alignment = Alignment.TopRight,
+                Tint = ColorHelper.HexToColor("#808080")
             };
 
-            SubHeader.Y = Header.Height / 2f - SubHeader.Height / 2f;
+            SubHeader.Y = Header.Y + Header.Height - SubHeader.Height - 3;
         }
 
         /// <summary>
