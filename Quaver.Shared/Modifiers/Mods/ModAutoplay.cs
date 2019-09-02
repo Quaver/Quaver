@@ -19,7 +19,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "Take a break and watch something magical.";
+        public string Description { get; set; } = "Take a break, and watch something magical.";
 
         public bool Ranked { get; set; } = false;
 
