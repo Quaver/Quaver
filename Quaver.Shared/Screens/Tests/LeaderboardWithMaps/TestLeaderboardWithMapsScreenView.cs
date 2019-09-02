@@ -9,10 +9,12 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection.Components;
+using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
+using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Wobble.Bindables;
@@ -30,6 +32,12 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
         private MapScrollContainer MapContainer { get; }
 
         private Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
+
+        private Bindable<SelectContainerPanel> ActivePanel { get; }
+
+        private ModifierSelectorContainer ModifierSelector { get; }
+
+        private LeaderboardContainer LeaderboardContainer { get; }
 
         public TestLeaderboardWithMapsScreenView(FilterPanelTestScreen screen) : base(screen)
         {
@@ -80,21 +88,46 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
 
             ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChanged;
 
-            var leaderboardContainer = new LeaderboardContainer()
+            LeaderboardContainer = new LeaderboardContainer()
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
                 X = 50,
                 Y = FilterPanel.Y + FilterPanel.Height + 24
             };
+
+            ModifierSelector = new ModifierSelectorContainer
+            {
+                Parent = Container,
+                Y = LeaderboardContainer.Y
+            };
+
+            ModifierSelector.X = -ModifierSelector.Width - 50;
+
+            ActivePanel = new Bindable<SelectContainerPanel>(SelectContainerPanel.Leaderboard)
+            {
+                Value = SelectContainerPanel.Leaderboard
+            };
+
+            ActivePanel.ValueChanged += OnActivePanelChanged;
         }
 
         public override void Update(GameTime gameTime)
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
-                if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
-                    ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                switch (ActivePanel.Value)
+                {
+                    case SelectContainerPanel.Leaderboard:
+                        if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
+                            ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                        break;
+                    case SelectContainerPanel.Modifiers:
+                        ActivePanel.Value = SelectContainerPanel.Leaderboard;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
@@ -102,6 +135,9 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
                 if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets)
                     ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
             }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && ActivePanel.Value != SelectContainerPanel.Modifiers)
+                ActivePanel.Value = SelectContainerPanel.Modifiers;
 
             SelectScreen.HandleKeyPressControlRateChange();
             base.Update(gameTime);
@@ -114,8 +150,33 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
             screen.AvailableMapsets.ValueChanged -= OnAvailableMapsetsChanged;
 
             ActiveScrollContainer.Dispose();
+            ActivePanel?.Dispose();
 
             base.Destroy();
+        }
+
+        private void OnActivePanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
+        {
+            LeaderboardContainer.ClearAnimations();
+            ModifierSelector.ClearAnimations();
+
+            const int activePos = 50;
+            var inactivePos = -LeaderboardContainer.Width - activePos;
+            const int animTime = 400;
+
+            switch (e.Value)
+            {
+                case SelectContainerPanel.Leaderboard:
+                    LeaderboardContainer.MoveToX(activePos, Easing.OutQuint, animTime);
+                    ModifierSelector.MoveToX(inactivePos, Easing.OutQuint, animTime);
+                    break;
+                case SelectContainerPanel.Modifiers:
+                    LeaderboardContainer.MoveToX(inactivePos, Easing.OutQuint, animTime);
+                    ModifierSelector.MoveToX(activePos, Easing.OutQuint, animTime);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
