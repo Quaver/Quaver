@@ -101,5 +101,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D WarningRed => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/warning-red.png");
         public static Texture2D Clock => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock.png");
         public static Texture2D Triangles => TextureManager.Load(@"Quaver.Resources/Textures/UI/triangles.png");
+        public static Texture2D ModifierSelectorBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/modifier-selector-bg.png");
+        public static Texture2D Off => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/off.png");
+        public static Texture2D On => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/on.png");
+        public static Texture2D ResetMods => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/reset-mods.png");
+        public static Texture2D ClosePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/close-panel.png");
     }
 }
