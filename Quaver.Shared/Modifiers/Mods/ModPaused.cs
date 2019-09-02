@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers.Mods
@@ -26,6 +27,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = {};
+
+        public Color ModColor { get; }
 
         public void InitializeMod() {}
     }

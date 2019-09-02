@@ -6,6 +6,7 @@
 */
 
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 
 namespace Quaver.Shared.Modifiers.Mods
@@ -30,6 +31,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Chill };
+
+        public Color ModColor { get; }
 
         public void InitializeMod() => throw new NotImplementedException();
     }
