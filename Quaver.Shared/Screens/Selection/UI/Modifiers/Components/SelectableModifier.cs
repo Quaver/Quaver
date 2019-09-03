@@ -1,9 +1,11 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Modifiers.Mods;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -55,7 +57,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             {
                 Parent = this,
                 Size = new ScalableVector2(60, 30),
-                Image = ModManager.GetTexture(Mod.ModIdentifier),
+                Image = GetTexture(),
                 Alignment = Alignment.MidLeft,
                 X = paddingLeft,
                 UsePreviousSpriteBatchOptions = true
@@ -89,6 +91,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 else
                     ModManager.AddMod(Mod.ModIdentifier);
             };
+
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -108,6 +112,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public override void Destroy()
         {
             Tooltip.Destroy();
+            ModManager.ModsChanged -= OnModsChanged;
+
             base.Destroy();
         }
 
@@ -117,8 +123,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <param name="gameTime"></param>
         private void PerformHoverAnimation(GameTime gameTime)
         {
-            var color = ScreenRectangle.Contains(MouseManager.CurrentState.Position.ToPoint()) ? ColorHelper.HexToColor("#575757") : OriginalColor;
+            var color = ScreenRectangle.Contains(MouseManager.CurrentState.Position.ToPoint()) ? ColorHelper.HexToColor("#464545") : OriginalColor;
             FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Icon.Image = GetTexture();
+
+        private Texture2D GetTexture()
+        {
+            if (Mod.GetType() == typeof(ModSpeed))
+                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-1.1x.png");
+
+            return ModManager.GetTexture(Mod.ModIdentifier, !ModManager.IsActivated(Mod.ModIdentifier));
         }
     }
 }
