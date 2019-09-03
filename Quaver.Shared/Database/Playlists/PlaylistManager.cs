@@ -95,7 +95,7 @@ namespace Quaver.Shared.Database.Playlists
 
                 Playlists = Playlists.Concat(playlists).ToList();
 
-                foreach (var playlist in Playlists)
+                foreach (var playlist in playlists)
                     Logger.Important($"Loaded Quaver playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
 
                 conn.Close();
@@ -149,7 +149,7 @@ namespace Quaver.Shared.Database.Playlists
 
             Playlists = Playlists.Concat(playlists).ToList();
 
-            foreach (var playlist in Playlists)
+            foreach (var playlist in playlists)
                 Logger.Important($"Loaded osu! playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
         }
 
