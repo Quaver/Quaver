@@ -5,7 +5,9 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -17,7 +19,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "Take a break and watch something magical.";
+        public string Description { get; set; } = "Take a break, and watch something magical.";
 
         public bool Ranked { get; set; } = false;
 
@@ -29,6 +31,8 @@ namespace Quaver.Shared.Modifiers.Mods
         {
             ModIdentifier.NoFail
         };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#2D9CDB");
 
         public void InitializeMod()
         {

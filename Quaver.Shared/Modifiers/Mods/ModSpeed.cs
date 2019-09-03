@@ -7,9 +7,11 @@
 
 using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -56,6 +58,8 @@ namespace Quaver.Shared.Modifiers.Mods
             ModIdentifier.Speed19X,
             ModIdentifier.Speed20X,
         };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#A35596");
 
         /// <summary>
         /// </summary>

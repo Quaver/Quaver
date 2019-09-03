@@ -270,11 +270,15 @@ namespace Quaver.Shared.Modifiers
         ///     Gets a texture for an individual mod
         /// </summary>
         /// <param name="mod"></param>
+        /// <param name="inactive"></param>
         /// <returns></returns>
-        public static Texture2D GetTexture(ModIdentifier mod)
+        public static Texture2D GetTexture(ModIdentifier mod, bool inactive = false)
         {
             if (mod <= 0)
                 return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/None.png");
+
+            if (inactive)
+                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-{ModHelper.GetModsString(mod)}.png");
 
             return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/{ModHelper.GetModsString(mod)}.png");
         }

@@ -1,4 +1,6 @@
-﻿using Quaver.API.Enums;
+﻿using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -19,6 +21,8 @@ namespace Quaver.Shared.Modifiers.Mods
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } = { };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor($"#5F868F");
 
         public void InitializeMod() {}
     }

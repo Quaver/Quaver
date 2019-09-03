@@ -49,6 +49,7 @@ using Quaver.Shared.Screens.Tests.Leaderboards;
 using Quaver.Shared.Screens.Tests.LeaderboardWithMaps;
 using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
 using Quaver.Shared.Screens.Tests.MapScrollContainers;
+using Quaver.Shared.Screens.Tests.ModifierSelectors;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -145,7 +146,8 @@ namespace Quaver.Shared
             {"MapScrollContainer", typeof(TestScreenMapScrollContainer)},
             {"Leaderboard", typeof(TestLeaderboardScreen)},
             {"Leaderboard + Maps", typeof(TestLeaderboardWithMapsScreen)},
-            {"DrawableLeaderboardScore", typeof(TestScreenDrawableLeaderboardScore)}
+            {"DrawableLeaderboardScore", typeof(TestScreenDrawableLeaderboardScore)},
+            {"ModifierSelector", typeof(TestModifierSelectorScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

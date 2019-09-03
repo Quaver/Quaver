@@ -5,7 +5,9 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -28,6 +30,8 @@ namespace Quaver.Shared.Modifiers.Mods
         {
             ModIdentifier.Autoplay,
         };
+
+        public Color ModColor { get; } = ColorHelper.HexToColor("#2F80ED");
 
         public void InitializeMod() {}
     }
