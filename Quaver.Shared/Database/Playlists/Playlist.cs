@@ -13,13 +13,17 @@ namespace Quaver.Shared.Database.Playlists
         /// <summary>
         ///     The name of the playlist
         /// </summary>
-        [Unique]
         public string Name { get; set; }
 
         /// <summary>
         ///     The person who created the playlist
         /// </summary>
         public string Creator { get; set; }
+
+        /// <summary>
+        ///     Small description about the playlist
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         ///     The maps that are inside of the playlist
