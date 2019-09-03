@@ -106,5 +106,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D On => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/on.png");
         public static Texture2D ResetMods => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/reset-mods.png");
         public static Texture2D ClosePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/close-panel.png");
+        public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
+        public static Texture2D CancelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/cancel-button.png");
     }
 }
