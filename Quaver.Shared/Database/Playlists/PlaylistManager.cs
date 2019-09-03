@@ -96,7 +96,7 @@ namespace Quaver.Shared.Database.Playlists
                 Playlists = Playlists.Concat(playlists).ToList();
 
                 foreach (var playlist in Playlists)
-                    Logger.Important($"Loaded Quaver playlist: {playlist.Name} w/ {playlist.Maps.Count} maps!", LogType.Runtime);
+                    Logger.Important($"Loaded Quaver playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
 
                 conn.Close();
             }
@@ -150,7 +150,36 @@ namespace Quaver.Shared.Database.Playlists
             Playlists = Playlists.Concat(playlists).ToList();
 
             foreach (var playlist in Playlists)
-                Logger.Important($"Loaded osu! playlist: {playlist.Name} w/ {playlist.Maps.Count} maps!", LogType.Runtime);
+                Logger.Important($"Loaded osu! playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Adds a playlist to the database
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static int AddPlaylist(Playlist playlist)
+        {
+            try
+            {
+                var conn = new SQLiteConnection(DatabasePath);
+                var id = conn.Insert(playlist);
+
+                conn.Close();
+
+                Logger.Important($"Successfully added playlist: {playlist.Name} (#{id}) (by: {playlist.Creator}) to the database",LogType.Runtime);
+                return id;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+            finally
+            {
+                if (!Playlists.Contains(playlist))
+                    Playlists.Add(playlist);
+            }
+
+            return -1;
         }
     }
 }
