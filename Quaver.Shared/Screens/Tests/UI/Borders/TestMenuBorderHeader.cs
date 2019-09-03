@@ -14,7 +14,8 @@ namespace Quaver.Shared.Screens.Tests.UI.Borders
             {
                 new MenuBorderLogo(),
                 new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.LatoBlack),"Home"),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), FontManager.GetWobbleFont(Fonts.LatoBlack),"Download"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), FontManager.GetWobbleFont(Fonts.LatoBlack),"Download Maps"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_trophy), FontManager.GetWobbleFont(Fonts.LatoBlack),"Leaderboards"),
                 new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_speech_bubbles_comment_option), FontManager.GetWobbleFont(Fonts.LatoBlack),"Community Chat"),
                 new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_bug), FontManager.GetWobbleFont(Fonts.LatoBlack),"Report Bugs"),
             },

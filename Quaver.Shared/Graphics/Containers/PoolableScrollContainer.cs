@@ -105,7 +105,7 @@ namespace Quaver.Shared.Graphics.Containers
         ///     Begins creation of the pool. This should be called last in the constructor when the pool
         ///     is ready to be created
         /// </summary>
-        protected void CreatePool()
+        protected void CreatePool(bool containDrawables = true)
         {
             Pool = new List<PoolableSprite<T>>();
 
@@ -117,7 +117,8 @@ namespace Quaver.Shared.Graphics.Containers
                 if (i >= AvailableItems.Count)
                     continue;
 
-                AddContainedDrawable(drawable);
+                if (containDrawables)
+                    AddContainedDrawable(drawable);
             }
 
             RecalculateContainerHeight();

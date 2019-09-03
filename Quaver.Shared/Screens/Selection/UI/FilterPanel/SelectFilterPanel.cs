@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -14,6 +15,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
@@ -71,6 +73,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         private FilterDropdownMode SortMode { get; set; }
 
         /// <summary>
+        ///     Task used to filter mapsets
+        /// </summary>
+        private TaskHandler<int, int> FilterMapsetsTask { get; }
+
+        /// <summary>
         /// </summary>
         public SelectFilterPanel(Bindable<List<Mapset>> availableMapsets, Bindable<string> currentSearchQuery)
         {
@@ -101,7 +108,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             CreateSearchBox();
             CreateMapsAvailable();
 
-            CurrentSearchQuery.ValueChanged += (sender, args) => FilterMapsets();
+            FilterMapsetsTask = new TaskHandler<int, int>(StartFilterMapsetsTask);
+
+            CurrentSearchQuery.ValueChanged += (sender, args) => StartFilterMapsetsTask();
 
             if (ConfigManager.SelectOrderMapsetsBy != null)
                 ConfigManager.SelectOrderMapsetsBy.ValueChanged += OnSelectOrderMapsetsChanged;
@@ -127,6 +136,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 ConfigManager.SelectFilterGameModeBy.ValueChanged -= OnSelectFilterGameModeChanged;
 
             MapManager.Selected.ValueChanged -= OnMapChanged;
+
+            FilterMapsetsTask?.Dispose();
 
             base.Destroy();
         }
@@ -200,43 +211,68 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         }
 
         /// <summary>
+        /// </summary>
+        private void StartFilterMapsetsTask()
+        {
+            if (FilterMapsetsTask.IsRunning)
+                FilterMapsetsTask.Cancel();
+
+            FilterMapsetsTask.Run(0);
+        }
+
+        /// <summary>
+        ///     Begins the task to filter mapsets
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int StartFilterMapsetsTask(int a, CancellationToken token)
+        {
+            FilterMapsets();
+            return 0;
+        }
+
+        /// <summary>
         ///     Handles filtering mapsets for the screen
         /// </summary>
         private void FilterMapsets()
         {
-            Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
-                LogType.Runtime, false);
-
-            AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value));
-
-            if (AvailableMapsets.Value.Count == 0)
-                return;
-
-            // Check if the map is in any of the mapsets
-            if (MapManager.Selected.Value != null)
+            lock (AvailableMapsets.Value)
             {
-                foreach (var set in AvailableMapsets.Value)
-                {
-                    if (set.Maps.Any(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum))
-                        return;
-                }
-            }
+                Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
+                    LogType.Runtime, false);
 
-            MapManager.Selected.Value = AvailableMapsets.Value.First().Maps.First();
-            BackgroundHelper.Load(MapManager.Selected.Value);
+                AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value));
+
+                if (AvailableMapsets.Value.Count == 0)
+                    return;
+
+                // Check if the map is in any of the mapsets
+                if (MapManager.Selected.Value != null)
+                {
+                    foreach (var set in AvailableMapsets.Value)
+                    {
+                        if (set.Maps.Any(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum))
+                            return;
+                    }
+                }
+
+                MapManager.Selected.Value = AvailableMapsets.Value.First().Maps.First();
+                BackgroundHelper.Load(MapManager.Selected.Value);
+            }
         }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSelectOrderMapsetsChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e) => FilterMapsets();
+        private void OnSelectOrderMapsetsChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e) => StartFilterMapsetsTask();
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => FilterMapsets();
+        private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => StartFilterMapsetsTask();
 
         /// <summary>
         ///     Responsible for initiating the new banner load

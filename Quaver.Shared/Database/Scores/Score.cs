@@ -170,6 +170,12 @@ namespace Quaver.Shared.Database.Scores
         public bool IsEmptyScore { get; set; }
 
         /// <summary>
+        ///     The country of the player
+        /// </summary>
+        [Ignore]
+        public string Country { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -238,7 +244,8 @@ namespace Quaver.Shared.Database.Scores
                 CountGood = score.CountGood,
                 CountOkay = score.CountOkay,
                 CountMiss = score.CountMiss,
-                Mods = (long) score.Mods
+                Mods = (long) score.Mods,
+                Country = score.Country
             };
 
             return localScore;

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.API.Enums;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -12,7 +13,9 @@ using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.UI;
 using Wobble.Input;
 using Wobble.Screens;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -29,8 +32,14 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
 
         protected TestMenuBorderFooter Footer { get; }
 
+        private BackgroundImage Bg;
         public FilterPanelTestScreenView(FilterPanelTestScreen screen) : base(screen)
         {
+            Bg = new BackgroundImage(UserInterface.Triangles, 0, false)
+            {
+                Parent = Container,
+            };
+
             // ReSharper disable twice ObjectCreationAsStatement
             Header = new TestMenuBorderHeader {Parent = Container};
             Footer = new TestMenuBorderFooter
@@ -81,6 +90,9 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Console.WriteLine(MapManager.Mapsets.Count);
             }
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Home))
+                Bg.Visible = !Bg.Visible;
+
             Container?.Update(gameTime);
         }
 
@@ -90,7 +102,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2f2f2f"));
+            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
             Container?.Draw(gameTime);
         }
 
