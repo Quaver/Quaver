@@ -314,7 +314,6 @@ namespace Quaver.Shared.Screens.Menu
                 new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
                 new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
                 new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com")),
-                new ButtonSupportQuaver()
             }, Colors.MainAccent)
             {
                 Parent = Container,
