@@ -109,8 +109,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(930, 500),
-                Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\customize-window-panel.png")
+                Tint = ColorHelper.HexToColor("#2f2f2f")
             };
+
+            CustomizeContainer.AddBorder(Colors.MainAccent, 2);
         }
 
         /// <summary>
