@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <summary>
         ///     Reference to the parent screen
         /// </summary>
-        private ResultScreen Screen { get; }
+        public ResultScreen Screen { get; }
 
         /// <summary>
         ///     The divider line at the top of the box
@@ -107,6 +107,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private ScoreProcessor Processor { get; }
 
         /// <summary>
+        ///     The standardied scoring processor
+        /// </summary>
+        public ScoreProcessor StandardizedProcessor { get; }
+
+        /// <summary>
         ///     Hit statistics computed for the current score.
         /// </summary>
         private HitStatistics HitStatistics { get; }
@@ -114,13 +119,14 @@ namespace Quaver.Shared.Screens.Result.UI
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ResultScoreContainer(ResultScreen screen)
+        public ResultScoreContainer(ResultScreen screen, ScoreProcessor standardizedProcessor = null)
         {
             Screen = screen;
             Size = new ScalableVector2(WindowManager.Width - 56, 490);
             Image = UserInterface.ResultScorePanel;
             DestroyIfParentIsNull = false;
             Processor = Screen.GetScoreProcessor();
+            StandardizedProcessor = standardizedProcessor;
 
             if (Processor.Stats != null)
                 HitStatistics = Processor.GetHitStatistics();
@@ -257,12 +263,16 @@ namespace Quaver.Shared.Screens.Result.UI
             switch (Screen.ResultsType)
             {
                 case ResultScreenType.Gameplay:
+                    if (Screen.ScoreProcessor.Failed)
+                        performanceRating = 0;
+                    else
+                        performanceRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods)).CalculateRating(Screen.Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor);
+                    break;
                 case ResultScreenType.Replay:
                     if (Screen.ScoreProcessor.Failed)
                         performanceRating = 0;
                     else
-                        performanceRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods))
-                            .CalculateRating(Screen.ScoreProcessor);
+                        performanceRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(Screen.ScoreProcessor.Mods)).CalculateRating(Screen.ScoreProcessor);
                     break;
                 case ResultScreenType.Score:
                     performanceRating = Screen.Score.PerformanceRating;
@@ -271,13 +281,24 @@ namespace Quaver.Shared.Screens.Result.UI
                     throw new ArgumentOutOfRangeException();
             }
 
+            var standardized = StandardizedProcessor != null
+                ? new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "RANKED ACCURACY",StringHelper.AccuracyToString(StandardizedProcessor.Accuracy))
+                : null;
+
+            var beginPosition = 40;
+            var spacing = StandardizedProcessor != null ? 44 : 100;
+
             ResultKeyValueItems = new List<ResultKeyValueItem>()
             {
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "SCORE RATING", $"{performanceRating:F}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "TOTAL SCORE", $"{Screen.ScoreProcessor.Score:N0}"),
                 new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "ACCURACY", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
-                new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "MAX COMBO", $"{Screen.ScoreProcessor.MaxCombo}x"),
             };
+
+            if (standardized != null)
+                ResultKeyValueItems.Add(standardized);
+
+            ResultKeyValueItems.Add(new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "MAX COMBO", $"{Screen.ScoreProcessor.MaxCombo}x"));
 
             for (var i = 0; i < ResultKeyValueItems.Count; i++)
             {
@@ -285,7 +306,13 @@ namespace Quaver.Shared.Screens.Result.UI
                 item.Parent = this;
                 item.Y = TopHorizontalDividerLine.Y + 15;
 
-                item.X = VerticalDividerLine.X / ResultKeyValueItems.Count * i + 40;
+                if (i == 0)
+                {
+                    item.X = beginPosition;
+                    continue;
+                }
+
+                item.X = ResultKeyValueItems[i - 1].X + ResultKeyValueItems[i - 1].Width + spacing;
             }
 
             // Add a divider line at the bottom of the key value items

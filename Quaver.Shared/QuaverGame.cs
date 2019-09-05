@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
@@ -270,6 +271,7 @@ namespace Quaver.Shared
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
+            JudgementWindowsDatabaseCache.Load();
 
             // Force garabge collection.
             GC.Collect();
