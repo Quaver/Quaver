@@ -25,6 +25,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
@@ -360,17 +361,17 @@ namespace Quaver.Shared.Screens.Result
 
             if (Gameplay.IsMultiplayerGame)
             {
-                if (Gameplay.Ruleset.ScoreProcessor.MultiplayerProcessor.HasFailed)
-                {
-                    Logger.Important($"Skipping score submission due to failure in multiplayer match", LogType.Network);
-                    return;
-                }
-
                 if (!Gameplay.IsPlayComplete)
                 {
                     Logger.Important($"Skipping score submission due to play not being complete in multiplayer match", LogType.Network);
                     return;
                 }
+            }
+
+            if (Gameplay.Ruleset.ScoreProcessor.Failed && !Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Failed)
+            {
+                Logger.Important($"Skipping score submission due to failing on custom windows, but not on standardized", LogType.Network);
+                return;
             }
 
             ThreadScheduler.Run(() =>
@@ -406,7 +407,7 @@ namespace Quaver.Shared.Screens.Result
                 }
 
                 OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, Gameplay.ReplayCapturer.Replay,
-                    Gameplay.Ruleset.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                    Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor, ScrollSpeed, ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
                     SteamManager.PTicket));
             });
         }
@@ -425,10 +426,20 @@ namespace Quaver.Shared.Screens.Result
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
 
+                var windows = JudgementWindowsDatabaseCache.Selected.Value;
+
+                localScore.JudgementWindowPreset = windows.Name;
+                localScore.JudgementWindowMarv = windows.Marvelous;
+                localScore.JudgementWindowPerf = windows.Perfect;
+                localScore.JudgementWindowGreat = windows.Great;
+                localScore.JudgementWindowGood= windows.Good;
+                localScore.JudgementWindowOkay = windows.Okay;
+                localScore.JudgementWindowMiss = windows.Miss;
+
                 if (ScoreProcessor.Failed)
                     localScore.PerformanceRating = 0;
                 else
-                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(Gameplay.Ruleset.ScoreProcessor.Mods)).CalculateRating(Gameplay.Ruleset.ScoreProcessor.Accuracy);
+                    localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(Gameplay.Ruleset.ScoreProcessor.Mods)).CalculateRating(Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }
@@ -742,7 +753,7 @@ namespace Quaver.Shared.Screens.Result
 
             users.ForEach(x =>
             {
-                var rating = x.RatingProcessor.CalculateRating(x.Processor);
+                var rating = x.CalculateRating();
 
                 if (x.Processor.MultiplayerProcessor.IsEliminated || x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
                     rating = 0;
