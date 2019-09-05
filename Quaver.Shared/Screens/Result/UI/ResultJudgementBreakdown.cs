@@ -7,8 +7,10 @@
 
 using System;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -90,6 +92,44 @@ namespace Quaver.Shared.Screens.Result.UI
                     X = progressBar.Width + 10,
                     FontSize = 15
                 };
+
+                var windows = new SpriteTextBitmap(FontsBitmap.GothamRegular, $"")
+                {
+                    Parent = progressBar,
+                    Alignment = Alignment.MidLeft,
+                    Tint = color,
+                    X = judgementAmount.X + judgementAmount.Width + 3,
+                    FontSize = 15
+                };
+
+                if (Container.StandardizedProcessor != null)
+                    windows.Text = $" - {Processor.JudgementWindow[j] / ModHelper.GetRateFromMods(Processor.Mods)}ms";
+                else if (Container.Screen.ResultsType == ResultScreenType.Score
+                         && Container.Screen.Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name
+                         && Container.Screen.Score.JudgementWindowPreset != null)
+                {
+                    switch (j)
+                    {
+                        case Judgement.Marv:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMarv + "ms";
+                            break;
+                        case Judgement.Perf:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowPerf + "ms";
+                            break;
+                        case Judgement.Great:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGreat + "ms";
+                            break;
+                        case Judgement.Good:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGood+ "ms";
+                            break;
+                        case Judgement.Okay:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowOkay + "ms";
+                            break;
+                        case Judgement.Miss:
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMiss + "ms";
+                            break;
+                    }
+                }
 
                 i++;
             }

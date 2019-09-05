@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         ///    New score processor for this current user's scoreboard.
         ///    So we can calculate score on the fly.
         /// </summary>
-        internal ScoreProcessor Processor { get; }
+        internal ScoreProcessor Processor { get; set; }
 
         /// <summary>
         ///     Handles calculating rating for this individual user.
@@ -282,7 +282,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             if (setScoreboardValues && Type == ScoreboardUserType.Self)
             {
+                var oldProcessor = Processor;
+                Processor = Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor;
                 var rating = CalculateRating();
+                Processor = oldProcessor;
+
                 Score.Text = $"{StringHelper.RatingToString(rating)} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
 
@@ -421,7 +425,14 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         /// <returns></returns>
         public double CalculateRating()
         {
+            var oldProcessor = Processor;
+
+            if (Type == ScoreboardUserType.Self)
+                Processor = Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor;
+
             var rating = RatingProcessor.CalculateRating(Processor.Accuracy);
+
+            Processor = oldProcessor;
 
             if (Processor.MultiplayerProcessor != null)
             {

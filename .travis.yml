@@ -6,7 +6,7 @@ git:
 install:
   - dotnet restore
 script:
-  - dotnet build ./Quaver
+  - dotnet build ./Quaver --configuration Debug
 after_success:
  - wget https://raw.githubusercontent.com/Swan/travis-ci-discord-webhook/master/send.sh
  - chmod +x send.sh

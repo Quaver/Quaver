@@ -1083,18 +1083,18 @@ namespace Quaver.Shared.Screens.Gameplay
 
             TimeSinceLastJudgementsSentToServer = 0;
 
-            if (Ruleset.ScoreProcessor.Stats.Count == 0)
+            if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == 0)
                 return;
 
-            if (Ruleset.ScoreProcessor.Stats.Count == LastJudgementIndexSentToServer + 1)
+            if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == LastJudgementIndexSentToServer + 1)
                 return;
 
             var judgementsToGive = new List<Judgement>();
 
-            for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.ScoreProcessor.Stats.Count; i++)
-                judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
+            for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count; i++)
+                judgementsToGive.Add(Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats[i].Judgement);
 
-            LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
+            LastJudgementIndexSentToServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count - 1;
 
             if (OnlineManager.CurrentGame.InProgress)
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);

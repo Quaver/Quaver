@@ -19,6 +19,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.IPC;
 using Quaver.Shared.Online;
 using Wobble;
+using Wobble.Extended.HotReload;
 using Wobble.Logging;
 using Wobble.Platform;
 using ZetaIpc.Runtime.Client;
@@ -54,7 +55,7 @@ namespace Quaver
 
                     // Send to running instance only if we have actual data to send
                     if (args.Length > 0)
-                        SendToRunningInstanceIpc(args[0]);
+                        SendToRunningInstanceIpc(args);
 
                     return;
                 }
@@ -111,7 +112,11 @@ namespace Quaver
                 Logger.Error(e, LogType.Runtime);
             }
 
+#if VISUAL_TESTS
+            using (var game = new QuaverGame(new HotLoader("../../../../Quaver.Shared/")))
+#else
             using (var game = new QuaverGame())
+#endif
                 game.Run();
         }
 
@@ -144,17 +149,19 @@ namespace Quaver
         ///     Creates an IPC client and sends a message to the already
         ///     running instance of Quaver
         /// </summary>
-        private static void SendToRunningInstanceIpc(string message)
+        private static void SendToRunningInstanceIpc(string[] messages)
         {
             try
             {
                 var c = new IpcClient();
                 c.Initialize(IpcPort);
-                c.Send(message);
+
+                foreach (var message in messages)
+                    c.Send(message);
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
+                Console.WriteLine(e.ToString());
             }
         }
     }

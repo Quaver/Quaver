@@ -190,7 +190,11 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         private void CreateScoreContainer()
         {
-            ScoreContainer = new ResultScoreContainer(Screen as ResultScreen)
+            var screen = Screen as ResultScreen;
+
+            var standardized = screen?.ResultsType == ResultScreenType.Gameplay ? screen.Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor : null;
+
+            ScoreContainer = new ResultScoreContainer(screen, standardized)
             {
                 Parent = MainContainer,
                 Alignment = Alignment.BotCenter,
