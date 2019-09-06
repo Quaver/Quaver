@@ -141,12 +141,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamBold, "Presets")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, "Presets")
             {
                 Parent = SubHeaderBackground,
                 Alignment = Alignment.MidLeft,
                 X = 18,
-                FontSize = 20
+                FontSize = 18
             };
 
             var addButton = new BorderedTextButton("Add", Color.Lime, (sender, args) =>
