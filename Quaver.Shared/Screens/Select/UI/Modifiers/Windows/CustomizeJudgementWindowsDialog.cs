@@ -216,6 +216,28 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
             };
 
             DeleteButton.Size = new ScalableVector2(DeleteButton.Width * 0.85f, DeleteButton.Height * 0.85f);
+
+            var resetToDefaultButton = new BorderedTextButton("Reset", Color.Orange, (sender, args) =>
+                {
+                    Sliders[Judgement.Marv].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Marvelous;
+                    Sliders[Judgement.Perf].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Perfect;
+                    Sliders[Judgement.Great].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Great;
+                    Sliders[Judgement.Good].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Good;
+                    Sliders[Judgement.Okay].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Okay;
+                    Sliders[Judgement.Miss].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Miss;
+                })
+            {
+                Parent = SubHeaderBackground,
+                Alignment = Alignment.MidRight,
+                X = DeleteButton.X - DeleteButton.Width - 12,
+                Text =
+                {
+                    FontSize = 14,
+                    Font = Fonts.Exo2SemiBold
+                }
+            };
+
+            resetToDefaultButton .Size = new ScalableVector2(resetToDefaultButton .Width * 0.85f, resetToDefaultButton .Height * 0.85f);
         }
 
         /// <summary>
