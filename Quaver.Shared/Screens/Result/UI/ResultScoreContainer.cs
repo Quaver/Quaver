@@ -281,12 +281,22 @@ namespace Quaver.Shared.Screens.Result.UI
                     throw new ArgumentOutOfRangeException();
             }
 
-            var standardized = StandardizedProcessor != null
-                ? new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "RANKED ACCURACY",StringHelper.AccuracyToString(StandardizedProcessor.Accuracy))
-                : null;
+            ResultKeyValueItem standardized = null;
 
-            var beginPosition = 40;
-            var spacing = StandardizedProcessor != null ? 44 : 100;
+            int spacing;
+            const int beginPosition = 40;
+
+            if (StandardizedProcessor != null || Screen.ResultsType == ResultScreenType.Score && !Screen.Score.IsOnline)
+            {
+                var acc = StandardizedProcessor?.Accuracy ?? Screen.Score.RankedAccuracy;
+
+                standardized = new ResultKeyValueItem(ResultKeyValueItemType.Vertical, "RANKED ACCURACY",
+                    StringHelper.AccuracyToString((float) acc));
+
+                spacing = 44;
+            }
+            else
+                spacing = 100;
 
             ResultKeyValueItems = new List<ResultKeyValueItem>()
             {

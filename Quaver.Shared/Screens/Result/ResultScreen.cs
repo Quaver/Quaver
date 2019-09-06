@@ -425,6 +425,7 @@ namespace Quaver.Shared.Screens.Result
                     Gameplay.PauseCount, Gameplay.Map.RandomizeModifierSeed);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
+                localScore.RankedAccuracy = Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy;
 
                 var windows = JudgementWindowsDatabaseCache.Selected.Value;
 

@@ -175,6 +175,11 @@ namespace Quaver.Shared.Database.Scores
         public float JudgementWindowMiss { get; set; }
 
         /// <summary>
+        ///     The score's ranked/standardized accuracy
+        /// </summary>
+        public double RankedAccuracy { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]
