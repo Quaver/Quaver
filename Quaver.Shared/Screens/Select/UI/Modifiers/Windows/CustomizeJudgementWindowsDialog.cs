@@ -156,9 +156,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     Name = "Preset"
                 };
 
-                var id = JudgementWindowsDatabaseCache.Insert(windows);
+                var presetCount = JudgementWindowsDatabaseCache.Presets.FindAll(x => !x.IsDefault).Count;
+                JudgementWindowsDatabaseCache.Insert(windows);
 
-                windows.Name = $"Preset {windows.Id}";
+                windows.Name = $"Preset {presetCount + 1}";
                 JudgementWindowsDatabaseCache.Update(windows);
 
                 WindowContainer.AddObject(windows);
