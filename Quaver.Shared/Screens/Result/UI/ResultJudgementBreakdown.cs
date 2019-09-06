@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 };
 
                 if (Container.StandardizedProcessor != null)
-                    windows.Text = $" - {Processor.JudgementWindow[j] / ModHelper.GetRateFromMods(Processor.Mods)}ms";
+                    windows.Text = $" - {Processor.JudgementWindow[j] / ModHelper.GetRateFromMods(Processor.Mods)} ms";
                 else if (Container.Screen.ResultsType == ResultScreenType.Score
                          && Container.Screen.Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name
                          && Container.Screen.Score.JudgementWindowPreset != null)
@@ -111,24 +111,26 @@ namespace Quaver.Shared.Screens.Result.UI
                     switch (j)
                     {
                         case Judgement.Marv:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMarv + "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMarv;
                             break;
                         case Judgement.Perf:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowPerf + "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowPerf;
                             break;
                         case Judgement.Great:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGreat + "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGreat;
                             break;
                         case Judgement.Good:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGood+ "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowGood;
                             break;
                         case Judgement.Okay:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowOkay + "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowOkay;
                             break;
                         case Judgement.Miss:
-                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMiss + "ms";
+                            windows.Text = " - " + Container.Screen.Score.JudgementWindowMiss;
                             break;
                     }
+
+                    windows.Text += " ms";
                 }
 
                 i++;

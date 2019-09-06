@@ -18,8 +18,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 3;
-            Scrollbar.X = -Width - 6;
+            Scrollbar.Width = 4;
+            Scrollbar.X = -Width - 14;
             EasingType = Easing.OutQuint;
             ScrollSpeed = 150;
             TimeToCompleteScroll = 1200;

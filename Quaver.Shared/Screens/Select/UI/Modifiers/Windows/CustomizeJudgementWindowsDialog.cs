@@ -43,6 +43,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
         private Button DeleteButton { get; set; }
 
+        public BorderedTextButton ResetToDefaultButton { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -72,8 +74,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
             CreateContainer();
             CreateHeader();
             CreateSubHeaders();
-            CreateFooter();
             CreateWindowContainer();
+            CreateFooter();
             CreateSliders();
         }
 
@@ -109,7 +111,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(930, 500),
-                Tint = ColorHelper.HexToColor("#2f2f2f")
+                Tint = ColorHelper.HexToColor("#0f0f0f")
             };
 
             CustomizeContainer.AddBorder(Colors.MainAccent, 2);
@@ -137,16 +139,16 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Y = 2,
                 Alignment = Alignment.TopCenter,
                 Size = new ScalableVector2(CustomizeContainer.Width - 4, 47),
-                Tint = ColorHelper.HexToColor("#101010")
+                Tint = ColorHelper.HexToColor("#212121")
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamBold, "Presets")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, "Presets")
             {
                 Parent = SubHeaderBackground,
                 Alignment = Alignment.MidLeft,
                 X = 18,
-                FontSize = 20
+                FontSize = 18
             };
 
             var addButton = new BorderedTextButton("Add", Color.Lime, (sender, args) =>
@@ -156,9 +158,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     Name = "Preset"
                 };
 
-                var id = JudgementWindowsDatabaseCache.Insert(windows);
+                var presetCount = JudgementWindowsDatabaseCache.Presets.FindAll(x => !x.IsDefault).Count;
+                JudgementWindowsDatabaseCache.Insert(windows);
 
-                windows.Name = $"Preset {windows.Id}";
+                windows.Name = $"Preset {presetCount + 1}";
                 JudgementWindowsDatabaseCache.Update(windows);
 
                 WindowContainer.AddObject(windows);
@@ -215,6 +218,28 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
             };
 
             DeleteButton.Size = new ScalableVector2(DeleteButton.Width * 0.85f, DeleteButton.Height * 0.85f);
+
+            ResetToDefaultButton = new BorderedTextButton("Reset", Color.Orange, (sender, args) =>
+                {
+                    Sliders[Judgement.Marv].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Marvelous;
+                    Sliders[Judgement.Perf].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Perfect;
+                    Sliders[Judgement.Great].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Great;
+                    Sliders[Judgement.Good].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Good;
+                    Sliders[Judgement.Okay].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Okay;
+                    Sliders[Judgement.Miss].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Miss;
+                })
+            {
+                Parent = SubHeaderBackground,
+                Alignment = Alignment.MidRight,
+                X = DeleteButton.X - DeleteButton.Width - 12,
+                Text =
+                {
+                    FontSize = 14,
+                    Font = Fonts.Exo2SemiBold
+                }
+            };
+
+            ResetToDefaultButton .Size = new ScalableVector2(ResetToDefaultButton .Width * 0.85f, ResetToDefaultButton .Height * 0.85f);
         }
 
         /// <summary>
@@ -226,8 +251,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Parent = CustomizeContainer,
                 Y = -2,
                 Alignment = Alignment.BotCenter,
-                Size = new ScalableVector2(CustomizeContainer.Width - 4, 49),
-                Tint = ColorHelper.HexToColor("#101010")
+                Size = new ScalableVector2(CustomizeContainer.Width - 4, 52),
+                Tint = ColorHelper.HexToColor("#212121")
             };
 
             var closeButton = new BorderedTextButton("Close", Color.Crimson, (sender, args) => Close())
@@ -245,12 +270,12 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
             closeButton.Size = new ScalableVector2(closeButton.Width * 0.85f, closeButton.Height * 0.85f);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamBold, "NOTE: Scores with custom windows must be passing on the Standard windows in order to be ranked.")
+            new SpriteTextBitmap(FontsBitmap.GothamRegular, "*Scores with custom windows must be passing on Standard* in order to be ranked.")
             {
                 Parent = FooterBackground,
                 Alignment = Alignment.MidLeft,
                 X = 15,
-                FontSize = 15
+                FontSize = 18
             };
         }
 
@@ -292,7 +317,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     FontSize = 18
                 };
 
-                var slider = new Slider(BindableSliderValues[judgement], new Vector2(550, 3), FontAwesome.Get(FontAwesomeIcon.fa_circle))
+                var slider = new Slider(BindableSliderValues[judgement], new Vector2(530, 3), FontAwesome.Get(FontAwesomeIcon.fa_circle))
                 {
                     Parent = CustomizeContainer,
                     X = name.X + 70,
@@ -300,7 +325,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 };
 
                 Sliders.Add(judgement, slider);
-                var value = new SpriteTextBitmap(FontsBitmap.GothamRegular, BindableSliderValues[judgement].Value.ToString(), false)
+                var value = new SpriteTextBitmap(FontsBitmap.GothamRegular, BindableSliderValues[judgement].Value + " ms", false)
                 {
                     Parent = CustomizeContainer,
                     Alignment = Alignment.TopRight,
@@ -311,7 +336,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
                 slider.BindedValue.ValueChanged += (sender, args) =>
                 {
-                    value.Text = args.Value.ToString();
+                    value.Text = args.Value.ToString() + " ms";
 
                     switch (judgement)
                     {
@@ -370,6 +395,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     EditButton.IsClickable = false;
                     DeleteButton.Visible = false;
                     DeleteButton.IsClickable = false;
+                    ResetToDefaultButton.Visible = false;
+                    ResetToDefaultButton.IsClickable = false;
                 }
                 else
                 {
@@ -381,6 +408,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     EditButton.IsClickable = true;
                     DeleteButton.Visible = true;
                     DeleteButton.IsClickable = true;
+                    ResetToDefaultButton.Visible = true;
+                    ResetToDefaultButton.IsClickable = true;
                 }
             }
         }

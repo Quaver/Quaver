@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
             HitObjectManager = CreateHitObjectManager();
 
             StandardizedReplayPlayer = new VirtualReplayPlayer(new Replay(Map.Mode,
-                ConfigManager.Username.Value, ModManager.Mods, Screen.MapHash), map, true);
+                ConfigManager.Username.Value, ModManager.Mods, Screen.MapHash), map, null, true);
         }
 
         /// <inheritdoc />
