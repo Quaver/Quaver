@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -127,6 +128,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             // Get a formatted string of the activated mods.
             var modsString = "Mods: " + (ModManager.CurrentModifiersList.Count > 0 ? $"{ModHelper.GetModsString(ModManager.Mods)}" : "None");
+
+            modsString += $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
+
             Mods = new SpriteText(Fonts.SourceSansProSemiBold, modsString, 13)
             {
                 Parent = this,

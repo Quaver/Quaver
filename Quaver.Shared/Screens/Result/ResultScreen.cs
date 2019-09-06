@@ -425,6 +425,7 @@ namespace Quaver.Shared.Screens.Result
                     Gameplay.PauseCount, Gameplay.Map.RandomizeModifierSeed);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
+                localScore.RankedAccuracy = Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy;
 
                 var windows = JudgementWindowsDatabaseCache.Selected.Value;
 
@@ -849,7 +850,23 @@ namespace Quaver.Shared.Screens.Result
             var qua = Map.LoadQua();
             qua.ApplyMods(replay.Mods);
 
-            var player = new VirtualReplayPlayer(replay, qua);
+            JudgementWindows windows = null;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name && Score.JudgementWindowMarv != 0)
+            {
+                windows = new JudgementWindows()
+                {
+                    Marvelous = Score.JudgementWindowMarv,
+                    Perfect = Score.JudgementWindowPerf,
+                    Great = Score.JudgementWindowGreat,
+                    Good = Score.JudgementWindowGood,
+                    Okay = Score.JudgementWindowOkay,
+                    Miss = Score.JudgementWindowMiss
+                };
+            }
+
+            var player = new VirtualReplayPlayer(replay, qua, windows);
             player.PlayAllFrames();
 
             return player.ScoreProcessor;
