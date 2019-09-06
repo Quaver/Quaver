@@ -43,6 +43,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
         private Button DeleteButton { get; set; }
 
+        public BorderedTextButton ResetToDefaultButton { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -217,7 +219,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
             DeleteButton.Size = new ScalableVector2(DeleteButton.Width * 0.85f, DeleteButton.Height * 0.85f);
 
-            var resetToDefaultButton = new BorderedTextButton("Reset", Color.Orange, (sender, args) =>
+            ResetToDefaultButton = new BorderedTextButton("Reset", Color.Orange, (sender, args) =>
                 {
                     Sliders[Judgement.Marv].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Marvelous;
                     Sliders[Judgement.Perf].BindedValue.Value = (int) JudgementWindowsDatabaseCache.Standard.Perfect;
@@ -237,7 +239,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 }
             };
 
-            resetToDefaultButton .Size = new ScalableVector2(resetToDefaultButton .Width * 0.85f, resetToDefaultButton .Height * 0.85f);
+            ResetToDefaultButton .Size = new ScalableVector2(ResetToDefaultButton .Width * 0.85f, ResetToDefaultButton .Height * 0.85f);
         }
 
         /// <summary>
@@ -393,6 +395,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     EditButton.IsClickable = false;
                     DeleteButton.Visible = false;
                     DeleteButton.IsClickable = false;
+                    ResetToDefaultButton.Visible = false;
+                    ResetToDefaultButton.IsClickable = false;
                 }
                 else
                 {
@@ -404,6 +408,8 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                     EditButton.IsClickable = true;
                     DeleteButton.Visible = true;
                     DeleteButton.IsClickable = true;
+                    ResetToDefaultButton.Visible = true;
+                    ResetToDefaultButton.IsClickable = true;
                 }
             }
         }
