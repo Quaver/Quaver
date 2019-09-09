@@ -119,16 +119,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         public void Destroy() => Playfield.Destroy();
 
         /// <summary>
-        ///     Pools <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>
+        ///     Polls <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>
         ///     with the standardized scoring values
         /// </summary>
         private void UpdateStandardizedScoreProcessor()
         {
             if (Screen.ReplayCapturer.Replay.Frames.Count == StandardizedReplayPlayer.Replay.Frames.Count)
-                return;
-
-            // Don't continue if the user has failed
-            if (StandardizedReplayPlayer.ScoreProcessor.Failed)
                 return;
 
             for (var i = StandardizedReplayPlayer.Replay.Frames.Count; i < Screen.ReplayCapturer.Replay.Frames.Count; i++)
