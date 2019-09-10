@@ -296,7 +296,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     .OrderBy(x => x.HasQuit)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
                     .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
-                    .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
+                    .ThenByDescending(x =>
+                    {
+                        var game = (QuaverGame) GameBase.Game;
+
+                        if (x.Type != ScoreboardUserType.Self || !(game.CurrentScreen is GameplayScreen screen))
+                            return x.RatingProcessor.CalculateRating(x.Processor.Accuracy);
+
+                        return x.RatingProcessor.CalculateRating(screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+                    })
                     .ThenByDescending(x => x.Processor.Accuracy)
                     .ToList();
             }
@@ -304,7 +312,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             {
                 users = Users
                     .OrderBy(x => x.Processor.Health <= 0)
-                    .ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy))
+                    .ThenByDescending(x =>
+                    {
+                        var game = (QuaverGame) GameBase.Game;
+
+                        if (x.Type != ScoreboardUserType.Self || !(game.CurrentScreen is GameplayScreen screen))
+                            return x.RatingProcessor.CalculateRating(x.Processor.Accuracy);
+
+                        return x.RatingProcessor.CalculateRating(screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+                    })
                     .ThenByDescending(x => x.Processor.Accuracy)
                     .ToList();
             }
