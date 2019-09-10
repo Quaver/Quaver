@@ -31,6 +31,7 @@ using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Input;
+using Wobble.Platform;
 using Wobble.Platform.Linux;
 using Wobble.Platform.Windows;
 using Wobble.Window;
@@ -681,8 +682,14 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
         /// </summary>
         public void CopySelectedHitObjects()
         {
+            var cp = Wobble.Platform.Clipboard.NativeClipboard;
+
+            // If no objects are selected, just select the time in the track instead
             if (SelectedHitObjects.Count == 0)
+            {
+                cp.SetText(((int)AudioEngine.Track.Time).ToString());
                 return;
+            }
 
             var copyString = "";
 
@@ -696,8 +703,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys
 
             copyString = copyString.TrimEnd(',');
 
-            var clipboard = new WindowsClipboard();
-            clipboard.SetText(copyString);
+            cp.SetText(copyString);
         }
 
         /// <summary>

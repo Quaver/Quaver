@@ -502,19 +502,26 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Only allow offset changes if the map hasn't started or if we're on a break
                 if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
+                    var change = 5;
+                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                        KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    {
+                        change = 1;
+                    }
+
                     // Handle offset +
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                     {
-                        MapManager.Selected.Value.LocalOffset += 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        MapManager.Selected.Value.LocalOffset += change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
 
                     // Handle offset -
                     if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                     {
-                        MapManager.Selected.Value.LocalOffset -= 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
+                        MapManager.Selected.Value.LocalOffset -= change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
                         MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
                     }
                 }
@@ -1076,18 +1083,18 @@ namespace Quaver.Shared.Screens.Gameplay
 
             TimeSinceLastJudgementsSentToServer = 0;
 
-            if (Ruleset.ScoreProcessor.Stats.Count == 0)
+            if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == 0)
                 return;
 
-            if (Ruleset.ScoreProcessor.Stats.Count == LastJudgementIndexSentToServer + 1)
+            if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == LastJudgementIndexSentToServer + 1)
                 return;
 
             var judgementsToGive = new List<Judgement>();
 
-            for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.ScoreProcessor.Stats.Count; i++)
-                judgementsToGive.Add(Ruleset.ScoreProcessor.Stats[i].Judgement);
+            for (var i = LastJudgementIndexSentToServer + 1; i < Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count; i++)
+                judgementsToGive.Add(Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats[i].Judgement);
 
-            LastJudgementIndexSentToServer = Ruleset.ScoreProcessor.Stats.Count - 1;
+            LastJudgementIndexSentToServer = Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count - 1;
 
             if (OnlineManager.CurrentGame.InProgress)
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);

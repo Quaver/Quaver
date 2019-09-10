@@ -105,6 +105,11 @@ namespace Quaver.Shared.Online
         public static MultiplayerGame CurrentGame { get; private set; }
 
         /// <summary>
+        ///     If the current user is a donator
+        /// </summary>
+        public static bool IsDonator => Connected && Self.OnlineUser.UserGroups.HasFlag(UserGroups.Donator);
+
+        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
@@ -412,44 +417,51 @@ namespace Quaver.Shared.Online
         {
             Logger.Important($"Retrieved scores and ranked status for: {e.Id} | {e.Md5} | {e.Response.Code}", LogType.Network);
 
-            var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
-
-            if (mapsets.Count == 0)
-                return;
-
-            var map = mapsets.First().Maps.Find(x => x.MapId == e.Id && x.Md5Checksum == e.Md5);
-
-            switch (e.Response.Code)
+            try
             {
-                case OnlineScoresResponseCode.NotSubmitted:
-                    map.RankedStatus = RankedStatus.NotSubmitted;
-                    break;
-                case OnlineScoresResponseCode.NeedsUpdate:
-                    break;
-                case OnlineScoresResponseCode.Unranked:
-                    map.RankedStatus = RankedStatus.Unranked;
-                    break;
-                case OnlineScoresResponseCode.Ranked:
-                    map.RankedStatus = RankedStatus.Ranked;
-                    break;
-                case OnlineScoresResponseCode.DanCourse:
-                    map.RankedStatus = RankedStatus.DanCourse;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var mapsets = MapManager.Mapsets.Where(x => x.Maps.Any(y => y.MapId == e.Id && y.Md5Checksum == e.Md5)).ToList();
+
+                if (mapsets.Count == 0)
+                    return;
+
+                var map = mapsets.First().Maps.Find(x => x.MapId == e.Id && x.Md5Checksum == e.Md5);
+
+                switch (e.Response.Code)
+                {
+                    case OnlineScoresResponseCode.NotSubmitted:
+                        map.RankedStatus = RankedStatus.NotSubmitted;
+                        break;
+                    case OnlineScoresResponseCode.NeedsUpdate:
+                        break;
+                    case OnlineScoresResponseCode.Unranked:
+                        map.RankedStatus = RankedStatus.Unranked;
+                        break;
+                    case OnlineScoresResponseCode.Ranked:
+                        map.RankedStatus = RankedStatus.Ranked;
+                        break;
+                    case OnlineScoresResponseCode.DanCourse:
+                        map.RankedStatus = RankedStatus.DanCourse;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                MapDatabaseCache.UpdateMap(map);
+
+                var game = GameBase.Game as QuaverGame;
+
+                // If in song select, update the banner of the currently selected map.
+                if (game.CurrentScreen is SelectScreen screen)
+                {
+                    var view = screen.View as SelectScreenView;
+
+                    if (MapManager.Selected.Value == map)
+                        view.Banner.RankedStatus.UpdateMap(map);
+                }
             }
-
-            MapDatabaseCache.UpdateMap(map);
-
-            var game = GameBase.Game as QuaverGame;
-
-            // If in song select, update the banner of the currently selected map.
-            if (game.CurrentScreen is SelectScreen screen)
+            catch (Exception)
             {
-                var view = screen.View as SelectScreenView;
-
-                if (MapManager.Selected.Value == map)
-                    view.Banner.RankedStatus.UpdateMap(map);
+                // ignored. This can happen for donor-only maps
             }
         }
 

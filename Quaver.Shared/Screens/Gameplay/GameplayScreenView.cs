@@ -254,7 +254,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Notify the user if their local offset is actually set for this map.
             if (MapManager.Selected.Value.LocalOffset != 0)
-                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset}ms");
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms");
 
             if (Screen.IsCalibratingOffset)
             {
@@ -402,7 +402,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.ScoreProcessor.Accuracy));
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 

@@ -10,30 +10,19 @@ using System.Collections.Generic;
 using System.Text;
 using MonoGame.Extended.BitmapFonts;
 using Wobble;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Assets
 {
     public static class FontsBitmap
     {
-        public static BitmapFont Exo2Regular { get; private set; }
-        public static BitmapFont AllerRegular { get; private set; }
-        public static BitmapFont MuliRegular { get; private set; }
-        public static BitmapFont MuliBold { get; private set; }
-        public static BitmapFont CodeProRegular { get; private set; }
-        public static BitmapFont CodeProBold { get; private set; }
-        public static BitmapFont GothamRegular { get; private set; }
-        public static BitmapFont GothamBold { get; private set; }
-
-        public static void Load()
-        {
-            Exo2Regular = GameBase.Game.Content.Load<BitmapFont>("exo2-regular");
-            AllerRegular = GameBase.Game.Content.Load<BitmapFont>("aller-regular");
-            MuliRegular = GameBase.Game.Content.Load<BitmapFont>("muli");
-            MuliBold = GameBase.Game.Content.Load<BitmapFont>("muli-bold");
-            CodeProRegular = GameBase.Game.Content.Load<BitmapFont>("code-pro");
-            CodeProBold = GameBase.Game.Content.Load<BitmapFont>("code-pro-bold");
-            GothamRegular = GameBase.Game.Content.Load<BitmapFont>("gotham");
-            GothamBold = GameBase.Game.Content.Load<BitmapFont>("gotham-bold");
-        }
+        public static BitmapFont Exo2Regular => FontManager.LoadBitmapFont($"exo2-regular");
+        public static BitmapFont AllerRegular => FontManager.LoadBitmapFont("aller-regular");
+        public static BitmapFont MuliRegular => FontManager.LoadBitmapFont("muli");
+        public static BitmapFont MuliBold => FontManager.LoadBitmapFont($"muli-bold");
+        public static BitmapFont CodeProRegular => FontManager.LoadBitmapFont($"code-pro");
+        public static BitmapFont CodeProBold => FontManager.LoadBitmapFont($"code-pro-bold");
+        public static BitmapFont GothamRegular => FontManager.LoadBitmapFont("gotham");
+        public static BitmapFont GothamBold => FontManager.LoadBitmapFont($"gotham-bold");
     }
 }
