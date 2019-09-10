@@ -853,7 +853,7 @@ namespace Quaver.Shared.Screens.Result
             JudgementWindows windows = null;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name && Score.JudgementWindowMarv != 0)
+            if (Score != null && Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name && Score.JudgementWindowMarv != 0)
             {
                 windows = new JudgementWindows()
                 {
