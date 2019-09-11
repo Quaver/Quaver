@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Scheduling;
 using Steamworks;
 using Wobble;
 using Wobble.Logging;
@@ -166,14 +167,14 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Requests to steam to retrieve a user's avatar.
         /// </summary>
-        public static void SendAvatarRetrievalRequest(ulong steamId)
+        public static void SendAvatarRetrievalRequest(ulong steamId) => ThreadScheduler.Run(() =>
         {
             var info = SteamFriends.RequestUserInformation(new CSteamID(steamId), false);
             Logger.Debug($"Requested Steam user information for user: {steamId} - {info}", LogType.Network);
 
             if (!info)
                 LoadAvatarIfNotExists(steamId);
-        }
+        });
 
         /// <summary>
         ///     Called when a requested user's persona state has changed.

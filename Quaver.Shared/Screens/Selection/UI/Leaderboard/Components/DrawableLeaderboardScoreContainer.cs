@@ -515,29 +515,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             var steamId = (ulong) Score.Item.SteamId;
 
-            if (Score.IsPersonalBest && !Score.Item.IsOnline)
+            lock (Avatar)
+            lock (Avatar.Image)
             {
-                Avatar.Image = UserInterface.UnknownAvatar;
-                return;
-            }
-
-            if (SteamManager.UserAvatars.ContainsKey(steamId))
-            {
-                if (Avatar.Image == SteamManager.UserAvatars[steamId])
+                if (Score.IsPersonalBest && !Score.Item.IsOnline)
+                {
+                    Avatar.Image = UserInterface.UnknownAvatar;
+                    Avatar.Alpha = 1;
                     return;
+                }
 
-                Avatar.Alpha = 0;
+                if (SteamManager.UserAvatars.ContainsKey(steamId))
+                {
+                    if (Avatar.Image == SteamManager.UserAvatars[steamId])
+                        return;
+
+                    Avatar.Alpha = 0;
+                    Avatar.ClearAnimations();
+                    Avatar.FadeTo(1, Easing.Linear, 400);
+
+                    Avatar.Image = SteamManager.UserAvatars[steamId];
+                    return;
+                }
+
+                Avatar.Image = UserInterface.UnknownAvatar;
                 Avatar.ClearAnimations();
-                Avatar.FadeTo(1, Easing.Linear, 400);
-
-                Avatar.Image = SteamManager.UserAvatars[steamId];
-                return;
+                Avatar.Alpha = 0;
             }
 
-            Avatar.Image = BlankImage;
             SteamManager.SendAvatarRetrievalRequest(steamId);
-            Avatar.ClearAnimations();
-            Avatar.Alpha = 0;
         }
 
         /// <summary>
@@ -600,10 +606,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (e.SteamId != (ulong) Score.Item.SteamId)
                 return;
 
-            Avatar.Alpha = 0;
-            Avatar.ClearAnimations();
-            Avatar.FadeTo(1, Easing.Linear, 400);
-            Avatar.Image = e.Texture;
+            lock (Avatar)
+            lock (Avatar.Image)
+            {
+                Avatar.Alpha = 0;
+                Avatar.ClearAnimations();
+                Avatar.FadeTo(1, Easing.Linear, 400);
+                Avatar.Image = e.Texture;
+            }
         }
 
         /// <summary>
