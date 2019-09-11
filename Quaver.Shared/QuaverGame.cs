@@ -35,6 +35,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.Border;
@@ -150,7 +151,8 @@ namespace Quaver.Shared
             {"Leaderboard + Maps", typeof(TestLeaderboardWithMapsScreen)},
             {"DrawableLeaderboardScore", typeof(TestScreenDrawableLeaderboardScore)},
             {"ModifierSelector", typeof(TestModifierSelectorScreen)},
-            {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)}
+            {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)},
+            {"SelectionScreen", typeof(SelectionScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

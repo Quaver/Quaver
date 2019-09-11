@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+            if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
                 InterpolateBars();
 
             base.Update(gameTime);
@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Visualizer
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (ConfigManager.DisplayMenuAudioVisualizer.Value)
+            if (ConfigManager.DisplayMenuAudioVisualizer != null && ConfigManager.DisplayMenuAudioVisualizer.Value)
                 base.Draw(gameTime);
         }
 
