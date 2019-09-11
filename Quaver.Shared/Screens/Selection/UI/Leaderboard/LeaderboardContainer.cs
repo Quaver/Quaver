@@ -201,6 +201,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <returns></returns>
         private FetchedScoreStore FetchScores(Map map, CancellationToken token)
         {
+            if (map == null)
+                return new FetchedScoreStore(new List<Score>());
+
             switch (ConfigManager.LeaderboardSection.Value)
             {
                 case LeaderboardType.Local:
@@ -223,7 +226,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="e"></param>
         private void OnFetchedScores(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
         {
-            Logger.Important($"Fetched {e.Result.Scores.Count} {ConfigManager.LeaderboardSection.Value} scores for map: {e.Input} | " +
+            Logger.Important($"Fetched {e.Result.Scores?.Count} {ConfigManager.LeaderboardSection?.Value} scores for map: {e?.Input} | " +
                              $"Has PB: {e.Result.PersonalBest != null}", LogType.Runtime);
 
             StopLoading();
