@@ -160,23 +160,25 @@ namespace Quaver.Shared.Graphics.Containers
                     if (Pool.Count == 0)
                         return;
 
-                    var firstDrawable = Pool.First();
+                    for (var i = 0; i < Pool.Count; i++)
+                    {
+                        var firstDrawable = Pool.First();
 
-                    // Check if the object is in the rect of the ScrollContainer.
-                    // If it is, then there's no updating that needs to happen.
-                    if (!RectangleF.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                        return;
+                        // Check if the object is in the rect of the ScrollContainer.
+                        // If it is, then there's no updating that needs to happen.
+                        if (!RectangleF.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
+                            return;
 
-                    // Update the mapset's information and y position.
-                    firstDrawable.Y = (PoolStartingIndex + PoolSize) * DrawableHeight;
+                        // Update the mapset's information and y position.
+                        firstDrawable.Y = (PoolStartingIndex + PoolSize) * DrawableHeight;
+                        firstDrawable.UpdateContent(AvailableItems[PoolStartingIndex + PoolSize], PoolStartingIndex + PoolSize);
 
-                    firstDrawable.UpdateContent(AvailableItems[PoolStartingIndex + PoolSize], PoolStartingIndex + PoolSize);
+                        // Circularly shift the drawable in the list so it's at the end.
+                        Pool.Remove(firstDrawable);
+                        Pool.Add(firstDrawable);
 
-                    // Circularly shift the drawable in the list so it's at the end.
-                    Pool.Remove(firstDrawable);
-                    Pool.Add(firstDrawable);
-
-                    PoolStartingIndex++;
+                        PoolStartingIndex++;
+                    }
                     break;
                 case Direction.Backward:
                     if (PoolStartingIndex - 1 > AvailableItems.Count - 1 || PoolStartingIndex - 1 < 0)
@@ -185,21 +187,24 @@ namespace Quaver.Shared.Graphics.Containers
                     if (Pool.Count == 0)
                         return;
 
-                    var lastDrawable = Pool.Last();
+                    for (var i = Pool.Count - 1; i >= 0; i--)
+                    {
+                        var lastDrawable = Pool.Last();
 
-                    // Check if the object is in the rect of the ScrollContainer.
-                    // If it is, then there's no updating that needs to happen.
-                    if (!RectangleF.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                        return;
+                        // Check if the object is in the rect of the ScrollContainer.
+                        // If it is, then there's no updating that needs to happen.
+                        if (!RectangleF.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
+                            return;
 
-                    lastDrawable.Y = (PoolStartingIndex - 1) * DrawableHeight;
-                    lastDrawable.UpdateContent(AvailableItems[PoolStartingIndex - 1], PoolStartingIndex - 1);
+                        lastDrawable.Y = (PoolStartingIndex - 1) * DrawableHeight;
+                        lastDrawable.UpdateContent(AvailableItems[PoolStartingIndex - 1], PoolStartingIndex - 1);
 
-                    // Circularly shift the drawable in the list so it's at the beginning
-                    Pool.Remove(lastDrawable);
-                    Pool.Insert(0, lastDrawable);
+                        // Circularly shift the drawable in the list so it's at the beginning
+                        Pool.Remove(lastDrawable);
+                        Pool.Insert(0, lastDrawable);
 
-                    PoolStartingIndex--;
+                        PoolStartingIndex--;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
