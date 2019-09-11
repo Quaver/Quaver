@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
-        private MapScrollContainer MapContainer { get; set; }
+        public MapScrollContainer MapContainer { get; private set; }
 
         /// <summary>
         ///     The position of the active panel on the left

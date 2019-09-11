@@ -15,6 +15,7 @@ using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -137,6 +138,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF1();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
+            HandleRightMouseButtonClick();
         }
 
         /// <summary>
@@ -211,6 +213,26 @@ namespace Quaver.Shared.Screens.Selection
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+        }
+
+        /// <summary>
+        ///     Handles when the user clicks the right mouse button.
+        ///     If the user has the maps container open, this'll bring back the mapset container
+        /// </summary>
+        private void HandleRightMouseButtonClick()
+        {
+            if (!MouseManager.IsUniqueClick(MouseButton.Right))
+                return;
+
+            if (ActiveScrollContainer.Value != SelectScrollContainerType.Maps)
+                return;
+
+            var view = (SelectionScreenView) View;
+
+            if (!view.MapContainer.IsHovered())
+                return;
+
+            ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
         }
 
         /// <summary>
