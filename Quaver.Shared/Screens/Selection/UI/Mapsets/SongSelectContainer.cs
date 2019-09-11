@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -98,17 +99,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <returns></returns>
         protected int GetPoolStartingIndex()
         {
-            if (SelectedIndex <= PoolSize / 2 + 1)
+            const int ITEMS_DISPLAYED_BEFORE_POOL_SHIFT = 5;
+
+            var val = SelectedIndex - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT;
+
+            if (SelectedIndex <= 0)
                 return 0;
-            if (SelectedIndex + PoolSize > AvailableItems.Count)
-                return AvailableItems.Count - PoolSize;
 
-            var index = SelectedIndex - PoolSize / 2 + 1;
+            if (SelectedIndex <= AvailableItems.Count - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT)
+                return val < 0 ? 0 : val;
 
-            if (index < 0)
-                index = 0;
-
-            return index;
+            var proposed = AvailableItems.Count - PoolSize;
+            return proposed < 0 ? 0 : proposed;
         }
 
         /// <summary>

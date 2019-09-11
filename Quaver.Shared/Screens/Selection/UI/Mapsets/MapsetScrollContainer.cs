@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight + (-SelectedIndex - 3);
+        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight;
 
         /// <inheritdoc />
         /// <summary>

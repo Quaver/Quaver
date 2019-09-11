@@ -115,10 +115,10 @@ namespace Quaver.Shared.Graphics.Containers
             // Create enough objects to use for the pool and contain them inside the drawable.
             for (var i = 0; i < PoolSize && i < AvailableItems?.Count; i++)
             {
-                var drawable = AddObject(PoolStartingIndex + i);
+                if (i + PoolStartingIndex >= AvailableItems.Count)
+                    break;
 
-                if (i >= AvailableItems.Count)
-                    continue;
+                var drawable = AddObject(PoolStartingIndex + i);
 
                 if (containDrawables)
                     AddContainedDrawable(drawable);
