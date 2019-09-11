@@ -183,13 +183,19 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Creates <see cref="LeaderboardContainer"/>
         /// </summary>
-        private void CreateLeaderboardContainer() => LeaderboardContainer = new LeaderboardContainer
+        private void CreateLeaderboardContainer()
         {
-            Parent = Container,
-            Alignment = Alignment.TopLeft,
-            X = ScreenPaddingX,
-            Y = FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY
-        };
+            LeaderboardContainer = new LeaderboardContainer
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                X = ScreenPaddingX,
+                Y = FilterPanel.Y + FilterPanel.Height + LeftPanelSpacingY
+            };
+
+            LeaderboardContainer.X = -LeaderboardContainer.Width - ScreenPaddingX;
+            LeaderboardContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 1000);
+        }
 
         /// <summary>
         ///     Creates <see cref="ModifierSelector"/>
@@ -215,8 +221,10 @@ namespace Quaver.Shared.Screens.Selection
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 Y = FilterPanel.Y + FilterPanel.Height,
-                X = -ScreenPaddingX
             };
+
+            MapsetContainer.X = MapsetContainer.Width + ScreenPaddingX;
+            MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 1200);
         }
 
         /// <summary>
