@@ -109,8 +109,11 @@ namespace Quaver.Shared.Graphics.Containers
         {
             Pool = new List<PoolableSprite<T>>();
 
+            if (AvailableItems == null)
+                return;
+
             // Create enough objects to use for the pool and contain them inside the drawable.
-            for (var i = 0; i < PoolSize && i < AvailableItems.Count; i++)
+            for (var i = 0; i < PoolSize && i < AvailableItems?.Count; i++)
             {
                 var drawable = AddObject(PoolStartingIndex + i);
 
@@ -145,6 +148,9 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="direction"></param>
         private void HandlePoolShifting(Direction direction)
         {
+            if (AvailableItems == null)
+                return;
+
             switch (direction)
             {
                 case Direction.Forward:
