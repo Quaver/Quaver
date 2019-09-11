@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ScrollbarBackground.Visible = Pool.Count > 10;
+            ScrollbarBackground.Visible = Pool?.Count > 10;
 
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && DialogManager.Dialogs.Count == 0
@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             SnapToTop();
 
-            AvailableItems.Clear();
+            AvailableItems?.Clear();
             ScrollbarBackground.Visible = false;
             FinishedLoading = false;
         }
@@ -191,6 +191,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="store"></param>
         public void HandleFetchedScores(Map map, FetchedScoreStore store)
         {
+            if (map == null)
+                return;
+
             var isConnected = OnlineManager.Connected;
             var isDonator = OnlineManager.IsDonator;
 
@@ -317,6 +320,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             SnapToTop();
 
             AvailableItems = e.Result.Scores;
+
+            if (AvailableItems == null)
+                return;
 
             const int MAX_SHOWN_ITEMS = 10;
 
