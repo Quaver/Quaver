@@ -426,25 +426,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void OnMapsetClicked()
         {
-            if (ParentMapset.Container != null)
-            {
-                var container = (MapsetScrollContainer) ParentMapset.Container;
-                container.SelectedIndex = ParentMapset.Index;
-
-                // If a mapset is clicked, then we want to take the user to the maps container
-                if (container.ActiveScrollContainer != null && MapManager.Selected.Value == ParentMapset.Item.Maps.First())
-                    container.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
-            }
+            var container = (MapsetScrollContainer) ParentMapset.Container;
 
             // Mapset is already selected, so go play the current map.
             if (ParentMapset.IsSelected)
             {
-                Logger.Important($"User clicked on mapset to play: {MapManager.Selected.Value}", LogType.Runtime, false);
+                container.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                container.SelectedIndex = ParentMapset.Index;
                 return;
             }
 
-            Logger.Important($"User opened mapset: {ParentMapset.Item.Artist} - {ParentMapset.Item.Title}", LogType.Runtime, false);
             MapManager.Selected.Value = ParentMapset.Item.Maps.First();
+            container.SelectedIndex = ParentMapset.Index;
         }
     }
 }
