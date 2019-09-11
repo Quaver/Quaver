@@ -93,11 +93,11 @@ namespace Quaver.Shared.Screens.Selection
             CreateFooter();
             CreateAudioVisualizer();
             CreateFilterPanel();
-            CreateLeaderboardContainer();
-            CreateModifierSelectorContainer();
             CreateMapsetContainer();
             CreateMapContainer();
             ReorderContainerLayerDepth();
+            CreateLeaderboardContainer();
+            CreateModifierSelectorContainer();
 
             SelectScreen.ActiveLeftPanel.ValueChanged += OnActiveLeftPanelChanged;
             SelectScreen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
