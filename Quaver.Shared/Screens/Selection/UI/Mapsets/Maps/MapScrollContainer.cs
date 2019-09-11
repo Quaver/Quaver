@@ -87,7 +87,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             }
         }
 
-        protected override void SetSelectedIndex() => SelectedIndex = 0;
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        protected override void SetSelectedIndex()
+        {
+            var index = MapManager.Selected.Value.Mapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
+
+            if (index == -1)
+                index = 0;
+
+            SelectedIndex = index;
+        }
 
         /// <summary>
         ///     Called when the selected map has changed
@@ -107,10 +118,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             AvailableItems = e.Value.Mapset.Maps;
 
             // Get the new selected mapset index
-            SelectedIndex = e.Value.Mapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
-
-            if (SelectedIndex == -1)
-                SelectedIndex = 0;
+            SetSelectedIndex();
 
             // Reset the starting index so we can be aware of the mapsets that are needed
             PoolStartingIndex = GetPoolStartingIndex();
