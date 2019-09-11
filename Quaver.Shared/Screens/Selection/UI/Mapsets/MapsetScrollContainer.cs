@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight + (-SelectedIndex - 3);
+        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight;
 
         /// <inheritdoc />
         /// <summary>
@@ -122,10 +122,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                     AvailableItems = e.Value;
 
-                    SelectedIndex = e.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
-
-                    if (SelectedIndex == -1)
-                        SelectedIndex = 0;
+                    SetSelectedIndex();
 
                     // Reset the starting index so we can be aware of the mapsets that are needed
                     PoolStartingIndex = GetPoolStartingIndex();
@@ -138,6 +135,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                     SnapToSelected();
                 }
             }, 250);
+        }
+
+        /// <summary>
+        ///     Sets the appropriate index of the selected mapset
+        /// </summary>
+        protected override void SetSelectedIndex()
+        {
+            SelectedIndex = AvailableItems.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+
+            if (SelectedIndex == -1)
+                SelectedIndex = 0;
         }
     }
 }

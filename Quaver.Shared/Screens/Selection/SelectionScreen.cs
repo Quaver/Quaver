@@ -5,14 +5,17 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -55,6 +58,15 @@ namespace Quaver.Shared.Screens.Selection
             InitializeActiveScrollContainerBindable();
 
             View = new SelectionScreenView(this);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            FadeAudioTrackIn();
+            base.OnFirstUpdate();
         }
 
         /// <inheritdoc />
@@ -126,6 +138,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF1();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
+            HandleRightMouseButtonClick();
         }
 
         /// <summary>
@@ -140,13 +153,19 @@ namespace Quaver.Shared.Screens.Selection
             {
                 case SelectContainerPanel.Leaderboard:
                     if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
+                    {
                         ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                        return;
+                    }
+
+                    // TODO: Handle for multiplayer
+                    Exit(() => new MenuScreen());
                     break;
                 case SelectContainerPanel.Modifiers:
                     ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 
@@ -195,7 +214,27 @@ namespace Quaver.Shared.Screens.Selection
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
         }
-        
+
+        /// <summary>
+        ///     Handles when the user clicks the right mouse button.
+        ///     If the user has the maps container open, this'll bring back the mapset container
+        /// </summary>
+        private void HandleRightMouseButtonClick()
+        {
+            if (!MouseManager.IsUniqueClick(MouseButton.Right))
+                return;
+
+            if (ActiveScrollContainer.Value != SelectScrollContainerType.Maps)
+                return;
+
+            var view = (SelectionScreenView) View;
+
+            if (!view.MapContainer.IsHovered())
+                return;
+
+            ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+        }
+
         /// <summary>
         ///     Gets the adjacent rate value.
         ///
@@ -216,7 +255,19 @@ namespace Quaver.Shared.Screens.Selection
             var next = current + adjustment * (faster ? 1f : -1f);
             return (float) Math.Round(next, 2);
         }
-        
+
+        /// <summary>
+        ///     Fades the track back to the config setting
+        /// </summary>
+        private void FadeAudioTrackIn()
+        {
+            if (ConfigManager.VolumeMusic == null)
+                return;
+
+            if (AudioEngine.Track.IsPlaying)
+                AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
