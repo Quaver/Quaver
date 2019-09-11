@@ -87,6 +87,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             }
         }
 
+        protected override void SetSelectedIndex() => SelectedIndex = 0;
+
         /// <summary>
         ///     Called when the selected map has changed
         /// </summary>

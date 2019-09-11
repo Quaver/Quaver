@@ -48,8 +48,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateScrollbar();
 
             // ReSharper disable once VirtualMemberCallInConstructor
+            SetSelectedIndex();
             PoolStartingIndex = GetPoolStartingIndex();
+            SnapToSelected();
             CreatePool();
+            PositionAndContainPoolObjects();
         }
 
         /// <inheritdoc />
@@ -180,5 +183,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         /// <param name="gameTime"></param>
         protected abstract void HandleInput(GameTime gameTime);
+
+        /// <summary>
+        ///     Sets the appropriate index of the selected mapset
+        /// </summary>
+        protected abstract void SetSelectedIndex();
     }
 }
