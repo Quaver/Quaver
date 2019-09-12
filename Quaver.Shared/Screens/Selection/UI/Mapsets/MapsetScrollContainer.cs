@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override float GetSelectedPosition() => (-SelectedIndex + 4) * DrawableMapset.MapsetHeight;
+        protected override float GetSelectedPosition() => (-SelectedIndex.Value + 4) * DrawableMapset.MapsetHeight;
 
         /// <inheritdoc />
         /// <summary>
@@ -80,23 +80,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // Move to the next mapset
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
             {
-                if (SelectedIndex + 1 >= AvailableMapsets.Value.Count)
+                if (SelectedIndex.Value + 1 >= AvailableMapsets.Value.Count)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex + 1].Maps.First();
-                SelectedIndex++;
+                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value + 1].Maps.First();
+                SelectedIndex.Value++;
 
                 ScrollToSelected();
             }
             // Move to the previous mapset
             else if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
             {
-                if (SelectedIndex - 1 < 0)
+                if (SelectedIndex.Value - 1 < 0)
                     return;
 
-                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex - 1].Maps.First();
+                MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value - 1].Maps.First();
 
-                SelectedIndex--;
+                SelectedIndex.Value--;
                 ScrollToSelected();
             }
         }
@@ -142,10 +142,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         protected override void SetSelectedIndex()
         {
-            SelectedIndex = AvailableItems.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+            SelectedIndex.Value = AvailableItems.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-            if (SelectedIndex == -1)
-                SelectedIndex = 0;
+            var oldValue = SelectedIndex.Value;
+
+            if (SelectedIndex.Value == -1)
+                SelectedIndex.Value = 0;
+
+            // Manually trigger the change event in the case that the selected index is still the same value.
+            // Other components that rely on the bindable will want to update their state in case
+            // the mapset has changed in any way.
+            if (oldValue == SelectedIndex.Value)
+                SelectedIndex.TriggerChangeEvent();
         }
     }
 }

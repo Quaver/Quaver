@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -19,7 +20,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     The index of the selected available item
         /// </summary>
-        public int SelectedIndex { get; set; }
+        public BindableInt SelectedIndex { get; set; }
 
         /// <summary>
         ///     The height of the scroll container
@@ -47,8 +48,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Alpha = 0;
             CreateScrollbar();
 
+            SelectedIndex = new BindableInt(-1, 0, int.MaxValue);
+
             // ReSharper disable once VirtualMemberCallInConstructor
             SetSelectedIndex();
+
             PoolStartingIndex = GetPoolStartingIndex();
             SnapToSelected();
             CreatePool();
@@ -73,6 +77,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            SelectedIndex?.Dispose();
+            base.Destroy();
         }
 
         /// <summary>
@@ -104,12 +116,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             const int ITEMS_DISPLAYED_BEFORE_POOL_SHIFT = 5;
 
-            var val = SelectedIndex - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT;
+            var val = SelectedIndex.Value - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT;
 
-            if (SelectedIndex <= 0)
+            if (SelectedIndex.Value <= 0)
                 return 0;
 
-            if (SelectedIndex <= AvailableItems.Count - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT)
+            if (SelectedIndex.Value <= AvailableItems.Count - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT)
                 return val < 0 ? 0 : val;
 
             var proposed = AvailableItems.Count - PoolSize;
@@ -121,7 +133,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         protected void ScrollToSelected()
         {
-            if (SelectedIndex < 3)
+            if (SelectedIndex.Value < 3)
                 return;
 
             // Scroll the the place where the map is.
@@ -134,7 +146,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         protected void SnapToSelected()
         {
-            ContentContainer.Y = SelectedIndex < 7 ? 0 : GetSelectedPosition();
+            ContentContainer.Y = SelectedIndex.Value < 7 ? 0 : GetSelectedPosition();
 
             ContentContainer.Animations.Clear();
             PreviousContentContainerY = ContentContainer.Y;

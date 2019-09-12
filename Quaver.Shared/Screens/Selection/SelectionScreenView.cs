@@ -232,7 +232,8 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void CreateMapContainer()
         {
-            MapContainer = new MapScrollContainer(MapManager.Selected.Value?.Mapset?.Maps, SelectScreen.ActiveScrollContainer)
+            MapContainer = new MapScrollContainer(SelectScreen.AvailableMapsets, MapsetContainer,
+                MapManager.Selected.Value?.Mapset?.Maps, SelectScreen.ActiveScrollContainer)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,

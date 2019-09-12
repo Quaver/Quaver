@@ -429,7 +429,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (ParentMapset.Container != null)
             {
                 var container = (MapsetScrollContainer) ParentMapset.Container;
-                container.SelectedIndex = ParentMapset.Index;
+                container.SelectedIndex.Value = ParentMapset.Index;
 
                 // If a mapset is clicked, then we want to take the user to the maps container
                 if (ParentMapset.IsSelected)
