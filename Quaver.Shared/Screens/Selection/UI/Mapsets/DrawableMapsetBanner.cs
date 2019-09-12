@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -50,8 +51,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             Mapset = mapset;
 
+            Alpha = 0;
             Image = DefaultBanner;
             BackgroundHelper.BannerLoaded += OnBannerLoaded;
+            MapManager.Selected.ValueChanged += OnMapChanged;
         }
 
         /// <inheritdoc />
@@ -62,10 +65,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             TimeSinceLoadRequested += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (TimeSinceLoadRequested >= 250 && !HasBannerLoaded)
+            if (TimeSinceLoadRequested >= 200 && !HasBannerLoaded)
             {
                 Alpha = 0;
+                Logger.Debug($"Loading banner for mapset: {Mapset.Item.Artist} - {Mapset.Item.Title}", LogType.Runtime, false);
                 BackgroundHelper.LoadBanner(Mapset.Item);
+
                 HasBannerLoaded = true;
             }
 
@@ -79,20 +84,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public void UpdateContent(DrawableMapset mapset)
         {
             Mapset = mapset;
-            Alpha = 0;
-            ClearAnimations();
 
+            // The map is already loaded, so just use it.
             if (BackgroundHelper.Banners.ContainsKey(Mapset.Item.Directory))
             {
-                Image = BackgroundHelper.Banners[Mapset.Item.Directory];
-                Alpha = Mapset.IsSelected ? 1 : DeselectedAlpha;
+                var tex = BackgroundHelper.Banners[Mapset.Item.Directory];
+
+                if (Image != tex)
+                {
+                    Image = tex;
+                    FadeTo(Mapset.IsSelected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
+                }
+                else
+                {
+                    Image = tex;
+
+                    ClearAnimations();
+                    FadeTo(Mapset.IsSelected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
+                }
 
                 HasBannerLoaded = true;
+                TimeSinceLoadRequested = 1000;
                 return;
             }
 
-            HasBannerLoaded = false;
-            TimeSinceLoadRequested = 0;
+            MakeInvisible();
         }
 
         /// <inheritdoc />
@@ -101,6 +117,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public override void Destroy()
         {
             BackgroundHelper.BannerLoaded -= OnBannerLoaded;
+
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
 
             base.Destroy();
         }
@@ -114,7 +133,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             ClearAnimations();
 
             var alpha = Mapset.IsSelected ? 1 : DeselectedAlpha;
-            FadeTo(alpha, Easing.OutQuint, 700);
+            FadeTo(alpha, Easing.OutQuint, 400);
+        }
+
+        /// <summary>
+        ///     Makes the banner completely invisible
+        /// </summary>
+        private void MakeInvisible()
+        {
+            Alpha = 0;
+            ClearAnimations();
+
+            HasBannerLoaded = false;
+            TimeSinceLoadRequested = 0;
         }
 
         /// <summary>
@@ -127,10 +158,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (e.Mapset.Directory != Mapset.Item.Directory)
                 return;
 
-            Alpha = 0;
-            Image = e.Banner;
-            FadeIn();
-            HasBannerLoaded = true;
+            UpdateContent(Mapset);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
+            => UpdateContent(Mapset);
     }
 }
