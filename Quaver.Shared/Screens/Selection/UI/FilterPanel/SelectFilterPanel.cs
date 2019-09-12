@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -14,6 +15,7 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 using Wobble.Scheduling;
 using Wobble.Window;
@@ -31,6 +33,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         ///     The current search the user has had
         /// </summary>
         private Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
+        ///     Underlying button that prevents mapsets from being clicked from inside the area
+        /// </summary>
+        private ImageButton Button { get; }
 
         /// <summary>
         ///     The banner that displays the current map's background
@@ -86,6 +93,14 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
 
             Size = new ScalableVector2(WindowManager.Width, 85);
             Tint = ColorHelper.HexToColor("#242424");
+
+            Button = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = this,
+                Size = Size,
+                Alpha = 0,
+                Depth = 1
+            };
 
             Banner = new FilterPanelBanner(this)
             {
