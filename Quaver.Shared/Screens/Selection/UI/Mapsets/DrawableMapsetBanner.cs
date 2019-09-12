@@ -65,7 +65,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             TimeSinceLoadRequested += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // First load the banner if the user
             if (TimeSinceLoadRequested >= 200 && !HasBannerLoaded)
             {
                 Alpha = 0;
