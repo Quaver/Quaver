@@ -70,7 +70,8 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
 
             MapManager.Selected.Value = screen.AvailableMapsets.Value.First().Maps.First();
 
-            MapContainer = new MapScrollContainer(MapManager.Selected.Value.Mapset.Maps, ActiveScrollContainer)
+            MapContainer = new MapScrollContainer(screen.AvailableMapsets, MapsetContainer,
+                MapManager.Selected.Value.Mapset.Maps, ActiveScrollContainer)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
