@@ -178,22 +178,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             if (CurrentMapset == null)
                 return;
 
-            ThreadScheduler.Run(() =>
-            {
-                lock (Pool)
-                lock (AvailableItems)
-                {
-                    try
-                    {
-                        Initialize(CurrentMapset.Maps);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                }
-            });
-
+            Initialize(CurrentMapset.Maps);
         }
     }
 }
