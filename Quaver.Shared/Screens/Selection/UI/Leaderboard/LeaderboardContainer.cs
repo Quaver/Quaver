@@ -85,6 +85,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             if (ConfigManager.LeaderboardSection != null)
                 ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChanged;
 
+            if (ConfigManager.DisplayFailedLocalScores != null)
+                ConfigManager.DisplayFailedLocalScores.ValueChanged += OnDisplayFailedLocalScoresChanged;
+
             ModManager.ModsChanged += OnModsChanged;
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
 
@@ -105,6 +108,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             {
                 // ReSharper disable once DelegateSubtraction
                 ConfigManager.LeaderboardSection.ValueChanged -= OnLeaderboardSectionChanged;
+            }
+
+            if (ConfigManager.DisplayFailedLocalScores != null)
+            {
+                // ReSharper disable once DelegateSubtraction
+                ConfigManager.DisplayFailedLocalScores.ValueChanged -= OnDisplayFailedLocalScoresChanged;
             }
 
             ModManager.ModsChanged -= OnModsChanged;
@@ -253,6 +262,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnLeaderboardSectionChanged(object sender, BindableValueChangedEventArgs<LeaderboardType> e) => FetchScores();
+
+        /// <summary>
+        ///     Called when the user changes the option to display failed local scores
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplayFailedLocalScoresChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (ConfigManager.LeaderboardSection == null || ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
+                return;
+
+            FetchScores();
+        }
 
         /// <summary>
         ///     Called when the user selects new mods while their leaderboard section is selected mods
