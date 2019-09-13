@@ -53,6 +53,7 @@ using Quaver.Shared.Screens.Tests.LeaderboardWithMaps;
 using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
 using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Quaver.Shared.Screens.Tests.ModifierSelectors;
+using Quaver.Shared.Screens.Tests.YesNoDialog;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -152,7 +153,8 @@ namespace Quaver.Shared
             {"DrawableLeaderboardScore", typeof(TestScreenDrawableLeaderboardScore)},
             {"ModifierSelector", typeof(TestModifierSelectorScreen)},
             {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)},
-            {"SelectionScreen", typeof(SelectionScreen)}
+            {"SelectionScreen", typeof(SelectionScreen)},
+            {"YesNoDialog", typeof(TestYesNoDialogScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

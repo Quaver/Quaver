@@ -19,6 +19,7 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 
@@ -152,6 +153,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="gameTime"></param>
         private void HandleInput(GameTime gameTime)
         {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
             HandleKeyPressEscape();
             HandleKeyPressF1();
             HandleKeyPressF2();
