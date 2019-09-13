@@ -9,8 +9,10 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
@@ -57,6 +59,11 @@ namespace Quaver.Shared.Screens.Selection
         ///     Invoked when a random mapset has been selected
         /// </summary>
         public static event EventHandler<RandomMapsetSelectedEventArgs> RandomMapsetSelected;
+
+        /// <summary>
+        ///     If the user is currently exporting a mapset
+        /// </summary>
+        private bool IsExportingMapset { get; set; }
 
         /// <summary>
         /// </summary>
@@ -148,6 +155,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressEscape();
             HandleKeyPressF1();
             HandleKeyPressF2();
+            HandleKeyPressF3();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleRightMouseButtonClick();
@@ -191,7 +199,7 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
-        ///     Handles random map selection
+        ///     Handles random map selection through key press
         /// </summary>
         private void HandleKeyPressF2()
         {
@@ -199,6 +207,17 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             SelectRandomMap();
+        }
+
+        /// <summary>
+        ///    Handles exporting mapsets through F3 key press
+        /// </summary>
+        private void HandleKeyPressF3()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F3))
+                return;
+
+            ExportSelectedMapset();
         }
 
         /// <summary>
@@ -306,6 +325,34 @@ namespace Quaver.Shared.Screens.Selection
 
             MapManager.Selected.Value = AvailableMapsets.Value[index].Maps[mapIndex];
             RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(AvailableMapsets.Value[index], index));
+        }
+
+        /// <summary>
+        ///     Exports the current mapset to a zip file and opens it in the file manager
+        /// </summary>
+        public void ExportSelectedMapset()
+        {
+            if (MapManager.Selected.Value == null)
+                return;
+
+            if (IsExportingMapset)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Slow down! You must wait for your previous mapset to export");
+                return;
+            }
+
+            IsExportingMapset = true;
+
+            ThreadScheduler.Run(() =>
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to zip archive. Please wait!");
+
+                MapManager.Selected.Value.Mapset.ExportToZip();
+                IsExportingMapset = false;
+
+                NotificationManager.Show(NotificationLevel.Success,
+                    $"Successfully exported {MapManager.Selected.Value.Mapset.Artist} - {MapManager.Selected.Value.Mapset.Title}!");
+            });
         }
 
         /// <inheritdoc />
