@@ -14,6 +14,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Quaver.Shared.Skinning;
 using SQLite;
 using TimeAgo;
@@ -26,6 +27,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
@@ -232,6 +234,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alpha = 0,
                 Depth = 1,
                 UsePreviousSpriteBatchOptions = true
+            };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                if (Score.Item.IsOnline)
+                    return;
+
+                DialogManager.Show(new DeleteScoreDialog(Score.Item));
             };
         }
 

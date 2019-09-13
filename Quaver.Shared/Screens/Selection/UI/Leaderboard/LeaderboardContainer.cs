@@ -90,6 +90,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 
             ModManager.ModsChanged += OnModsChanged;
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+            ScoreDatabaseCache.ScoreDeleted += OnScoreDeleted;
 
             FetchScores();
         }
@@ -120,6 +121,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+            ScoreDatabaseCache.ScoreDeleted -= OnScoreDeleted;
 
             base.Destroy();
         }
@@ -317,6 +319,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
         {
             if (e.Value != ConnectionStatus.Connected || ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
+                return;
+
+            FetchScores();
+        }
+
+        /// <summary>
+        ///     Called when the user deletes a local score.
+        ///     Refreshes the leaderboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScoreDeleted(object sender, ScoreDeletedEventArgs e)
+        {
+            if (ConfigManager.LeaderboardSection == null || ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                 return;
 
             FetchScores();
