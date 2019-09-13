@@ -337,7 +337,7 @@ namespace Quaver.Shared.Screens.Selection
 
             if (IsExportingMapset)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Slow down! You must wait for you previous mapset to export");
+                NotificationManager.Show(NotificationLevel.Warning, "Slow down! You must wait for your previous mapset to export");
                 return;
             }
 
