@@ -161,11 +161,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (e.Value.Mapset != e.OldValue.Mapset)
+            if (e.Value?.Mapset != e.OldValue?.Mapset)
                 return;
 
             ScrollToSelected();
-            return;
         }
 
         /// <summary>

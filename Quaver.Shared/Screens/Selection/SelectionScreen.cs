@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
@@ -50,6 +51,15 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
+        private Random Rng { get; } = new Random();
+
+        /// <summary>
+        ///     Invoked when a random mapset has been selected
+        /// </summary>
+        public static event EventHandler<RandomMapsetSelectedEventArgs> RandomMapsetSelected;
+
+        /// <summary>
+        /// </summary>
         public SelectionScreen()
         {
             InitializeSearchQueryBindable();
@@ -88,6 +98,7 @@ namespace Quaver.Shared.Screens.Selection
             AvailableMapsets?.Dispose();
             ActiveLeftPanel?.Dispose();
             ActiveScrollContainer?.Dispose();
+            RandomMapsetSelected = null;
 
             base.Destroy();
         }
@@ -136,6 +147,7 @@ namespace Quaver.Shared.Screens.Selection
         {
             HandleKeyPressEscape();
             HandleKeyPressF1();
+            HandleKeyPressF2();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleRightMouseButtonClick();
@@ -176,6 +188,17 @@ namespace Quaver.Shared.Screens.Selection
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && ActiveLeftPanel.Value != SelectContainerPanel.Modifiers)
                 ActiveLeftPanel.Value = SelectContainerPanel.Modifiers;
+        }
+
+        /// <summary>
+        ///     Handles random map selection
+        /// </summary>
+        private void HandleKeyPressF2()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                return;
+
+            SelectRandomMap();
         }
 
         /// <summary>
@@ -264,8 +287,25 @@ namespace Quaver.Shared.Screens.Selection
             if (ConfigManager.VolumeMusic == null)
                 return;
 
-            if (AudioEngine.Track.IsPlaying)
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+        }
+
+        /// <summary>
+        ///     Selects a random map
+        /// </summary>
+        public void SelectRandomMap()
+        {
+            if (AvailableMapsets.Value.Count == 0)
+                return;
+
+            ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+
+            var index = Rng.Next(AvailableMapsets.Value.Count);
+            var mapIndex = Rng.Next(AvailableMapsets.Value[index].Maps.Count);
+
+            MapManager.Selected.Value = AvailableMapsets.Value[index].Maps[mapIndex];
+            RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(AvailableMapsets.Value[index], index));
         }
 
         /// <inheritdoc />
