@@ -133,9 +133,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         protected void ScrollToSelected()
         {
-            if (SelectedIndex.Value < 3)
-                return;
-
             // Scroll the the place where the map is.
             var targetScroll = GetSelectedPosition();
             ScrollTo(targetScroll, 1800);

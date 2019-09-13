@@ -44,14 +44,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             MapManager.Selected.ValueChanged += OnMapChanged;
             AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
+            SelectionScreen.RandomMapsetSelected += OnRandomMapsetSelected;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            AvailableMapsets.ValueChanged -= OnAvailableMapsetsChanged;
+            SelectionScreen.RandomMapsetSelected -= OnRandomMapsetSelected;
+
             base.Destroy();
         }
 
@@ -135,6 +140,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                     SnapToSelected();
                 }
             }, 250);
+        }
+
+        /// <summary>
+        ///     Properly sets the selected index when a random map was selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRandomMapsetSelected(object sender, RandomMapsetSelectedEventArgs e)
+        {
+            SelectedIndex.Value = e.Index;
+            ScrollToSelected();
         }
 
         /// <summary>
