@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
@@ -76,7 +77,7 @@ namespace Quaver.Shared.Graphics
             YesAction = yesAction;
             NoAction = noAction;
 
-            FadeTo(0.75f, Easing.Linear, FadeTime);
+            FadeTo(0.85f, Easing.Linear, FadeTime);
 
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
@@ -100,7 +101,7 @@ namespace Quaver.Shared.Graphics
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) && DialogManager.Dialogs.First() == this)
             {
                 NoAction?.Invoke();
                 Close();
@@ -172,7 +173,7 @@ namespace Quaver.Shared.Graphics
                 Alpha = 0
             };
 
-            Blackness.FadeTo(0.6f, Easing.Linear, FadeTime + 50);
+            Blackness.FadeTo(0.7f, Easing.Linear, FadeTime + 50);
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateConfirmation()
         {
-            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfirmationText, 24)
+            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfirmationText, 26)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter
