@@ -46,6 +46,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// </summary>
         private FilterMetadataLongNotePercentage LongNotePercentage { get; set; }
 
+        private FilterMetadataNotesPerSecond NotesPerSecond { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -114,21 +116,28 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = GameMode.X + GameMode.Width + 25
+                X = GameMode.X + GameMode.Width + spacing
             };
 
             Bpm = new FilterMetadataBpm
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = Length.X + Length.Width + 25
+                X = Length.X + Length.Width + spacing
             };
 
             LongNotePercentage = new FilterMetadataLongNotePercentage()
             {
                 Parent = this,
                 Y = GameMode.Y,
-                X = Bpm.X + Bpm.Width + 25
+                X = Bpm.X + Bpm.Width + spacing
+            };
+
+            NotesPerSecond = new FilterMetadataNotesPerSecond()
+            {
+                Parent = this,
+                Y = GameMode.Y,
+                X = LongNotePercentage.X + LongNotePercentage.Width + spacing
             };
         }
 
