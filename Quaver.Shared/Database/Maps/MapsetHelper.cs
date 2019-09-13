@@ -312,7 +312,7 @@ namespace Quaver.Shared.Database.Maps
                                 if (!float.TryParse(searchQuery.Value, out var valLength))
                                     exitLoop = true;
 
-                                if (!CompareValues(map.SongLength, valLength, searchQuery.Operator))
+                                if (!CompareValues(map.SongLength / 1000f, valLength, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Keys:
