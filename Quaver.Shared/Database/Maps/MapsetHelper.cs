@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using TagLib.Riff;
@@ -228,6 +229,7 @@ namespace Quaver.Shared.Database.Maps
                 { SearchFilterOption.Keys,       ("k", "keys") },
                 { SearchFilterOption.Status,     ("s", "status") },
                 { SearchFilterOption.LNs,        ("ln", "lns") },
+                { SearchFilterOption.NPS, ("n", "nps") }
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -293,6 +295,16 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
 
                                 if (!CompareValues(map.DifficultyFromMods(ModManager.Mods), valDiff, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            case SearchFilterOption.NPS:
+                                if (!float.TryParse(searchQuery.Value, out var valNps))
+                                    exitLoop = true;
+
+                                var objectCount = map.LongNoteCount + map.RegularNoteCount;
+                                var nps = (int) (objectCount / (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
+
+                                if (!CompareValues(nps, valNps, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Length:
@@ -517,5 +529,10 @@ namespace Quaver.Shared.Database.Maps
         ///     LN count or percentage.
         /// </summary>
         LNs,
+
+        /// <summary>
+        ///     Notes Per Second
+        /// </summary>
+        NPS
     }
 }
