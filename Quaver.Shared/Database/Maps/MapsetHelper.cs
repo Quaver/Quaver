@@ -229,7 +229,8 @@ namespace Quaver.Shared.Database.Maps
                 { SearchFilterOption.Keys,       ("k", "keys") },
                 { SearchFilterOption.Status,     ("s", "status") },
                 { SearchFilterOption.LNs,        ("ln", "lns") },
-                { SearchFilterOption.NPS, ("n", "nps") }
+                { SearchFilterOption.NPS,        ("n", "nps") },
+                { SearchFilterOption.Game,       ("g", "game") }
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -356,6 +357,25 @@ namespace Quaver.Shared.Database.Maps
                                         break;
                                     case RankedStatus.Unranked:
                                         if (!CompareValues("unranked", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+                                break;
+                            case SearchFilterOption.Game:
+                                if (!(searchQuery.Operator.Equals(operators[2]) ||
+                                      searchQuery.Operator.Equals(operators[6])))
+                                    exitLoop = true;
+
+                                switch (map.Game)
+                                {
+                                    case MapGame.Quaver:
+                                        if (!CompareValues("quaver", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case MapGame.Osu:
+                                        if (!CompareValues("osu", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     default:
@@ -533,6 +553,11 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Notes Per Second
         /// </summary>
-        NPS
+        NPS,
+
+        /// <summary>
+        ///     The game that the map comes from
+        /// </summary>
+        Game
     }
 }
