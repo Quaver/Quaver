@@ -6,15 +6,21 @@
 */
 
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Skinning;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Screens.Menu.UI.Jukebox
 {
     public class IconButton : ImageButton
     {
+        /// <summary>
+        /// </summary>
+        public bool IsPerformingFadeAnimations { get; set; } = true;
+
         public IconButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
         {
             Hovered += OnHoverEnter;
@@ -29,7 +35,8 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float) Math.Min(dt / 60, 1));
+            if (IsPerformingFadeAnimations)
+                Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float) Math.Min(dt / 60, 1));
 
             base.Update(gameTime);
         }
