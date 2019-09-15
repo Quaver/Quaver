@@ -506,7 +506,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             var maxRating = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods)).CalculateRating(100);
 
-            for (var i = 0; i < mapScores.Count && i < mapScores.Count; i++)
+            for (var i = 0; i < mapScores.Count; i++)
             {
                 if (OnlineManager.CurrentGame == null && ScoreboardLeft?.Users?.Count == 5)
                     break;
@@ -516,6 +516,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Hide unbeatable scores if the user specified it
                 if (OnlineManager.CurrentGame == null &&
                     !ConfigManager.DisplayUnbeatableScoresDuringGameplay.Value && mapScores[i].PerformanceRating > maxRating)
+                    continue;
+
+                if (OnlineManager.CurrentGame == null && mapScores[i].Grade == Grade.None)
                     continue;
 
                 // For online scores we want to just give them their score in the processor,
