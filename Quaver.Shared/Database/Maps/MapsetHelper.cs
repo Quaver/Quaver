@@ -88,6 +88,16 @@ namespace Quaver.Shared.Database.Maps
         internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
+        ///     Orders mapsets by their genre
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByGenre(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps.First().Genre).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+        
+        /// <summary>
         ///     Orders mapsets by creator.
         /// </summary>
         /// <param name="mapsets"></param>
@@ -95,6 +105,30 @@ namespace Quaver.Shared.Database.Maps
         internal static List<Mapset> OrderMapsetsByCreator(IEnumerable<Mapset> mapsets)
         {
             return mapsets.OrderBy(x => x.Maps.First().Creator).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders mapsets by the amount of times the user played
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByTimesPlayed(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderByDescending(x => x.Maps.Max(y => y.TimesPlayed))
+                    .ThenBy(x => x.Maps.First().Artist)
+                    .ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders mapsets by the most recently played
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByRecentlyPlayed(List<Mapset> mapsets)
+        {
+            return mapsets.OrderByDescending(x => x.Maps.Max(y => y.LastTimePlayed))
+                .ThenBy(x => x.Maps.First().Artist)
+                .ThenBy(x => x.Maps.First().Title).ToList();
         }
 
         /// <summary>
@@ -151,6 +185,12 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByStatus(mapsets);
                 case OrderMapsetsBy.BPM:
                     return OrderMapsetsByBpm(mapsets);
+                case OrderMapsetsBy.TimesPlayed:
+                    return OrderMapsetsByTimesPlayed(mapsets);
+                case OrderMapsetsBy.RecentlyPlayed:
+                    return OrderMapsetsByRecentlyPlayed(mapsets);
+                case OrderMapsetsBy.Genre:
+                    return OrderMapsetsByGenre(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -230,7 +270,8 @@ namespace Quaver.Shared.Database.Maps
                 { SearchFilterOption.Status,     ("s", "status") },
                 { SearchFilterOption.LNs,        ("ln", "lns") },
                 { SearchFilterOption.NPS,        ("n", "nps") },
-                { SearchFilterOption.Game,       ("g", "game") }
+                { SearchFilterOption.Game,       ("g", "game") },
+                { SearchFilterOption.TimesPlayed, ("t", "timesplayed") }
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -313,6 +354,13 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
 
                                 if (!CompareValues(map.SongLength / 1000f, valLength, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            case SearchFilterOption.TimesPlayed:
+                                if (!float.TryParse(searchQuery.Value, out var valTimesPlayed))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.TimesPlayed, valTimesPlayed, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Keys:
@@ -426,7 +474,7 @@ namespace Quaver.Shared.Database.Maps
                             if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
                                 !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
                                 !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                                !map.DifficultyName.ToLower().Contains(term))
+                                !map.DifficultyName.ToLower().Contains(term) && !map.Genre.ToLower().Contains(term))
                             {
                                 exitLoop = true;
                                 break;
@@ -558,6 +606,11 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The game that the map comes from
         /// </summary>
-        Game
+        Game,
+
+        /// <summary>
+        ///     The amount of times the user has played the map
+        /// </summary>
+        TimesPlayed
     }
 }

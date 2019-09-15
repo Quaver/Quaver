@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// </summary>
         /// <param name="availableMapsets"></param>
         public FilterDropdownSorting(Bindable<List<Mapset>> availableMapsets) : base("SORT BY: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(155, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+            new ScalableVector2(188, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             AvailableMapsets = availableMapsets;
             Dropdown.ItemSelected += OnItemSelected;
@@ -45,7 +45,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Creator",
             "Date Added",
             "Status",
-            "BPM"
+            "BPM",
+            "Times Played",
+            "Recently Played",
+            "Genre"
         };
 
         /// <summary>

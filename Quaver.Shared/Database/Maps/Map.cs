@@ -87,7 +87,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The last time the user has played the map.
         /// </summary>
-        public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss");
+        public long LastTimePlayed { get; set; }
 
         /// <summary>
         ///     The creator of the map.
@@ -128,6 +128,11 @@ namespace Quaver.Shared.Database.Maps
         ///     Tags for the map
         /// </summary>
         public string Tags { get; set; }
+
+        /// <summary>
+        ///     The genre of the song
+        /// </summary>
+        public string Genre { get; set; }
 
         /// <summary>
         ///     The most common bpm for the map
@@ -185,6 +190,11 @@ namespace Quaver.Shared.Database.Maps
                 return hitObjectCount == 0 ? 0 : ((float) LongNoteCount / hitObjectCount * 100);
             }
         }
+
+        /// <summary>
+        ///     The amount of times the map has been played
+        /// </summary>
+        public int TimesPlayed { get; set; }
 
 #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
@@ -278,6 +288,7 @@ namespace Quaver.Shared.Database.Maps
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
                 Tags = qua.Tags,
+                Genre = qua.Genre,
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
