@@ -130,6 +130,11 @@ namespace Quaver.Shared.Database.Maps
         public string Tags { get; set; }
 
         /// <summary>
+        ///     The genre of the song
+        /// </summary>
+        public string Genre { get; set; }
+
+        /// <summary>
         ///     The most common bpm for the map
         /// </summary>
         public double Bpm { get; set; }
@@ -283,6 +288,7 @@ namespace Quaver.Shared.Database.Maps
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
                 Tags = qua.Tags,
+                Genre = qua.Genre,
                 SongLength =  qua.Length,
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),

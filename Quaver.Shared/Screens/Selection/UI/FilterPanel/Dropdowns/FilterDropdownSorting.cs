@@ -47,7 +47,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Status",
             "BPM",
             "Times Played",
-            "Recently Played"
+            "Recently Played",
+            "Genre"
         };
 
         /// <summary>

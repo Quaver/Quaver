@@ -88,6 +88,16 @@ namespace Quaver.Shared.Database.Maps
         internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps.First().Title).ToList();
 
         /// <summary>
+        ///     Orders mapsets by their genre
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByGenre(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps.First().Genre).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+        
+        /// <summary>
         ///     Orders mapsets by creator.
         /// </summary>
         /// <param name="mapsets"></param>
@@ -179,6 +189,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByTimesPlayed(mapsets);
                 case OrderMapsetsBy.RecentlyPlayed:
                     return OrderMapsetsByRecentlyPlayed(mapsets);
+                case OrderMapsetsBy.Genre:
+                    return OrderMapsetsByGenre(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -462,7 +474,7 @@ namespace Quaver.Shared.Database.Maps
                             if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
                                 !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
                                 !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
-                                !map.DifficultyName.ToLower().Contains(term))
+                                !map.DifficultyName.ToLower().Contains(term) && !map.Genre.ToLower().Contains(term))
                             {
                                 exitLoop = true;
                                 break;
