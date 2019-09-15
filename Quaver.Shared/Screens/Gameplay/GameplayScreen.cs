@@ -275,6 +275,7 @@ namespace Quaver.Shared.Screens.Gameplay
             bool isCalibratingOffset = false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            UpdateMapInDatabase();
 
             if (isPlayTesting)
             {
@@ -1145,6 +1146,19 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 info = Map.SoundEffects[NextSoundEffectIndex];
             }
+        }
+        
+        /// <summary>
+        ///     Updates the amount of times the user played the map/last time played in the database
+        /// </summary>
+        private void UpdateMapInDatabase()
+        {
+            var map = MapManager.Selected.Value;
+            
+            map.TimesPlayed++;
+            map.LastTimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            
+            MapDatabaseCache.UpdateMap(map);
         }
     }
 }
