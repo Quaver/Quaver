@@ -44,11 +44,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Title",
             "Creator",
             "Date Added",
-            "Status",
+            "Ranked Status",
             "BPM",
             "Times Played",
             "Recently Played",
-            "Genre"
+            "Genre",
+            "Game"
         };
 
         /// <summary>
