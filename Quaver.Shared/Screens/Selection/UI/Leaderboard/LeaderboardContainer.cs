@@ -215,19 +215,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             if (map == null)
                 return new FetchedScoreStore(new List<Score>());
 
+            FetchedScoreStore scores;
+
             switch (ConfigManager.LeaderboardSection.Value)
             {
                 case LeaderboardType.Local:
-                    return new ScoreFetcherLocal().Fetch(map);
+                    scores = new ScoreFetcherLocal().Fetch(map);
+                    break;
                 case LeaderboardType.Global:
-                    return new ScoreFetcherGlobal().Fetch(map);
+                    scores = new ScoreFetcherGlobal().Fetch(map);
+                    break;
                 case LeaderboardType.Mods:
-                    return new ScoreFetcherMods().Fetch(map);
+                    scores = new ScoreFetcherMods().Fetch(map);
+                    break;
                 case LeaderboardType.Country:
-                    return new ScoreFetcherCountry().Fetch(map);
+                    scores = new ScoreFetcherCountry().Fetch(map);
+                    break;
                 default:
-                    return new FetchedScoreStore();
+                    scores = new FetchedScoreStore();
+                    break;
             }
+
+            // Set scores to use during gameplay
+            if (OnlineManager.CurrentGame == null)
+                MapManager.Selected.Value.Scores.Value = scores.Scores;
+
+            return scores;
         }
 
         /// <summary>
@@ -256,7 +269,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => FetchScores();
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+            e.OldValue?.ClearScores();
+            e.Value?.ClearScores();
+
+            FetchScores();
+        }
 
         /// <summary>
         ///     Called when the user changes the selected leaderboard section
