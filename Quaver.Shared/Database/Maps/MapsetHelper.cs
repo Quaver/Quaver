@@ -96,7 +96,18 @@ namespace Quaver.Shared.Database.Maps
         {
             return mapsets.OrderBy(x => x.Maps.First().Genre).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
         }
-        
+
+        /// <summary>
+        ///     Orders mapsets by the game they come from
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static List<Mapset> OrderMapsetsByGame(List<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps.First().Game).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
         /// <summary>
         ///     Orders mapsets by creator.
         /// </summary>
@@ -191,6 +202,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByRecentlyPlayed(mapsets);
                 case OrderMapsetsBy.Genre:
                     return OrderMapsetsByGenre(mapsets);
+                case OrderMapsetsBy.Game:
+                    return OrderMapsetsByGame(mapsets);
                 default:
                     return mapsets.ToList();
             }

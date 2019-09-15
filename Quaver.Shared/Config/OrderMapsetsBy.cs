@@ -17,6 +17,7 @@ namespace Quaver.Shared.Config
         BPM,
         TimesPlayed,
         RecentlyPlayed,
-        Genre
+        Genre,
+        Game
     }
 }
