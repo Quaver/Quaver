@@ -390,6 +390,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableBattleRoyaleAlerts { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayUnbeatableScoresDuringGameplay { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -666,6 +670,7 @@ namespace Quaver.Shared.Config
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
             SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
+            DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -775,6 +780,7 @@ namespace Quaver.Shared.Config
                     EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
                     SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
+                    DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
