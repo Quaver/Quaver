@@ -244,7 +244,8 @@ namespace Quaver.Shared.Database.Maps
                 { SearchFilterOption.Status,     ("s", "status") },
                 { SearchFilterOption.LNs,        ("ln", "lns") },
                 { SearchFilterOption.NPS,        ("n", "nps") },
-                { SearchFilterOption.Game,       ("g", "game") }
+                { SearchFilterOption.Game,       ("g", "game") },
+                { SearchFilterOption.TimesPlayed, ("t", "timesplayed") }
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -327,6 +328,13 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
 
                                 if (!CompareValues(map.SongLength / 1000f, valLength, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            case SearchFilterOption.TimesPlayed:
+                                if (!float.TryParse(searchQuery.Value, out var valTimesPlayed))
+                                    exitLoop = true;
+
+                                if (!CompareValues(map.TimesPlayed, valTimesPlayed, searchQuery.Operator))
                                     exitLoop = true;
                                 break;
                             case SearchFilterOption.Keys:
@@ -572,6 +580,11 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     The game that the map comes from
         /// </summary>
-        Game
+        Game,
+
+        /// <summary>
+        ///     The amount of times the user has played the map
+        /// </summary>
+        TimesPlayed
     }
 }
