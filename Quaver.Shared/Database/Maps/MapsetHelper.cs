@@ -98,6 +98,18 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Orders mapsets by the amount of times the user played
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByTimesPlayed(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderByDescending(x => x.Maps.Max(y => y.TimesPlayed))
+                    .ThenBy(x => x.Maps.First().Artist)
+                    .ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
+        /// <summary>
         ///     Orders the mapsets based on the set config value.
         /// </summary>
         /// <param name="mapsets"></param>
@@ -151,6 +163,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByStatus(mapsets);
                 case OrderMapsetsBy.BPM:
                     return OrderMapsetsByBpm(mapsets);
+                case OrderMapsetsBy.TimesPlayed:
+                    return OrderMapsetsByTimesPlayed(mapsets);
                 default:
                     return mapsets.ToList();
             }
