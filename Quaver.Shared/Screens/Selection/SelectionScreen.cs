@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -221,6 +222,9 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void HandleKeyPressF3()
         {
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F3))
                 return;
 
@@ -271,6 +275,8 @@ namespace Quaver.Shared.Screens.Selection
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+
+            ChangeScrollSpeed();
         }
 
         /// <summary>
@@ -324,6 +330,45 @@ namespace Quaver.Shared.Screens.Selection
 
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+        }
+
+        /// <summary>
+        ///     Changes the user's scroll speed for the selected game mode
+        ///     CTRL+F3/CTRL+F4
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void ChangeScrollSpeed()
+        {
+            BindableInt scrollSpeed;
+
+            switch (ConfigManager.SelectedGameMode.Value)
+            {
+                case GameMode.Keys4:
+                    scrollSpeed = ConfigManager.ScrollSpeed4K;
+                    break;
+                case GameMode.Keys7:
+                    scrollSpeed = ConfigManager.ScrollSpeed7K;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var changed = false;
+
+            // Change scroll speed down
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
+            {
+                scrollSpeed.Value--;
+                changed = true;
+            }
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
+            {
+                scrollSpeed.Value++;
+                changed = true;
+            }
+
+            if (changed)
+                NotificationManager.Show(NotificationLevel.Info, $"Your scroll speed has been changed to: {scrollSpeed.Value}");
         }
 
         /// <summary>
