@@ -375,14 +375,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateCantBeatAlert()
         {
-            CantBeatAlert = new IconButton(UserInterface.WarningRed)
+            CantBeatAlert = new CantBeatAlert(UserInterface.WarningRed)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(20, 20),
                 UsePreviousSpriteBatchOptions = true,
                 Y = PerformanceRating.Y + 5,
-                X = BeatablePerformanceRatingX
+                X = BeatablePerformanceRatingX,
+                Alpha = 0
             };
 
             UnbeatableTooltip = new Tooltip("You cannot beat this score with your currently activated modifiers!", Color.Crimson);
