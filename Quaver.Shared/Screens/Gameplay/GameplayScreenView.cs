@@ -321,6 +321,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             var background = ConfigManager.BlurBackgroundInGameplay.Value ? BackgroundHelper.BlurredTexture : BackgroundHelper.RawTexture;
 
+            if (background == null)
+                background = UserInterface.MenuBackgroundRaw;
+
             // We don't set a parent here because we have to manually call draw on the background, as the
             // ScreenView's container is drawn after the ruleset.
             Background = new BackgroundImage(background, 100 - ConfigManager.BackgroundBrightness.Value, false);

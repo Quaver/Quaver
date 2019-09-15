@@ -102,6 +102,7 @@ namespace Quaver.Shared.Screens.Selection
             SelectScreen.ActiveLeftPanel.ValueChanged += OnActiveLeftPanelChanged;
             SelectScreen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
             SelectScreen.ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChanged;
+            SelectScreen.ScreenExiting += OnExiting;
         }
 
         /// <inheritdoc />
@@ -129,6 +130,7 @@ namespace Quaver.Shared.Screens.Selection
 
             // ReSharper disable once DelegateSubtraction
             SelectScreen.ActiveLeftPanel.ValueChanged -= OnActiveLeftPanelChanged;
+            SelectScreen.ScreenExiting -= OnExiting;
         }
 
         /// <summary>
@@ -333,6 +335,28 @@ namespace Quaver.Shared.Screens.Selection
 
             Header.Parent = Container;
             Footer.Parent = Container;
+        }
+
+        /// <summary>
+        ///     Animations perform when the screen exits
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExiting(object sender, ScreenExitingEventArgs e)
+        {
+            LeaderboardContainer.ClearAnimations();
+            ModifierSelector.ClearAnimations();
+            MapContainer.ClearAnimations();
+            MapsetContainer.ClearAnimations();
+
+            const Easing easing = Easing.OutQuint;
+            const int time = 400;
+
+            LeaderboardContainer.MoveToX(-LeaderboardContainer.Width - ScreenPaddingX, easing, time);
+            ModifierSelector.MoveToX(-ModifierSelector.Width - ScreenPaddingX, easing, time);
+
+            MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
+            MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);
         }
     }
 }
