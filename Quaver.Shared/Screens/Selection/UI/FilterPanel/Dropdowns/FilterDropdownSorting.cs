@@ -49,7 +49,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Times Played",
             "Recently Played",
             "Genre",
-            "Game"
+            "Game",
+            "Length"
         };
 
         /// <summary>
