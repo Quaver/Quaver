@@ -9,10 +9,13 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
@@ -232,8 +235,17 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
 
-            if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets)
-                ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+            switch (ActiveScrollContainer.Value)
+            {
+                case SelectScrollContainerType.Mapsets:
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                    break;
+                case SelectScrollContainerType.Maps:
+                    ExitToGameplay();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -329,6 +341,17 @@ namespace Quaver.Shared.Screens.Selection
 
             MapManager.Selected.Value = AvailableMapsets.Value[index].Maps[mapIndex];
             RandomMapsetSelected?.Invoke(this, new RandomMapsetSelectedEventArgs(AvailableMapsets.Value[index], index));
+        }
+
+        /// <summary>
+        ///     Exits the screen to gameplay
+        /// </summary>
+        public void ExitToGameplay()
+        {
+            if (MapManager.Selected.Value == null)
+                return;
+
+            Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 
         /// <summary>
