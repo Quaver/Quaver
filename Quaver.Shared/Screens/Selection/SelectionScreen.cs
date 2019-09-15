@@ -341,7 +341,7 @@ namespace Quaver.Shared.Screens.Selection
         {
             BindableInt scrollSpeed;
 
-            switch (ConfigManager.SelectedGameMode.Value)
+            switch (MapManager.Selected.Value.Mode)
             {
                 case GameMode.Keys4:
                     scrollSpeed = ConfigManager.ScrollSpeed4K;
@@ -368,7 +368,10 @@ namespace Quaver.Shared.Screens.Selection
             }
 
             if (changed)
-                NotificationManager.Show(NotificationLevel.Info, $"Your scroll speed has been changed to: {scrollSpeed.Value}");
+            {
+                NotificationManager.Show(NotificationLevel.Info, $"Your {ModeHelper.ToShortHand(MapManager.Selected.Value.Mode)} " +
+                                                                 $"scroll speed has been changed to: {scrollSpeed.Value}");
+            }
         }
 
         /// <summary>
