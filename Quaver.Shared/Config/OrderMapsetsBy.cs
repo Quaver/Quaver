@@ -15,6 +15,7 @@ namespace Quaver.Shared.Config
         DateAdded,
         Status,
         BPM,
-        TimesPlayed
+        TimesPlayed,
+        RecentlyPlayed
     }
 }
