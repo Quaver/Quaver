@@ -19,6 +19,7 @@ namespace Quaver.Shared.Config
         RecentlyPlayed,
         Genre,
         Game,
-        Length
+        Length,
+        Source
     }
 }
