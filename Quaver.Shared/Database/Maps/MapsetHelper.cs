@@ -98,6 +98,16 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Orders mapsets by length
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByLength(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps.First().SongLength).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
+        /// <summary>
         ///     Orders mapsets by the game they come from
         /// </summary>
         /// <param name="mapsets"></param>
@@ -204,6 +214,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByGenre(mapsets);
                 case OrderMapsetsBy.Game:
                     return OrderMapsetsByGame(mapsets);
+                case OrderMapsetsBy.Length:
+                    return OrderMapsetsByLength(mapsets);
                 default:
                     return mapsets.ToList();
             }
