@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(25, 25),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_trophy),
-                Tint = Color.Gold,
+                Tint = ColorHelper.HexToColor("#E9B736"),
                 Alpha = 0
             };
         }
