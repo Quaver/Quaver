@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -16,6 +18,7 @@ using Quaver.Shared.Screens.Selection.UI.Leaderboard.Rankings;
 using WebSocketSharp;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Logging;
@@ -63,6 +66,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         public TaskHandler<Map, FetchedScoreStore> FetchScoreTask { get; }
 
         /// <summary>
+        ///     Trophy symbol that shows what the user's PB rank is
+        /// </summary>
+        private Sprite PersonalBestTrophy { get; set; }
+
+        /// <summary>
+        ///     Displays the user's personal best rank
+        /// </summary>
+        private SpriteTextPlus PersonalBestRank { get; set; }
+
+        /// <summary>
         /// </summary>
         public LeaderboardContainer()
         {
@@ -77,6 +90,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             CreateScoresContainer();
             CreatePersonalBestHeader();
             CreatePersonalBestScore();
+            CreateTrophy();
+            CreatePersonalBestRank();
 
             ListHelper.Swap(Children, Children.IndexOf(TypeDropdown), Children.IndexOf(ScoresContainerBackground));
 
@@ -94,6 +109,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 
             FetchScores();
         }
+
 
         /// <inheritdoc />
         /// <summary>
@@ -185,6 +201,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         }
 
         /// <summary>
+        /// </summary>
+        private void CreateTrophy()
+        {
+            PersonalBestTrophy = new Sprite
+            {
+                Parent = this,
+                Y = PersonalBestHeader.Y + 2,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(25, 25),
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_trophy),
+                Tint = Color.Gold,
+                Alpha = 0
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreatePersonalBestRank()
+        {
+            PersonalBestRank = new SpriteTextPlus(Header.Font, "#50", Header.FontSize - 2)
+            {
+                Parent = this,
+                Y = PersonalBestTrophy.Y - 3,
+                Alignment = Alignment.TopRight,
+                Alpha = 0
+            };
+        }
+
+        /// <summary>
         ///     Creates <see cref="PersonalBestScore"/>
         /// </summary>
         private void CreatePersonalBestScore()
@@ -231,6 +276,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.Country:
                     scores = new ScoreFetcherCountry().Fetch(map);
                     break;
+                case LeaderboardType.Rate:
+                    scores = new ScoreFetcherRate().Fetch(map);
+                    break;
                 default:
                     scores = new FetchedScoreStore();
                     break;
@@ -262,6 +310,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             });
 
             ScoresContainer.HandleFetchedScores(e.Input, e.Result);
+
+            PersonalBestTrophy.ClearAnimations();
+            PersonalBestRank.ClearAnimations();
+
+            // Handle personal best rank
+            if (ConfigManager.LeaderboardSection != null && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
+            {
+                var rank = e.Result.Scores?.FindIndex(x => x.Name == e.Result.PersonalBest?.Name);
+
+                if (rank == -1)
+                    return;
+
+                PersonalBestRank.Text = $"#{rank + 1} of Top {e.Result.Scores?.Count}";
+                PersonalBestTrophy.X = -PersonalBestRank.Width - 10;
+
+                const int animTime = 250;
+                PersonalBestTrophy.FadeTo(1, Easing.Linear, animTime);
+                PersonalBestRank.FadeTo(1, Easing.Linear, animTime);
+            }
         }
 
         /// <summary>
@@ -304,7 +371,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            if (ConfigManager.LeaderboardSection == null || ConfigManager.LeaderboardSection.Value != LeaderboardType.Mods)
+            if (ConfigManager.LeaderboardSection == null ||
+                ConfigManager.LeaderboardSection.Value != LeaderboardType.Mods && ConfigManager.LeaderboardSection.Value != LeaderboardType.Rate)
                 return;
 
             FetchScores();
@@ -318,6 +386,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 loadable.StartLoading();
 
             ScoresContainer.StartLoading();
+
+            const int animTime = 20;
+
+            PersonalBestTrophy.ClearAnimations();
+            PersonalBestTrophy.FadeTo(0, Easing.Linear, animTime);
+
+            PersonalBestRank.ClearAnimations();
+            PersonalBestRank.FadeTo(0, Easing.Linear, animTime);
         });
 
         /// <summary>
