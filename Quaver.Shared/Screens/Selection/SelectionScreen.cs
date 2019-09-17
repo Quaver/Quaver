@@ -15,6 +15,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
@@ -186,8 +187,7 @@ namespace Quaver.Shared.Screens.Selection
                         return;
                     }
 
-                    // TODO: Handle for multiplayer
-                    Exit(() => new MenuScreen());
+                    ExitToMenu();
                     break;
                 case SelectContainerPanel.Modifiers:
                     ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
@@ -400,6 +400,29 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             Exit(() => new MapLoadingScreen(new List<Score>()));
+        }
+
+        /// <summary>
+        ///     Exits the current screen back to menu
+        ///     TODO: Handle for multiplayer
+        /// </summary>
+        public void ExitToMenu()
+        {
+            Exit(() => new MenuScreen());
+        }
+
+        /// <summary>
+        ///     Exits the current screen and goes to the editor
+        /// </summary>
+        public void ExitToEditor()
+        {
+            if (MapManager.Selected.Value == null)
+                return;
+
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Pause();
+            
+            Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
         }
 
         /// <summary>

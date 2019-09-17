@@ -8,6 +8,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Borders.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -152,7 +153,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Creates <see cref="Footer"/>
         /// </summary>
-        private void CreateFooter() => Footer = new TestMenuBorderFooter
+        private void CreateFooter() => Footer = new SelectMenuFooter(SelectScreen)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft
