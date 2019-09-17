@@ -459,16 +459,9 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void SetRichPresence()
         {
-            if (OnlineManager.CurrentGame == null)
-            {
-                DiscordHelper.Presence.Details = "Selecting a song";
-                DiscordHelper.Presence.State = "In the menus";
-                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
-            }
-            else
-            {
-                OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
-            }
+            DiscordHelper.Presence.Details = "Selecting a song";
+            DiscordHelper.Presence.State = "In the menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
         /// <inheritdoc />
