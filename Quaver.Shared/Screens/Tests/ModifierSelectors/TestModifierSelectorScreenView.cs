@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Tests.ModifierSelectors
         public TestModifierSelectorScreenView(Screen screen) : base(screen)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new ModifierSelectorContainer
+            new ModifierSelectorContainer(null)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter

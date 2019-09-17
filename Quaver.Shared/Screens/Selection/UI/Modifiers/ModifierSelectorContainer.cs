@@ -6,6 +6,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Screens.Selection.UI.Modifiers.Components;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -15,6 +16,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 {
     public class ModifierSelectorContainer : Sprite
     {
+        /// <summary>
+        /// </summary>
+        private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
+
         /// <summary>
         /// </summary>
         private SpriteTextPlus Header { get; set; }
@@ -33,8 +38,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
         /// <summary>
         /// </summary>
-        public ModifierSelectorContainer()
+        public ModifierSelectorContainer(Bindable<SelectContainerPanel> activeLeftPanel)
         {
+            ActiveLeftPanel = activeLeftPanel;
+
             Size = new ScalableVector2(564, 838);
             Alpha = 0f;
 
@@ -85,7 +92,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
             var width = (int) (Width - 4);
 
-            Selector = new ModifierSelector(new ScalableVector2(width, ModifierSelectorBackground.Height - 4), new List<ModifierSection>
+            Selector = new ModifierSelector(ActiveLeftPanel,
+                new ScalableVector2(width, ModifierSelectorBackground.Height - 4), new List<ModifierSection>
                 {
                     new ModifierSection(width, FontAwesome.Get(FontAwesomeIcon.fa_check_mark),"Ranked",
                         "This section can be used for ranked scores", ColorHelper.HexToColor("#27B06E"), new List<SelectableModifier>()

@@ -97,7 +97,7 @@ namespace Quaver.Shared.Screens.Tests.LeaderboardWithMaps
                 Y = FilterPanel.Y + FilterPanel.Height + 24
             };
 
-            ModifierSelector = new ModifierSelectorContainer
+            ModifierSelector = new ModifierSelectorContainer(null)
             {
                 Parent = Container,
                 Y = LeaderboardContainer.Y

@@ -204,7 +204,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void CreateModifierSelectorContainer()
         {
-            ModifierSelector = new ModifierSelectorContainer
+            ModifierSelector = new ModifierSelectorContainer(SelectScreen.ActiveLeftPanel)
             {
                 Parent = Container,
                 Y = LeaderboardContainer.Y
