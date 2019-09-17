@@ -5,7 +5,9 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
@@ -15,7 +17,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
         public IconTextButtonCreatePlaylist() : base(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Create Playlist", (sender, args) =>
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet");
+                DialogManager.Show(new CreatePlaylistDialog());
             })
         {
         }

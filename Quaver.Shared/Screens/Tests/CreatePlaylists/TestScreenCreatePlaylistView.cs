@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Tests.CreatePlaylists
         public TestScreenCreatePlaylistView(Screen screen) : base(screen)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CreatePlaylistContainer()
+            new CreatePlaylistContainer(null)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
