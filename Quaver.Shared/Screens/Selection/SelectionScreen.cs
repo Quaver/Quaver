@@ -11,6 +11,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -75,6 +76,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         public SelectionScreen()
         {
+            SetRichPresence();
             InitializeSearchQueryBindable();
             InitializeAvailableMapsetsBindable();
             InitializeActiveLeftPanelBindable();
@@ -421,7 +423,7 @@ namespace Quaver.Shared.Screens.Selection
 
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track.Pause();
-            
+
             Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
         }
 
@@ -451,6 +453,15 @@ namespace Quaver.Shared.Screens.Selection
                 NotificationManager.Show(NotificationLevel.Success,
                     $"Successfully exported {MapManager.Selected.Value.Mapset.Artist} - {MapManager.Selected.Value.Mapset.Title}!");
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SetRichPresence()
+        {
+            DiscordHelper.Presence.Details = "Selecting a song";
+            DiscordHelper.Presence.State = "In the menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
 
         /// <inheritdoc />
