@@ -26,6 +26,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
     {
         /// <summary>
         /// </summary>
+        private CreatePlaylistDialog Dialog { get; set; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Header { get; set; }
 
         /// <summary>
@@ -98,6 +102,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         private IconButton CancelButton { get; set; }
 
         /// <summary>
+        ///     Informs the user that they can drag and drop to add a banner
+        /// </summary>
+        public SpriteTextPlus DragAndDropText { get; set; }
+
+        /// <summary>
         ///     The path of the custom playlist banner
         /// </summary>
         private string BannerPath { get; set; }
@@ -109,8 +118,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
 
         /// <summary>
         /// </summary>
-        public CreatePlaylistContainer()
+        public CreatePlaylistContainer(CreatePlaylistDialog dialog)
         {
+            Dialog = dialog;
+
             Alpha = 0f;
             Size = new ScalableVector2(660, 424);
 
@@ -193,7 +204,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Drag an image into the window...", 24)
+            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Drag an image into the window...", 24)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter
@@ -283,12 +294,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             var id = PlaylistManager.AddPlaylist(playlist);
 
             if (string.IsNullOrEmpty(BannerPath))
+            {
+                Close();
                 return;
+            }
 
             // Copy the banner into a new directory
             var dir = $"{ConfigManager.DataDirectory}/playlists";
             Directory.CreateDirectory(dir);
             File.Copy(BannerPath, $"{dir}/{id}{Path.GetExtension(BannerPath)}");
+
+            Close();
         }
 
         /// <summary>
@@ -296,7 +312,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateButtonCancel()
         {
-            CancelButton = new IconButton(UserInterface.CancelButton)
+            CancelButton = new IconButton(UserInterface.CancelButton, (sender, args) =>
+            {
+                Close();
+            })
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -345,6 +364,62 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                     BannerBlackness.FadeTo(0.45f, Easing.Linear, 200);
                 }
             }, 200);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void Close()
+        {
+            Fade();
+            Dialog?.Close();
+        }
+
+        /// <summary>
+        ///     Fades out the entire
+        /// </summary>
+        private void Fade()
+        {
+            const Easing easing = Easing.Linear;
+            const int time = 150;
+
+            ClearAnimations();
+            FadeTo(0, easing, time);
+
+            Header.ClearAnimations();
+            Header.FadeTo(0, easing, time);
+
+            Container.ClearAnimations();
+            Container.FadeTo(0, easing, time);
+
+            Container.Border.ClearAnimations();
+            Container.Border.FadeTo(0, easing, time);
+
+            Banner.ClearAnimations();
+            Banner.FadeTo(0, easing, time);
+
+            BannerBlackness.ClearAnimations();
+            BannerBlackness.FadeTo(0, easing, time);
+
+            Name.Label.ClearAnimations();
+            Name.Label.FadeTo(0, easing, time);
+
+            Name.Textbox.Visible = false;
+
+            Description.Label.ClearAnimations();
+            Description.Label.FadeTo(0, easing, time);
+
+            Description.Textbox.Visible = false;
+
+            CreateButton.IsPerformingFadeAnimations = false;
+            CreateButton.ClearAnimations();
+            CreateButton.FadeTo(0, easing, time);
+
+            CancelButton.IsPerformingFadeAnimations = false;
+            CancelButton.ClearAnimations();
+            CancelButton.FadeTo(0, easing, time);
+
+            DragAndDropText.ClearAnimations();
+            DragAndDropText.FadeTo(0, easing, time);
         }
     }
 }
