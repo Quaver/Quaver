@@ -91,7 +91,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             AvailableMapsets = availableMapsets;
             CurrentSearchQuery = currentSearchQuery;
 
-            Size = new ScalableVector2(WindowManager.Width, 85);
+            Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
 
             Button = new ImageButton(UserInterface.BlankBox)

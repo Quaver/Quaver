@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         {
             DifficultyMods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "[Difficulty] + Mods", 20)
             {
-                Y = ArtistTitle.Height + 6,
+                Y = ArtistTitle.Height + 8,
             };
 
             AddContainedDrawable(DifficultyMods);
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             GameMode = new FilterMetadataGameMode
             {
                 Parent = this,
-                Y = DifficultyMods.Y + DifficultyMods.Height + 6,
+                Y = DifficultyMods.Y + DifficultyMods.Height + 8,
                 X = ArtistTitle.X
             };
 

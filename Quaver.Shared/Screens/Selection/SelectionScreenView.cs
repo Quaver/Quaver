@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     The amount of y-axis space between <see cref="FilterPanel"/> and the left panel
         /// </summary>
-        private const int LeftPanelSpacingY = 24;
+        private const int LeftPanelSpacingY = 20;
 
         /// <inheritdoc />
         /// <summary>
@@ -222,7 +222,7 @@ namespace Quaver.Shared.Screens.Selection
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                Y = FilterPanel.Y + FilterPanel.Height,
+                Y = FilterPanel.Y + FilterPanel.Height - 4,
             };
 
             MapsetContainer.X = MapsetContainer.Width + ScreenPaddingX;
