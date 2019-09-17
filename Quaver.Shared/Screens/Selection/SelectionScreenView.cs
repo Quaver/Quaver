@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Creates <see cref="Header"/>
         /// </summary>
-        private void CreateHeader() => Header = new TestMenuBorderHeader { Parent = Container };
+        private void CreateHeader() => Header = new MenuHeaderMain() { Parent = Container };
 
         /// <summary>
         ///     Creates <see cref="Footer"/>
