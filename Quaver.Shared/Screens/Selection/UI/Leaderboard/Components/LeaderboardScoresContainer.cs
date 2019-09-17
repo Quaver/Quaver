@@ -268,10 +268,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 case LeaderboardType.Local:
                     return false;
-                case LeaderboardType.Global:
-                case LeaderboardType.Mods:
-                case LeaderboardType.Country:
-                case LeaderboardType.Rate:
+                default:
                     return true;
             }
 
