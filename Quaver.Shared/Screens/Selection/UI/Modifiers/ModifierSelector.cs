@@ -6,6 +6,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -19,6 +20,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// <summary>
         /// </summary>
         private List<ModifierSection> Sections { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<SelectContainerPanel> ActiveLeftPanel { get; }
 
         /// <summary>
         /// </summary>
@@ -40,10 +45,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="activeLeftPanel"></param>
         /// <param name="size"></param>
         /// <param name="sections"></param>
-        public ModifierSelector(ScalableVector2 size, List<ModifierSection> sections) : base(size, size)
+        public ModifierSelector(Bindable<SelectContainerPanel> activeLeftPanel, ScalableVector2 size, List<ModifierSection> sections) : base(size, size)
         {
+            ActiveLeftPanel = activeLeftPanel;
             Sections = sections;
             Alpha = 0;
 
@@ -114,7 +121,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                 Image = UserInterface.ResetMods
             };
 
-            ClosePanelButton = new IconButton(UserInterface.EditPlayButton)
+            ClosePanelButton = new IconButton(UserInterface.EditPlayButton, (sender, args) =>
+            {
+                if (ActiveLeftPanel == null)
+                    return;
+
+                ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+            })
             {
                 Parent = ButtonBackground,
                 Alignment = Alignment.MidRight,
