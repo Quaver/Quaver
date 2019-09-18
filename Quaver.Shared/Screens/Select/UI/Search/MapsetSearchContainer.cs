@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Select.UI.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new Textbox(new ScalableVector2(518, 30), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13)
+            SearchBox = new Textbox(new ScalableVector2(518, 30), FontManager.GetWobbleFont(Fonts.LatoBlack), 13)
             {
                 Parent = TextSearch,
                 Position = new ScalableVector2(TextSearch.Width + 15, 0),

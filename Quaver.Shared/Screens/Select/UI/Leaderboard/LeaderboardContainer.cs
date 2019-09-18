@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 Y = -15
             };
 
-            Donator = new SpriteTextBitmap(FontsBitmap.GothamBold, "Consider becoming a donator to access leaderboards for all maps!")
+            Donator = new SpriteTextBitmap(FontsBitmap.GothamBold, "")
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

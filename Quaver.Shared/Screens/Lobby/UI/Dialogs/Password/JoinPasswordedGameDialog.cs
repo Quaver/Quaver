@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Password
                 Alignment = Alignment.BotLeft
             };
 
-            PasswordBox = new Textbox(new ScalableVector2(392, 36), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13, "", "Enter Password",
+            PasswordBox = new Textbox(new ScalableVector2(392, 36), FontManager.GetWobbleFont(Fonts.LatoBlack), 13, "", "Enter Password",
                 (pw) =>
                 {
                     if (pw.Length == 0)

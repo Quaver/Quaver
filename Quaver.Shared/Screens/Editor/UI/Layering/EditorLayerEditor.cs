@@ -153,7 +153,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Layering
             var selectedLayer = View?.LayerCompositor.ScrollContainer.AvailableItems[View.LayerCompositor.SelectedLayerIndex.Value];
 
             NameTextbox = new Textbox(new ScalableVector2(Width - 20, 26),
-                FontManager.GetWobbleFont(Fonts.LatoSemiBold), 13, selectedLayer?.Name)
+                FontManager.GetWobbleFont(Fonts.LatoBlack), 13, selectedLayer?.Name)
             {
                 Parent = this,
                 X = TextLayerName.X,

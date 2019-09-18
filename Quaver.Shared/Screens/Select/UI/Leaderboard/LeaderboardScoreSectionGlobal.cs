@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
                 return "Your map is outdated. Please update it!";
 
             if (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country && !OnlineManager.IsDonator)
-                return "Country leaderboards are a donator-only feature!";
+                return "Coming soon!";
 
             var donatorNoScores = "No scores available. Scores for this map will be unranked!";
 

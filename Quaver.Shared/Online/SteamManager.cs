@@ -52,7 +52,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The avatars for steam users.
         /// </summary>
-        public static Dictionary<ulong, Texture2D> UserAvatars { get; set; } = new Dictionary<ulong, Texture2D>();
+        public static Dictionary<ulong, Texture2D> UserAvatars { get; set; }
 
         /// <summary>
         ///     A user's steam avatar has loaded.

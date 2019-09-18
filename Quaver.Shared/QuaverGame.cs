@@ -18,6 +18,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Database.Scores;
@@ -54,6 +55,7 @@ using Quaver.Shared.Screens.Tests.MapsetScrollContainers;
 using Quaver.Shared.Screens.Tests.MapScrollContainers;
 using Quaver.Shared.Screens.Tests.ModifierSelectors;
 using Quaver.Shared.Screens.Tests.YesNoDialog;
+using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -323,6 +325,7 @@ namespace Quaver.Shared
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
             PlaylistManager.Load();
+            JudgementWindowsDatabaseCache.Load();
 
             // Force garabge collection.
             GC.Collect();

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
@@ -121,8 +122,28 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             var text = $"[{Map.DifficultyName}]";
 
+            var windows = "";
+
+            switch (Screen.ResultsType)
+            {
+                case ResultScreenType.Gameplay:
+                    if (JudgementWindowsDatabaseCache.Selected.Value.Name != JudgementWindowsDatabaseCache.Standard.Name)
+                        windows = $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
+                    break;
+                case ResultScreenType.Score:
+                    if (Screen.Score.JudgementWindowPreset != null && Screen.Score.JudgementWindowPreset != JudgementWindowsDatabaseCache.Standard.Name)
+                        windows = $" ({Screen.Score.JudgementWindowPreset})";
+                    break;
+                case ResultScreenType.Replay:
+                    break;
+                default:
+                    break;
+            }
+
             if (Screen.ScoreProcessor.Mods != 0)
                 text += $" + {ModHelper.GetModsString(Screen.ScoreProcessor.Mods)}";
+
+            text += windows;
 
             DifficultyName = new SpriteTextBitmap(FontsBitmap.GothamRegular, text)
             {

@@ -13,6 +13,7 @@ using MonoGame.Extended;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
@@ -144,7 +145,7 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         {
             if (RectangleF.Intersect(ScreenRectangle, ScoreSection.ScreenRectangle).IsEmpty)
                 return;
-            
+
             base.Draw(gameTime);
         }
 
@@ -286,14 +287,23 @@ namespace Quaver.Shared.Screens.Select.UI.Leaderboard
         /// <summary>
         ///     Creates the text that displays the modifiers used on the score.
         /// </summary>
-        private void CreateModsUsed() => Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModHelper.GetModsString((ModIdentifier) Score.Mods), false)
+        private void CreateModsUsed()
         {
-            Parent = this,
-            Alignment = Alignment.TopRight,
-            X = -12,
-            Y = Username.Y + 2,
-            FontSize = 16
-        };
+            var windows = Score.IsOnline || Score.JudgementWindowPreset == null
+                                         || Score.JudgementWindowPreset == JudgementWindowsDatabaseCache.Standard.Name
+                ? ""
+                : $" ({Score.JudgementWindowPreset})";
+
+            Mods = new SpriteTextBitmap(FontsBitmap.GothamRegular, ModHelper.GetModsString((ModIdentifier) Score.Mods) + windows,
+                false)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                X = -12,
+                Y = Username.Y + 2,
+                FontSize = 16
+            };
+        }
 
         /// <summary>
         ///     Creates the text that displays how long ago the score was.
