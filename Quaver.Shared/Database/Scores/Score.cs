@@ -140,6 +140,46 @@ namespace Quaver.Shared.Database.Scores
         public string RatingProcessorVersion { get; set; }
 
         /// <summary>
+        ///     The judgement windows used on the score
+        /// </summary>
+        public string JudgementWindowPreset { get; set; }
+
+        /// <summary>
+        ///     The marv judgement window used on the score
+        /// </summary>
+        public float JudgementWindowMarv { get; set; }
+
+        /// <summary>
+        ///     The perf judgement window used on the score
+        /// </summary>
+        public float JudgementWindowPerf { get; set; }
+
+        /// <summary>
+        ///     The great judgement window used on the score
+        /// </summary>
+        public float JudgementWindowGreat { get; set; }
+
+        /// <summary>
+        ///     The good judgement window used on the score
+        /// </summary>
+        public float JudgementWindowGood { get; set; }
+
+        /// <summary>
+        ///     The okay judgement window used on the score
+        /// </summary>
+        public float JudgementWindowOkay { get; set; }
+
+        /// <summary>
+        ///     The miss judgement window used on the score
+        /// </summary>
+        public float JudgementWindowMiss { get; set; }
+
+        /// <summary>
+        ///     The score's ranked/standardized accuracy
+        /// </summary>
+        public double RankedAccuracy { get; set; }
+
+        /// <summary>
         ///     If the score is an online score.
         /// </summary>
         [Ignore]

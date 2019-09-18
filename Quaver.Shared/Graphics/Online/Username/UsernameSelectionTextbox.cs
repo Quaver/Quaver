@@ -29,7 +29,8 @@ namespace Quaver.Shared.Graphics.Online.Username
         /// <summary>
         /// </summary>
         public UsernameSelectionTextbox()
-            : base(new ScalableVector2(360, 39), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 14, "", "Enter Username")
+            : base(new ScalableVector2(360, 39), FontManager.GetWobbleFont(Fonts.LatoBlack),
+                14, "", "Enter Username")
         {
             Image = UserInterface.BlankBox;
             Tint = Color.Transparent;

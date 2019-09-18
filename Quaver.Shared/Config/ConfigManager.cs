@@ -394,6 +394,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayUnbeatableScoresDuringGameplay { get; private set; }
 
         /// <summary>
+        ///     The selected judgement window preset
+        /// </summary>
+        internal static Bindable<string> JudgementWindows { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -671,7 +676,7 @@ namespace Quaver.Shared.Config
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
             SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
             DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
-
+            JudgementWindows = ReadValue("JudgementWindows", "", data);
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
@@ -781,6 +786,7 @@ namespace Quaver.Shared.Config
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
                     SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
                     DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
+                    JudgementWindows.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

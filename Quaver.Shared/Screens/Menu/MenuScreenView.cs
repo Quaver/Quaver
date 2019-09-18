@@ -34,6 +34,7 @@ using Quaver.Shared.Screens.Menu.UI.Panels;
 using Quaver.Shared.Screens.Menu.UI.Tips;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
@@ -314,7 +315,6 @@ namespace Quaver.Shared.Screens.Menu
                 new ButtonText(FontsBitmap.GothamRegular, "Discord", 14, (sender, args) => BrowserHelper.OpenURL("https://discord.gg/nJa8VFr")),
                 new ButtonText(FontsBitmap.GothamRegular, "Twitter", 14, (sender, args) => BrowserHelper.OpenURL("https://twitter.com/QuaverGame")),
                 new ButtonText(FontsBitmap.GothamRegular, "Website", 14, (sender, args) => BrowserHelper.OpenURL("https://quavergame.com")),
-                new ButtonSupportQuaver()
             }, Colors.MainAccent)
             {
                 Parent = Container,
@@ -395,7 +395,7 @@ namespace Quaver.Shared.Screens.Menu
             screen?.Exit(() =>
             {
                 AudioEngine.Track?.Fade(10, 300);
-                return new SelectScreen();
+                return new SelectionScreen();
             });
         }
 

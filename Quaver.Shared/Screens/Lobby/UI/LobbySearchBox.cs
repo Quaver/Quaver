@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Lobby.UI
         /// <param name="view"></param>
         /// <param name="size"></param>
         public LobbySearchBox(LobbyScreenView view, ScalableVector2 size)
-            : base(size, FontManager.GetWobbleFont(Fonts.LatoSemiBold), 12, "", "Search For Games")
+            : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 12, "", "Search For Games")
         {
             View = view;
 

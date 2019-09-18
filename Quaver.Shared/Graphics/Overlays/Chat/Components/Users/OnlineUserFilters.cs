@@ -227,7 +227,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Users
         /// </summary>
         private void CreateSearchTextbox()
         {
-            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), FontManager.GetWobbleFont(Fonts.LatoSemiBold), 8)
+            SearchTextbox = new Textbox(new ScalableVector2(150, TextSearch.Height), FontManager.GetWobbleFont(Fonts.LatoBlack), 8)
             {
                 Parent = TextSearch,
                 X = TextSearch.Width + 5,
