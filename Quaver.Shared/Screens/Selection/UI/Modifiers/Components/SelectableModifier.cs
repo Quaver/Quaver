@@ -10,6 +10,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Managers;
 
@@ -49,7 +50,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public SelectableModifier(int width, IGameplayModifier mod)
         {
             Mod = mod;
-            Size = new ScalableVector2(width, 65);
+            Size = new ScalableVector2(width, 59);
 
             const int paddingLeft = 10;
 
@@ -86,6 +87,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
             Clicked += (sender, args) =>
             {
+                if (Mod is ModSpeed || Mod is ModJudgementWindows)
+                    return;
+
                 if (ModManager.IsActivated(Mod.ModIdentifier))
                     ModManager.RemoveMod(Mod.ModIdentifier);
                 else
@@ -123,6 +127,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <param name="gameTime"></param>
         private void PerformHoverAnimation(GameTime gameTime)
         {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
             var color = ScreenRectangle.Contains(MouseManager.CurrentState.Position.ToPoint()) ? ColorHelper.HexToColor("#464545") : OriginalColor;
             FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
@@ -137,6 +144,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             if (Mod.GetType() == typeof(ModSpeed))
                 return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-1.1x.png");
+            if (Mod.GetType() == typeof(ModJudgementWindows))
+                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-JW.png");
 
             return ModManager.GetTexture(Mod.ModIdentifier, !ModManager.IsActivated(Mod.ModIdentifier));
         }

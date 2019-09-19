@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Online.Username;
+using Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows;
 using TagLib.Id3v2;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;

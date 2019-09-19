@@ -6,19 +6,18 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
+namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 {
     public class DrawableJudgementWindows : PoolableSprite<JudgementWindows>
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public sealed override int HEIGHT { get; } = 50;
+        public sealed override int HEIGHT { get; } = 71;
 
         /// <summary>
         /// </summary>
@@ -51,7 +50,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Tint = BackgroundColor
             };
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Name, 22)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Name, 24)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -78,6 +77,9 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void PerformHHoverAnimation(GameTime gameTime)
         {
             Color color;

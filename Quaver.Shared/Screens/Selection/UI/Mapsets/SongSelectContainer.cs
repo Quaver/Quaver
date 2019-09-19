@@ -44,6 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 320;
+            IsMinScrollYEnabled = true;
 
             Alpha = 0;
             CreateScrollbar();

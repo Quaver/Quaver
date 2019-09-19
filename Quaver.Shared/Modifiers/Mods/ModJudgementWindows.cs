@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Shared.Helpers;
 
 namespace Quaver.Shared.Modifiers.Mods
 {
@@ -21,7 +22,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public ModIdentifier[] IncompatibleMods { get; set; }
 
-        public Color ModColor { get; }
+        public Color ModColor { get; } = ColorHelper.HexToColor("#F2C94C");
 
         public void InitializeMod() => throw new System.NotImplementedException();
     }
