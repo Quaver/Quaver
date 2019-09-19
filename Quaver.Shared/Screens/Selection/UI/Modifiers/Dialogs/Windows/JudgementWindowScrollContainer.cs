@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Select.UI.Modifiers.Windows;
@@ -37,6 +39,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
             // Kakes it so the scrollbar appears over
             Scrollbar.Parent = this;
+
+            SnapToSelected();
         }
 
         /// <inheritdoc />
@@ -77,6 +81,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             }
 
             RecalculateContainerHeight();
+        }
+
+        /// <summary>
+        ///     Snaps the scroll container to the initial mapset.
+        /// </summary>
+        protected void SnapToSelected()
+        {
+            var index = JudgementWindowsDatabaseCache.Presets.IndexOf(JudgementWindowsDatabaseCache.Selected.Value);
+
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y =  index < 8 ? 0  : (-index + 6) * Pool.First().Height;
+
+
+            PreviousContentContainerY = ContentContainer.Y;
+            TargetY = PreviousContentContainerY;
+            PreviousTargetY = PreviousContentContainerY;
+
         }
     }
 }
