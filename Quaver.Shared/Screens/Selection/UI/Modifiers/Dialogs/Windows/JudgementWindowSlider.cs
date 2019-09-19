@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
@@ -8,6 +10,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
+using TagLib;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -42,6 +45,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         /// <summary>
         /// </summary>
+        public Textbox ValueTextbox { get; private set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="judgement"></param>
         public JudgementWindowSlider(Judgement judgement)
         {
@@ -51,18 +58,36 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
             Bindable = new BindableInt((int) JudgementWindowsDatabaseCache.Selected.Value.GetValueFromJudgement(judgement), 1, 500);
 
-            Bindable.ValueChanged += (sender, args) =>
-            {
-                SetValue(args.Value);
-                SetMillisecondValue();
-            };
+            Bindable.ValueChanged += (sender, args) => SetValue(args.Value);
 
             CreateJudgementSprite();
             CreateSlider();
+            CreateValueTextbox();
             CreateMillisecondValue();
             SetToValue();
 
             JudgementWindowsDatabaseCache.Selected.ValueChanged += OnJudgementWindowsChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            var selected = JudgementWindowsDatabaseCache.Selected.Value;
+
+            if (selected.IsDefault)
+            {
+                ValueTextbox.Button.IsClickable = false;
+                ValueTextbox.Focused = false;
+            }
+            else
+            {
+                ValueTextbox.Button.IsClickable = true;
+            }
+
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -111,17 +136,52 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateMillisecondValue()
         {
-            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0 ms", 24)
+            MillisecondValue = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "ms", 24)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Slider.X + Slider.Width + 22
+                X = ValueTextbox.X + ValueTextbox.Width + 10
             };
         }
 
         /// <summary>
         /// </summary>
-        private void SetMillisecondValue() => MillisecondValue.Text = $"{Bindable.Value} ms";
+        private void CreateValueTextbox()
+        {
+            ValueTextbox = new Textbox(new ScalableVector2(50, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),
+                22, Bindable.Value.ToString(), "", null, s =>
+                {
+                    if (string.IsNullOrEmpty(s))
+                        return;
+
+                    int val = 1;
+
+                    try
+                    {
+                        val = int.Parse(s);
+                        val = MathHelper.Clamp(val, 0, 500);
+                        Bindable.Value = val;
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+
+                    ValueTextbox.RawText = val.ToString();
+                    ValueTextbox.InputText.Text = val.ToString();
+                })
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = Slider.X + Slider.Width + 12,
+                Tint = ColorHelper.HexToColor("#2F2F2F"),
+                AllowedCharacters = new Regex("^[0-9]*$"),
+                AllowSubmission = false,
+                StoppedTypingActionCalltime = 1
+            };
+
+            ValueTextbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
+        }
 
         /// <summary>
         ///     Called to set the sliders back to the real value when the windows are changed
@@ -129,14 +189,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnJudgementWindowsChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
-            => SetToValue();
+        {
+            SetToValue();
+
+            ValueTextbox.RawText = e.Value.GetValueFromJudgement(Judgement).ToString(CultureInfo.InvariantCulture);
+            ValueTextbox.InputText.Text = ValueTextbox.RawText;
+        }
 
         /// <summary>
         /// </summary>
         private void SetToValue()
         {
             Bindable.Value = (int) JudgementWindowsDatabaseCache.Selected.Value.GetValueFromJudgement(Judgement);
-            SetMillisecondValue();
 
             var windows = JudgementWindowsDatabaseCache.Selected.Value;
 
@@ -192,6 +256,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            ValueTextbox.RawText = Bindable.Value.ToString();
+            ValueTextbox.InputText.Text = Bindable.Value.ToString();
         }
     }
 }

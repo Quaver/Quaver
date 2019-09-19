@@ -17,6 +17,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Form;
 using Wobble.Input;
 using Wobble.Managers;
 
@@ -84,6 +85,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private Dictionary<Judgement, JudgementWindowSlider> Sliders { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private TextboxTabControl TabControl { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -148,6 +153,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             FadeTo(0, Easing.Linear, 200);
 
             Panel.Visible = false;
+
+            ThreadScheduler.Run(JudgementWindowsDatabaseCache.UpdateAll);
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 200);
         }
 
@@ -430,6 +437,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         private void CreateSliders()
         {
             Sliders = new Dictionary<Judgement, JudgementWindowSlider>();
+            TabControl = new TextboxTabControl(new List<Textbox>()) {Parent = this};
 
             foreach (Judgement judgement in Enum.GetValues(typeof(Judgement)))
             {
@@ -444,6 +452,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 };
 
                 Sliders.Add(judgement, slider);
+                TabControl.AddTextbox(slider.ValueTextbox);
             }
         }
 
