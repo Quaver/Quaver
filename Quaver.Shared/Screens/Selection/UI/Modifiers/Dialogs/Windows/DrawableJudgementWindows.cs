@@ -5,18 +5,20 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
+namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 {
     public class DrawableJudgementWindows : PoolableSprite<JudgementWindows>
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public sealed override int HEIGHT { get; } = 50;
+        public sealed override int HEIGHT { get; } = 71;
 
         /// <summary>
         /// </summary>
@@ -24,7 +26,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Name { get; }
+        public SpriteTextPlus Name { get; }
 
         /// <summary>
         ///     Returns the background color of the table
@@ -49,15 +51,20 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Tint = BackgroundColor
             };
 
-            Name = new SpriteTextBitmap(FontsBitmap.GothamRegular, item.Name)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Name, 24)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 18,
-                FontSize = 18
             };
+
+            JudgementWindowsDatabaseCache.Selected.ValueChanged += OnSelectedJudgementWindowChanged;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             PerformHHoverAnimation(gameTime);
@@ -67,12 +74,27 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            JudgementWindowsDatabaseCache.Selected.ValueChanged -= OnSelectedJudgementWindowChanged;
+
+            base.Destroy();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="item"></param>
         /// <param name="index"></param>
         public override void UpdateContent(JudgementWindows item, int index)
         {
+            Name.Text = item.Name;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void PerformHHoverAnimation(GameTime gameTime)
         {
             Color color;
@@ -89,8 +111,10 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Button.Alpha = 0;
             }
 
-
             Button.FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
+
+        private void OnSelectedJudgementWindowChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
+            => UpdateContent(Item, Index);
     }
 }

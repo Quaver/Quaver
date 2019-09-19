@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Color = Microsoft.Xna.Framework.Color;

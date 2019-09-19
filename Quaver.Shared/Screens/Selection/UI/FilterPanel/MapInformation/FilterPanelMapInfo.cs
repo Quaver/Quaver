@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework.Media;
+using osu.Shared;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -64,6 +67,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
 
             MapManager.Selected.ValueChanged += OnMapChanged;
             ModManager.ModsChanged += OnModsChanged;
+            JudgementWindowsDatabaseCache.Selected.ValueChanged += OnSelectedWindowsChanged;
         }
 
         /// <inheritdoc />
@@ -71,9 +75,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ModManager.ModsChanged -= OnModsChanged;
+            JudgementWindowsDatabaseCache.Selected.ValueChanged -= OnSelectedWindowsChanged;
 
             base.Destroy();
         }
@@ -153,7 +158,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             ArtistTitle.Text = map.Artist + " - " + map.Title;
 
             var mods = ModManager.CurrentModifiersList.Count > 0 ? $" + {ModHelper.GetModsString(ModManager.Mods)}": "";
-            DifficultyMods.Text = $"[{map.DifficultyName}]{mods}";
+
+            var windows = JudgementWindowsDatabaseCache.Selected.Value == JudgementWindowsDatabaseCache.Standard
+                ? "" : $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
+
+            DifficultyMods.Text = $"[{map.DifficultyName}]{mods}{windows}";
 
             //  Reset positions of the text
             ArtistTitle.ClearAnimations();
@@ -177,5 +186,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateText(MapManager.Selected.Value);
+
+        /// <summary>
+        ///     Called when the user changed their judgement windows
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedWindowsChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
+            => UpdateText(MapManager.Selected.Value);
     }
 }

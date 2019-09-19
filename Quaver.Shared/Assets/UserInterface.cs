@@ -109,5 +109,14 @@ namespace Quaver.Shared.Assets
         public static Texture2D CreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/create-button.png");
         public static Texture2D CancelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/cancel-button.png");
         public static Texture2D YesNoPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/yes-no-panel.png");
+        public static Texture2D CustomizeButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/customize-button.png");
+        public static Texture2D JudgementWindowPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/judgement-window-panel.png");
+        public static Texture2D JudgementWindowHeaderBanner => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/header-banner.png");
+        public static Texture2D JudgementWindowCloseButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/close-button.png");
+        public static Texture2D JudgementWindowCreateButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/create-button.png");
+        public static Texture2D JudgementWindowDeleteButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/delete-button.png");
+        public static Texture2D JudgementWindowEditNameButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/edit-name-button.png");
+        public static Texture2D JudgementWindowResetButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/reset-button.png");
+        public static Texture2D SliderProgressBall => TextureManager.Load(@"Quaver.Resources/Textures/UI/slider-progress-ball.png");
     }
 }

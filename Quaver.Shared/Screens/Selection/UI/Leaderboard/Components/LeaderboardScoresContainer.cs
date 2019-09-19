@@ -70,6 +70,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
+            IsMinScrollYEnabled = true;
 
             CreateScrollbar();
             CreateLoadingWheel();

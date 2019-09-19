@@ -99,6 +99,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                         "This section can be used for ranked scores", ColorHelper.HexToColor("#27B06E"), new List<SelectableModifier>()
                         {
                             new SelectableModifierSpeed(width),
+                            new SelectableModifierJudgementWindows(width),
                             new SelectableModifierBool(width, new ModMirror()),
                         }),
 
