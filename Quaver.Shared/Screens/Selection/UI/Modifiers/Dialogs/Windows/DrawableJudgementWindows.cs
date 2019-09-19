@@ -7,7 +7,9 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 {
@@ -24,7 +26,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
 
         /// <summary>
         /// </summary>
-        public SpriteTextBitmap Name { get; }
+        public SpriteTextPlus Name { get; }
 
         /// <summary>
         ///     Returns the background color of the table
@@ -49,15 +51,18 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 Tint = BackgroundColor
             };
 
-            Name = new SpriteTextBitmap(FontsBitmap.GothamRegular, item.Name)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), item.Name, 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 18,
-                FontSize = 18
             };
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             PerformHHoverAnimation(gameTime);
@@ -88,7 +93,6 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers.Windows
                 color = Color.Transparent;
                 Button.Alpha = 0;
             }
-
 
             Button.FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
