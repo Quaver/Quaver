@@ -10,6 +10,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Lobby.UI.Dialogs.Create;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -71,10 +72,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         /// <summary>
         /// </summary>
-        private IconButton EditNameButton { get; set; }
-
-        /// <summary>
-        /// </summary>
         private IconButton CreateButton { get; set; }
 
         /// <summary>
@@ -88,6 +85,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// <summary>
         /// </summary>
         private TextboxTabControl TabControl { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private LabelledTextbox NameTextbox { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -117,11 +118,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             CreateCreateButton();
             CreateDeleteButton();
             CreateResetButton();
-            CreateEditNameButton();
             CreateJudgementWindowScrollContainer();
+            CreateNameTextbox();
             CreateSliders();
 
             HandleButtonVisibility();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            var selected = JudgementWindowsDatabaseCache.Selected.Value;
+
+            if (selected.IsDefault)
+            {
+                NameTextbox.Textbox.Button.IsClickable = false;
+                NameTextbox.Textbox.Focused = false;
+            }
+            else
+            {
+                NameTextbox.Textbox.Button.IsClickable = true;
+            }
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -314,20 +336,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
         /// <summary>
         /// </summary>
-        private void CreateEditNameButton()
-        {
-            EditNameButton = new IconButton(UserInterface.JudgementWindowEditNameButton, (o, e) => {})
-            {
-                Parent = HeaderBackground,
-                Alignment = Alignment.MidRight,
-                Size = DeleteButton.Size,
-                X = ResetButton.X - ResetButton.Width + CreateButton.X,
-                Y = CloseButton.Y
-            };
-        }
-
-        /// <summary>
-        /// </summary>
         private void CreateCreateButton()
         {
             CreateButton = new IconButton(UserInterface.JudgementWindowCreateButton, (o, e) => CreateNewPreset())
@@ -349,6 +357,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             {
                 Parent = ContentBackground
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateNameTextbox()
+        {
+            NameTextbox = new LabelledTextbox(784, "Preset Name:", 24, 40, 22, 14,
+                "Enter the name of the preset", JudgementWindowsDatabaseCache.Selected.Value.Name)
+            {
+                Parent = ContentBackground,
+                Y = 28,
+                X = JudgementWindowScrollContainer.Width + 22,
+                Textbox =
+                {
+                    StoppedTypingActionCalltime = 1,
+                    AllowSubmission = false,
+                    OnSubmit = HandleTextboxSubmission,
+                    OnStoppedTyping = HandleTextboxSubmission,
+                    Border =
+                    {
+                        Tint = ColorHelper.HexToColor("#5B5B5B")
+                    }
+                }
+            };
+
+            NameTextbox.Textbox.Y = NameTextbox.Label.Y;
+            NameTextbox.Textbox.X = NameTextbox.Label.X + NameTextbox.Label.Width + 12;
+            NameTextbox.Textbox.Parent = NameTextbox.Label;
+            NameTextbox.Textbox.Alignment = Alignment.MidLeft;
         }
 
         /// <summary>
@@ -413,8 +450,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         {
             if (JudgementWindowsDatabaseCache.Selected.Value.IsDefault)
             {
-                EditNameButton.Visible = false;
-                EditNameButton.IsClickable = false;
                 DeleteButton.Visible = false;
                 DeleteButton.IsClickable = false;
                 ResetButton.Visible = false;
@@ -422,8 +457,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             }
             else
             {
-                EditNameButton.Visible = true;
-                EditNameButton.IsClickable = true;
                 DeleteButton.Visible = true;
                 DeleteButton.IsClickable = true;
                 ResetButton.Visible = true;
@@ -437,7 +470,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         private void CreateSliders()
         {
             Sliders = new Dictionary<Judgement, JudgementWindowSlider>();
-            TabControl = new TextboxTabControl(new List<Textbox>()) {Parent = this};
+
+            TabControl = new TextboxTabControl(new List<Textbox>()
+            {
+                NameTextbox.Textbox
+            }) {Parent = this};
 
             foreach (Judgement judgement in Enum.GetValues(typeof(Judgement)))
             {
@@ -448,7 +485,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 {
                     Parent = ContentBackground,
                     X = JudgementWindowScrollContainer.Width + 22,
-                    Y = 50 + 90 * (int) judgement
+                    Y = NameTextbox.Textbox.Y + NameTextbox.Textbox.Height + 70 + 80 * (int) judgement
                 };
 
                 Sliders.Add(judgement, slider);
@@ -462,6 +499,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedWindowsChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
-            => HandleButtonVisibility();
+        {
+            HandleButtonVisibility();
+
+            NameTextbox.Textbox.RawText = e.Value.Name;
+            NameTextbox.Textbox.InputText.Text = e.Value.Name;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="s"></param>
+        private void HandleTextboxSubmission(string s)
+        {
+            JudgementWindowsDatabaseCache.Selected.Value.Name = s;
+            JudgementWindowsDatabaseCache.Selected.Value = JudgementWindowsDatabaseCache.Selected.Value;
+        }
     }
 }

@@ -5,6 +5,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -56,6 +57,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 Alignment = Alignment.MidLeft,
                 X = 18,
             };
+
+            JudgementWindowsDatabaseCache.Selected.ValueChanged += OnSelectedJudgementWindowChanged;
         }
 
         /// <inheritdoc />
@@ -71,10 +74,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            JudgementWindowsDatabaseCache.Selected.ValueChanged -= OnSelectedJudgementWindowChanged;
+
+            base.Destroy();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="item"></param>
         /// <param name="index"></param>
         public override void UpdateContent(JudgementWindows item, int index)
         {
+            Name.Text = item.Name;
         }
 
         /// <summary>
@@ -98,5 +113,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
 
             Button.FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
         }
+
+        private void OnSelectedJudgementWindowChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
+            => UpdateContent(Item, Index);
     }
 }

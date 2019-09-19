@@ -111,7 +111,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Image = img,
-                Size = new ScalableVector2(120, 0),
+                Size = new ScalableVector2(110, 0),
             };
 
             // ReSharper disable once PossibleLossOfFraction
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateValueTextbox()
         {
-            ValueTextbox = new Textbox(new ScalableVector2(50, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),
+            ValueTextbox = new Textbox(new ScalableVector2(52, 40), FontManager.GetWobbleFont(Fonts.LatoBlack),
                 22, Bindable.Value.ToString(), "", null, s =>
                 {
                     if (string.IsNullOrEmpty(s))
@@ -173,14 +173,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Slider.X + Slider.Width + 12,
+                X = Slider.X + Slider.Width + 16,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AllowedCharacters = new Regex("^[0-9]*$"),
                 AllowSubmission = false,
                 StoppedTypingActionCalltime = 1
             };
 
-            ValueTextbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
+            ValueTextbox.AddBorder(ColorHelper.HexToColor("#5B5B5B"), 2);
         }
 
         /// <summary>
