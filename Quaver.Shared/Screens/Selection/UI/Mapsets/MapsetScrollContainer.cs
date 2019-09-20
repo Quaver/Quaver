@@ -36,8 +36,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
 
         /// <summary>
+        ///     The amount of time that has elapsed since the user requested to initialize the mapsets
         /// </summary>
-        private TaskHandler<int, int> CreateNewMapsetsTask { get; }
+        private double TimeElapsedUntilInitializationRequest { get; set; } = ReinitializeTime;
+
+        /// <summary>
+        ///     The time it takes until the mapsets will reinitialize
+        /// </summary>
+        private const int ReinitializeTime = 250;
+
+        /// <summary>
+        ///     If the mapsets have reinitialized
+        /// </summary>
+        private bool HasReinitialized { get; set; } = false;
 
         /// <inheritdoc />
         /// <summary>
@@ -50,10 +61,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             AvailableMapsets = availableMapsets;
             ActiveScrollContainer = activeScrollContainer;
 
-            CreateNewMapsetsTask = new TaskHandler<int, int>(StartCreateNewMapsetsTask);
             MapManager.Selected.ValueChanged += OnMapChanged;
             AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
             SelectionScreen.RandomMapsetSelected += OnRandomMapsetSelected;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            TimeElapsedUntilInitializationRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
+            InitializeMapsets(false);
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -117,11 +139,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        /// <param name="arg1"></param>
-        /// <param name="token"></param>
         /// <returns></returns>
-        private int StartCreateNewMapsetsTask(int arg1, CancellationToken token)
+        private void InitializeMapsets(bool restart)
         {
+            if (restart)
+            {
+                TimeElapsedUntilInitializationRequest = 0;
+                HasReinitialized = false;
+                return;
+            }
+
+            if (TimeElapsedUntilInitializationRequest < ReinitializeTime || HasReinitialized)
+                return;
+
             lock (Pool)
             {
                 DestroyAndClearPool();
@@ -141,7 +171,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 SnapToSelected();
             }
 
-            return 0;
+            HasReinitialized = true;
         }
 
         /// <summary>
@@ -155,13 +185,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
-        {
-            if (CreateNewMapsetsTask.IsRunning)
-                CreateNewMapsetsTask.Cancel();
-
-            CreateNewMapsetsTask.Run(0, 250);
-        }
+        private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e) => InitializeMapsets(true);
 
         /// <summary>
         ///     Properly sets the selected index when a random map was selected
