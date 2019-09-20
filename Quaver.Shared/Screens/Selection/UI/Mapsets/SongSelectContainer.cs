@@ -157,8 +157,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         protected void DestroyAndClearPool()
         {
-            Pool.ForEach(x => x.Destroy());
-            Pool.Clear();
+            lock (Pool)
+            {
+                Pool.ForEach(x => x.Destroy());
+                Pool.Clear();
+            }
         }
 
         /// <summary>

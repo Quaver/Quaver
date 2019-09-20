@@ -4,9 +4,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -61,6 +64,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private const int ArtistCreatorSpacingX = 4;
 
         /// <summary>
+        ///     The X position of the title/first element
+        /// </summary>
+        private const int TitleX = 26;
+
+        /// <summary>
         ///     The ranked status of the map
         /// </summary>
         private Sprite RankedStatusSprite { get; set; }
@@ -75,6 +83,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private SpriteTextPlus ByText { get; set; }
 
         /// <summary>
+        ///     When the mapsets are sorted by difficulty/grade achieved
+        ///     this will display the difficulty rating to make it act as an individual map
+        /// </summary>
+        private SpriteTextPlus DifficultyRating { get; set; }
+
+        /// <summary>
+        ///     <see cref="DifficultyRating"/>
+        /// </summary>
+        private SpriteTextPlus DifficultyName { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
         public DrawableMapsetContainer(DrawableMapset mapset)
@@ -87,6 +106,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateButton();
             CreateTitle();
             CreateArtist();
+            CreateDifficultyRating();
+            CreateDifficultyName();
             CreateDividerLine();
             CreateCreator();
             CreateBannerImage();
@@ -132,6 +153,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             Creator.Text = $"{item.Creator}";
+
+            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            {
+                var map = ParentMapset.Item.Maps.First();
+
+                var diff = map.DifficultyFromMods(ModManager.Mods);
+                DifficultyRating.Text = $"{StringHelper.RatingToString(diff)} -";
+                DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) diff);
+
+                DifficultyRating.X = TitleX;
+                Title.X = DifficultyRating.X + DifficultyRating.Width + ArtistCreatorSpacingX;
+
+                DifficultyName.Text = $"[{map.DifficultyName}] -";
+                DifficultyName.Tint = DifficultyRating.Tint;
+
+                DifficultyName.X = TitleX;
+                Artist.X = DifficultyName.X + DifficultyName.Width + ArtistCreatorSpacingX;
+            }
+            else
+            {
+                Title.X = TitleX;
+                Artist.X = TitleX;
+            }
 
             DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;
@@ -189,7 +233,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "SONG TITLE", 26)
             {
                 Parent = this,
-                Position = new ScalableVector2(26, 18),
+                Position = new ScalableVector2(TitleX, 18),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -272,6 +316,34 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Size = new ScalableVector2(71, 28),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateDifficultyRating()
+        {
+            DifficultyRating = new SpriteTextPlus(Title.Font, "0.00", 20)
+            {
+                Parent = this,
+                Position = new ScalableVector2(Title.X, Title.Y),
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0
+            };
+
+            DifficultyRating.Y += DifficultyRating.Height / 4f - 2;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateDifficultyName()
+        {
+            DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
+            {
+                Parent = this,
+                Position = new ScalableVector2(Title.X, Artist.Y),
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0
             };
         }
 
@@ -366,6 +438,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             GameModes.ClearAnimations();
             GameModes.FadeTo(fade, Easing.Linear, time);
 
+            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            {
+                DifficultyRating.ClearAnimations();
+                DifficultyRating.FadeTo(fade, Easing.Linear, time);
+
+                DifficultyName.ClearAnimations();
+                DifficultyName.FadeTo(fade, Easing.Linear, time);
+            }
+
             if (Banner.HasBannerLoaded)
             {
                 Banner.ClearAnimations();
@@ -407,6 +488,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             GameModes.ClearAnimations();
             GameModes.FadeTo(fade, Easing.Linear, time);
 
+            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            {
+                DifficultyRating.ClearAnimations();
+                DifficultyRating.FadeTo(fade, Easing.Linear, time);
+
+                DifficultyName.ClearAnimations();
+                DifficultyName.FadeTo(fade, Easing.Linear, time);
+            }
+
             if (Banner.HasBannerLoaded)
             {
                 Banner.ClearAnimations();
@@ -433,7 +523,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 // If a mapset is clicked, then we want to take the user to the maps container
                 if (ParentMapset.IsSelected)
-                    container.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                {
+                    // Go straight to gameplay if sorting by diff
+                    if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+                    {
+                        var game = (QuaverGame) GameBase.Game;
+                        var screen = game.CurrentScreen as SelectionScreen;
+                        screen?.ExitToGameplay();
+                    }
+                    else
+                    {
+                        container.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                    }
+
+                    return;
+                }
             }
 
             // Mapset is already selected, so go play the current map.

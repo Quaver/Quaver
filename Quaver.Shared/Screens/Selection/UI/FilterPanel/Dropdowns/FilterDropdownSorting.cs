@@ -51,7 +51,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Genre",
             "Game",
             "Length",
-            "Source"
+            "Source",
+            "Difficulty"
         };
 
         /// <summary>

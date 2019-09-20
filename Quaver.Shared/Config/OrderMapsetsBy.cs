@@ -20,6 +20,7 @@ namespace Quaver.Shared.Config
         Genre,
         Game,
         Length,
-        Source
+        Source,
+        Difficulty
     }
 }

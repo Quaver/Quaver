@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using TagLib.Ape;
@@ -15,6 +18,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
@@ -31,6 +35,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public Bindable<SelectScrollContainerType> ActiveScrollContainer { get; }
 
+        /// <summary>
+        /// </summary>
+        private TaskHandler<int, int> CreateNewMapsetsTask { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -42,6 +50,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             AvailableMapsets = availableMapsets;
             ActiveScrollContainer = activeScrollContainer;
 
+            CreateNewMapsetsTask = new TaskHandler<int, int>(StartCreateNewMapsetsTask);
             MapManager.Selected.ValueChanged += OnMapChanged;
             AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
             SelectionScreen.RandomMapsetSelected += OnRandomMapsetSelected;
@@ -108,6 +117,35 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int StartCreateNewMapsetsTask(int arg1, CancellationToken token)
+        {
+            lock (Pool)
+            {
+                DestroyAndClearPool();
+
+                AvailableItems = AvailableMapsets.Value;
+
+                SetSelectedIndex();
+
+                // Reset the starting index so we can be aware of the mapsets that are needed
+                PoolStartingIndex = GetPoolStartingIndex();
+
+                // Recreate the object pool
+                CreatePool();
+                PositionAndContainPoolObjects();
+
+                // Snap to it immediately
+                SnapToSelected();
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => ScrollToSelected();
@@ -119,27 +157,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="e"></param>
         private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
         {
-            ThreadScheduler.RunAfter(() =>
-            {
-                lock (Pool)
-                {
-                    DestroyAndClearPool();
+            if (CreateNewMapsetsTask.IsRunning)
+                CreateNewMapsetsTask.Cancel();
 
-                    AvailableItems = e.Value;
-
-                    SetSelectedIndex();
-
-                    // Reset the starting index so we can be aware of the mapsets that are needed
-                    PoolStartingIndex = GetPoolStartingIndex();
-
-                    // Recreate the object pool
-                    CreatePool();
-                    PositionAndContainPoolObjects();
-
-                    // Snap to it immediately
-                    SnapToSelected();
-                }
-            }, 250);
+            CreateNewMapsetsTask.Run(0, 250);
         }
 
         /// <summary>

@@ -228,10 +228,21 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByLength(mapsets);
                 case OrderMapsetsBy.Source:
                     return OrderMapsetsBySource(mapsets);
+                case OrderMapsetsBy.Difficulty:
+                    return OrderMapsetsByDifficulty(mapsets);
                 default:
                     return mapsets.ToList();
             }
         }
+
+        /// <summary>
+        ///     Orders maps by difficulty.
+        ///     In this, each map gets its own individual mapset
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets)
+            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => x.Maps.First().DifficultyFromMods(ModManager.Mods)).ToList();
 
         /// <summary>
         ///     Orders the mapsets by BPM
@@ -266,6 +277,30 @@ namespace Quaver.Shared.Database.Maps
         {
             mapsets.ForEach(x => x.Maps = x.Maps.OrderBy(y => y.Difficulty10X).ToList());
             return mapsets;
+        }
+
+        /// <summary>
+        ///     Converts every map into a mapset of its own
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> SeparateMapsIntoOwnMapsets(List<Mapset> mapsets)
+        {
+            var newMapsets = new List<Mapset>();
+
+            foreach (var mapset in mapsets)
+            {
+                foreach (var map in mapset.Maps)
+                {
+                    newMapsets.Add(new Mapset
+                    {
+                        Directory = mapset.Directory,
+                        Maps = new List<Map> { map }
+                    });
+                }
+            }
+
+            return newMapsets;
         }
 
         /// <summary>

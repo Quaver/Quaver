@@ -10,6 +10,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble.Assets;
@@ -72,6 +73,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
 
+            ModManager.ModsChanged += OnModsChanged;
+
             UsePreviousSpriteBatchOptions = true;
         }
 
@@ -85,6 +88,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
+
+            ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
         }
@@ -147,5 +152,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e) => UpdateContent(Item, Index);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
     }
 }
