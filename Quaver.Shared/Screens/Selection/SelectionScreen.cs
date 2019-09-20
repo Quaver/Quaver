@@ -244,7 +244,10 @@ namespace Quaver.Shared.Screens.Selection
             switch (ActiveScrollContainer.Value)
             {
                 case SelectScrollContainerType.Mapsets:
-                    ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                    if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+                        ExitToGameplay();
+                    else
+                        ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
                     break;
                 case SelectScrollContainerType.Maps:
                     ExitToGameplay();

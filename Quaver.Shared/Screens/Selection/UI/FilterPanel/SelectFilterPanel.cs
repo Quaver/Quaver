@@ -8,6 +8,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;
@@ -134,6 +135,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 ConfigManager.SelectFilterGameModeBy.ValueChanged += OnSelectFilterGameModeChanged;
 
             MapManager.Selected.ValueChanged += OnMapChanged;
+            ModManager.ModsChanged += OnModsChanged;
 
             AlignRightItems();
         }
@@ -151,6 +153,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 ConfigManager.SelectFilterGameModeBy.ValueChanged -= OnSelectFilterGameModeChanged;
 
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            ModManager.ModsChanged -= OnModsChanged;
 
             FilterMapsetsTask?.Dispose();
 
@@ -310,6 +313,22 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                     BackgroundHelper.Load(e.Value);
                 }
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (ConfigManager.SelectOrderMapsetsBy == null)
+                return;
+
+            if (ConfigManager.SelectOrderMapsetsBy.Value != OrderMapsetsBy.Difficulty)
+                return;
+
+            StartFilterMapsetsTask();
         }
     }
 }
