@@ -135,22 +135,38 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <param name="index"></param>
         public void UpdateContent(Mapset item, int index)
         {
-            Title.Text = item.Title;
-
             // Give title an elipsis
-            if (Title.Width > 500 && Title.Text.Length > 33)
+            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
             {
-                Title.Text = Title.Text.Substring(0, 33);
-                Title.Text += "...";
+                Title.FontSize = 22;
+                Title.Text = $"{item.Artist} - {item.Title}";
+
+                if (Title.Width > 500 && Title.Text.Length > 33)
+                {
+                    Title.Text = Title.Text.Substring(0, 33);
+                    Title.Text += "...";
+                }
+            }
+            else
+            {
+                Title.FontSize = 26;
+                Title.Text = item.Title;
+
+                if (Title.Width > 500 && Title.Text.Length > 33)
+                {
+                    Title.Text = Title.Text.Substring(0, 33);
+                    Title.Text += "...";
+                }
+
+                Artist.Text = $"{item.Artist}";
+
+                if (Artist.Width > 500 && Artist.Text.Length > 40)
+                {
+                    Artist.Text = Artist.Text.Substring(0, 39);
+                    Artist.Text += "...";
+                }
             }
 
-            Artist.Text = $"{item.Artist}";
-
-            if (Artist.Width > 500 && Artist.Text.Length > 40)
-            {
-                Artist.Text = Artist.Text.Substring(0, 39);
-                Artist.Text += "...";
-            }
 
             Creator.Text = $"{item.Creator}";
 
@@ -165,19 +181,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 DifficultyRating.X = TitleX;
                 Title.X = DifficultyRating.X + DifficultyRating.Width + ArtistCreatorSpacingX;
 
-                DifficultyName.Text = $"[{map.DifficultyName}] -";
+                DifficultyName.Text = $"{map.DifficultyName}";
                 DifficultyName.Tint = DifficultyRating.Tint;
 
                 DifficultyName.X = TitleX;
-                Artist.X = DifficultyName.X + DifficultyName.Width + ArtistCreatorSpacingX;
+                DividerLine.X = DifficultyName.X + DifficultyName.Width + ArtistCreatorSpacingX;
+                Artist.Visible = false;
             }
             else
             {
                 Title.X = TitleX;
                 Artist.X = TitleX;
+                DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
+                Artist.Visible = true;
             }
 
-            DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;
             Creator.X = ByText.X + ByText.Width + ArtistCreatorSpacingX;
 
