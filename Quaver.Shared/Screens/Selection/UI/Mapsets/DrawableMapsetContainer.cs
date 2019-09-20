@@ -84,12 +84,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         ///     When the mapsets are sorted by difficulty/grade achieved
-        ///     this will display the difficulty rating to make it act as an individual map
-        /// </summary>
-        private SpriteTextPlus DifficultyRating { get; set; }
-
-        /// <summary>
-        ///     <see cref="DifficultyRating"/>
+        ///     this will display the difficulty rating & name to make it act as an individual map
         /// </summary>
         private SpriteTextPlus DifficultyName { get; set; }
 
@@ -106,7 +101,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateButton();
             CreateTitle();
             CreateArtist();
-            CreateDifficultyRating();
             CreateDifficultyName();
             CreateDividerLine();
             CreateCreator();
@@ -167,7 +161,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 }
             }
 
-
             Creator.Text = $"{item.Creator}";
 
             if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
@@ -175,14 +168,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 var map = ParentMapset.Item.Maps.First();
 
                 var diff = map.DifficultyFromMods(ModManager.Mods);
-                DifficultyRating.Text = $"{StringHelper.RatingToString(diff)} -";
-                DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) diff);
 
-                DifficultyRating.X = TitleX;
-                Title.X = DifficultyRating.X + DifficultyRating.Width + ArtistCreatorSpacingX;
-
-                DifficultyName.Text = $"{map.DifficultyName}";
-                DifficultyName.Tint = DifficultyRating.Tint;
+                DifficultyName.Text = $"{StringHelper.RatingToString(diff)} - {map.DifficultyName}";
+                DifficultyName.Tint = ColorHelper.DifficultyToColor((float) diff);
 
                 DifficultyName.X = TitleX;
                 DividerLine.X = DifficultyName.X + DifficultyName.Width + ArtistCreatorSpacingX;
@@ -190,7 +178,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
             else
             {
-                Title.X = TitleX;
+                // Title.X = TitleX;
                 Artist.X = TitleX;
                 DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
                 Artist.Visible = true;
@@ -339,21 +327,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private void CreateDifficultyRating()
-        {
-            DifficultyRating = new SpriteTextPlus(Title.Font, "0.00", 20)
-            {
-                Parent = this,
-                Position = new ScalableVector2(Title.X, Title.Y),
-                UsePreviousSpriteBatchOptions = true,
-                Alpha = 0
-            };
-
-            DifficultyRating.Y += DifficultyRating.Height / 4f - 2;
-        }
-
-        /// <summary>
-        /// </summary>
         private void CreateDifficultyName()
         {
             DifficultyName = new SpriteTextPlus(Title.Font, "Difficulty", 20)
@@ -458,9 +431,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
             {
-                DifficultyRating.ClearAnimations();
-                DifficultyRating.FadeTo(fade, Easing.Linear, time);
-
                 DifficultyName.ClearAnimations();
                 DifficultyName.FadeTo(fade, Easing.Linear, time);
             }
@@ -508,9 +478,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
             {
-                DifficultyRating.ClearAnimations();
-                DifficultyRating.FadeTo(fade, Easing.Linear, time);
-
                 DifficultyName.ClearAnimations();
                 DifficultyName.FadeTo(fade, Easing.Linear, time);
             }
