@@ -23,6 +23,7 @@ namespace Quaver.Shared.Config
         Source,
         Difficulty,
         OnlineGrade,
-        DateLastUpdated
+        DateLastUpdated,
+        DateRanked
     }
 }
