@@ -392,6 +392,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private Texture2D GetRankedStatusImage()
         {
+            if (ParentMapset.Item.Maps.First().Game != MapGame.Quaver)
+                return UserInterface.StatusOtherGameOsu;
+
             switch (ParentMapset.Item.Maps.Max(x => x.RankedStatus))
             {
                 case RankedStatus.NotSubmitted:
