@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation;

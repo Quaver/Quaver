@@ -1,11 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -50,6 +52,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
         /// <summary>
         /// </summary>
+        private Sprite OnlineGrade { get; set; }
+
+        /// <summary>
+        ///     The amount of spacing between the panel and first value
+        /// </summary>
+        private const int PaddingX = 26;
+
+        /// <summary>
+        /// </summary>
         /// <param name="parentMap"></param>
         public DrawableMapContainer(DrawableMap parentMap)
         {
@@ -63,6 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             CreateDifficultyRating();
             CreateBarDisplay();
             CreateCreator();
+            CreateGrade();
 
             UsePreviousSpriteBatchOptions = true;
 
@@ -104,6 +116,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             BarDisplay.DifficultyBar.ChangeMap(map);
             Rating.ChangeMap(map);
 
+            if (map.OnlineGrade != Grade.None)
+            {
+                const int width = 40;
+
+                OnlineGrade.Visible = true;
+                OnlineGrade.Image = SkinManager.Skin.Grades[map.OnlineGrade];
+                OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Width / OnlineGrade.Image.Height * width);
+
+                Name.X = OnlineGrade.X + OnlineGrade.Width + 16;
+                ByText.X = Name.X;
+            }
+            else
+            {
+                Name.X = PaddingX;
+                ByText.X = Name.X;
+                OnlineGrade.Visible = false;
+            }
+
+            Creator.X = ByText.X + ByText.Width + 4;
+
             if (ParentMap.IsSelected)
                 Select(true);
             else
@@ -133,6 +165,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
             BarDisplay.CachedSprite.ClearAnimations();
             BarDisplay.CachedSprite.FadeTo(fade, Easing.Linear, time);
+
+            OnlineGrade.ClearAnimations();
+            OnlineGrade.FadeTo(fade, Easing.Linear, time);
 
             ClearAnimations();
 
@@ -165,6 +200,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
             BarDisplay.CachedSprite.ClearAnimations();
             BarDisplay.CachedSprite.FadeTo(fade, Easing.Linear, time);
+
+            OnlineGrade.ClearAnimations();
+            OnlineGrade.FadeTo(fade, Easing.Linear, time);
 
             ClearAnimations();
 
@@ -200,7 +238,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "DIFFICULTY", 26)
             {
                 Parent = this,
-                Position = new ScalableVector2(26, 18),
+                Position = new ScalableVector2(PaddingX, 18),
                 UsePreviousSpriteBatchOptions = true,
             };
         }
@@ -258,6 +296,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
                 Parent = this,
                 Position = new ScalableVector2(ByText.X + ByText.Width + 4, ByText.Y),
                 Tint = ColorHelper.HexToColor("#0587e5"),
+                UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateGrade()
+        {
+            OnlineGrade = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                Visible = false,
+                X = PaddingX,
                 UsePreviousSpriteBatchOptions = true
             };
         }

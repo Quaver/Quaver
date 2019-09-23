@@ -1,5 +1,7 @@
+using Quaver.Server.Client.Events.Scores;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Online;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -41,6 +43,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             UsePreviousSpriteBatchOptions = true;
 
             MapManager.Selected.ValueChanged += OnMapChanged;
+            OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
             UpdateContent(item, index);
         }
 
@@ -51,6 +54,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         {
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
+
             base.Destroy();
         }
 
@@ -98,5 +103,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             else if (!IsSelected)
                 Deselect();
         }
+
+        /// <summary>
+        ///     Called when retrieving online scores to update the container's state
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRetrievedOnlineScores(object sender, RetrievedOnlineScoresEventArgs e)
+            => UpdateContent(Item, Index);
     }
 }

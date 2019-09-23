@@ -13,6 +13,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Collections;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events;
 using Quaver.Server.Client.Events.Disconnnection;
@@ -40,6 +41,7 @@ using Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Steamworks;
 using UniversalThreadManagement;
 using Wobble;
@@ -443,7 +445,17 @@ namespace Quaver.Shared.Online
                         map.RankedStatus = RankedStatus.DanCourse;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        map.RankedStatus = RankedStatus.NotSubmitted;
+                        break;
+                }
+
+                // Update online grade
+                if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Rate && e.Response.PersonalBest != null)
+                {
+                    var onlineGrade = GradeHelper.GetGradeFromAccuracy((float) e.Response.PersonalBest.Accuracy);
+
+                    if (GradeHelper.GetGradeImportanceIndex(onlineGrade) > GradeHelper.GetGradeImportanceIndex(map.OnlineGrade))
+                        map.OnlineGrade = onlineGrade;
                 }
 
                 MapDatabaseCache.UpdateMap(map);

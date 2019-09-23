@@ -21,6 +21,7 @@ namespace Quaver.Shared.Config
         Game,
         Length,
         Source,
-        Difficulty
+        Difficulty,
+        OnlineGrade
     }
 }

@@ -39,6 +39,22 @@ namespace Quaver.Shared.Database.Maps
         }
 
         /// <summary>
+        ///     Returns if in song select, we're sorting by single difficulties
+        /// </summary>
+        /// <returns></returns>
+        internal static bool IsSingleDifficultySorted()
+        {
+            switch (ConfigManager.SelectOrderMapsetsBy.Value)
+            {
+                case OrderMapsetsBy.Difficulty:
+                case OrderMapsetsBy.OnlineGrade:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         ///     Responsible for taking a list of maps, and grouping each directory.
         /// </summary>
         /// <param name="maps"></param>
@@ -230,6 +246,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsBySource(mapsets);
                 case OrderMapsetsBy.Difficulty:
                     return OrderMapsetsByDifficulty(mapsets);
+                case OrderMapsetsBy.OnlineGrade:
+                    return OrderMapsetsByOnlineGrade(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -243,6 +261,14 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         private static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets)
             => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => x.Maps.First().DifficultyFromMods(ModManager.Mods)).ToList();
+
+        /// <summary>
+        ///     Highest online grade achieved
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByOnlineGrade(List<Mapset> mapsets)
+            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => GradeHelper.GetGradeImportanceIndex(x.Maps.First().OnlineGrade)).ToList();
 
         /// <summary>
         ///     Orders the mapsets by BPM

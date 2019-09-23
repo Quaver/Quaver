@@ -52,7 +52,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Game",
             "Length",
             "Source",
-            "Difficulty"
+            "Difficulty",
+            "Online Grade"
         };
 
         /// <summary>
