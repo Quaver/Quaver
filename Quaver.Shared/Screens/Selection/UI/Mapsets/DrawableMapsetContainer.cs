@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -89,6 +90,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private SpriteTextPlus DifficultyName { get; set; }
 
         /// <summary>
+        ///     The highest online grade that the user has achieved
+        /// </summary>
+        private Sprite OnlineGrade { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
         public DrawableMapsetContainer(DrawableMapset mapset)
@@ -107,6 +113,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             CreateBannerImage();
             CreateRankedStatus();
             CreateGameModes();
+            CreateOnlineGrade();
 
             UsePreviousSpriteBatchOptions = true;
         }
@@ -130,14 +137,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public void UpdateContent(Mapset item, int index)
         {
             // Give title an elipsis
-            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            if (MapsetHelper.IsSingleDifficultySorted())
             {
                 Title.FontSize = 22;
                 Title.Text = $"{item.Artist} - {item.Title}";
 
-                if (Title.Width > 500 && Title.Text.Length > 33)
+                if (Title.Width > 475 || Title.Text.Length > 45)
                 {
-                    Title.Text = Title.Text.Substring(0, 33);
+                    Title.Text = Title.Text.Substring(0, 45);
                     Title.Text += "...";
                 }
             }
@@ -163,7 +170,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Creator.Text = $"{item.Creator}";
 
-            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            if (MapsetHelper.IsSingleDifficultySorted())
             {
                 var map = ParentMapset.Item.Maps.First();
 
@@ -172,7 +179,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 DifficultyName.Text = $"{StringHelper.RatingToString(diff)} - {map.DifficultyName}";
                 DifficultyName.Tint = ColorHelper.DifficultyToColor((float) diff);
 
-                DifficultyName.X = TitleX;
+                if (DifficultyName.Width >= 260 || DifficultyName.Text.Length >= 40)
+                {
+                    DifficultyName.Text = DifficultyName.Text.Substring(0, 30);
+                    DifficultyName.Text += "...";
+                }
+
+                if (map.OnlineGrade != Grade.None)
+                {
+                    const int width = 40;
+
+                    OnlineGrade.Visible = true;
+                    OnlineGrade.Image = SkinManager.Skin.Grades[map.OnlineGrade];
+                    OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Width / OnlineGrade.Image.Height * width);
+
+                    Title.X = OnlineGrade.X + OnlineGrade.Width + 16;
+                    Artist.X = Title.X;
+                    DifficultyName.X = Artist.X;
+                }
+                else
+                {
+                    Title.X = TitleX;
+                    Artist.X = TitleX;
+                    DifficultyName.X = TitleX;
+                    OnlineGrade.Visible = false;
+                }
+
                 DividerLine.X = DifficultyName.X + DifficultyName.Width + ArtistCreatorSpacingX;
                 Artist.Visible = false;
             }
@@ -182,6 +214,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Artist.X = TitleX;
                 DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
                 Artist.Visible = true;
+                OnlineGrade.Visible = false;
             }
 
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;
@@ -311,7 +344,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///
         /// </summary>
         private void CreateGameModes()
         {
@@ -322,6 +354,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Size = new ScalableVector2(71, 28),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateOnlineGrade()
+        {
+            OnlineGrade = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                Visible = false,
+                Alpha = 0,
+                X = TitleX,
+                UsePreviousSpriteBatchOptions = true,
             };
         }
 
@@ -429,10 +476,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             GameModes.ClearAnimations();
             GameModes.FadeTo(fade, Easing.Linear, time);
 
-            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            if (MapsetHelper.IsSingleDifficultySorted())
             {
                 DifficultyName.ClearAnimations();
                 DifficultyName.FadeTo(fade, Easing.Linear, time);
+
+                OnlineGrade.ClearAnimations();
+                OnlineGrade.FadeTo(fade, Easing.Linear, time);
             }
 
             if (Banner.HasBannerLoaded)
@@ -476,10 +526,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             GameModes.ClearAnimations();
             GameModes.FadeTo(fade, Easing.Linear, time);
 
-            if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+            if (MapsetHelper.IsSingleDifficultySorted())
             {
                 DifficultyName.ClearAnimations();
                 DifficultyName.FadeTo(fade, Easing.Linear, time);
+
+                OnlineGrade.ClearAnimations();
+                OnlineGrade.FadeTo(fade, Easing.Linear, time);
             }
 
             if (Banner.HasBannerLoaded)
@@ -510,7 +563,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 if (ParentMapset.IsSelected)
                 {
                     // Go straight to gameplay if sorting by diff
-                    if (ConfigManager.SelectOrderMapsetsBy.Value == OrderMapsetsBy.Difficulty)
+                    if (MapsetHelper.IsSingleDifficultySorted())
                     {
                         var game = (QuaverGame) GameBase.Game;
                         var screen = game.CurrentScreen as SelectionScreen;

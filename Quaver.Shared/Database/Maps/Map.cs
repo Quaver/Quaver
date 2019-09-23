@@ -75,9 +75,9 @@ namespace Quaver.Shared.Database.Maps
         public string DifficultyName { get; set; }
 
         /// <summary>
-        ///     The highest rank that the player has gotten on the map.
+        ///     The highest online grade that the player has gotten on the map.
         /// </summary>
-        public Grade HighestRank { get; set; }
+        public Grade OnlineGrade { get; set; }
 
         /// <summary>
         ///     The ranked status of the map.
@@ -276,7 +276,7 @@ namespace Quaver.Shared.Database.Maps
             {
                 Artist = qua.Artist,
                 Title = qua.Title,
-                HighestRank = Grade.None,
+                OnlineGrade = Grade.None,
                 AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
