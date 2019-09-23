@@ -248,6 +248,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByDifficulty(mapsets);
                 case OrderMapsetsBy.OnlineGrade:
                     return OrderMapsetsByOnlineGrade(mapsets);
+                case OrderMapsetsBy.DateLastUpdated:
+                    return OrderMapsetsByDateLastUpdated(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -269,6 +271,17 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> OrderMapsetsByOnlineGrade(List<Mapset> mapsets)
             => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => GradeHelper.GetGradeImportanceIndex(x.Maps.First().OnlineGrade)).ToList();
+
+        /// <summary>
+        ///     Orders mapsets by the date they were last updated online
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByDateLastUpdated(List<Mapset> mapsets)
+        {
+            return mapsets.OrderByDescending(x => x.Maps.Max(y => y.DateLastUpdated)).ThenBy(x => x.Maps.First().Artist)
+                .ThenBy(x => x.Maps.First().Title).ToList();
+        }
 
         /// <summary>
         ///     Orders the mapsets by BPM
