@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataLongNotePercentage : TextKeyValue
     {
-        public FilterMetadataLongNotePercentage() : base("LN%", "10%", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public FilterMetadataLongNotePercentage() : base("LNs:", "10%", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
             if (MapManager.Selected.Value != null)
                 Value.Text = $"{GetPercentage()}";
