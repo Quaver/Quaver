@@ -55,7 +55,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
             "Difficulty",
             "Online Grade",
             "Last Updated",
-            "Date Ranked"
+            "Date Ranked",
+            "Long Note %"
         };
 
         /// <summary>

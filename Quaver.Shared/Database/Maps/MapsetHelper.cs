@@ -48,6 +48,7 @@ namespace Quaver.Shared.Database.Maps
             {
                 case OrderMapsetsBy.Difficulty:
                 case OrderMapsetsBy.OnlineGrade:
+                case OrderMapsetsBy.LongNotePercentage:
                     return true;
                 default:
                     return false;
@@ -252,6 +253,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByDateLastUpdated(mapsets);
                 case OrderMapsetsBy.DateRanked:
                     return OrderMapsetsByDateRanked(mapsets);
+                case OrderMapsetsBy.LongNotePercentage:
+                    return OrderMapsetsByLongNotePercentage(mapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -273,6 +276,14 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static List<Mapset> OrderMapsetsByOnlineGrade(List<Mapset> mapsets)
             => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => GradeHelper.GetGradeImportanceIndex(x.Maps.First().OnlineGrade)).ToList();
+
+        /// <summary>
+        ///     Sorts maps by their long note percentage
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByLongNotePercentage(List<Mapset> mapsets)
+            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => x.Maps.First().LNPercentage).ToList();
 
         /// <summary>
         ///     Orders mapsets by the date they were last updated online

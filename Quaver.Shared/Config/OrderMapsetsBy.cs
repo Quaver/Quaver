@@ -24,6 +24,7 @@ namespace Quaver.Shared.Config
         Difficulty,
         OnlineGrade,
         DateLastUpdated,
-        DateRanked
+        DateRanked,
+        LongNotePercentage
     }
 }
