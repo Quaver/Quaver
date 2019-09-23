@@ -170,6 +170,11 @@ namespace Quaver.Shared.Database.Maps
         public DateTime DateAdded { get; set; }
 
         /// <summary>
+        ///     The time the map was last updated
+        /// </summary>
+        public DateTime DateLastUpdated { get; set; }
+
+        /// <summary>
         ///     The count of regular notes.
         /// </summary>
         public int RegularNoteCount { get; set; }

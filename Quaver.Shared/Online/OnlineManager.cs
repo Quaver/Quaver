@@ -449,6 +449,9 @@ namespace Quaver.Shared.Online
                         break;
                 }
 
+                if ((int) e.Response.Code == -1)
+                    map.RankedStatus = RankedStatus.Unranked;
+
                 // Update online grade
                 if (ConfigManager.LeaderboardSection.Value != LeaderboardType.Rate && e.Response.PersonalBest != null)
                 {
@@ -458,6 +461,7 @@ namespace Quaver.Shared.Online
                         map.OnlineGrade = onlineGrade;
                 }
 
+                map.DateLastUpdated = e.Response.DateLastUpdated;
                 MapDatabaseCache.UpdateMap(map);
 
                 var game = GameBase.Game as QuaverGame;
