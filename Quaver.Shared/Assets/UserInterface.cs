@@ -31,6 +31,8 @@ namespace Quaver.Shared.Assets
         public static Texture2D StatusNotSubmitted => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-not-submitted.png");
         public static Texture2D StatusDanCourse => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-dancourse.png");
         public static Texture2D StatusOtherGameOsu => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-other-game-osu.png");
+        public static Texture2D StatusVarious => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-various.png");
+        public static Texture2D StatusNone => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-none.png");
         public static Texture2D SelectButtonBackground => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/select-button-background.png");
         public static Texture2D HorizontalSelectorLeft => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/horizontal-selector-left.png");
         public static Texture2D HorizontalSelectorRight => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/horizontal-selector-right.png");
@@ -90,6 +92,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D SearchBox => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/search-box.png");
         public static Texture2D Keys4Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys4.png");
         public static Texture2D Keys7Panel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys7.png");
+        public static Texture2D KeysNonePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/keys-none.png");
         public static Texture2D BothModesPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/both-modes-panel.png");
         public static Texture2D ModePanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/mode-panel.png");
         public static Texture2D EditPlayButton => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/edit-play-button.png");
