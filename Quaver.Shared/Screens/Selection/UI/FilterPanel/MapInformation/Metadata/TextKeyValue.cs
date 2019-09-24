@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
@@ -67,6 +69,36 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
                 X = Key.Width  + 6,
                 Tint = KeyColor
             };
+        }
+
+        /// <summary>
+        ///     Changes the value of the container
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangeValue(string value)
+        {
+            Value.Text = value;
+            UpdateSize();
+        }
+
+        /// <summary>
+        ///     Updates the size of the container
+        /// </summary>
+        public virtual void UpdateSize() => Size = new ScalableVector2(Key.Width + Value.Width + 6, Key.Height);
+
+        public void RemoveAnimations()
+        {
+            ClearAnimations();
+            Children.ForEach(x => x.ClearAnimations());
+        }
+
+        public void FadeTo(float fade, Easing easing, int time)
+        {
+            Children.ForEach(x =>
+            {
+                if (x is Sprite s)
+                    s.FadeTo(fade, easing, time);
+            });
         }
     }
 }
