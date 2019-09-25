@@ -14,7 +14,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Assets;
@@ -63,14 +65,24 @@ namespace Quaver.Shared.Graphics.Backgrounds
         private static CancellationTokenSource Source { get; set; }
 
         /// <summary>
-        ///     Banners to use throughout song select
+        ///     Mapset Banners to use throughout song select
         /// </summary>
-        public static Dictionary<string, Texture2D> Banners { get; } = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Texture2D> MapsetBanners { get; } = new Dictionary<string, Texture2D>();
+
+        /// <summary>
+        ///     Playlist banners to use throughout song select
+        /// </summary>
+        public static Dictionary<string, Texture2D> PlaylistBanners { get; } = new Dictionary<string, Texture2D>();
 
         /// <summary>
         ///     A list of banners that are queued to be loaded on the load thread
         /// </summary>
         private static List<Mapset> MapsetBannersToLoad { get; } = new List<Mapset>();
+
+        /// <summary>
+        ///     A list of playlist banners to load
+        /// </summary>
+        private static List<Playlist> PlaylistBannersToLoad { get; } = new List<Playlist>();
 
         /// <summary>
         /// </summary>
@@ -87,7 +99,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         public static event EventHandler<BackgroundBlurredEventArgs> Blurred;
 
         /// <summary>
-        ///     Event invoked when a new banner has loaded
+        ///     Event invoked when a new mapset banner has loaded
         /// </summary>
         public static event EventHandler<BannerLoadedEventArgs> BannerLoaded;
 
@@ -195,98 +207,30 @@ namespace Quaver.Shared.Graphics.Backgrounds
         {
             while (true)
             {
-                if (MapsetBannersToLoad.Count == 0)
-                    continue;
-
-                var bannersToRemove = new List<Mapset>();
-
-                for (var i = 0; i < MapsetBannersToLoad.Count; i++)
-                {
-                    var mapset = MapsetBannersToLoad[i];
-
-                    // Give custom banners first priority
-                    var bannerExists = true;
-
-                    var path = MapManager.GetBannerPath(mapset);
-
-                    // Give map backgrounds second priority
-                    if (!File.Exists(path))
-                    {
-                        path = MapManager.GetBackgroundPath(mapset.Maps.First());
-                        bannerExists = false;
-                    }
-
-                    // Give the default banner last priority
-                    var mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
-
-                    // The banner is the default, so there's no need to cache it to a RenderTarget
-                    if (mapTexture == DefaultBanner || bannerExists)
-                    {
-                        if (!Banners.ContainsKey(mapset.Directory))
-                            Banners.Add(mapset.Directory, mapTexture);
-
-                        BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, mapTexture));
-                        bannersToRemove.Add(mapset);
-                        continue;
-                    }
-
-                    // Mask the image and draw it to a RenderTarget
-                    GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
-                    {
-                        var size = new ScalableVector2(421, 82);
-                        var scrollContainer = new ScrollContainer(size, size);
-
-                        var maskedSprite = new Sprite
-                        {
-                            Alignment = Alignment.MidCenter,
-                            // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
-                            Size = new ScalableVector2(1024, 576),
-                            // This y offset usually captures the best part of the image (such as faces or text)
-                            Y = 100,
-                            Image = mapTexture
-                        };
-
-                        scrollContainer.AddContainedDrawable(maskedSprite);
-
-                        // Only create a new RT if needed
-                        var (pixelWidth, pixelHeight) = scrollContainer.AbsoluteSize * WindowManager.ScreenScale;
-
-                        var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth,
-                            (int) pixelHeight, false,
-                            GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
-
-                        GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
-                        GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
-
-                        scrollContainer.Draw(new GameTime());
-                        GameBase.Game.SpriteBatch.End();
-
-                        GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-                        scrollContainer?.Destroy();
-                        maskedSprite?.Destroy();
-
-                        if (!Banners.ContainsKey(mapset.Directory))
-                            Banners.Add(mapset.Directory, renderTarget);
-
-                        BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, renderTarget));
-                    });
-
-                    bannersToRemove.Add(mapset);
-                }
-
-                for (var i = 0; i < bannersToRemove.Count; i++)
-                    MapsetBannersToLoad.Remove(bannersToRemove[i]);
+                LoadAllMapsetBanners();
+                LoadAllPlaylistBanners();
 
                 Thread.Sleep(16);
             }
         }
+
+
         /// <summary>
         ///     Loads a background banner to use during song select
         /// </summary>
         /// <param name="mapset"></param>
-        public static void LoadBanner(Mapset mapset)
+        public static void LoadMapsetBanner(Mapset mapset)
         {
             MapsetBannersToLoad.Add(mapset);
+        }
+
+        /// <summary>
+        ///     Loads a playlist banner into the game
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void LoadPlaylistBanner(Playlist playlist)
+        {
+            PlaylistBannersToLoad.Add(playlist);
         }
 
         /// <summary>
@@ -315,6 +259,164 @@ namespace Quaver.Shared.Graphics.Backgrounds
         {
             Background.BrightnessSprite.ClearAnimations();
             Background.BrightnessSprite.Animations.Add(new Animation(AnimationProperty.Alpha, Easing.Linear, Background.BrightnessSprite.Alpha, alpha, 250));
+        }
+
+        /// <summary>
+        ///     Responsible for making sure all mapset banners are loaded in
+        /// </summary>
+        private static void LoadAllMapsetBanners()
+        {
+            if (MapsetBannersToLoad.Count == 0)
+                return;
+
+            var bannersToRemove = new List<Mapset>();
+
+            for (var i = 0; i < MapsetBannersToLoad.Count; i++)
+            {
+                var mapset = MapsetBannersToLoad[i];
+
+                // Give custom banners first priority
+                var bannerExists = true;
+
+                var path = MapManager.GetBannerPath(mapset);
+
+                // Give map backgrounds second priority
+                if (!File.Exists(path))
+                {
+                    path = MapManager.GetBackgroundPath(mapset.Maps.First());
+                    bannerExists = false;
+                }
+
+                // Give the default banner last priority
+                var mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
+
+                // The banner is the default, so there's no need to cache it to a RenderTarget
+                if (mapTexture == DefaultBanner || bannerExists)
+                {
+                    if (!MapsetBanners.ContainsKey(mapset.Directory))
+                        MapsetBanners.Add(mapset.Directory, mapTexture);
+
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, mapTexture));
+                    bannersToRemove.Add(mapset);
+                    continue;
+                }
+
+                CreateBanner(mapTexture, mapset);
+                bannersToRemove.Add(mapset);
+            }
+
+            for (var i = 0; i < bannersToRemove.Count; i++)
+                MapsetBannersToLoad.Remove(bannersToRemove[i]);
+        }
+
+        /// <summary>
+        ///     Responsible for loading all playlist banners
+        /// </summary>
+        private static void LoadAllPlaylistBanners()
+        {
+            if (PlaylistBannersToLoad.Count == 0)
+                return;
+
+            var bannersToRemove = new List<Playlist>();
+
+            for (var i = 0; i < PlaylistBannersToLoad.Count; i++)
+            {
+                var playlist = PlaylistBannersToLoad[i];
+
+                // Give custom banners first priority
+                var bannerExists = true;
+
+                var path = $"{ConfigManager.DataDirectory.Value}/playlists/{playlist.Id}.jpg";
+
+                // Give map backgrounds second priority
+                if (!File.Exists(path) && playlist.Maps.Count != 0)
+                {
+                    path = MapManager.GetBackgroundPath(playlist.Maps.First());
+                    bannerExists = false;
+                }
+
+                // Give the default banner last priority
+                var mapTexture = File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : DefaultBanner;
+
+                // The banner is the default, so there's no need to cache it to a RenderTarget
+                if (mapTexture == DefaultBanner || bannerExists)
+                {
+                    if (!PlaylistBanners.ContainsKey(playlist.Id.ToString()))
+                        PlaylistBanners.Add(playlist.Id.ToString(), mapTexture);
+
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, mapTexture));
+                    bannersToRemove.Add(playlist);
+                    continue;
+                }
+
+                CreateBanner(mapTexture, null, playlist);
+                bannersToRemove.Add(playlist);
+            }
+
+            for (var i = 0; i < bannersToRemove.Count; i++)
+                PlaylistBannersToLoad.Remove(bannersToRemove[i]);
+        }
+
+        /// <summary>
+        ///     Masks a banner to use
+        /// </summary>
+        /// <param name="mapTexture"></param>
+        /// <param name="mapset"></param>
+        private static void CreateBanner(Texture2D mapTexture, Mapset mapset = null, Playlist playlist = null)
+        {
+            if (mapset == null && playlist == null || mapset != null && playlist != null)
+                throw new InvalidOperationException();
+
+            // Mask the image and draw it to a RenderTarget
+            GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
+            {
+                var size = new ScalableVector2(421, 82);
+                var scrollContainer = new ScrollContainer(size, size);
+
+                var maskedSprite = new Sprite
+                {
+                    Alignment = Alignment.MidCenter,
+                    // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
+                    Size = new ScalableVector2(1024, 576),
+                    // This y offset usually captures the best part of the image (such as faces or text)
+                    Y = 100,
+                    Image = mapTexture
+                };
+
+                scrollContainer.AddContainedDrawable(maskedSprite);
+
+                // Only create a new RT if needed
+                var (pixelWidth, pixelHeight) = scrollContainer.AbsoluteSize * WindowManager.ScreenScale;
+
+                var renderTarget = new RenderTarget2D(GameBase.Game.GraphicsDevice, (int) pixelWidth,
+                    (int) pixelHeight, false,
+                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+                GameBase.Game.GraphicsDevice.SetRenderTarget(renderTarget);
+                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+
+                scrollContainer.Draw(new GameTime());
+                GameBase.Game.SpriteBatch.End();
+
+                GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+                scrollContainer?.Destroy();
+                maskedSprite?.Destroy();
+
+                if (mapset != null)
+                {
+                    if (!MapsetBanners.ContainsKey(mapset.Directory))
+                        MapsetBanners.Add(mapset.Directory, renderTarget);
+
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(mapset, renderTarget));
+                }
+                else if (playlist != null)
+                {
+                    if (!PlaylistBanners.ContainsKey(playlist.Id.ToString()))
+                        PlaylistBanners.Add(playlist.Id.ToString(), renderTarget);
+
+                    BannerLoaded?.Invoke(typeof(BackgroundHelper), new BannerLoadedEventArgs(playlist, renderTarget));
+                }
+            });
         }
     }
 }

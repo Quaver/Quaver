@@ -131,10 +131,13 @@ namespace Quaver.Shared.Database.Playlists
 
             var playlists = new List<Playlist>();
 
-            foreach (var collection in db.Collections)
+            for (var i = 0; i < db.Collections.Count; i++)
             {
+                var collection = db.Collections[i];
+
                 var playlist = new Playlist
                 {
+                    Id = -i,
                     Name = collection.Name,
                     Creator = "External Game",
                     Maps = new List<Map>(),
