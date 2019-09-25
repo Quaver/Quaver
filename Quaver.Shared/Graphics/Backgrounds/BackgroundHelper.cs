@@ -207,10 +207,13 @@ namespace Quaver.Shared.Graphics.Backgrounds
         {
             while (true)
             {
+                if (MapsetBannersToLoad.Count == 0 && PlaylistBannersToLoad.Count == 0)
+                    continue;
+
                 LoadAllMapsetBanners();
                 LoadAllPlaylistBanners();
 
-                Thread.Sleep(16);
+                Thread.Sleep(50);
             }
         }
 
