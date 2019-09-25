@@ -183,7 +183,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF3();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
-            HandleRightMouseButtonClick();
+            HandleThumb1MouseButtonClick();
         }
 
         /// <summary>
@@ -309,12 +309,12 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
-        ///     Handles when the user clicks the right mouse button.
+        ///     Handles when the user clicks the thumb1 mouse button.
         ///     If the user has the maps container open, this'll bring back the mapset container
         /// </summary>
-        private void HandleRightMouseButtonClick()
+        private void HandleThumb1MouseButtonClick()
         {
-            if (!MouseManager.IsUniqueClick(MouseButton.Right))
+            if (!MouseManager.IsUniqueClick(MouseButton.Thumb1))
                 return;
 
             var view = (SelectionScreenView) View;
