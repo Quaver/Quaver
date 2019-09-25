@@ -6,6 +6,7 @@ using osu_database_reader.BinaryFiles;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using SQLite;
+using Wobble.Bindables;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Playlists
@@ -21,6 +22,11 @@ namespace Quaver.Shared.Database.Playlists
         ///     The available playlists
         /// </summary>
         public static List<Playlist> Playlists { get; private set; } = new List<Playlist>();
+
+        /// <summary>
+        ///     The currently selected playlist
+        /// </summary>
+        public static Bindable<Playlist> Selected { get; } = new Bindable<Playlist>(null);
 
         /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use

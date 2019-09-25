@@ -135,6 +135,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
+        ///     Difficulty name is only visible on mapsets for playlists
+        /// </summary>
+        public bool IsPlaylistMapset() => DrawableContainer.DifficultyName.Visible;
+
+        /// <summary>
         ///     Handles opening/closing the mapset when the map has changed
         /// </summary>
         /// <param name="sender"></param>

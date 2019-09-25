@@ -44,6 +44,9 @@ namespace Quaver.Shared.Database.Maps
         /// <returns></returns>
         internal static bool IsSingleDifficultySorted()
         {
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                return true;
+
             switch (ConfigManager.SelectOrderMapsetsBy.Value)
             {
                 case OrderMapsetsBy.Difficulty:
@@ -183,9 +186,10 @@ namespace Quaver.Shared.Database.Maps
         ///     Orders the mapsets based on the set config value.
         /// </summary>
         /// <param name="mapsets"></param>
+        /// <param name="separateMapsets"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets, bool separateMapsets = true)
         {
             var mapsetsToRemove = new List<Mapset>();
 
@@ -246,15 +250,15 @@ namespace Quaver.Shared.Database.Maps
                 case OrderMapsetsBy.Source:
                     return OrderMapsetsBySource(mapsets);
                 case OrderMapsetsBy.Difficulty:
-                    return OrderMapsetsByDifficulty(mapsets);
+                    return OrderMapsetsByDifficulty(mapsets, separateMapsets);
                 case OrderMapsetsBy.OnlineGrade:
-                    return OrderMapsetsByOnlineGrade(mapsets);
+                    return OrderMapsetsByOnlineGrade(mapsets, separateMapsets);
                 case OrderMapsetsBy.DateLastUpdated:
                     return OrderMapsetsByDateLastUpdated(mapsets);
                 case OrderMapsetsBy.DateRanked:
                     return OrderMapsetsByDateRanked(mapsets);
                 case OrderMapsetsBy.LongNotePercentage:
-                    return OrderMapsetsByLongNotePercentage(mapsets);
+                    return OrderMapsetsByLongNotePercentage(mapsets, separateMapsets);
                 default:
                     return mapsets.ToList();
             }
@@ -265,25 +269,55 @@ namespace Quaver.Shared.Database.Maps
         ///     In this, each map gets its own individual mapset
         /// </summary>
         /// <param name="mapsets"></param>
+        /// <param name="separateMapsets"></param>
         /// <returns></returns>
-        private static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets)
-            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => x.Maps.First().DifficultyFromMods(ModManager.Mods)).ToList();
+        private static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets, bool separateMapsets)
+        {
+            var newMapsets = new List<Mapset>();
+
+            if (separateMapsets)
+                newMapsets = SeparateMapsIntoOwnMapsets(mapsets);
+            else
+                newMapsets = mapsets;
+
+            return newMapsets.OrderBy(x => x.Maps.First().DifficultyFromMods(ModManager.Mods)).ToList();
+        }
 
         /// <summary>
         ///     Highest online grade achieved
         /// </summary>
         /// <param name="mapsets"></param>
+        /// <param name="separateMapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByOnlineGrade(List<Mapset> mapsets)
-            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => GradeHelper.GetGradeImportanceIndex(x.Maps.First().OnlineGrade)).ToList();
+        internal static List<Mapset> OrderMapsetsByOnlineGrade(List<Mapset> mapsets, bool separateMapsets)
+        {
+            var newMapsets = new List<Mapset>();
+
+            if (separateMapsets)
+                newMapsets = SeparateMapsIntoOwnMapsets(mapsets);
+            else
+                newMapsets = mapsets;
+
+            return newMapsets.OrderBy(x => GradeHelper.GetGradeImportanceIndex(x.Maps.First().OnlineGrade)).ToList();
+        }
 
         /// <summary>
         ///     Sorts maps by their long note percentage
         /// </summary>
         /// <param name="mapsets"></param>
+        /// <param name="separateMapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByLongNotePercentage(List<Mapset> mapsets)
-            => SeparateMapsIntoOwnMapsets(mapsets).OrderBy(x => x.Maps.First().LNPercentage).ToList();
+        internal static List<Mapset> OrderMapsetsByLongNotePercentage(List<Mapset> mapsets, bool separateMapsets)
+        {
+            var newMapsets = new List<Mapset>();
+
+            if (separateMapsets)
+                newMapsets = SeparateMapsIntoOwnMapsets(mapsets);
+            else
+                newMapsets = mapsets;
+
+            return newMapsets.OrderBy(x => x.Maps.First().LNPercentage).ToList();
+        }
 
         /// <summary>
         ///     Orders mapsets by the date they were last updated online
@@ -366,6 +400,29 @@ namespace Quaver.Shared.Database.Maps
             }
 
             return newMapsets;
+        }
+
+        /// <summary>
+        ///     Separates a list of maps into their own mapsets
+        /// </summary>
+        /// <param name="maps"></param>
+        /// <returns></returns>
+        internal static List<Mapset> SeparateMapsIntoOwnMapsets(List<Map> maps)
+        {
+            var mapsets = new List<Mapset>();
+
+            foreach (var map in maps)
+            {
+                var mapset = new Mapset()
+                {
+                    Directory = map.Mapset.Directory,
+                    Maps = new List<Map>() {map}
+                };
+
+                mapsets.Add(mapset);
+            }
+
+            return mapsets;
         }
 
         /// <summary>

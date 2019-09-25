@@ -29,7 +29,7 @@ namespace Quaver.Shared.Database.Playlists
         ///     The maps that are inside of the playlist
         /// </summary>
         [Ignore]
-        public List<Map> Maps { get; set; }
+        public List<Map> Maps { get; set; } = new List<Map>();
 
         /// <summary>
         ///     The game the playlist is from
