@@ -300,9 +300,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             }
 
             // Copy the banner into a new directory
-            var dir = $"{ConfigManager.DataDirectory}/playlists";
-            Directory.CreateDirectory(dir);
-            File.Copy(BannerPath, $"{dir}/{id}{Path.GetExtension(BannerPath)}");
+            try
+            {
+                var dir = $"{ConfigManager.DataDirectory}/playlists";
+                Directory.CreateDirectory(dir);
+                File.Copy(BannerPath, $"{dir}/{id}{Path.GetExtension(BannerPath)}", true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, LogType.Runtime);
+            }
 
             Close();
         }

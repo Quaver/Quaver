@@ -315,5 +315,13 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         protected abstract PoolableSprite<T> CreateObject(T item, int index);
+
+        /// <summary>
+        /// </summary>
+        public void DestroyPool()
+        {
+            Pool.ForEach(x => x.Destroy());
+            Pool.Clear();
+        }
     }
 }

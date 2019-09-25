@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -159,8 +160,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
                 container.SelectedIndex.Value = Playlist.Index;
 
-                if (wasSelectedPrior)
-                    container.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                if (!wasSelectedPrior)
+                    return;
+
+                // No maps inside playlist. Prevent opening
+                if (PlaylistManager.Selected.Value.Maps.Count == 0)
+                {
+                    NotificationManager.Show(NotificationLevel.Error, "There are no maps inside of this playlist! You can right-click maps to add to it");
+                    return;
+                }
+
+                container.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
             };
         }
 

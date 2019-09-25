@@ -5,8 +5,10 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
@@ -115,6 +117,8 @@ namespace Quaver.Shared.Screens.Selection
             MapsetContainer.ContainerInitialized += OnMapsetContainerInitialized;
             SelectScreen.ScreenExiting += OnExiting;
             ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnGroupingChanged;
+            PlaylistManager.PlaylistCreated += OnPlaylistCreated;
+            PlaylistContainer.ContainerInitialized += OnPlaylistContainerInitialized;
 
             // Trigger a scroll container change, to bring in the correct container
             SelectScreen.ActiveScrollContainer.TriggerChange();
@@ -147,6 +151,8 @@ namespace Quaver.Shared.Screens.Selection
             SelectScreen.ActiveLeftPanel.ValueChanged -= OnActiveLeftPanelChanged;
             MapsetContainer.ContainerInitialized -= OnMapsetContainerInitialized;
             ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnGroupingChanged;
+            PlaylistManager.PlaylistCreated -= OnPlaylistCreated;
+            PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
 
             SelectScreen.ScreenExiting -= OnExiting;
         }
@@ -353,7 +359,9 @@ namespace Quaver.Shared.Screens.Selection
                     PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 case SelectScrollContainerType.Playlists:
-                    PlaylistContainer.MoveToX(activePosition, easing, animTime);
+                    if (PlaylistManager.Playlists.Count != 0)
+                        PlaylistContainer.MoveToX(activePosition, easing, animTime);
+
                     MapsetContainer.MoveToX(inactivePosition, easing, animTime);
                     MapContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
@@ -402,11 +410,12 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMapsetContainerInitialized(object sender, MapsetContainerInitializedEventArgs e)
+        private void OnMapsetContainerInitialized(object sender, SelectContainerInitializedEventArgs e)
         {
             if (SelectScreen.ActiveScrollContainer.Value != SelectScrollContainerType.Mapsets)
                 return;
 
+            MapsetContainer.ClearAnimations();
             MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 600);
         }
 
@@ -437,6 +446,49 @@ namespace Quaver.Shared.Screens.Selection
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        ///     Called when a new playlist has been created
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistCreated(object sender, PlaylistCreatedEventArgs e)
+        {
+            switch (SelectScreen.ActiveScrollContainer.Value)
+            {
+                case SelectScrollContainerType.Mapsets:
+                    PlaylistContainer.DestroyPool();
+                    MapsetContainer.ClearAnimations();
+                    MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);
+
+                    // Add a delay before updating these values to account for animations
+                    ThreadScheduler.RunAfter(() =>
+                    {
+                        ConfigManager.SelectGroupMapsetsBy.Value = GroupMapsetsBy.Playlists;
+                        SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+                    },250);
+                    break;
+                case SelectScrollContainerType.Playlists:
+                    PlaylistContainer.ClearAnimations();
+                    PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, Easing.OutQuint, 450);
+                    break;
+            }
+
+            PlaylistContainer.InitializePlaylists(true);
+        }
+
+        /// <summary>
+        ///     Called when the playlist container has been initialized
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistContainerInitialized(object sender, SelectContainerInitializedEventArgs e)
+        {
+            if (SelectScreen.ActiveScrollContainer.Value != SelectScrollContainerType.Playlists)
+                return;
+
+            PlaylistContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 600);
         }
     }
 }

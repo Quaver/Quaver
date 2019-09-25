@@ -29,6 +29,11 @@ namespace Quaver.Shared.Database.Playlists
         public static Bindable<Playlist> Selected { get; } = new Bindable<Playlist>(null);
 
         /// <summary>
+        ///     Event invoked when a new playlist has been created
+        /// </summary>
+        public static event EventHandler<PlaylistCreatedEventArgs> PlaylistCreated;
+
+        /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
@@ -183,6 +188,11 @@ namespace Quaver.Shared.Database.Playlists
             {
                 if (!Playlists.Contains(playlist))
                     Playlists.Add(playlist);
+
+                Playlists = Playlists.OrderBy(x => x.PlaylistGame).ThenBy(x => x.Name).ToList();
+                Selected.Value = playlist;
+
+                PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
             }
 
             return -1;

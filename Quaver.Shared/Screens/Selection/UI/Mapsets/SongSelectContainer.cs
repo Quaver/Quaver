@@ -32,6 +32,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private Sprite ScrollbarBackground { get; set; }
 
         /// <summary>
+        ///     Event invoked when the mapset container has had its maps initialized
+        /// </summary>
+        public event EventHandler<SelectContainerInitializedEventArgs> ContainerInitialized;
+
+        /// <summary>
         /// </summary>
         /// <param name="availableItems"></param>
         /// <param name="poolSize"></param>
@@ -84,6 +89,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         public override void Destroy()
         {
+            ContainerInitialized = null;
             SelectedIndex?.Dispose();
             base.Destroy();
         }
@@ -176,6 +182,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 AddContainedDrawable(Pool[i]);
             }
         }
+
+        /// <summary>
+        ///     Fires the <see cref="ContainerInitialized"/> event
+        /// </summary>
+        protected void FireInitializedEvent() => ContainerInitialized?.Invoke(this, new SelectContainerInitializedEventArgs());
 
         /// <summary>
         ///     Gets the position of the selected item

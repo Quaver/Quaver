@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics.Sprites.Text;
 
-namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs
+namespace Quaver.Shared.Screens.Selection.UI.Playlists
 {
     public class PlaylistDifficultyDisplay : PlaylistKeyValueDisplay
     {
