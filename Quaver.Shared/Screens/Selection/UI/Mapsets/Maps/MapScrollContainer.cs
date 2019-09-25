@@ -50,7 +50,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             MapManager.Selected.ValueChanged += OnMapChanged;
             ActiveScrollContainer = activeContainer;
 
-            Initialize(CurrentMapset.Maps);
+            if (CurrentMapset != null)
+                Initialize(CurrentMapset.Maps);
         }
 
         /// <summary>

@@ -7,16 +7,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Modifiers;
-using TagLib.Riff;
-using Wobble.Logging;
-using File = System.IO.File;
+using Wobble.Bindables;
 
 namespace Quaver.Shared.Database.Maps
 {
@@ -36,6 +36,26 @@ namespace Quaver.Shared.Database.Maps
                     return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
                 }
             }
+        }
+
+        /// <summary>
+        ///     Filters mapsets to use in song select
+        /// </summary>
+        /// <returns></returns>
+        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery)
+        {
+            var mapsets = MapManager.Mapsets;
+
+            // Handle playlists
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            {
+                mapsets = PlaylistManager.Selected.Value == null
+                    ? new List<Mapset>()
+                    : SeparateMapsIntoOwnMapsets(PlaylistManager.Selected.Value.Maps);
+            }
+
+            return OrderMapsetsByConfigValue(SearchMapsets(mapsets, searchQuery.Value),
+                ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
         }
 
         /// <summary>
@@ -76,7 +96,7 @@ namespace Quaver.Shared.Database.Maps
 
             foreach (var mapset in groupedMaps)
             {
-                var set = new Mapset()
+                var set = new Mapset
                 {
                     Directory = mapset.First().Directory,
                     Maps = mapset
@@ -216,8 +236,6 @@ namespace Quaver.Shared.Database.Maps
                         if (x.Maps.Count == 0)
                             mapsetsToRemove.Add(x);
                     });
-                    break;
-                default:
                     break;
             }
 
@@ -413,10 +431,11 @@ namespace Quaver.Shared.Database.Maps
 
             foreach (var map in maps)
             {
-                var mapset = new Mapset()
+                var mapset = new Mapset
                 {
                     Directory = map.Mapset.Directory,
-                    Maps = new List<Map>() {map}
+                    Maps = new List<Map>
+                        {map}
                 };
 
                 mapsets.Add(mapset);
@@ -446,7 +465,7 @@ namespace Quaver.Shared.Database.Maps
                 "!=",
                 "<",
                 ">",
-                "=",
+                "="
             };
 
             // The shortest and longest matching sequences for every option. For example, "d" and "difficulty" means you
@@ -455,7 +474,7 @@ namespace Quaver.Shared.Database.Maps
             // When adding new options with overlapping first characters, specify the shortest unambiguous sequence as
             // the new key. So, for example, "duration" should be added as "du", "duration". This way "d" still searches
             // for "difficulty" (backwards-compatibility) and "du" searches for duration.
-            var options = new Dictionary<SearchFilterOption, (string Shortest, string Longest)>()
+            var options = new Dictionary<SearchFilterOption, (string Shortest, string Longest)>
             {
                 { SearchFilterOption.BPM,        ("b", "bpm") },
                 { SearchFilterOption.Difficulty, ("d", "difficulty") },
@@ -497,7 +516,7 @@ namespace Quaver.Shared.Database.Maps
                             {
                                 Option = option,
                                 Value = val,
-                                Operator = op,
+                                Operator = op
                             });
 
                             // Remove it from the search terms.
@@ -649,8 +668,6 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
 
                                 break;
-                            default:
-                                break;
                         }
 
                         if (exitLoop)
@@ -687,7 +704,7 @@ namespace Quaver.Shared.Database.Maps
 
                     // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
-                        sets.Add(new Mapset()
+                        sets.Add(new Mapset
                         {
                             Directory = map.Directory,
                             Maps = new List<Map> {map}

@@ -270,19 +270,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
                     LogType.Runtime, false);
 
-                var mapsets = MapManager.Mapsets;
-
-                // Need to get playlist mapsets
-                if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
-                {
-                    if (PlaylistManager.Selected.Value == null)
-                        mapsets = new List<Mapset>();
-                    else
-                        mapsets = MapsetHelper.SeparateMapsIntoOwnMapsets(PlaylistManager.Selected.Value.Maps);
-                }
-
-                AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(mapsets, CurrentSearchQuery.Value),
-                    ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
+                AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
                 if (AvailableMapsets.Value.Count == 0)
                     return;
