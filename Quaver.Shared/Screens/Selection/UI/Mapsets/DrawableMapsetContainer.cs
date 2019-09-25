@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Displays the map background/banner for the mapset
         /// </summary>
-        private DrawableMapsetBanner Banner { get; set; }
+        private DrawableBanner Banner { get; set; }
 
         /// <summary>
         ///     The title of the map
@@ -256,7 +256,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void CreateBannerImage()
         {
-            Banner = new DrawableMapsetBanner(ParentMapset)
+            Banner = new DrawableBanner(ParentMapset)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -543,7 +543,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (Banner.HasBannerLoaded)
             {
                 Banner.ClearAnimations();
-                Banner.FadeTo(DrawableMapsetBanner.DeselectedAlpha, Easing.Linear, time);
+                Banner.FadeTo(DrawableBanner.DeselectedAlpha, Easing.Linear, time);
             }
 
             ClearAnimations();

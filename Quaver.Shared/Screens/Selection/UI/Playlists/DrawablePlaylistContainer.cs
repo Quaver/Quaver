@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         /// <summary>
         /// </summary>
-        private Sprite Banner { get; set; }
+        private DrawableBanner Banner { get; set; }
 
         /// <summary>
         /// </summary>
@@ -124,6 +124,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             RankedStatusSprite.Image = GetRankedStatusImage();
             GameModes.Image = GetGameModeImage();
+            Banner.UpdateContent(Playlist.Item);
 
             if (Playlist.IsSelected)
                 Select(true);
@@ -233,7 +234,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateBannerImage()
         {
-            Banner = new Sprite()
+            Banner = new DrawableBanner(Playlist.Item)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
