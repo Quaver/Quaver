@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 return;
 
             // Move to the next mapset
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || KeyboardManager.IsUniqueKeyPress(Keys.Down))
             {
                 if (SelectedIndex.Value + 1 >= AvailableItems.Count)
                     return;
@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 ScrollToSelected();
             }
             // Move to the previous mapset
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Up))
             {
                 if (SelectedIndex.Value - 1 < 0)
                     return;
