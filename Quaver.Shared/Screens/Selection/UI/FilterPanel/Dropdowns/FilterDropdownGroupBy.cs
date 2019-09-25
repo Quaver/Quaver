@@ -32,6 +32,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         {
             AvailableMapsets = availableMapsets;
             Dropdown.ItemSelected += OnItemSelected;
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnGroupingChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnGroupingChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -65,6 +76,20 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
                 return;
 
             ConfigManager.SelectGroupMapsetsBy.Value = (GroupMapsetsBy) e.Index;
+        }
+
+
+        /// <summary>
+        ///     Called when <see cref="ConfigManager.SelectGroupMapsetsBy"/> has changed, so the state
+        ///     of the dropdown can be updated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnGroupingChanged(object sender, BindableValueChangedEventArgs<GroupMapsetsBy> e)
+        {
+            Dropdown.SelectedText.Text = Dropdown.Options[(int) e.Value];
+            Dropdown.Close();
         }
     }
 }

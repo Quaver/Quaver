@@ -50,11 +50,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private bool HasReinitialized { get; set; }
 
-        /// <summary>
-        ///     Event invoked when the mapset container has had its maps initialized
-        /// </summary>
-        public event EventHandler<MapsetContainerInitializedEventArgs> ContainerInitialized;
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -92,8 +87,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             MapManager.Selected.ValueChanged -= OnMapChanged;
             AvailableMapsets.ValueChanged -= OnAvailableMapsetsChanged;
             SelectionScreen.RandomMapsetSelected -= OnRandomMapsetSelected;
-
-            ContainerInitialized = null;
 
             base.Destroy();
         }
@@ -179,7 +172,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             HasReinitialized = true;
-            ContainerInitialized?.Invoke(this, new MapsetContainerInitializedEventArgs());
+            FireInitializedEvent();
         }
 
         /// <summary>
@@ -223,14 +216,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // the mapset has changed in any way.
             if (oldValue == SelectedIndex.Value)
                 SelectedIndex.TriggerChangeEvent();
-        }
-
-        /// <summary>
-        /// </summary>
-        public void DestroyPool()
-        {
-            Pool.ForEach(x => x.Destroy());
-            Pool.Clear();
         }
     }
 }

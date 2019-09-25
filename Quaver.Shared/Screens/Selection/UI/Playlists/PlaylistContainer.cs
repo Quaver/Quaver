@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private void InitializePlaylists(bool restart)
+        public void InitializePlaylists(bool restart)
         {
             if (restart)
             {
@@ -158,6 +158,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             }
 
             HasReinitialized = true;
+            FireInitializedEvent();
         }
     }
 }

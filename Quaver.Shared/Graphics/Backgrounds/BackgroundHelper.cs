@@ -24,6 +24,7 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Window;
 using Logger = Wobble.Logging.Logger;
 
@@ -161,10 +162,13 @@ namespace Quaver.Shared.Graphics.Backgrounds
 
                 ThreadScheduler.RunAfter(() =>
                 {
-                    if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                    lock (TextureManager.Textures)
                     {
-                        oldRawTexture?.Dispose();
-                        oldBlurredTexture?.Dispose();
+                        if (oldRawTexture != null && oldRawTexture != UserInterface.MenuBackgroundRaw)
+                        {
+                            oldRawTexture?.Dispose();
+                            oldBlurredTexture?.Dispose();
+                        }
                     }
                 }, 500);
 
