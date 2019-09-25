@@ -87,12 +87,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         ///     When the mapsets are sorted by difficulty/grade achieved
         ///     this will display the difficulty rating & name to make it act as an individual map
         /// </summary>
-        private SpriteTextPlus DifficultyName { get; set; }
+        public SpriteTextPlus DifficultyName { get; private set; }
 
         /// <summary>
         ///     The highest online grade that the user has achieved
         /// </summary>
-        private Sprite OnlineGrade { get; set; }
+        public Sprite OnlineGrade { get; set; }
 
         /// <summary>
         /// </summary>
@@ -178,6 +178,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 DifficultyName.Text = $"{StringHelper.RatingToString(diff)} - {map.DifficultyName}";
                 DifficultyName.Tint = ColorHelper.DifficultyToColor((float) diff);
+                DifficultyName.Visible = true;
 
                 if (DifficultyName.Width >= 260 || DifficultyName.Text.Length >= 40)
                 {
@@ -215,6 +216,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 DividerLine.X = Artist.X + Artist.Width + ArtistCreatorSpacingX;
                 Artist.Visible = true;
                 OnlineGrade.Visible = false;
+                DifficultyName.Visible = false;
             }
 
             ByText.X = DividerLine.X + DividerLine.Width + ArtistCreatorSpacingX;

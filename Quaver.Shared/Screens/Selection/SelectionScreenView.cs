@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
@@ -14,6 +16,8 @@ using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Playlists;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
@@ -66,11 +70,15 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
-        private MapsetScrollContainer MapsetContainer { get; set; }
+        public MapsetScrollContainer MapsetContainer { get; private set; }
 
         /// <summary>
         /// </summary>
         public MapScrollContainer MapContainer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private PlaylistContainer PlaylistContainer { get; set; }
 
         /// <summary>
         ///     The position of the active panel on the left
@@ -96,6 +104,7 @@ namespace Quaver.Shared.Screens.Selection
             CreateFilterPanel();
             CreateMapsetContainer();
             CreateMapContainer();
+            CreatePlaylistContainer();
             ReorderContainerLayerDepth();
             CreateLeaderboardContainer();
             CreateModifierSelectorContainer();
@@ -103,7 +112,12 @@ namespace Quaver.Shared.Screens.Selection
             SelectScreen.ActiveLeftPanel.ValueChanged += OnActiveLeftPanelChanged;
             SelectScreen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
             SelectScreen.ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChanged;
+            MapsetContainer.ContainerInitialized += OnMapsetContainerInitialized;
             SelectScreen.ScreenExiting += OnExiting;
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnGroupingChanged;
+
+            // Trigger a scroll container change, to bring in the correct container
+            SelectScreen.ActiveScrollContainer.TriggerChange();
         }
 
         /// <inheritdoc />
@@ -129,8 +143,11 @@ namespace Quaver.Shared.Screens.Selection
         {
             Container?.Destroy();
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             SelectScreen.ActiveLeftPanel.ValueChanged -= OnActiveLeftPanelChanged;
+            MapsetContainer.ContainerInitialized -= OnMapsetContainerInitialized;
+            ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnGroupingChanged;
+
             SelectScreen.ScreenExiting -= OnExiting;
         }
 
@@ -197,7 +214,7 @@ namespace Quaver.Shared.Screens.Selection
             };
 
             LeaderboardContainer.X = -LeaderboardContainer.Width - ScreenPaddingX;
-            LeaderboardContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 1000);
+            LeaderboardContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 500);
         }
 
         /// <summary>
@@ -227,7 +244,6 @@ namespace Quaver.Shared.Screens.Selection
             };
 
             MapsetContainer.X = MapsetContainer.Width + ScreenPaddingX;
-            MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 1200);
         }
 
         /// <summary>
@@ -244,6 +260,20 @@ namespace Quaver.Shared.Screens.Selection
             };
 
             MapContainer.X = MapContainer.Width + ScreenPaddingX;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreatePlaylistContainer()
+        {
+            PlaylistContainer = new PlaylistContainer(SelectScreen.ActiveScrollContainer)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = MapsetContainer.Y
+            };
+
+            PlaylistContainer.X = PlaylistContainer.Width + ScreenPaddingX;
         }
 
         /// <summary>
@@ -283,16 +313,15 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="e"></param>
         private void OnAvailableMapsetsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
         {
+            if (SelectScreen.ActiveScrollContainer.Value == SelectScrollContainerType.Playlists)
+                return;
+
             SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
 
             MapsetContainer.ClearAnimations();
 
             const int animTime = 500;
-            const int waitTime = 50;
-
             MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, Easing.OutQuint, animTime);
-            MapsetContainer.Wait(waitTime);
-            MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, animTime);
         }
 
         /// <summary>
@@ -308,18 +337,25 @@ namespace Quaver.Shared.Screens.Selection
             const int animTime = 450;
             const Easing easing = Easing.OutQuint;
 
-            MapsetContainer.ClearAnimations();
             MapContainer.ClearAnimations();
-
+            PlaylistContainer.ClearAnimations();
+            MapsetContainer.ClearAnimations();
             switch (e.Value)
             {
                 case SelectScrollContainerType.Mapsets:
                     MapsetContainer.MoveToX(activePosition, easing, animTime);
                     MapContainer.MoveToX(inactivePosition, easing, animTime);
+                    PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 case SelectScrollContainerType.Maps:
-                    MapsetContainer.MoveToX(inactivePosition, easing, animTime);
                     MapContainer.MoveToX(activePosition, easing, animTime);
+                    MapsetContainer.MoveToX(inactivePosition, easing, animTime);
+                    PlaylistContainer.MoveToX(inactivePosition, easing, animTime);
+                    break;
+                case SelectScrollContainerType.Playlists:
+                    PlaylistContainer.MoveToX(activePosition, easing, animTime);
+                    MapsetContainer.MoveToX(inactivePosition, easing, animTime);
+                    MapContainer.MoveToX(inactivePosition, easing, animTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -332,7 +368,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void ReorderContainerLayerDepth()
         {
-            ListHelper.Swap(Container.Children, Container.Children.IndexOf(MapContainer), Container.Children.IndexOf(FilterPanel));
+            ListHelper.Swap(Container.Children, Container.Children.IndexOf(PlaylistContainer), Container.Children.IndexOf(FilterPanel));
 
             Header.Parent = Container;
             Footer.Parent = Container;
@@ -349,6 +385,7 @@ namespace Quaver.Shared.Screens.Selection
             ModifierSelector.ClearAnimations();
             MapContainer.ClearAnimations();
             MapsetContainer.ClearAnimations();
+            PlaylistContainer.ClearAnimations();
 
             const Easing easing = Easing.OutQuint;
             const int time = 400;
@@ -358,6 +395,48 @@ namespace Quaver.Shared.Screens.Selection
 
             MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
             MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);
+            PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, easing, time);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapsetContainerInitialized(object sender, MapsetContainerInitializedEventArgs e)
+        {
+            if (SelectScreen.ActiveScrollContainer.Value != SelectScrollContainerType.Mapsets)
+                return;
+
+            MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        ///     Called when the user changes their grouping setting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void OnGroupingChanged(object sender, BindableValueChangedEventArgs<GroupMapsetsBy> e)
+        {
+            switch (e.Value)
+            {
+                case GroupMapsetsBy.None:
+                    // We want to completely destroy the pool to prevent the mapsets from
+                    // coming in and displaying prematurely
+                    if (SelectScreen.ActiveScrollContainer.Value == SelectScrollContainerType.Playlists)
+                    {
+                        SelectScreen.AvailableMapsets.Value = new List<Mapset>();
+                        MapsetContainer.DestroyPool();
+                    }
+
+                    SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                    break;
+                case GroupMapsetsBy.Playlists:
+                    SelectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

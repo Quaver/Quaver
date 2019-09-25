@@ -46,6 +46,7 @@ using Quaver.Shared.Screens.Tests.DrawableLeaderboardScores;
 using Quaver.Shared.Screens.Tests.DrawableMaps;
 using Quaver.Shared.Screens.Tests.DrawableMapsets;
 using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
+using Quaver.Shared.Screens.Tests.DrawablePlaylists;
 using Quaver.Shared.Screens.Tests.Dropdowns;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
@@ -156,7 +157,8 @@ namespace Quaver.Shared
             {"ModifierSelector", typeof(TestModifierSelectorScreen)},
             {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)},
             {"SelectionScreen", typeof(SelectionScreen)},
-            {"YesNoDialog", typeof(TestYesNoDialogScreen)}
+            {"YesNoDialog", typeof(TestYesNoDialogScreen)},
+            {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

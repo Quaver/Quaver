@@ -5,6 +5,7 @@ using System.Threading;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
@@ -135,8 +136,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             if (ConfigManager.SelectFilterGameModeBy != null)
                 ConfigManager.SelectFilterGameModeBy.ValueChanged += OnSelectFilterGameModeChanged;
 
+            if (ConfigManager.SelectGroupMapsetsBy != null)
+                ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnSelectGroupMapsetsChanged;
+
             MapManager.Selected.ValueChanged += OnMapChanged;
             ModManager.ModsChanged += OnModsChanged;
+            PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
 
             AlignRightItems();
         }
@@ -153,8 +158,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             if (ConfigManager.SelectFilterGameModeBy != null)
                 ConfigManager.SelectFilterGameModeBy.ValueChanged -= OnSelectFilterGameModeChanged;
 
+            if (ConfigManager.SelectGroupMapsetsBy != null)
+                ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnSelectGroupMapsetsChanged;
+
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ModManager.ModsChanged -= OnModsChanged;
+            PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
 
             FilterMapsetsTask?.Dispose();
 
@@ -261,7 +270,19 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
                     LogType.Runtime, false);
 
-                AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value));
+                var mapsets = MapManager.Mapsets;
+
+                // Need to get playlist mapsets
+                if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                {
+                    if (PlaylistManager.Selected.Value == null)
+                        mapsets = new List<Mapset>();
+                    else
+                        mapsets = MapsetHelper.SeparateMapsIntoOwnMapsets(PlaylistManager.Selected.Value.Maps);
+                }
+
+                AvailableMapsets.Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(mapsets, CurrentSearchQuery.Value),
+                    ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
 
                 if (AvailableMapsets.Value.Count == 0)
                     return;
@@ -292,6 +313,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectFilterGameModeChanged(object sender, BindableValueChangedEventArgs<SelectFilterGameMode> e) => StartFilterMapsetsTask();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectGroupMapsetsChanged(object sender, BindableValueChangedEventArgs<GroupMapsetsBy> e) => StartFilterMapsetsTask();
 
         /// <summary>
         ///     Responsible for initiating the new banner load
@@ -331,5 +358,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
 
             StartFilterMapsetsTask();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> e) => StartFilterMapsetsTask();
     }
 }

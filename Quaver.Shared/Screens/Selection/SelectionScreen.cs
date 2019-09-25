@@ -10,6 +10,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
@@ -81,6 +82,7 @@ namespace Quaver.Shared.Screens.Selection
             InitializeAvailableMapsetsBindable();
             InitializeActiveLeftPanelBindable();
             InitializeActiveScrollContainerBindable();
+            InitializeSelectedPlaylist();
 
             View = new SelectionScreenView(this);
         }
@@ -152,6 +154,18 @@ namespace Quaver.Shared.Screens.Selection
             {
                 Value = SelectScrollContainerType.Mapsets
             };
+
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+        }
+
+        /// <summary>
+        ///     If the initial playlist is null this will set it apporpriately
+        /// </summary>
+        private void InitializeSelectedPlaylist()
+        {
+            if (PlaylistManager.Selected.Value == null && PlaylistManager.Playlists.Count != 0)
+                PlaylistManager.Selected.Value = PlaylistManager.Playlists.First();
         }
 
         /// <summary>
@@ -186,6 +200,13 @@ namespace Quaver.Shared.Screens.Selection
                     if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
                     {
                         ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                        return;
+                    }
+
+                    if (ActiveScrollContainer.Value == SelectScrollContainerType.Mapsets &&
+                        ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                    {
+                        ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
                         return;
                     }
 
@@ -252,6 +273,9 @@ namespace Quaver.Shared.Screens.Selection
                 case SelectScrollContainerType.Maps:
                     ExitToGameplay();
                     break;
+                case SelectScrollContainerType.Playlists:
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -293,15 +317,28 @@ namespace Quaver.Shared.Screens.Selection
             if (!MouseManager.IsUniqueClick(MouseButton.Right))
                 return;
 
-            if (ActiveScrollContainer.Value != SelectScrollContainerType.Maps)
-                return;
-
             var view = (SelectionScreenView) View;
 
-            if (!view.MapContainer.IsHovered())
-                return;
+            switch (ActiveScrollContainer.Value)
+            {
+                case SelectScrollContainerType.Mapsets:
+                    if (ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists)
+                        return;
 
-            ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                    if (!view.MapsetContainer.IsHovered())
+                        return;
+
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+                    break;
+                case SelectScrollContainerType.Maps:
+                    if (!view.MapContainer.IsHovered())
+                        return;
+
+                    ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+                    break;
+                case SelectScrollContainerType.Playlists:
+                    return;
+            }
         }
 
         /// <summary>

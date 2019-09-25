@@ -145,7 +145,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Depth = 1
             };
 
-            Button.Clicked += (sender, args) => PlaylistManager.Selected.Value = Playlist.Item;
+            Button.Clicked += (sender, args) =>
+            {
+                var wasSelectedPrior = Playlist.IsSelected;
+
+                if (!wasSelectedPrior)
+                    PlaylistManager.Selected.Value = Playlist.Item;
+
+                if (Playlist.Container == null)
+                    return;
+
+                var container = (PlaylistContainer) Playlist.Container;
+
+                container.SelectedIndex.Value = Playlist.Index;
+
+                if (wasSelectedPrior)
+                    container.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+            };
         }
 
         /// <summary>
@@ -233,7 +249,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new PlaylistKeyValueDisplay("Creator:", "Me", ColorHelper.HexToColor("#0587E5"))
+            Creator = new PlaylistKeyValueDisplay("By:", "Me", ColorHelper.HexToColor("#0587E5"))
             {
                 Parent = this,
                 Position = new ScalableVector2(Title.X, MapCount.Y),

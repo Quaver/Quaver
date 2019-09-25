@@ -49,7 +49,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <returns></returns>
         private static int GetSelectedIndex()
         {
-            return 0;
+            if (ConfigManager.SelectGroupMapsetsBy == null)
+                return 0;
+
+            return (int) ConfigManager.SelectGroupMapsetsBy.Value;
         }
 
         /// <summary>
@@ -58,6 +61,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <param name="e"></param>
         private void OnItemSelected(object sender, DropdownClickedEventArgs e)
         {
+            if (ConfigManager.SelectGroupMapsetsBy == null)
+                return;
+
+            ConfigManager.SelectGroupMapsetsBy.Value = (GroupMapsetsBy) e.Index;
         }
     }
 }

@@ -203,6 +203,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
+        ///     Dictates how to group mapsets in song select
+        /// </summary>
+        internal static Bindable<GroupMapsetsBy> SelectGroupMapsetsBy { get; private set; }
+
+        /// <summary>
         ///     Dictates how to filter song select mpas
         /// </summary>
         internal static Bindable<SelectFilterGameMode> SelectFilterGameModeBy { get; private set; }
@@ -677,6 +682,8 @@ namespace Quaver.Shared.Config
             SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
             DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
             JudgementWindows = ReadValue("JudgementWindows", "", data);
+            SelectGroupMapsetsBy = ReadValue(@"SelectGroupMapsetsBy", GroupMapsetsBy.None, data);
+
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
                 Username.Value = "Player";
@@ -787,6 +794,7 @@ namespace Quaver.Shared.Config
                     SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
                     DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
                     JudgementWindows.ValueChanged += AutoSaveConfiguration;
+                    SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
