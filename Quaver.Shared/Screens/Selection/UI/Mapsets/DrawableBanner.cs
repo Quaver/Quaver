@@ -22,7 +22,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class DrawableMapsetBanner : Sprite
+    public class DrawableBanner : Sprite
     {
         /// <summary>
         /// </summary>
@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
-        public DrawableMapsetBanner(DrawableMapset mapset)
+        public DrawableBanner(DrawableMapset mapset)
         {
             Type = DrawableBannerType.Mapsets;
             Mapset = mapset;
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         /// <param name="playlist"></param>
-        public DrawableMapsetBanner(Playlist playlist)
+        public DrawableBanner(Playlist playlist)
         {
             Type = DrawableBannerType.Playlists;
             Playlist = playlist;

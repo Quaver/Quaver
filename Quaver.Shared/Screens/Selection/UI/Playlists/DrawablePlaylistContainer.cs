@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         /// <summary>
         /// </summary>
-        private DrawableMapsetBanner Banner { get; set; }
+        private DrawableBanner Banner { get; set; }
 
         /// <summary>
         /// </summary>
@@ -234,7 +234,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateBannerImage()
         {
-            Banner = new DrawableMapsetBanner(Playlist.Item)
+            Banner = new DrawableBanner(Playlist.Item)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
