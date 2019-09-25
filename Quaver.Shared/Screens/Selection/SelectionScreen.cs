@@ -129,10 +129,8 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableMapsets"/>
         /// </summary>
-        private void InitializeAvailableMapsetsBindable() => AvailableMapsets = new Bindable<List<Mapset>>(null)
-        {
-            Value = MapsetHelper.OrderMapsetsByConfigValue(MapsetHelper.SearchMapsets(MapManager.Mapsets, CurrentSearchQuery.Value))
-        };
+        private void InitializeAvailableMapsetsBindable()
+            => AvailableMapsets = new Bindable<List<Mapset>>(null) { Value = MapsetHelper.FilterMapsets(CurrentSearchQuery) };
 
         /// <summary>
         ///     Initializes the bindable which keeps track of which panel on the left side of the screen is active
