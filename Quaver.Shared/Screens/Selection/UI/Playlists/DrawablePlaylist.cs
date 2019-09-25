@@ -1,5 +1,6 @@
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -45,6 +46,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             UpdateContent(item, index);
 
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -72,6 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         {
             // ReSharper disable once DelegateSubtraction
             PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
+            ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
         }
@@ -95,5 +98,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             else
                 Deselect();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateContent(Item, Index);
     }
 }
