@@ -141,31 +141,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 Title.FontSize = 22;
                 Title.Text = $"{item.Artist} - {item.Title}";
-
-                if (Title.Width > 475 || Title.Text.Length > 45)
-                {
-                    Title.Text = Title.Text.Substring(0, 45);
-                    Title.Text += "...";
-                }
+                Title.TruncateWithEllipsis(400);
             }
             else
             {
                 Title.FontSize = 26;
                 Title.Text = item.Title;
-
-                if (Title.Width > 500 && Title.Text.Length > 33)
-                {
-                    Title.Text = Title.Text.Substring(0, 33);
-                    Title.Text += "...";
-                }
+                Title.TruncateWithEllipsis(400);
 
                 Artist.Text = $"{item.Artist}";
-
-                if (Artist.Width > 500 && Artist.Text.Length > 40)
-                {
-                    Artist.Text = Artist.Text.Substring(0, 39);
-                    Artist.Text += "...";
-                }
+                Artist.TruncateWithEllipsis(400);
             }
 
             Creator.Text = $"{item.Creator}";
@@ -180,11 +165,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 DifficultyName.Tint = ColorHelper.DifficultyToColor((float) diff);
                 DifficultyName.Visible = true;
 
-                if (DifficultyName.Width >= 260 || DifficultyName.Text.Length >= 40)
-                {
-                    DifficultyName.Text = DifficultyName.Text.Substring(0, 30);
-                    DifficultyName.Text += "...";
-                }
+                DifficultyName.TruncateWithEllipsis(260);
 
                 if (map.OnlineGrade != Grade.None)
                 {
