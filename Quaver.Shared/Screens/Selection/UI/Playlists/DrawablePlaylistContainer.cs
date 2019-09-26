@@ -105,6 +105,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         public void UpdateContent(Playlist item, int index)
         {
             Title.Text = item.Name;
+            Title.TruncateWithEllipsis(400);
             MapCount.ChangeValue(item.Maps.Count.ToString("n0"));
 
             const int metadataSpacing = 4;
