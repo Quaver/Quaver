@@ -171,17 +171,28 @@ namespace Quaver.Shared.Database.Playlists
         ///     Adds a playlist to the database
         /// </summary>
         /// <param name="playlist"></param>
-        public static int AddPlaylist(Playlist playlist)
+        public static int AddPlaylist(Playlist playlist, string bannerPath = null)
         {
+            var id = -1;
+
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
-                var id = conn.Insert(playlist);
-
+                id = conn.Insert(playlist);
                 conn.Close();
 
-                Logger.Important($"Successfully added playlist: {playlist.Name} (#{id}) (by: {playlist.Creator}) to the database",LogType.Runtime);
-                return id;
+                Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database",
+                    LogType.Runtime);
+
+                // Copy the banner over to the playlist directory
+                if (bannerPath != null)
+                {
+                    var dir = $"{ConfigManager.DataDirectory}/playlists";
+                    Directory.CreateDirectory(dir);
+                    File.Copy(bannerPath, $"{dir}/{playlist.Id}{Path.GetExtension(bannerPath)}", true);
+
+                    Logger.Important($"Copied over banner for playlist: {playlist.Id}", LogType.Runtime);
+                }
             }
             catch (Exception e)
             {
@@ -198,7 +209,7 @@ namespace Quaver.Shared.Database.Playlists
                 PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
             }
 
-            return -1;
+            return id;
         }
     }
 }

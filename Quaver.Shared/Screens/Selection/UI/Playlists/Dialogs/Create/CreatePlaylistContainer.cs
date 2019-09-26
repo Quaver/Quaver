@@ -291,24 +291,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 Description = Description.Textbox.RawText
             };
 
-            var id = PlaylistManager.AddPlaylist(playlist);
+            PlaylistManager.AddPlaylist(playlist, BannerPath);
 
             if (string.IsNullOrEmpty(BannerPath))
             {
                 Close();
                 return;
-            }
-
-            // Copy the banner into a new directory
-            try
-            {
-                var dir = $"{ConfigManager.DataDirectory}/playlists";
-                Directory.CreateDirectory(dir);
-                File.Copy(BannerPath, $"{dir}/{id}{Path.GetExtension(BannerPath)}", true);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, LogType.Runtime);
             }
 
             Close();
