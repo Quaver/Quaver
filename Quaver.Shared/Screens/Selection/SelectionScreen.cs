@@ -460,7 +460,7 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
-                AudioEngine.Track.Pause();
+                AudioEngine.Track.Stop();
 
             Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
         }

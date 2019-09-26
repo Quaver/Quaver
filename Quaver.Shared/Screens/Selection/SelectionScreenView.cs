@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Creates <see cref="Jukebox"/>
         /// </summary>
-        private void CreateJukebox() => Jukebox = new SelectJukebox { Parent = Container };
+        private void CreateJukebox() => Jukebox = new SelectJukebox(SelectScreen) { Parent = Container };
 
         /// <summary>
         ///     Creates <see cref="Background"/>

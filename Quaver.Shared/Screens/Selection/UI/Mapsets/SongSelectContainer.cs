@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Scrolls the container to the selected position
         /// </summary>
-        protected void ScrollToSelected()
+        public virtual void ScrollToSelected()
         {
             // Scroll the the place where the map is.
             var targetScroll = GetSelectedPosition();

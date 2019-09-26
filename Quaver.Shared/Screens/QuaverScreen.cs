@@ -8,8 +8,12 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens
 {
@@ -40,6 +44,11 @@ namespace Quaver.Shared.Screens
         /// </summary>
         public event EventHandler<ScreenExitingEventArgs> ScreenExiting;
 
+        /// <summary>
+        ///     The currently active right click options for the screen
+        /// </summary>
+        private RightClickOptions ActiveRightClickOptions { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -68,6 +77,7 @@ namespace Quaver.Shared.Screens
         {
             Exiting = true;
             Button.IsGloballyClickable = false;
+            ActiveRightClickOptions?.Close();
 
             ScreenExiting?.Invoke(this, new ScreenExitingEventArgs());
 
@@ -77,6 +87,33 @@ namespace Quaver.Shared.Screens
                 QuaverScreenManager.ScheduleScreenChange(screen, false, type);
 
             ScreenExiting = null;
+        }
+
+        /// <summary>
+        ///     Activates right click options for the screen
+        /// </summary>
+        /// <param name="rco"></param>
+        public void ActivateRightClickOptions(RightClickOptions rco)
+        {
+            if (ActiveRightClickOptions != null)
+            {
+                ActiveRightClickOptions.Visible = false;
+                ActiveRightClickOptions.Parent = null;
+                ActiveRightClickOptions.Destroy();
+            }
+
+            ActiveRightClickOptions = rco;
+            ActiveRightClickOptions.Parent = View.Container;
+
+            ActiveRightClickOptions.ItemContainer.Height = 0;
+            ActiveRightClickOptions.Visible = true;
+
+            var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveRightClickOptions.Width, 0,
+                WindowManager.Width - ActiveRightClickOptions.Width);
+
+            ActiveRightClickOptions.Position = new ScalableVector2(x, MouseManager.CurrentState.Y);
+
+            ActiveRightClickOptions.Open(350);
         }
 
         /// <summary>

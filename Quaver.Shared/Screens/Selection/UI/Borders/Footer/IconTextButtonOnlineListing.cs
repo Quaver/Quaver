@@ -15,19 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonOnlineListing : IconTextButton
     {
         public IconTextButtonOnlineListing() : base(FontAwesome.Get(FontAwesomeIcon.fa_earth_globe),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Online Listing", (sender, args) =>
-            {
-                if (MapManager.Selected.Value == null)
-                    return;
-
-                if (MapManager.Selected.Value.MapId == -1)
-                {
-                    NotificationManager.Show(NotificationLevel.Error, "This map is not submitted online!");
-                    return;
-                }
-
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{MapManager.Selected.Value.MapId}");
-            })
+            FontManager.GetWobbleFont(Fonts.LatoBlack),"Online Listing", (sender, args) => MapManager.ViewOnlineListing())
         {
         }
     }

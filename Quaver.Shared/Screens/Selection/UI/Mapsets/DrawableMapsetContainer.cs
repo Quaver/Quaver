@@ -230,6 +230,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             };
 
             Button.Clicked += (sender, args) => OnMapsetClicked();
+            Button.RightClicked += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game?.CurrentScreen?.ActivateRightClickOptions(new MapsetRightClickOptions(ParentMapset));
+            };
         }
 
         /// <summary>

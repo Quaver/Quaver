@@ -23,7 +23,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     The index of the selected option in <see cref="Options"/>
         /// </summary>
-        private int SelectedIndex { get; set; }
+        public int SelectedIndex { get; protected set; }
 
         /// <summary>
         ///     The color of the text elements

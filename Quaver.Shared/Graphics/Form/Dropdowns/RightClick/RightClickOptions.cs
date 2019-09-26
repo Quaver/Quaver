@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
 {
@@ -21,9 +22,12 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
             DividerLine.Visible = false;
             HoverSprite.Visible = false;
             Alpha = 0;
-            ItemContainer.Y = 0;
             IsClickable = false;
+            DestroyIfParentIsNull = false;
+            ItemContainer.Y = 0;
 
+            // Remove the button entirely to prevent depth collisions since the original dropdown opener isn't needed
+            ButtonManager.Remove(this);
 
             var i = 0;
 
@@ -37,6 +41,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
             }
 
             Open();
+
+            SelectedIndex = -1;
+            ItemSelected += (sender, args) => SelectedIndex = -1;
         }
     }
 }

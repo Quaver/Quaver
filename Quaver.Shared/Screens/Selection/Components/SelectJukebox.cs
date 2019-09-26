@@ -6,6 +6,7 @@ using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Logging;
+using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Selection.Components
 {
@@ -14,6 +15,8 @@ namespace Quaver.Shared.Screens.Selection.Components
     /// </summary>
     public class SelectJukebox : Container
     {
+        private QuaverScreen Screen { get; }
+
         /// <summary>
         ///     If we're currently in the process of loading a track
         /// </summary>
@@ -21,8 +24,9 @@ namespace Quaver.Shared.Screens.Selection.Components
 
         /// <summary>
         /// </summary>
-        public SelectJukebox()
+        public SelectJukebox(QuaverScreen screen = null)
         {
+            Screen = screen;
             Size = new ScalableVector2(0, 0);
 
             if (MapManager.Selected != null)
@@ -56,6 +60,9 @@ namespace Quaver.Shared.Screens.Selection.Components
         /// </summary>
         private void KeepPlayingAudioTrackAtPreview()
         {
+            if (Screen != null && Screen.Exiting)
+                return;
+
             // No map is currently selected
             if (MapManager.Selected == null || MapManager.Selected.Value == null)
                 return;
