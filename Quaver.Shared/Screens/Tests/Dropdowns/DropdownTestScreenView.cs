@@ -2,14 +2,19 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
+using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Helpers;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Tests.Dropdowns
@@ -17,6 +22,8 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
     public class DropdownTestScreenView : ScreenView
     {
         private Dropdown Dropdown { get; }
+
+        private RightClickOptions RightClickOptions { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -56,6 +63,38 @@ namespace Quaver.Shared.Screens.Tests.Dropdowns
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 X = 400
+            };
+
+            RightClickOptions = new RightClickOptions(new Dictionary<string, Color>()
+            {
+                {"Profile", Color.White},
+                {"Edit", Color.Yellow},
+                {"Add", Color.Green},
+                {"Delete", Color.Crimson},
+            }, new ScalableVector2(200, 40), 22)
+            {
+            };
+
+            var btn = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                Y = -300,
+                Size = new ScalableVector2(200, 50),
+                Tint = Color.DarkRed
+            };
+
+            btn.RightClicked += (o, args) =>
+            {
+                RightClickOptions.Parent = btn;
+                RightClickOptions.Alignment = Alignment.MidCenter;
+                RightClickOptions.Open();
+            };
+
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), "Right-Click Me", 22)
+            {
+                Parent = btn,
+                Alignment = Alignment.MidCenter
             };
         }
 

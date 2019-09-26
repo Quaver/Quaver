@@ -33,7 +33,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     The chevron pointing down on the dropdown
         /// </summary>
-        private Sprite Chevron { get; set; }
+        public Sprite Chevron { get; private set; }
 
         /// <summary>
         ///     The text of the selected item
@@ -57,7 +57,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         ///     When the dropdown is opened/closed, this will give it a clipping rectangle effect, so that
         ///     the dropdown gradually is opening/closing
         /// </summary>
-        public ScrollContainer ItemContainer { get; set; }
+        public ScrollContainer ItemContainer { get; private set; }
 
         /// <summary>
         ///     The clickable items in the dropdown
@@ -72,12 +72,12 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     The line that divides the top element from the items
         /// </summary>
-        private Sprite DividerLine { get; set; }
+        public Sprite DividerLine { get; private set; }
 
         /// <summary>
         ///     The sprite that lights up when hovered
         /// </summary>
-        private Sprite HoverSprite { get; set; }
+        public Sprite HoverSprite { get; private set; }
 
         /// <summary>
         ///     Event invoked when an item was selected in the dropdown
@@ -208,7 +208,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <summary>
         ///     Creates the items to be used in the dropdown
         /// </summary>
-        private void CreateItems()
+        public void CreateItems()
         {
             Items = new List<DropdownItem>();
 
