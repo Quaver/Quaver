@@ -482,7 +482,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public void OpenFolder()
         {
-            if (MapManager.Selected.Value.Game != MapGame.Quaver)
+            if (Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Error, "You cannot open a folder for a map loaded from another game.");
                 return;

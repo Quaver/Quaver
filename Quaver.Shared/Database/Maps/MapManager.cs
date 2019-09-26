@@ -10,6 +10,8 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Database.Maps
@@ -135,6 +137,23 @@ namespace Quaver.Shared.Database.Maps
                 default:
                     return "";
             }
+        }
+
+        /// <summary>
+        ///     Views the online listing page on the website
+        /// </summary>
+        public static void ViewOnlineListing()
+        {
+            if (Selected.Value == null)
+                return;
+
+            if (Selected.Value.MapId == -1)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "This map is not submitted online!");
+                return;
+            }
+
+            BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Selected.Value.MapId}");
         }
     }
 }
