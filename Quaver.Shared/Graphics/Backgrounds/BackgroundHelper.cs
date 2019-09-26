@@ -329,7 +329,17 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 // Give custom banners first priority
                 var bannerExists = true;
 
-                var path = $"{ConfigManager.DataDirectory.Value}/playlists/{playlist.Id}.jpg";
+                var extensions = new[] {".png", ".jpg", ".jpg"};
+
+                var path = "";
+
+                foreach (var ext in extensions)
+                {
+                    path = $"{ConfigManager.DataDirectory.Value}/playlists/{playlist.Id}{ext}";
+
+                    if (File.Exists(path))
+                        break;
+                }
 
                 // Give map backgrounds second priority
                 if (!File.Exists(path) && playlist.Maps.Count != 0)
