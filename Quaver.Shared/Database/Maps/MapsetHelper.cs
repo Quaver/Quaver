@@ -54,8 +54,12 @@ namespace Quaver.Shared.Database.Maps
                     : SeparateMapsIntoOwnMapsets(PlaylistManager.Selected.Value.Maps);
             }
 
-            return OrderMapsetsByConfigValue(SearchMapsets(mapsets, searchQuery.Value),
-                ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
+            var searched = SearchMapsets(mapsets, searchQuery.Value);
+
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                searched = SeparateMapsIntoOwnMapsets(searched);
+
+            return OrderMapsetsByConfigValue(searched, ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
         }
 
         /// <summary>
