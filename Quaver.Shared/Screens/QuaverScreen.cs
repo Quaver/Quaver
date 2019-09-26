@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
@@ -111,7 +112,10 @@ namespace Quaver.Shared.Screens
             var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveRightClickOptions.Width, 0,
                 WindowManager.Width - ActiveRightClickOptions.Width);
 
-            ActiveRightClickOptions.Position = new ScalableVector2(x, MouseManager.CurrentState.Y);
+            var y = MathHelper.Clamp(MouseManager.CurrentState.Y, 0,
+                WindowManager.Height - ActiveRightClickOptions.Items.Count * ActiveRightClickOptions.Items.First().Height);
+
+            ActiveRightClickOptions.Position = new ScalableVector2(x, y);
 
             ActiveRightClickOptions.Open(350);
         }
