@@ -43,7 +43,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
             UsePreviousSpriteBatchOptions = true;
 
             MapManager.Selected.ValueChanged += OnMapChanged;
-            OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
+
             UpdateContent(item, index);
         }
 
@@ -54,7 +57,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
         {
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
-            OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnRetrievedOnlineScores -= OnRetrievedOnlineScores;
 
             base.Destroy();
         }
