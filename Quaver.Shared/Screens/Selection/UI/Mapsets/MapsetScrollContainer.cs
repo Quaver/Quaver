@@ -221,7 +221,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         }
 
         /// <summary>
-        ///     When a mapset has been deleted, refilter the mapsets
+        ///     When a mapset has been deleted, reset the selected index of the container to the newly selected mapset
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
