@@ -113,7 +113,7 @@ namespace Quaver.Shared.Screens
                 WindowManager.Width - ActiveRightClickOptions.Width);
 
             var y = MathHelper.Clamp(MouseManager.CurrentState.Y, 0,
-                WindowManager.Height - ActiveRightClickOptions.Items.Count * ActiveRightClickOptions.Items.First().Height);
+                WindowManager.Height - ActiveRightClickOptions.Items.Count * ActiveRightClickOptions.Items.First().Height - 60);
 
             ActiveRightClickOptions.Position = new ScalableVector2(x, y);
 
