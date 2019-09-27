@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
         private const string Delete = "Delete Map";
 
-        private const string Export = "Export";
+        private const string Export = "Export Mapset";
 
         private const string OpenMapsetFolder = "Open Folder";
 
