@@ -75,6 +75,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 
                         DialogManager.Show(new DeleteMapDialog(Map, Map.Mapset.Maps.IndexOf(Map)));
                         break;
+                    case DeleteLocalScores:
+                        DialogManager.Show(new DeleteLocalScoresDialog(Map));
+                        break;
                     case AddToPlaylist:
                         break;
                     case Export:

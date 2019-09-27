@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using SQLite;
 using Wobble.Logging;
 
@@ -26,6 +27,11 @@ namespace Quaver.Shared.Database.Scores
          ///     Event invoked when a score has been deleted
          /// </summary>
          public static event EventHandler<ScoreDeletedEventArgs> ScoreDeleted;
+
+         /// <summary>
+         ///     Event invoked when a map's local scores have been deleted
+         /// </summary>
+        public static event EventHandler<LocalScoresDeletedEventArgs> LocalMapScoresDeleted;
 
         /// <summary>
         ///     Asynchronously creates the scores database
@@ -100,13 +106,16 @@ namespace Quaver.Shared.Database.Scores
         ///     Responsible for removing a score from the database
         /// </summary>
         /// <param name="score"></param>
+        /// <param name="raiseEvent"></param>
         /// <returns></returns>
-        internal static void DeleteScoreFromDatabase(Score score)
+        internal static void DeleteScoreFromDatabase(Score score, bool raiseEvent = true)
         {
             try
             {
                 new SQLiteConnection(DatabasePath).Delete(score);
-                ScoreDeleted?.Invoke(typeof(ScoreDatabaseCache), new ScoreDeletedEventArgs(score));
+
+                if (raiseEvent)
+                    ScoreDeleted?.Invoke(typeof(ScoreDatabaseCache), new ScoreDeletedEventArgs(score));
 
                 Logger.Important($"Successfully deleted score from map: {score.MapMd5} from the database.", LogType.Runtime);
             }
@@ -114,6 +123,25 @@ namespace Quaver.Shared.Database.Scores
             {
                 Logger.Error(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Deletes all local scores for a map
+        /// </summary>
+        /// <param name="map"></param>
+        internal static void DeleteAllLocalScores(Map map)
+        {
+            try
+            {
+                var scores = FetchMapScores(map.Md5Checksum);
+                scores.ForEach(x => DeleteScoreFromDatabase(x, false));
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            LocalMapScoresDeleted?.Invoke(typeof(ScoreDatabaseCache), new LocalScoresDeletedEventArgs(map));
         }
     }
 }
