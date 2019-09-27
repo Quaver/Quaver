@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         selectScreen?.ExitToEditor();
                         break;
                     case ViewOnlineListing:
-                        MapManager.ViewOnlineListing();
+                        MapManager.ViewOnlineListing(Mapset.Maps.First());
                         break;
                     case Delete:
                         break;
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             if (index == -1)
                 return;
-            
+
             container.SelectedIndex.Value = index;
             container.ScrollToSelected();
         }

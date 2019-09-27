@@ -142,18 +142,21 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Views the online listing page on the website
         /// </summary>
-        public static void ViewOnlineListing()
+        public static void ViewOnlineListing(Map map = null)
         {
-            if (Selected.Value == null)
+            if (map == null)
+                map = Selected.Value;
+
+            if (map == null)
                 return;
 
-            if (Selected.Value.MapId == -1)
+            if (map.MapId == -1)
             {
                 NotificationManager.Show(NotificationLevel.Error, "This map is not submitted online!");
                 return;
             }
 
-            BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Selected.Value.MapId}");
+            BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{map.MapId}");
         }
     }
 }
