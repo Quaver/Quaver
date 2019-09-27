@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
@@ -84,6 +85,8 @@ namespace Quaver.Shared.Screens.Selection
             InitializeActiveScrollContainerBindable();
             InitializeSelectedPlaylist();
 
+            MapManager.MapsetDeleted += OnMapsetDeleted;
+
             View = new SelectionScreenView(this);
         }
 
@@ -116,6 +119,7 @@ namespace Quaver.Shared.Screens.Selection
             ActiveLeftPanel?.Dispose();
             ActiveScrollContainer?.Dispose();
             RandomMapsetSelected = null;
+            MapManager.MapsetDeleted -= OnMapsetDeleted;
 
             base.Destroy();
         }
@@ -500,6 +504,42 @@ namespace Quaver.Shared.Screens.Selection
             DiscordHelper.Presence.Details = "Selecting a song";
             DiscordHelper.Presence.State = "In the menus";
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+        }
+
+        /// <summary>
+        ///     When a mapset has been deleted, refilter the mapsets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapsetDeleted(object sender, MapsetDeletedEventArgs e)
+        {
+            ThreadScheduler.Run(() =>
+            {
+                var index = 0;
+
+                if (e.Index == -1)
+                    index = 0;
+
+                if (e.Index - 1 >= 0)
+                    index = e.Index - 1;
+;
+                lock (AvailableMapsets.Value)
+                    AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+
+                // Change the map
+                if (index != -1)
+                {
+                    MapManager.Selected.Value = AvailableMapsets.Value[index].Maps.First();
+                    return;
+                }
+
+                // Stop the current track if there are no more mapsets left
+                lock (AudioEngine.Track)
+                {
+                    if (AudioEngine.Track.IsDisposed && !AudioEngine.Track.IsStopped)
+                        AudioEngine.Track.Dispose();
+                }
+            });
         }
 
         /// <inheritdoc />
