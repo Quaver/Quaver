@@ -10,6 +10,7 @@ using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
@@ -73,6 +74,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         MapManager.ViewOnlineListing(Mapset.Maps.First());
                         break;
                     case Delete:
+                        if (selectScreen == null)
+                            return;
+
+                        // Using First().Mapset to get the *real* and unfiltered mapset
+                        DialogManager.Show(new DeleteMapsetDialog(Mapset.Maps.First().Mapset, selectScreen.AvailableMapsets.Value.IndexOf(Mapset)));
                         break;
                     case AddToPlaylist:
                         break;

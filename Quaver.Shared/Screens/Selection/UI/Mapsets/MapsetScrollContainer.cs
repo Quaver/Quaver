@@ -62,6 +62,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             ActiveScrollContainer = activeScrollContainer;
 
             MapManager.Selected.ValueChanged += OnMapChanged;
+            MapManager.MapsetDeleted += OnMapsetDeleted;
             AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
             SelectionScreen.RandomMapsetSelected += OnRandomMapsetSelected;
         }
@@ -85,6 +86,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            MapManager.MapsetDeleted -= OnMapsetDeleted;
             AvailableMapsets.ValueChanged -= OnAvailableMapsetsChanged;
             SelectionScreen.RandomMapsetSelected -= OnRandomMapsetSelected;
 
@@ -216,6 +218,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // the mapset has changed in any way.
             if (oldValue == SelectedIndex.Value)
                 SelectedIndex.TriggerChangeEvent();
+        }
+
+        /// <summary>
+        ///     When a mapset has been deleted, refilter the mapsets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapsetDeleted(object sender, MapsetDeletedEventArgs e)
+        {
+            if (e.Index == -1)
+                SelectedIndex.Value = 0;
+
+            if (e.Index - 1 < 0)
+                return;
+
+            SelectedIndex.Value = e.Index - 1;
         }
     }
 }

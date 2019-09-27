@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
