@@ -238,10 +238,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Button.RightClicked += (sender, args) =>
             {
-                if (Score.Item.IsOnline)
-                    return;
-
-                DialogManager.Show(new DeleteScoreDialog(Score.Item));
+                var game = (QuaverGame) GameBase.Game;
+                game?.CurrentScreen?.ActivateRightClickOptions(new LeaderboardScoreRightClickOptions(Score.Item));
             };
         }
 
