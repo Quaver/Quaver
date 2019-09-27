@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -86,6 +87,7 @@ namespace Quaver.Shared.Screens.Selection
             InitializeSelectedPlaylist();
 
             MapManager.MapsetDeleted += OnMapsetDeleted;
+            MapManager.MapDeleted += OnMapDeleted;
 
             View = new SelectionScreenView(this);
         }
@@ -530,6 +532,35 @@ namespace Quaver.Shared.Screens.Selection
                 if (index != -1)
                 {
                     MapManager.Selected.Value = AvailableMapsets.Value[index].Maps.First();
+                    return;
+                }
+
+                // Stop the current track if there are no more mapsets left
+                lock (AudioEngine.Track)
+                {
+                    if (AudioEngine.Track.IsDisposed && !AudioEngine.Track.IsStopped)
+                        AudioEngine.Track.Dispose();
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Called when a map has been deleted
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapDeleted(object sender, MapDeletedEventArgs e)
+        {
+            ThreadScheduler.Run(() =>
+            {
+                lock (AvailableMapsets.Value)
+                    AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+
+                var mapsetIndex = AvailableMapsets.Value.FindIndex(x => x.Maps.Contains(e.Map));
+
+                if (mapsetIndex == -1 && AvailableMapsets.Value.Count != 0)
+                {
+                    MapManager.Selected.Value = AvailableMapsets.Value.First().Maps.First();
                     return;
                 }
 

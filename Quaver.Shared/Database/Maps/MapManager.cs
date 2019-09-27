@@ -16,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble.Bindables;
 using Wobble.Logging;
 
@@ -57,6 +58,11 @@ namespace Quaver.Shared.Database.Maps
         ///     Event invoked when a mapset has been deleted
         /// </summary>
         public static event EventHandler<MapsetDeletedEventArgs> MapsetDeleted;
+
+        /// <summary>
+        ///     Event invoked when a map has been deleted
+        /// </summary>
+        public static event EventHandler<MapDeletedEventArgs> MapDeleted;
 
         /// <summary>
         ///     Gets the background path for a given map.
@@ -167,6 +173,44 @@ namespace Quaver.Shared.Database.Maps
             }
 
             BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{map.MapId}");
+        }
+
+        /// <summary>
+        ///     Deletes a m map from the game
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="index"></param>
+        public static void Delete(Map map, int index)
+        {
+            if (map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot delete a map loaded from another game");
+                return;
+            }
+
+            try
+            {
+                var mapsetPath = Path.Combine(ConfigManager.SongDirectory.Value, map.Mapset.Directory);
+                var path = Path.Combine(mapsetPath, map.Path);
+
+                if (File.Exists(path))
+                    File.Delete(path);
+
+                MapDatabaseCache.RemoveMap(map);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            map.Mapset.Maps.Remove(map);
+
+            // Delete the mapset entirely if there are no more maps left.
+            if (map.Mapset.Maps.Count == 0)
+                Mapsets.Remove(map.Mapset);
+
+            // Raise an event with the deleted map
+            MapDeleted?.Invoke(typeof(MapManager), new MapDeletedEventArgs(map, index));
         }
 
         /// <summary>

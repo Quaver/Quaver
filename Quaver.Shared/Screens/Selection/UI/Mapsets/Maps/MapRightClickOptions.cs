@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -8,17 +7,16 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble;
-using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
 {
-    public class MapsetRightClickOptions : RightClickOptions
+    public class MapRightClickOptions : RightClickOptions
     {
-        private DrawableMapset DrawableMapset { get; }
+        private DrawableMap DrawableMap { get; }
 
-        private Mapset Mapset { get; }
+        private Map Map { get; }
 
         private const string Play = "Play";
 
@@ -28,27 +26,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         private const string AddToPlaylist = "Add To Playlist";
 
-        private const string Delete = "Delete Mapset";
+        private const string Delete = "Delete Map";
 
         private const string Export = "Export";
 
         private const string OpenMapsetFolder = "Open Folder";
 
+        private const string DeleteLocalScores = "Delete Local Scores";
+
         /// <summary>
         /// </summary>
-        public MapsetRightClickOptions(DrawableMapset drawableMapset) : base(new Dictionary<string, Color>()
+        public MapRightClickOptions(DrawableMap drawableMap) : base(new Dictionary<string, Color>()
         {
             {Play, Color.White},
             {Edit, ColorHelper.HexToColor("#F2994A")},
             {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
             {Delete, ColorHelper.HexToColor($"#FF6868")},
+            {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
             {Export, ColorHelper.HexToColor("#0787E3")},
             {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
             {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
         }, new ScalableVector2(200, 40), 22)
         {
-            DrawableMapset = drawableMapset;
-            Mapset = DrawableMapset.Item;
+            DrawableMap = drawableMap;
+            Map = DrawableMap.Item;
 
             ItemSelected += (sender, args) =>
             {
@@ -58,27 +59,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 switch (args.Text)
                 {
                     case Play:
-                        if (!Mapset.Maps.Contains(MapManager.Selected.Value))
-                            SelectMap(Mapset.Maps.First());
-
-                        if (MapsetHelper.IsSingleDifficultySorted())
-                            selectScreen?.ExitToGameplay();
-                        else if (selectScreen != null)
-                            selectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
+                        SelectMap(Map);
+                        selectScreen?.ExitToGameplay();
                         break;
                     case Edit:
-                        SelectMap(Mapset.Maps.First());
+                        SelectMap(Map);
                         selectScreen?.ExitToEditor();
                         break;
                     case ViewOnlineListing:
-                        MapManager.ViewOnlineListing(Mapset.Maps.First());
+                        MapManager.ViewOnlineListing(Map);
                         break;
                     case Delete:
                         if (selectScreen == null)
                             return;
 
-                        // Using First().Mapset to get the *real* and unfiltered mapset
-                        DialogManager.Show(new DeleteMapsetDialog(Mapset.Maps.First().Mapset, selectScreen.AvailableMapsets.Value.IndexOf(Mapset)));
+                        DialogManager.Show(new DeleteMapDialog(Map, Map.Mapset.Maps.IndexOf(Map)));
+                        break;
+                    case DeleteLocalScores:
+                        DialogManager.Show(new DeleteLocalScoresDialog(Map));
                         break;
                     case AddToPlaylist:
                         break;
@@ -87,14 +85,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         {
                             NotificationManager.Show(NotificationLevel.Info, "Exporting mapset to zip archive. Please wait!");
 
-                            Mapset.Maps.First().Mapset.ExportToZip();
+                            Map.Mapset.ExportToZip();
 
-                            NotificationManager.Show(NotificationLevel.Success,
-                                $"Successfully exported {MapManager.Selected.Value.Mapset.Artist} - {MapManager.Selected.Value.Mapset.Title}!");
+                            NotificationManager.Show(NotificationLevel.Success,$"Successfully exported {Map.Artist} - {Map.Title}!");
                         });
                         break;
                     case OpenMapsetFolder:
-                        Mapset.Maps.First().OpenFolder();
+                        Map.OpenFolder();
                         break;
                 }
             };
@@ -108,9 +105,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             MapManager.Selected.Value = m;
 
-            var container = (MapsetScrollContainer) DrawableMapset.Container;
+            var container = (MapScrollContainer) DrawableMap.Container;
 
-            var index = container.AvailableItems.IndexOf(Mapset);
+            var index = container.AvailableItems.IndexOf(Map);
 
             if (index == -1)
                 return;

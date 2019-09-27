@@ -106,10 +106,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             ModManager.ModsChanged += OnModsChanged;
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
             ScoreDatabaseCache.ScoreDeleted += OnScoreDeleted;
+            ScoreDatabaseCache.LocalMapScoresDeleted += OnMapLocalScoresDeleted;
 
             FetchScores();
         }
-
 
         /// <inheritdoc />
         /// <summary>
@@ -138,6 +138,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
             ScoreDatabaseCache.ScoreDeleted -= OnScoreDeleted;
+            ScoreDatabaseCache.LocalMapScoresDeleted -= OnMapLocalScoresDeleted;
 
             base.Destroy();
         }
@@ -426,6 +427,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScoreDeleted(object sender, ScoreDeletedEventArgs e)
+        {
+            if (ConfigManager.LeaderboardSection == null || ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
+                return;
+
+            FetchScores();
+        }
+
+        /// <summary>
+         ///     Called when the user deletes a map's scores
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+        private void OnMapLocalScoresDeleted(object sender, LocalScoresDeletedEventArgs e)
         {
             if (ConfigManager.LeaderboardSection == null || ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                 return;
