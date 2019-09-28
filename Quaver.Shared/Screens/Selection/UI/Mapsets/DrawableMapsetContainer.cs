@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -230,10 +231,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             };
 
             Button.Clicked += (sender, args) => OnMapsetClicked();
+
             Button.RightClicked += (sender, args) =>
             {
                 var game = (QuaverGame) GameBase.Game;
-                game?.CurrentScreen?.ActivateRightClickOptions(new MapsetRightClickOptions(ParentMapset));
+
+                if (MapsetHelper.IsSingleDifficultySorted())
+                    game?.CurrentScreen?.ActivateRightClickOptions(new MapRightClickOptions(ParentMapset));
+                else
+                    game?.CurrentScreen?.ActivateRightClickOptions(new MapsetRightClickOptions(ParentMapset));
             };
         }
 
