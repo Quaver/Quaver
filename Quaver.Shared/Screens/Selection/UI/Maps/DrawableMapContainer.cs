@@ -5,8 +5,8 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty;
+using Quaver.Shared.Screens.Selection.UI.Maps.Components;
+using Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -18,7 +18,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class DrawableMapContainer : Sprite
     {

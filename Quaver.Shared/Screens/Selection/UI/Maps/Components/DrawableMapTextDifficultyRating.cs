@@ -1,4 +1,3 @@
-using System;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -8,7 +7,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components
+namespace Quaver.Shared.Screens.Selection.UI.Maps.Components
 {
     public class DrawableMapTextDifficultyRating : SpriteTextPlus, IDrawableMapComponent
     {

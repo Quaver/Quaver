@@ -1,7 +1,7 @@
 using System;
 using Quaver.Shared.Database.Maps;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class MapDeletedEventArgs : EventArgs
     {

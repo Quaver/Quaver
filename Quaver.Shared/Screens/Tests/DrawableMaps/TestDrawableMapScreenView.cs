@@ -7,7 +7,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Wobble;
 using Wobble.Input;
 using Wobble.Screens;

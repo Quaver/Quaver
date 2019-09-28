@@ -6,6 +6,7 @@ using Quaver.API.Replays;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -14,7 +15,6 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -58,7 +58,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     case WatchReplay:
                         // Download Online Replay
                         if (Score.IsOnline)
+                        {
+                            var dialog = new LoadingDialog("Downloading Replay",
+                                "Fetching online replay! Please wait...", () =>
+                                {
+                                    var replay = Score.DownloadOnlineReplay();
+
+                                    if (replay == null)
+                                    {
+                                        NotificationManager.Show(NotificationLevel.Error, "The replay you have tried to download failed. It may be unavailable.");
+                                        return;
+                                    }
+
+                                    game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), replay));
+                                });
+                            DialogManager.Show(dialog);
                             return;
+                        }
 
                         if (!File.Exists(replayPath))
                         {

@@ -33,7 +33,7 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        private Sprite Panel { get; set; }
+        protected Sprite Panel { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -53,11 +53,11 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        private IconButton YesButton { get; set; }
+        protected IconButton YesButton { get; set; }
 
         /// <summary>
         /// </summary>
-        private IconButton NoButton { get; set; }
+        protected IconButton NoButton { get; set; }
 
         /// <summary>
         /// </summary>

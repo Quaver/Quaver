@@ -6,15 +6,24 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Loading;
 using SQLite;
+using Wobble;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Database.Scores
 {
@@ -309,5 +318,37 @@ namespace Quaver.Shared.Database.Scores
             CountMiss = CountMiss,
             RandomizeModifierSeed = RandomizeModifierSeed
         };
+
+        /// <summary>
+        ///     Downloads a replay from online
+        /// </summary>
+        /// <returns></returns>
+        public Replay DownloadOnlineReplay()
+        {
+            if (!IsOnline || !OnlineManager.Connected)
+                return null;
+
+            Replay replay = null;
+
+            var dir = $"{ConfigManager.DataDirectory}/Downloads";
+            var path = $"{dir}/{Id}.qr";
+            Directory.CreateDirectory(dir);
+
+            try
+            {
+                OnlineManager.Client?.DownloadReplay(Id, path);
+                replay = new Replay(path);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Network);
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+
+            return replay;
+        }
     }
 }
