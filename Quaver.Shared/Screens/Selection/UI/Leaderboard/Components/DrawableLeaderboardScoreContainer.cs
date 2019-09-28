@@ -14,6 +14,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Quaver.Shared.Skinning;
 using SQLite;
@@ -234,6 +235,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alpha = 0,
                 Depth = 1,
                 UsePreviousSpriteBatchOptions = true
+            };
+
+            Button.Clicked += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+
+                if (OnlineManager.CurrentGame != null)
+                    return;
+
+                game?.CurrentScreen?.Exit(() => new ResultScreen(Score.Item));
             };
 
             Button.RightClicked += (sender, args) =>
