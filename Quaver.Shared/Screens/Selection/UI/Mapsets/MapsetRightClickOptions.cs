@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 {
                     case Play:
                         if (!Mapset.Maps.Contains(MapManager.Selected.Value))
-                            SelectMap(Mapset.Maps.First());
+                            SelectMap(DrawableMapset, Mapset.Maps.First(), Mapset);
 
                         if (MapsetHelper.IsSingleDifficultySorted())
                             selectScreen?.ExitToGameplay();
@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                             selectScreen.ActiveScrollContainer.Value = SelectScrollContainerType.Maps;
                         break;
                     case Edit:
-                        SelectMap(Mapset.Maps.First());
+                        SelectMap(DrawableMapset, Mapset.Maps.First(), Mapset);
                         selectScreen?.ExitToEditor();
                         break;
                     case ViewOnlineListing:
@@ -103,14 +103,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Selects a map and sets the appropriate index
         /// </summary>
-        /// <param name="m"></param>
-        private void SelectMap(Map m)
+        /// <param name="drawableMapset"></param>
+        /// <param name="map"></param>
+        /// <param name="mapset"></param>
+        public static void SelectMap(DrawableMapset drawableMapset, Map map, Mapset mapset)
         {
-            MapManager.Selected.Value = m;
+            MapManager.Selected.Value = map;
 
-            var container = (MapsetScrollContainer) DrawableMapset.Container;
+            var container = (MapsetScrollContainer) drawableMapset.Container;
 
-            var index = container.AvailableItems.IndexOf(Mapset);
+            var index = container.AvailableItems.IndexOf(mapset);
 
             if (index == -1)
                 return;

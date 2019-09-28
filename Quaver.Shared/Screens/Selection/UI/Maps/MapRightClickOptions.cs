@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -13,9 +15,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class MapRightClickOptions : RightClickOptions
     {
+        /// <summary>
+        /// </summary>
         private DrawableMap DrawableMap { get; }
 
+        /// <summary>
+        ///     If <see cref="MapsetHelper.IsSingleDifficultySorted()"/> is true,
+        ///     we'll need the DrawableMapset and use it as if it were a map.
+        /// </summary>
+        private DrawableMapset DrawableMapset { get; }
+
+        /// <summary>
+        ///     <see cref="DrawableMapset"/>
+        /// </summary>
+        private Mapset Mapset { get; }
+
+        /// <summary>
+        /// </summary>
         private Map Map { get; }
+
+        /// <summary>
+        /// </summary>
+        private static ScalableVector2 OptionsSize { get; } = new ScalableVector2(200, 40);
+
+        /// <summary>
+        /// </summary>
+        private const int FontSize = 22;
 
         private const string Play = "Play";
 
@@ -35,21 +60,48 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
         /// <summary>
         /// </summary>
-        public MapRightClickOptions(DrawableMap drawableMap) : base(new Dictionary<string, Color>()
-        {
-            {Play, Color.White},
-            {Edit, ColorHelper.HexToColor("#F2994A")},
-            {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
-            {Delete, ColorHelper.HexToColor($"#FF6868")},
-            {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
-            {Export, ColorHelper.HexToColor("#0787E3")},
-            {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
-            {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
-        }, new ScalableVector2(200, 40), 22)
+        public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(), OptionsSize, FontSize)
         {
             DrawableMap = drawableMap;
             Map = DrawableMap.Item;
 
+            SubscribeToItemSelected();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="drawableMapset"></param>
+        public MapRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(), OptionsSize, FontSize)
+        {
+            DrawableMapset = drawableMapset;
+            Map = DrawableMapset.Item.Maps.First();
+            Mapset = DrawableMapset.Item;
+            SubscribeToItemSelected();
+        }
+
+        /// <summary>
+        ///     Selects a map and sets the appropriate index
+        /// </summary>
+        /// <param name="m"></param>
+        private void SelectMap(Map m)
+        {
+            MapManager.Selected.Value = m;
+
+            var container = (MapScrollContainer) DrawableMap.Container;
+
+            var index = container.AvailableItems.IndexOf(Map);
+
+            if (index == -1)
+                return;
+
+            container.SelectedIndex.Value = index;
+            container.ScrollToSelected();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SubscribeToItemSelected()
+        {
             ItemSelected += (sender, args) =>
             {
                 var game = (QuaverGame) GameBase.Game;
@@ -58,11 +110,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                 switch (args.Text)
                 {
                     case Play:
-                        SelectMap(Map);
+                        if (MapsetHelper.IsSingleDifficultySorted())
+                            MapsetRightClickOptions.SelectMap(DrawableMapset, Map, Mapset);
+                        else
+                            SelectMap(Map);
+
                         selectScreen?.ExitToGameplay();
                         break;
                     case Edit:
-                        SelectMap(Map);
+                        if (MapsetHelper.IsSingleDifficultySorted())
+                            MapsetRightClickOptions.SelectMap(DrawableMapset, Map, Mapset);
+                        else
+                            SelectMap(Map);
+
                         selectScreen?.ExitToEditor();
                         break;
                     case ViewOnlineListing:
@@ -97,22 +157,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         }
 
         /// <summary>
-        ///     Selects a map and sets the appropriate index
+        ///     Returns the options to select
         /// </summary>
-        /// <param name="m"></param>
-        private void SelectMap(Map m)
+        /// <returns></returns>
+        private static Dictionary<string, Color> GetOptions() => new Dictionary<string, Color>()
         {
-            MapManager.Selected.Value = m;
-
-            var container = (MapScrollContainer) DrawableMap.Container;
-
-            var index = container.AvailableItems.IndexOf(Map);
-
-            if (index == -1)
-                return;
-
-            container.SelectedIndex.Value = index;
-            container.ScrollToSelected();
-        }
+            {Play, Color.White},
+            {Edit, ColorHelper.HexToColor("#F2994A")},
+            {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
+            {Delete, ColorHelper.HexToColor($"#FF6868")},
+            {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
+            {Export, ColorHelper.HexToColor("#0787E3")},
+            {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
+            {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
+        };
     }
 }
