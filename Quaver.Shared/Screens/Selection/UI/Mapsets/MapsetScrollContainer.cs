@@ -10,7 +10,6 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using TagLib.Ape;
 using Wobble.Bindables;
 using Wobble.Graphics;

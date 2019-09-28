@@ -14,7 +14,6 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;

@@ -2,10 +2,11 @@ using Quaver.Server.Client.Events.Scores;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public sealed class DrawableMap : PoolableSprite<Map>
     {

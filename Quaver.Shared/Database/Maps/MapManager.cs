@@ -16,7 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Selection.UI.Mapsets.Maps;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Wobble.Bindables;
 using Wobble.Logging;
 

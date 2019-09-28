@@ -1,7 +1,7 @@
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class DeleteMapDialog : YesNoDialog
     {

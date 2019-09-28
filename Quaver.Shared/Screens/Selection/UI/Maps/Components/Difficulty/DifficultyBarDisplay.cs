@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
@@ -7,7 +5,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
+namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
 {
     public class DifficultyBarDisplay : Sprite, IDrawableMapComponent
     {

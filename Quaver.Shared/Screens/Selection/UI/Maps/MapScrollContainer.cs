@@ -1,16 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
-using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Input;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class MapScrollContainer : SongSelectContainer<Map>
     {

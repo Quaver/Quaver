@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
@@ -10,7 +9,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps
+namespace Quaver.Shared.Screens.Selection.UI.Maps
 {
     public class MapRightClickOptions : RightClickOptions
     {

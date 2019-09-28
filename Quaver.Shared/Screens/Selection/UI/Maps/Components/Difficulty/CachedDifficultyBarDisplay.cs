@@ -9,7 +9,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Selection.UI.Mapsets.Maps.Components.Difficulty
+namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
 {
     public class CachedDifficultyBarDisplay : CacheableContainer, IDrawableMapComponent
     {
