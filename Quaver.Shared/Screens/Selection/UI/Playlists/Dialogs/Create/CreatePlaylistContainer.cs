@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Lobby.UI.Dialogs.Create;
@@ -194,7 +195,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 Alignment = Alignment.TopCenter,
                 Size = new ScalableVector2(Width - Container.Border.Thickness * 2, 125),
                 Y = Container.Border.Thickness,
-                Image = UserInterface.DefaultBanner,
+                Image = UserInterface.DefaultBanner
             };
 
             BannerBlackness = new Sprite()

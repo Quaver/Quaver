@@ -116,6 +116,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             Title.Text = item.Name;
             Title.TruncateWithEllipsis(400);
+            Title.X = item.IsOnlineMapPool() ? OnlineMapPoolIcon.Width + OnlineMapPoolIcon.X + 10 : TitleX;
 
             MapCount.ChangeValue(item.Maps.Count.ToString("n0"));
 
@@ -337,12 +338,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             OnlineMapPoolIcon = new Sprite()
             {
                 Parent = this,
-                Size = new ScalableVector2(25, 25),
+                Size = new ScalableVector2(18, 18),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_earth_globe),
                 UsePreviousSpriteBatchOptions = true,
                 Visible = false,
-                Alignment = Alignment.MidRight,
-                X = GameModes.X - GameModes.Width - 18,
+                X = TitleX,
+                Y = Title.Y + 4
             };
         }
 
