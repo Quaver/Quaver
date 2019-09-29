@@ -29,6 +29,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         private const string Sync = "Sync Map Pool";
 
+        private const string ExportToZip = "Export To Zip";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -69,6 +71,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
                         DialogManager.Show(new SyncPlaylistDialog(Playlist));
                         break;
+                    case ExportToZip:
+                        DialogManager.Show(new ExportPlaylistDialog(Playlist));
+                        break;
                 }
             };
         }
@@ -98,7 +103,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             var options = new Dictionary<string, Color>()
             {
                 {Play, Color.White},
-                {Delete, ColorHelper.HexToColor($"#FF6868")}
+                {Delete, ColorHelper.HexToColor($"#FF6868")},
+                {ExportToZip, ColorHelper.HexToColor("#0787E3")}
             };
 
             if (playlist.IsOnlineMapPool())
