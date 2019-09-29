@@ -156,7 +156,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Create New Playlist".ToUpper(), 26)
+            var header = Dialog.Playlist != null ? "Edit Playlist" : "Create New Playlist";
+
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), header.ToUpper(), 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft
@@ -217,7 +219,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         private void CreateNameTextbox()
         {
             Name = new LabelledTextbox(TextboxWidth, "Name", LabelFontSize, TextboxHeight, TextboxFontSize, LabelSpacing,
-                "What would you like your playlist to be called?")
+                "What would you like your playlist to be called?", Dialog.Playlist != null ? Dialog.Playlist.Name : "")
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -237,7 +239,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         private void CreateDescriptionTextbox()
         {
             Description = new LabelledTextbox(TextboxWidth, "Description", LabelFontSize, TextboxHeight, TextboxFontSize, LabelSpacing,
-                "Describe your playlist in a few words")
+                "Describe your playlist in a few words", Dialog.Playlist != null ? Dialog.Playlist.Description : "")
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -256,7 +258,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         private void CreateButtonCreate()
         {
-            CreateButton = new IconButton(UserInterface.CreateButton, OnSubmit)
+            CreateButton = new IconButton(Dialog.Playlist == null ? UserInterface.CreateButton : UserInterface.EditPlayButton, OnSubmit)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -284,14 +286,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 return;
             }
 
-            var playlist = new Playlist
+            // Add playlist
+            if (Dialog.Playlist == null)
             {
-                Name = Name.Textbox.RawText,
-                Creator = ConfigManager.Username.Value ?? "Player",
-                Description = Description.Textbox.RawText
-            };
+                var playlist = new Playlist
+                {
+                    Name = Name.Textbox.RawText,
+                    Creator = ConfigManager.Username.Value ?? "Player",
+                    Description = Description.Textbox.RawText
+                };
 
-            PlaylistManager.AddPlaylist(playlist, BannerPath);
+                PlaylistManager.AddPlaylist(playlist, BannerPath);
+            }
+            // Update playlist
+            else
+            {
+                var playlist = Dialog.Playlist;
+                playlist.Name = Name.Textbox.RawText;
+                playlist.Description = Description.Textbox.RawText;
+
+                PlaylistManager.EditPlaylist(playlist, BannerPath);
+            }
 
             if (string.IsNullOrEmpty(BannerPath))
             {

@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -11,6 +12,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
 {
     public class CreatePlaylistDialog : DialogScreen
     {
+        /// <summary>
+        ///     If editing an existing playlist
+        /// </summary>
+        public Playlist Playlist { get; }
+
         /// <summary>
         ///     The time it takes to fade in/out the dialog
         /// </summary>
@@ -25,6 +31,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         /// </summary>
         public CreatePlaylistDialog() : base(0)
         {
+            FadeTo(0.85f, Easing.Linear, FadeTime);
+            CreateContent();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="playlist"></param>
+        public CreatePlaylistDialog(Playlist playlist) : base(0)
+        {
+            Playlist = playlist;
+
             FadeTo(0.85f, Easing.Linear, FadeTime);
             CreateContent();
         }
