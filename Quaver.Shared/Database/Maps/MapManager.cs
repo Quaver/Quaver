@@ -137,6 +137,24 @@ namespace Quaver.Shared.Database.Maps
             return null;
         }
 
+        /// <summary>
+        ///     Finds a map based on its online id
+        /// </summary>
+        /// <returns></returns>
+        public static Map FindMapFromOnlineId(int id)
+        {
+            foreach (var set in Mapsets)
+            {
+                var found = set.Maps.Find(x => x.MapId == id);
+
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
+
+        ///<summary>
         ///     Gets a map's custom audio sample path taking into account the game.
         /// </summary>
         /// <param name="map"></param>

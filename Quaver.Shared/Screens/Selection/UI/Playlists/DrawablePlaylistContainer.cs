@@ -9,8 +9,10 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -62,6 +64,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         private Sprite GameModes { get; set; }
 
         /// <summary>
+        ///     Signifies if the playlist is online
+        /// </summary>
+        private Sprite OnlineMapPoolIcon { get; set; }
+
+        /// <summary>
         ///     The X position of the title/first element
         /// </summary>
         private const int TitleX = 26;
@@ -84,6 +91,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             CreateDifficultyDisplay();
             CreateRankedStatus();
             CreateGameModes();
+            CreateOnlineMapPoolIcon();
         }
 
         /// <inheritdoc />
@@ -104,8 +112,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <param name="index"></param>
         public void UpdateContent(Playlist item, int index)
         {
+            OnlineMapPoolIcon.Visible = item.IsOnlineMapPool();
+
             Title.Text = item.Name;
             Title.TruncateWithEllipsis(400);
+
             MapCount.ChangeValue(item.Maps.Count.ToString("n0"));
 
             const int metadataSpacing = 4;
@@ -173,6 +184,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 }
 
                 container.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+            };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game?.CurrentScreen?.ActivateRightClickOptions(new PlaylistRightClickOptions(Playlist));
             };
         }
 
@@ -309,6 +326,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Size = new ScalableVector2(71, 28),
                 X = RankedStatusSprite.X - RankedStatusSprite.Width - 18,
                 UsePreviousSpriteBatchOptions = true
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void CreateOnlineMapPoolIcon()
+        {
+            OnlineMapPoolIcon = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(25, 25),
+                Image = FontAwesome.Get(FontAwesomeIcon.fa_earth_globe),
+                UsePreviousSpriteBatchOptions = true,
+                Visible = false,
+                Alignment = Alignment.MidRight,
+                X = GameModes.X - GameModes.Width - 18,
             };
         }
 
