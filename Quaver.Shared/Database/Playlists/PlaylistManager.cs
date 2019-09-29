@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using osu_database_reader.BinaryFiles;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Online.API.Playlists;
 using SQLite;
 using Wobble.Bindables;
@@ -195,15 +197,7 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database",
                     LogType.Runtime);
 
-                // Copy the banner over to the playlist directory
-                if (bannerPath != null)
-                {
-                    var dir = $"{ConfigManager.DataDirectory}/playlists";
-                    Directory.CreateDirectory(dir);
-                    File.Copy(bannerPath, $"{dir}/{playlist.Id}{Path.GetExtension(bannerPath)}", true);
-
-                    Logger.Important($"Copied over banner for playlist: {playlist.Id}", LogType.Runtime);
-                }
+                CopyPlaylistBanner(playlist, bannerPath);
             }
             catch (Exception e)
             {
@@ -221,6 +215,26 @@ namespace Quaver.Shared.Database.Playlists
             }
 
             return id;
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void EditPlaylist(Playlist playlist, string bannerPath)
+        {
+            try
+            {
+                var conn = new SQLiteConnection(DatabasePath);
+                conn.Update(playlist);
+                conn.Close();
+
+                CopyPlaylistBanner(playlist, bannerPath);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
         }
 
         /// <summary>
@@ -293,6 +307,37 @@ namespace Quaver.Shared.Database.Playlists
             conn.Insert(playlistMap);
 
             conn.Close();
+        }
+
+        /// <summary>
+        ///     Copies a banner path to the correct directory
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="bannerPath"></param>
+        private static void CopyPlaylistBanner(Playlist playlist, string bannerPath)
+        {
+            if (bannerPath == null)
+                return;
+
+            // Dispose of old banner
+            lock (BackgroundHelper.PlaylistBanners)
+            {
+                if (BackgroundHelper.PlaylistBanners.ContainsKey(playlist.Id.ToString()))
+                {
+                    var banner = BackgroundHelper.PlaylistBanners[playlist.Id.ToString()];
+
+                    if (banner != UserInterface.DefaultBanner)
+                        banner.Dispose();
+
+                    BackgroundHelper.PlaylistBanners.Remove(playlist.Id.ToString());
+                }
+            }
+
+            var dir = $"{ConfigManager.DataDirectory}/playlists";
+            Directory.CreateDirectory(dir);
+            File.Copy(bannerPath, $"{dir}/{playlist.Id}{Path.GetExtension(bannerPath)}", true);
+
+            Logger.Important($"Copied over banner for playlist: {playlist.Id}", LogType.Runtime);
         }
     }
 }

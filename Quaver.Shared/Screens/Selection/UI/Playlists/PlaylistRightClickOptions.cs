@@ -6,6 +6,7 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -30,6 +31,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         private const string Sync = "Sync Map Pool";
 
         private const string ExportToZip = "Export To Zip";
+
+        private const string Edit = "Edit";
 
         /// <inheritdoc />
         /// <summary>
@@ -74,6 +77,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                     case ExportToZip:
                         DialogManager.Show(new ExportPlaylistDialog(Playlist));
                         break;
+                    case Edit:
+                        if (Playlist.IsOnlineMapPool())
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "You cannot edit an online map pool!");
+                            return;
+                        }
+
+                        if (Playlist.PlaylistGame != MapGame.Quaver)
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "You cannot edit a playlist loaded from a different game!");
+                            return;
+                        }
+
+                        DialogManager.Show(new CreatePlaylistDialog(Playlist));
+                        break;
                 }
             };
         }
@@ -103,6 +121,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             var options = new Dictionary<string, Color>()
             {
                 {Play, Color.White},
+                {Edit, ColorHelper.HexToColor("#F2994A")},
                 {Delete, ColorHelper.HexToColor($"#FF6868")},
                 {ExportToZip, ColorHelper.HexToColor("#0787E3")}
             };
