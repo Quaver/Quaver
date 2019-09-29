@@ -9,8 +9,10 @@ using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -173,6 +175,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 }
 
                 container.ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
+            };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game?.CurrentScreen?.ActivateRightClickOptions(new PlaylistRightClickOptions(Playlist));
             };
         }
 

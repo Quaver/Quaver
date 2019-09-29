@@ -34,6 +34,11 @@ namespace Quaver.Shared.Database.Playlists
         public static event EventHandler<PlaylistCreatedEventArgs> PlaylistCreated;
 
         /// <summary>
+        ///     Event invoked when a playlist has been deleted from the game
+        /// </summary>
+        public static event EventHandler<PlaylistDeletedEventArgs> PlaylistDeleted;
+
+        /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
@@ -210,6 +215,31 @@ namespace Quaver.Shared.Database.Playlists
             }
 
             return id;
+        }
+
+        /// <summary>
+        ///     Deletes a playlist from the database
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void DeletePlaylist(Playlist playlist)
+        {
+            try
+            {
+                new SQLiteConnection(DatabasePath).Delete(playlist);
+                Logger.Important($"Successfully deleted playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            Playlists.Remove(playlist);
+
+            // Handle selection of the new playlist if deleted
+            if (Selected.Value == playlist)
+                Selected.Value = Playlists.Count != 0 ? Playlists.First() : null;
+
+            PlaylistDeleted?.Invoke(typeof(PlaylistManager), new PlaylistDeletedEventArgs(playlist));
         }
     }
 }
