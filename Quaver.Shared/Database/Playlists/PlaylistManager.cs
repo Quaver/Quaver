@@ -264,7 +264,7 @@ namespace Quaver.Shared.Database.Playlists
                 var map = MapManager.FindMapFromOnlineId(id);
 
                 // Map is already in playlist or doesn't exist
-                if (map == null || playlist.Maps.Contains(map))
+                if (map == null || playlist.Maps.Any(x => x.MapId == id))
                     continue;
 
                 AddMapToPlaylist(playlist, map);
