@@ -13,6 +13,7 @@ using SharpCompress.Common;
 using SQLite;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Database.Playlists
 {
@@ -69,6 +70,7 @@ namespace Quaver.Shared.Database.Playlists
 
             var tempFolder = $"{ConfigManager.DataDirectory}/temp/{GameBase.Game.TimeRunning}/";
             Directory.CreateDirectory(tempFolder);
+            var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.zip";
 
             using (var archive = ZipArchive.Create())
             {
@@ -125,14 +127,13 @@ namespace Quaver.Shared.Database.Playlists
                 }
 
                 archive.AddAllFromDirectory(tempFolder, "*.qp");
-
-                var outputPath = $"{ConfigManager.DataDirectory}/Exports/{StringHelper.FileNameSafeString(Name)}.zip";
-
                 archive.SaveTo(outputPath, CompressionType.Deflate);
             }
 
             Directory.Delete(tempFolder, true);
             Logger.Important($"Playlist `{Name} (#{Id}) has been successfully exported`",LogType.Runtime);
+
+            Utils.NativeUtils.HighlightInFileManager(outputPath);
         }
     }
 }
