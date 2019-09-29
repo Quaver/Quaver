@@ -27,11 +27,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         private const string Delete = "Delete";
 
+        private const string Sync = "Sync Map Pool";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="playlist"></param>
-        public PlaylistRightClickOptions(DrawablePlaylist playlist) : base(GetOptions(), new ScalableVector2(200, 40), 22)
+        public PlaylistRightClickOptions(DrawablePlaylist playlist) : base(GetOptions(playlist.Item), new ScalableVector2(200, 40), 22)
         {
             Drawable = playlist;
             Playlist = playlist.Item;
@@ -58,6 +60,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
                         DialogManager.Show(new DeletePlaylistDialog(Playlist));
                         break;
+                    case Sync:
+                        if (!Playlist.IsOnlineMapPool())
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "You cannot sync a playlist to a map pool if it isn't uploaded online!");
+                            return;
+                        }
+
+                        DialogManager.Show(new SyncPlaylistDialog(Playlist));
+                        break;
                 }
             };
         }
@@ -82,10 +93,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string, Color> GetOptions() => new Dictionary<string, Color>()
+        private static Dictionary<string, Color> GetOptions(Playlist playlist)
         {
-            {Play, Color.White},
-            {Delete, ColorHelper.HexToColor($"#FF6868")}
-        };
+            var options = new Dictionary<string, Color>()
+            {
+                {Play, Color.White},
+                {Delete, ColorHelper.HexToColor($"#FF6868")}
+            };
+
+            if (playlist.IsOnlineMapPool())
+                options.Add(Sync, ColorHelper.HexToColor("#27B06E"));
+
+            return options;
+        }
     }
 }

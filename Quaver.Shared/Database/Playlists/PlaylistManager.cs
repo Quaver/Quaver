@@ -5,6 +5,7 @@ using System.Linq;
 using osu_database_reader.BinaryFiles;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Online.API.Playlists;
 using SQLite;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -37,6 +38,11 @@ namespace Quaver.Shared.Database.Playlists
         ///     Event invoked when a playlist has been deleted from the game
         /// </summary>
         public static event EventHandler<PlaylistDeletedEventArgs> PlaylistDeleted;
+
+        /// <summary>
+        ///     Event invoked when a playlist has been synced to a map pool
+        /// </summary>
+        public static event EventHandler<PlaylistSyncedEventArgs> PlaylistSynced;
 
         /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
@@ -240,6 +246,53 @@ namespace Quaver.Shared.Database.Playlists
                 Selected.Value = Playlists.Count != 0 ? Playlists.First() : null;
 
             PlaylistDeleted?.Invoke(typeof(PlaylistManager), new PlaylistDeletedEventArgs(playlist));
+        }
+
+        /// <summary>
+        ///     Syncs playlist to an online map pool
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void SyncPlaylistToMapPool(Playlist playlist)
+        {
+            if (!playlist.IsOnlineMapPool())
+                return;
+
+            var response = new APIRequestPlaylistMaps(playlist).ExecuteRequest();
+
+            foreach (var id in response.MapIds)
+            {
+                var map = MapManager.FindMapFromOnlineId(id);
+
+                // Map is already in playlist or doesn't exist
+                if (map == null || playlist.Maps.Contains(map))
+                    continue;
+
+                AddMapToPlaylist(playlist, map);
+                playlist.Maps.Add(map);
+            }
+
+            Logger.Important($"Playlist {playlist.Name} (#{playlist.Id}) has been synced to map pool: {playlist.OnlineMapPoolId}", LogType.Runtime);
+            PlaylistSynced?.Invoke(typeof(PlaylistManager), new PlaylistSyncedEventArgs(playlist));
+        }
+
+        /// <summary>
+        ///     Adds a map to a playlist
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="map"></param>
+        public static void AddMapToPlaylist(Playlist playlist, Map map)
+        {
+            var conn = new SQLiteConnection(DatabasePath);
+
+            var playlistMap = new PlaylistMap()
+            {
+                PlaylistId = playlist.Id,
+                Md5 = map.Md5Checksum
+            };
+
+            conn.Insert(playlistMap);
+
+            conn.Close();
         }
     }
 }

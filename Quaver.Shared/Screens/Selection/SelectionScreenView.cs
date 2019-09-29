@@ -119,6 +119,7 @@ namespace Quaver.Shared.Screens.Selection
             ConfigManager.SelectGroupMapsetsBy.ValueChanged += OnGroupingChanged;
             PlaylistManager.PlaylistCreated += OnPlaylistCreated;
             PlaylistManager.PlaylistDeleted += OnPlaylistDeleted;
+            PlaylistManager.PlaylistSynced += OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized += OnPlaylistContainerInitialized;
 
             // Trigger a scroll container change, to bring in the correct container
@@ -154,6 +155,7 @@ namespace Quaver.Shared.Screens.Selection
             ConfigManager.SelectGroupMapsetsBy.ValueChanged -= OnGroupingChanged;
             PlaylistManager.PlaylistCreated -= OnPlaylistCreated;
             PlaylistManager.PlaylistDeleted -= OnPlaylistDeleted;
+            PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
 
             SelectScreen.ScreenExiting -= OnExiting;
@@ -463,6 +465,17 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnPlaylistDeleted(object sender, PlaylistDeletedEventArgs e) => ReInitializePlaylists();
+
+        /// <summary>
+        ///     Called when a playlist has been synced to an online map pool
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistSynced(object sender, PlaylistSyncedEventArgs e)
+        {
+            PlaylistManager.Selected.Value = e.Playlist;
+            ReInitializePlaylists();
+        }
 
         /// <summary>
         ///     Handles reinitializing the playlist container with animations

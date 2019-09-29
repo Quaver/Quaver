@@ -26,6 +26,11 @@ namespace Quaver.Shared.Database.Playlists
         public string Description { get; set; }
 
         /// <summary>
+        ///     The ID for the map pool of the playlist (if exists)
+        /// </summary>
+        public int OnlineMapPoolId { get; set; } = -1;
+
+        /// <summary>
         ///     The maps that are inside of the playlist
         /// </summary>
         [Ignore]
@@ -36,5 +41,11 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         [Ignore]
         public MapGame PlaylistGame { get; set; }
+
+        /// <summary>
+        ///     Returns if the playlist is an online playlist
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOnlineMapPool() => OnlineMapPoolId != -1;
     }
 }
