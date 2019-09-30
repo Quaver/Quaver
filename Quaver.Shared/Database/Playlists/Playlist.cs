@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Media;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online.API.Playlists;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
@@ -42,6 +44,11 @@ namespace Quaver.Shared.Database.Playlists
         ///     The ID for the map pool of the playlist (if exists)
         /// </summary>
         public int OnlineMapPoolId { get; set; } = -1;
+
+        /// <summary>
+        ///     The id of the creator of the map pool
+        /// </summary>
+        public int OnlineMapPoolCreatorId { get; set; } = -1;
 
         /// <summary>
         ///     The maps that are inside of the playlist
@@ -135,5 +142,32 @@ namespace Quaver.Shared.Database.Playlists
 
             Utils.NativeUtils.HighlightInFileManager(outputPath);
         }
+
+        /// <summary>
+        ///     Returns any maps that are missing in the pool
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetMissingMapPoolMaps()
+        {
+            if (!IsOnlineMapPool())
+                return new List<int>();
+
+            var missing = new List<int>();
+
+            var response = new APIRequestPlaylistMaps(this).ExecuteRequest();
+
+            foreach (var id in response.MapIds)
+            {
+                var map = MapManager.FindMapFromOnlineId(id);
+
+                // Map is already in playlist or doesn't exist
+                if (map == null)
+                    missing.Add(id);
+            }
+
+            return missing;
+        }
+
+        public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/mappool/{OnlineMapPoolId}");
     }
 }

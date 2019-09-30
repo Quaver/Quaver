@@ -1,12 +1,7 @@
-using System;
-using System.IO;
-using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
-using Quaver.Shared.Helpers;
-using Wobble.Platform;
 
-namespace Quaver.Shared.Screens.Selection.UI.Playlists
+namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs
 {
     public class ExportPlaylistDialog : LoadingDialog
     {

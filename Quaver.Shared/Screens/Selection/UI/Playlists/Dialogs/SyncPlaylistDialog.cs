@@ -1,8 +1,7 @@
-using System;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
 
-namespace Quaver.Shared.Screens.Selection.UI.Playlists
+namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs
 {
     public class SyncPlaylistDialog : LoadingDialog
     {
