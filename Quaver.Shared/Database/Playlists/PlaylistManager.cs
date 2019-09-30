@@ -7,6 +7,8 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
 using SQLite;
 using Wobble.Bindables;
@@ -307,6 +309,64 @@ namespace Quaver.Shared.Database.Playlists
             conn.Insert(playlistMap);
 
             conn.Close();
+        }
+
+        /// <summary>
+        ///     Uploads the playlist to the server as a map pool
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void UploadPlaylist(Playlist playlist)
+        {
+            Logger.Important($"Uploading playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
+
+            var maps = playlist.Maps.FindAll(x => x.Game == MapGame.Quaver && x.MapId != -1);
+
+            var ids = new List<int>();
+            maps.ForEach(x => ids.Add(x.MapId));
+
+            var response = OnlineManager.Client?.UploadPlaylist(playlist.Name, playlist.Description, ids);
+
+            // Success
+            if (response?.Status == 200)
+            {
+                playlist.OnlineMapPoolId = response.PlaylistId;
+                playlist.OnlineMapPoolCreatorId = OnlineManager.Self.OnlineUser.Id;
+                Logger.Important($"Successfully uploaded playlist: {playlist.Name} (#{playlist.Id}) online: {playlist.OnlineMapPoolId}", LogType.Runtime);
+                playlist.OpenUrl();
+            }
+            else
+                Logger.Important($"Failed to upload playlist: {playlist.Name} (#{playlist.Id}) online!", LogType.Runtime);
+
+            EditPlaylist(playlist, null);
+        }
+
+        /// <summary>
+        ///     Updates the playlist online
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="removeMissingMaps"></param>
+        public static void UpdatePlaylist(Playlist playlist, bool removeMissingMaps)
+        {
+            Logger.Important($"Updating playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
+
+            var maps = playlist.Maps.FindAll(x => x.Game == MapGame.Quaver && x.MapId != -1);
+
+            var ids = new List<int>();
+            maps.ForEach(x => ids.Add(x.MapId));
+
+            var response = OnlineManager.Client?.UpdatePlaylist(playlist.OnlineMapPoolId,
+                playlist.Name, playlist.Description, ids, removeMissingMaps);
+
+            // Success
+            if (response == 200)
+            {
+                Logger.Important($"Successfully updated playlist: {playlist.Name} (#{playlist.Id}) online: {playlist.OnlineMapPoolId}", LogType.Runtime);
+                playlist.OpenUrl();
+            }
+            else
+                Logger.Important($"Failed to upload playlist: {playlist.Name} (#{playlist.Id}) online! {playlist.OnlineMapPoolId}", LogType.Runtime);
+
+            EditPlaylist(playlist, null);
         }
 
         /// <summary>

@@ -5,7 +5,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble;
 using Wobble.Graphics;
@@ -33,6 +35,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         private const string ExportToZip = "Export To Zip";
 
         private const string Edit = "Edit";
+
+        private const string UploadAsMapPool = "Upload Playlist";
 
         /// <inheritdoc />
         /// <summary>
@@ -78,9 +82,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                         DialogManager.Show(new ExportPlaylistDialog(Playlist));
                         break;
                     case Edit:
-                        if (Playlist.IsOnlineMapPool())
+                        if (Playlist.IsOnlineMapPool() && Playlist.OnlineMapPoolCreatorId != OnlineManager.Self.OnlineUser.Id)
                         {
-                            NotificationManager.Show(NotificationLevel.Error, "You cannot edit an online map pool!");
+                            NotificationManager.Show(NotificationLevel.Error, "You cannot edit an online playlist that isn't yours!");
                             return;
                         }
 
@@ -91,6 +95,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                         }
 
                         DialogManager.Show(new CreatePlaylistDialog(Playlist));
+                        break;
+                    case UploadAsMapPool:
+                        DialogManager.Show(new UploadPlaylistConfirmationDialog(Playlist));
                         break;
                 }
             };
@@ -128,6 +135,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
             if (playlist.IsOnlineMapPool())
                 options.Add(Sync, ColorHelper.HexToColor("#27B06E"));
+
+            if (playlist.PlaylistGame == MapGame.Quaver &&
+                playlist.OnlineMapPoolCreatorId == -1 ||
+                playlist.OnlineMapPoolCreatorId == OnlineManager.Self?.OnlineUser.Id)
+            {
+                options.Add(UploadAsMapPool, ColorHelper.HexToColor("#FFE76B"));
+            }
 
             return options;
         }

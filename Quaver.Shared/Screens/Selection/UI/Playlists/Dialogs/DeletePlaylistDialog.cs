@@ -1,9 +1,7 @@
-using System;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics;
-using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Selection.UI.Playlists
+namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs
 {
     public class DeletePlaylistDialog : YesNoDialog
     {

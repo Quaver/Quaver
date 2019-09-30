@@ -284,6 +284,7 @@ namespace Quaver.Shared.Screens.Selection
             };
 
             PlaylistContainer.X = PlaylistContainer.Width + ScreenPaddingX;
+            PlaylistContainer.InitializePlaylists(false);
         }
 
         /// <summary>
