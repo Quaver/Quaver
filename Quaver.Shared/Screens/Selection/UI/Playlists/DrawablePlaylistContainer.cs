@@ -150,7 +150,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateButton()
         {
-            Button = new ImageButton(WobbleAssets.WhiteBox)
+            var container = (PlaylistContainer) Playlist.Container;
+
+            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,
@@ -169,8 +171,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
                 if (Playlist.Container == null)
                     return;
-
-                var container = (PlaylistContainer) Playlist.Container;
 
                 container.SelectedIndex.Value = Playlist.Index;
 
