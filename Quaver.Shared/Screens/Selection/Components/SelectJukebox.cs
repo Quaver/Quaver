@@ -6,6 +6,7 @@ using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Logging;
+using Wobble.Scheduling;
 using Wobble.Screens;
 
 namespace Quaver.Shared.Screens.Selection.Components
@@ -24,10 +25,24 @@ namespace Quaver.Shared.Screens.Selection.Components
 
         /// <summary>
         /// </summary>
+        private TaskHandler<int, int> LoadTrackTask { get; set; }
+
+        /// <summary>
+        /// </summary>
         public SelectJukebox(QuaverScreen screen = null)
         {
             Screen = screen;
             Size = new ScalableVector2(0, 0);
+
+            LoadTrackTask = new TaskHandler<int, int>((i, token) =>
+            {
+                LogLoadingTrack();
+                AudioEngine.PlaySelectedTrackAtPreview();
+                IsLoadingTrack = false;
+                return 0;
+            });
+
+            LoadTrackTask.OnCancelled += (sender, args) => IsLoadingTrack = false;
 
             if (MapManager.Selected != null)
                 MapManager.Selected.ValueChanged += OnMapChanged;
@@ -52,6 +67,8 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (MapManager.Selected != null)
                 MapManager.Selected.ValueChanged -= OnMapChanged;
 
+            LoadTrackTask.Dispose();
+
             base.Destroy();
         }
 
@@ -74,24 +91,27 @@ namespace Quaver.Shared.Screens.Selection.Components
                 AudioEngine.PlaySelectedTrackAtPreview();
             }
             // Loading further AudioTracks, run under a separate thread
-            else
+            else if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped && !IsLoadingTrack)
             {
-                lock (AudioEngine.Track)
-                {
-                    if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped && !IsLoadingTrack)
-                    {
-                        IsLoadingTrack = true;
+                if (LoadTrackTask.IsRunning)
+                    LoadTrackTask.Cancel();
 
-                        ThreadScheduler.Run(() =>
-                        {
-                            lock (AudioEngine.Track)
-                            {
-                                AudioEngine.PlaySelectedTrackAtPreview();
-                                IsLoadingTrack = false;
-                            }
-                        });
-                    }
+                IsLoadingTrack = true;
+                LoadTrackTask.Run(0);
+            }
+            else if (!AudioEngine.Track.HasPlayed)
+            {
+                try
+                {
+                    AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
                 }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
+                if (!AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Play();
             }
         }
 
@@ -114,7 +134,8 @@ namespace Quaver.Shared.Screens.Selection.Components
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Stop();
 
-                IsLoadingTrack = false;
+                if (LoadTrackTask.IsRunning)
+                    LoadTrackTask.Cancel();
             }
         }
 
