@@ -74,17 +74,24 @@ namespace Quaver.Shared.Screens.Selection.Components
                 AudioEngine.PlaySelectedTrackAtPreview();
             }
             // Loading further AudioTracks, run under a separate thread
-            else if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped && !IsLoadingTrack)
+            else
             {
-                LogLoadingTrack();
-
-                IsLoadingTrack = true;
-
-                ThreadScheduler.Run(() =>
+                lock (AudioEngine.Track)
                 {
-                    AudioEngine.PlaySelectedTrackAtPreview();
-                    IsLoadingTrack = false;
-                });
+                    if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped && !IsLoadingTrack)
+                    {
+                        IsLoadingTrack = true;
+
+                        ThreadScheduler.Run(() =>
+                        {
+                            lock (AudioEngine.Track)
+                            {
+                                AudioEngine.PlaySelectedTrackAtPreview();
+                                IsLoadingTrack = false;
+                            }
+                        });
+                    }
+                }
             }
         }
 
