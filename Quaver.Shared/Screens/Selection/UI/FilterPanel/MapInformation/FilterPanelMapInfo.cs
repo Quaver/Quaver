@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public FilterPanelMapInfo() : base(new ScalableVector2(800, 72), new ScalableVector2(800, 72))
+        public FilterPanelMapInfo() : base(new ScalableVector2(520, 72), new ScalableVector2(520, 72))
         {
             Alpha = 0f;
             InputEnabled = false;
@@ -163,6 +163,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
                 ? "" : $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
 
             DifficultyMods.Text = $"[{map.DifficultyName}]{mods}{windows}";
+            DifficultyMods.TruncateWithEllipsis(480);
 
             //  Reset positions of the text
             ArtistTitle.ClearAnimations();

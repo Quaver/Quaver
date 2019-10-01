@@ -7,6 +7,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Maps.Components;
 using Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -217,7 +218,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateButton()
         {
-            Button = new ImageButton(WobbleAssets.WhiteBox)
+            var container = (SongSelectContainer<Map>) ParentMap.Container;
+
+            Button = new SongSelectContainerButton(WobbleAssets.WhiteBox, container.ClickableArea)
             {
                 Parent = this,
                 Size = Size,

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
@@ -131,6 +132,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                     case Delete:
                         if (selectScreen == null)
                             return;
+
+                        if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                        {
+
+                        }
 
                         DialogManager.Show(new DeleteMapDialog(Map, Map.Mapset.Maps.IndexOf(Map)));
                         break;

@@ -15,6 +15,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
     public abstract class SongSelectContainer<T> : PoolableScrollContainer<T>
     {
+        /// <summary>
+        /// </summary>
         public abstract SelectScrollContainerType Type { get; }
 
         /// <summary>
@@ -37,6 +39,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public event EventHandler<SelectContainerInitializedEventArgs> ContainerInitialized;
 
         /// <summary>
+        ///     The area that is clickable for buttons within the container
+        /// </summary>
+        public Container ClickableArea { get; }
+
+        /// <summary>
         /// </summary>
         /// <param name="availableItems"></param>
         /// <param name="poolSize"></param>
@@ -53,6 +60,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             Alpha = 0;
             CreateScrollbar();
+
+            ClickableArea = new Container()
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                Width = Width,
+                Height = 880,
+            };
 
             SelectedIndex = new BindableInt(-1, 0, int.MaxValue);
 

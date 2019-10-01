@@ -86,6 +86,9 @@ namespace Quaver.Shared.Screens.Selection
             InitializeActiveScrollContainerBindable();
             InitializeSelectedPlaylist();
 
+            // Do initial filtering of mapsets for the screen
+            AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+
             MapManager.MapsetDeleted += OnMapsetDeleted;
             MapManager.MapDeleted += OnMapDeleted;
 
@@ -136,7 +139,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableMapsets"/>
         /// </summary>
         private void InitializeAvailableMapsetsBindable()
-            => AvailableMapsets = new Bindable<List<Mapset>>(null) { Value = MapsetHelper.FilterMapsets(CurrentSearchQuery) };
+            => AvailableMapsets = new Bindable<List<Mapset>>(null) { Value = new List<Mapset>()};
 
         /// <summary>
         ///     Initializes the bindable which keeps track of which panel on the left side of the screen is active
