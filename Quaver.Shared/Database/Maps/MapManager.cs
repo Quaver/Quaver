@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Parsers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -226,6 +227,10 @@ namespace Quaver.Shared.Database.Maps
             // Delete the mapset entirely if there are no more maps left.
             if (map.Mapset.Maps.Count == 0)
                 Mapsets.Remove(map.Mapset);
+
+            // Remove from the selected playlist if applicable
+            if (PlaylistManager.Selected.Value != null && PlaylistManager.Selected.Value.Maps.Contains(map))
+                PlaylistManager.Selected.Value.Maps.Remove(map);
 
             // Raise an event with the deleted map
             MapDeleted?.Invoke(typeof(MapManager), new MapDeletedEventArgs(map, index));
