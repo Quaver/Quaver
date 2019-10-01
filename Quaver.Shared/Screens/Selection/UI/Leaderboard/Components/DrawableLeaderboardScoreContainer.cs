@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <summary>
         ///     Makes the leaderboard score clickable/hoverable
         /// </summary>
-        private ImageButton Button { get; set; }
+        private DrawableLeaderboardScoreButton Button { get; set; }
 
         /// <summary>
         ///     Displays the rank of the score
@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateButton()
         {
-            Button = new ImageButton(WobbleAssets.WhiteBox)
+            Button = new DrawableLeaderboardScoreButton(Score.Container as LeaderboardScoresContainer, WobbleAssets.WhiteBox)
             {
                 Parent = this,
                 Size = Size,
