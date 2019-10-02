@@ -345,6 +345,9 @@ namespace Quaver.Shared.Database.Maps
                 newMap.Mapset = outdated.Mapset;
                 newMap.Directory = outdated.Directory;
                 newMap.Path = outdated.Path;
+                newMap.DateAdded = outdated.DateAdded;
+                newMap.TimesPlayed = outdated.TimesPlayed;
+                newMap.LocalOffset = outdated.LocalOffset;
 
                 MapDatabaseCache.UpdateMap(outdated);
 
