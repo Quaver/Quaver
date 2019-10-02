@@ -295,8 +295,6 @@ namespace Quaver.Shared.Database.Maps
 
         /// <summary>
         ///     Updates an individual map to the latest version
-        ///
-        ///     NOTE: Pass by reference because we want to update the original refrence of the map.
         /// </summary>
         /// <param name="outdated"></param>
         public static void UpdateMapToLatestVersion(Map outdated)
