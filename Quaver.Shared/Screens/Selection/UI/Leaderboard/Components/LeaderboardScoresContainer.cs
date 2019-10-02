@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // Only make the update perform hover if absolutely necessary
             UpdateButton.IsPerformingFadeAnimations = MapManager.Selected.Value != null
                                                       && MapManager.Selected.Value.NeedsOnlineUpdate &&
-                                                      UpdateButton.Animations.Count == 0 && LoadingWheel.Animations.Count == 0;
+                                                      LoadingWheel.Alpha < 0.1f;
 
             base.Update(gameTime);
         }
@@ -330,11 +330,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(200, 500),
-                Y = StatusText.Y + StatusText.Height + 18,
+                Size = new ScalableVector2(220, 40),
+                Y = StatusText.Y + StatusText.Height + 28,
                 Alpha = 0,
                 IsPerformingFadeAnimations = false,
-                IsClickable = false
+                IsClickable = false,
+                Image = UserInterface.UpdateButton
             };
         }
 
