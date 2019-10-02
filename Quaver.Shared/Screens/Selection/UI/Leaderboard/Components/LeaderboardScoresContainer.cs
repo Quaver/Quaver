@@ -12,6 +12,8 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using TagLib.Ape;
 using Wobble.Graphics;
@@ -57,6 +59,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private bool FinishedLoading { get; set; }
 
         /// <summary>
+        ///     The button to update the map to the latest version
+        /// </summary>
+        private IconButton UpdateButton { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="container"></param>
         public LeaderboardScoresContainer(LeaderboardContainer container) : base(new List<Score>(), 12, 0,
@@ -75,6 +82,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             CreateScrollbar();
             CreateLoadingWheel();
             CreateStatusText();
+            CreateUpdateButton();
 
             Container.FetchScoreTask.OnCompleted += OnScoresRetrieved;
         }
@@ -104,6 +112,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     score?.ChildContainer.FadeIn();
                 });
             }
+
+            // Only make the update perform hover if absolutely necessary
+            UpdateButton.IsPerformingFadeAnimations = MapManager.Selected.Value != null
+                                                      && MapManager.Selected.Value.NeedsOnlineUpdate &&
+                                                      LoadingWheel.Alpha < 0.1f;
 
             base.Update(gameTime);
         }
@@ -172,6 +185,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             AvailableItems?.Clear();
             ScrollbarBackground.Visible = false;
             FinishedLoading = false;
+
+            UpdateButton.ClearAnimations();
+            UpdateButton.IsClickable = false;
+            UpdateButton.FadeTo(0, Easing.Linear, 250);
         }
 
         /// <summary>
@@ -221,11 +238,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (store.Scores.Count == 0)
             {
                 // The user's map is not up-to-date, so prompt them of this.
-                // TODO: Button to update the map
                 if (map.NeedsOnlineUpdate)
+                {
                     StatusText.Text = "Your map is outdated. Please update it!".ToUpper();
+                    UpdateButton.ClearAnimations();
+                    UpdateButton.IsClickable = true;
+                    UpdateButton.FadeTo(1, Easing.Linear, 250);
+                }
                 else
                 {
+                    UpdateButton.ClearAnimations();
+                    UpdateButton.IsClickable = false;
+                    UpdateButton.FadeTo(0, Easing.Linear, 250);
+
                     // The map isn't ranked, but the user is a donator, so they can access leaderboards on all maps
                     if (map.RankedStatus != RankedStatus.Ranked && isDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                         StatusText.Text = "Scores on this map will be unranked!".ToUpper();
@@ -255,8 +280,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 FadeStatusTextIn();
                 return;
             }
-
-            // Show scores
         }
 
         /// <summary>
@@ -291,6 +314,28 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="UpdateButton"/>
+        /// </summary>
+        private void CreateUpdateButton()
+        {
+            UpdateButton = new IconButton(UserInterface.BlankBox, (o, e) =>
+                {
+                    ThreadScheduler.Run(() => MapManager.UpdateMapToLatestVersion(MapManager.Selected.Value));
+                    StartLoading();
+                })
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(220, 40),
+                Y = StatusText.Y + StatusText.Height + 28,
+                Alpha = 0,
+                IsPerformingFadeAnimations = false,
+                IsClickable = false,
+                Image = UserInterface.UpdateButton
             };
         }
 

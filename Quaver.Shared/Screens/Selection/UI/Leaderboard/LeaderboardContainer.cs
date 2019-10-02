@@ -247,6 +247,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// </summary>
         public void FetchScores()
         {
+            if (MapManager.Selected.Value != null)
+                MapManager.Selected.Value.NeedsOnlineUpdate = false;
+
             StopLoading();
             FetchScoreTask.Run(MapManager.Selected.Value, 400);
             StartLoading();
