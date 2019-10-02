@@ -91,6 +91,7 @@ namespace Quaver.Shared.Screens.Selection
 
             MapManager.MapsetDeleted += OnMapsetDeleted;
             MapManager.MapDeleted += OnMapDeleted;
+            MapManager.MapUpdated += OnMapUpdated;
 
             View = new SelectionScreenView(this);
         }
@@ -125,6 +126,7 @@ namespace Quaver.Shared.Screens.Selection
             ActiveScrollContainer?.Dispose();
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
+            MapManager.MapUpdated -= OnMapUpdated;
 
             base.Destroy();
         }
@@ -575,6 +577,12 @@ namespace Quaver.Shared.Screens.Selection
                 }
             });
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapUpdated(object sender, MapUpdatedEventArgs e) => AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
         /// <inheritdoc />
         /// <summary>

@@ -10,14 +10,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.Maps;
 using Quaver.Shared.Screens.Selection.UI.Maps;
+using RestSharp;
+using RestSharp.Extensions;
+using SQLite;
 using Wobble.Bindables;
 using Wobble.Logging;
 
@@ -64,6 +72,11 @@ namespace Quaver.Shared.Database.Maps
         ///     Event invoked when a map has been deleted
         /// </summary>
         public static event EventHandler<MapDeletedEventArgs> MapDeleted;
+
+        /// <summary>
+        ///     Event invoked when a map has been updated
+        /// </summary>
+        public static event EventHandler<MapUpdatedEventArgs> MapUpdated;
 
         /// <summary>
         ///     Gets the background path for a given map.
@@ -277,6 +290,79 @@ namespace Quaver.Shared.Database.Maps
                     banner.Dispose();
 
                 BackgroundHelper.MapsetBanners.Remove(mapset.Directory);
+            }
+        }
+
+        /// <summary>
+        ///     Updates an individual map to the latest version
+        ///
+        ///     NOTE: Pass by reference because we want to update the original refrence of the map.
+        /// </summary>
+        /// <param name="outdated"></param>
+        public static void UpdateMapToLatestVersion(Map outdated)
+        {
+            try
+            {
+                var lookup = new APIRequestMapInformation(outdated.MapId).ExecuteRequest();
+
+                if (lookup.Status != 200)
+                    throw new Exception($"Map updated failed. APIRequestMapInformation failed with status: {lookup.Status}");
+
+                // Check if we already have the updated version of the map. If we do, just delete the old one,
+                // and select the new version
+                foreach (var mapset in Mapsets)
+                {
+                    var foundMap = mapset.Maps.Find(x => x.Md5Checksum == lookup.Map.Md5);
+
+                    if (foundMap == null)
+                        continue;
+
+                    outdated.Mapset.Maps.Remove(outdated);
+
+                    MapDatabaseCache.RemoveMap(outdated);
+
+                    if (outdated.Mapset.Maps.Count == 0)
+                        Mapsets.Remove(outdated.Mapset);
+
+                    if (Selected.Value == outdated)
+                        Selected.Value = foundMap;
+
+                    MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, foundMap));
+                    return;
+                }
+
+                // We don't have the map, so replace it and update its map information.
+                var path = $"{ConfigManager.SongDirectory.Value}/{outdated.Directory}/{outdated.Path}";
+
+                Logger.Important($"Downloading latest version of map: {outdated.Id}", LogType.Runtime);
+
+                var client = new RestClient($"{OnlineClient.API_ENDPOINT}");
+                client.DownloadData(new RestRequest($"{OnlineClient.API_ENDPOINT}/d/web/map/{outdated.MapId}", Method.GET)).SaveAs(path);
+
+                Logger.Important($"Successfully downloaded latest version of map: {outdated.Id}", LogType.Runtime);
+
+                var newMap = Map.FromQua(Qua.Parse(path), path);
+                newMap.CalculateDifficulties();
+                newMap.Id = outdated.Id;
+                newMap.Mapset = outdated.Mapset;
+                newMap.Directory = outdated.Directory;
+                newMap.Path = outdated.Path;
+
+                MapDatabaseCache.UpdateMap(outdated);
+
+                outdated.Mapset.Maps.Remove(outdated);
+                outdated.Mapset.Maps.Add(newMap);
+                outdated.Mapset.Maps = newMap.Mapset.Maps.OrderBy(x => x.DifficultyFromMods(ModManager.Mods)).ToList();
+
+                if (Selected.Value == outdated)
+                    Selected.Value = newMap;
+
+                MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, newMap));
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, outdated));
             }
         }
     }

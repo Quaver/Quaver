@@ -157,7 +157,6 @@ namespace Quaver.Shared.Screens.Selection
             PlaylistManager.PlaylistDeleted -= OnPlaylistDeleted;
             PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
-
             SelectScreen.ScreenExiting -= OnExiting;
         }
 

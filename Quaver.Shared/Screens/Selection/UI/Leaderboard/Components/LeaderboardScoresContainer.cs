@@ -12,6 +12,8 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using TagLib.Ape;
 using Wobble.Graphics;
@@ -57,6 +59,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private bool FinishedLoading { get; set; }
 
         /// <summary>
+        ///     The button to update the map to the latest version
+        /// </summary>
+        private IconButton UpdateButton { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="container"></param>
         public LeaderboardScoresContainer(LeaderboardContainer container) : base(new List<Score>(), 12, 0,
@@ -75,6 +82,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             CreateScrollbar();
             CreateLoadingWheel();
             CreateStatusText();
+            CreateUpdateButton();
 
             Container.FetchScoreTask.OnCompleted += OnScoresRetrieved;
         }
@@ -291,6 +299,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="UpdateButton"/>
+        /// </summary>
+        private void CreateUpdateButton()
+        {
+            UpdateButton = new IconButton(UserInterface.BlankBox, (o, e) =>
+                {
+                    ThreadScheduler.Run(() => MapManager.UpdateMapToLatestVersion(MapManager.Selected.Value));
+                })
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(200, 500),
+                Y = StatusText.Y + StatusText.Height + 18,
             };
         }
 
