@@ -113,6 +113,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 });
             }
 
+            // Only make the update perform hover if absolutely necessary
+            UpdateButton.IsPerformingFadeAnimations = MapManager.Selected.Value != null
+                                                      && MapManager.Selected.Value.NeedsOnlineUpdate &&
+                                                      UpdateButton.Animations.Count == 0 && LoadingWheel.Animations.Count == 0;
+
             base.Update(gameTime);
         }
 
@@ -180,6 +185,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             AvailableItems?.Clear();
             ScrollbarBackground.Visible = false;
             FinishedLoading = false;
+
+            UpdateButton.ClearAnimations();
+            UpdateButton.IsClickable = false;
+            UpdateButton.FadeTo(0, Easing.Linear, 250);
         }
 
         /// <summary>
@@ -229,11 +238,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             if (store.Scores.Count == 0)
             {
                 // The user's map is not up-to-date, so prompt them of this.
-                // TODO: Button to update the map
                 if (map.NeedsOnlineUpdate)
+                {
                     StatusText.Text = "Your map is outdated. Please update it!".ToUpper();
+                    UpdateButton.ClearAnimations();
+                    UpdateButton.IsClickable = true;
+                    UpdateButton.FadeTo(1, Easing.Linear, 250);
+                }
                 else
                 {
+                    UpdateButton.ClearAnimations();
+                    UpdateButton.IsClickable = false;
+                    UpdateButton.FadeTo(0, Easing.Linear, 250);
+
                     // The map isn't ranked, but the user is a donator, so they can access leaderboards on all maps
                     if (map.RankedStatus != RankedStatus.Ranked && isDonator && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
                         StatusText.Text = "Scores on this map will be unranked!".ToUpper();
@@ -263,8 +280,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 FadeStatusTextIn();
                 return;
             }
-
-            // Show scores
         }
 
         /// <summary>
@@ -310,12 +325,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             UpdateButton = new IconButton(UserInterface.BlankBox, (o, e) =>
                 {
                     ThreadScheduler.Run(() => MapManager.UpdateMapToLatestVersion(MapManager.Selected.Value));
+                    StartLoading();
                 })
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(200, 500),
                 Y = StatusText.Y + StatusText.Height + 18,
+                Alpha = 0,
+                IsPerformingFadeAnimations = false,
+                IsClickable = false
             };
         }
 
