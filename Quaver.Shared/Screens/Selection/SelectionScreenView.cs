@@ -121,6 +121,7 @@ namespace Quaver.Shared.Screens.Selection
             PlaylistManager.PlaylistDeleted += OnPlaylistDeleted;
             PlaylistManager.PlaylistSynced += OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized += OnPlaylistContainerInitialized;
+            FilterPanel.SearchBox.OnStoppedTyping += OnSearchingStopped;
 
             // Trigger a scroll container change, to bring in the correct container
             SelectScreen.ActiveScrollContainer.TriggerChange();
@@ -158,6 +159,7 @@ namespace Quaver.Shared.Screens.Selection
             PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
             SelectScreen.ScreenExiting -= OnExiting;
+            FilterPanel.SearchBox.OnStoppedTyping -= OnSearchingStopped;
         }
 
         /// <summary>
@@ -516,6 +518,24 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             PlaylistContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        ///     Called when the user stops typing to search. Used for immediately animating
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnSearchingStopped(string obj)
+        {
+            MapsetContainer.ClearAnimations();
+            MapContainer.ClearAnimations();
+            PlaylistContainer.ClearAnimations();
+
+            const Easing easing = Easing.OutQuint;
+            const int time = 400;
+
+            MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
+            MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);
+            PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, easing, time);
         }
     }
 }
