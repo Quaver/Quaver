@@ -36,6 +36,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -692,9 +693,8 @@ namespace Quaver.Shared.Screens.Gameplay
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
                             ModManager.RemoveMod(ModIdentifier.Paused);
 
-                        return new SelectScreen();
+                        return new SelectionScreen();
                     }
-
 
                     return new ResultScreen(Screen);
                 }, 500);

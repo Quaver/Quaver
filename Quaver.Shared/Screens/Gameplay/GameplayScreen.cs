@@ -40,6 +40,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio;
@@ -653,7 +654,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     CustomAudioSampleCache.StopAll();
                     ModManager.RemoveAllMods();
-                    Exit(() => new SelectScreen());
+                    Exit(() => new SelectionScreen());
                     return;
                 }
 

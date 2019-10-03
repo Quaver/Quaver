@@ -42,6 +42,7 @@ using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -484,7 +485,7 @@ namespace Quaver.Shared.Screens.Result
                 return;
             }
 
-            Exit(() => new SelectScreen());
+            Exit(() => new SelectionScreen());
         }
 
         /// <summary>

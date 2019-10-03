@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -721,7 +722,7 @@ namespace Quaver.Shared.Screens.Editor
                 if (track is AudioTrack t)
                     t?.Fade(0, 100);
 
-                return new SelectScreen();
+                return new SelectionScreen();
             });
         }
 
