@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
@@ -72,6 +73,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
                                     game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), replay));
                                 });
+
                             DialogManager.Show(dialog);
                             return;
                         }
@@ -111,11 +113,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <returns></returns>
         private static Dictionary<string, Color> GetOptions(Score score)
         {
-            var options = new Dictionary<string, Color>()
+            var options = new Dictionary<string, Color>();
+
+            if (OnlineManager.CurrentGame == null)
             {
-                {ViewResults, Color.White},
-                {WatchReplay, ColorHelper.HexToColor("#9B51E0")},
-            };
+                options.Add(ViewResults, Color.White);
+                options.Add(WatchReplay, ColorHelper.HexToColor("#9B51E0"));
+            }
 
             if (score.IsOnline)
             {

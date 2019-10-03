@@ -169,7 +169,7 @@ namespace Quaver.Shared.Screens.Result.UI
 
         public override void Destroy()
         {
-            HitDifferenceGraph.Image?.Dispose();
+            HitDifferenceGraph?.Image?.Dispose();
 
             base.Destroy();
         }
