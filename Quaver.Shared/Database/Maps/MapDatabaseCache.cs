@@ -259,7 +259,8 @@ namespace Quaver.Shared.Database.Maps
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
                 maps = maps.Concat(OtherGameMapDatabaseCache.Load()).ToList();
 
-            MapManager.Mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
+            var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
+            MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
         }
 
         /// <summary>
