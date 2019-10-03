@@ -241,9 +241,7 @@ namespace Quaver.Shared.Database.Maps
             if (map.Mapset.Maps.Count == 0)
                 Mapsets.Remove(map.Mapset);
 
-            // Remove from the selected playlist if applicable
-            if (PlaylistManager.Selected.Value != null && PlaylistManager.Selected.Value.Maps.Contains(map))
-                PlaylistManager.Selected.Value.Maps.Remove(map);
+            PlaylistManager.RemoveMapFromAllPlaylists(map);
 
             // Raise an event with the deleted map
             MapDeleted?.Invoke(typeof(MapManager), new MapDeletedEventArgs(map, index));

@@ -370,6 +370,29 @@ namespace Quaver.Shared.Database.Playlists
         }
 
         /// <summary>
+        ///     Removes a map from all playlists that its in
+        /// </summary>
+        /// <param name="map"></param>
+        public static void RemoveMapFromAllPlaylists(Map map)
+        {
+            Playlists.ForEach(x =>
+            {
+                x.Maps.Remove(map);
+
+                try
+                {
+                    var conn = new SQLiteConnection(DatabasePath);
+                    conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == map.Md5Checksum);
+                    conn.Close();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
+        }
+
+        /// <summary>
         ///     Copies a banner path to the correct directory
         /// </summary>
         /// <param name="playlist"></param>
