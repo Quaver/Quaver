@@ -531,6 +531,8 @@ namespace Quaver.Shared.Database.Maps
                 }
             }
 
+            var newMapsetLookup = new Dictionary<string, Mapset>();
+
             // Create a list of mapsets with the matched mapsets
             foreach (var mapset in mapsets)
             {
@@ -706,15 +708,21 @@ namespace Quaver.Shared.Database.Maps
                     if (exitLoop)
                         continue;
 
-                    // Add the set if all the comparisons and queries are correct
-                    if (sets.All(x => x.Directory != map.Directory))
-                        sets.Add(new Mapset
+                    // Create a new mapset if it doesn't exist
+                    if (!newMapsetLookup.ContainsKey(map.Directory))
+                    {
+                        var set = new Mapset()
                         {
                             Directory = map.Directory,
-                            Maps = new List<Map> {map}
-                        });
+                            Maps = new List<Map>() {map}
+                        };
+
+                        sets.Add(set);
+                        newMapsetLookup.Add(map.Directory, set);
+                    }
+                    // Otherwise just add the mapset to the existing set
                     else
-                        sets.Find(x => x.Directory == map.Directory).Maps.Add(map);
+                        newMapsetLookup[map.Directory].Maps.Add(map);
                 }
             }
 
