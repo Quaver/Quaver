@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         ///     The textbox to search for maps
         /// </summary>
-        private FilterPanelSearchBox SearchBox { get; set; }
+        public FilterPanelSearchBox SearchBox { get; private set; }
 
         /// <summary>
         ///     The text that displays how many maps are available
