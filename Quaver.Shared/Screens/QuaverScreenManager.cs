@@ -84,6 +84,7 @@ namespace Quaver.Shared.Screens
             {
                 case QuaverScreenChangeType.CompleteChange:
                     ChangeScreen(QueuedScreen);
+                    Button.IsGloballyClickable = true;
                     break;
                 case QuaverScreenChangeType.AddToStack:
                     AddScreen(QueuedScreen);

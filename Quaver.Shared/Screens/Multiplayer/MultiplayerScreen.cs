@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
@@ -48,6 +49,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// <param name="playTrackOnFirstUpdate"></param>
         public MultiplayerScreen(MultiplayerGame game, bool playTrackOnFirstUpdate = false)
         {
+            AutomaticallyDestroyOnScreenSwitch = false;
             Game = game;
             PlayTrackOnFirstUpdate = playTrackOnFirstUpdate;
 
@@ -201,6 +203,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         public void LeaveGame() => Exit(() =>
         {
             OnlineManager.LeaveGame();
+            ThreadScheduler.RunAfter(Destroy, 1000);
             return new LobbyScreen();
         });
 

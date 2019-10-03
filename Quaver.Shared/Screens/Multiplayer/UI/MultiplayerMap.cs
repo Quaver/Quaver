@@ -253,7 +253,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             HasMap = map != null;
 
-            if (OnlineManager.CurrentGame.HostSelectingMap)
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
             {
                 ArtistTitle.Text = "Host is currently selecting a map!";
                 Mode.Text = "Please wait...";
@@ -285,14 +285,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var length = TimeSpan.FromMilliseconds(map.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
                 var time = length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
 
-                if (OnlineManager.CurrentGame.HostSelectingMap)
+                if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostSelectingMap)
                     Creator.Text = "";
                 else
                     Creator.Text = $"By: {map.Creator} | Length: {time} | BPM: {(int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods))} " +
                                    $"| LNs: {(int) map.LNPercentage}%";
 
                 // Inform the server that we now have the map if we didn't before.
-                if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
+                if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                     OnlineManager.Client.HasMultiplayerGameMap();
 
                 if (game.CurrentScreen.Type == QuaverScreenType.Lobby || game.CurrentScreen.Type == QuaverScreenType.Multiplayer
@@ -336,7 +336,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Creator.Text = Game.MapId != -1 ? "You don't have this map. Click to download!" : "You don't have this map. Download not available!";
                 Creator.Tint = Colors.SecondaryAccent;
 
-                if (!OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
+                if (OnlineManager.CurrentGame != null && !OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
                     OnlineManager.Client.DontHaveMultiplayerGameMap();
 
                 if (!AudioEngine.Track.IsStopped)
