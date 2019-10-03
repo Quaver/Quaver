@@ -241,9 +241,7 @@ namespace Quaver.Shared.Database.Maps
             if (map.Mapset.Maps.Count == 0)
                 Mapsets.Remove(map.Mapset);
 
-            // Remove from the selected playlist if applicable
-            if (PlaylistManager.Selected.Value != null && PlaylistManager.Selected.Value.Maps.Contains(map))
-                PlaylistManager.Selected.Value.Maps.Remove(map);
+            PlaylistManager.RemoveMapFromAllPlaylists(map);
 
             // Raise an event with the deleted map
             MapDeleted?.Invoke(typeof(MapManager), new MapDeletedEventArgs(map, index));
@@ -325,6 +323,7 @@ namespace Quaver.Shared.Database.Maps
                     if (Selected.Value == outdated)
                         Selected.Value = foundMap;
 
+                    PlaylistManager.UpdateMapInPlaylists(outdated, foundMap);
                     MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, foundMap));
                     return;
                 }
@@ -358,6 +357,7 @@ namespace Quaver.Shared.Database.Maps
                 if (Selected.Value == outdated)
                     Selected.Value = newMap;
 
+                PlaylistManager.UpdateMapInPlaylists(outdated, newMap);
                 MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, newMap));
             }
             catch (Exception e)
