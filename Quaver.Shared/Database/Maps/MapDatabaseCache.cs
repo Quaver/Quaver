@@ -15,6 +15,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using SQLite;
 using Wobble;
@@ -258,8 +259,7 @@ namespace Quaver.Shared.Database.Maps
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
                 maps = maps.Concat(OtherGameMapDatabaseCache.Load()).ToList();
 
-            var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
-            MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
+            MapManager.Mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
         }
 
         /// <summary>
@@ -278,11 +278,18 @@ namespace Quaver.Shared.Database.Maps
                     var map = Map.FromQua(Qua.Parse(path, false), path);
                     map.CalculateDifficulties();
                     map.Id = MapsToUpdate[i].Id;
+                    map.Directory = MapsToUpdate[i].Directory;
+                    map.Mapset = MapsToUpdate[i].Mapset;
 
                     if (map.Id == 0)
+                    {
                         map.Id = InsertMap(map, path);
+                    }
                     else
+                    {
                         UpdateMap(map);
+                        PlaylistManager.UpdateMapInPlaylists(MapsToUpdate[i], map);
+                    }
 
                     MapsToUpdate[i] = map;
                     MapManager.Selected.Value = map;
@@ -295,9 +302,10 @@ namespace Quaver.Shared.Database.Maps
 
             MapsToUpdate.Clear();
             OrderAndSetMapsets();
+            PlaylistManager.Load();
 
-            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Id == MapManager.Selected.Value.Id));
-            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Id == MapManager.Selected.Value.Id);
+            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == MapManager.Selected.Value.Md5Checksum));
+            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum);
         }
     }
 }

@@ -323,6 +323,7 @@ namespace Quaver.Shared.Database.Maps
                     if (Selected.Value == outdated)
                         Selected.Value = foundMap;
 
+                    PlaylistManager.UpdateMapInPlaylists(outdated, foundMap);
                     MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, foundMap));
                     return;
                 }
@@ -356,6 +357,7 @@ namespace Quaver.Shared.Database.Maps
                 if (Selected.Value == outdated)
                     Selected.Value = newMap;
 
+                PlaylistManager.UpdateMapInPlaylists(outdated, newMap);
                 MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, newMap));
             }
             catch (Exception e)

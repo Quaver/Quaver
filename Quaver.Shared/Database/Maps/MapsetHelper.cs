@@ -437,9 +437,8 @@ namespace Quaver.Shared.Database.Maps
             {
                 var mapset = new Mapset
                 {
-                    Directory = map.Mapset.Directory,
-                    Maps = new List<Map>
-                        {map}
+                    Directory = map?.Mapset?.Directory ?? "",
+                    Maps = new List<Map> {map}
                 };
 
                 mapsets.Add(mapset);

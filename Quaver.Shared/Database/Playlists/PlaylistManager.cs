@@ -90,6 +90,9 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         private static void LoadPlaylists()
         {
+            Playlists = new List<Playlist>();
+            Selected.Value = null;
+
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
@@ -306,7 +309,10 @@ namespace Quaver.Shared.Database.Playlists
                 Md5 = map.Md5Checksum
             };
 
-            conn.Insert(playlistMap);
+            var check = conn.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
+
+            if (check == null)
+                conn.Insert(playlistMap);
 
             conn.Close();
         }
@@ -382,7 +388,49 @@ namespace Quaver.Shared.Database.Playlists
                 try
                 {
                     var conn = new SQLiteConnection(DatabasePath);
-                    conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == map.Md5Checksum);
+
+                    var playlistMap = conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == map.Md5Checksum);
+
+                    if (playlistMap != null)
+                        conn.Delete(playlistMap);
+
+                    conn.Close();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Updates a particular map in a playlist with
+        /// </summary>
+        /// <param name="outdated"></param>
+        /// <param name="newMap"></param>
+        public static void UpdateMapInPlaylists(Map outdated, Map newMap)
+        {
+            Playlists.ForEach(x =>
+            {
+                if (!x.Maps.Contains(outdated))
+                    return;
+
+                x.Maps.Remove(outdated);
+
+                if (!x.Maps.Contains(newMap))
+                    x.Maps.Add(newMap);
+
+                try
+                {
+                    var conn = new SQLiteConnection(DatabasePath);
+
+                    var playlistMap = conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == outdated.Md5Checksum);
+
+                    if (playlistMap != null)
+                        conn.Delete(playlistMap);
+
+                    AddMapToPlaylist(x, newMap);
+
                     conn.Close();
                 }
                 catch (Exception e)
