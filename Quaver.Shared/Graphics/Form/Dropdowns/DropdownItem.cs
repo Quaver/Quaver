@@ -66,7 +66,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         {
             if (HoverSprite.Image != Image)
                 HoverSprite.Image = Image;
-            
+
             base.Update(gameTime);
         }
 
@@ -108,7 +108,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 return;
 
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0.35f, Easing.Linear, 50);
+            HoverSprite.FadeTo(Dropdown.HighlightAlpha, Easing.Linear, 75);
 
             SkinManager.Skin?.SoundHover?.CreateChannel()?.Play();
         }
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         private void OnHoverLeft(object sender, EventArgs e)
         {
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0f, Easing.Linear, 50);
+            HoverSprite.FadeTo(0f, Easing.Linear, 75);
         }
 
         /// <summary>

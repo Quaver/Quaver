@@ -84,6 +84,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// </summary>
         public event EventHandler<DropdownClickedEventArgs> ItemSelected;
 
+        /// <summary>
+        ///     The alpha of the buttons when it's highlighted
+        /// </summary>
+        public float HighlightAlpha { get; set; } = 0.45f;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -276,7 +281,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         private void OnHovered(object sender, EventArgs e)
         {
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0.35f, Easing.OutQuint, 500);
+            HoverSprite.FadeTo(HighlightAlpha, Easing.OutQuint, 75);
 
             SkinManager.Skin?.SoundHover?.CreateChannel()?.Play();
         }
@@ -288,7 +293,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         private void OnHoverLeft(object sender, EventArgs e)
         {
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0f, Easing.OutQuint, 500);
+            HoverSprite.FadeTo(0f, Easing.OutQuint, 75);
         }
 
         /// <summary>
