@@ -152,8 +152,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (DialogManager.Dialogs.Last() == this && KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Close();
+            if (DialogManager.Dialogs.Last() == this)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                    Close();
+
+                if (MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
+                    Close();
+            }
         }
 
         /// <inheritdoc />

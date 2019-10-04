@@ -68,6 +68,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             {
                 CreatePlaylistContainer.Close();
             }
+
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && !CreatePlaylistContainer.IsHovered())
+                CreatePlaylistContainer.Close();
         }
 
         /// <summary>
