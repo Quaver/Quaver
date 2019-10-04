@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning;
@@ -57,6 +58,18 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             ClickedOutside += OnClickedOutside;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (HoverSprite.Image != Image)
+                HoverSprite.Image = Image;
+            
+            base.Update(gameTime);
+        }
+
         /// <summary>
         ///     Creates <see cref="HoverSprite"/>
         /// </summary>
@@ -95,7 +108,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 return;
 
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0.35f, Easing.OutQuint, 500);
+            HoverSprite.FadeTo(0.35f, Easing.Linear, 50);
 
             SkinManager.Skin?.SoundHover?.CreateChannel()?.Play();
         }
@@ -107,7 +120,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         private void OnHoverLeft(object sender, EventArgs e)
         {
             HoverSprite.ClearAnimations();
-            HoverSprite.FadeTo(0f, Easing.OutQuint, 500);
+            HoverSprite.FadeTo(0f, Easing.Linear, 50);
         }
 
         /// <summary>
