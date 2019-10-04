@@ -106,6 +106,12 @@ namespace Quaver.Shared.Graphics
                 NoAction?.Invoke();
                 Close();
             }
+
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
+            {
+                NoAction?.Invoke();
+                Close();
+            }
         }
 
         /// <summary>
