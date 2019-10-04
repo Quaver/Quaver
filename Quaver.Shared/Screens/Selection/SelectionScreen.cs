@@ -180,6 +180,10 @@ namespace Quaver.Shared.Screens.Selection
 
             if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
                 ActiveScrollContainer.Value = SelectScrollContainerType.Playlists;
+
+            // If the user is playing maps from a playlist, then automatically use the mapset container
+            if (PlaylistManager.Selected.Value != null && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+                ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
         }
 
         /// <summary>
