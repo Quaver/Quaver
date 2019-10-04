@@ -13,7 +13,7 @@ namespace Quaver.Shared.Modifiers.Mods
 {
     internal class ModNoSliderVelocities: IGameplayModifier
     {
-        public string Name { get; set; } = "No Slider Velocities";
+        public string Name { get; set; } = "No Scroll Velocities";
 
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.NoSliderVelocity;
 
