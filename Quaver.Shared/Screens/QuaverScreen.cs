@@ -9,8 +9,10 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Screens;
@@ -50,6 +52,11 @@ namespace Quaver.Shared.Screens
         /// </summary>
         private RightClickOptions ActiveRightClickOptions { get; set; }
 
+        /// <summary>
+        ///     The currently active tooltip for the screen
+        /// </summary>
+        private Tooltip ActiveTooltip { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -62,6 +69,7 @@ namespace Quaver.Shared.Screens
                 FirstUpdateCalled = true;
             }
 
+            HandleTooltipAnimation();
             base.Update(gameTime);
         }
 
@@ -118,6 +126,57 @@ namespace Quaver.Shared.Screens
             ActiveRightClickOptions.Position = new ScalableVector2(x, y);
 
             ActiveRightClickOptions.Open(350);
+        }
+
+        /// <summary>
+        ///     Activates the current tooltip for the screen
+        /// </summary>
+        /// <param name="tooltip"></param>
+        public void ActivateTooltip(Tooltip tooltip)
+        {
+            if (ActiveTooltip != null)
+            {
+                ActiveTooltip.Visible = false;
+                ActiveTooltip.Parent = null;
+            }
+
+            ActiveTooltip = tooltip;
+            ActiveTooltip.Parent = View.Container;
+            ActiveTooltip.Visible = true;
+
+            var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 0,
+                WindowManager.Width - ActiveTooltip.Width);
+
+            var y = MathHelper.Clamp(MouseManager.CurrentState.Y, 60, WindowManager.Height - ActiveTooltip.Height - 60);
+
+            ActiveTooltip.Position = new ScalableVector2(x, y);
+
+            ActiveTooltip.Alpha = 0;
+            ActiveTooltip.ClearAnimations();
+            ActiveTooltip.FadeTo(1, Easing.Linear, 150);
+        }
+
+        /// <summary>
+        ///     Deactivates the current tooltip for the screen
+        /// </summary>
+        public void DeactivateTooltip()
+        {
+            if (ActiveTooltip == null)
+                return;
+
+            ActiveTooltip.Visible = false;
+            ActiveTooltip.Parent = null;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleTooltipAnimation()
+        {
+            if (ActiveTooltip == null)
+                return;
+
+            ActiveTooltip.X = MouseManager.CurrentState.X - ActiveTooltip.Width + 14;
+            ActiveTooltip.Y = MouseManager.CurrentState.Y - ActiveTooltip.Height - 2;
         }
 
         /// <summary>

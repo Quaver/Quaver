@@ -49,11 +49,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private SpriteTextPlus StatusText { get; set; }
 
         /// <summary>
-        ///     The currently active tooltip that is displayed on top of the container
-        /// </summary>
-        private Tooltip ActiveTooltip { get; set; }
-
-        /// <summary>
         ///     If the scores have finished loading
         /// </summary>
         private bool FinishedLoading { get; set; }
@@ -99,8 +94,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                            && DialogManager.Dialogs.Count == 0
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
-
-            HandleTooltipAnimation();
 
             if (FinishedLoading && Pool.Count >= 10 && Pool.First().Parent != ContentContainer)
             {
@@ -397,34 +390,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             PreviousTargetY = PreviousContentContainerY;
 
             PoolStartingIndex = 0;
-        }
-
-        /// <summary>
-        ///     Sets the active tooltip
-        /// </summary>
-        /// <param name="tooltip"></param>
-        public void ActivateTooltip(Tooltip tooltip)
-        {
-            if (ActiveTooltip != null)
-                ActiveTooltip.Parent = null;
-
-            ActiveTooltip = tooltip;
-            ActiveTooltip.Parent = this;
-
-            ActiveTooltip.Alpha = 0;
-            ActiveTooltip.ClearAnimations();
-            ActiveTooltip.FadeTo(1, Easing.Linear, 150);
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleTooltipAnimation()
-        {
-            if (ActiveTooltip == null)
-                return;
-
-            ActiveTooltip.X = MouseManager.CurrentState.X - AbsolutePosition.X - ActiveTooltip.Width + 14;
-            ActiveTooltip.Y = MouseManager.CurrentState.Y - AbsolutePosition.Y - ActiveTooltip.Height - 2;
         }
     }
 }

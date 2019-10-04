@@ -395,15 +395,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Alpha = 0
             };
 
-            UnbeatableTooltip = new Tooltip("You cannot beat this score with your currently activated modifiers!", Color.Crimson);
+            UnbeatableTooltip = new Tooltip("You cannot beat this score with your currently activated modifiers!",
+                Color.Crimson)
+            {
+                DestroyIfParentIsNull = false
+            };
 
             CantBeatAlert.Hovered += (sender, args) =>
             {
-                var container = Score.Container as LeaderboardScoresContainer;
-                container?.ActivateTooltip(UnbeatableTooltip);
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen.ActivateTooltip(UnbeatableTooltip);
             };
 
-            CantBeatAlert.LeftHover += (sender, args) => UnbeatableTooltip.Parent = null;
+            CantBeatAlert.LeftHover += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen.DeactivateTooltip();
+            };
         }
 
         /// <summary>
