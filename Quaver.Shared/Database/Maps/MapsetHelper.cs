@@ -76,6 +76,7 @@ namespace Quaver.Shared.Database.Maps
                 case OrderMapsetsBy.Difficulty:
                 case OrderMapsetsBy.OnlineGrade:
                 case OrderMapsetsBy.LongNotePercentage:
+                case OrderMapsetsBy.NotesPerSecond:
                     return true;
                 default:
                     return false;
@@ -149,6 +150,23 @@ namespace Quaver.Shared.Database.Maps
         private static List<Mapset> OrderMapsetsByLength(IEnumerable<Mapset> mapsets)
         {
             return mapsets.OrderBy(x => x.Maps.First().SongLength).ThenBy(x => x.Maps.First().Artist).ThenBy(x => x.Maps.First().Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders mapsets by notes per second
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private static List<Mapset> OrderMapsetsByNotesPerSecond(List<Mapset> mapsets, bool separateMapsets)
+        {
+            var newMapsets = new List<Mapset>();
+
+            if (separateMapsets)
+                newMapsets = SeparateMapsIntoOwnMapsets(mapsets);
+            else
+                newMapsets = mapsets;
+
+            return newMapsets.OrderBy(x => x.Maps.First().NotesPerSecond).ToList();
         }
 
         /// <summary>
@@ -281,6 +299,8 @@ namespace Quaver.Shared.Database.Maps
                     return OrderMapsetsByDateRanked(mapsets);
                 case OrderMapsetsBy.LongNotePercentage:
                     return OrderMapsetsByLongNotePercentage(mapsets, separateMapsets);
+                case OrderMapsetsBy.NotesPerSecond:
+                    return OrderMapsetsByNotesPerSecond(mapsets, separateMapsets);
                 default:
                     return mapsets.ToList();
             }

@@ -25,6 +25,7 @@ namespace Quaver.Shared.Config
         OnlineGrade,
         DateLastUpdated,
         DateRanked,
-        LongNotePercentage
+        LongNotePercentage,
+        NotesPerSecond
     }
 }
