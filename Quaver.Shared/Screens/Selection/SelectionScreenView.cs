@@ -528,14 +528,12 @@ namespace Quaver.Shared.Screens.Selection
         {
             MapsetContainer.ClearAnimations();
             MapContainer.ClearAnimations();
-            PlaylistContainer.ClearAnimations();
 
             const Easing easing = Easing.OutQuint;
             const int time = 400;
 
             MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
             MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);
-            PlaylistContainer.MoveToX(PlaylistContainer.Width + ScreenPaddingX, easing, time);
         }
     }
 }
