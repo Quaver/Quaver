@@ -38,10 +38,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             if (MapManager.Selected.Value == null)
                 return 0;
 
-            var objectCount = MapManager.Selected.Value.LongNoteCount + MapManager.Selected.Value.RegularNoteCount;
-            var nps = objectCount / (MapManager.Selected.Value.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods)));
-
-            return (int) nps;
+            return MapManager.Selected.Value.NotesPerSecond;
         }
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => Value.Text = GetNotesPerSecond().ToString();

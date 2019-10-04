@@ -21,6 +21,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using SQLite;
 using Wobble.Bindables;
 using Wobble.Platform;
@@ -201,7 +202,22 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public int TimesPlayed { get; set; }
 
-#region DIFFICULTY_RATINGS
+        /// <summary>
+        ///    Returns the notes per second a map has
+        /// </summary>
+        [Ignore]
+        public int NotesPerSecond
+        {
+            get
+            {
+                var objectCount = LongNoteCount + RegularNoteCount;
+                var nps = objectCount / (SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods)));
+
+                return (int) nps.Clamp(0, int.MaxValue);
+            }
+        }
+
+        #region DIFFICULTY_RATINGS
         public double Difficulty05X { get; set; }
         public double Difficulty055X { get; set; }
         public double Difficulty06X { get; set; }
