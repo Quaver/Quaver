@@ -24,6 +24,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
+using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Maps;
@@ -206,6 +207,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
+            HandleKeyPressTab();
         }
 
         /// <summary>
@@ -301,6 +303,22 @@ namespace Quaver.Shared.Screens.Selection
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        ///     Handles when the user presses the tab key
+        /// </summary>
+        private void HandleKeyPressTab()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            var index = (int) ConfigManager.LeaderboardSection.Value;
+
+            if (index + 1 < Enum.GetNames(typeof(LeaderboardType)).Length)
+                ConfigManager.LeaderboardSection.Value = (LeaderboardType) index + 1;
+            else
+                ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
         }
 
         /// <summary>

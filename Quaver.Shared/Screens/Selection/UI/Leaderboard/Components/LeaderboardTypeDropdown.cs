@@ -7,6 +7,7 @@ using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Wobble.Bindables;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
@@ -17,6 +18,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             new ScalableVector2(125, 30), 22, ColorHelper.HexToColor($"#10C8F6"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;
+            ConfigManager.LeaderboardSection.ValueChanged += OnLeaderboardSectionChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.LeaderboardSection.ValueChanged -= OnLeaderboardSectionChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -42,5 +54,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             ConfigManager.LeaderboardSection.Value = (LeaderboardType) Enum.Parse(typeof(LeaderboardType), e.Text);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLeaderboardSectionChanged(object sender, BindableValueChangedEventArgs<LeaderboardType> e)
+            => Dropdown.SelectedText.Text = Dropdown.Options[(int) e.Value];
     }
 }
