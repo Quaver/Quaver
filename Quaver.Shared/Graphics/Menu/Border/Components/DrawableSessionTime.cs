@@ -6,11 +6,12 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components
 {
-    public class DrawableSessionTime : Sprite, IMenuBorderItem
+    public class DrawableSessionTime : ImageButton, IMenuBorderItem
     {
         /// <inheritdoc />
         /// <summary>
@@ -38,6 +39,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         public SpriteTextPlus Time { get; }
 
         /// <summary>
+        /// </summary>
+        private Tooltip Tooltip { get; }
+
+        /// <summary>
         ///     The time in the previous frame
         /// </summary>
         private double TimeSinceLastSecond { get; set; }
@@ -49,10 +54,9 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
         /// <summary>
         /// </summary>
-        public DrawableSessionTime()
+        public DrawableSessionTime() : base(UserInterface.DropdownClosed)
         {
             Size = new ScalableVector2(114, 30);
-            Image = UserInterface.DropdownClosed;
             Tint = ColorHelper.HexToColor($"#363636");
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
@@ -61,6 +65,21 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter
+            };
+
+            Tooltip = new Tooltip($"This displays how long the game has been running.\nBe sure to take breaks often!",
+                Colors.MainAccent) {DestroyIfParentIsNull = false};
+
+            Hovered += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen?.ActivateTooltip(Tooltip);
+            };
+
+            LeftHover += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen?.DeactivateTooltip();
             };
         }
 
