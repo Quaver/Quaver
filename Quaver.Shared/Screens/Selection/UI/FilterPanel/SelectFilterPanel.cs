@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
@@ -344,7 +345,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             if (ConfigManager.SelectOrderMapsetsBy.Value != OrderMapsetsBy.Difficulty)
                 return;
 
-            StartFilterMapsetsTask();
+            var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
+                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X;
+
+            if (e.Type == ModChangeType.RemoveAll || e.Type == ModChangeType.RemoveSpeed || isSpeedMod)
+                StartFilterMapsetsTask();
         }
 
         /// <summary>

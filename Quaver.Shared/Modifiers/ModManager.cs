@@ -132,7 +132,7 @@ namespace Quaver.Shared.Modifiers
             CurrentModifiersList.Add(gameplayModifier);
             gameplayModifier.InitializeMod();
 
-            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, modIdentifier));
             Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
         }
 
@@ -149,7 +149,7 @@ namespace Quaver.Shared.Modifiers
                 // Remove the Mod
                 CurrentModifiersList.Remove(removedMod);
 
-                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Removal, Mods, modIdentifier));
                 Logger.Debug($"Removed mod: {removedMod.ModIdentifier}.", LogType.Runtime, false);
             }
             catch (Exception e)
@@ -173,7 +173,7 @@ namespace Quaver.Shared.Modifiers
             CurrentModifiersList.Clear();
             CheckModInconsistencies();
 
-            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveAll, Mods, ModIdentifier.None));
             Logger.Debug("Removed all modifiers", LogType.Runtime, false);
         }
 
@@ -212,7 +212,9 @@ namespace Quaver.Shared.Modifiers
 
                 CheckModInconsistencies();
 
-                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
+                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveSpeed, Mods,
+                    ModIdentifier.None));
+
                 Logger.Debug("Removed all speed modifiers", LogType.Runtime, false);
             }
             catch (Exception e)
