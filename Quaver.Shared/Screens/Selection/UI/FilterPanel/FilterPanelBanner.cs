@@ -44,6 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             CreateGradientSprite();
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
+            BackgroundHelper.Load(MapManager.Selected.Value);
         }
 
         /// <inheritdoc />

@@ -14,6 +14,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
@@ -42,6 +43,12 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private Map PreviouslySelectedMap { get; set; }
 
+        /// <summary>
+        ///     IF the screen was called when coming from select in a multiplayer game.
+        ///     This will bring the user back to song select after importing
+        /// </summary>
+        private bool ComingFromSelect { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -50,9 +57,11 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        public ImportingScreen(MultiplayerScreen multiplayerScreen = null)
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false)
         {
+            ComingFromSelect = fromSelect;
             MultiplayerScreen = multiplayerScreen;
+
             PreviouslySelectedMap = MapManager.Selected.Value;
             View = new ImportingScreenView(this);
         }
@@ -89,32 +98,27 @@ namespace Quaver.Shared.Screens.Importing
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
-            if (SelectScreen.PreviousSearchTerm != "")
-                SelectScreen.PreviousSearchTerm = "";
-
             if (OnlineManager.CurrentGame != null && MultiplayerScreen != null)
             {
                 MapManager.Selected.Value = PreviouslySelectedMap;
 
-                var selectScreen = ScreenManager.Screens.ToList().Find(x => x is SelectScreen) as SelectScreen;
-                var selectScreenView = selectScreen?.View as SelectScreenView;
-
-                if (selectScreen != null)
-                    selectScreen.AvailableMapsets = MapsetHelper.OrderMapsetsByConfigValue(MapManager.Mapsets);
-
-                selectScreenView?.MapsetScrollContainer.InitializeWithNewSets();
-
-                RemoveTopScreen(MultiplayerScreen);
-
                 var view = (MultiplayerScreenView) MultiplayerScreen.View;
                 view.Map.UpdateContent();
+
+                Exit(() =>
+                {
+                    if (ComingFromSelect)
+                        return new SelectionScreen(MultiplayerScreen);
+
+                    return MultiplayerScreen;
+                });
             }
             else
             {
                 Exit(() =>
                 {
                     AudioEngine.Track?.Fade(10, 300);
-                    return new SelectScreen(MultiplayerScreen);
+                    return new SelectionScreen(MultiplayerScreen);
                 });
             }
         }

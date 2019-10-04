@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     If the user is in multiplayer, this is the current screen
         /// </summary>
-        private MultiplayerScreen MultiplayerScreen { get; }
+        public MultiplayerScreen MultiplayerScreen { get; }
 
         /// <summary>
         ///     Stores the currently available mapsets to play in the screen
