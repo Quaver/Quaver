@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                 new ScalableVector2(width, ModifierSelectorBackground.Height - 4), new List<ModifierSection>
                 {
                     new ModifierSection(width, FontAwesome.Get(FontAwesomeIcon.fa_check_mark),"Ranked",
-                        "This section can be used for ranked scores", ColorHelper.HexToColor("#27B06E"), new List<SelectableModifier>()
+                        "These mods can be used for ranked scores", ColorHelper.HexToColor("#27B06E"), new List<SelectableModifier>()
                         {
                             new SelectableModifierSpeed(width),
                             new SelectableModifierJudgementWindows(width),
