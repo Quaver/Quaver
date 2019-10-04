@@ -23,6 +23,7 @@ using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using SharpCompress.Archives;
 using SharpCompress.Common;
@@ -105,8 +106,8 @@ namespace Quaver.Shared.Database.Maps
                 {
                     if (OnlineManager.CurrentGame != null)
                     {
-                        var mpScreen = ScreenManager.Screens.ToList().Find(x => x is MultiplayerScreen);
-                        screen.Exit(() => new ImportingScreen(mpScreen as MultiplayerScreen), 0, QuaverScreenChangeType.AddToStack);
+                        var select = game.CurrentScreen as SelectionScreen;
+                        screen.Exit(() => new ImportingScreen(select?.MultiplayerScreen, true));
                         return;
                     }
 
@@ -116,7 +117,7 @@ namespace Quaver.Shared.Database.Maps
 
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
-                    screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen), 0, QuaverScreenChangeType.AddToStack);
+                    screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen));
                     return;
                 }
             }
