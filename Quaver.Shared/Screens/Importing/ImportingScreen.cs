@@ -71,6 +71,8 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         public override void OnFirstUpdate()
         {
+            AudioEngine.Track?.Fade(100, 300);
+
             ThreadScheduler.Run(() =>
             {
                 MapsetImporter.ImportMapsetsInQueue();
@@ -81,8 +83,8 @@ namespace Quaver.Shared.Screens.Importing
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
                     var view = View as ImportingScreenView;
-                    view.Header.Text = "Please wait. Calculating difficulties for maps.";
-                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();;
+                    view.Status.Text = "Performing difficulty calculation for outdated maps".ToUpper();
+                    QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
                 }
 
                 OnImportCompletion();
@@ -115,11 +117,7 @@ namespace Quaver.Shared.Screens.Importing
             }
             else
             {
-                Exit(() =>
-                {
-                    AudioEngine.Track?.Fade(10, 300);
-                    return new SelectionScreen(MultiplayerScreen);
-                });
+                Exit(() => new SelectionScreen(MultiplayerScreen));
             }
         }
     }
