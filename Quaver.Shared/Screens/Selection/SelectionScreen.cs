@@ -117,6 +117,8 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted += OnMapDeleted;
             MapManager.MapUpdated += OnMapUpdated;
 
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
             View = new SelectionScreenView(this);
         }
 
@@ -151,6 +153,9 @@ namespace Quaver.Shared.Screens.Selection
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
+
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
 
             base.Destroy();
         }
@@ -766,6 +771,14 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMapUpdated(object sender, MapUpdatedEventArgs e) => AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => Exit(() => new ImportingScreen(MultiplayerScreen, true));
 
         /// <inheritdoc />
         /// <summary>
