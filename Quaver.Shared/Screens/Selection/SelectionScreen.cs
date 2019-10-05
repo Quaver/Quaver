@@ -430,7 +430,7 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
-                AudioEngine.Track?.Fade(ConfigManager.VolumeMusic.Value, 500);
+                AudioEngine.Track?.Fade(100, 300);
         }
 
         /// <summary>
