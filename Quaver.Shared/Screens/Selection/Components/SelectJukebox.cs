@@ -19,13 +19,12 @@ namespace Quaver.Shared.Screens.Selection.Components
         private QuaverScreen Screen { get; }
 
         /// <summary>
-        ///     If we're currently in the process of loading a track
         /// </summary>
-        private bool IsLoadingTrack { get; set; }
+        private TaskHandler<int, int> LoadTrackTask { get; set; }
 
         /// <summary>
         /// </summary>
-        private TaskHandler<int, int> LoadTrackTask { get; set; }
+        private bool AudioTrackStoppedInLastFrame { get; set; }
 
         /// <summary>
         /// </summary>
@@ -38,14 +37,19 @@ namespace Quaver.Shared.Screens.Selection.Components
             {
                 LogLoadingTrack();
                 AudioEngine.PlaySelectedTrackAtPreview();
-                IsLoadingTrack = false;
+                AudioTrackStoppedInLastFrame = false;
                 return 0;
             });
 
-            LoadTrackTask.OnCancelled += (sender, args) => IsLoadingTrack = false;
+            LoadTrackTask.OnCancelled += (sender, args) => AudioTrackStoppedInLastFrame = false;
 
             if (MapManager.Selected != null)
+            {
                 MapManager.Selected.ValueChanged += OnMapChanged;
+
+                if (AudioEngine.Map != MapManager.Selected.Value || AudioEngine.Track.IsStopped)
+                    LoadTrackTask.Run(0);
+            }
         }
 
         /// <inheritdoc />
@@ -80,39 +84,13 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (Screen != null && Screen.Exiting)
                 return;
 
-            // No map is currently selected
-            if (MapManager.Selected == null || MapManager.Selected.Value == null)
+            if (AudioEngine.Track == null)
                 return;
 
-            // Loading the first AudioTrack ever.
-            if (AudioEngine.Track == null)
-            {
-                LogLoadingTrack();
-                AudioEngine.PlaySelectedTrackAtPreview();
-            }
-            // Loading further AudioTracks, run under a separate thread
-            else if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped && !IsLoadingTrack)
-            {
-                if (LoadTrackTask.IsRunning)
-                    LoadTrackTask.Cancel();
-
-                IsLoadingTrack = true;
+            if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning)
                 LoadTrackTask.Run(0);
-            }
-            else if (!AudioEngine.Track.HasPlayed)
-            {
-                try
-                {
-                    AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
 
-                if (!AudioEngine.Track.IsPlaying)
-                    AudioEngine.Track.Play();
-            }
+            AudioTrackStoppedInLastFrame = AudioEngine.Track.HasPlayed && AudioEngine.Track.IsDisposed;
         }
 
         /// <summary>
@@ -128,14 +106,12 @@ namespace Quaver.Shared.Screens.Selection.Components
                 return;
 
             // On map switch, we want to just stop the track.
-            // KeepPlayingAudioTrackAtPreview() will automatically load and play the track again at its preview point
             lock (AudioEngine.Track)
             {
-                if (AudioEngine.Track.IsPlaying)
-                    AudioEngine.Track.Stop();
-
                 if (LoadTrackTask.IsRunning)
                     LoadTrackTask.Cancel();
+
+                LoadTrackTask.Run(0);
             }
         }
 
