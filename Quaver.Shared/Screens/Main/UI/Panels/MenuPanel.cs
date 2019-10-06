@@ -63,18 +63,10 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 Image = image,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
+                UsePreviousSpriteBatchOptions = true
             };
 
             AddContainedDrawable(Background);
-
-            Darkness = new Sprite()
-            {
-                Tint = Color.Black,
-                Size = Background.Size,
-                Alpha = 0.60f
-            };
-
-            AddContainedDrawable(Darkness);
 
             Button = new ImageButton(UserInterface.BlankBox)
             {
@@ -107,6 +99,13 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                     Container.Panels.ForEach(x => x.CondenseToOriginalSize());
             };
 
+            Darkness = new Sprite()
+            {
+                Parent = Button,
+                Tint = Color.Black,
+                Alpha = 0.60f,
+            };
+
             Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 30)
             {
                 Parent = Button,
@@ -130,6 +129,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         public override void Update(GameTime gameTime)
         {
             Button.Size = Size;
+            Darkness.Size = Button.Size;
 
             base.Update(gameTime);
         }

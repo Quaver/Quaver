@@ -1,8 +1,22 @@
+using System;
+using Quaver.Server.Client;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Selection;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Main
 {
@@ -17,8 +31,105 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         public MainMenuScreen()
         {
-            // SetDiscordRichPresence();
+#if  !VISUAL_TESTS
+            SetDiscordRichPresence();
+#endif
+
             View = new MainMenuScreenView(this);
+        }
+
+        /// <summary>
+        ///     Exits the screen and goes to single player
+        /// </summary>
+        public void ExitToSinglePlayer()
+        {
+            // We have maps in the queue, so we need to go to the import screen first
+            if (MapsetImporter.Queue.Count != 0)
+            {
+                Exit(() => new ImportingScreen());
+                return;
+            }
+
+            // User has no maps loaded.
+            if (MapManager.Mapsets.Count == 0)
+            {
+                // If they're online, send them to the download screen
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    Exit(() => new DownloadScreen());
+                    return;
+                }
+
+                // Not online, just notify them.
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                return;
+            }
+
+            Exit(() => new SelectionScreen());
+        }
+
+        /// <summary>
+        ///     Exits the screen and goes to competitive
+        /// </summary>
+        public void ExitToCompetitive()
+        {
+            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+        }
+
+        /// <summary>
+        ///     Exits the screen and goes to multiplayer
+        /// </summary>
+        public void ExitToMultiplayer()
+        {
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to play multiplayer.");
+                return;
+            }
+
+            // User has no maps, so send them to the download screen.
+            if (MapManager.Mapsets.Count == 0 || MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                if (OnlineManager.Status.Value == ConnectionStatus.Connected)
+                {
+                    Exit(() => new DownloadScreen());
+                    return;
+                }
+
+                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                return;
+            }
+
+            Exit(() => new LobbyScreen());
+        }
+
+        /// <summary>
+        ///     Exits the screen to the editor
+        /// </summary>
+        public void ExitToEditor()
+        {
+            if (MapManager.Selected == null || MapManager.Selected.Value == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You cannot edit without a map selected.");
+                return;
+            }
+
+            Exit(() =>
+            {
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track?.Pause();
+
+                try
+                {
+                    return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                    return new MenuScreen();
+                }
+            });
         }
 
         /// <summary>
