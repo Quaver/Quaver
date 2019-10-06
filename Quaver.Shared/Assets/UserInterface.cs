@@ -47,6 +47,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorCompositionToolsPanel => TextureManager.Load("Quaver.Resources/Textures/UI/Editor/composition-tools-panel.png");
         public static Texture2D EditorDetailsPanel => TextureManager.Load("Quaver.Resources/Textures/UI/Editor/details-panel.png");
         public static Texture2D MenuBackgroundRaw => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/menu-background-raw.jpg");
+        public static Texture2D MenuBackgroundClear => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/menu-background-clear.jpg");
         public static Texture2D LobbyCreateGame => TextureManager.Load("Quaver.Resources/Textures/UI/Multiplayer/create-game.png");
         public static Texture2D TeamBannerRed => TextureManager.Load("Quaver.Resources/Textures/UI/Multiplayer/team-banner-red.png");
         public static Texture2D TeamBannerBlue => TextureManager.Load("Quaver.Resources/Textures/UI/Multiplayer/team-banner-blue.png");
