@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Scheduling;
 using Steamworks;
 using Wobble;
@@ -156,6 +157,10 @@ namespace Quaver.Shared.Online
                 // Send the login request to Flamingo.
                 case EResult.k_EResultOK:
                     AuthSessionTicketValidated = true;
+
+                    if (ConfigManager.AutoLoginToServer.Value)
+                        OnlineManager.Login();
+
                     break;
                 // All error cases returned from Steam
                 default:

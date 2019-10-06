@@ -8,6 +8,7 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
@@ -86,7 +87,7 @@ namespace Quaver.Shared.Screens.Lobby
             Exit(() =>
             {
                 NotificationManager.Show(NotificationLevel.Error, "You must be logged in to join the multiplayer lobby.");
-                return new MenuScreen();
+                return new MainMenuScreen();
             });
         }
 
@@ -110,7 +111,7 @@ namespace Quaver.Shared.Screens.Lobby
             if (OnlineManager.Connected)
                 OnlineManager.LeaveLobby();
 
-            return new MenuScreen();
+            return new MainMenuScreen();
         });
 
         /// <summary>

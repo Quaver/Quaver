@@ -31,7 +31,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// <summary>
         ///     The color when the button isn't hovered
         /// </summary>
-        private Color BaseColor { get; }
+        protected Color BaseColor { get; set; }
 
         /// <summary>
         ///     The color when the button is hovered

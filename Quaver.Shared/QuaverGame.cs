@@ -35,6 +35,7 @@ using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
@@ -158,7 +159,8 @@ namespace Quaver.Shared
             {"CreatePlaylistDialog", typeof(TestScreenCreatePlaylist)},
             {"SelectionScreen", typeof(SelectionScreen)},
             {"YesNoDialog", typeof(TestYesNoDialogScreen)},
-            {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)}
+            {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)},
+            {"Main Menu", typeof(MainMenuScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
@@ -238,7 +240,7 @@ namespace Quaver.Shared
             Window.Title = $"Quaver Visual Test Runner";
 #else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
-            QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
 #endif
         }
 

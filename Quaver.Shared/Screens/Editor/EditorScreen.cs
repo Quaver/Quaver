@@ -45,6 +45,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
@@ -421,7 +422,7 @@ namespace Quaver.Shared.Screens.Editor
             catch (Exception e)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Audio track was unable to be loaded for this map.");
-                Exit(() => new MenuScreen());
+                Exit(() => new MainMenuScreen());
                 return true;
             }
         }

@@ -17,6 +17,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download.UI.Drawable;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Bindables;
@@ -106,7 +107,7 @@ namespace Quaver.Shared.Screens.Download
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Exit(() => new MenuScreen());
+                Exit(() => new MainMenuScreen());
         }
 
         /// <inheritdoc />
