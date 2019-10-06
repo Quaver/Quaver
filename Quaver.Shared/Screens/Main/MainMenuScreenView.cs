@@ -6,12 +6,14 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Main.UI.Panels;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Input;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Main
 {
@@ -37,6 +39,10 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         private MenuPanelContainer PanelContainer { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private MenuAudioVisualizer Visualizer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -48,6 +54,7 @@ namespace Quaver.Shared.Screens.Main
             CreateBackground();
             CreateHeader();
             CreateFooter();
+            CreateAudioVisualizer();
             CreatePanelContainer();
 
             Header.Parent = Container;
@@ -114,6 +121,21 @@ namespace Quaver.Shared.Screens.Main
 
             PanelContainer.X = PanelContainer.Width + 50;
             PanelContainer.MoveToX(0, Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Visualizer"/>
+        /// </summary>
+        private void CreateAudioVisualizer()
+        {
+            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 58, 3, 8)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotLeft,
+                Y = -Footer.Height
+            };
+
+            Visualizer.Bars.ForEach(x => x.Alpha = 0.35f);
         }
 
         /// <summary>
