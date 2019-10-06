@@ -28,13 +28,18 @@ namespace Quaver.Shared.Screens.Main
         public override QuaverScreenType Type { get; } = QuaverScreenType.Menu;
 
         /// <summary>
+        ///     Dictates if this is the first ever menu screen load.
+        ///     Used to determine if we should auto-connect to the server
+        /// </summary>
+        public static bool FirstMenuLoad { get; private set; }
+
+        /// <summary>
         /// </summary>
         public MainMenuScreen()
         {
 #if  !VISUAL_TESTS
             SetDiscordRichPresence();
 #endif
-
             View = new MainMenuScreenView(this);
         }
 

@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Settings;
@@ -79,7 +80,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
                 case QuaverScreenType.Select:
                     return new SelectScreen();
                 default:
-                    return new MenuScreen();
+                    return new MainMenuScreen();
             }
         });
     }

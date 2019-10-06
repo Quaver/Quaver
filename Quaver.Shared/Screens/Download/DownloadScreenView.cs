@@ -22,6 +22,7 @@ using Quaver.Shared.Screens.Download.UI;
 using Quaver.Shared.Screens.Download.UI.Drawable;
 using Quaver.Shared.Screens.Download.UI.Filter;
 using Quaver.Shared.Screens.Download.UI.Status;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -148,7 +149,7 @@ namespace Quaver.Shared.Screens.Download
                 new ButtonText(FontsBitmap.GothamRegular, "Back", 14, (sender, args) =>
                 {
                     var screen = Screen as DownloadScreen;
-                    screen?.Exit(() => new MenuScreen());
+                    screen?.Exit(() => new MainMenuScreen());
                 })
             }, new List<ButtonText>(), Colors.MainAccent)
             {

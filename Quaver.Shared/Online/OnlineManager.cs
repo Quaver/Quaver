@@ -38,6 +38,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
@@ -221,7 +222,7 @@ namespace Quaver.Shared.Online
             {
                 LeaveLobby();
                 CurrentGame = null;
-                game.CurrentScreen?.Exit(() => new MenuScreen());
+                game.CurrentScreen?.Exit(() => new MainMenuScreen());
             }
         }
 
