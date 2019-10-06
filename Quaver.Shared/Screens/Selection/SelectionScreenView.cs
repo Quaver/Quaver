@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void CreateAudioVisualizer()
         {
-            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 6)
+            Visualizer = new MenuAudioVisualizer((int) WindowManager.Width, 600, 65, 3, 8)
             {
                 Parent = Container,
                 Alignment = Alignment.BotLeft,
