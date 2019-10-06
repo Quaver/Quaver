@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public MenuPanel(MenuPanelContainer container, Texture2D image, string title, string subtitle)
+        public MenuPanel(MenuPanelContainer container, Texture2D image, string title, string subtitle, Action clickAction)
             : base(PanelSize, PanelSize)
         {
             Container = container;
@@ -82,6 +82,8 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 Alpha = 0
             };
 
+            Button.Clicked += (sender, args) => clickAction();
+
             Button.Hovered += (sender, args) =>
             {
                 Expand();
@@ -102,21 +104,21 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
 
                 // All buttons are no longer hoevered, so return them to its original size
                 if (!Container.Panels.Any(x => x.Button.IsHovered))
-                    Container.Panels.ForEach(x => x.CondenseToOriginalSize());;
+                    Container.Panels.ForEach(x => x.CondenseToOriginalSize());
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 26)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), title, 30)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,
-                Y = -200
+                Y = -150
             };
 
-            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle, 20)
+            Subtitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subtitle, 22)
             {
                 Parent = Button,
                 Alignment = Alignment.BotCenter,
-                Y = Title.Y + Title.Height + 18,
+                Y = Title.Y + Title.Height + 4,
                 Visible = false
             };
         }
@@ -128,6 +130,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         public override void Update(GameTime gameTime)
         {
             Button.Size = Size;
+
             base.Update(gameTime);
         }
 
@@ -136,10 +139,14 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// </summary>
         public void Expand()
         {
+            Title.Animations.Clear();
+            Title.MoveToX(-ExpandedWidth / 2f + Title.Width / 2f + 20, Easing.OutQuint, 400);
+
             Subtitle.Visible = true;
             Subtitle.Alpha = 0;
             Subtitle.Animations.Clear();
-            Subtitle.FadeTo(1, Easing.Linear, 200);
+            Subtitle.FadeTo(1, Easing.Linear, 250);
+            Subtitle.MoveToX(-ExpandedWidth / 2f + Subtitle.Width / 2f + 20, Easing.OutQuint, 400);
 
             Animations.Clear();
             ChangeWidthTo(ExpandedWidth, Easing.OutQuint, 400);
@@ -153,7 +160,11 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// </summary>
         public void Condense()
         {
+            Title.Animations.Clear();
+            Title.MoveToX(0, Easing.OutQuint, 400);
+
             Subtitle.Visible = false;
+            Subtitle.X = 0;
 
             Animations.Clear();
             ChangeWidthTo(260, Easing.OutQuint, 400);
@@ -167,7 +178,11 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// </summary>
         public void CondenseToOriginalSize()
         {
+            Title.Animations.Clear();
+            Title.MoveToX(0, Easing.OutQuint, 400);
+
             Subtitle.Visible = false;
+            Subtitle.X = 0;
 
             Animations.Clear();
             ChangeWidthTo((int) PanelSize.X.Value, Easing.OutQuint, 400);

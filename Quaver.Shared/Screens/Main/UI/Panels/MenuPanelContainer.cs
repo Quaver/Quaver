@@ -17,30 +17,27 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
 
         /// <summary>
         /// </summary>
-        public MenuPanelContainer()
+        public MenuPanelContainer(MainMenuScreen menuScreen)
         {
-            Panels = new List<MenuPanel>()
+            Panels = new List<MenuPanel>
             {
                 new MenuPanel(this, UserInterface.MenuBackgroundClear,
-                    "Single Player".ToUpper(), "Compete for leaderboard ranks".ToUpper())
+                    "Single Player".ToUpper(), "Compete for leaderboard ranks".ToUpper(), menuScreen.ExitToSinglePlayer)
                 {
-                    Background =
-                    {
-                        X = -450
-                    }
+                    Background = { X = -450 }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Competitve".ToUpper(), "Compete against players all over the world".ToUpper())
+                    "Competitve".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
                 {
                     Background = { Tint = Color.LimeGreen }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Multiplayer".ToUpper(), "Play custom matches online with others".ToUpper())
+                    "Multiplayer".ToUpper(), "Play custom matches online with others".ToUpper(), menuScreen.ExitToMultiplayer)
                 {
                     Background = { Tint = Color.MediumPurple }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Editor".ToUpper(), "Create or edit a map to any song you'd like".ToUpper())
+                    "Editor".ToUpper(), "Create or edit a map to any song you'd like".ToUpper(), menuScreen.ExitToEditor)
                 {
                     Background = { Tint = Color.Orange }
                 }
@@ -85,6 +82,8 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 if (i == 0)
                     continue;
 
+                panel.Width = panel.Width;
+                panel.X = panel.X;
                 panel.X = Panels[i - 1].X + Panels[i - 1].Width;
             }
         }
