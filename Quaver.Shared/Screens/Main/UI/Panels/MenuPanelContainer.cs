@@ -54,6 +54,33 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var buttonsHovered = false;
+
+            for (var i = 0; i < Panels.Count; i++)
+            {
+                if (Panels[i].Button.IsHovered)
+                {
+                    buttonsHovered = true;
+                    break;
+                }
+            }
+
+            if (buttonsHovered)
+            {
+                for (var i = 0; i < Panels.Count; i++)
+                {
+                    if (Panels[i].Button.IsHovered)
+                        Panels[i].Expand(gameTime);
+                    else
+                        Panels[i].Condense(gameTime);
+                }
+            }
+            else
+            {
+                for (var i = 0; i < Panels.Count; i++)
+                    Panels[i].CondenseToOriginalSize(gameTime);
+            }
+
             SetPositions();
             base.Update(gameTime);
         }
@@ -82,8 +109,6 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 if (i == 0)
                     continue;
 
-                panel.Width = panel.Width;
-                panel.X = panel.X;
                 panel.X = Panels[i - 1].X + Panels[i - 1].Width;
             }
         }

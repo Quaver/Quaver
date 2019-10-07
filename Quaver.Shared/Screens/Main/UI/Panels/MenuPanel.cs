@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// <summary>
         ///     The width of a panel when it is expanded
         /// </summary>
-        private const int ExpandedWidth = 518;
+        private const int ExpandedWidth = 517;
 
         /// <summary>
         /// </summary>
@@ -44,11 +44,11 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus Title { get; set; }
+        private SpriteTextPlus Title { get; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus Subtitle { get; set; }
+        private SpriteTextPlus Subtitle { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -75,29 +75,6 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             };
 
             Button.Clicked += (sender, args) => clickAction();
-
-            Button.Hovered += (sender, args) =>
-            {
-                Expand();
-
-                Container.Panels.ForEach(x =>
-                {
-                    if (x == this)
-                        return;
-
-                    x.Condense();
-                });
-            };
-
-            Button.LeftHover += (sender, args) =>
-            {
-                // Run an update on ALL buttons to make sure we get the most recent hover state
-                Container.Panels.ForEach(x => x.Update(new GameTime()));
-
-                // All buttons are no longer hoevered, so return them to its original size
-                if (!Container.Panels.Any(x => x.Button.IsHovered))
-                    Container.Panels.ForEach(x => x.CondenseToOriginalSize());
-            };
 
             Darkness = new Sprite()
             {
@@ -137,58 +114,63 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// <summary>
         ///     Expands the panel to its full width
         /// </summary>
-        public void Expand()
+        public void Expand(GameTime gameTime)
         {
-            Title.Animations.Clear();
-            Title.MoveToX(-ExpandedWidth / 2f + Title.Width / 2f + 20, Easing.OutQuint, 400);
+            const int animTime = 75;
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            Title.X = MathHelper.Lerp(Title.X, -ExpandedWidth / 2f + Title.Width / 2f + 20, (float) Math.Min(dt / animTime, 1));
+
+            Width = MathHelper.Lerp(Width, ExpandedWidth, (float) Math.Min(dt / animTime, 1));
+            Background.X = MathHelper.Lerp(Background.X, -ExpandedWidth / 2f, (float) Math.Min(dt / animTime, 1));
+
+            Darkness.Alpha = MathHelper.Lerp(Darkness.Alpha, 0.45f, (float) Math.Min(dt / animTime, 1));
 
             Subtitle.Visible = true;
-            Subtitle.Alpha = 0;
-            Subtitle.Animations.Clear();
-            Subtitle.FadeTo(1, Easing.Linear, 250);
-            Subtitle.MoveToX(-ExpandedWidth / 2f + Subtitle.Width / 2f + 20, Easing.OutQuint, 400);
-
-            Animations.Clear();
-            ChangeWidthTo(ExpandedWidth, Easing.OutQuint, 400);
-
-            Darkness.ClearAnimations();
-            Darkness.FadeTo(0.45f, Easing.Linear, 200);
+            Subtitle.Alpha = MathHelper.Lerp(Subtitle.Alpha, 1, (float) Math.Min(dt / (animTime + 50), 1));
+            Subtitle.X = MathHelper.Lerp(Subtitle.X, -ExpandedWidth / 2f + Subtitle.Width / 2f + 20, (float) Math.Min(dt / animTime, 1));
         }
 
         /// <summary>
         ///     Condenses the panel to its original size
         /// </summary>
-        public void Condense()
+        public void Condense(GameTime gameTime)
         {
-            Title.Animations.Clear();
-            Title.MoveToX(0, Easing.OutQuint, 400);
+            const int animTime = 100;
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             Subtitle.Visible = false;
             Subtitle.X = 0;
+            Subtitle.Alpha = 0;
 
-            Animations.Clear();
-            ChangeWidthTo(260, Easing.OutQuint, 400);
+            Title.X = MathHelper.Lerp(Title.X, 0, (float) Math.Min(dt / animTime, 1));
+            Background.X = MathHelper.Lerp(Background.X, -450, (float) Math.Min(dt / animTime, 1));
 
-            Darkness.ClearAnimations();
-            Darkness.FadeTo(0.60f, Easing.Linear, 200);
+            Width = MathHelper.Lerp(Width, 260, (float) Math.Min(dt / animTime, 1));
+            Darkness.Alpha = MathHelper.Lerp(Darkness.Alpha, 0.6f, (float) Math.Min(dt / animTime, 1));
         }
 
         /// <summary>
         ///     Condenses the panel back to its original size
         /// </summary>
-        public void CondenseToOriginalSize()
+        public void CondenseToOriginalSize(GameTime gameTime)
         {
-            Title.Animations.Clear();
-            Title.MoveToX(0, Easing.OutQuint, 400);
+            const int animTime = 100;
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            Title.X = MathHelper.Lerp(Title.X, 0, (float) Math.Min(dt / animTime, 1));
 
             Subtitle.Visible = false;
             Subtitle.X = 0;
+            Subtitle.Alpha = 0;
 
-            Animations.Clear();
-            ChangeWidthTo((int) PanelSize.X.Value, Easing.OutQuint, 400);
+            Width = MathHelper.Lerp(Width, PanelSize.X.Value, (float) Math.Min(dt / animTime, 1));
+            Background.X = MathHelper.Lerp(Background.X, -450, (float) Math.Min(dt / animTime, 1));
 
-            Darkness.ClearAnimations();
-            Darkness.FadeTo(0.60f, Easing.Linear, 200);
+            Darkness.Alpha = MathHelper.Lerp(Darkness.Alpha, 0.6f, (float) Math.Min(dt / animTime, 1));
         }
     }
 }
