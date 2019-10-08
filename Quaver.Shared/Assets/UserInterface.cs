@@ -124,5 +124,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D JudgementWindowEditNameButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/edit-name-button.png");
         public static Texture2D JudgementWindowResetButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/JudgementWindows/reset-button.png");
         public static Texture2D SliderProgressBall => TextureManager.Load(@"Quaver.Resources/Textures/UI/slider-progress-ball.png");
+        public static Texture2D JukeboxPlayButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-play-button.png");
+        public static Texture2D JukeboxPauseButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-pause-button.png");
+        public static Texture2D JukeboxHamburgerIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-hamburger-icon.png");
+        public static Texture2D JukeboxBackwardButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-backward-button.png");
     }
 }
