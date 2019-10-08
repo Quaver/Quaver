@@ -33,10 +33,6 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
-        private Jukebox Jukebox { get; }
-
-        /// <summary>
-        /// </summary>
         private MenuPanelContainer PanelContainer { get; set; }
 
         /// <summary>
@@ -49,8 +45,6 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="screen"></param>
         public MainMenuScreenView(QuaverScreen screen) : base(screen)
         {
-            Jukebox = new Jukebox(true);
-
             CreateBackground();
             CreateHeader();
             CreateFooter();
@@ -69,7 +63,6 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Jukebox.Update(gameTime);
             Container?.Update(gameTime);
         }
 

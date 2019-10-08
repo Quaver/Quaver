@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
         ///     Started at -1 because there may not be any tracks to begin with.
         ///     Meaning... the user doesn't have any mapsets loaded.
         /// </summary>
-        private int TrackListQueuePosition { get; set; } = -1;
+        public int TrackListQueuePosition { get; set; } = -1;
 
         /// <summary>
         ///     Dictates if we're in the middle of loading the next track on a new thread.
