@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 X = -2,
                 Size = new ScalableVector2(Width + 10, Height),
-                Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\footer-jukebox-fade.png")
+                Image = UserInterface.JukeboxFade
             };
 
             AddContainedDrawable(Fade);
