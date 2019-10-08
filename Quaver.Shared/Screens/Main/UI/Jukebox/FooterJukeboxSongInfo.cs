@@ -4,6 +4,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Wobble.Assets;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 
         /// <summary>
         /// </summary>
-        private IAudioTrack PreviousAudioTrack { get; set; }
+        private static IAudioTrack PreviousAudioTrack { get; set; }
 
         /// <summary>
         /// </summary>
@@ -40,10 +41,9 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         public FooterJukeboxSongInfo()
         {
-            Size = new ScalableVector2(480, 36);
-            Tint = ColorHelper.HexToColor("#181818");
+            Size = new ScalableVector2(480, 39);
             SetChildrenAlpha = true;
-            AddBorder(Color.MediumPurple, 2);
+            Image = UserInterface.JukeboxInfoBackground;
 
             Alpha = 0;
 
@@ -52,15 +52,15 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Position = new ScalableVector2(10, 0),
-                Tint = Colors.MainAccent,
+                Tint = ColorHelper.HexToColor("##0FBAE5"),
                 Alpha = 0
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Nothing!", 20)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Position = new ScalableVector2(NowPlaying.X + NowPlaying.Width + 10, NowPlaying.Y),
+                Position = new ScalableVector2(NowPlaying.X + NowPlaying.Width + 16, NowPlaying.Y),
                 Alpha = 0
             };
 
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (AudioEngine.Track != PreviousAudioTrack && PreviousAudioTrack != null)
+            if (AudioEngine.Track != PreviousAudioTrack)
                 Activate();
 
             if (Active)
