@@ -129,5 +129,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D JukeboxHamburgerIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-hamburger-icon.png");
         public static Texture2D JukeboxBackwardButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-backward-button.png");
         public static Texture2D JukeboxInfoBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-info-bg.png");
+        public static Texture2D JukeboxInfoButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-info-button.png");
     }
 }

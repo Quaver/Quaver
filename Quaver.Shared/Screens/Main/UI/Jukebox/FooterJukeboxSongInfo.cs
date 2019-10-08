@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 
         /// <summary>
         /// </summary>
-        private static IAudioTrack PreviousAudioTrack { get; set; }
+        private IAudioTrack PreviousAudioTrack { get; set; }
 
         /// <summary>
         /// </summary>
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (AudioEngine.Track != PreviousAudioTrack)
+            if (AudioEngine.Track != PreviousAudioTrack && PreviousAudioTrack != null)
                 Activate();
 
             if (Active)

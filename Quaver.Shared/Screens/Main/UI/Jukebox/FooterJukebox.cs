@@ -133,8 +133,8 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(42, 42),
-                Y = 2
+                Size = new ScalableVector2(40, 40),
+                Y = -1
             };
         }
 
@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         private void CreateInfoIcon()
         {
-            InfoButton = new IconButton(UserInterface.JukeboxHamburgerIcon, (sender, args) =>
+            InfoButton = new IconButton(UserInterface.JukeboxInfoButton, (sender, args) =>
             {
                 if (SongInfo.Active)
                     SongInfo.Deactivate();
@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(24, 24),
+                Size = new ScalableVector2(22, 22),
                 X = 20
             };
 
