@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 {
     public class JukeboxForwardsButton: IconButton
     {
-        public JukeboxForwardsButton(FooterJukebox jukebox) : base(UserInterface.JukeboxBackwardButton,(o, e) => jukebox.SelectNextTrack(Direction.Forward))
+        public JukeboxForwardsButton(FooterJukebox jukebox) : base(UserInterface.JukeboxBackwardButton,(o, e) => jukebox?.SelectNextTrack(Direction.Forward))
         {
             SpriteEffect = SpriteEffects.FlipHorizontally;
         }

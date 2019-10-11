@@ -249,7 +249,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         {
             var game = (QuaverGame) GameBase.Game;
 
-            if (MapManager.Mapsets.Count == 0 || game.CurrentScreen.Exiting)
+            if (MapManager.Mapsets.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
                 return;
 
             try

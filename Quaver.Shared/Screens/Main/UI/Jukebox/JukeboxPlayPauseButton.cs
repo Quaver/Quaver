@@ -62,7 +62,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         private void SetImage()
         {
-            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying || FooterJukebox.LoadingNextTrack)
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying || FooterJukebox != null && FooterJukebox.LoadingNextTrack)
             {
                 if (Image != PauseButton)
                     Image = PauseButton;
