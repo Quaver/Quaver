@@ -30,9 +30,15 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             base.Destroy();
         }
 
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
-            => Value.Text = GetNotesPerSecond().ToString();
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => SetText();
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         private int GetNotesPerSecond()
         {
             if (MapManager.Selected.Value == null)
@@ -41,6 +47,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             return MapManager.Selected.Value.NotesPerSecond;
         }
 
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Value.Text = GetNotesPerSecond().ToString();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => SetText();
+
+        private void SetText() => ScheduleUpdate(() => Value.Text = GetNotesPerSecond().ToString());
     }
 }

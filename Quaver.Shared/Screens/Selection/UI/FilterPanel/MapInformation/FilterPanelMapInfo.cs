@@ -155,22 +155,25 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation
             if (map == null)
                 return;
 
-            ArtistTitle.Text = map.Artist + " - " + map.Title;
+            ScheduleUpdate(() =>
+            {
+                ArtistTitle.Text = map.Artist + " - " + map.Title;
 
-            var mods = ModManager.CurrentModifiersList.Count > 0 ? $" + {ModHelper.GetModsString(ModManager.Mods)}": "";
+                var mods = ModManager.CurrentModifiersList.Count > 0 ? $" + {ModHelper.GetModsString(ModManager.Mods)}": "";
 
-            var windows = JudgementWindowsDatabaseCache.Selected.Value == JudgementWindowsDatabaseCache.Standard
-                ? "" : $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
+                var windows = JudgementWindowsDatabaseCache.Selected.Value == JudgementWindowsDatabaseCache.Standard
+                    ? "" : $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
 
-            DifficultyMods.Text = $"[{map.DifficultyName}]{mods}{windows}";
-            DifficultyMods.TruncateWithEllipsis(480);
+                DifficultyMods.Text = $"[{map.DifficultyName}]{mods}{windows}";
+                DifficultyMods.TruncateWithEllipsis(480);
 
-            //  Reset positions of the text
-            ArtistTitle.ClearAnimations();
-            ArtistTitle.X = 0;
+                //  Reset positions of the text
+                ArtistTitle.ClearAnimations();
+                ArtistTitle.X = 0;
 
-            DifficultyMods.ClearAnimations();
-            DifficultyMods.X = 0;
+                DifficultyMods.ClearAnimations();
+                DifficultyMods.X = 0;
+            });
         }
 
         /// <summary>

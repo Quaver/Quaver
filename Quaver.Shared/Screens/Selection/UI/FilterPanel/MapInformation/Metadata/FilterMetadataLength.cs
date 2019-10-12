@@ -31,10 +31,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             base.Destroy();
         }
 
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
-            => Value.Text = GetLength();
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => SetText();
 
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Value.Text = GetLength();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => SetText();
 
         private string GetLength()
         {
@@ -44,5 +43,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             var length = TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
             return length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
         }
+
+        private void SetText() => ScheduleUpdate(() => Value.Text = GetLength());
     }
 }

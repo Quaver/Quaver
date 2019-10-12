@@ -30,10 +30,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             base.Destroy();
         }
 
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
-            => Value.Text = GetBpm().ToString();
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => ScheduleUpdate(SetText);
 
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Value.Text = GetBpm().ToString();
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => ScheduleUpdate(SetText);
 
         private int GetBpm()
         {
@@ -42,5 +41,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
             return (int) (MapManager.Selected.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods));
         }
+
+        private void SetText() => Value.Text = GetBpm().ToString();
     }
 }

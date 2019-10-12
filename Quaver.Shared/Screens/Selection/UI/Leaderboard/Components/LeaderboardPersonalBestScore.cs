@@ -122,18 +122,21 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         private void OnScoresFetched(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
         {
-            Score?.Destroy();
-
-            if (e.Result.PersonalBest == null)
-                return;
-
-            Score = new DrawableLeaderboardScore(null, e.Result.PersonalBest, 1, true)
+            ScheduleUpdate(() =>
             {
-                Parent = this,
-                Alignment = Alignment.MidCenter
-            };
+                Score?.Destroy();
 
-            Score.UpdateContent(e.Result.PersonalBest, 1);
+                if (e.Result.PersonalBest == null)
+                    return;
+
+                Score = new DrawableLeaderboardScore(null, e.Result.PersonalBest, 1, true)
+                {
+                    Parent = this,
+                    Alignment = Alignment.MidCenter
+                };
+
+                Score.UpdateContent(e.Result.PersonalBest, 1);
+            });
         }
     }
 }

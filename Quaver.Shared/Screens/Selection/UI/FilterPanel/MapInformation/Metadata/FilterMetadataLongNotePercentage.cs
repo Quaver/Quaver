@@ -30,8 +30,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             base.Destroy();
         }
 
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
-            => Value.Text = GetPercentage();
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => SetText();
 
         private string GetPercentage()
         {
@@ -40,5 +39,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
             return ((int) MapManager.Selected.Value.LNPercentage).ToString(CultureInfo.InvariantCulture) + "%";
         }
+
+        private void SetText() => ScheduleUpdate(() => Value.Text = GetPercentage());
     }
 }

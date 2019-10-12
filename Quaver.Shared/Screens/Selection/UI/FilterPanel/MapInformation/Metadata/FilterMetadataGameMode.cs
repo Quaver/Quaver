@@ -30,13 +30,16 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (MapManager.Selected.Value == null)
+            ScheduleUpdate(() =>
             {
-                Value.Text = "None";
-                return;
-            }
+                if (MapManager.Selected.Value == null)
+                {
+                    Value.Text = "None";
+                    return;
+                }
 
-            Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode);
+                Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode);
+            });
         }
     }
 }
