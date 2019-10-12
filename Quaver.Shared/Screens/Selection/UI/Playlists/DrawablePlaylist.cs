@@ -59,12 +59,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             Item = item;
             Index = index;
 
-            DrawableContainer.UpdateContent(Item, Index);
+            ScheduleUpdate(() =>
+            {
+                DrawableContainer.UpdateContent(Item, Index);
 
-            if (IsSelected)
-                Select();
-            else
-                Deselect();
+                if (IsSelected)
+                    Select();
+                else
+                    Deselect();
+            });
         }
 
         /// <summary>
