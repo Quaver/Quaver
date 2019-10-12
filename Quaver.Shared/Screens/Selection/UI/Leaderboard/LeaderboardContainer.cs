@@ -305,37 +305,34 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             Logger.Important($"Fetched {e.Result.Scores?.Count} {ConfigManager.LeaderboardSection?.Value} scores for map: {e?.Input} | " +
                              $"Has PB: {e.Result.PersonalBest != null}", LogType.Runtime);
 
-            ScheduleUpdate(() =>
+            StopLoading();
+
+            Children.ForEach(x =>
             {
-                StopLoading();
-
-                Children.ForEach(x =>
-                {
-                    if (x is IFetchedScoreHandler handler)
-                        handler.HandleFetchedScores(e.Input, e.Result);
-                });
-
-                ScoresContainer.HandleFetchedScores(e.Input, e.Result);
-
-                PersonalBestTrophy.ClearAnimations();
-                PersonalBestRank.ClearAnimations();
-
-                // Handle personal best rank
-                if (ConfigManager.LeaderboardSection != null && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
-                {
-                    var rank = e.Result.Scores?.FindIndex(x => x.Name == e.Result.PersonalBest?.Name);
-
-                    if (rank == -1)
-                        return;
-
-                    PersonalBestRank.Text = $"#{rank + 1} of Top {e.Result.Scores?.Count}";
-                    PersonalBestTrophy.X = -PersonalBestRank.Width - 10;
-
-                    const int animTime = 250;
-                    PersonalBestTrophy.FadeTo(1, Easing.Linear, animTime);
-                    PersonalBestRank.FadeTo(1, Easing.Linear, animTime);
-                }
+                if (x is IFetchedScoreHandler handler)
+                    handler.HandleFetchedScores(e.Input, e.Result);
             });
+
+            ScoresContainer.HandleFetchedScores(e.Input, e.Result);
+
+            PersonalBestTrophy.ClearAnimations();
+            PersonalBestRank.ClearAnimations();
+
+            // Handle personal best rank
+            if (ConfigManager.LeaderboardSection != null && ConfigManager.LeaderboardSection.Value != LeaderboardType.Local)
+            {
+                var rank = e.Result.Scores?.FindIndex(x => x.Name == e.Result.PersonalBest?.Name);
+
+                if (rank == -1)
+                    return;
+
+                PersonalBestRank.Text = $"#{rank + 1} of Top {e.Result.Scores?.Count}";
+                PersonalBestTrophy.X = -PersonalBestRank.Width - 10;
+
+                const int animTime = 250;
+                PersonalBestTrophy.FadeTo(1, Easing.Linear, animTime);
+                PersonalBestRank.FadeTo(1, Easing.Linear, animTime);
+            }
         }
 
         /// <summary>
@@ -345,10 +342,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            e.OldValue?.ClearScores();
-            e.Value?.ClearScores();
+            ScheduleUpdate(() =>
+            {
+                e.OldValue?.ClearScores();
+                e.Value?.ClearScores();
 
-            FetchScores();
+                FetchScores();
+            });
         }
 
         /// <summary>
