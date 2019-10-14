@@ -10,6 +10,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Music.Components;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -22,7 +23,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Main.UI.Jukebox
 {
-    public class FooterJukebox : ImageButton
+    public class FooterJukebox : ImageButton, IJukebox
     {
         /// <summary>
         /// </summary>
@@ -69,7 +70,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         ///     Started at -1 because there may not be any tracks to begin with,
         ///     meaning the user doesn't have any mapsets loaded.
         /// </summary>
-        public int TrackListQueuePosition { get; private set; } = -1;
+        public int TrackListQueuePosition { get; set; } = -1;
 
         /// <summary>
         /// </summary>
