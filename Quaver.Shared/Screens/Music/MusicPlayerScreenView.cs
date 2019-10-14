@@ -7,6 +7,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Main.UI.Jukebox;
 using Quaver.Shared.Screens.Music.Components;
 using Quaver.Shared.Screens.Music.UI.Controller;
+using Quaver.Shared.Screens.Music.UI.Controller.Search;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -71,6 +72,7 @@ namespace Quaver.Shared.Screens.Music
             CreateSearchPanel();
             CreateSongContainer();
 
+            SearchPanel.Parent = ContentContainer;
             Header.Parent = Container;
             Footer.Parent = Container;
 
