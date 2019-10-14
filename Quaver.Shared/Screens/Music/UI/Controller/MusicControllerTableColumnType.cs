@@ -4,7 +4,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
     {
         Title,
         Artist,
-        DateAdded,
+        Creator,
         BPM,
         Length
     }

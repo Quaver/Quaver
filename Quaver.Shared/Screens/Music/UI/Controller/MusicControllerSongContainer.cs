@@ -56,9 +56,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                         width = Width * 0.25f;
                         title = "Artist";
                         break;
-                    case MusicControllerTableColumnType.DateAdded:
+                    case MusicControllerTableColumnType.Creator:
                         width = Width * 0.15f;
-                        title = "Date";
+                        title = "Creator";
                         break;
                     case MusicControllerTableColumnType.BPM:
                         width = Width * 0.10f;

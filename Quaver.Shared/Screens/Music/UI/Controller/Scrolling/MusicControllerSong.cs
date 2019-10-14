@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -21,10 +22,14 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 {
     public sealed class MusicControllerSong : PoolableSprite<Mapset>
     {
+        /// <summary>
+        /// </summary>
+        public static int SongHeight => 53;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int HEIGHT { get; } = 53;
+        public override int HEIGHT { get; } = SongHeight;
 
         /// <summary>
         /// </summary>
@@ -36,7 +41,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus DateAdded { get; set; }
+        private SpriteTextPlus Creator { get; set; }
 
         /// <summary>
         /// </summary>
@@ -48,7 +53,15 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
         /// <summary>
         /// </summary>
-        private ImageButton Button { get; }
+        private ImageButton Button { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite BottomLine { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Dictionary<MusicControllerTableColumnType, SpriteTextPlus> ColumnData { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -61,33 +74,46 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             Size = new ScalableVector2(container.Width, HEIGHT);
             Alpha = 0;
 
+            CreateButton();
             CreateTitle();
             CreateArtist();
             CreateDateAdded();
             CreateBpm();
             CreateLength();
+            CreateBottomLine();
 
-            Button = new ImageButton(UserInterface.BlankBox, (o, e) =>
-                {
-                    MapManager.Selected.Value = Item.Maps.First();
-                })
+            // Allows for automatic positioning of the data within the columns
+            ColumnData = new Dictionary<MusicControllerTableColumnType, SpriteTextPlus>
             {
-                Parent = this,
-                Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(Width - 50, Height - 2),
-                UsePreviousSpriteBatchOptions = true,
-                Alpha = 0,
-                Tint = Colors.MainBlue
+                {MusicControllerTableColumnType.Title, Title},
+                {MusicControllerTableColumnType.Artist, Artist},
+                {MusicControllerTableColumnType.Creator, Creator},
+                {MusicControllerTableColumnType.BPM, Bpm},
+                {MusicControllerTableColumnType.Length, Length}
             };
 
-            new Sprite()
-            {
-                Parent = this,
-                UsePreviousSpriteBatchOptions = true,
-                Alignment = Alignment.BotCenter,
-                Size = new ScalableVector2(Width - 50, 1),
-                Alpha = 0.45f
-            };
+            MapManager.Selected.ValueChanged += OnMapChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleButtonAnimations();
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
+
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -100,44 +126,30 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             Item = item;
             Index = index;
 
-            Tint = Index % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
+            ScheduleUpdate(() =>
+            {
+                Tint = Index % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
 
-            var container = (MusicControllerScrollContainer) Container;
+                Title.Text = item.Title;
+                Artist.Text = item.Artist;
+                Creator.Text = item.Creator;
+                Bpm.Text = $"{(int) Item.Maps.First().Bpm}".ToString();
+                Length.Text = $"{new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(Item.Maps.First().SongLength):mm:ss}";
 
-            var titleColumn = container.SongContainer.Columns.Find(x => x.Type == MusicControllerTableColumnType.Title);
-            Title.Text = item.Title;
-            Title.TruncateWithEllipsis((int) titleColumn.Container.Width - 50);
-            Title.X = titleColumn.Container.X + titleColumn.Header.X;
+                var container = (MusicControllerScrollContainer) Container;
 
-            Title.Tint = MapManager.Selected.Value?.Mapset == Item ? Colors.MainAccent : Color.White;
+                // Truncate and position the text
+                foreach (var data in ColumnData)
+                {
+                    var column = container.SongContainer.Columns.Find(x => x.Type == data.Key);
 
-            var artistColumn = container.SongContainer.Columns.Find(x => x.Type == MusicControllerTableColumnType.Artist);
-            Artist.Text = item.Artist;
-            Artist.TruncateWithEllipsis((int) artistColumn.Container.Width - 50);
-            Artist.X = artistColumn.Container.X + artistColumn.Header.X;
-            Artist.Tint = MapManager.Selected.Value?.Mapset == Item ? Colors.MainAccent : Color.White;
+                    data.Value.TruncateWithEllipsis((int) column.Container.Width - 50);
+                    data.Value.X = column.Container.X + column.Header.X;
+                    // data.Value.Tint = MapManager.Selected.Value?.Mapset == Item ? ColorHelper.HexToColor("#57D6FF") : Color.White;
+                }
 
-            var dateColumn = container.SongContainer.Columns.Find(x => x.Type == MusicControllerTableColumnType.DateAdded);
-            DateAdded.Text = "2 days ago";
-            DateAdded.TruncateWithEllipsis((int) dateColumn.Container.Width - 50);
-            DateAdded.X = dateColumn.Container.X + dateColumn.Header.X;
-            DateAdded.Tint = MapManager.Selected.Value?.Mapset == Item ? Colors.MainAccent : Color.White;
-
-            var bpmColumn = container.SongContainer.Columns.Find(x => x.Type == MusicControllerTableColumnType.BPM);
-            Bpm.Text = $"{(int) Item.Maps.First().Bpm}".ToString();
-            Bpm.TruncateWithEllipsis((int) bpmColumn.Container.Width - 50);
-            Bpm.X = bpmColumn.Container.X + bpmColumn.Header.X;
-            Bpm.Tint = MapManager.Selected.Value?.Mapset == Item ? Colors.MainAccent : Color.White;
-
-            var lengthColumn = container.SongContainer.Columns.Find(x => x.Type == MusicControllerTableColumnType.Length);
-
-            var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(Item.Maps.First().SongLength);
-            Length.Text = currTime.ToString("mm:ss");
-            Length.TruncateWithEllipsis((int) lengthColumn.Container.Width - 50);
-            Length.X = lengthColumn.Container.X + lengthColumn.Header.X;
-            Length.Tint = MapManager.Selected.Value?.Mapset == Item ? Colors.MainAccent : Color.White;
-
-            Button.Alpha = MapManager.Selected.Value?.Mapset == Item ? 0.35f : 0;
+                Button.Alpha = MapManager.Selected.Value?.Mapset == Item ? 0.35f : 0;
+            });
         }
 
         /// <summary>
@@ -168,7 +180,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void CreateDateAdded()
         {
-            DateAdded = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -176,6 +188,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             };
         }
 
+        /// <summary>
+        /// </summary>
         private void CreateBpm()
         {
             Bpm = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
@@ -186,6 +200,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             };
         }
 
+        /// <summary>
+        /// </summary>
         private void CreateLength()
         {
             Length = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
@@ -194,6 +210,60 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
                 Alignment = Alignment.MidLeft,
                 UsePreviousSpriteBatchOptions = true
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateButton() => Button = new MusicControllerSongButton(Container, UserInterface.BlankBox,
+            (o, e) =>
+            {
+                if (MapManager.Selected.Value?.Mapset == Item.Maps.First().Mapset)
+                    return;
+
+                MapManager.Selected.Value = Item.Maps.First();
+            })
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(Width - 50, Height - 2),
+            UsePreviousSpriteBatchOptions = true,
+            Alpha = 0,
+            Tint = Colors.MainBlue
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateBottomLine() => BottomLine = new Sprite
+        {
+            Parent = this,
+            UsePreviousSpriteBatchOptions = true,
+            Alignment = Alignment.BotCenter,
+            Size = new ScalableVector2(Width - 50, 1),
+            Alpha = 0.45f
+        };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => UpdateContent(Item, Index);
+
+        /// <summary>
+        /// </summary>
+        private void HandleButtonAnimations()
+        {
+            if (MapManager.Selected.Value?.Mapset == Item)
+            {
+                Button.Tint = new Color(87, 214, 255);
+                Button.Alpha = 0.45f;
+            }
+            else if (Button.IsHovered)
+            {
+                Button.Tint = Color.White;
+                Button.Alpha = 0.45f;
+            }
+            else
+                Button.Alpha = 0;
         }
     }
 }

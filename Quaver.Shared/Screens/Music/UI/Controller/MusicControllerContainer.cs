@@ -4,19 +4,28 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Main.UI.Jukebox;
+using Quaver.Shared.Screens.Music.Components;
 using TagLib.Ape;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Music.UI.Controller
 {
-    public class MusicControllerContainer : Sprite
+    public class MusicControllerContainer : ImageButton
     {
+        /// <summary>
+        /// </summary>
+        private MusicPlayerJukebox Jukebox { get; set; }
+
         /// <summary>
         /// </summary>
         private MusicControllerBackground Background { get; set; }
@@ -55,8 +64,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
 
         /// <summary>
         /// </summary>
-        public MusicControllerContainer()
+        public MusicControllerContainer(MusicPlayerJukebox jukebox) : base(UserInterface.BlankBox)
         {
+            Jukebox = jukebox;
+
             Alpha = 0;
             Size = new ScalableVector2(WindowManager.Width - 622, 200);
 
@@ -71,25 +82,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             CreateTimeLeft();
 
             SetText();
+
             MapManager.Selected.ValueChanged += OnMapChanged;
-        }
-
-        public override void Destroy()
-        {
-            // ReSharper disable once DelegateSubtraction
-            MapManager.Selected.ValueChanged -= OnMapChanged;
-            base.Destroy();
-        }
-
-        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => SetText();
-
-        private void SetText()
-        {
-            Title.Text = MapManager.Selected.Value.Title;
-            Title.TruncateWithEllipsis((int) Width - 50);
-
-            Artist.Text = MapManager.Selected.Value.Artist;
-            Artist.TruncateWithEllipsis((int) Width - 50);
+            Clicked += OnClicked;
         }
 
         /// <inheritdoc />
@@ -98,16 +93,19 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (AudioEngine.Track != null)
-            {
-                var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(AudioEngine.Track.Position);
-                CurrentTime.Text = currTime.ToString("mm:ss");
-
-                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Position);
-                TimeLeft.Text = "-" + timeLeft.ToString("mm:ss");
-            }
-
+            UpdateSongTime();
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -123,7 +121,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Y = 28,
-                Tint = Colors.MainAccent
+                Tint = ColorHelper.HexToColor("#57D6FF")
             };
         }
 
@@ -144,7 +142,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         private void CreateProgressBar()
         {
             ProgressBar = new JukeboxProgressBar(new Vector2(Width, 5), 0, 1000, 560,
-                Color.LightGray, Colors.SecondaryAccent)
+                Color.LightGray, ColorHelper.HexToColor("#57D6FF"))
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft
@@ -168,7 +166,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateBackwardsButton()
         {
-            BackwardsButton = new JukeboxBackwardsButton(null)
+            BackwardsButton = new JukeboxBackwardsButton(Jukebox)
             {
                 Parent = PlayPauseButton,
                 Alignment = Alignment.MidCenter,
@@ -181,7 +179,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateForwardsButton()
         {
-            ForwardsButton = new JukeboxForwardsButton(null)
+            ForwardsButton = new JukeboxForwardsButton(Jukebox)
             {
                 Parent = PlayPauseButton,
                 Alignment = Alignment.MidCenter,
@@ -214,6 +212,64 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Y = CurrentTime.Y,
                 X = -CurrentTime.X
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => SetText();
+
+        /// <summary>
+        /// </summary>
+        private void SetText()
+        {
+            ScheduleUpdate(() =>
+            {
+                Title.Text = MapManager.Selected.Value.Title;
+                Title.TruncateWithEllipsis((int) Width - 50);
+
+                Artist.Text = MapManager.Selected.Value.Artist;
+                Artist.TruncateWithEllipsis((int) Width - 50);
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateSongTime()
+        {
+            if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
+                return;
+
+            var unix = new DateTime(1970, 1, 1);
+
+            var currTime = unix + TimeSpan.FromMilliseconds(AudioEngine.Track.Position);
+            CurrentTime.Text = currTime.ToString("mm:ss");
+
+            var timeLeft = unix + TimeSpan.FromMilliseconds(AudioEngine.Track.Length - AudioEngine.Track.Position);
+            TimeLeft.Text = "-" + timeLeft.ToString("mm:ss");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnClicked(object sender, EventArgs e)
+        {
+            if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
+                return;
+
+            try
+            {
+                var percentage = (MouseManager.CurrentState.X - AbsolutePosition.X) / AbsoluteSize.X;
+
+                lock (AudioEngine.Track)
+                    AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, LogType.Runtime);
+            }
         }
     }
 }
