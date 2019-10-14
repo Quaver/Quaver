@@ -100,7 +100,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
             Darkness.ClearAnimations();
-            Darkness.FadeTo(1, Easing.Linear, 100);
+            Darkness.FadeTo(1, Easing.Linear, 150);
 
             BackgroundHelper.Load(e.Value);
         }
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             Background.Image = e.Texture;
 
             Darkness.ClearAnimations();
-            Darkness.FadeTo(DarknessVisibleAlpha, Easing.Linear, 100);
+            Darkness.FadeTo(DarknessVisibleAlpha, Easing.Linear, 150);
         }
     }
 }
