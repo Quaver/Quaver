@@ -1,5 +1,6 @@
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Modifiers;
 
 namespace Quaver.Shared.Screens.Music
 {
@@ -12,7 +13,11 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        public MusicPlayerScreen() => View = new MusicPlayerScreenView(this);
+        public MusicPlayerScreen()
+        {
+            ModManager.RemoveSpeedMods();
+            View = new MusicPlayerScreenView(this);
+        }
 
         /// <inheritdoc />
         /// <summary>
