@@ -95,17 +95,20 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         {
             lock (AvailableMapsets.Value)
             {
-                var count = GetMapCount();
+                ScheduleUpdate(() =>
+                {
+                    var count = GetMapCount();
 
-                TextCount.Text = $"{count:n0}";
+                    TextCount.Text = $"{count:n0}";
 
-                if (count == 0 || count > 1)
-                    TextMapsFound.Text = MapsetsOnly ? $"RESULTS FOUND" : $"MAPS FOUND";
-                else
-                    TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
+                    if (count == 0 || count > 1)
+                        TextMapsFound.Text = MapsetsOnly ? $"RESULTS FOUND" : $"MAPS FOUND";
+                    else
+                        TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
 
-                TextMapsFound.X = TextCount.Width + TextSpacing;
-                Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width), (int) TextMapsFound.Height);
+                    TextMapsFound.X = TextCount.Width + TextSpacing;
+                    Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width), (int) TextMapsFound.Height);
+                });
             }
         }
 

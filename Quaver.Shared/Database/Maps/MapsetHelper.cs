@@ -42,12 +42,12 @@ namespace Quaver.Shared.Database.Maps
         ///     Filters mapsets to use in song select
         /// </summary>
         /// <returns></returns>
-        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery)
+        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery, bool ignoreGrouping = false)
         {
             var mapsets = MapManager.Mapsets;
 
             // Handle playlists
-            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
             {
                 mapsets = PlaylistManager.Selected.Value == null
                     ? new List<Mapset>()
@@ -56,10 +56,10 @@ namespace Quaver.Shared.Database.Maps
 
             var searched = SearchMapsets(mapsets, searchQuery.Value);
 
-            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
-            return OrderMapsetsByConfigValue(searched, ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
+            return OrderMapsetsByConfigValue(searched, (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists));
         }
 
         /// <summary>

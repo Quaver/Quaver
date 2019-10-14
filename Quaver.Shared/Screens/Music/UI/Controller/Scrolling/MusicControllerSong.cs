@@ -63,6 +63,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private Dictionary<MusicControllerTableColumnType, SpriteTextPlus> ColumnData { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private bool IsSelected => Item.Maps.Contains(MapManager.Selected.Value);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -147,8 +151,6 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
                     data.Value.X = column.Container.X + column.Header.X;
                     // data.Value.Tint = MapManager.Selected.Value?.Mapset == Item ? ColorHelper.HexToColor("#57D6FF") : Color.White;
                 }
-
-                Button.Alpha = MapManager.Selected.Value?.Mapset == Item ? 0.35f : 0;
             });
         }
 
@@ -228,7 +230,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             Size = new ScalableVector2(Width - 50, Height - 2),
             UsePreviousSpriteBatchOptions = true,
             Alpha = 0,
-            Tint = Colors.MainBlue
+            Tint = Colors.MainBlue,
+            Depth = 1
         };
 
         /// <summary>
@@ -252,7 +255,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void HandleButtonAnimations()
         {
-            if (MapManager.Selected.Value?.Mapset == Item)
+            if (IsSelected)
             {
                 Button.Tint = new Color(87, 214, 255);
                 Button.Alpha = 0.45f;

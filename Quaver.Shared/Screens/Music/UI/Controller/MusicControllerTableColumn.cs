@@ -1,4 +1,6 @@
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -46,7 +48,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             {
                 Parent = Container,
                 X = 36,
-                Y = 16
+                Y = 16,
+                Tint = ColorHelper.HexToColor("#57D6FF")
             };
 
             DividerLine = new Sprite()

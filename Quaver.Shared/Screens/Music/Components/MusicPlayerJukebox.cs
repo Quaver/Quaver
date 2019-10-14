@@ -212,6 +212,8 @@ namespace Quaver.Shared.Screens.Music.Components
         {
             DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
             DiscordHelper.Presence.State = "Listening";
+            DiscordHelper.Presence.PartySize = 1;
+            DiscordHelper.Presence.PartyMax = 16;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Threading;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
@@ -7,11 +9,21 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 {
     public class MusicControllerSearchPanel : Sprite
     {
+        /// <summary>
+        /// </summary>
+        public Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
+        /// </summary>
+        public Bindable<List<Mapset>> AvailableSongs { get; }
+
         /// <summary>
         ///     Items that are aligned from right to left
         /// </summary>
@@ -35,8 +47,15 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
         /// <summary>
         /// </summary>
-        public MusicControllerSearchPanel(float width)
+        private TaskHandler<int, int> FilterMapsetsTask { get; }
+
+        /// <summary>
+        /// </summary>
+        public MusicControllerSearchPanel(float width, Bindable<string> currentSearchQuery, Bindable<List<Mapset>> availableSongs)
         {
+            CurrentSearchQuery = currentSearchQuery;
+            AvailableSongs = availableSongs;
+
             Size = new ScalableVector2(width, 74);
             Tint = ColorHelper.HexToColor("#242424");
 
@@ -48,6 +67,11 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             CreateSongsFound();
 
             AlignRightItems();
+
+            FilterMapsetsTask = new TaskHandler<int, int>(StartFilterMapsetsTask);
+            CurrentSearchQuery.ValueChanged += (sender, args) => StartFilterMapsetsTask();
+
+            FilterMapsets();
         }
 
         /// <summary>
@@ -103,13 +127,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new FilterPanelSearchBox(new Bindable<string>("")
-            {
-                Value = ""
-            }, new Bindable<List<Mapset>>(null)
-            {
-                Value = null
-            }, "Type to search...")
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight
@@ -122,10 +140,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         /// </summary>
         private void CreateSongsFound()
         {
-            SongsFound = new FilterPanelMapsAvailable(new Bindable<List<Mapset>>(MapManager.Mapsets)
-            {
-                Value = MapManager.Mapsets
-            }, true)
+            SongsFound = new FilterPanelMapsAvailable(AvailableSongs, true)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -133,6 +148,40 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             };
 
             RightItems.Add(SongsFound);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void StartFilterMapsetsTask()
+        {
+            if (FilterMapsetsTask.IsRunning)
+                FilterMapsetsTask.Cancel();
+
+            FilterMapsetsTask.Run(0);
+        }
+
+        /// <summary>
+        ///     Begins the task to filter mapsets
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int StartFilterMapsetsTask(int a, CancellationToken token)
+        {
+            FilterMapsets();
+            return 0;
+        }
+
+        /// <summary>
+        ///     Handles filtering mapsets for the screen
+        /// </summary>
+        private void FilterMapsets()
+        {
+            lock (AvailableSongs.Value)
+            {
+                Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}`", LogType.Runtime, false);
+                AvailableSongs.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery, true);
+            }
         }
     }
 }

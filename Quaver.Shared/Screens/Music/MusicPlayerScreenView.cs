@@ -23,6 +23,10 @@ namespace Quaver.Shared.Screens.Music
     public class MusicPlayerScreenView : ScreenView
     {
         /// <summary>
+        /// </summary>
+        public MusicPlayerScreen PlayerScreen => (MusicPlayerScreen) Screen;
+
+        /// <summary>
         ///     The main menu background.
         /// </summary>
         public BackgroundImage Background { get; set; }
@@ -129,7 +133,8 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        private void CreateSearchPanel() => SearchPanel = new MusicControllerSearchPanel(ControllerContainer.Width)
+        private void CreateSearchPanel() => SearchPanel = new MusicControllerSearchPanel(ControllerContainer.Width,
+            PlayerScreen.CurrentSearchQuery, PlayerScreen.AvailableSongs)
         {
             Parent = ContentContainer,
             Alignment = ControllerContainer.Alignment,
@@ -139,7 +144,7 @@ namespace Quaver.Shared.Screens.Music
         /// <summary>
         /// </summary>
         private void CreateSongContainer() => SongContainer = new MusicControllerSongContainer(new ScalableVector2(ControllerContainer.Width,
-            WindowManager.Height - Footer.Height - SearchPanel.Y - SearchPanel.Height))
+            WindowManager.Height - Footer.Height - SearchPanel.Y - SearchPanel.Height), PlayerScreen.AvailableSongs)
         {
             Parent = ContentContainer,
             Alignment = ControllerContainer.Alignment,

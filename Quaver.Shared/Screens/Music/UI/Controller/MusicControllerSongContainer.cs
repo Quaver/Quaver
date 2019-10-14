@@ -6,6 +6,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Music.UI.Controller.Scrolling;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -15,7 +16,11 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
     {
         /// <summary>
         /// </summary>
-        public  List<MusicControllerTableColumn> Columns { get; private set; }
+        private Bindable<List<Mapset>> AvailableSongs { get; }
+
+        /// <summary>
+        /// </summary>
+        public List<MusicControllerTableColumn> Columns { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -24,8 +29,11 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        public MusicControllerSongContainer(ScalableVector2 size)
+        /// <param name="availableSongs"></param>
+        public MusicControllerSongContainer(ScalableVector2 size, Bindable<List<Mapset>> availableSongs)
         {
+            AvailableSongs = availableSongs;
+            
             Tint = ColorHelper.HexToColor("#2F2F2F");
             Size = size;
 
@@ -97,7 +105,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         {
             var size = new ScalableVector2(Width, Height - Columns.First().DividerLine.Y - Columns.First().DividerLine.Height);
 
-            ScrollContainer = new MusicControllerScrollContainer(this, MapManager.Mapsets, size)
+            ScrollContainer = new MusicControllerScrollContainer(this, AvailableSongs, size)
             {
                 Parent = this,
                 Y = Columns.First().DividerLine.Y + Columns.First().DividerLine.Height

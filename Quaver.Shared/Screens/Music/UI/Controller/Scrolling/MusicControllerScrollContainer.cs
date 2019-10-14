@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
@@ -17,6 +18,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
     {
         /// <summary>
         /// </summary>
+        private Bindable<List<Mapset>> AvailableSongs { get; }
+
+        /// <summary>
+        /// </summary>
         public MusicControllerSongContainer SongContainer { get; }
 
         /// <inheritdoc />
@@ -24,10 +29,13 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         /// <param name="songContainer"></param>
         /// <param name="availableItems"></param>
+        /// <param name="availableSongs"></param>
         /// <param name="size"></param>
-        public MusicControllerScrollContainer(MusicControllerSongContainer songContainer, List<Mapset> availableItems, ScalableVector2 size)
-            : base(availableItems, 16, 0, size, size)
+        public MusicControllerScrollContainer(MusicControllerSongContainer songContainer, Bindable<List<Mapset>> availableSongs, ScalableVector2 size)
+            : base(availableSongs.Value, 16, 0, size, size)
         {
+            AvailableSongs = availableSongs;
+
             SongContainer = songContainer;
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
@@ -40,9 +48,13 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
             Alpha = 0;
 
+            AvailableItems = AvailableSongs.Value;
+
             SetPoolStartingIndex();
             CreatePool();
             SnapToSelected();
+
+            AvailableSongs.ValueChanged += OnAvailableSongsChanged;
         }
 
         /// <inheritdoc />
@@ -57,7 +69,18 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
             PositionAndContainPoolObjects();
+
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            AvailableSongs.ValueChanged -= OnAvailableSongsChanged;
+
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -72,12 +95,12 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// </summary>
         private void SetPoolStartingIndex()
         {
-            PoolStartingIndex = MathHelper.Clamp(AvailableItems.IndexOf(MapManager.Selected.Value.Mapset), 0,
-                AvailableItems.Count - PoolSize - 1);
+            var index = AvailableSongs.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+
+            PoolStartingIndex = MathHelper.Clamp(index, 0, AvailableSongs.Value.Count - PoolSize - 1);
 
             if (PoolStartingIndex == -1)
                 PoolStartingIndex = 0;
-
         }
 
         /// <summary>
@@ -104,6 +127,28 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
                 if (Pool[i].Parent != ContentContainer)
                     AddContainedDrawable(Pool[i]);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAvailableSongsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
+        {
+            lock (AvailableSongs.Value)
+            {
+                AvailableItems = e.Value;
+
+                ScheduleUpdate(() =>
+                {
+                    Pool.ForEach(x => x.Destroy());
+                    Pool.Clear();
+
+                    SetPoolStartingIndex();
+                    CreatePool();
+                    SnapToSelected();
+                });
             }
         }
     }
