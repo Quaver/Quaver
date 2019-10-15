@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Music
         /// <param name="screen"></param>
         public MusicPlayerScreenView(Screen screen) : base(screen)
         {
-            Jukebox = new MusicPlayerJukebox {Parent = Container};
+            Jukebox = new MusicPlayerJukebox(PlayerScreen.AvailableSongs) {Parent = Container};
 
             CreateBackground();
             CreateMenuHeader();

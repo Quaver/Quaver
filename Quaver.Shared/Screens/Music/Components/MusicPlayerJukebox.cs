@@ -16,6 +16,10 @@ namespace Quaver.Shared.Screens.Music.Components
     public class MusicPlayerJukebox : Container, IJukebox
     {
         /// <summary>
+        /// </summary>
+        private Bindable<List<Mapset>> AvailableSongs { get; }
+
+        /// <summary>
         ///     The list of tracks (maps) that were played during this jukebox section,
         ///     so we can go to the previous/next song.
         /// </summary>
@@ -35,8 +39,9 @@ namespace Quaver.Shared.Screens.Music.Components
 
         /// <summary>
         /// </summary>
-        public MusicPlayerJukebox()
+        public MusicPlayerJukebox(Bindable<List<Mapset>> availableSongs)
         {
+            AvailableSongs = availableSongs;
             MapManager.Selected.ValueChanged += OnMapChanged;
 
             // If a track is already playing, add it to the queue.
@@ -82,7 +87,7 @@ namespace Quaver.Shared.Screens.Music.Components
                 return;
 
             // Start selecting random tracks.
-            if (MapManager.Mapsets.Count != 0 && AudioEngine.Track == null || AudioEngine.Track != null &&
+            if (AvailableSongs.Value.Count != 0 && AudioEngine.Track == null || AudioEngine.Track != null &&
                 AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
             {
                 SelectNextTrack(Direction.Forward);
@@ -96,7 +101,7 @@ namespace Quaver.Shared.Screens.Music.Components
         {
             var game = (QuaverGame) GameBase.Game;
 
-            if (MapManager.Mapsets.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
+            if (AvailableSongs.Value.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
                 return;
 
             try
@@ -107,10 +112,10 @@ namespace Quaver.Shared.Screens.Music.Components
                         // We ran out of songs to play in the queue, so we need to pick a new one
                         if (TrackListQueuePosition == TrackListQueue.Count - 1)
                         {
-                            var index = MapManager.Mapsets.IndexOf(MapManager.Selected.Value.Mapset);
+                            var index = AvailableSongs.Value.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
-                            if (index != -1 && index + 1 < MapManager.Mapsets.Count)
-                                MapManager.Selected.Value = MapManager.Mapsets[index + 1].Maps.First();
+                            if (index != -1 && index + 1 < AvailableSongs.Value.Count)
+                                MapManager.Selected.Value = AvailableSongs.Value[index + 1].Maps.First();
                         }
                         else if (TrackListQueuePosition + 1 < TrackListQueue.Count)
                         {
