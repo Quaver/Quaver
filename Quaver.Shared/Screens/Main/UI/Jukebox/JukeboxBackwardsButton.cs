@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Music.Components;
 using Wobble.Assets;
 using Wobble.Graphics;
 
@@ -10,7 +11,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
 {
     public class JukeboxBackwardsButton : IconButton
     {
-        public JukeboxBackwardsButton(FooterJukebox jukebox) : base(UserInterface.JukeboxBackwardButton,(o, e) =>
+        public JukeboxBackwardsButton(IJukebox jukebox) : base(UserInterface.JukeboxBackwardButton,(o, e) =>
             {
                 if (AudioEngine.Track == null)
                     return;

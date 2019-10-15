@@ -42,12 +42,12 @@ namespace Quaver.Shared.Database.Maps
         ///     Filters mapsets to use in song select
         /// </summary>
         /// <returns></returns>
-        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery)
+        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery, bool ignoreGrouping = false)
         {
             var mapsets = MapManager.Mapsets;
 
             // Handle playlists
-            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
             {
                 mapsets = PlaylistManager.Selected.Value == null
                     ? new List<Mapset>()
@@ -56,10 +56,14 @@ namespace Quaver.Shared.Database.Maps
 
             var searched = SearchMapsets(mapsets, searchQuery.Value);
 
-            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
-            return OrderMapsetsByConfigValue(searched, ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists);
+            var separateMapsets = !ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
+            var gameModes = ignoreGrouping ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) { Value = SelectFilterGameMode.All } : null;
+            var orderMapsetsBy = ignoreGrouping ? ConfigManager.MusicPlayerOrderMapsBy : null;
+
+            return OrderMapsetsByConfigValue(searched, separateMapsets, gameModes, orderMapsetsBy);
         }
 
         /// <summary>
@@ -229,13 +233,23 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <param name="separateMapsets"></param>
+        /// <param name="gameMode"></param>
+        /// <param name="orderMapsetsBy"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets, bool separateMapsets = true)
+        internal static List<Mapset> OrderMapsetsByConfigValue(List<Mapset> mapsets, bool separateMapsets = true,
+            Bindable<SelectFilterGameMode> gameMode = null, Bindable<OrderMapsetsBy> orderMapsetsBy = null)
         {
+            // Default to song select filter options
+            if (gameMode == null)
+                gameMode = ConfigManager.SelectFilterGameModeBy;
+
+            if (orderMapsetsBy == null)
+                orderMapsetsBy = ConfigManager.SelectOrderMapsetsBy;
+
             var mapsetsToRemove = new List<Mapset>();
 
-            switch (ConfigManager.SelectFilterGameModeBy?.Value)
+            switch (gameMode?.Value)
             {
                 case SelectFilterGameMode.All:
                     break;
@@ -263,7 +277,7 @@ namespace Quaver.Shared.Database.Maps
 
             mapsetsToRemove.ForEach(x => mapsets.Remove(x));
 
-            switch (ConfigManager.SelectOrderMapsetsBy?.Value)
+            switch (orderMapsetsBy?.Value)
             {
                 case OrderMapsetsBy.Artist:
                     return OrderMapsetsByArtist(mapsets);

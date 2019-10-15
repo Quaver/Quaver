@@ -16,14 +16,18 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         private Bindable<List<Mapset>> AvailableMapsets { get; }
 
         /// <summary>
+        /// </summary>
+        private bool MapsetsOnly { get; }
+
+        /// <summary>
         ///    The amount of maps there are
         /// </summary>
-        private SpriteTextPlus TextCount { get; set; }
+        public SpriteTextPlus TextCount { get; private set; }
 
         /// <summary>
         ///     The text that displays "Maps Found"
         /// </summary>
-        private SpriteTextPlus TextMapsFound { get; set; }
+        public SpriteTextPlus TextMapsFound { get; private set; }
 
         /// <summary>
         ///     The amount of space between <see cref="TextCount"/> and <see cref="TextSpacing"/>
@@ -33,9 +37,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         /// <param name="availableMapsets"></param>
-        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets)
+        /// <param name="mapsetsOnly"></param>
+        public FilterPanelMapsAvailable(Bindable<List<Mapset>> availableMapsets, bool mapsetsOnly = false)
         {
             AvailableMapsets = availableMapsets;
+            MapsetsOnly = mapsetsOnly;
 
             CreateTextCount();
             CreateTextMapsFound();
@@ -95,14 +101,15 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
 
                     TextCount.Text = $"{count:n0}";
 
-                    // TODO: Localize this
                     if (count == 0 || count > 1)
-                        TextMapsFound.Text = $"MAPS FOUND";
+                        TextMapsFound.Text = MapsetsOnly ? $"RESULTS FOUND" : $"MAPS FOUND";
                     else
-                        TextMapsFound.Text = $"MAP FOUND";
+                        TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
 
                     TextMapsFound.X = TextCount.Width + TextSpacing;
-                    Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width), (int) TextMapsFound.Height);
+
+                    Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width),
+                        (int) TextMapsFound.Height);
                 }
             });
         }
@@ -113,6 +120,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <returns></returns>
         private int GetMapCount()
         {
+            if (MapsetsOnly)
+                return AvailableMapsets.Value.Count;
+
             var total = 0;
 
             foreach (var mapset in AvailableMapsets.Value)

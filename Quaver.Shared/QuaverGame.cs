@@ -37,6 +37,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
@@ -162,7 +163,8 @@ namespace Quaver.Shared
             {"YesNoDialog", typeof(TestYesNoDialogScreen)},
             {"DrawablePlaylist", typeof(TestScreenDrawablePlaylist)},
             {"Main Menu", typeof(MainMenuScreen)},
-            {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)}
+            {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
+            {"MusicPlayerScreen", typeof(MusicPlayerScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
@@ -527,6 +529,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
+                case QuaverScreenType.Music:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }

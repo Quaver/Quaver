@@ -404,6 +404,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<string> JudgementWindows { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<OrderMapsetsBy> MusicPlayerOrderMapsBy { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -683,6 +687,7 @@ namespace Quaver.Shared.Config
             DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
             JudgementWindows = ReadValue("JudgementWindows", "", data);
             SelectGroupMapsetsBy = ReadValue(@"SelectGroupMapsetsBy", GroupMapsetsBy.None, data);
+            MusicPlayerOrderMapsBy = ReadValue(@"MusicPlayerOrderMapsBy", OrderMapsetsBy.Artist, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -795,6 +800,7 @@ namespace Quaver.Shared.Config
                     DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
                     JudgementWindows.ValueChanged += AutoSaveConfiguration;
                     SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
+                    MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
