@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
@@ -70,8 +71,19 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
             FilterMapsetsTask = new TaskHandler<int, int>(StartFilterMapsetsTask);
             CurrentSearchQuery.ValueChanged += (sender, args) => StartFilterMapsetsTask();
+            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
 
             FilterMapsets();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged -= OnOrderMapsByChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -182,6 +194,17 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
                 Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}`", LogType.Runtime, false);
                 AvailableSongs.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery, true);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOrderMapsByChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> e)
+        {
+            // Here we trigger a search query change to handle the loading wheel animation as well
+            // as re-filtering the songs in the handled event
+            CurrentSearchQuery.TriggerChange();
         }
     }
 }

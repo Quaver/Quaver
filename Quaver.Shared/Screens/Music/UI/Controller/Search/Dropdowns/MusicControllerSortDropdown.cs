@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Wobble.Graphics;
@@ -11,6 +13,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
         public MusicControllerSortDropdown() : base("SORT BY: ", 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(160, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
+            Dropdown.ItemSelected += OnItemSelected;
         }
 
         /// <summary>
@@ -31,7 +34,17 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
         /// <returns></returns>
         private static int GetSelectedIndex()
         {
-            return 0;
+            return GetDropdownItems().IndexOf(ConfigManager.MusicPlayerOrderMapsBy.Value.ToString());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnItemSelected(object sender, DropdownClickedEventArgs e)
+        {
+            var val = (OrderMapsetsBy) Enum.Parse(typeof(OrderMapsetsBy), e.Text);
+            ConfigManager.MusicPlayerOrderMapsBy.Value = val;
         }
     }
 }
