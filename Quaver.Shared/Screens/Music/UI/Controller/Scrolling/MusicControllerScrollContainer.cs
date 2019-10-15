@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -48,6 +49,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             CurrentSearchQuery = searchQuery;
             SongContainer = songContainer;
 
+            Tint = ColorHelper.HexToColor("#2F2F2F");
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 10;
@@ -57,7 +59,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
 
-            Alpha = 0;
+            Alpha = 1;
 
             AvailableItems = AvailableSongs.Value;
 

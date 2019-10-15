@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Parent = Container,
                 X = 36,
                 Y = 16,
-                Tint = ColorHelper.HexToColor("#57D6FF")
+                //Tint = ColorHelper.HexToColor("#9177DD")
             };
 
             DividerLine = new Sprite()

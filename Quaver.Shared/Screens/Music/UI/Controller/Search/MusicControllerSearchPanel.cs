@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             AvailableSongs = availableSongs;
 
             Size = new ScalableVector2(width, 74);
-            Tint = ColorHelper.HexToColor("#242424");
+            Tint = ColorHelper.HexToColor("#1f1f1f");
 
             RightItems = new List<Drawable>();
 

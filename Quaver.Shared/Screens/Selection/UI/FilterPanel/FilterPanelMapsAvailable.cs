@@ -22,12 +22,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         ///    The amount of maps there are
         /// </summary>
-        private SpriteTextPlus TextCount { get; set; }
+        public SpriteTextPlus TextCount { get; private set; }
 
         /// <summary>
         ///     The text that displays "Maps Found"
         /// </summary>
-        private SpriteTextPlus TextMapsFound { get; set; }
+        public SpriteTextPlus TextMapsFound { get; private set; }
 
         /// <summary>
         ///     The amount of space between <see cref="TextCount"/> and <see cref="TextSpacing"/>

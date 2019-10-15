@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             AvailableSongs = availableSongs;
             CurrentSearchQuery = searchQuery;
 
-            Tint = ColorHelper.HexToColor("#2F2F2F");
+            Tint = ColorHelper.HexToColor("#262626");
             Size = size;
 
             CreateTableColumns();
