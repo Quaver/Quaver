@@ -11,6 +11,7 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using TimeAgo;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -216,23 +217,33 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
         /// <summary>
         /// </summary>
-        private void CreateButton() => Button = new MusicControllerSongButton(Container, UserInterface.BlankBox,
-            (o, e) =>
-            {
-                if (MapManager.Selected.Value?.Mapset == Item.Maps.First().Mapset)
-                    return;
-
-                MapManager.Selected.Value = Item.Maps.First();
-            })
+        private void CreateButton()
         {
-            Parent = this,
-            Alignment = Alignment.MidCenter,
-            Size = new ScalableVector2(Width - 50, Height - 2),
-            UsePreviousSpriteBatchOptions = true,
-            Alpha = 0,
-            Tint = Colors.MainBlue,
-            Depth = 1
-        };
+            Button = new MusicControllerSongButton(Container, UserInterface.BlankBox,
+                (o, e) =>
+                {
+                    if (MapManager.Selected.Value?.Mapset == Item.Maps.First().Mapset)
+                        return;
+
+                    MapManager.Selected.Value = Item.Maps.First();
+                })
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(Width - 50, Height - 2),
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0,
+                Tint = Colors.MainBlue,
+                Depth = 1
+            };
+
+            Button.RightClicked += (o, e) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                var screen = game.CurrentScreen as MusicPlayerScreen;
+                screen?.ActivateRightClickOptions(new MusicPlayerSongRightClickOptions(Item));
+            };
+        }
 
         /// <summary>
         /// </summary>
