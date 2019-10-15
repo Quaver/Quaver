@@ -7,6 +7,8 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -67,7 +69,10 @@ namespace Quaver.Shared.Screens.Music
         /// <summary>
         ///     Initializes the bindable which stores the user's search query <see cref="CurrentSearchQuery"/>
         /// </summary>
-        private void InitializeSearchQueryBindable() => CurrentSearchQuery = new Bindable<string>(null) { Value = "" };
+        private void InitializeSearchQueryBindable() => CurrentSearchQuery = new Bindable<string>(null)
+        {
+            Value = FilterPanelSearchBox.PreviousSearchTerm
+        };
 
         /// <summary>
         ///     Initializes the bindable which stores the available mapsets for the screen <see cref="AvailableSongs"/>
