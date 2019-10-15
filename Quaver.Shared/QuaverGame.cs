@@ -529,6 +529,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
+                case QuaverScreenType.Music:
                     DialogManager.Show(new SettingsDialog());
                     break;
             }
