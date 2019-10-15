@@ -1,9 +1,15 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Main;
+using Quaver.Shared.Screens.Menu;
 using Wobble.Bindables;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Music
 {
@@ -34,6 +40,30 @@ namespace Quaver.Shared.Screens.Music
             View = new MusicPlayerScreenView(this);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleInput();
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleInput()
+        {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
+            HandleKeyPressEscape();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExitToMenu() => Exit(() => new MainMenuScreen());
+
         /// <summary>
         ///     Initializes the bindable which stores the user's search query <see cref="CurrentSearchQuery"/>
         /// </summary>
@@ -44,6 +74,16 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private void InitializeAvailableSongsBindable()
             => AvailableSongs= new Bindable<List<Mapset>>(null) { Value = new List<Mapset>()};
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEscape()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+
+            ExitToMenu();
+        }
 
         /// <inheritdoc />
         /// <summary>

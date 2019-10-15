@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Main.UI.Jukebox;
 using Quaver.Shared.Screens.Music.Components;
+using Quaver.Shared.Screens.Music.UI;
 using Quaver.Shared.Screens.Music.UI.Controller;
 using Quaver.Shared.Screens.Music.UI.Controller.Search;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
@@ -116,7 +117,7 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        private void CreateMenuFooter() => Footer = new TestMenuBorderFooter
+        private void CreateMenuFooter() => Footer = new MusicPlayerMenuFooter(PlayerScreen)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft
