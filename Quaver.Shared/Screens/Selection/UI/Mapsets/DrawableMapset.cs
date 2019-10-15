@@ -105,14 +105,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             IsSelected = Item.Maps.Contains(MapManager.Selected.Value);
 
-            // Make sure the mapset is properly selected/deselected when updating the content
-            if (IsSelected)
-                Select();
-            else
-                Deselect();
+            ScheduleUpdate(() =>
+            {
+                // Make sure the mapset is properly selected/deselected when updating the content
+                if (IsSelected)
+                    Select();
+                else
+                    Deselect();
 
-            // Update all the values in the mapset
-            DrawableContainer.UpdateContent(Item, Index);
+                // Update all the values in the mapset
+                DrawableContainer.UpdateContent(Item, Index);
+            });
         }
 
         /// <summary>

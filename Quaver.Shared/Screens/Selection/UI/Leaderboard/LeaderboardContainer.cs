@@ -342,10 +342,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            e.OldValue?.ClearScores();
-            e.Value?.ClearScores();
+            ScheduleUpdate(() =>
+            {
+                e.OldValue?.ClearScores();
+                e.Value?.ClearScores();
 
-            FetchScores();
+                FetchScores();
+            });
         }
 
         /// <summary>

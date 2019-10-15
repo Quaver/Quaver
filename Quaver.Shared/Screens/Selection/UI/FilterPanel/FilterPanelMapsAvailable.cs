@@ -93,9 +93,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void UpdateText()
         {
-            lock (AvailableMapsets.Value)
+            ScheduleUpdate(() =>
             {
-                ScheduleUpdate(() =>
+                lock (AvailableMapsets.Value)
                 {
                     var count = GetMapCount();
 
@@ -107,9 +107,11 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                         TextMapsFound.Text = MapsetsOnly ? "RESULT FOUND" : $"MAP FOUND";
 
                     TextMapsFound.X = TextCount.Width + TextSpacing;
-                    Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width), (int) TextMapsFound.Height);
-                });
-            }
+
+                    Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMapsFound.Width),
+                        (int) TextMapsFound.Height);
+                }
+            });
         }
 
         /// <summary>
