@@ -20,6 +20,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
 
         /// <summary>
         /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
+        /// </summary>
         public List<MusicControllerTableColumn> Columns { get; private set; }
 
         /// <summary>
@@ -30,10 +34,12 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         /// <param name="size"></param>
         /// <param name="availableSongs"></param>
-        public MusicControllerSongContainer(ScalableVector2 size, Bindable<List<Mapset>> availableSongs)
+        /// <param name="searchQuery"></param>
+        public MusicControllerSongContainer(ScalableVector2 size, Bindable<List<Mapset>> availableSongs, Bindable<string> searchQuery)
         {
             AvailableSongs = availableSongs;
-            
+            CurrentSearchQuery = searchQuery;
+
             Tint = ColorHelper.HexToColor("#2F2F2F");
             Size = size;
 
@@ -105,7 +111,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         {
             var size = new ScalableVector2(Width, Height - Columns.First().DividerLine.Y - Columns.First().DividerLine.Height);
 
-            ScrollContainer = new MusicControllerScrollContainer(this, AvailableSongs, size)
+            ScrollContainer = new MusicControllerScrollContainer(this, AvailableSongs, CurrentSearchQuery, size)
             {
                 Parent = this,
                 Y = Columns.First().DividerLine.Y + Columns.First().DividerLine.Height

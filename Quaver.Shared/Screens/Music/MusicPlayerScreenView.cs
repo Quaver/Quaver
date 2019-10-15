@@ -144,7 +144,7 @@ namespace Quaver.Shared.Screens.Music
         /// <summary>
         /// </summary>
         private void CreateSongContainer() => SongContainer = new MusicControllerSongContainer(new ScalableVector2(ControllerContainer.Width,
-            WindowManager.Height - Footer.Height - SearchPanel.Y - SearchPanel.Height), PlayerScreen.AvailableSongs)
+            WindowManager.Height - Footer.Height - SearchPanel.Y - SearchPanel.Height), PlayerScreen.AvailableSongs, PlayerScreen.CurrentSearchQuery)
         {
             Parent = ContentContainer,
             Alignment = ControllerContainer.Alignment,

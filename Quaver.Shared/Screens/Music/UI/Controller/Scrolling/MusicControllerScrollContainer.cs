@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -22,21 +24,30 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
         /// <summary>
         /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
+        /// </summary>
         public MusicControllerSongContainer SongContainer { get; }
+
+        /// <summary>
+        /// </summary>
+        private LoadingWheel LoadingWheel { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="songContainer"></param>
-        /// <param name="availableItems"></param>
         /// <param name="availableSongs"></param>
+        /// <param name="searchQuery"></param>
         /// <param name="size"></param>
-        public MusicControllerScrollContainer(MusicControllerSongContainer songContainer, Bindable<List<Mapset>> availableSongs, ScalableVector2 size)
-            : base(availableSongs.Value, 16, 0, size, size)
+        public MusicControllerScrollContainer(MusicControllerSongContainer songContainer, Bindable<List<Mapset>> availableSongs,
+            Bindable<string> searchQuery, ScalableVector2 size) : base(availableSongs.Value, 16, 0, size, size)
         {
             AvailableSongs = availableSongs;
-
+            CurrentSearchQuery = searchQuery;
             SongContainer = songContainer;
+
             InputEnabled = true;
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 10;
@@ -50,10 +61,12 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
 
             AvailableItems = AvailableSongs.Value;
 
+            CreateLoadingWheel();
             SetPoolStartingIndex();
             CreatePool();
             SnapToSelected();
 
+            CurrentSearchQuery.ValueChanged += OnSearchChanged;
             AvailableSongs.ValueChanged += OnAvailableSongsChanged;
         }
 
@@ -136,20 +149,61 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
         /// <param name="e"></param>
         private void OnAvailableSongsChanged(object sender, BindableValueChangedEventArgs<List<Mapset>> e)
         {
-            lock (AvailableSongs.Value)
+            ThreadScheduler.RunAfter(() =>
             {
-                AvailableItems = e.Value;
-
-                ScheduleUpdate(() =>
+                lock (AvailableSongs.Value)
                 {
-                    Pool.ForEach(x => x.Destroy());
-                    Pool.Clear();
+                    AvailableItems = e.Value;
 
-                    SetPoolStartingIndex();
-                    CreatePool();
-                    SnapToSelected();
-                });
-            }
+                    ScheduleUpdate(() =>
+                    {
+                        FadeLoadingWheel(0);
+
+                        Pool.ForEach(x => x.Destroy());
+                        Pool.Clear();
+                        RecalculateContainerHeight();
+
+                        SetPoolStartingIndex();
+                        CreatePool();
+                        SnapToSelected();
+                    });
+                }
+            }, 250);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSearchChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            FadeLoadingWheel(1);
+
+            ScheduleUpdate(() =>
+            {
+                Pool.ForEach(x => x.Destroy());
+                Pool.Clear();
+                RecalculateContainerHeight();
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateLoadingWheel() => LoadingWheel = new LoadingWheel
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(50, 50),
+            Alpha = 0
+        };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="alpha"></param>
+        private void FadeLoadingWheel(float alpha)
+        {
+            LoadingWheel.ClearAnimations();
+            LoadingWheel.FadeTo(alpha, Easing.Linear, 50);
         }
     }
 }
