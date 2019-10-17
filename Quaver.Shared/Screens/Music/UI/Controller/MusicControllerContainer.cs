@@ -1,10 +1,12 @@
 using System;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Common.Objects.Listening;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI.Jukebox;
 using Quaver.Shared.Screens.Music.Components;
 using TagLib.Ape;
@@ -116,7 +118,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Example Song Title", 34)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "No Track Playing", 34)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -129,7 +131,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Music Artist", 28)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Unknown Artist", 28)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -226,10 +228,15 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         {
             ScheduleUpdate(() =>
             {
-                Title.Text = MapManager.Selected.Value.Title;
+                var map = MapManager.Selected.Value;
+
+                var title = OnlineManager.IsListeningPartyHost || map != null ? map.Title : OnlineManager.ListeningParty.SongTitle;
+                Title.Text = title;
+                Title.Tint = map == null ? Color.Crimson : ColorHelper.HexToColor("#57D6FF");
                 Title.TruncateWithEllipsis((int) Width - 50);
 
-                Artist.Text = MapManager.Selected.Value.Artist;
+                var artist = OnlineManager.IsListeningPartyHost || map != null ? map.Artist : OnlineManager.ListeningParty.SongArtist;
+                Artist.Text = artist;
                 Artist.TruncateWithEllipsis((int) Width - 50);
             });
         }
@@ -259,12 +266,18 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             if (AudioEngine.Track == null || AudioEngine.Track.IsDisposed)
                 return;
 
+            if (!OnlineManager.IsListeningPartyHost)
+                return;
+
             try
             {
                 var percentage = (MouseManager.CurrentState.X - AbsolutePosition.X) / AbsoluteSize.X;
 
                 lock (AudioEngine.Track)
+                {
                     AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);
+                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.Seek);
+                }
             }
             catch (Exception ex)
             {

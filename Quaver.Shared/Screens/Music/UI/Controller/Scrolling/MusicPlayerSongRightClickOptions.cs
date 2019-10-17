@@ -5,6 +5,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -44,6 +45,12 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Scrolling
                 switch (args.Text)
                 {
                     case Play:
+                        if (!OnlineManager.IsListeningPartyHost)
+                        {
+                            NotificationManager.Show(NotificationLevel.Error, "You are not the host of listening party!");
+                            return;
+                        }
+                        
                         MapManager.Selected.Value = Mapset.Maps.First();
                         break;
                     case Export:

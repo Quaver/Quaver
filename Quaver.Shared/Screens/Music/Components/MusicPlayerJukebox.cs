@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Handlers;
+using Quaver.Server.Common.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Bindables;
@@ -44,6 +47,15 @@ namespace Quaver.Shared.Screens.Music.Components
             AvailableSongs = availableSongs;
             MapManager.Selected.ValueChanged += OnMapChanged;
 
+            if (OnlineManager.Client != null)
+            {
+                SelectListeningPartySong();
+
+                OnlineManager.Client.OnListeningPartyStateUpdate += OnListeningPartyStateUpdate;
+                OnlineManager.Client.OnListeningPartyFellowJoined += OnlisteningPartyFellowJoined;
+                OnlineManager.Client.OnListeningPartyFellowLeft += OnListeningPartyFellowLeft;
+            }
+
             // If a track is already playing, add it to the queue.
             if (MapManager.Selected == null || MapManager.Selected.Value == null)
                 return;
@@ -72,6 +84,13 @@ namespace Quaver.Shared.Screens.Music.Components
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
 
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnListeningPartyStateUpdate -= OnListeningPartyStateUpdate;
+                OnlineManager.Client.OnListeningPartyFellowJoined -= OnlisteningPartyFellowJoined;
+                OnlineManager.Client.OnListeningPartyFellowLeft -= OnListeningPartyFellowLeft;
+            }
+
             base.Destroy();
         }
 
@@ -82,6 +101,9 @@ namespace Quaver.Shared.Screens.Music.Components
         /// </summary>
         private void SelectNextTrackIfFinished()
         {
+            if (!OnlineManager.IsListeningPartyHost)
+                return;
+
             // Don't execute if we're in the middle of loading a new track.
             if (LoadingNextTrack)
                 return;
@@ -166,11 +188,43 @@ namespace Quaver.Shared.Screens.Music.Components
                 {
                     AudioEngine.LoadCurrentTrack();
 
-                    if (AudioEngine.Track != null)
+                    lock (AudioEngine.Track)
                     {
-                        lock (AudioEngine.Track)
+                        if (!OnlineManager.IsListeningPartyHost)
+                        {
+                            // The host currently has the song paused, so just seek and wait
+                            if (OnlineManager.ListeningParty.IsPaused)
+                            {
+                                AudioEngine.Track.Seek(OnlineManager.ListeningParty.SongTime);
+                                AudioEngine.Track.Play();
+                                AudioEngine.Track.Pause();
+                            }
+                            // Need to calculate the current song time from the listening party's last action time
+                            else
+                            {
+                                var unix = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                                var seekTime = unix - OnlineManager.ListeningParty.LastActionTime + OnlineManager.ListeningParty.SongTime;
+
+                                try
+                                {
+                                    AudioEngine.Track.Seek(seekTime);
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Error(e, LogType.Runtime);
+                                }
+
+                                AudioEngine.Track.Play();
+                            }
+                        }
+                        // We're the host, so just play it normally
+                        else
+                        {
                             AudioEngine.Track.Play();
+                        }
                     }
+
+                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
                 }
                 catch (Exception e)
                 {
@@ -182,9 +236,17 @@ namespace Quaver.Shared.Screens.Music.Components
                     LoadFailures = 0;
                 }
 
-                Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
-                             $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
-                             $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+                if (MapManager.Selected.Value == null)
+                {
+                    if (!AudioEngine.Track.IsStopped)
+                        AudioEngine.Track.Stop();
+                }
+                else
+                {
+                    Logger.Debug($"Selected new jukebox track ({TrackListQueuePosition}): " +
+                                 $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title} " +
+                                 $"[{MapManager.Selected.Value.DifficultyName}] ", LogType.Runtime);
+                }
             });
         }
 
@@ -196,13 +258,26 @@ namespace Quaver.Shared.Screens.Music.Components
         {
             try
             {
+                SetRichPresence();
+
+                // Stop the music if it was changed to a map we don't have.
+                if (e.Value == null)
+                {
+                    if (!AudioEngine.Track.IsStopped)
+                    {
+                        if (!AudioEngine.Track.IsPaused)
+                            AudioEngine.Track.Pause();
+
+                        AudioEngine.Track.Seek(0);
+                    }
+                }
+
                 if (!TrackListQueue.Contains(e.Value))
                 {
                     TrackListQueue.Add(e.Value);
                     TrackListQueuePosition = TrackListQueue.Count - 1;
                 }
 
-                SetRichPresence();
                 LoadTrack();
             }
             catch (Exception ex)
@@ -213,14 +288,94 @@ namespace Quaver.Shared.Screens.Music.Components
 
         /// <summary>
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnListeningPartyStateUpdate(object sender, ListeningPartyStateUpdateEventArgs e)
+        {
+            if (OnlineManager.IsListeningPartyHost)
+                return;
+
+            switch (e.Action)
+            {
+                case ListeningPartyAction.ChangeSong:
+                    SelectListeningPartySong();
+                    break;
+                case ListeningPartyAction.Pause:
+                    lock (AudioEngine.Track)
+                    {
+                        if (AudioEngine.Track.IsPlaying)
+                            AudioEngine.Track.Pause();
+                    }
+                    break;
+                case ListeningPartyAction.Play:
+                    lock (AudioEngine.Track)
+                    {
+                        if (AudioEngine.Track.IsPaused)
+                            AudioEngine.Track.Play();
+                    }
+                    break;
+                case ListeningPartyAction.Seek:
+                    lock (AudioEngine.Track)
+                    {
+                        try
+                        {
+                            AudioEngine.Track.Seek(e.SongTime);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, LogType.Runtime);
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SelectListeningPartySong()
+        {
+            if (OnlineManager.IsListeningPartyHost)
+                return;
+
+            MapManager.Selected.Value = MapManager.FindMapFromMd5(OnlineManager.ListeningParty.MapMd5);
+            Logger.Important($"Host changed listening party map to: {OnlineManager.ListeningParty.MapMd5}", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
         private void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
-            DiscordHelper.Presence.State = "Listening";
-            DiscordHelper.Presence.PartySize = 1;
-            DiscordHelper.Presence.PartyMax = 16;
+            if (OnlineManager.ListeningParty == null || OnlineManager.ListeningParty.Listeners.Count <= 1)
+            {
+                DiscordHelper.Presence.Details = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
+                DiscordHelper.Presence.State = "Listening";
+                DiscordHelper.Presence.PartySize = 0;
+                DiscordHelper.Presence.PartyMax = 0;
+            }
+            else
+            {
+                DiscordHelper.Presence.Details = $"{OnlineManager.ListeningParty.SongArtist} - {OnlineManager.ListeningParty.SongTitle}";
+                DiscordHelper.Presence.State = "Listening Party";
+                DiscordHelper.Presence.PartySize = OnlineManager.ListeningParty.Listeners.Count;
+                DiscordHelper.Presence.PartyMax = 32;
+            }
+
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnlisteningPartyFellowJoined(object sender, ListeningPartyFellowJoinedEventArgs e) => SetRichPresence();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnListeningPartyFellowLeft(object sender, ListeningPartyFellowLeftEventArgs e) => SetRichPresence();
     }
 }

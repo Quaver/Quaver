@@ -99,6 +99,9 @@ namespace Quaver.Shared.Screens.Selection.Components
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
+            if (Screen != null && Screen.Exiting)
+                return;
+
             if (MapManager.GetAudioPath(e.Value) == MapManager.GetAudioPath(e.OldValue) && e.Value != null)
                 return;
 

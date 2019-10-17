@@ -3,8 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Listening;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
@@ -39,6 +42,7 @@ namespace Quaver.Shared.Screens.Music
             InitializeSearchQueryBindable();
             InitializeAvailableSongsBindable();
 
+            MapManager.Selected.ValueChanged += OnMapChanged;
             View = new MusicPlayerScreenView(this);
         }
 
@@ -50,6 +54,16 @@ namespace Quaver.Shared.Screens.Music
         {
             HandleInput();
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -64,7 +78,14 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        public void ExitToMenu() => Exit(() => new MainMenuScreen());
+        public void ExitToMenu()
+        {
+            DiscordHelper.Presence.PartySize = 0;
+            DiscordHelper.Presence.PartyMax = 0;
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+
+            Exit(() => new MainMenuScreen());
+        }
 
         /// <summary>
         ///     Initializes the bindable which stores the user's search query <see cref="CurrentSearchQuery"/>
@@ -94,6 +115,22 @@ namespace Quaver.Shared.Screens.Music
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1,"", 1, "", 0);
+        public override UserClientStatus GetClientStatus()
+        {
+            if (MapManager.Selected.Value == null)
+                return new UserClientStatus(ClientStatus.Listening, -1, "-1", 1, "", 0);
+
+            return new UserClientStatus(ClientStatus.Listening, MapManager.Selected.Value.MapId, MapManager.Selected.Value.Md5Checksum,
+                (byte) MapManager.Selected.Value.Mode, $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}", 0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+            OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
+        }
     }
 }
