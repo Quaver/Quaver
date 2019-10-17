@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         private void SetText()
         {
-            Title.Text = $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}";
+            Title.Text = MapManager.Selected.Value != null ? $"{MapManager.Selected.Value.Artist} - {MapManager.Selected.Value.Title}" : "";
             Title.TruncateWithEllipsis(330);
         }
 
