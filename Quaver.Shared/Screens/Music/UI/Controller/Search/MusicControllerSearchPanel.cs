@@ -71,7 +71,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
             FilterMapsetsTask = new TaskHandler<int, int>(StartFilterMapsetsTask);
             CurrentSearchQuery.ValueChanged += (sender, args) => StartFilterMapsetsTask();
-            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
+
+            if (ConfigManager.MusicPlayerOrderMapsBy != null)
+                ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
 
             FilterMapsets();
         }
@@ -82,7 +84,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged -= OnOrderMapsByChanged;
+            if (ConfigManager.MusicPlayerOrderMapsBy != null)
+                ConfigManager.MusicPlayerOrderMapsBy.ValueChanged -= OnOrderMapsByChanged;
+
             base.Destroy();
         }
 
