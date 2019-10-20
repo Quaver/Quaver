@@ -143,6 +143,8 @@ namespace Quaver.Shared.Screens.Main
         {
             DiscordHelper.Presence.Details = "Main Menu";
             DiscordHelper.Presence.State = "In the menus";
+            DiscordHelper.Presence.PartySize = 0;
+            DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
