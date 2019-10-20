@@ -115,6 +115,12 @@ namespace Quaver.Shared.Database.Maps
                     return;
                 }
 
+                if (screen.Type == QuaverScreenType.Music)
+                {
+                    screen.Exit(() => new ImportingScreen());
+                    return;
+                }
+
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
                     screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen));

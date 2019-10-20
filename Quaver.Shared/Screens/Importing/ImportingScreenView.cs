@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Importing
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnImportingMapset(object sender, ImportingMapsetEventArgs e)
-            => Status.Text = $"[{e.Index + 1}/{e.Queue.Count}] IMPORTING: \"{e.FileName}\"";
+            => Status.ScheduleUpdate(() => Status.Text = $"[{e.Index + 1}/{e.Queue.Count}] IMPORTING: \"{e.FileName}\"");
 
         /// <summary>
         ///     Creates <see cref="Background"/>
