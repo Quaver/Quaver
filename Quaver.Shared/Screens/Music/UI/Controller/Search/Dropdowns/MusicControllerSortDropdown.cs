@@ -34,6 +34,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
         /// <returns></returns>
         private static int GetSelectedIndex()
         {
+            if (ConfigManager.MusicPlayerOrderMapsBy == null)
+                return 0;
+
             return GetDropdownItems().IndexOf(ConfigManager.MusicPlayerOrderMapsBy.Value.ToString());
         }
 
@@ -43,6 +46,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
         /// <param name="e"></param>
         private void OnItemSelected(object sender, DropdownClickedEventArgs e)
         {
+            if (ConfigManager.MusicPlayerOrderMapsBy == null)
+                return;
+
             var val = (OrderMapsetsBy) Enum.Parse(typeof(OrderMapsetsBy), e.Text);
             ConfigManager.MusicPlayerOrderMapsBy.Value = val;
         }
