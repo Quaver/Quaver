@@ -241,7 +241,8 @@ namespace Quaver.Shared.Graphics.Containers
             lock (AvailableItems)
             lock (Pool)
             {
-                AvailableItems.Add(obj);
+                if (!AvailableItems.Contains(obj))
+                    AvailableItems.Add(obj);
 
                 // Need another drawable to use
                 if (Pool.Count < PoolSize)

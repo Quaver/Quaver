@@ -9,6 +9,7 @@ using Quaver.Shared.Screens.Music.Components;
 using Quaver.Shared.Screens.Music.UI;
 using Quaver.Shared.Screens.Music.UI.Controller;
 using Quaver.Shared.Screens.Music.UI.Controller.Search;
+using Quaver.Shared.Screens.Music.UI.ListenerList;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -60,6 +61,10 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private MusicPlayerJukebox Jukebox { get; }
 
+        /// <summary>
+        /// </summary>
+        private DrawableListenerList ListenerList { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -72,7 +77,14 @@ namespace Quaver.Shared.Screens.Music
             CreateMenuHeader();
             CreateMenuFooter();
 
-            ContentContainer = new Container {Parent = Container};
+            CreateListenerList();
+
+            ContentContainer = new Container
+            {
+                Parent = Container,
+                X = -ListenerList.Width
+            };
+
             CreateMusicControllerContainer();
             CreateSearchPanel();
             CreateSongContainer();
@@ -125,6 +137,16 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
+        private void CreateListenerList() => ListenerList = new DrawableListenerList(new ScalableVector2(312,
+            WindowManager.Height - Footer.Height * 2))
+        {
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            Y = Header.Height
+        };
+
+        /// <summary>
+        /// </summary>
         private void CreateMusicControllerContainer() => ControllerContainer = new MusicControllerContainer(Jukebox)
         {
             Parent = ContentContainer,
@@ -156,7 +178,7 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private void AnimateContentContainer()
         {
-            ContentContainer.X = ContentContainer.Width;
+            /*ContentContainer.X = ContentContainer.Width;
             ContentContainer.MoveToX(0, Easing.OutQuint, 600);
 
             var screen = (MusicPlayerScreen) Screen;
@@ -165,7 +187,7 @@ namespace Quaver.Shared.Screens.Music
             {
                 ContentContainer.ClearAnimations();
                 ContentContainer.MoveToX(ContentContainer.Width, Easing.OutQuint, 800);
-            };
+            };*/
         }
     }
 }

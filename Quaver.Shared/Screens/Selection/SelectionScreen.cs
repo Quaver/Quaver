@@ -698,6 +698,8 @@ namespace Quaver.Shared.Screens.Selection
         {
             DiscordHelper.Presence.Details = "Selecting a song";
             DiscordHelper.Presence.State = "In the menus";
+            DiscordHelper.Presence.PartySize = 0;
+            DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }

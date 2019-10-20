@@ -230,13 +230,23 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             {
                 var map = MapManager.Selected.Value;
 
-                var title = OnlineManager.IsListeningPartyHost || map != null ? map.Title : OnlineManager.ListeningParty.SongTitle;
-                Title.Text = title;
-                Title.Tint = map == null ? Color.Crimson : ColorHelper.HexToColor("#57D6FF");
-                Title.TruncateWithEllipsis((int) Width - 50);
+                if (map == null && OnlineManager.ListeningParty != null)
+                {
+                    Title.Text = OnlineManager.ListeningParty.SongTitle;
+                    Title.Tint = Color.Crimson;
 
-                var artist = OnlineManager.IsListeningPartyHost || map != null ? map.Artist : OnlineManager.ListeningParty.SongArtist;
-                Artist.Text = artist;
+                    Artist.Text = OnlineManager.ListeningParty.SongArtist;
+
+                }
+                else if (map != null)
+                {
+                    Title.Text = map.Title;
+                    Title.Tint = ColorHelper.HexToColor("#57D6FF");
+
+                    Artist.Text = map.Artist;
+                }
+
+                Title.TruncateWithEllipsis((int) Width - 50);
                 Artist.TruncateWithEllipsis((int) Width - 50);
             });
         }

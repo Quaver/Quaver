@@ -221,6 +221,9 @@ namespace Quaver.Shared.Online
             Client.OnListeningPartyStateUpdate += OnListeningPartyStateUpdate;
             Client.OnListeningPartyFellowJoined += OnListeningPartyFellowJoined;
             Client.OnListeningPartyFellowLeft += OnListeningPartyFellowLeft;
+            Client.OnListeningPartyChangeHost += OnListeningPartyChangeHost;
+            Client.OnListeningPartyUserMissingSong += OnListeningPartyUserMissingSong;
+            Client.OnListeningPartyUserHasSong += OnListeningPartyUserHasSong;
         }
 
         /// <summary>
@@ -243,6 +246,8 @@ namespace Quaver.Shared.Online
                 CurrentGame = null;
                 game.CurrentScreen?.Exit(() => new MainMenuScreen());
             }
+
+            ListeningParty = null;
         }
 
         /// <summary>
@@ -312,6 +317,9 @@ namespace Quaver.Shared.Online
                     NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate to the server");
                     return;
             }
+
+            // Remove the active listening party
+            ListeningParty = null;
         }
 
         /// <summary>
@@ -1261,9 +1269,6 @@ namespace Quaver.Shared.Online
         /// <exception cref="NotImplementedException"></exception>
         private static void OnListeningPartyStateUpdate(object sender, ListeningPartyStateUpdateEventArgs e)
         {
-            Logger.Important($"Received listening party state update: {e.Action} | {e.MapMd5} | {e.MapId} | {e.LastActionTime} " +
-                             $"| {e.SongTime} | {e.IsPaused} | {e.SongArtist} | {e.SongTitle}", LogType.Runtime);
-
             if (ListeningParty == null)
                 return;
 
@@ -1274,6 +1279,23 @@ namespace Quaver.Shared.Online
             ListeningParty.IsPaused = e.IsPaused;
             ListeningParty.SongArtist = e.SongArtist;
             ListeningParty.SongTitle = e.SongTitle;
+
+            // Clear the listeners who don't have the active song
+            if (e.Action == ListeningPartyAction.ChangeSong)
+            {
+                ListeningParty.ListenersWithoutSong.Clear();
+                ListeningParty.ListenerIdsWithoutSong.Clear();
+            }
+
+            try
+            {
+                Logger.Important($"Received listening party state update: {e.Action} | {e.MapMd5} | {e.MapId} | {e.LastActionTime} " +
+                                 $"| {e.SongTime} | {e.IsPaused} | {e.SongArtist} | {e.SongTitle}", LogType.Runtime);
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
         }
 
         /// <summary>
@@ -1319,6 +1341,64 @@ namespace Quaver.Shared.Online
             ListeningParty.ListenerIds.Remove(e.UserId);
 
             Logger.Important($"{e.UserId} has left the listening party", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnListeningPartyChangeHost(object sender, ListeningPartyChangeHostEventArgs e)
+        {
+            if (ListeningParty == null)
+                return;
+
+            ListeningParty.Host = OnlineUsers[e.UserId].OnlineUser;
+            ListeningParty.HostId = e.UserId;
+
+            Logger.Important($"{e.UserId} has become host of the listening party.", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnListeningPartyUserMissingSong(object sender, ListeningPartyUserMissingSongEventArgs e)
+        {
+            if (ListeningParty == null)
+                return;
+
+            if (OnlineUsers.ContainsKey(e.UserId))
+            {
+                var user = OnlineUsers[e.UserId];
+
+                if (!ListeningParty.ListenersWithoutSong.Contains(user.OnlineUser))
+                    ListeningParty.ListenersWithoutSong.Add(user.OnlineUser);
+            }
+
+            if (!ListeningParty.ListenerIdsWithoutSong.Contains(e.UserId))
+                ListeningParty.ListenerIdsWithoutSong.Add(e.UserId);
+
+            Logger.Important($"{e.UserId} does not have the active listening party song", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnListeningPartyUserHasSong(object sender, ListeningPartyUserHasSongEventArgs e)
+        {
+            if (ListeningParty == null)
+                return;
+
+            if (OnlineUsers.ContainsKey(e.UserId))
+            {
+                var user = OnlineUsers[e.UserId];
+                ListeningParty.ListenersWithoutSong.Remove(user.OnlineUser);
+            }
+
+            ListeningParty.ListenerIdsWithoutSong.Remove(e.UserId);
+            Logger.Important($"{e.UserId} has the active listening party song", LogType.Runtime);
         }
 
         /// <summary>

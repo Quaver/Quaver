@@ -7,12 +7,14 @@
 
 using System.Linq;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Listening;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Multiplayer;
+using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
@@ -113,6 +115,18 @@ namespace Quaver.Shared.Screens.Importing
                         return new SelectionScreen(MultiplayerScreen);
 
                     return MultiplayerScreen;
+                });
+            }
+            else if (OnlineManager.ListeningParty != null)
+            {
+                Exit(() =>
+                {
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track.Play();
+
+                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
+
+                    return new MusicPlayerScreen();
                 });
             }
             else

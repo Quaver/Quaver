@@ -292,6 +292,8 @@ namespace Quaver.Shared.Screens.Music.Components
         /// <param name="e"></param>
         private void OnListeningPartyStateUpdate(object sender, ListeningPartyStateUpdateEventArgs e)
         {
+            SetRichPresence();
+
             if (OnlineManager.IsListeningPartyHost)
                 return;
 
@@ -340,6 +342,14 @@ namespace Quaver.Shared.Screens.Music.Components
                 return;
 
             MapManager.Selected.Value = MapManager.FindMapFromMd5(OnlineManager.ListeningParty.MapMd5);
+
+            // User is missing the map, so inform the server of this.
+            if (MapManager.Selected.Value == null)
+                OnlineManager.Client?.InformMissingListeningPartySong();
+            // Otherwise, make the server aware that we have the map
+            else
+                OnlineManager.Client?.InformListeningPartyHasMap();
+
             Logger.Important($"Host changed listening party map to: {OnlineManager.ListeningParty.MapMd5}", LogType.Runtime);
         }
 
@@ -359,7 +369,7 @@ namespace Quaver.Shared.Screens.Music.Components
                 DiscordHelper.Presence.Details = $"{OnlineManager.ListeningParty.SongArtist} - {OnlineManager.ListeningParty.SongTitle}";
                 DiscordHelper.Presence.State = "Listening Party";
                 DiscordHelper.Presence.PartySize = OnlineManager.ListeningParty.Listeners.Count;
-                DiscordHelper.Presence.PartyMax = 32;
+                DiscordHelper.Presence.PartyMax = 16;
             }
 
             DiscordHelper.Presence.EndTimestamp = 0;

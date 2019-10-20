@@ -1,15 +1,21 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Listening;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Wobble.Bindables;
@@ -37,12 +43,24 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         public MusicPlayerScreen()
         {
+            // Import any maps in the queue
+            if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
+                                               || MapDatabaseCache.MapsToUpdate.Count != 0)
+            {
+                Exit(() => new ImportingScreen());
+                return;
+            }
+
             ModManager.RemoveSpeedMods();
 
             InitializeSearchQueryBindable();
             InitializeAvailableSongsBindable();
 
             MapManager.Selected.ValueChanged += OnMapChanged;
+
+            if (ConfigManager.AutoLoadOsuBeatmaps != null)
+                ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
             View = new MusicPlayerScreenView(this);
         }
 
@@ -61,7 +79,7 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
             base.Destroy();
         }
@@ -132,5 +150,12 @@ namespace Quaver.Shared.Screens.Music
         {
             OnlineManager.Client?.UpdateClientStatus(GetClientStatus());
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => Exit(() => new ImportingScreen());
     }
 }
