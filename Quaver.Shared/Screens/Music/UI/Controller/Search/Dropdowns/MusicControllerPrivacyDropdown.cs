@@ -19,8 +19,6 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns
         private static List<string> GetDropdownItems() => new List<string>
         {
             "Open",
-            "Friends",
-            "Invite-Only",
             "Closed"
         };
 

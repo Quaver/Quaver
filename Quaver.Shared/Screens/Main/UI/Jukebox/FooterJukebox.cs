@@ -10,6 +10,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Music.Components;
 using Wobble;
 using Wobble.Assets;
@@ -203,7 +204,11 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         private void CreateGoToJukeboxScreenButton()
         {
-            GoToJukeboxScreenButton = new IconButton(UserInterface.JukeboxHamburgerIcon)
+            GoToJukeboxScreenButton = new IconButton(UserInterface.JukeboxHamburgerIcon, (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen?.Exit(() => new MusicPlayerScreen());
+            })
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

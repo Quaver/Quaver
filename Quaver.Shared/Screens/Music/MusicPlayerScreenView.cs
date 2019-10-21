@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Music.UI;
 using Quaver.Shared.Screens.Music.UI.Controller;
 using Quaver.Shared.Screens.Music.UI.Controller.Search;
 using Quaver.Shared.Screens.Music.UI.ListenerList;
+using Quaver.Shared.Screens.Music.UI.Sidebar;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -65,6 +66,10 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private DrawableListenerList ListenerList { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private MusicPlayerSidebar Sidebar { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -82,12 +87,13 @@ namespace Quaver.Shared.Screens.Music
             ContentContainer = new Container
             {
                 Parent = Container,
-                X = -ListenerList.Width
+                X = ListenerList.Width
             };
 
             CreateMusicControllerContainer();
             CreateSearchPanel();
             CreateSongContainer();
+            CreateSidebar();
 
             SearchPanel.Parent = ContentContainer;
             Header.Parent = Container;
@@ -137,11 +143,11 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
-        private void CreateListenerList() => ListenerList = new DrawableListenerList(new ScalableVector2(312,
+        private void CreateListenerList() => ListenerList = new DrawableListenerList(new ScalableVector2(310,
             WindowManager.Height - Footer.Height * 2))
         {
             Parent = Container,
-            Alignment = Alignment.TopRight,
+            Alignment = Alignment.TopLeft,
             Y = Header.Height
         };
 
@@ -150,7 +156,7 @@ namespace Quaver.Shared.Screens.Music
         private void CreateMusicControllerContainer() => ControllerContainer = new MusicControllerContainer(Jukebox)
         {
             Parent = ContentContainer,
-            Alignment = Alignment.TopRight,
+            Alignment = Alignment.TopLeft,
             Y = Header.Height
         };
 
@@ -176,18 +182,21 @@ namespace Quaver.Shared.Screens.Music
 
         /// <summary>
         /// </summary>
+        private void CreateSidebar()
+        {
+            /*Sidebar = new MusicPlayerSidebar(new ScalableVector2(
+                WindowManager.Width - SongContainer.Width - ListenerList.Width,
+                ListenerList.Height))
+            {
+                Parent = Container,
+                Y = ListenerList.Y
+            };*/
+        }
+
+        /// <summary>
+        /// </summary>
         private void AnimateContentContainer()
         {
-            /*ContentContainer.X = ContentContainer.Width;
-            ContentContainer.MoveToX(0, Easing.OutQuint, 600);
-
-            var screen = (MusicPlayerScreen) Screen;
-
-            screen.ScreenExiting += (sender, args) =>
-            {
-                ContentContainer.ClearAnimations();
-                ContentContainer.MoveToX(ContentContainer.Width, Easing.OutQuint, 800);
-            };*/
         }
     }
 }

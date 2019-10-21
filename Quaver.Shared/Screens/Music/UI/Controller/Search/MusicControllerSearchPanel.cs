@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Music.UI.Controller.Search.Dropdowns;
@@ -40,6 +41,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
         /// <summary>
         /// </summary>
+        private MusicControllerPlaylistDropdown PlaylistDropdown { get; set; }
+
+        /// <summary>
+        /// </summary>
         private FilterPanelSearchBox SearchBox { get; set; }
 
         /// <summary>
@@ -57,13 +62,14 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             CurrentSearchQuery = currentSearchQuery;
             AvailableSongs = availableSongs;
 
-            Size = new ScalableVector2(width, 74);
+            Size = new ScalableVector2(width, 86);
             Tint = ColorHelper.HexToColor("#1f1f1f");
 
             RightItems = new List<Drawable>();
 
             CreatePrivacyDropdown();
             CreateSortDropdown();
+            CreatePlaylistDropdown();
             CreateSearchBox();
             CreateSongsFound();
 
@@ -74,6 +80,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
             if (ConfigManager.MusicPlayerOrderMapsBy != null)
                 ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
+
+            PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
 
             FilterMapsets();
         }
@@ -86,6 +94,9 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             // ReSharper disable once DelegateSubtraction
             if (ConfigManager.MusicPlayerOrderMapsBy != null)
                 ConfigManager.MusicPlayerOrderMapsBy.ValueChanged -= OnOrderMapsByChanged;
+
+            // ReSharper disable once DelegateSubtraction
+            PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
 
             base.Destroy();
         }
@@ -141,14 +152,28 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
         /// <summary>
         /// </summary>
-        private void CreateSearchBox()
+        private void CreatePlaylistDropdown()
         {
-            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
+            PlaylistDropdown = new MusicControllerPlaylistDropdown()
             {
                 Parent = this,
                 Alignment = Alignment.MidRight
             };
 
+            RightItems.Add(PlaylistDropdown);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSearchBox()
+        {
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+            };
+
+            SearchBox.Width -= 20;
             RightItems.Add(SearchBox);
         }
 
@@ -210,5 +235,11 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             // as re-filtering the songs in the handled event
             CurrentSearchQuery.TriggerChange();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> e) => CurrentSearchQuery.TriggerChange();
     }
 }

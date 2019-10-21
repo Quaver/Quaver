@@ -96,6 +96,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 X = Dropdown.PaddingX,
                 Alpha = 1
             };
+
+            if (Dropdown.MaxWidth != 0)
+                Text.TruncateWithEllipsis(Dropdown.MaxWidth);
         }
 
         /// <summary>

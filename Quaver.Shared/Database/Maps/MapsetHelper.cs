@@ -42,12 +42,12 @@ namespace Quaver.Shared.Database.Maps
         ///     Filters mapsets to use in song select
         /// </summary>
         /// <returns></returns>
-        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery, bool ignoreGrouping = false)
+        internal static List<Mapset> FilterMapsets(Bindable<string> searchQuery, bool musicPlayer = false)
         {
             var mapsets = MapManager.Mapsets;
 
             // Handle playlists
-            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
             {
                 mapsets = PlaylistManager.Selected.Value == null
                     ? new List<Mapset>()
@@ -56,12 +56,12 @@ namespace Quaver.Shared.Database.Maps
 
             var searched = SearchMapsets(mapsets, searchQuery.Value);
 
-            if (!ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
+            if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
-            var separateMapsets = !ignoreGrouping && ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
-            var gameModes = ignoreGrouping ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) { Value = SelectFilterGameMode.All } : null;
-            var orderMapsetsBy = ignoreGrouping ? ConfigManager.MusicPlayerOrderMapsBy : null;
+            var separateMapsets = ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
+            var gameModes = musicPlayer ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) {Value = SelectFilterGameMode.All} : null;
+            var orderMapsetsBy = musicPlayer ? ConfigManager.MusicPlayerOrderMapsBy : null;
 
             return OrderMapsetsByConfigValue(searched, separateMapsets, gameModes, orderMapsetsBy);
         }

@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             Jukebox = jukebox;
 
             Alpha = 0;
-            Size = new ScalableVector2(WindowManager.Width - 622, 200);
+            Size = new ScalableVector2(WindowManager.Width - 310, 220);
 
             CreateBackground();
             CreateTitle();
@@ -122,7 +122,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Y = 28,
+                Y = 34,
                 Tint = ColorHelper.HexToColor("#57D6FF")
             };
         }

@@ -44,6 +44,11 @@ namespace Quaver.Shared.Database.Maps
         public static List<Mapset> Mapsets { get; set; } = new List<Mapset>();
 
         /// <summary>
+        ///     List of recently selected/played maps
+        /// </summary>
+        public static List<Map> RecentlyPlayed { get; set; } = new List<Map>();
+
+        /// <summary>
         ///     The osu! Songs folder path
         /// </summary>
         public static string OsuSongsFolder { get; set; }
