@@ -24,18 +24,21 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         /// <param name="width"></param>
         /// <param name="icon"></param>
         /// <param name="text"></param>
-        public MusicPlayerSidebarHeader(float width, Texture2D icon, string text)
+        public MusicPlayerSidebarHeader(float width, Texture2D icon, string text, bool hasTopLine = true)
         {
             Size = new ScalableVector2(width, 52);
             Tint = ColorHelper.HexToColor("#181818");
 
-            var dividerLineTop = new Sprite
+            if (hasTopLine)
             {
-                Parent = this,
-                Size = new ScalableVector2(Width, 2),
-                Alignment = Alignment.TopLeft,
-                Alpha = 0.65f
-            };
+                var dividerLineTop = new Sprite
+                {
+                    Parent = this,
+                    Size = new ScalableVector2(Width, 2),
+                    Alignment = Alignment.TopLeft,
+                    Alpha = 0.65f
+                };
+            }
 
             HeaderText = new IconTextButton(icon,
                 FontManager.GetWobbleFont(Fonts.LatoBlack), text, null, Color.White, Color.White)

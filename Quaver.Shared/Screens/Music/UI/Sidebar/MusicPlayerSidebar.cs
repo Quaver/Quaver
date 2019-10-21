@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         /// </summary>
         private void CreateRecentlyPlayedHeader()
         {
-            RecentlyPlayedHeader = new MusicPlayerSidebarHeader(Width, FontAwesome.Get(FontAwesomeIcon.fa_time), "RECENTLY PLAYED")
+            RecentlyPlayedHeader = new MusicPlayerSidebarHeader(Width, FontAwesome.Get(FontAwesomeIcon.fa_time), "RECENTLY PLAYED", false)
             {
                 Parent = this,
             };
