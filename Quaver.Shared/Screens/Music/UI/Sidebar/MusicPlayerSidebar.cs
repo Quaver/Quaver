@@ -9,6 +9,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
+using Quaver.Shared.Screens.Music.UI.Sidebar.Playlists;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Bindables;
@@ -40,6 +41,10 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         /// <summary>
         /// </summary>
         private MusicPlayerSidebarHeader PlaylistHeader { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private SidebarPlaylistContainer PlaylistContainer { get; set; }
 
         /// <summary>
         /// </summary>
@@ -94,8 +99,6 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             MapManager.Selected.ValueChanged -= OnMapChanged;
             base.Destroy();
         }
-
-
 
         /// <summary>
         /// </summary>
@@ -175,7 +178,12 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             {
                 Parent = ExploreContainer,
                 X = 14,
-                Y = 33
+                Y = 32,
+                Text =
+                {
+                    FontSize = 22,
+                    Text = "Download Songs"
+                }
             };
         }
 
@@ -191,7 +199,12 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             {
                 Parent = ExploreContainer,
                 X = DownloadSongs.X,
-                Y = DownloadSongs.Y + DownloadSongs.Height + DownloadSongs.Y
+                Y = DownloadSongs.Y + DownloadSongs.Height + DownloadSongs.Y,
+                Text =
+                {
+                    FontSize = 22,
+                    Text = "Online Map Pools"
+                }
             };
         }
 
@@ -208,7 +221,12 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             {
                 Parent = ExploreContainer,
                 X = DownloadSongs.X,
-                Y = OnlineMapPools.Y + OnlineMapPools.Height + DownloadSongs.Y
+                Y = OnlineMapPools.Y + OnlineMapPools.Height + DownloadSongs.Y,
+                Text =
+                {
+                    FontSize = 22,
+                    Text = "Song Select"
+                }
             };
         }
 
@@ -240,7 +258,12 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             {
                 Parent = ExploreContainer,
                 X = DownloadSongs.X,
-                Y = SongSelect.Y + SongSelect.Height + DownloadSongs.Y
+                Y = SongSelect.Y + SongSelect.Height + DownloadSongs.Y,
+                Text =
+                {
+                    FontSize = 22,
+                    Text = "Map Editor"
+                }
             };
         }
 
@@ -252,6 +275,13 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             {
                 Parent = this,
                 Y = ExploreContainer.Y + ExploreContainer.Height
+            };
+
+            PlaylistContainer = new SidebarPlaylistContainer(new ScalableVector2(Width,
+                Height - PlaylistHeader.Y - PlaylistHeader.Height))
+            {
+                Parent = this,
+                Y = PlaylistHeader.Y + PlaylistHeader.Height
             };
         }
 

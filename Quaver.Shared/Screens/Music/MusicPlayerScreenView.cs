@@ -197,16 +197,6 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private void AnimateContentContainer()
         {
-            /*ContentContainer.X = ContentContainer.Width;
-            ContentContainer.MoveToX(0, Easing.OutQuint, 600);
-
-            var screen = (MusicPlayerScreen) Screen;
-
-            screen.ScreenExiting += (sender, args) =>
-            {
-                ContentContainer.ClearAnimations();
-                ContentContainer.MoveToX(ContentContainer.Width, Easing.OutQuint, 800);
-            };*/
         }
     }
 }
