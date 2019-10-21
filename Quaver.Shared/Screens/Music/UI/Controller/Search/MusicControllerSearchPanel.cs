@@ -41,6 +41,10 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
         /// <summary>
         /// </summary>
+        private MusicControllerPlaylistDropdown PlaylistDropdown { get; set; }
+
+        /// <summary>
+        /// </summary>
         private FilterPanelSearchBox SearchBox { get; set; }
 
         /// <summary>
@@ -58,13 +62,14 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
             CurrentSearchQuery = currentSearchQuery;
             AvailableSongs = availableSongs;
 
-            Size = new ScalableVector2(width, 80);
+            Size = new ScalableVector2(width, 86);
             Tint = ColorHelper.HexToColor("#1f1f1f");
 
             RightItems = new List<Drawable>();
 
             CreatePrivacyDropdown();
             CreateSortDropdown();
+            CreatePlaylistDropdown();
             CreateSearchBox();
             CreateSongsFound();
 
@@ -147,14 +152,28 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
 
         /// <summary>
         /// </summary>
-        private void CreateSearchBox()
+        private void CreatePlaylistDropdown()
         {
-            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
+            PlaylistDropdown = new MusicControllerPlaylistDropdown()
             {
                 Parent = this,
                 Alignment = Alignment.MidRight
             };
 
+            RightItems.Add(PlaylistDropdown);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSearchBox()
+        {
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+            };
+
+            SearchBox.Width -= 20;
             RightItems.Add(SearchBox);
         }
 

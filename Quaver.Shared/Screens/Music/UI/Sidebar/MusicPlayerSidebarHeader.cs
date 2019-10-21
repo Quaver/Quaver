@@ -24,10 +24,12 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         /// <param name="width"></param>
         /// <param name="icon"></param>
         /// <param name="text"></param>
+        /// <param name="hasTopLine"></param>
         public MusicPlayerSidebarHeader(float width, Texture2D icon, string text, bool hasTopLine = true)
         {
             Size = new ScalableVector2(width, 52);
             Tint = ColorHelper.HexToColor("#181818");
+            Alpha = 1;
 
             if (hasTopLine)
             {

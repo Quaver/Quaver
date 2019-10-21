@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             DividerLine = new Sprite()
             {
                 Parent = Container,
-                Y = 50,
+                Y = 54,
                 Size = new ScalableVector2(width, 2),
                 Alpha = 0.75f
             };

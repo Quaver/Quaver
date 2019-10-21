@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateOnlineMapPoolsButton()
         {
             OnlineMapPools = new IconTextButton(UserInterface.JukeboxHamburgerIcon,
-                FontManager.GetWobbleFont(Fonts.LatoBlack), "Online Map Pools", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.LatoBlack), "Online Playlists", (sender, args) =>
                 {
                     BrowserHelper.OpenURL($"https://quavergame.com/mappools/");
                 })
@@ -203,7 +203,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
                 Text =
                 {
                     FontSize = 22,
-                    Text = "Online Map Pools"
+                    Text = "Online Playlists"
                 }
             };
         }

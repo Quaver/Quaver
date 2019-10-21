@@ -5,6 +5,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Graphics.Sprites.Text;
@@ -56,7 +57,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            FadeToColor(IsHovered ? Colors.MainAccent : Color.White, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
+            FadeToColor(IsHovered ? Colors.MainAccent : ColorHelper.HexToColor("#808080"), gameTime.ElapsedGameTime.TotalMilliseconds, 30);
             Text.Tint = Tint;
 
             base.Update(gameTime);
