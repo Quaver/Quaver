@@ -89,6 +89,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// </summary>
         public float HighlightAlpha { get; set; } = 0.45f;
 
+        /// <summary>
+        ///     The max width of the dropdown's text
+        /// </summary>
+        public int MaxWidth { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -97,12 +102,15 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <param name="fontSize"></param>
         /// <param name="color"></param>
         /// <param name="selectedIndex"></param>
-        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0) : base(UserInterface.DropdownClosed)
+        /// <param name="maxWidth"></param>
+        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0, int maxWidth = 0)
+            : base(UserInterface.DropdownClosed)
         {
             Options = options;
             SelectedIndex = selectedIndex;
             HoverColor = color ?? Colors.MainAccent;
             FontSize = fontSize;
+            MaxWidth = maxWidth;
 
             if (Options == null || Options.Count == 0)
                 throw new InvalidOperationException("You cannot create a dropdown with zero elements");
@@ -174,6 +182,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 X = PaddingX,
                 Tint = HoverColor
             };
+
+            if (MaxWidth != 0)
+                SelectedText.TruncateWithEllipsis(MaxWidth);
         }
 
         /// <summary>
