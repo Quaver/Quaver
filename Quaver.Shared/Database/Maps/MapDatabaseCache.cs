@@ -261,6 +261,7 @@ namespace Quaver.Shared.Database.Maps
 
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
+            MapManager.RecentlyPlayed = new List<Map>();
         }
 
         /// <summary>

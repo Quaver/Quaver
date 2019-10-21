@@ -29,7 +29,7 @@ namespace Quaver.Shared.Database.Settings
         /// <summary>
         ///     Current maps with outdated difficulties
         /// </summary>
-        public static List<Map> OutdatedMaps { get; private set; }
+        public static List<Map> OutdatedMaps { get; private set; } = new List<Map>();
 
         /// <summary>
         ///     Current scores with outdated ratings.
