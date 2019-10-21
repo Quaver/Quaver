@@ -60,8 +60,7 @@ namespace Quaver.Shared.Database.Maps
                 searched = SeparateMapsIntoOwnMapsets(searched);
 
             var separateMapsets = ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists;
-            var gameModes = new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) {Value = SelectFilterGameMode.All};
-
+            var gameModes = musicPlayer ? new Bindable<SelectFilterGameMode>(SelectFilterGameMode.All) {Value = SelectFilterGameMode.All} : null;
             var orderMapsetsBy = musicPlayer ? ConfigManager.MusicPlayerOrderMapsBy : null;
 
             return OrderMapsetsByConfigValue(searched, separateMapsets, gameModes, orderMapsetsBy);

@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                     Background = { X = -450 }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Competitve".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
+                    "Competitive".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
                 {
                     Background = { Tint = Color.LimeGreen }
                 },
