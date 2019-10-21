@@ -81,6 +81,10 @@ namespace Quaver.Shared.Screens.Music
         {
             // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+
+            if (ConfigManager.AutoLoadOsuBeatmaps != null)
+                ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+
             base.Destroy();
         }
 

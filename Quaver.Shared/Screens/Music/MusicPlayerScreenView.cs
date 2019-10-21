@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Music.UI;
 using Quaver.Shared.Screens.Music.UI.Controller;
 using Quaver.Shared.Screens.Music.UI.Controller.Search;
 using Quaver.Shared.Screens.Music.UI.ListenerList;
+using Quaver.Shared.Screens.Music.UI.Sidebar;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -65,6 +66,10 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         private DrawableListenerList ListenerList { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private MusicPlayerSidebar Sidebar { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -88,6 +93,7 @@ namespace Quaver.Shared.Screens.Music
             CreateMusicControllerContainer();
             CreateSearchPanel();
             CreateSongContainer();
+            CreateSidebar();
 
             SearchPanel.Parent = ContentContainer;
             Header.Parent = Container;
@@ -173,6 +179,19 @@ namespace Quaver.Shared.Screens.Music
             Alignment = ControllerContainer.Alignment,
             Y = SearchPanel.Y + SearchPanel.Height
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateSidebar()
+        {
+            Sidebar = new MusicPlayerSidebar(new ScalableVector2(
+                WindowManager.Width - SongContainer.Width - ListenerList.Width,
+                ListenerList.Height))
+            {
+                Parent = Container,
+                Y = ListenerList.Y
+            };
+        }
 
         /// <summary>
         /// </summary>
