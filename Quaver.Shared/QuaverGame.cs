@@ -377,6 +377,14 @@ namespace Quaver.Shared
             // Create bindable for selected map.
             if (MapManager.Mapsets.Count != 0)
                 MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
+
+            MapManager.Selected.ValueChanged += (sender, args) =>
+            {
+                if (MapManager.RecentlyPlayed.Contains(args.Value))
+                    MapManager.RecentlyPlayed.Remove(args.Value);
+
+                MapManager.RecentlyPlayed.Add(args.Value);
+            };
         }
 
         /// <summary>
