@@ -386,7 +386,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
             {
                 // Create a RenderTarget with mipmapping with the original texuture.
                 var mipmapped = new RenderTarget2D(GameBase.Game.GraphicsDevice, mapTexture.Width, mapTexture.Height, true,
-                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+                    SurfaceFormat.Bgr565, DepthFormat.Depth24Stencil8);
 
                 GameBase.Game.GraphicsDevice.SetRenderTarget(mipmapped);
                 GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
