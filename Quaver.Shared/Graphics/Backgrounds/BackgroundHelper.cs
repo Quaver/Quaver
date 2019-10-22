@@ -305,6 +305,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 }
 
                 CreateBanner(mapTexture, mapset);
+
                 bannersToRemove.Add(mapset);
             }
 
@@ -383,6 +384,28 @@ namespace Quaver.Shared.Graphics.Backgrounds
             // Mask the image and draw it to a RenderTarget
             GameBase.Game.ScheduledRenderTargetDraws.Add(() =>
             {
+                // Create a RenderTarget with mipmapping with the original texuture.
+                var mipmapped = new RenderTarget2D(GameBase.Game.GraphicsDevice, mapTexture.Width, mapTexture.Height, true,
+                    GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+
+                GameBase.Game.GraphicsDevice.SetRenderTarget(mipmapped);
+                GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+
+                var textureSprite = new Sprite
+                {
+                    Size = new ScalableVector2(mapTexture.Width, mapTexture.Height),
+                    Image = mapTexture,
+                    SpriteBatchOptions = new SpriteBatchOptions()
+                    {
+                        DoNotScale = true,
+                        SamplerState = SamplerState.PointClamp
+                    }
+                };
+
+                textureSprite.Draw(new GameTime());
+                GameBase.Game.SpriteBatch.End();
+
+                // Cache a smaller version of the texture to a RenderTarget
                 var size = new ScalableVector2(421, 82);
                 var scrollContainer = new ScrollContainer(size, size);
 
@@ -391,7 +414,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                     Alignment = Alignment.MidCenter,
                     // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
                     Size = new ScalableVector2(448, 252),
-                    Image = mapTexture
+                    Image = mipmapped
                 };
 
                 scrollContainer.AddContainedDrawable(maskedSprite);
@@ -412,6 +435,10 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                 scrollContainer?.Destroy();
                 maskedSprite?.Destroy();
+
+                textureSprite.Destroy();
+                mipmapped?.Dispose();
+                mapTexture.Dispose();
 
                 if (mapset != null)
                 {
