@@ -390,9 +390,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 {
                     Alignment = Alignment.MidCenter,
                     // Small 16:9 resolution size to make backgrounds look a bit better and zoomed out
-                    Size = new ScalableVector2(1024, 576),
-                    // This y offset usually captures the best part of the image (such as faces or text)
-                    Y = 100,
+                    Size = new ScalableVector2(448, 252),
                     Image = mapTexture
                 };
 
