@@ -541,7 +541,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateHealthBar()
         {
-            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarType, Playfield.Ruleset.ScoreProcessor)
+            var scale = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarScale;
+            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarType,
+                Playfield.Ruleset.ScoreProcessor, new Vector2(scale / 100f, scale / 100f))
             {
                 Parent = Playfield.ForegroundContainer,
             };

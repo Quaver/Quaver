@@ -143,6 +143,8 @@ namespace Quaver.Shared.Skinning
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
+        internal int HealthBarScale{ get; private set; }
+
         internal Color TimingLineColor { get; private set; }
 
         internal Color SongTimeProgressInactiveColor { get; private set; }
@@ -366,6 +368,7 @@ namespace Quaver.Shared.Skinning
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
+            HealthBarScale = ConfigHelper.ReadInt32(HealthBarScale, ini["HealthBarScale"]);
             HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
             HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
             HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
