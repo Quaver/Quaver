@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
@@ -38,24 +39,33 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
+        [FixedScale]
         internal float StageReceptorPadding { get; private set; }
 
+        [FixedScale]
         internal float HitPosOffsetY { get; private set; }
 
+        [FixedScale]
         internal float NotePadding { get; private set; }
 
+        // Not FixedScale because it's used as a factor in an expression with another, already scaled, attribute.
         internal float ColumnLightingScale { get; private set; }
 
+        [FixedScale]
         internal float ColumnLightingOffsetY { get; private set; }
 
+        [FixedScale]
         internal float ColumnSize { get; private set; }
 
+        [FixedScale]
         internal float ReceptorPosOffsetY { get; private set; }
 
+        [FixedScale]
         internal float ColumnAlignment { get; private set; }
 
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
+        [FixedScale]
         internal float JudgementHitBurstScale { get; private set; }
 
         internal bool ReceptorsOverHitObjects { get; private set; }
@@ -87,62 +97,87 @@ namespace Quaver.Shared.Skinning
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
+        [FixedScale]
         internal float HitLightingX { get; private set; }
 
+        [FixedScale]
         internal float HitLightingY { get; private set; }
 
         internal int HitLightingFps { get; private set; }
 
         internal int HoldLightingFps { get; private set; }
 
+        [FixedScale]
         internal float HitLightingWidth { get; private set; }
 
+        [FixedScale]
         internal float HitLightingHeight { get; private set; }
 
+        [FixedScale]
         internal float ScoreDisplayPosX { get; private set; }
 
+        [FixedScale]
         internal float ScoreDisplayPosY { get; private set; }
 
+        [FixedScale]
         internal float ScoreDisplayScale { get; private set; }
 
+        [FixedScale]
         internal float RatingDisplayPosX { get; private set; }
 
+        [FixedScale]
         internal float RatingDisplayPosY { get; private set; }
 
+        [FixedScale]
         internal float RatingDisplayScale { get; private set; }
 
+        [FixedScale]
         internal float AccuracyDisplayPosX { get; private set; }
 
+        [FixedScale]
         internal float AccuracyDisplayPosY { get; private set; }
 
+        [FixedScale]
         internal float AccuracyDisplayScale { get; private set; }
 
+        [FixedScale]
         internal float KpsDisplayPosX { get; private set; }
 
+        [FixedScale]
         internal float KpsDisplayPosY { get; private set; }
 
+        [FixedScale]
         internal float KpsDisplayScale { get; private set; }
 
+        [FixedScale]
         internal float ComboPosX { get; private set; }
 
+        [FixedScale]
         internal float ComboPosY { get; private set; }
 
+        [FixedScale]
         internal float ComboDisplayScale { get; private set; }
 
+        [FixedScale]
         internal float JudgementBurstPosY { get; private set; }
 
+        [FixedScale]
         internal float HitErrorPosX { get; private set; }
 
+        [FixedScale]
         internal float HitErrorPosY { get; private set; }
 
+        [FixedScale]
         internal float HitErrorHeight { get; private set; }
 
+        [FixedScale]
         internal float HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
+        [FixedScale]
         internal float HealthBarScale{ get; private set; }
 
         internal Color TimingLineColor { get; private set; }
@@ -151,26 +186,33 @@ namespace Quaver.Shared.Skinning
 
         internal Color SongTimeProgressActiveColor { get; private set; }
 
+        [FixedScale]
         internal float SongTimeProgressScale { get; private set; }
 
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
 
+        [FixedScale]
         internal float JudgementCounterSize { get; private set; }
 
         internal bool DrawLongNoteEnd { get; private set; }
 
         internal Color DeadNoteColor { get; private set; }
 
+        [FixedScale]
         internal float BattleRoyaleAlertPosX { get; private set; }
 
+        [FixedScale]
         internal float BattleRoyaleAlertPosY { get; private set; }
 
+        [FixedScale]
         internal float BattleRoyaleAlertScale { get; private set; }
 
+        [FixedScale]
         internal float BattleRoyaleEliminatedPosX { get; private set; }
 
+        [FixedScale]
         internal float BattleRoyaleEliminatedPosY { get; private set; }
 
         #endregion
@@ -301,7 +343,26 @@ namespace Quaver.Shared.Skinning
             // skin.ini.
             ReadConfig(true);
             ReadConfig(false);
+            FixScale();
             LoadTextures();
+        }
+
+        /// <summary>
+        ///     Scale all necessary skin keys to match the UI redesign coordinate system.
+        /// </summary>
+        private void FixScale()
+        {
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+                .Where(info => Attribute.IsDefined(info, typeof(FixedScale)));
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(this);
+                if (value is float f)
+                {
+                    property.SetValue(this, f * QuaverGame.SkinScalingFactor);
+                }
+            }
         }
 
         /// <summary>
