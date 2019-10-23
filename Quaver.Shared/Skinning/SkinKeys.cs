@@ -38,25 +38,25 @@ namespace Quaver.Shared.Skinning
 
 #region SKIN.INI VALUES
 
-        internal int StageReceptorPadding { get; private set; }
+        internal float StageReceptorPadding { get; private set; }
 
-        internal int HitPosOffsetY { get; private set; }
+        internal float HitPosOffsetY { get; private set; }
 
-        internal int NotePadding { get; private set; }
+        internal float NotePadding { get; private set; }
 
         internal float ColumnLightingScale { get; private set; }
 
-        internal int ColumnLightingOffsetY { get; private set; }
+        internal float ColumnLightingOffsetY { get; private set; }
 
-        internal int ColumnSize { get; private set; }
+        internal float ColumnSize { get; private set; }
 
-        internal int ReceptorPosOffsetY { get; private set; }
+        internal float ReceptorPosOffsetY { get; private set; }
 
-        internal int ColumnAlignment { get; private set; }
+        internal float ColumnAlignment { get; private set; }
 
         internal bool ColorObjectsBySnapDistance { get; private set; }
 
-        internal byte JudgementHitBurstScale { get; private set; }
+        internal float JudgementHitBurstScale { get; private set; }
 
         internal bool ReceptorsOverHitObjects { get; private set; }
 
@@ -87,63 +87,63 @@ namespace Quaver.Shared.Skinning
 
         internal bool FlipNoteEndImagesOnUpscroll { get; private set; }
 
-        internal int HitLightingX { get; private set; }
+        internal float HitLightingX { get; private set; }
 
-        internal int HitLightingY { get; private set; }
+        internal float HitLightingY { get; private set; }
 
         internal int HitLightingFps { get; private set; }
 
         internal int HoldLightingFps { get; private set; }
 
-        internal int HitLightingWidth { get; private set; }
+        internal float HitLightingWidth { get; private set; }
 
-        internal int HitLightingHeight { get; private set; }
+        internal float HitLightingHeight { get; private set; }
 
-        internal int ScoreDisplayPosX { get; private set; }
+        internal float ScoreDisplayPosX { get; private set; }
 
-        internal int ScoreDisplayPosY { get; private set; }
+        internal float ScoreDisplayPosY { get; private set; }
 
-        internal int ScoreDisplayScale { get; private set; }
+        internal float ScoreDisplayScale { get; private set; }
 
-        internal int RatingDisplayPosX { get; private set; }
+        internal float RatingDisplayPosX { get; private set; }
 
-        internal int RatingDisplayPosY { get; private set; }
+        internal float RatingDisplayPosY { get; private set; }
 
-        internal int RatingDisplayScale { get; private set; }
+        internal float RatingDisplayScale { get; private set; }
 
-        internal int AccuracyDisplayPosX { get; private set; }
+        internal float AccuracyDisplayPosX { get; private set; }
 
-        internal int AccuracyDisplayPosY { get; private set; }
+        internal float AccuracyDisplayPosY { get; private set; }
 
-        internal int AccuracyDisplayScale { get; private set; }
+        internal float AccuracyDisplayScale { get; private set; }
 
-        internal int KpsDisplayPosX { get; private set; }
+        internal float KpsDisplayPosX { get; private set; }
 
-        internal int KpsDisplayPosY { get; private set; }
+        internal float KpsDisplayPosY { get; private set; }
 
-        internal int KpsDisplayScale { get; private set; }
+        internal float KpsDisplayScale { get; private set; }
 
-        internal int ComboPosX { get; private set; }
+        internal float ComboPosX { get; private set; }
 
-        internal int ComboPosY { get; private set; }
+        internal float ComboPosY { get; private set; }
 
-        internal int ComboDisplayScale { get; private set; }
+        internal float ComboDisplayScale { get; private set; }
 
-        internal int JudgementBurstPosY { get; private set; }
+        internal float JudgementBurstPosY { get; private set; }
 
-        internal int HitErrorPosX { get; private set; }
+        internal float HitErrorPosX { get; private set; }
 
-        internal int HitErrorPosY { get; private set; }
+        internal float HitErrorPosY { get; private set; }
 
-        internal int HitErrorHeight { get; private set; }
+        internal float HitErrorHeight { get; private set; }
 
-        internal int HitErrorChevronSize { get; private set; }
+        internal float HitErrorChevronSize { get; private set; }
 
         internal HealthBarType HealthBarType { get; private set; }
 
         internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
 
-        internal int HealthBarScale{ get; private set; }
+        internal float HealthBarScale{ get; private set; }
 
         internal Color TimingLineColor { get; private set; }
 
@@ -151,27 +151,27 @@ namespace Quaver.Shared.Skinning
 
         internal Color SongTimeProgressActiveColor { get; private set; }
 
-        internal int SongTimeProgressScale { get; private set; }
+        internal float SongTimeProgressScale { get; private set; }
 
         internal float JudgementCounterAlpha { get; private set; }
 
         internal Color JudgementCounterFontColor { get; private set; }
 
-        internal int JudgementCounterSize { get; private set; }
+        internal float JudgementCounterSize { get; private set; }
 
         internal bool DrawLongNoteEnd { get; private set; }
 
         internal Color DeadNoteColor { get; private set; }
 
-        internal int BattleRoyaleAlertPosX { get; private set; }
+        internal float BattleRoyaleAlertPosX { get; private set; }
 
-        internal int BattleRoyaleAlertPosY { get; private set; }
+        internal float BattleRoyaleAlertPosY { get; private set; }
 
-        internal int BattleRoyaleAlertScale { get; private set; }
+        internal float BattleRoyaleAlertScale { get; private set; }
 
-        internal int BattleRoyaleEliminatedPosX { get; private set; }
+        internal float BattleRoyaleEliminatedPosX { get; private set; }
 
-        internal int BattleRoyaleEliminatedPosY { get; private set; }
+        internal float BattleRoyaleEliminatedPosY { get; private set; }
 
         #endregion
 
@@ -329,16 +329,16 @@ namespace Quaver.Shared.Skinning
 
             var ini = config[ModeHelper.ToShortHand(Mode).ToUpper()];
 
-            StageReceptorPadding = ConfigHelper.ReadInt32(StageReceptorPadding, ini["StageReceptorPadding"]);
-            HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
-            NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
+            StageReceptorPadding = ConfigHelper.ReadInt32((int) StageReceptorPadding, ini["StageReceptorPadding"]);
+            HitPosOffsetY = ConfigHelper.ReadInt32((int) HitPosOffsetY, ini["HitPosOffsetY"]);
+            NotePadding = ConfigHelper.ReadInt32((int) NotePadding, ini["NotePadding"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
-            ColumnLightingOffsetY = ConfigHelper.ReadInt32(ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
-            ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
-            ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
-            ColumnAlignment = ConfigHelper.ReadInt32(ColumnAlignment, ini["ColumnAlignment"]);
+            ColumnLightingOffsetY = ConfigHelper.ReadInt32((int) ColumnLightingOffsetY, ini["ColumnLightingOffsetY"]);
+            ColumnSize = ConfigHelper.ReadInt32((int) ColumnSize, ini["ColumnSize"]);
+            ReceptorPosOffsetY = ConfigHelper.ReadInt32((int) ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
+            ColumnAlignment = ConfigHelper.ReadInt32((int) ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
-            JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
+            JudgementHitBurstScale = ConfigHelper.ReadByte((byte) JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);
             JudgeColors[Judgement.Marv] = ConfigHelper.ReadColor(JudgeColors[Judgement.Marv], ini["JudgeColorMarv"]);
             JudgeColors[Judgement.Perf] = ConfigHelper.ReadColor(JudgeColors[Judgement.Perf], ini["JudgeColorPerf"]);
@@ -349,49 +349,49 @@ namespace Quaver.Shared.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             FlipNoteEndImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteEndImagesOnUpscroll, ini["FlipNoteEndImagesOnUpscroll"]);
-            HitLightingY = ConfigHelper.ReadInt32(HitLightingY, ini["HitLightingY"]);
-            HitLightingX = ConfigHelper.ReadInt32(HitLightingX, ini["HitLightingX"]);
+            HitLightingY = ConfigHelper.ReadInt32((int) HitLightingY, ini["HitLightingY"]);
+            HitLightingX = ConfigHelper.ReadInt32((int) HitLightingX, ini["HitLightingX"]);
             HitLightingFps = ConfigHelper.ReadInt32(HitLightingFps, ini["HitLightingFps"]);
             HoldLightingFps = ConfigHelper.ReadInt32(HoldLightingFps, ini["HoldLightingFps"]);
-            HitLightingWidth = ConfigHelper.ReadInt32(HitLightingWidth, ini["HitLightingWidth"]);
-            HitLightingHeight = ConfigHelper.ReadInt32(HitLightingHeight, ini["HitLightingHeight"]);
-            ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
-            ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
-            RatingDisplayPosX = ConfigHelper.ReadInt32(RatingDisplayPosX, ini["RatingDisplayPosX"]);
-            RatingDisplayPosY = ConfigHelper.ReadInt32(RatingDisplayPosY, ini["RatingDisplayPosY"]);
-            AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
-            AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
-            KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, ini["KpsDisplayPosX"]);
-            KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, ini["KpsDisplayPosY"]);
-            ComboPosX = ConfigHelper.ReadInt32(ComboPosX, ini["ComboPosX"]);
-            ComboPosY = ConfigHelper.ReadInt32(ComboPosY, ini["ComboPosY"]);
-            JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
+            HitLightingWidth = ConfigHelper.ReadInt32((int) HitLightingWidth, ini["HitLightingWidth"]);
+            HitLightingHeight = ConfigHelper.ReadInt32((int) HitLightingHeight, ini["HitLightingHeight"]);
+            ScoreDisplayPosX = ConfigHelper.ReadInt32((int) ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
+            ScoreDisplayPosY = ConfigHelper.ReadInt32((int) ScoreDisplayPosY, ini["ScoreDisplayPosY"]);
+            RatingDisplayPosX = ConfigHelper.ReadInt32((int) RatingDisplayPosX, ini["RatingDisplayPosX"]);
+            RatingDisplayPosY = ConfigHelper.ReadInt32((int) RatingDisplayPosY, ini["RatingDisplayPosY"]);
+            AccuracyDisplayPosX = ConfigHelper.ReadInt32((int) AccuracyDisplayPosX, ini["AccuracyDisplayPosX"]);
+            AccuracyDisplayPosY = ConfigHelper.ReadInt32((int) AccuracyDisplayPosY, ini["AccuracyDisplayPosY"]);
+            KpsDisplayPosX = ConfigHelper.ReadInt32((int) KpsDisplayPosX, ini["KpsDisplayPosX"]);
+            KpsDisplayPosY = ConfigHelper.ReadInt32((int) KpsDisplayPosY, ini["KpsDisplayPosY"]);
+            ComboPosX = ConfigHelper.ReadInt32((int) ComboPosX, ini["ComboPosX"]);
+            ComboPosY = ConfigHelper.ReadInt32((int) ComboPosY, ini["ComboPosY"]);
+            JudgementBurstPosY = ConfigHelper.ReadInt32((int) JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadEnum(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadEnum(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
-            HealthBarScale = ConfigHelper.ReadInt32(HealthBarScale, ini["HealthBarScale"]);
-            HitErrorPosX = ConfigHelper.ReadInt32(HitErrorPosX, ini["HitErrorPosX"]);
-            HitErrorPosY = ConfigHelper.ReadInt32(HitErrorPosY, ini["HitErrorPosY"]);
-            HitErrorHeight = ConfigHelper.ReadInt32(HitErrorHeight, ini["HitErrorHeight"]);
-            HitErrorChevronSize = ConfigHelper.ReadInt32(HitErrorChevronSize, ini["HitErrorChevronSize"]);
+            HealthBarScale = ConfigHelper.ReadInt32((int) HealthBarScale, ini["HealthBarScale"]);
+            HitErrorPosX = ConfigHelper.ReadInt32((int) HitErrorPosX, ini["HitErrorPosX"]);
+            HitErrorPosY = ConfigHelper.ReadInt32((int) HitErrorPosY, ini["HitErrorPosY"]);
+            HitErrorHeight = ConfigHelper.ReadInt32((int) HitErrorHeight, ini["HitErrorHeight"]);
+            HitErrorChevronSize = ConfigHelper.ReadInt32((int) HitErrorChevronSize, ini["HitErrorChevronSize"]);
             TimingLineColor = ConfigHelper.ReadColor(TimingLineColor, ini["TimingLineColor"]);
             SongTimeProgressInactiveColor = ConfigHelper.ReadColor(SongTimeProgressInactiveColor, ini["SongTimeProgressInactiveColor"]);
             SongTimeProgressActiveColor = ConfigHelper.ReadColor(SongTimeProgressActiveColor, ini["SongTimeProgressActiveColor"]);
             JudgementCounterAlpha = ConfigHelper.ReadFloat(JudgementCounterAlpha, ini["JudgementCounterAlpha"]);
             JudgementCounterFontColor = ConfigHelper.ReadColor(JudgementCounterFontColor, ini["JudgementCounterFontColor"]);
-            JudgementCounterSize = ConfigHelper.ReadInt32(JudgementCounterSize, ini["JudgementCounterSize"]);
+            JudgementCounterSize = ConfigHelper.ReadInt32((int) JudgementCounterSize, ini["JudgementCounterSize"]);
             DrawLongNoteEnd = ConfigHelper.ReadBool(DrawLongNoteEnd, ini["DrawLongNoteEnd"]);
-            ScoreDisplayScale = ConfigHelper.ReadInt32(ScoreDisplayScale, ini["ScoreDisplayScale"]);
-            RatingDisplayScale = ConfigHelper.ReadInt32(RatingDisplayScale, ini["RatingDisplayScale"]);
-            AccuracyDisplayScale = ConfigHelper.ReadInt32(AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
-            ComboDisplayScale = ConfigHelper.ReadInt32(ComboDisplayScale, ini["ComboDisplayScale"]);
-            KpsDisplayScale = ConfigHelper.ReadInt32(KpsDisplayScale, ini["KpsDisplayScale"]);
-            SongTimeProgressScale = ConfigHelper.ReadInt32(SongTimeProgressScale, ini["SongTimeProgressScale"]);
+            ScoreDisplayScale = ConfigHelper.ReadInt32((int) ScoreDisplayScale, ini["ScoreDisplayScale"]);
+            RatingDisplayScale = ConfigHelper.ReadInt32((int) RatingDisplayScale, ini["RatingDisplayScale"]);
+            AccuracyDisplayScale = ConfigHelper.ReadInt32((int) AccuracyDisplayScale, ini["AccuracyDisplayScale"]);
+            ComboDisplayScale = ConfigHelper.ReadInt32((int) ComboDisplayScale, ini["ComboDisplayScale"]);
+            KpsDisplayScale = ConfigHelper.ReadInt32((int) KpsDisplayScale, ini["KpsDisplayScale"]);
+            SongTimeProgressScale = ConfigHelper.ReadInt32((int) SongTimeProgressScale, ini["SongTimeProgressScale"]);
             DeadNoteColor = ConfigHelper.ReadColor(DeadNoteColor, ini["DeadNoteColor"]);
-            BattleRoyaleAlertPosX = ConfigHelper.ReadInt32(BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
-            BattleRoyaleAlertPosY = ConfigHelper.ReadInt32(BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
-            BattleRoyaleAlertScale = ConfigHelper.ReadInt32(BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
-            BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
-            BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32(BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
+            BattleRoyaleAlertPosX = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosX, ini["BattleRoyaleAlertPosX"]);
+            BattleRoyaleAlertPosY = ConfigHelper.ReadInt32((int) BattleRoyaleAlertPosY, ini["BattleRoyaleAlertPosY"]);
+            BattleRoyaleAlertScale = ConfigHelper.ReadInt32((int) BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
+            BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
+            BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
         }
 
         /// <summary>
