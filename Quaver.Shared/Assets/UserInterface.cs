@@ -133,5 +133,12 @@ namespace Quaver.Shared.Assets
         public static Texture2D JukeboxFade => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-fade.png");
         public static Texture2D HostCrown => TextureManager.Load(@"Quaver.Resources/Textures/UI/host-crown.png");
         public static Texture2D LoginButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/login-button.png");
+        public static Texture2D HubTriangles => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-triangles.png");
+        public static Texture2D HubDownloads => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-downloads.png");
+        public static Texture2D HubNotifications => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-notifications.png");
+        public static Texture2D HubOnlineUsers => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-users.png");
+        public static Texture2D HubSongRequests => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-song-requests.png");
+        public static Texture2D HubHeaderBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-header-background.png");
+        public static Texture2D HubIconBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-icon-background.png");
     }
 }

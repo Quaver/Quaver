@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border
@@ -29,7 +32,23 @@ namespace Quaver.Shared.Graphics.Menu.Border
             },
             new List<Drawable>
             {
-                new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option)) { Size = new ScalableVector2(30, 30)},
+                new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option), (sender, args) =>
+                {
+                    if (DialogManager.Dialogs.Count == 0)
+                    {
+                        DialogManager.Show(new OnlineHubDialog());
+                        return;
+                    }
+
+                    if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
+                        return;
+
+                    var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+                    dialog?.Close();
+                })
+                {
+                    Size = new ScalableVector2(30, 30)
+                },
                 new DrawableSessionTime()
             })
         {
