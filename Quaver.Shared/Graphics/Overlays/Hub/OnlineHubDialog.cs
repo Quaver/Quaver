@@ -39,8 +39,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         public override void CreateContent()
         {
+            Height = Hub.Height;
+            Alignment = Alignment.MidLeft;
+
             Hub.Parent = this;
-            Hub.Alignment = Alignment.MidRight;
+            Hub.Alignment = Alignment.TopRight;
 
             Hub.ClearAnimations();
             Hub.X = Hub.Width + 10;
@@ -66,7 +69,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         public void Open()
         {
             Hub.Open();
-            FadeTo(0.80f, Easing.Linear, 200);
+            FadeTo(0.75f, Easing.Linear, 200);
         }
 
         /// <summary>
