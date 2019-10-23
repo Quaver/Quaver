@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
@@ -31,7 +32,20 @@ namespace Quaver.Shared.Graphics.Menu.Border
             },
             new List<Drawable>
             {
-                new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option), (sender, args) => DialogManager.Show(new OnlineHubDialog()))
+                new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option), (sender, args) =>
+                {
+                    if (DialogManager.Dialogs.Count == 0)
+                    {
+                        DialogManager.Show(new OnlineHubDialog());
+                        return;
+                    }
+
+                    if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
+                        return;
+
+                    var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+                    dialog?.Close();
+                })
                 {
                     Size = new ScalableVector2(30, 30)
                 },

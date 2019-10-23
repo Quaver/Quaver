@@ -638,7 +638,7 @@ namespace Quaver.Shared
             if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
                 return true;
 
-            var dialog = (OnlineHubDialog) DialogManager.Dialogs.First();
+            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
             dialog?.Close();
 
             return true;
