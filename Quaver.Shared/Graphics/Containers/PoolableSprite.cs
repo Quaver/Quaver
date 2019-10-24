@@ -20,7 +20,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The item that this sprite represents
         /// </summary>
-        public T Item { get; protected set; }
+        public T Item { get; set; }
 
         /// <summary>
         ///     The index that this sprite is in the pool
