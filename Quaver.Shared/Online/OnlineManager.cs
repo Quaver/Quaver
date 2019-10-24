@@ -591,7 +591,7 @@ namespace Quaver.Shared.Online
                 newOnlineUsers.Add(user);
             }
 
-            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(newOnlineUsers);
+            // ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(newOnlineUsers);
         }
 
         /// <summary>
@@ -602,14 +602,8 @@ namespace Quaver.Shared.Online
         /// <exception cref="NotImplementedException"></exception>
         private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
         {
-            ThreadScheduler.Run(() =>
-            {
-                foreach (var user in e.Users)
-                {
-                    OnlineUsers[user.Id] = new User(user);
-                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
-                }
-            });
+            foreach (var user in e.Users)
+                OnlineUsers[user.Id].OnlineUser = user;
         }
 
         /// <summary>
@@ -619,19 +613,16 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUserStatusReceived(object sender, UserStatusEventArgs e)
         {
-            ThreadScheduler.Run(() =>
+            foreach (var user in e.Statuses)
             {
-                foreach (var user in e.Statuses)
-                {
-                    if (!OnlineUsers.ContainsKey(user.Key))
-                        continue;
+                if (!OnlineUsers.ContainsKey(user.Key))
+                    continue;
 
-                    var onlineUser = OnlineUsers[user.Key];
-                    onlineUser.CurrentStatus = user.Value;
+                var onlineUser = OnlineUsers[user.Key];
+                onlineUser.CurrentStatus = user.Value;
 
-                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
-                }
-            });
+                // ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
+            }
         }
 
         /// <summary>

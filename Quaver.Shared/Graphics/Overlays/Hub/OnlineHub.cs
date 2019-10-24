@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
 using Wobble.Graphics;
@@ -192,7 +193,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
                 section.Icon.X = width * (i + 1) - 56;
             }
 
-            SelectSection(Sections[OnlineHubSectionType.Notifications]);
+            SelectSection(Sections[OnlineHubSectionType.OnlineUsers]);
         }
     }
 }
