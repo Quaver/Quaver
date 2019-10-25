@@ -90,6 +90,11 @@ namespace Quaver.Shared
     public class QuaverGame : WobbleGame
 #endif
     {
+        /// <summary>
+        ///     Scaling factor for skin values and scroll speed to convert them to the UI redesign coordinate system.
+        /// </summary>
+        public const float SkinScalingFactor = 1920f / 1366;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
