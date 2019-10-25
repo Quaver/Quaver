@@ -6,8 +6,12 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -18,11 +22,21 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 {
     public class OnlineUserContainer : PoolableScrollContainer<User>
     {
+        /// <summary>
+        /// </summary>
+        public OnlineHubOnlineUsersFilterDropdown FilterDropdown { get; }
+
+        /// <summary>
+        ///     The currently active right click options for the screen
+        /// </summary>
+        public RightClickOptions ActiveRightClickOptions { get; private set; }
+
         /// <summary>
         /// </summary>
         private double TimeSinceLastRequestedStatuses { get; set; }
@@ -47,16 +61,18 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         /// <summary>
         /// </summary>
-        private Bindable<string> CurrentSearchQuery { get; set; }
+        private Bindable<string> CurrentSearchQuery { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="searchQuery"></param>
         /// <param name="size"></param>
-        public OnlineUserContainer(Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(),
-            int.MaxValue, 0, size, size, true)
+        /// <param name="filterDropdown"></param>
+        public OnlineUserContainer(Bindable<string> searchQuery, ScalableVector2 size, OnlineHubOnlineUsersFilterDropdown filterDropdown)
+            : base(new List<User>(), int.MaxValue, 0, size, size, true)
         {
+            FilterDropdown = filterDropdown;
             CurrentSearchQuery = searchQuery;
             Tint = ColorHelper.HexToColor("#242424");
             Alpha = 1;
@@ -79,7 +95,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             SubscribeToEvents();
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+            OnlineManager.FriendsListUserChanged += OnFriendsListUserChanged;
             CurrentSearchQuery.ValueChanged += OnSearched;
+
+            if (ConfigManager.OnlineUserListFilterType != null)
+                ConfigManager.OnlineUserListFilterType.ValueChanged += OnFilterChanged;
         }
 
         /// <inheritdoc />
@@ -92,14 +112,15 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
-            lock (Pool)
-            {
-                ContainPooledDrawables();
-                LoadingWheel.Visible = string.IsNullOrEmpty(CurrentSearchQuery.Value) && (Pool?.Count == 0 || ContentContainer.Children.Count == 0);
+            // Manually run scheduled updates here to get rid of flashing when resetting the pool
+            // under a different thread.
+            RunScheduledUpdates();
 
-                RequestUserInfo(gameTime);
-                RequestUserStatuses(gameTime);
-            }
+            ContainPooledDrawables();
+            LoadingWheel.Visible = string.IsNullOrEmpty(CurrentSearchQuery.Value) && (Pool?.Count == 0 || ContentContainer.Children.Count == 0);
+
+            RequestUserInfo(gameTime);
+            RequestUserStatuses(gameTime);
 
             base.Update(gameTime);
         }
@@ -110,9 +131,41 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         {
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+            OnlineManager.FriendsListUserChanged -= OnFriendsListUserChanged;
+
             UnsubscribeToEvents();
 
+            if (ConfigManager.OnlineUserListFilterType != null)
+            {
+                // ReSharper disable once DelegateSubtraction
+                ConfigManager.OnlineUserListFilterType.ValueChanged -= OnFilterChanged;
+            }
+
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        private void AddUser(User user)
+        {
+            if (!UserMeetsFilter(user))
+                return;
+
+            lock (AvailableItems)
+            {
+                if (!AvailableItems.Contains(user))
+                    AvailableItems.Add(user);
+            }
+
+            lock (Pool)
+            {
+                if (Pool.Any(x => x.Item == user))
+                    return;
+
+                AddContainedDrawable(AddObject(AvailableItems.IndexOf(user)));
+                RecalculateContainerHeight();
+            }
         }
 
         /// <summary>
@@ -255,33 +308,31 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         }
 
         /// <summary>
+        ///     Completely resets and refreshes the object pool
+        /// </summary>
+        private void ResetPool()
+        {
+            lock (AvailableItems)
+                AvailableItems = FilterUsers();
+
+            ScheduleUpdate(() =>
+            {
+                TargetY = 0;
+                PreviousTargetY = 0;
+                PreviousContentContainerY = 0;
+                ContentContainer.Y = 0;
+
+                Pool.ForEach(x => x.Destroy());
+                Pool.Clear();
+                CreatePool(false);
+            });
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSearched(object sender, BindableValueChangedEventArgs<string> e)
-        {
-            if (string.IsNullOrEmpty(e.Value))
-                AvailableItems = OnlineManager.OnlineUsers.Values.ToList();
-            else
-            {
-                AvailableItems = OnlineManager.OnlineUsers.Values.ToList().FindAll(x =>
-                {
-                    if (x.OnlineUser.Username == null)
-                        return false;
-
-                    return x.OnlineUser.Username.ToLower().Contains(e.Value.ToLower());
-                }).ToList();
-            }
-
-            TargetY = 0;
-            PreviousTargetY = 0;
-            PreviousContentContainerY = 0;
-            ContentContainer.Y = 0;
-
-            Pool.ForEach(x => x.Destroy());
-            Pool.Clear();
-            CreatePool(false);
-        }
+        private void OnSearched(object sender, BindableValueChangedEventArgs<string> e) => ResetPool();
 
         /// <inheritdoc />
         /// <summary>
@@ -335,16 +386,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <param name="e"></param>
         private void OnUsersOnline(object sender, UsersOnlineEventArgs e)
         {
-            lock (AvailableItems)
-                AvailableItems = OnlineManager.OnlineUsers.Values.ToList();
-
-            // Create the initial pool, but don't contain the drawable automatically,
-            // because this'll be done in Update(), so we can contain/update the correct users.
-            Pool?.ForEach(x => x.Destroy());
-            Pool?.Clear();
-            CreatePool(false, false);
-
-            RecalculateContainerHeight();
+            ResetPool();
         }
 
         /// <summary>
@@ -357,20 +399,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 return;
 
             var user = e.User;
-
-            lock (AvailableItems)
-            {
-                if (!AvailableItems.Contains(user))
-                    AvailableItems.Add(user);
-            }
-
-            lock (Pool)
-            {
-                if (Pool.Any(x => x.Item == e.User))
-                    return;
-
-                AddObjectToBottom(user, false);
-            }
+            AddUser(user);
         }
 
         /// <summary>
@@ -386,6 +415,143 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 return;
 
             RemoveUser(user.Item);
+        }
+
+        /// <summary>
+        ///     Returns a list of filtered users
+        /// </summary>
+        /// <returns></returns>
+        private List<User> FilterUsers()
+        {
+            lock (AvailableItems)
+            {
+                if (!OnlineManager.Connected)
+                    return new List<User>();
+
+                var users = OnlineManager.OnlineUsers.Values.ToList();
+
+                if (ConfigManager.OnlineUserListFilterType != null)
+                {
+                    switch (ConfigManager.OnlineUserListFilterType.Value)
+                    {
+                        case OnlineUserListFilter.All:
+                            break;
+                        case OnlineUserListFilter.Friends:
+                            users = users.FindAll(x => OnlineManager.FriendsList.Contains(x.OnlineUser.Id));
+                            break;
+                        case OnlineUserListFilter.Country:
+                            users = users.FindAll(x => x.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                // Filter by searched value
+                if (!string.IsNullOrEmpty(CurrentSearchQuery.Value))
+                {
+                    users = users.FindAll(x => x.OnlineUser.Username != null
+                                               && x.OnlineUser.Username.ToLower().Contains(CurrentSearchQuery.Value.ToLower())).ToList();
+                }
+
+                return users;
+            }
+        }
+
+        /// <summary>
+        ///     Returns if a user meets the filter requirements
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private bool UserMeetsFilter(User user)
+        {
+            if (ConfigManager.OnlineUserListFilterType != null)
+            {
+                switch (ConfigManager.OnlineUserListFilterType.Value)
+                {
+                    case OnlineUserListFilter.All:
+                        break;
+                    // Check if the user is on the friends list.
+                    case OnlineUserListFilter.Friends:
+                        if (!OnlineManager.FriendsList.Contains(user.OnlineUser.Id))
+                            return false;
+                        break;
+                    // Check if the user is in the same country
+                    case OnlineUserListFilter.Country:
+                        if (user.OnlineUser.CountryFlag != OnlineManager.Self.OnlineUser.CountryFlag)
+                            return false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            // No search query, so we can assume the user fits the criteria
+            if (string.IsNullOrEmpty(user.OnlineUser.Username))
+                return true;
+
+            // Check if user meets search filter
+            return user.OnlineUser.Username.ToLower().Contains(CurrentSearchQuery.Value.ToLower());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="rco"></param>
+        public void ActivateRightClickOptions(RightClickOptions rco)
+        {
+            if (ActiveRightClickOptions != null)
+            {
+                ActiveRightClickOptions.Visible = false;
+                ActiveRightClickOptions.Parent = null;
+                ActiveRightClickOptions.Destroy();
+            }
+
+            ActiveRightClickOptions = rco;
+            ActiveRightClickOptions.Parent = this;
+
+            ActiveRightClickOptions.ItemContainer.Height = 0;
+            ActiveRightClickOptions.Visible = true;
+
+            var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveRightClickOptions.Width - AbsolutePosition.X, 0,
+                Width - ActiveRightClickOptions.Width);
+
+            var y = MathHelper.Clamp(MouseManager.CurrentState.Y - AbsolutePosition.Y, 0,
+                Height - ActiveRightClickOptions.Items.Count * ActiveRightClickOptions.Items.First().Height - 60);
+
+            ActiveRightClickOptions.Position = new ScalableVector2(x, y);
+            ActiveRightClickOptions.Open(350);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnFilterChanged(object sender, BindableValueChangedEventArgs<OnlineUserListFilter> e) => ResetPool();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnFriendsListUserChanged(object sender, FriendsListUserChangedEventArgs e)
+        {
+            var user = Pool.Find(x => x.Item.OnlineUser.Id == e.UserId);
+
+            if (user == null)
+                return;
+
+            switch (e.Action)
+            {
+                case FriendsListAction.Add:
+                    AddUser(user.Item);
+                    break;
+                case FriendsListAction.Remove:
+                    if (ConfigManager.OnlineUserListFilterType?.Value == OnlineUserListFilter.Friends)
+                        RemoveUser(user.Item);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

@@ -28,11 +28,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
-        private Sprite HeaderBackground { get; set; }
+        public Sprite HeaderBackground { get; private set; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus HeaderText { get; set; }
+        public SpriteTextPlus HeaderText { get; private set; }
 
         /// <summary>
         /// </summary>
