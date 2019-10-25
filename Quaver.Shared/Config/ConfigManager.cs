@@ -18,6 +18,7 @@ using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
@@ -408,6 +409,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<OrderMapsetsBy> MusicPlayerOrderMapsBy { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<OnlineUserListFilter> OnlineUserListFilterType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplayFriendOnlineNotifications { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -688,6 +697,8 @@ namespace Quaver.Shared.Config
             JudgementWindows = ReadValue("JudgementWindows", "", data);
             SelectGroupMapsetsBy = ReadValue(@"SelectGroupMapsetsBy", GroupMapsetsBy.None, data);
             MusicPlayerOrderMapsBy = ReadValue(@"MusicPlayerOrderMapsBy", OrderMapsetsBy.Artist, data);
+            OnlineUserListFilterType = ReadValue(@"OnlineUserListFilterType", OnlineUserListFilter.All, data);
+            DisplayFriendOnlineNotifications = ReadValue(@"DisplayFriendOnlineNotifications", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -801,6 +812,7 @@ namespace Quaver.Shared.Config
                     JudgementWindows.ValueChanged += AutoSaveConfiguration;
                     SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
+                    OnlineUserListFilterType.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

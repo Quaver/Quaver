@@ -217,7 +217,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private PoolableSprite<T> AddObject(int index, bool updateContent = true)
+        protected PoolableSprite<T> AddObject(int index, bool updateContent = true)
         {
             lock (AvailableItems)
             {

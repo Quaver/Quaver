@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter
 
         /// <summary>
         /// </summary>
-        private OnlineHubOnlineUsersFilterDropdown filterDropdown { get; set; }
+        public OnlineHubOnlineUsersFilterDropdown FilterDropdown { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -47,7 +47,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Filter
         /// </summary>
         private void CreateFilterDropdown()
         {
-            filterDropdown = new OnlineHubOnlineUsersFilterDropdown()
+            FilterDropdown = new OnlineHubOnlineUsersFilterDropdown()
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

@@ -8,9 +8,12 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
+using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -81,6 +84,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             {
                 OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
                 OnlineManager.Client.OnUserStatusReceived += OnUserStatusReceived;
+
+                // If we're logged in, we already have our user state, so we can update content
+                // immediately
+                if (Item.OnlineUser.Id == OnlineManager.Self.OnlineUser.Id)
+                    UpdateContent(OnlineManager.Self, Index);
             }
         }
 
@@ -91,7 +99,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         public override void Update(GameTime gameTime)
         {
             if (Button != null)
+            {
                 Button.Alpha = Button.IsHovered ? 0.45f : 0;
+
+                var container = (OnlineUserContainer) Container;
+
+                Button.Depth = container.FilterDropdown.Dropdown.Opened ||
+                               container.ActiveRightClickOptions!= null && container.ActiveRightClickOptions.Opened ? 1 : 0;
+            }
 
             // The button is no longer in range of the container, so uncontain it.
             if (Container != null && RectangleF.Intersect(ScreenRectangle, Container.ScreenRectangle).IsEmpty)
@@ -171,13 +186,18 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateButton()
         {
-            Button = new ImageButton(UserInterface.BlankBox)
+            Button = new DrawableOnlineUserButton(UserInterface.BlankBox, Container)
             {
                 Parent = this,
                 Size = Size,
                 Alpha = 0,
                 UsePreviousSpriteBatchOptions = true
             };
+
+            var container = (OnlineUserContainer) Container;
+
+            Button.Clicked += (sender, args) => container.ActivateRightClickOptions(new DrawableOnlineUserRightClickOptions(Item));
+            Button.RightClicked += (sender, args) => container.ActivateRightClickOptions(new DrawableOnlineUserRightClickOptions(Item));
         }
 
         /// <summary>

@@ -433,7 +433,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Automatically Login To The Server", ConfigManager.AutoLoginToServer),
                     new SettingsBool(this, "Load Maps From Other Games", ConfigManager.AutoLoadOsuBeatmaps),
                     new SettingsBool(this, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
-                    new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                    new SettingsBool(this, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores),
+                    new SettingsBool(this, "Display Online Friends Notification", ConfigManager.DisplayFriendOnlineNotifications)
                 })
             };
 
