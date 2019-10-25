@@ -283,6 +283,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 case LeaderboardType.Rate:
                     scores = new ScoreFetcherRate().Fetch(map);
                     break;
+                case LeaderboardType.Friends:
+                    scores = new ScoreFetcherFriends().Fetch(map);
+                    break;
                 default:
                     scores = new FetchedScoreStore();
                     break;
