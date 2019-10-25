@@ -18,6 +18,10 @@ namespace Quaver.Shared.Graphics.Menu.Border
         private MenuBorderType Type { get; }
 
         /// <summary>
+        /// </summary>
+        public static int HEIGHT { get; } = 56;
+
+        /// <summary>
         ///     The line displayed at the top of the footer
         /// </summary>
         public Sprite ForegroundLine { get; private set; }
@@ -46,7 +50,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             LeftAlignedItems = leftAligned;
             RightAlignedItems = rightAligned;
 
-            Size = new ScalableVector2(WindowManager.Width, 56);
+            Size = new ScalableVector2(WindowManager.Width, HEIGHT);
             Image = UserInterface.MenuBorderBackground;
 
             CreateForegroundLine();

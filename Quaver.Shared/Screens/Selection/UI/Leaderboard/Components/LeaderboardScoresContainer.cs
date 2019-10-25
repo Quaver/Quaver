@@ -296,7 +296,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         ///     If the leaderboard requires donator privileges
         /// </summary>
         /// <returns></returns>
-        private bool RequiresDonator() => RequiresOnline() && ConfigManager.LeaderboardSection.Value == LeaderboardType.Country;
+        private bool RequiresDonator() => RequiresOnline()
+                                          && (ConfigManager.LeaderboardSection.Value == LeaderboardType.Country
+                                          || ConfigManager.LeaderboardSection.Value == LeaderboardType.Friends);
 
         /// <summary>
         ///     Creates <see cref="StatusText"/>

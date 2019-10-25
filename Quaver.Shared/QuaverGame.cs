@@ -27,6 +27,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
@@ -61,6 +62,7 @@ using Quaver.Shared.Screens.Tests.YesNoDialog;
 using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Screens.Tests.ListenerLists;
 using Quaver.Shared.Screens.Tests.MenuJukebox;
+using Quaver.Shared.Screens.Tests.OnlineHubs;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -104,6 +106,11 @@ namespace Quaver.Shared
         public VolumeController VolumeController { get; private set; }
 
         /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public OnlineHub OnlineHub { get; private set; }
+
+        /// <summary>
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
@@ -140,6 +147,12 @@ namespace Quaver.Shared
         /// </summary>
         private bool WindowActiveInPreviousFrame { get; set; }
 
+        /// <summary>
+        ///     Sometimes we'd like to perform actions on the first update, such as
+        ///     creating <see cref="OnlineHub"/>
+        /// </summary>
+        public bool FirstUpdateCalled { get; set; }
+
 #if VISUAL_TESTS
         /// <summary>
         ///     The visual screen type in the previous frame
@@ -171,7 +184,8 @@ namespace Quaver.Shared
             {"Main Menu", typeof(MainMenuScreen)},
             {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
             {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
-            {"DrawableListenerList", typeof(TestScreenListenerList)}
+            {"DrawableListenerList", typeof(TestScreenListenerList)},
+            {"OnlineHub", typeof(TestScreenOnlineHub)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
@@ -242,7 +256,6 @@ namespace Quaver.Shared
             // Make the cursor appear over the volume controller.
             ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
                                                             GlobalUserInterface.Children.IndexOf(VolumeController));
-
             IsReadyToUpdate = true;
 
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
@@ -283,6 +296,15 @@ namespace Quaver.Shared
             if (SteamManager.IsInitialized)
                 SteamAPI.RunCallbacks();
 
+            if (!FirstUpdateCalled)
+            {
+                // Create the online hub on the first update, since it uses text, and we have to wait for things to
+                // be initialized
+                OnlineHub = new OnlineHub();
+
+                FirstUpdateCalled = true;
+            }
+
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
 
@@ -292,6 +314,7 @@ namespace Quaver.Shared
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
+            HandleOnlineHubInput();
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
@@ -593,6 +616,37 @@ namespace Quaver.Shared
                 InitializeFpsLimiting();
 
             WindowActiveInPreviousFrame = IsActive;
+        }
+
+        /// <summary>
+        ///     Handles input when opening the online hub
+        /// </summary>
+        private void HandleOnlineHubInput()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F9))
+                return;
+
+            if (CloseOnlineHubDialog())
+                return;
+
+            DialogManager.Show(new OnlineHubDialog());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool CloseOnlineHubDialog()
+        {
+            if (DialogManager.Dialogs.Count == 0)
+                return false;
+
+            if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
+                return true;
+
+            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
+            dialog?.Close();
+
+            return true;
         }
 
 #if VISUAL_TESTS

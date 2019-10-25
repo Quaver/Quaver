@@ -255,7 +255,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static List<OnlineUser> CreateTestUsers()
+        public static List<OnlineUser> CreateTestUsers()
         {
             var leaderboard = new APIRequestLeaderboard(GameMode.Keys4).ExecuteRequest();
 

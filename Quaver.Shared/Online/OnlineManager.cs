@@ -72,6 +72,7 @@ namespace Quaver.Shared.Online
                 OnlineUsers = new Dictionary<int, User>();
                 MultiplayerGames = new Dictionary<string, MultiplayerGame>();
                 ListeningParty = null;
+                FriendsList = new List<int>();
 
                 if (_client != null)
                     return;
@@ -125,6 +126,17 @@ namespace Quaver.Shared.Online
         ///     Returns if the user is the host of the listening party and can perform actions
         /// </summary>
         public static bool IsListeningPartyHost => ListeningParty == null || ListeningParty.Host == Self.OnlineUser;
+
+        /// <summary>
+        ///     The user's friends list
+        /// </summary>
+        public static List<int> FriendsList { get; private set; }
+
+        /// <summary>
+        ///     Event invoked when the user's friends list has changed
+        ///     (user added/removed)
+        /// </summary>
+        public static event EventHandler<FriendsListUserChangedEventArgs> FriendsListUserChanged;
 
         /// <summary>
         ///     Logs into the Quaver server.
@@ -224,6 +236,7 @@ namespace Quaver.Shared.Online
             Client.OnListeningPartyChangeHost += OnListeningPartyChangeHost;
             Client.OnListeningPartyUserMissingSong += OnListeningPartyUserMissingSong;
             Client.OnListeningPartyUserHasSong += OnListeningPartyUserHasSong;
+            Client.OnUserFriendsListReceived += OnUserFriendsListReceieved;
         }
 
         /// <summary>
@@ -387,6 +400,13 @@ namespace Quaver.Shared.Online
 
             OnlineUsers[e.User.OnlineUser.Id] = e.User;
             ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() { e.User });
+
+            // Display notification for online friends
+            if (FriendsList.Contains(e.User.OnlineUser.Id) && ConfigManager.DisplayFriendOnlineNotifications != null
+                                                           && ConfigManager.DisplayFriendOnlineNotifications.Value)
+            {
+                NotificationManager.Show(NotificationLevel.Success, $"{e.User.OnlineUser.Username} has logged in!");
+            }
 
             Trace.WriteLine($"User: {e.User.OnlineUser.Username} [{e.User.OnlineUser.SteamId}] (#{e.User.OnlineUser.Id}) has connected to the server.");
             Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
@@ -591,7 +611,7 @@ namespace Quaver.Shared.Online
                 newOnlineUsers.Add(user);
             }
 
-            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(newOnlineUsers);
+            // ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(newOnlineUsers);
         }
 
         /// <summary>
@@ -602,14 +622,8 @@ namespace Quaver.Shared.Online
         /// <exception cref="NotImplementedException"></exception>
         private static void OnUserInfoReceived(object sender, UserInfoEventArgs e)
         {
-            ThreadScheduler.Run(() =>
-            {
-                foreach (var user in e.Users)
-                {
-                    OnlineUsers[user.Id] = new User(user);
-                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(OnlineUsers[user.Id]);
-                }
-            });
+            foreach (var user in e.Users)
+                OnlineUsers[user.Id].OnlineUser = user;
         }
 
         /// <summary>
@@ -619,19 +633,16 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUserStatusReceived(object sender, UserStatusEventArgs e)
         {
-            ThreadScheduler.Run(() =>
+            foreach (var user in e.Statuses)
             {
-                foreach (var user in e.Statuses)
-                {
-                    if (!OnlineUsers.ContainsKey(user.Key))
-                        continue;
+                if (!OnlineUsers.ContainsKey(user.Key))
+                    continue;
 
-                    var onlineUser = OnlineUsers[user.Key];
-                    onlineUser.CurrentStatus = user.Value;
+                var onlineUser = OnlineUsers[user.Key];
+                onlineUser.CurrentStatus = user.Value;
 
-                    ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
-                }
-            });
+                // ChatManager.Dialog.OnlineUserList?.UpdateUserInfo(onlineUser);
+            }
         }
 
         /// <summary>
@@ -1402,6 +1413,18 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnUserFriendsListReceieved(object sender, UserFriendsListEventArgs e)
+        {
+            lock (FriendsList)
+                FriendsList = e.Friends;
+
+            Logger.Important($"Received friends list containing {FriendsList.Count} users.", LogType.Runtime);
+        }
+
+        /// <summary>
         ///     Leaves the current multiplayer game if any
         /// </summary>
         public static void LeaveGame(bool dontSendPacket = false)
@@ -1499,6 +1522,46 @@ namespace Quaver.Shared.Online
 
             Client?.UpdateListeningPartyState(action, map.Md5Checksum, map.MapId, unix, AudioEngine.Track.Time,
                 AudioEngine.Track.IsPaused, map.Artist, map.Title);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        public static void AddFriend(User user)
+        {
+            lock (FriendsList)
+            {
+                if (!FriendsList.Contains(user.OnlineUser.Id))
+                    FriendsList.Add(user.OnlineUser.Id);
+
+                Client?.AddFriend(user.OnlineUser.Id);
+
+                FriendsListUserChanged?.Invoke(typeof(OnlineManager),
+                    new FriendsListUserChangedEventArgs(FriendsListAction.Add, user.OnlineUser.Id));
+
+                Logger.Important($"{user.OnlineUser.Id} has been added to our friends list.",LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Success, $"{user.OnlineUser.Username} has been added to your friends list!");
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        public static void RemoveFriend(User user)
+        {
+            lock (FriendsList)
+            {
+                if (FriendsList.Contains(user.OnlineUser.Id))
+                    FriendsList.Remove(user.OnlineUser.Id);
+
+                Client?.RemoveFriend(user.OnlineUser.Id);
+
+                FriendsListUserChanged?.Invoke(typeof(OnlineManager),
+                    new FriendsListUserChangedEventArgs(FriendsListAction.Remove, user.OnlineUser.Id));
+
+                Logger.Important($"{user.OnlineUser.Id} has been removed from our friends list.", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Success, $"{user.OnlineUser.Username} has been removed from your friends list!");
+            }
         }
     }
 }

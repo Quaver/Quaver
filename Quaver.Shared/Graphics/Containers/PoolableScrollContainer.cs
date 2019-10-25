@@ -27,7 +27,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     The size of the object pool
         /// </summary>
-        public int PoolSize { get; }
+        public int PoolSize { get; protected set; }
 
         /// <summary>
         ///     The amount of padding from the top that the scroll container will have
@@ -70,8 +70,9 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="size"></param>
         /// <param name="contentSize"></param>
         /// <param name="startFromBottom"></param>
+        /// <param name="createUponScrolling"></param>
         protected PoolableScrollContainer(List<T> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize,
-            bool startFromBottom = false) : base(size, contentSize, startFromBottom)
+            bool startFromBottom = false) : base(size, contentSize)
         {
             AvailableItems = availableItems;
             PoolSize = poolSize;
@@ -105,7 +106,7 @@ namespace Quaver.Shared.Graphics.Containers
         ///     Begins creation of the pool. This should be called last in the constructor when the pool
         ///     is ready to be created
         /// </summary>
-        protected void CreatePool(bool containDrawables = true)
+        protected void CreatePool(bool containDrawables = true, bool updateContent = true)
         {
             Pool = new List<PoolableSprite<T>>();
 
@@ -118,7 +119,7 @@ namespace Quaver.Shared.Graphics.Containers
                 if (i + PoolStartingIndex >= AvailableItems.Count)
                     break;
 
-                var drawable = AddObject(PoolStartingIndex + i);
+                var drawable = AddObject(PoolStartingIndex + i, updateContent);
 
                 if (containDrawables)
                     AddContainedDrawable(drawable);
@@ -216,7 +217,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private PoolableSprite<T> AddObject(int index)
+        protected PoolableSprite<T> AddObject(int index, bool updateContent = true)
         {
             lock (AvailableItems)
             {
@@ -224,7 +225,9 @@ namespace Quaver.Shared.Graphics.Containers
                 drawable.DestroyIfParentIsNull = false;
                 drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT + PaddingTop;
 
-                drawable.UpdateContent(AvailableItems[index], index);
+                if (updateContent)
+                    drawable.UpdateContent(AvailableItems[index], index);
+
                 Pool.Add(drawable);
 
                 return drawable;

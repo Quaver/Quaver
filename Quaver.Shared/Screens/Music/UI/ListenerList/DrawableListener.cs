@@ -101,11 +101,11 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
             // ReSharper disable twice DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnAvatarLoaded;
             OnlineManager.Client.OnUserInfoReceived -= OnUserInfoReceived;
-            OnlineManager.Client.OnUserInfoReceived -= OnUserInfoReceived;
             MapManager.Selected.ValueChanged -= OnMapChanged;
             OnlineManager.Client.OnListeningPartyUserMissingSong -= OnListeningPartyUserMissingSong;
             OnlineManager.Client.OnListeningPartyStateUpdate -= OnListeningPartyStateUpdate;
             OnlineManager.Client.OnListeningPartyUserMissingSong -= OnListeningPartyUserMissingSong;
+            OnlineManager.Client.OnListeningPartyChangeHost -= OnHostChanged;
 
             base.Destroy();
         }
