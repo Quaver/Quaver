@@ -272,13 +272,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             {
                 Parent = Avatar,
                 Alignment = Alignment.BotRight,
-                Size = new ScalableVector2(16, 16),
-                Tint = Color.LimeGreen,
+                Size = new ScalableVector2(18, 18),
                 UsePreviousSpriteBatchOptions = true,
                 Image = UserInterface.HubOnlineIcon
             };
 
-            OnlineStatusIcon.Position = new ScalableVector2(OnlineStatusIcon.Width / 4f, OnlineStatusIcon.Height / 4f);
+            OnlineStatusIcon.Position = new ScalableVector2(OnlineStatusIcon.Width / 4f,OnlineStatusIcon.Height / 4f);
         }
         /// <summary>
         /// </summary>
@@ -332,13 +331,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                     Status.Text = $"Idle";
                     break;
                 case ClientStatus.Selecting:
-                    Status.Text = "Selecting a song";
+                    Status.Text = "Selecting a Song";
                     break;
                 case ClientStatus.Playing:
                     Status.Text = $"Playing {status.Content}";
                     break;
                 case ClientStatus.Paused:
-                    Status.Text = $"Paused in gameplay";
+                    Status.Text = $"Paused in Gameplay";
                     break;
                 case ClientStatus.Watching:
                     Status.Text = $"Watching {status.Content}";
@@ -347,10 +346,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                     Status.Text = $"Editing {status.Content}";
                     break;
                 case ClientStatus.InLobby:
-                    Status.Text = $"Finding a multiplayer game";
+                    Status.Text = $"Finding a Multiplayer Game";
                     break;
                 case ClientStatus.Multiplayer:
-                    Status.Text = $"Playing multiplayer";
+                    Status.Text = $"Playing Multiplayer";
                     break;
                 case ClientStatus.Listening:
                     Status.Text = $"Listening to {status.Content}";

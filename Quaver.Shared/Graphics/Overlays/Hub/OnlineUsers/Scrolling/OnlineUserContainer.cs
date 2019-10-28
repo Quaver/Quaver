@@ -8,6 +8,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
@@ -19,9 +20,11 @@ using Quaver.Shared.Screens.Music.UI.ListenerList;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
@@ -61,6 +64,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         /// <summary>
         /// </summary>
+        private SpriteTextPlus OfflineNotice { get; set; }
+
+        /// <summary>
+        /// </summary>
         private Bindable<string> CurrentSearchQuery { get; }
 
         /// <inheritdoc />
@@ -92,6 +99,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             ContentContainer.Y = 0;
 
             CreateLoadingWheel();
+            CreateOfflineNotice();
 
             SubscribeToEvents();
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
@@ -117,7 +125,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             RunScheduledUpdates();
 
             ContainPooledDrawables();
-            LoadingWheel.Visible = string.IsNullOrEmpty(CurrentSearchQuery.Value) && (Pool?.Count == 0 || ContentContainer.Children.Count == 0);
+
+            LoadingWheel.Visible = string.IsNullOrEmpty(CurrentSearchQuery.Value)
+                                   && (Pool?.Count == 0 || ContentContainer.Children.Count == 0)
+                                   && OnlineManager.Status.Value != ConnectionStatus.Disconnected;
+
+            OfflineNotice.Visible = OnlineManager.Status.Value == ConnectionStatus.Disconnected;
 
             RequestUserInfo(gameTime);
             RequestUserStatuses(gameTime);
@@ -353,6 +366,19 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(50, 50)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateOfflineNotice()
+        {
+            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "You must be logged in to \nview the online user list!".ToUpper(), 20)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                TextAlignment = TextAlignment.Center
             };
         }
 

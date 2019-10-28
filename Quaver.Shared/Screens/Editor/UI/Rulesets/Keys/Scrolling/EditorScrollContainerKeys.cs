@@ -62,9 +62,9 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling
                 switch (Ruleset.WorkingMap.Mode)
                 {
                     case GameMode.Keys4:
-                        return 60;
+                        return 80;
                     case GameMode.Keys7:
-                        return 50;
+                        return 70;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
