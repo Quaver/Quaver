@@ -312,7 +312,15 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnListeningPartyFellowLeft(object sender, ListeningPartyFellowLeftEventArgs e)
-            => ScheduleUpdate(() => RemoveUser(OnlineManager.OnlineUsers[e.UserId].OnlineUser));
+        {
+            ScheduleUpdate(() =>
+            {
+                var user = AvailableItems.Find(x => x.Id == e.UserId);
+
+                if (user != null)
+                    RemoveUser(user);
+            });
+        }
 
         /// <summary>
         ///     When the connection status changes, reset the state of the listener list.
