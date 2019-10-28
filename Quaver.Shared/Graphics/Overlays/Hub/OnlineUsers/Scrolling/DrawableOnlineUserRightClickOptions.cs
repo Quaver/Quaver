@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
@@ -8,6 +10,8 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Screens;
+using Wobble;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
@@ -50,13 +54,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                         OnlineManager.RemoveFriend(user);
                         break;
                     case JoinListeningParty:
-                        NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+                        HandleJoinListeningParty(user);
                         break;
                     case InviteToGame:
-                        NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+                        HandleInviteToGame(user);
                         break;
                     case Chat:
-                        NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+                        HandleOpenChat(user);
                         break;
                 }
             };
@@ -83,13 +87,89 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             else
                 options.Add(AddFriend, ColorHelper.HexToColor("#27B06E"));
 
-            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Type == MultiplayerGameType.Friendly)
+            // Invite To Multiplayer
+            if (OnlineManager.CurrentGame != null
+                && OnlineManager.CurrentGame.Type == MultiplayerGameType.Friendly
+                && OnlineManager.CurrentGame.Players.Count < OnlineManager.CurrentGame.MaxPlayers
+                && !OnlineManager.CurrentGame.PlayerIds.Contains(user.OnlineUser.Id))
+            {
                 options.Add(InviteToGame, ColorHelper.HexToColor("#9B51E0"));
+            }
 
+            // Join Listening Party
             if (user.CurrentStatus.Status == ClientStatus.Listening)
                 options.Add(JoinListeningParty, ColorHelper.HexToColor("#F2994A"));
 
+            // Chat
+            options.Add(Chat, ColorHelper.HexToColor("##b48bff"));
+
             return options;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        private void HandleJoinListeningParty(User user)
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            // Don't allow if currently in a game
+            if (OnlineManager.CurrentGame != null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must leave your current game before joining " +
+                                                                  "a listening party");
+                return;
+            }
+
+            // Don't allow if currently in a game
+            if (OnlineManager.ListeningParty != null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must leave your current listening party " +
+                                                                  "before joinnig another.");
+                return;
+            }
+
+            // Don't allow if on certain screens
+            switch (game.CurrentScreen.Type)
+            {
+                case QuaverScreenType.Editor:
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Loading:
+                case QuaverScreenType.Importing:
+                case QuaverScreenType.Multiplayer:
+                    NotificationManager.Show(NotificationLevel.Error, "You must exit the current screen before " +
+                                                                      "joining a listening party.");
+                    return;
+            }
+
+            OnlineManager.Client.JoinListeningParty(user.OnlineUser.Id);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        private void HandleInviteToGame(User user)
+        {
+            OnlineManager.Client?.InviteToGame(user.OnlineUser.Id);
+
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully invited {user.OnlineUser.Username ?? "user"} " +
+                                                                $"to the game!");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        private void HandleOpenChat(User user)
+        {
+            var list = new List<string>()
+            {
+                // Have to add a BS element in the beginning since the method assumes that its a chat command
+                // and removes the first element
+                "chat"
+            };
+
+            QuaverBot.ExecuteChatCommand(list.Concat(user.OnlineUser.Username.Split(" ")));
+            ChatManager.ToggleChatOverlay(true);
         }
     }
 }
