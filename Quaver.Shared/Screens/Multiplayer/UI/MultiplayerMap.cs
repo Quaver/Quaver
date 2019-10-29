@@ -449,7 +449,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 CurrentDownload.Completed.ValueChanged -= OnDownloadCompleted;
             }
 
-            CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId);
+            CurrentDownload = MapsetDownloadManager.Download(Game.MapsetId, Game.Map, "");
             CurrentDownload.Progress.ValueChanged += OnDownloadProgressChanged;
             CurrentDownload.Completed.ValueChanged += OnDownloadCompleted;
         }

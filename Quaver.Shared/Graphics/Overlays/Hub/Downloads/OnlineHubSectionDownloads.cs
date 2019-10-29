@@ -1,11 +1,9 @@
-using System;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Graphics.Overlays.Hub
+namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads
 {
     public class OnlineHubSectionDownloads : OnlineHubSection
     {
@@ -13,6 +11,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// <summary>
         /// </summary>
         public override string Name { get; } = "ACTIVE DOWNLOADS";
+
+        /// <summary>
+        /// </summary>
+        private DownloadScrollContainer ScrollContainer { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -33,7 +35,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         public override void CreateContent()
         {
-            CreateNotImplementedText();
+            ScrollContainer = new DownloadScrollContainer(new ScalableVector2(Container.Width, Container.Height))
+            {
+                Parent = Container
+            };
         }
     }
 }

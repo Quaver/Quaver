@@ -41,6 +41,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             {
                 case QuaverScreenType.Editor:
                 case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Importing:
                     Height = WindowManager.Height;
                     Hub.Alignment = Alignment.MidRight;
                     break;

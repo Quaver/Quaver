@@ -5,6 +5,7 @@ using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
@@ -33,7 +34,15 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
+        public bool IsUnread { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Color IconColor => ColorHelper.HexToColor("#808080");
+
+        /// <summary>
+        /// </summary>
+        private Color UnreadColor => ColorHelper.HexToColor($"#ffe76b");
 
         /// <summary>
         /// </summary>
@@ -103,12 +112,27 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
                 Icon.Tint = ColorHelper.HexToColor("#0FBAE5");
                 Icon.Alpha = 1;
             }
+            else if (IsUnread)
+            {
+                if (Icon.Animations.Count == 0)
+                    Icon.FadeToColor(Icon.Tint == UnreadColor ? IconColor : UnreadColor, Easing.Linear, 300);
+
+                Icon.IsPerformingFadeAnimations = true;
+            }
             else
             {
                 Icon.Tint = IconColor;
                 Icon.IsPerformingFadeAnimations = true;
             }
         }
+
+        /// <summary>
+        /// </summary>
+        public void MarkAsUnread() => IsUnread = true;
+
+        /// <summary>
+        /// </summary>
+        public void MarkAsRead() => IsUnread = false;
 
         /// <summary>
         ///     The icon of the section
