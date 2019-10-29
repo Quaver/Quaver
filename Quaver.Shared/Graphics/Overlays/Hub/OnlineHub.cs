@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
@@ -40,7 +41,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
-        private Dictionary<OnlineHubSectionType, OnlineHubSection> Sections { get; set; }
+        public Dictionary<OnlineHubSectionType, OnlineHubSection> Sections { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -111,6 +112,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             var oldSection = SelectedSection;
             SelectedSection = section;
+            SelectedSection.MarkAsRead();
 
             ScheduleUpdate(() =>
             {
@@ -194,6 +196,20 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             }
 
             SelectSection(Sections[OnlineHubSectionType.OnlineUsers]);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="type"></param>
+        public void MarkSectionAsUnread(OnlineHubSectionType type)
+        {
+            if (SelectedSection == Sections[type])
+            {
+                SelectedSection.MarkAsRead();
+                return;
+            }
+
+            Sections[type].MarkAsUnread();
         }
     }
 }
