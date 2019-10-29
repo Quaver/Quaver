@@ -32,23 +32,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
             },
             new List<Drawable>
             {
-                new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_reorder_option), (sender, args) =>
-                {
-                    if (DialogManager.Dialogs.Count == 0)
-                    {
-                        DialogManager.Show(new OnlineHubDialog());
-                        return;
-                    }
-
-                    if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
-                        return;
-
-                    var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
-                    dialog?.Close();
-                })
-                {
-                    Size = new ScalableVector2(30, 30)
-                },
+                new IconTextButtonOnlineHub(),
                 new DrawableSessionTime()
             })
         {

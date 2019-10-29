@@ -62,6 +62,7 @@ using Quaver.Shared.Screens.Tests.YesNoDialog;
 using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Screens.Tests.ListenerLists;
 using Quaver.Shared.Screens.Tests.MenuJukebox;
+using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
 using Quaver.Shared.Skinning;
 using Steamworks;
@@ -98,7 +99,7 @@ namespace Quaver.Shared
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-    protected override bool IsReadyToUpdate { get; set; }
+        protected override bool IsReadyToUpdate { get; set; }
 
         /// <summary>
         ///     The volume controller for the game.
@@ -185,7 +186,8 @@ namespace Quaver.Shared
             {"MenuFooterJukebox", typeof(TestScreenMenuJukebox)},
             {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
             {"DrawableListenerList", typeof(TestScreenListenerList)},
-            {"OnlineHub", typeof(TestScreenOnlineHub)}
+            {"OnlineHub", typeof(TestScreenOnlineHub)},
+            {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

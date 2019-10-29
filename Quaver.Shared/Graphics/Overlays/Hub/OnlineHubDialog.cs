@@ -1,11 +1,14 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Overlays.Hub
 {
@@ -24,6 +27,31 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            switch (game.CurrentScreen.Type)
+            {
+                case QuaverScreenType.Editor:
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Importing:
+                    Height = WindowManager.Height;
+                    Hub.Alignment = Alignment.MidRight;
+                    break;
+                default:
+                    Height = Hub.Height;
+                    Hub.Alignment = Alignment.TopRight;
+                    break;
+            }
+
+            base.Update(gameTime);
         }
 
         /// <summary>
