@@ -158,9 +158,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        public bool Failed =>
-            OnlineManager.CurrentGame == null && !IsPlayTesting && (!ModManager.IsActivated(ModIdentifier.NoFail)
-                                                                    && Ruleset.ScoreProcessor.Health <= 0) || ForceFail;
+        public bool Failed => OnlineManager.CurrentGame == null
+                              && !OnlineManager.IsSpectatingSomeone
+                              && !IsPlayTesting
+                              && (!ModManager.IsActivated(ModIdentifier.NoFail)
+                              && Ruleset.ScoreProcessor.Health <= 0)
+                              || ForceFail;
 
         /// <summary>
         ///     If we're force failing the user.
