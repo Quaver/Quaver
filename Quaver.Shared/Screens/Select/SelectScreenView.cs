@@ -261,7 +261,8 @@ namespace Quaver.Shared.Screens.Select
         {
             new LeaderboardSelectorItemRankings(LeaderboardType.Local, "Local"),
             new LeaderboardSelectorItemRankings(LeaderboardType.Global, "Global"),
-            new LeaderboardSelectorItemRankings(LeaderboardType.Mods, "Mods")
+            new LeaderboardSelectorItemRankings(LeaderboardType.Mods, "Mods"),
+            new LeaderboardSelectorItemRankings(LeaderboardType.Country, "Country")
         })
         {
             Parent = Container

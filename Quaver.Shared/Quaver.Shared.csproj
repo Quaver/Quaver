@@ -1,19 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.1</LangVersion>
+    <Configurations>Debug;Release;Visual Tests</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Visual Tests|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VISUAL_TESTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj" />
     <ProjectReference Include="..\Quaver.Dependencies\TimeAgo\TimeAgo\TimeAgo.csproj" />
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj" />
-    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj" />
     <ProjectReference Include="..\Wobble\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
+    <ProjectReference Include="..\Wobble\Wobble.Extended\Wobble.Extended.csproj" />
     <ProjectReference Include="..\Wobble\Wobble.Resources\Wobble.Resources.csproj" />
     <ProjectReference Include="..\Wobble\Wobble\Wobble.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Quaver.Server.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>Quaver.Server.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Quaver.Server.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>Quaver.Server.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Steamworks.NET">
       <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
@@ -109,5 +118,8 @@
     <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Screens\Tests" />
   </ItemGroup>
 </Project>

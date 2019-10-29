@@ -21,7 +21,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The application id for steam.
         /// </summary>
-        public static uint ApplicationId => 980610;
+        public static uint ApplicationId => 480;
 
         /// <summary>
         ///     Determines if steam is initialized or not.
@@ -115,6 +115,9 @@ namespace Quaver.Shared.Online
 
             InitializeCallbacks();
             StartAuthSession();
+
+            // DANGEROUS: Uncomment to reset all achievements
+            // SteamUserStats.ResetAllStats(true);
         }
 
         /// <summary>

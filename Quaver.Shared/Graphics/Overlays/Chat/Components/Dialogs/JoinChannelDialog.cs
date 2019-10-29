@@ -106,7 +106,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chat.Components.Dialogs
             {
                 Parent = InterfaceContainer,
                 Size = new ScalableVector2(Width, 75),
-                Tint = Colors.DarkGray,
+                Tint = Colors.BlueishDarkGray,
             };
 
             var line = new Sprite()

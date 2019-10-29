@@ -78,15 +78,24 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         internal static void OnFileDropped(object sender, string e)
         {
+            ImportFile(e);
+        }
+
+        /// <summary>
+        ///     Tries to import the given file, be it a map, a replay, a skin, etc.
+        ///     <param name="path">path to the file to import</param>
+        /// </summary>
+        public static void ImportFile(string path)
+        {
             var game = GameBase.Game as QuaverGame;
             var screen = game.CurrentScreen;
 
             // Mapset files
-            if (e.EndsWith(".qp") || e.EndsWith(".osz") || e.EndsWith(".sm"))
+            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm"))
             {
-                Queue.Add(e);
+                Queue.Add(path);
 
-                var log = $"Scheduled {Path.GetFileName(e)} to be imported!";
+                var log = $"Scheduled {Path.GetFileName(path)} to be imported!";
                 NotificationManager.Show(NotificationLevel.Info, log);
 
                 if (screen.Exiting)
@@ -112,7 +121,7 @@ namespace Quaver.Shared.Database.Maps
                 }
             }
             // Quaver Replay
-            else if (e.EndsWith(".qr"))
+            else if (path.EndsWith(".qr"))
             {
                 try
                 {
@@ -127,7 +136,7 @@ namespace Quaver.Shared.Database.Maps
                             return;
                     }
 
-                    var replay = new Replay(e);
+                    var replay = new Replay(path);
 
                     // Find the map associated with the replay.
                     var mapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == replay.MapMd5));
@@ -158,26 +167,26 @@ namespace Quaver.Shared.Database.Maps
                 }
             // Skins
             }
-            else if (e.EndsWith(".qs"))
+            else if (path.EndsWith(".qs"))
             {
                 switch (screen.Type)
                 {
                     case QuaverScreenType.Menu:
                     case QuaverScreenType.Results:
                     case QuaverScreenType.Select:
-                        SkinManager.Import(e);
+                        SkinManager.Import(path);
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before importing a skin");
                         return;
                 }
             }
-            else if (e.EndsWith(".mp3") || e.EndsWith(".ogg"))
+            else if (path.EndsWith(".mp3") || path.EndsWith(".ogg"))
             {
                 switch (screen.Type)
                 {
                     case QuaverScreenType.Select:
-                        EditorScreen.HandleNewMapsetCreation(e);
+                        EditorScreen.HandleNewMapsetCreation(path);
                         break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Go to the song select screen first to create a new mapset!");
@@ -285,6 +294,11 @@ namespace Quaver.Shared.Database.Maps
                 {
                     var map = Map.FromQua(Qua.Parse(quaFile), quaFile);
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
+
+                    var info = OnlineManager.Client?.RetrieveMapInfo(map.MapId);
+                    if (info != null)
+                        map.RankedStatus = info.Map.RankedStatus;
+
                     map.CalculateDifficulties();
                     MapDatabaseCache.InsertMap(map, quaFile);
                     lastImported = map;

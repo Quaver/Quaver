@@ -13,6 +13,7 @@ using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
@@ -70,7 +71,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Screen.SpectatorClient != null);
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, JudgementWindowsDatabaseCache.Selected.Value, Screen.SpectatorClient != null);
             VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.

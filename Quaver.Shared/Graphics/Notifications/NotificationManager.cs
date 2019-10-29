@@ -74,19 +74,19 @@ namespace Quaver.Shared.Graphics.Notifications
                     break;
                 case NotificationLevel.Info:
                     color = ColorHelper.HexToColor("#5BC0DE");
-                    image = UserInterface.NotificationInfoBg;
+                    image = UserInterface.NotificationInfo;
                     break;
                 case NotificationLevel.Error:
                     color = ColorHelper.HexToColor("#D9534F");
-                    image = UserInterface.NotificationErrorBg;
+                    image = UserInterface.NotificationError;
                     break;
                 case NotificationLevel.Warning:
                     color = Color.Yellow;
-                    image = UserInterface.NotificationWarningBg;
+                    image = UserInterface.NotificationWarning;
                     break;
                 case NotificationLevel.Success:
                     color = ColorHelper.HexToColor("#5CB85C");
-                    image = UserInterface.NotificationSuccessBg;
+                    image = UserInterface.NotificationSuccess;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);

@@ -389,6 +389,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ShowSpectators { get; private set; }
 
         /// <summary>
+        ///     The selected judgement window preset
+        /// </summary>
+        internal static Bindable<string> JudgementWindows { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -665,6 +670,7 @@ namespace Quaver.Shared.Config
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
             ShowSpectators = ReadValue(@"ShowSpectators", true, data);
+            JudgementWindows = ReadValue("JudgementWindows", "", data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -774,6 +780,7 @@ namespace Quaver.Shared.Config
                     EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
                     ShowSpectators.ValueChanged += AutoSaveConfiguration;
+                    JudgementWindows.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

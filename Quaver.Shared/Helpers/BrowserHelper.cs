@@ -17,9 +17,10 @@ namespace Quaver.Shared.Helpers
         ///     Opens a url in the browser.
         /// </summary>
         /// <param name="url"></param>
-        public static void OpenURL(string url)
+        /// <param name="forceNormalBrowser"></param>
+        public static void OpenURL(string url, bool forceNormalBrowser = false)
         {
-            if (SteamUtils.IsOverlayEnabled())
+            if (!forceNormalBrowser && SteamUtils.IsOverlayEnabled())
             {
                 SteamFriends.ActivateGameOverlayToWebPage(url);
                 return;

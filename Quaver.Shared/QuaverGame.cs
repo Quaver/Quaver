@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
@@ -34,6 +35,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Settings;
+using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -42,6 +44,8 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
+using Wobble.Extended.HotReload;
+using Wobble.Extended.HotReload.Screens;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
 using Wobble.Graphics.UI.Dialogs;
@@ -53,12 +57,16 @@ using Version = YamlDotNet.Core.Version;
 
 namespace Quaver.Shared
 {
+#if VISUAL_TESTS
+    public class QuaverGame : HotLoaderGame
+#else
     public class QuaverGame : WobbleGame
+#endif
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        protected override bool IsReadyToUpdate { get; set; }
+    protected override bool IsReadyToUpdate { get; set; }
 
         /// <summary>
         ///     The volume controller for the game.
@@ -102,10 +110,11 @@ namespace Quaver.Shared
         /// </summary>
         private bool WindowActiveInPreviousFrame { get; set; }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
+#if VISUAL_TESTS
+        public QuaverGame(HotLoader hl) : base(hl)
+#else
         public QuaverGame()
+#endif
         {
             Content.RootDirectory = "Content";
             InitializeFpsLimiting();
@@ -153,10 +162,7 @@ namespace Quaver.Shared
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
-            FontsBitmap.Load();
             Fonts.Load();
-            FontAwesome.Load();
-            UserInterface.Load();
 
             BackgroundHelper.Initialize();
 
@@ -177,8 +183,12 @@ namespace Quaver.Shared
 
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
 
+#if VISUAL_TESTS
+            Window.Title = $"Quaver Visual Test Runner";
+#else
             Window.Title = !IsDeployedBuild ? $"Quaver - {Version}" : $"Quaver v{Version}";
             QuaverScreenManager.ScheduleScreenChange(() => new MenuScreen());
+#endif
         }
 
         /// <inheritdoc />
@@ -261,6 +271,7 @@ namespace Quaver.Shared
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
+            JudgementWindowsDatabaseCache.Load();
 
             // Force garabge collection.
             GC.Collect();
@@ -502,5 +513,12 @@ namespace Quaver.Shared
 
             WindowActiveInPreviousFrame = IsActive;
         }
+
+#if VISUAL_TESTS
+        protected override HotLoaderScreen InitializeHotLoaderScreen() => new HotLoaderScreen(new Dictionary<string, Type>()
+        {
+            {"Menu Footer", typeof(MenuFooterTestScreen)}
+        });
+#endif
     }
 }
