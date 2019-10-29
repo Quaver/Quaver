@@ -65,6 +65,8 @@ namespace Quaver.Shared.Online
                 Self = null;
                 OnlineUsers = new Dictionary<int, User>();
                 MultiplayerGames = new Dictionary<string, MultiplayerGame>();
+                SpectatorClients = new Dictionary<int, SpectatorClient>();
+                Spectators = new Dictionary<int, User>();
 
                 if (_client != null)
                     return;
@@ -105,6 +107,29 @@ namespace Quaver.Shared.Online
         public static MultiplayerGame CurrentGame { get; private set; }
 
         /// <summary>
+        ///     The players who the client is currently spectating
+        ///
+        ///     Note:
+        ///         - Only 1 player is allowed if not running a tournament client
+        ///         - Otherwise multiple are allowed.
+        /// </summary>
+        public static Dictionary<int, SpectatorClient> SpectatorClients { get; private set; }
+
+        /// <summary>
+        ///     Players who are currently spectating us
+        /// </summary>
+        public static Dictionary<int, User> Spectators { get; private set; }
+
+        /// <summary>
+        ///     If we're currently being spectated by another user
+        /// </summary>
+        public static bool IsBeingSpectated => Client != null && Status.Value == ConnectionStatus.Connected && Spectators.Count != 0;
+
+        /// <summary>
+        ///     If the client is currently spectating someone
+        /// </summary>
+        public static bool IsSpectatingSomeone => Client != null & Status.Value == ConnectionStatus.Connected && SpectatorClients.Count != 0;
+
         ///     If the current user is a donator
         /// </summary>
         public static bool IsDonator => Connected && Self.OnlineUser.UserGroups.HasFlag(UserGroups.Donator);
@@ -199,6 +224,11 @@ namespace Quaver.Shared.Online
             Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
             Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
             Client.OnGameSetReferee += OnGameSetReferee;
+            Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
+            Client.OnStoppedSpectatingPlayer += OnStoppedSpectatingPlayer;
+            Client.OnSpectatorJoined += OnSpectatorJoined;
+            Client.OnSpectatorLeft += OnSpectatorLeft;
+            Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
         }
 
         /// <summary>
@@ -1113,6 +1143,80 @@ namespace Quaver.Shared.Online
             CurrentGame.RefereeUserId = e.UserId;
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.RedTeamPlayers.Remove(e.UserId);
+        }
+
+        private static void OnStartedSpectatingPlayer(object sender, StartSpectatePlayerEventArgs e)
+        {
+            if (SpectatorClients.ContainsKey(e.UserId))
+                return;
+
+            if (!OnlineUsers.ContainsKey(e.UserId))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, $"Tried to spectate user: {e.UserId}, but they are not online");
+                return;
+            }
+
+            SpectatorClients[e.UserId] = new SpectatorClient(OnlineUsers[e.UserId]);
+
+            // We don't have the player's information yet, so it needs to be requested from the server.
+            if (!SpectatorClients[e.UserId].Player.HasUserInfo)
+                Client?.RequestUserInfo(new List<int>() { e.UserId });
+
+            if (SpectatorClients.Count == 1)
+                NotificationManager.Show(NotificationLevel.Info, $"You are now spectating {SpectatorClients[e.UserId].Player.OnlineUser.Username}!");
+
+            Logger.Important($"Starting spectating player: {e.UserId}", LogType.Network);
+        }
+
+        private static void OnStoppedSpectatingPlayer(object sender, StopSpectatePlayerEventArgs e)
+        {
+            if (!SpectatorClients.ContainsKey(e.UserId))
+                return;
+
+            SpectatorClients.Remove(e.UserId);
+
+            NotificationManager.Show(NotificationLevel.Info, $"You are no longer spectating anymore!");
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen.Type == QuaverScreenType.Gameplay && SpectatorClients.Count == 0)
+                game.CurrentScreen.Exit(() => new MenuScreen());
+
+            Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);
+        }
+
+        private static void OnSpectatorJoined(object sender, SpectatorJoinedEventArgs e)
+        {
+            if (Spectators.ContainsKey(e.UserId))
+                return;
+
+            if (!OnlineUsers.ContainsKey(e.UserId))
+                return;
+
+            Spectators.Add(e.UserId, OnlineUsers[e.UserId]);
+
+            if (!OnlineUsers[e.UserId].HasUserInfo)
+                Client?.RequestUserInfo(new List<int> { e.UserId });
+
+            Logger.Important($"Spectator Joined: {e.UserId}", LogType.Network);
+        }
+
+        private static void OnSpectatorLeft(object sender, SpectatorLeftEventArgs e)
+        {
+            if (!Spectators.ContainsKey(e.UserId))
+                return;
+
+            Spectators.Remove(e.UserId);
+
+            Logger.Important($"Spectator Left: {e.UserId}", LogType.Network);
+        }
+
+        private static void OnSpectatorReplayFrames(object sender, SpectatorReplayFramesEventArgs e)
+        {
+            if (!SpectatorClients.ContainsKey(e.UserId))
+                return;
+
+            SpectatorClients[e.UserId].AddFrames(e);
         }
 
         /// <summary>

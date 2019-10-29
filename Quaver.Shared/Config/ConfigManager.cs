@@ -385,6 +385,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableBattleRoyaleAlerts { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ShowSpectators { get; private set; }
+
+        /// <summary>
         ///     The selected judgement window preset
         /// </summary>
         internal static Bindable<string> JudgementWindows { get; private set; }
@@ -665,6 +669,7 @@ namespace Quaver.Shared.Config
             LobbyFilterHasFriends = ReadValue(@"LobbyFilterHasFriends", false, data);
             EnableBattleRoyaleBackgroundFlashing = ReadValue(@"EnableBattleRoyaleBackgroundFlashing", true, data);
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
+            ShowSpectators = ReadValue(@"ShowSpectators", true, data);
             JudgementWindows = ReadValue("JudgementWindows", "", data);
 
             // Have to do this manually.
@@ -774,6 +779,7 @@ namespace Quaver.Shared.Config
                     LobbyFilterHasFriends.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleBackgroundFlashing.ValueChanged += AutoSaveConfiguration;
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
+                    ShowSpectators.ValueChanged += AutoSaveConfiguration;
                     JudgementWindows.ValueChanged += AutoSaveConfiguration;
                 });
         }

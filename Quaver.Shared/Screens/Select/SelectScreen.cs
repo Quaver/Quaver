@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
+using Quaver.API.Replays;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
@@ -124,6 +125,10 @@ namespace Quaver.Shared.Screens.Select
             var game = GameBase.Game as QuaverGame;
             var cursor = game?.GlobalUserInterface.Cursor;
             cursor.Alpha = 1;
+
+            // Let spectators know that we're selecting a new song
+            if (OnlineManager.IsBeingSpectated)
+                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.SelectingSong, -1, new List<ReplayFrame>());
 
             View = new SelectScreenView(this);
         }
@@ -461,6 +466,9 @@ namespace Quaver.Shared.Screens.Select
         public void ExitToGameplay()
         {
             IsExitingToGameplay = true;
+
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
 
             if (OnlineManager.CurrentGame != null)
             {

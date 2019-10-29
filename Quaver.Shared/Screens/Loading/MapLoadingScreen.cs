@@ -56,11 +56,17 @@ namespace Quaver.Shared.Screens.Loading
         private Replay Replay { get; }
 
         /// <summary>
+        ///     The spectator client (if any)
         /// </summary>
-        public MapLoadingScreen(List<Score> scores, Replay replay = null)
+        private SpectatorClient SpectatorClient { get; }
+
+        /// <summary>
+        /// </summary>
+        public MapLoadingScreen(List<Score> scores, Replay replay = null, SpectatorClient spectatorClient = null)
         {
             Scores = scores;
             Replay = replay;
+            SpectatorClient = spectatorClient;
 
             var game = GameBase.Game as QuaverGame;
             var cursor = game?.GlobalUserInterface.Cursor;
@@ -178,7 +184,7 @@ namespace Quaver.Shared.Screens.Loading
                     throw new ArgumentOutOfRangeException();
             }
 
-            Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>(), Replay));
+            Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>(), Replay, false, 0, false, SpectatorClient));
         }
 
         /// <summary>
