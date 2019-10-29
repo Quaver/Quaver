@@ -71,7 +71,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, JudgementWindowsDatabaseCache.Selected.Value, Screen.SpectatorClient != null);
+            var windows = Screen.SpectatorClient != null
+                ? JudgementWindowsDatabaseCache.Standard
+                : JudgementWindowsDatabaseCache.Selected.Value;
+
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, windows, Screen.SpectatorClient != null);
+
             VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.
