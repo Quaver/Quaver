@@ -22,6 +22,10 @@ namespace Quaver.Shared.Screens.Download
     public class MapsetDownload : IDisposable
     {
         /// <summary>
+        /// </summary>
+        public bool IsDownloading { get; private set; }
+
+        /// <summary>
         ///     Json containing the mapset.
         /// </summary>
         public JToken Mapset { get; }
@@ -29,6 +33,14 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         /// </summary>
         public int MapsetId { get; }
+
+        /// <summary>
+        /// </summary>
+        public string Artist { get; }
+
+        /// <summary>
+        /// </summary>
+        public string Title { get; }
 
         /// <summary>
         /// </summary>
@@ -41,21 +53,37 @@ namespace Quaver.Shared.Screens.Download
         /// <summary>
         /// </summary>
         /// <param name="mapset"></param>
-        public MapsetDownload(JToken mapset)
+        /// <param name="artist"></param>
+        /// <param name="title"></param>
+        public MapsetDownload(JToken mapset, string artist, string title, bool download = true)
         {
             Mapset = mapset;
             MapsetId = (int) Mapset["id"];
-            Download();
+
+            Artist = artist;
+            Title = title;
+
+            if (download)
+                Download();
         }
 
-        public MapsetDownload(int id)
+        public MapsetDownload(int id, string artist, string title, bool download = true)
         {
             MapsetId = id;
-            Download();
+            Artist = artist;
+            Title = title;
+
+            if (download)
+                Download();
         }
 
-        private void Download()
+        public void Download()
         {
+            if (IsDownloading)
+                return;
+
+            IsDownloading = true;
+
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
             var dir = $"{ConfigManager.DataDirectory.Value}/Downloads";
