@@ -400,6 +400,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayUnbeatableScoresDuringGameplay { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ShowSpectators { get; private set; }
+
+        /// <summary>
         ///     The selected judgement window preset
         /// </summary>
         internal static Bindable<string> JudgementWindows { get; private set; }
@@ -694,6 +698,7 @@ namespace Quaver.Shared.Config
             EnableBattleRoyaleAlerts = ReadValue(@"EnableBattleRoyaleAlerts", true, data);
             SelectFilterGameModeBy = ReadValue(@"SelectFilterGameModeBy", SelectFilterGameMode.All, data);
             DisplayUnbeatableScoresDuringGameplay = ReadValue(@"DisplayUnbeatableScoresDuringGameplay", true, data);
+            ShowSpectators = ReadValue(@"ShowSpectators", true, data);
             JudgementWindows = ReadValue("JudgementWindows", "", data);
             SelectGroupMapsetsBy = ReadValue(@"SelectGroupMapsetsBy", GroupMapsetsBy.None, data);
             MusicPlayerOrderMapsBy = ReadValue(@"MusicPlayerOrderMapsBy", OrderMapsetsBy.Artist, data);
@@ -809,6 +814,7 @@ namespace Quaver.Shared.Config
                     EnableBattleRoyaleAlerts.ValueChanged += AutoSaveConfiguration;
                     SelectFilterGameModeBy.ValueChanged += AutoSaveConfiguration;
                     DisplayUnbeatableScoresDuringGameplay.ValueChanged += AutoSaveConfiguration;
+                    ShowSpectators.ValueChanged += AutoSaveConfiguration;
                     JudgementWindows.ValueChanged += AutoSaveConfiguration;
                     SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;

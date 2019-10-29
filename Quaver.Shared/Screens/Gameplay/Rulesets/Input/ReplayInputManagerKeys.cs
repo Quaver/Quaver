@@ -12,6 +12,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.API.Replays.Virtual;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -70,7 +71,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, JudgementWindowsDatabaseCache.Selected.Value);
+            var windows = Screen.SpectatorClient != null
+                ? JudgementWindowsDatabaseCache.Standard
+                : JudgementWindowsDatabaseCache.Selected.Value;
+
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, windows, Screen.SpectatorClient != null);
+
             VirtualPlayer.PlayAllFrames();
 
             // Populate unique key presses/releases.
@@ -86,6 +92,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         internal void HandleInput()
         {
+            if (Screen.SpectatorClient != null)
+                VirtualPlayer.PlayAllFrames();
+
             HandleScoring();
 
             if (CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
@@ -123,8 +132,38 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             CurrentFrame++;
         }
 
+        /// <summary>
+        ///     Handles spectating a user if applicable
+        /// </summary>
+        public void HandleSpectating()
+        {
+            if (Screen.SpectatorClient == null)
+                return;
+
+            if (CurrentFrame >= Replay.Frames.Count)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Pause();
+
+                if (!Screen.IsPaused)
+                    Screen.IsPaused = true;
+                return;
+            }
+
+            VirtualPlayer.PlayAllFrames();
+
+            if (Screen.IsPaused)
+                Screen.IsPaused = false;
+
+            if (AudioEngine.Track.IsPaused)
+                AudioEngine.Track.Play();
+        }
+
         private void HandleScoring()
         {
+            if (VirtualPlayer.CurrentFrame < VirtualPlayer.Replay.Frames.Count)
+                VirtualPlayer.PlayAllFrames();
+
             for (var i = CurrentVirtualReplayStat + 1; i < VirtualPlayer.ScoreProcessor.Stats.Count; i++)
             {
                 var hom = Screen.Ruleset.HitObjectManager as HitObjectManagerKeys;

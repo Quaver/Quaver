@@ -468,7 +468,7 @@ namespace Quaver.Shared
         /// <summary>
         ///    Handles limiting/unlimiting FPS based on user config
         /// </summary>
-        private void InitializeFpsLimiting()
+        public void InitializeFpsLimiting()
         {
             switch (ConfigManager.FpsLimiterType.Value)
             {
@@ -607,13 +607,14 @@ namespace Quaver.Shared
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
                 OtherGameMapDatabaseCache.OnSyncableScreen() && !IsActive && !WindowActiveInPreviousFrame)
             {
-                Graphics.SynchronizeWithVerticalRetrace = false;
-                TargetElapsedTime = TimeSpan.FromSeconds(1d / 30);
-                IsFixedTimeStep = true;
+                InactiveSleepTime = TimeSpan.FromSeconds(1d / 30);
             }
             // Restore user's settings
             else if (!WindowActiveInPreviousFrame && (IsActive || !OtherGameMapDatabaseCache.OnSyncableScreen()))
+            {
+                InactiveSleepTime = TimeSpan.Zero;
                 InitializeFpsLimiting();
+            }
 
             WindowActiveInPreviousFrame = IsActive;
         }

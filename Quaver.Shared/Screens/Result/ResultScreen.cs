@@ -294,7 +294,17 @@ namespace Quaver.Shared.Screens.Result
             if (Gameplay.InReplayMode)
             {
                 Replay = Gameplay.LoadedReplay;
-                ScoreProcessor = Replay.Mods.HasFlag(ModIdentifier.Autoplay) ? Gameplay.Ruleset.ScoreProcessor : new ScoreProcessorKeys(Replay);
+
+                if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
+                    ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
+                else if (Gameplay.SpectatorClient != null)
+                {
+                    var im = Gameplay.Ruleset.InputManager as KeysInputManager;
+                    ScoreProcessor = im.ReplayInputManager.VirtualPlayer.ScoreProcessor;
+                }
+                else
+                    ScoreProcessor = new ScoreProcessorKeys(Replay);
+
                 ScoreProcessor.Stats = Gameplay.Ruleset.ScoreProcessor.Stats;
 
                 // Remove all modifiers that was played during the replay, so the user doesn't still have them
@@ -568,6 +578,9 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         public void ExitToWatchReplay()
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             if (IsFetchingOnlineReplay)
                 return;
 
@@ -629,6 +642,9 @@ namespace Quaver.Shared.Screens.Result
         /// </summary>
         public void ExitToRetryMap()
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             Exit(() => new MapLoadingScreen(new List<Score>()));
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
         }
