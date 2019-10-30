@@ -31,6 +31,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
@@ -567,7 +568,7 @@ namespace Quaver.Shared.Screens.Select
                         AudioEngine.Track?.Fade(10, 300);
                 }
 
-                return new MenuScreen();
+                return new MainMenuScreen();
             });
         }
 

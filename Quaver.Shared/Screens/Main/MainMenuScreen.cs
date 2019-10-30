@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Main
                 {
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
-                    return new MenuScreen();
+                    return new MainMenuScreen();
                 }
             });
         }

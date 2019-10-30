@@ -17,6 +17,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 {
@@ -100,36 +101,37 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
                 return;
 
-            var previousActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame - 1].Keys);
-            var currentActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame].Keys);
-
-            foreach (var activeLane in currentActive)
+            if (Math.Abs(Manager.CurrentAudioPosition - Replay.Frames[CurrentFrame].Time) >= 200)
             {
-                try
-                {
-                    if (!previousActive.Contains(activeLane))
-                        UniquePresses[activeLane] = true;
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
+                CurrentFrame = Replay.Frames.FindLastIndex(x => x.Time < AudioEngine.Track.Time);
+                Logger.Important($"Skipped to replay frame: {CurrentFrame}", LogType.Runtime);
             }
 
-            foreach (var activeLane in previousActive)
+            try
             {
-                try
-                {
-                    if (!currentActive.Contains(activeLane))
-                        UniqueReleases[activeLane] = true;
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
+                List<int> previousActive;
 
-            CurrentFrame++;
+                previousActive = CurrentFrame - 1 >= 0
+                    ? Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame - 1].Keys)
+                    : new List<int>();
+
+                var currentActive = Replay.KeyPressStateToLanes(Replay.Frames[CurrentFrame].Keys);
+
+                foreach (var lane in currentActive)
+                    UniquePresses[lane] = !previousActive.Contains(lane);
+
+                foreach (var lane in previousActive)
+                    UniqueReleases[lane] = !currentActive.Contains(lane);
+            }
+            catch (Exception e)
+            {
+                // ignored
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                CurrentFrame++;
+            }
         }
 
         /// <summary>

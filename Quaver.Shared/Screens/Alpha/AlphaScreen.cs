@@ -8,6 +8,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Wobble.Input;
 
@@ -38,7 +39,7 @@ namespace Quaver.Shared.Screens.Alpha
             TimeScreenActive += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (TimeScreenActive >= 10000 && !Exiting)
-                Exit(() => new MenuScreen(), 300);
+                Exit(() => new MainMenuScreen(), 300);
 
             HandleInput(gameTime);
             base.Update(gameTime);
@@ -53,7 +54,7 @@ namespace Quaver.Shared.Screens.Alpha
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
-                Exit(() => new MenuScreen(), 200);
+                Exit(() => new MainMenuScreen(), 200);
         }
 
         /// <inheritdoc />

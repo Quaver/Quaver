@@ -1283,7 +1283,10 @@ namespace Quaver.Shared.Online
             var game = (QuaverGame) GameBase.Game;
 
             if (game.CurrentScreen.Type == QuaverScreenType.Gameplay && SpectatorClients.Count == 0)
-                game.CurrentScreen.Exit(() => new MenuScreen());
+            {
+                if (!game.CurrentScreen.Exiting)
+                    game.CurrentScreen.Exit(() => new MainMenuScreen());
+            }
 
             Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);
         }

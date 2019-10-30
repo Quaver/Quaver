@@ -25,6 +25,7 @@ using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu.UI;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -363,7 +364,7 @@ namespace Quaver.Shared.Screens.Menu
         /// <param name="e"></param>
         private void OnSinglePlayerPanelClicked(object sender, EventArgs e)
         {
-            var screen = Screen as MenuScreen;
+            var screen = Screen as MainMenuScreen;
 
             // We have maps in the queue, so we need to go to the import screen first
             if (MapsetImporter.Queue.Count != 0)
@@ -453,7 +454,7 @@ namespace Quaver.Shared.Screens.Menu
                 return;
             }
 
-            var screen = Screen as MenuScreen;
+            var screen = Screen as MainMenuScreen;
 
             screen?.Exit(() =>
             {
@@ -468,7 +469,7 @@ namespace Quaver.Shared.Screens.Menu
                 {
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
-                    return new MenuScreen();
+                    return new MainMenuScreen();
                 }
             });
         }
