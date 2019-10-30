@@ -1164,7 +1164,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!OnlineManager.IsBeingSpectated || InReplayMode)
                 return;
 
-            if (TimeSinceSpectatorFramesLastSent < 1000 && !force)
+            if (TimeSinceSpectatorFramesLastSent < 750 && !force)
                 return;
 
             TimeSinceSpectatorFramesLastSent = 0;
