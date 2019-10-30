@@ -53,6 +53,9 @@ namespace Quaver.Shared.Screens.Multiplayer
             Game = game;
             PlayTrackOnFirstUpdate = playTrackOnFirstUpdate;
 
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             SetRichPresence();
 
             OnlineManager.Client.OnGameStarted += OnGameStarted;

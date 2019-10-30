@@ -400,6 +400,13 @@ namespace Quaver.Shared.Online.Chat
                 case "join":
                     QuaverBot.ExecuteJoinCommand(args.ToList());
                     break;
+                // Spectates a user
+                case "spectate":
+                    QuaverBot.ExecuteSpectateCommand(args.ToList());
+                    break;
+                case "stopspectating":
+                    QuaverBot.ExecuteStopSpectatingCommand();
+                    break;
             }
         }
 

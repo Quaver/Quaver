@@ -507,6 +507,9 @@ namespace Quaver.Shared.Screens.Selection
                 return;
             }
 
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }
 
@@ -544,6 +547,9 @@ namespace Quaver.Shared.Screens.Selection
                 NotificationManager.Show(NotificationLevel.Error, "You cannot use the editor while playing multiplayer.");
                 return;
             }
+
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
 
             Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
         }

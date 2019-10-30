@@ -43,6 +43,9 @@ namespace Quaver.Shared.Screens.Music
         /// </summary>
         public MusicPlayerScreen()
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+            
             // Import any maps in the queue
             if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
                                                || MapDatabaseCache.MapsToUpdate.Count != 0)
