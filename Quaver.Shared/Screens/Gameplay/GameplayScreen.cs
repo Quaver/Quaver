@@ -1177,6 +1177,7 @@ namespace Quaver.Shared.Screens.Gameplay
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
+                AudioTrack.AllowPlayback = true;
                 AudioEngine.Track?.Seek(skipTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
