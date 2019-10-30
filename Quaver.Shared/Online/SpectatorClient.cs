@@ -39,6 +39,11 @@ namespace Quaver.Shared.Online
         private List<SpectatorReplayFramesEventArgs> Frames { get; } = new List<SpectatorReplayFramesEventArgs>();
 
         /// <summary>
+        ///     Returns if the client has notified the user if they don't have the map
+        /// </summary>
+        private bool HasNotifiedForThisMap { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="player"></param>
         public SpectatorClient(User player) => Player = player;
@@ -54,7 +59,12 @@ namespace Quaver.Shared.Online
             // Not in possession of the map
             if (Map == null)
             {
-                NotificationManager.Show(NotificationLevel.Error,"You do not have the map the spectating player is playing!");
+                if (!HasNotifiedForThisMap)
+                {
+                    NotificationManager.Show(NotificationLevel.Error,"You do not have the map the host is playing!");
+                    HasNotifiedForThisMap = true;
+                }
+
                 return;
             }
 
@@ -87,6 +97,9 @@ namespace Quaver.Shared.Online
         /// </summary>
         public void AddFrames(SpectatorReplayFramesEventArgs e)
         {
+            if (e.Status == SpectatorClientStatus.NewSong)
+                HasNotifiedForThisMap = false;
+
             if (e.Status == SpectatorClientStatus.NewSong || (Replay == null && e.Status == SpectatorClientStatus.Playing))
                 PlayNewMap();
 
