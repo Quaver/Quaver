@@ -100,7 +100,7 @@ namespace Quaver.Shared.Online
             if (e.Status == SpectatorClientStatus.NewSong)
                 HasNotifiedForThisMap = false;
 
-            if (e.Status == SpectatorClientStatus.NewSong || (Replay == null && e.Status == SpectatorClientStatus.Playing))
+            if (e.Status == SpectatorClientStatus.NewSong || Replay == null)
                 PlayNewMap();
 
             // A second null check is required in this case
