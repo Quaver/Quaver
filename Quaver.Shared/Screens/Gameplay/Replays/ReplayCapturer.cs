@@ -91,6 +91,9 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
 
                 for (var i = Screen.Ruleset.StandardizedReplayPlayer.Replay.Frames.Count; i < replayInputManager.CurrentFrame + 1; i++)
                 {
+                    if (i >= replayInputManager.VirtualPlayer.Replay.Frames.Count)
+                        break;
+
                     var frame = replayInputManager.VirtualPlayer.Replay.Frames[i];
                     Replay.AddFrame(frame.Time, frame.Keys);
                 }
