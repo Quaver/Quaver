@@ -37,6 +37,7 @@ using Quaver.Shared.Screens.Gameplay.Replays;
 using Quaver.Shared.Screens.Gameplay.Rulesets;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Lobby;
@@ -396,24 +397,28 @@ namespace Quaver.Shared.Screens.Gameplay
 
             Timing.Update(gameTime);
 
+            // Handles spectating clients
+            // This needs to be above any checks for IsPlayComplete, because that
+            // relies on the object pool being empty.
+            // If skipping ahead, the pool gets recreated
+            if (InReplayMode && OnlineManager.IsSpectatingSomeone)
+            {
+                HandleSpectatorSkipping();
+
+                var inputManager = (KeysInputManager) Ruleset.InputManager;
+                inputManager.ReplayInputManager?.HandleSpectating();
+            }
+
             if (!Failed && !IsPlayComplete)
             {
                 HandleResuming();
                 PlayComboBreakSound();
             }
 
-            // Handles spectating clients
-            if (InReplayMode && OnlineManager.IsSpectatingSomeone)
-            {
-                var inputManager = (KeysInputManager) Ruleset.InputManager;
-                inputManager.ReplayInputManager?.HandleSpectating();
-            }
-
             HandleInput(gameTime);
             HandleSoundEffects();
             HandleFailure();
             ReplayCapturer.Capture(gameTime);
-            // Metronome?.Update(gameTime);
             SendJudgementsToServer();
             SendReplayFramesToServer();
 
@@ -1154,6 +1159,43 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (OnlineManager.CurrentGame.InProgress)
                 OnlineManager.Client.SendGameJudgements(judgementsToGive);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleSpectatorSkipping()
+        {
+            if (SpectatorClient.Replay.Frames.Count == 0)
+                return;
+
+            // User can only be two seconds out of sync with the user
+            if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
+                return;
+
+            var skipTime = SpectatorClient.Replay.Frames.Last().Time - 500;
+
+            try
+            {
+                // Skip to the time if the audio already played once. If it hasn't, then play it.
+                AudioEngine.Track?.Seek(skipTime);
+                Timing.Time = AudioEngine.Track.Time;
+            }
+            catch (Exception e)
+            {;
+                Timing.Time = skipTime;
+            }
+            finally
+            {
+                var inputManager = (KeysInputManager)Ruleset.InputManager;
+                inputManager.ReplayInputManager.HandleSkip();
+
+                var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
+                hitobjectManager.HandleSkip();
+
+                // Stop all playing sound effects and move NextSoundEffectIndex ahead.
+                CustomAudioSampleCache.StopAll();
+                UpdateNextSoundEffectIndex();
+            }
         }
 
         /// <summary>

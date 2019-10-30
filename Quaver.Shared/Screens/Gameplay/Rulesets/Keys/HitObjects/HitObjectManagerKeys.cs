@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Initialize Info Pool. Info pool is used to pass info around to Hit Objects.
         /// </summary>
         /// <param name="map"></param>
-        private void InitializeInfoPool(Qua map)
+        private void InitializeInfoPool(Qua map, bool skipObjects = false)
         {
             // Initialize collections
             var keyCount = Ruleset.Map.GetKeyCount();
@@ -248,7 +248,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Sort Hit Object Info into their respective lanes
             foreach (var info in map.HitObjects)
+            {
+                // Skip objects that aren't a second within range
+                if (skipObjects)
+                {
+                    if (info.StartTime - 1000 < CurrentAudioPosition)
+                        continue;
+                }
+
                 HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
+            }
         }
 
         /// <summary>
@@ -754,6 +763,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 CurrentSvIndex++;
             }
             CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition, CurrentSvIndex);
+        }
+
+        /// <summary>
+        ///     Handles skipping forward in the pool
+        /// </summary>
+        public void HandleSkip()
+        {
+            InitializeInfoPool(Ruleset.Map, true);
+            InitializeObjectPool();
         }
     }
 }
