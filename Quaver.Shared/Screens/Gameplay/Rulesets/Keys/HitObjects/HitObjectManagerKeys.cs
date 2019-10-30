@@ -770,6 +770,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
+            UpdateCurrentTrackPosition();
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
         }

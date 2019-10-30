@@ -1172,7 +1172,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time - 500;
+            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
 
             try
             {
