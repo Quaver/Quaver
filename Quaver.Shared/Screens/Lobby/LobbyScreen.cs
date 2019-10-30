@@ -34,6 +34,10 @@ namespace Quaver.Shared.Screens.Lobby
         public LobbyScreen()
         {
             CheckConnected();
+
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             OnlineManager.JoinLobby();
 
             DiscordHelper.Presence.Details = "Finding a Game";

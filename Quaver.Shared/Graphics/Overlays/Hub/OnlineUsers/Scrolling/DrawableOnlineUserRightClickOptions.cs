@@ -32,6 +32,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         private const string Chat = "Chat";
 
+        private const string Spectate = "Spectate";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -61,6 +63,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                         break;
                     case Chat:
                         HandleOpenChat(user);
+                        break;
+                    case Spectate:
+                        HandleSpectating(user);
                         break;
                 }
             };
@@ -101,7 +106,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 options.Add(JoinListeningParty, ColorHelper.HexToColor("#F2994A"));
 
             // Chat
-            options.Add(Chat, ColorHelper.HexToColor("##b48bff"));
+            options.Add(Chat, ColorHelper.HexToColor("#b48bff"));
+
+            if (!OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id))
+                options.Add(Spectate, ColorHelper.HexToColor("#0FBAE5"));
 
             return options;
         }
@@ -170,6 +178,32 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             QuaverBot.ExecuteChatCommand(list.Concat(user.OnlineUser.Username.Split(" ")));
             ChatManager.ToggleChatOverlay(true);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="user"></param>
+        private void HandleSpectating(User user)
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            switch (game.CurrentScreen.Type)
+            {
+                case QuaverScreenType.Menu:
+                case QuaverScreenType.Results:
+                case QuaverScreenType.Select:
+                case QuaverScreenType.Importing:
+                case QuaverScreenType.Alpha:
+                case QuaverScreenType.Download:
+                    if (OnlineManager.Spectators.Count != 0)
+                        OnlineManager.Client?.StopSpectating();
+
+                    OnlineManager.Client?.SpectatePlayer(user.OnlineUser.Id);
+                    break;
+                default:
+                    NotificationManager.Show(NotificationLevel.Error, "Please finish what you're doing before spectating!");
+                    break;
+            }
         }
     }
 }
