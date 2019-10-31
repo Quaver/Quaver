@@ -770,6 +770,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
+            ActiveNoteLanes.ForEach(x => x.Dequeue().Destroy());
+            DeadNoteLanes.ForEach(x => x.Dequeue().Destroy());
+            HeldLongNoteLanes.ForEach(x => x.Dequeue().Destroy());
+
+            UpdateCurrentTrackPosition();
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
         }

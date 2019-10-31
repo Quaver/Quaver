@@ -1172,11 +1172,12 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Math.Abs(AudioEngine.Track.Time - SpectatorClient.Replay.Frames.Last().Time) < 3000)
                 return;
 
-            var skipTime = SpectatorClient.Replay.Frames.Last().Time - 500;
+            var skipTime = SpectatorClient.Replay.Frames.Last().Time;
 
             try
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
+                AudioTrack.AllowPlayback = true;
                 AudioEngine.Track?.Seek(skipTime);
                 Timing.Time = AudioEngine.Track.Time;
             }
