@@ -20,6 +20,11 @@ namespace Quaver.Shared.Graphics.Notifications
     public class DrawableNotification : PoolableSprite<NotificationInfo>
     {
         /// <summary>
+        ///     Horizontal padding between the components of a notification.
+        /// </summary>
+        private const int PADDING = 14;
+
+        /// <summary>
         /// </summary>
         public override int HEIGHT { get; } = 0;
 
@@ -176,7 +181,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(34, 34),
-                X = 14,
+                X = PADDING,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -185,14 +190,12 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
-            const int padding = 7;
-
             Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Icon.X + Icon.Width + padding * 2,
-                MaxWidth = Width - Icon.Width - padding * 3,
+                X = PADDING + Icon.Width + PADDING,
+                MaxWidth = Width - PADDING - PADDING - Icon.Width - PADDING,
                 UsePreviousSpriteBatchOptions = true
             };
         }
