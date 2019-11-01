@@ -108,7 +108,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 // Calculate the new target y position
                 if (!notification.IsSlidingOut)
                 {
-                    var targetY = InitialY + (ActiveNotifications.Last().Height + 30) * iteration;
+                    var targetY = InitialY + (ActiveNotifications.Last().Height + 20) * iteration;
                     notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
                 }
 
