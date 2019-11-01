@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Download;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -74,6 +75,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         public override void Update(GameTime gameTime)
         {
             Button.Alpha = Button.IsHovered ? 0.35f : 0;
+            
+            var game = (QuaverGame) GameBase.Game;
+
+            if (Container != null)
+                Button.IsClickable = game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.ActiveDownloads];
+            
             base.Update(gameTime);
         }
 

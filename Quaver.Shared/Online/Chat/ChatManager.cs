@@ -340,7 +340,7 @@ namespace Quaver.Shared.Online.Chat
                     // TODO: Add better sound for this.
                     SkinManager.Skin.SoundClick.CreateChannel()?.Play();
 
-                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.SenderName} has sent you a message. Click here to read it.",
+                    NotificationManager.Show(NotificationLevel.Info, $"{e.Message.SenderName} has sent you a message. Click here to read it.",
                         (o, args) =>
                         {
                             while (!IsActive)

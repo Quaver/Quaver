@@ -62,6 +62,7 @@ using Quaver.Shared.Screens.Tests.YesNoDialog;
 using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Screens.Tests.ListenerLists;
 using Quaver.Shared.Screens.Tests.MenuJukebox;
+using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
 using Quaver.Shared.Skinning;
@@ -187,7 +188,8 @@ namespace Quaver.Shared
             {"MusicPlayerScreen", typeof(MusicPlayerScreen)},
             {"DrawableListenerList", typeof(TestScreenListenerList)},
             {"OnlineHub", typeof(TestScreenOnlineHub)},
-            {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)}
+            {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)},
+            {"Notifications", typeof(TestNotificationScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)

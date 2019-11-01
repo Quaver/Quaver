@@ -106,6 +106,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
                 Button.Depth = container.FilterDropdown.Dropdown.Opened ||
                                container.ActiveRightClickOptions!= null && container.ActiveRightClickOptions.Opened ? 1 : 0;
+
+                var game = (QuaverGame) GameBase.Game;
+
+                if (Container != null)
+                    Button.IsClickable = game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.OnlineUsers];
             }
 
             // The button is no longer in range of the container, so uncontain it.

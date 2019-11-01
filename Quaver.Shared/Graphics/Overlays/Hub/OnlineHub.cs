@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
+using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
@@ -201,9 +202,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// <summary>
         /// </summary>
         /// <param name="type"></param>
-        public void MarkSectionAsUnread(OnlineHubSectionType type)
+        /// <param name="force"></param>
+        public void MarkSectionAsUnread(OnlineHubSectionType type, bool force = false)
         {
-            if (SelectedSection == Sections[type])
+            if (SelectedSection == Sections[type] && !force)
             {
                 SelectedSection.MarkAsRead();
                 return;
