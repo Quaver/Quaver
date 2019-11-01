@@ -185,14 +185,14 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
-            const int padding = 14;
+            const int padding = 7;
 
             Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Icon.X + Icon.Width + padding,
-                MaxWidth = Width - Icon.Width - Icon.X - padding * 1.5f,
+                X = Icon.X + Icon.Width + padding * 2,
+                MaxWidth = Width - Icon.Width - padding * 3,
                 UsePreviousSpriteBatchOptions = true
             };
         }
