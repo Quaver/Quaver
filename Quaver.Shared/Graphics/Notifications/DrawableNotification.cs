@@ -176,7 +176,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(34, 34),
-                X = 16,
+                X = 14,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -185,12 +185,14 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
+            const int padding = 7;
+
             Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = Icon.X + Icon.Width + 14,
-                MaxWidth = Width - Icon.Width - 32,
+                X = Icon.X + Icon.Width + padding * 2,
+                MaxWidth = Width - Icon.Width - padding * 3,
                 UsePreviousSpriteBatchOptions = true
             };
         }
