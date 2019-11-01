@@ -223,7 +223,7 @@ namespace Quaver.Shared.Graphics.Containers
             {
                 var drawable = CreateObject(AvailableItems[index], index);
                 drawable.DestroyIfParentIsNull = false;
-                drawable.Y = (PoolStartingIndex + index) * drawable.HEIGHT + PaddingTop;
+                drawable.Y = (PoolStartingIndex + index) * drawable.Height + PaddingTop;
 
                 if (updateContent)
                     drawable.UpdateContent(AvailableItems[index], index);
