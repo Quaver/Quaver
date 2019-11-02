@@ -1,10 +1,12 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
@@ -14,6 +16,7 @@ using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
@@ -41,6 +44,17 @@ namespace Quaver.Shared.Screens.Main
             SetDiscordRichPresence();
 #endif
             View = new MainMenuScreenView(this);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            ImportMaps();
+
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -135,6 +149,20 @@ namespace Quaver.Shared.Screens.Main
                     return new MainMenuScreen();
                 }
             });
+        }
+
+        /// <summary>
+        ///     Automatically starts importing maps if currently in spectator mode
+        /// </summary>
+        private void ImportMaps()
+        {
+            // Go to the import screen if we've imported a map not on the select screen
+            if (OnlineManager.IsSpectatingSomeone && !Exiting && MapsetImporter.Queue.Count > 0
+                || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
+            {
+                Exit(() => new ImportingScreen());
+                return;
+            }
         }
 
         /// <summary>
