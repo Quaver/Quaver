@@ -63,11 +63,9 @@ namespace Quaver.Shared.Online
         {
             var game = (QuaverGame) GameBase.Game;
 
-            // Try to find the new map from the player
-            Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
-
             // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
-            Replay = new Replay(Map.Mode, Player.OnlineUser.Username, (ModIdentifier) Player.CurrentStatus.Modifiers, Map.Md5Checksum);
+            Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
+                (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
 
             // Add all existing frames
             if (frames != null)
@@ -78,6 +76,9 @@ namespace Quaver.Shared.Online
                     Replay.Frames.Add(frame);
             }
 
+            // Try to find the new map from the player
+            Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
+            
             // Not in possession of the map
             if (Map == null)
             {
