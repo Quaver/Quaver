@@ -78,7 +78,7 @@ namespace Quaver.Shared.Online
 
             // Try to find the new map from the player
             Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
-            
+
             // Not in possession of the map
             if (Map == null)
             {
@@ -189,10 +189,18 @@ namespace Quaver.Shared.Online
                     // Automatically start importing
                     download.Completed.ValueChanged += (sender, args) =>
                     {
-                        if (!game.CurrentScreen.Exiting)
+                        if (OnlineManager.IsSpectatingSomeone && !game.CurrentScreen.Exiting)
                         {
-                            if (game.CurrentScreen.Type != QuaverScreenType.Importing)
-                                game.CurrentScreen.Exit(() => new ImportingScreen());
+                            switch (game.CurrentScreen.Type)
+                            {
+                                case QuaverScreenType.Gameplay:
+                                case QuaverScreenType.Loading:
+                                case QuaverScreenType.Importing:
+                                    break;
+                                default:
+                                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                                    break;
+                            }
                         }
                     };
 
