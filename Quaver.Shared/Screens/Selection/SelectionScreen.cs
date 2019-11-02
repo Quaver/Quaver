@@ -774,8 +774,8 @@ namespace Quaver.Shared.Screens.Selection
         private void ImportMaps()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (!Exiting && MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
-                                                           || MapDatabaseCache.MapsToUpdate.Count != 0)
+            if (!Exiting && (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
+                                                           || MapDatabaseCache.MapsToUpdate.Count != 0))
             {
                 Exit(() => new ImportingScreen(MultiplayerScreen, true));
                 return;

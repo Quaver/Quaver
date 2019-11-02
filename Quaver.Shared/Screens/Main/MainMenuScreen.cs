@@ -157,8 +157,8 @@ namespace Quaver.Shared.Screens.Main
         private void ImportMaps()
         {
             // Go to the import screen if we've imported a map not on the select screen
-            if (OnlineManager.IsSpectatingSomeone && !Exiting && MapsetImporter.Queue.Count > 0
-                || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0)
+            if (OnlineManager.IsSpectatingSomeone && !Exiting && (MapsetImporter.Queue.Count > 0
+                || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 || MapDatabaseCache.MapsToUpdate.Count != 0))
             {
                 Exit(() => new ImportingScreen());
                 return;
