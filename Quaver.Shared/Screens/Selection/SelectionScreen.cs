@@ -92,6 +92,14 @@ namespace Quaver.Shared.Screens.Selection
         {
             MultiplayerScreen = multiplayerScreen;
 
+            // Go to the import screen if we've imported a map not on the select screen
+            if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
+                                               || MapDatabaseCache.MapsToUpdate.Count != 0)
+            {
+                Exit(() => new ImportingScreen(MultiplayerScreen, true));
+                return;
+            }
+
             if (MultiplayerScreen != null)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
             else
@@ -130,7 +138,6 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ImportMaps();
             HandleInput(gameTime);
             base.Update(gameTime);
         }
@@ -766,20 +773,6 @@ namespace Quaver.Shared.Screens.Selection
                         AudioEngine.Track.Dispose();
                 }
             });
-        }
-
-        /// <summary>
-        ///     Starts importing maps as soon as they're available to be imported
-        /// </summary>
-        private void ImportMaps()
-        {
-            // Go to the import screen if we've imported a map not on the select screen
-            if (!Exiting && (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
-                                                           || MapDatabaseCache.MapsToUpdate.Count != 0))
-            {
-                Exit(() => new ImportingScreen(MultiplayerScreen, true));
-                return;
-            }
         }
 
         /// <summary>
