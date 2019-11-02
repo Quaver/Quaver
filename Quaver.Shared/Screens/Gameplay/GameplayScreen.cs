@@ -1081,7 +1081,7 @@ namespace Quaver.Shared.Screens.Gameplay
             else if (InReplayMode)
             {
                 status = ClientStatus.Watching;
-                content = LoadedReplay.PlayerName;
+                content = LoadedReplay.PlayerName + $" play {Map}";
             }
             else if (IsResumeInProgress)
             {
