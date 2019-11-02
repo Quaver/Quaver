@@ -252,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // Skip objects that aren't a second within range
                 if (skipObjects)
                 {
-                    if (info.StartTime - 1000 < CurrentAudioPosition)
+                    if (info.StartTime < CurrentAudioPosition)
                         continue;
                 }
 
@@ -770,9 +770,29 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
-            ActiveNoteLanes.ForEach(x => x.Dequeue().Destroy());
-            DeadNoteLanes.ForEach(x => x.Dequeue().Destroy());
-            HeldLongNoteLanes.ForEach(x => x.Dequeue().Destroy());
+            ActiveNoteLanes.ForEach(x =>
+            {
+                if (x.Count == 0)
+                    return;
+
+                x.Dequeue().Destroy();
+            });
+
+            DeadNoteLanes.ForEach(x =>
+            {
+                if (x.Count == 0)
+                    return;
+
+                x.Dequeue().Destroy();
+            });
+
+            HeldLongNoteLanes.ForEach(x =>
+            {
+                if (x.Count == 0)
+                    return;
+
+                x.Dequeue().Destroy();
+            });
 
             UpdateCurrentTrackPosition();
             InitializeInfoPool(Ruleset.Map, true);

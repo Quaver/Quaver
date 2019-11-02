@@ -10,9 +10,17 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Online.API.Maps;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Main;
 using Wobble;
+using Wobble.Audio.Tracks;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Online
 {
@@ -51,8 +59,23 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     Handles when the client is beginning to play a new map
         /// </summary>
-        private void PlayNewMap()
+        private void PlayNewMap(List<ReplayFrame> frames)
         {
+            var game = (QuaverGame) GameBase.Game;
+
+            // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
+            Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
+                (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
+
+            // Add all existing frames
+            if (frames != null)
+            {
+                Logger.Important($"Adding existing {frames.Count} replay frames", LogType.Runtime);
+
+                foreach (var frame in frames)
+                    Replay.Frames.Add(frame);
+            }
+
             // Try to find the new map from the player
             Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
 
@@ -63,6 +86,20 @@ namespace Quaver.Shared.Online
                 {
                     NotificationManager.Show(NotificationLevel.Error,"You do not have the map the host is playing!");
                     HasNotifiedForThisMap = true;
+
+                    DownloadMap();
+                }
+
+                if (game.CurrentScreen.Type == QuaverScreenType.Gameplay ||
+                    game.CurrentScreen.Type == QuaverScreenType.Loading)
+                {
+                    game.GlobalUserInterface.Cursor.Alpha = 1;
+
+                    // Exit out to the main menu
+                    game.IsMouseVisible = false;
+                    game.GlobalUserInterface.Cursor.Show(1);
+                    game.CurrentScreen.Exit(() => new MainMenuScreen());
+                    AudioTrack.AllowPlayback = true;
                 }
 
                 return;
@@ -72,12 +109,6 @@ namespace Quaver.Shared.Online
 
             if (Map != BackgroundHelper.Map)
                 BackgroundHelper.Load(Map);
-
-            // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
-            Replay = new Replay(Map.Mode, Player.OnlineUser.Username, (ModIdentifier) Player.CurrentStatus.Modifiers, Map.Md5Checksum);
-
-            // Load the map up and start the spectating session.
-            var game = (QuaverGame) GameBase.Game;
 
             // Don't interrupt importing
             if (game.CurrentScreen.Type == QuaverScreenType.Importing)
@@ -101,11 +132,11 @@ namespace Quaver.Shared.Online
                 HasNotifiedForThisMap = false;
 
             if (e.Status == SpectatorClientStatus.NewSong || Replay == null)
-                PlayNewMap();
+                PlayNewMap(e.Frames);
 
             // A second null check is required in this case
             // because PlayNewMap() may not create a new replay instance depending on what the player is doing.
-            if (Replay == null)
+            if (Replay == null || MapManager.Selected.Value.Md5Checksum != Player.CurrentStatus.MapMd5)
                 return;
 
             lock (Replay.Frames)
@@ -130,6 +161,57 @@ namespace Quaver.Shared.Online
             }
 
             Frames.Add(e);
+        }
+
+        /// <summary>
+        ///     Starts the download for the map if it is available for downloading
+        /// </summary>
+        private void DownloadMap()
+        {
+            if (Player.CurrentStatus.MapId == -1)
+                return;
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    // Grab complete info for the map
+                    var response = new APIRequestMapInformation(Player.CurrentStatus.MapId).ExecuteRequest();
+
+                    // If we're already downloading it, don't restart
+                    if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                        return;
+
+                    var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
+
+                    var game = (QuaverGame) GameBase.Game;
+
+                    // Automatically start importing
+                    download.Completed.ValueChanged += (sender, args) =>
+                    {
+                        if (OnlineManager.IsSpectatingSomeone && !game.CurrentScreen.Exiting)
+                        {
+                            switch (game.CurrentScreen.Type)
+                            {
+                                case QuaverScreenType.Gameplay:
+                                case QuaverScreenType.Loading:
+                                case QuaverScreenType.Importing:
+                                    break;
+                                default:
+                                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                                    break;
+                            }
+                        }
+                    };
+
+                    MapsetDownloadManager.OpenOnlineHub();
+                    game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            });
         }
     }
 }

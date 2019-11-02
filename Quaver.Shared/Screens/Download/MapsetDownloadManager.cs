@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         /// </summary>
-        private static void OpenOnlineHub()
+        public static void OpenOnlineHub()
         {
             var game = (QuaverGame) GameBase.Game;
 
