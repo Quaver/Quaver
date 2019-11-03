@@ -306,6 +306,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 var testingQua = ObjectHelper.DeepClone(map);
                 testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+                Qua.RestoreDefaultValues(testingQua);
 
                 Map = testingQua;
                 OriginalEditorMap = map;
