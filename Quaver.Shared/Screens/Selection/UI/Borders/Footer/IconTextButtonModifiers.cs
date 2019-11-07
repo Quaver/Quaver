@@ -20,7 +20,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
                 if (activeLeftPanel == null)
                     return;
 
-                activeLeftPanel.Value = SelectContainerPanel.Modifiers;
+                if (activeLeftPanel.Value == SelectContainerPanel.Modifiers)
+                    activeLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                else
+                    activeLeftPanel.Value = SelectContainerPanel.Modifiers;
             })
         {
         }
