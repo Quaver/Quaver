@@ -93,6 +93,7 @@ namespace Quaver.Shared.Screens.Loading
                 {
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Failed to load the map. Is your .qua file valid?");
+                    GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
                     Exit(() => new SelectionScreen());
                 }
             });
