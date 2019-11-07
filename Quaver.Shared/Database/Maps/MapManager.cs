@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
+using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
@@ -82,6 +83,11 @@ namespace Quaver.Shared.Database.Maps
         ///     Event invoked when a map has been updated
         /// </summary>
         public static event EventHandler<MapUpdatedEventArgs> MapUpdated;
+
+        /// <summary>
+        ///     Event invoked when a song request has been played
+        /// </summary>
+        public static event EventHandler<SongRequestPlayedEventArgs> SongRequestPlayed;
 
         /// <summary>
         ///     Gets the background path for a given map.
@@ -370,6 +376,16 @@ namespace Quaver.Shared.Database.Maps
                 Logger.Error(e, LogType.Runtime);
                 MapUpdated?.Invoke(typeof(MapManager), new MapUpdatedEventArgs(outdated, outdated));
             }
+        }
+
+        /// <summary>
+        ///     Raises an event stating that the user wants to play a song request
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="map"></param>
+        public static void PlaySongRequest(SongRequest request, Map map)
+        {
+            SongRequestPlayed?.Invoke(typeof(MapManager), new SongRequestPlayedEventArgs(request, map));
         }
     }
 }
