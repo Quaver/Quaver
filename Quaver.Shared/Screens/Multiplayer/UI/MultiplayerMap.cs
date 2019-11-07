@@ -23,6 +23,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -429,7 +430,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 var game = (QuaverGame) GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
-                screen?.Exit(() => new SelectScreen(screen), 0, QuaverScreenChangeType.AddToStack);
+                screen?.Exit(() => new SelectionScreen(screen), 0, QuaverScreenChangeType.AddToStack);
                 return;
             }
 

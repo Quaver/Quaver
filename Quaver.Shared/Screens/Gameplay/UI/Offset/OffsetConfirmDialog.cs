@@ -12,6 +12,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -78,7 +79,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
             switch (QuaverScreenManager.LastScreen)
             {
                 case QuaverScreenType.Select:
-                    return new SelectScreen();
+                    return new SelectionScreen();
                 default:
                     return new MainMenuScreen();
             }
