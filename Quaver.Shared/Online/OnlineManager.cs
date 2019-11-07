@@ -26,16 +26,19 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Listening;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Lobby;
@@ -164,6 +167,15 @@ namespace Quaver.Shared.Online
         public static event EventHandler<FriendsListUserChangedEventArgs> FriendsListUserChanged;
 
         /// <summary>
+        ///     List of currently available song requests
+        /// </summary>
+        public static List<SongRequest> SongRequests { get; } = new List<SongRequest>();
+
+        /// <summary>
+        /// </summary>
+        public static string TwitchUsername { get; private set; }
+
+        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
@@ -267,6 +279,8 @@ namespace Quaver.Shared.Online
             Client.OnSpectatorJoined += OnSpectatorJoined;
             Client.OnSpectatorLeft += OnSpectatorLeft;
             Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
+            Client.OnSongRequestReceived += OnSongRequestReceived;
+            Client.OnTwitchConnectionReceived += OnTwitchConnectionReceived;
         }
 
         /// <summary>
@@ -1317,6 +1331,10 @@ namespace Quaver.Shared.Online
             Logger.Important($"Spectator Left: {e.UserId}", LogType.Network);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void OnSpectatorReplayFrames(object sender, SpectatorReplayFramesEventArgs e)
         {
             if (!SpectatorClients.ContainsKey(e.UserId))
@@ -1529,6 +1547,54 @@ namespace Quaver.Shared.Online
                 FriendsList = e.Friends;
 
             Logger.Important($"Received friends list containing {FriendsList.Count} users.", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnSongRequestReceived(object sender, SongRequestEventArgs e)
+        {
+            SongRequests.Add(e.Request);
+
+            Logger.Important($"Received song request: {e.Request.TwitchUsername} ({e.Request.UserId}) | " +
+                             $"{e.Request.Artist} - {e.Request.Title}", LogType.Runtime);
+
+            if (!ConfigManager.DisplaySongRequestNotifications.Value)
+                return;
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.OnlineHub.IsOpen)
+            {
+                if (game.OnlineHub.Sections[OnlineHubSectionType.SongRequests] != game.OnlineHub.SelectedSection)
+                    game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.SongRequests);
+
+                return;
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, $"You have received a new song request. Click here to view it!",
+                (o, args) =>
+                {
+                    game.OnlineHub.SelectSection(OnlineHubSectionType.SongRequests);
+
+                    if (game.OnlineHub.IsOpen)
+                        return;
+
+                    DialogManager.Show(new OnlineHubDialog());
+                });
+
+            game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.SongRequests);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnTwitchConnectionReceived(object sender, TwitchConnectionEventArgs e)
+        {
+            TwitchUsername = e.Connected ? e.TwitchUsername : null;
+            Logger.Important($"Received Twitch Connection Status: Connected: {e.Connected} | Username: {e.TwitchUsername}", LogType.Runtime);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
+using Quaver.Shared.Graphics.Overlays.Hub.SongRequests;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
 using Wobble.Graphics;
@@ -115,15 +116,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             SelectedSection = section;
             SelectedSection.MarkAsRead();
 
-            ScheduleUpdate(() =>
-            {
-                section.Container.Visible = true;
+            section.Container.Parent = this;
 
-                if (oldSection != null)
-                    oldSection.Container.Visible = false;
+            if (oldSection != null)
+                oldSection.Container.Parent = null;
 
-                HeaderText.Text = section.Name;
-            });
+            ScheduleUpdate(() => HeaderText.Text = section.Name);
         }
 
         /// <summary>
@@ -185,9 +183,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             {
                 var section = Sections[(OnlineHubSectionType) i];
 
-                section.Container.Parent = this;
+                // Update the container once
+                section.Container.Update(new GameTime());
+
+                section.Container.Parent = null;
                 section.Container.Y = IconContainer.Y + IconContainer.Height;
-                section.Container.Visible = false;
 
                 section.Icon.Parent = IconContainer;
                 section.Icon.Alignment = Alignment.MidLeft;

@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.Selection
             PlaylistManager.PlaylistSynced -= OnPlaylistSynced;
             PlaylistContainer.ContainerInitialized -= OnPlaylistContainerInitialized;
             SelectScreen.ScreenExiting -= OnExiting;
-            FilterPanel.SearchBox.OnStoppedTyping -= OnSearchingStopped;
+            FilterPanel.SearchBox.OnStoppedTyping -= OnSearchingStopped;;
         }
 
         /// <summary>
