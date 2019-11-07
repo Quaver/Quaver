@@ -101,16 +101,28 @@ namespace Quaver.Shared.Graphics
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) && DialogManager.Dialogs.First() == this)
+            if (DialogManager.Dialogs.First() == this)
             {
-                NoAction?.Invoke();
-                Close();
+                if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                {
+                    NoAction?.Invoke();
+                    Close();
+                    return;
+                }
+
+                if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                {
+                    YesAction?.Invoke();
+                    Close();
+                    return;
+                }
             }
 
             if (MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
             {
                 NoAction?.Invoke();
                 Close();
+                return;
             }
         }
 
