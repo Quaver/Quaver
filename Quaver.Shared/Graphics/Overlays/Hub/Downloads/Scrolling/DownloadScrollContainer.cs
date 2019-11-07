@@ -122,13 +122,18 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// </summary>
         private void CreateNoDownloadsText()
         {
-            NoDownloadsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "You currently do not have\n any active downloads!\n\nYou can download maps by clicking\nthe button in the top navigation bar.".ToUpper(), 20)
+            NoDownloadsText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),"", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = TextAlignment.Center
             };
+
+            AddScheduledUpdate(() =>
+            {
+                NoDownloadsText.Text = "You currently do not have\n any active downloads!\n\n".ToUpper() +
+                                       "You can download maps by clicking\nthe button in the top navigation bar.".ToUpper();
+            });
         }
 
         /// <summary>
@@ -137,7 +142,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="e"></param>
         private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            AddObjectToBottom(e.Download, false);
+            AddScheduledUpdate(() =>
+            {
+                AddObjectToBottom(e.Download, false);
+            });
 
             var game = (QuaverGame) GameBase.Game;
             game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.ActiveDownloads);

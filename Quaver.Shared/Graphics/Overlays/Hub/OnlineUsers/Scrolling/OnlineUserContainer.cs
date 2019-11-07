@@ -91,13 +91,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
 
-            CreatePool(false, false);
-
-            TargetY = 0;
-            PreviousTargetY = 0;
-            PreviousContentContainerY = 0;
-            ContentContainer.Y = 0;
-
             CreateLoadingWheel();
             CreateOfflineNotice();
 
@@ -108,6 +101,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             if (ConfigManager.OnlineUserListFilterType != null)
                 ConfigManager.OnlineUserListFilterType.ValueChanged += OnFilterChanged;
+
+            AddScheduledUpdate(() =>
+            {
+                CreatePool(false, false);
+                ResetPool();
+            });
         }
 
         /// <inheritdoc />
@@ -203,7 +202,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
                 RecalculateContainerHeight();
 
-                ScheduleUpdate(() =>
+                AddScheduledUpdate(() =>
                 {
                     // Reset the pool item index
                     for (var i = 0; i < Pool.Count; i++)
@@ -306,18 +305,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             if (e.Value == ConnectionStatus.Connected)
                 SubscribeToEvents();
             else
-            {
                 UnsubscribeToEvents();
 
-                ScheduleUpdate(() =>
-                {
-                    Pool.ForEach(x => x.Destroy());
-                    Pool.Clear();
-
-                    AvailableItems.Clear();
-                    RecalculateContainerHeight();
-                });
-            }
+            ResetPool();
         }
 
         /// <summary>
@@ -328,7 +318,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             lock (AvailableItems)
                 AvailableItems = FilterUsers();
 
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 TargetY = 0;
                 PreviousTargetY = 0;
@@ -373,13 +363,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateOfflineNotice()
         {
-            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "You must be logged in to \nview the online user list!".ToUpper(), 20)
+            OfflineNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = TextAlignment.Center
             };
+
+            AddScheduledUpdate(() => OfflineNotice.Text = "You must be logged in to \nview the online user list!".ToUpper());
         }
 
         /// <summary>

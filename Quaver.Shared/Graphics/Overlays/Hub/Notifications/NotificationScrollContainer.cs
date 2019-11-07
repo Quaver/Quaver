@@ -96,13 +96,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
         /// </summary>
         private void CreateTextNoNotifications()
         {
-            NoNotifications = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "All clear! You do not have any\nmissed notifications.".ToUpper(), 20)
+            NoNotifications = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = TextAlignment.Center
             };
+
+            AddScheduledUpdate(() => NoNotifications.Text = "All clear! You do not have any\nmissed notifications.".ToUpper());
         }
 
         /// <summary>
