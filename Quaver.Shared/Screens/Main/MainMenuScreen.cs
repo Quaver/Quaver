@@ -1,4 +1,6 @@
 using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
@@ -13,9 +15,12 @@ using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Main
@@ -41,6 +46,35 @@ namespace Quaver.Shared.Screens.Main
             SetDiscordRichPresence();
 #endif
             View = new MainMenuScreenView(this);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            HandleInput(gameTime);
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Handles all input for the screen
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandleInput(GameTime gameTime)
+        {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
+            HandleKeyPressEscape();
+        }
+
+        /// <summary>
+        ///     Handles when the user presses escape
+        /// </summary>
+        private void HandleKeyPressEscape()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+
+            DialogManager.Show(new QuitDialog());
         }
 
         /// <summary>
