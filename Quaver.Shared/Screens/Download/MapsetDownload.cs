@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -90,15 +91,23 @@ namespace Quaver.Shared.Screens.Download
             var path = $"{dir}/{MapsetId - TimeHelper.GetUnixTimestampMilliseconds()}.qp";
             Directory.CreateDirectory(dir);
 
-            OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+            try
             {
-                Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
-                MapsetImporter.Queue.Add(path);
+                OnlineManager.Client?.DownloadMapset(path, MapsetId, (o, e) => Progress.Value = e, (o, e) =>
+                {
+                    Logger.Important($"Finished downloading mapset: {MapsetId}. Cancelled: {e.Cancelled} | Error: {e.Error}", LogType.Network);
+                    MapsetImporter.Queue.Add(path);
 
-                Completed.Value = e;
-                MapsetDownloadManager.CurrentDownloads.Remove(this);
-                Dispose();
-            });
+                    Completed.Value = e;
+                    MapsetDownloadManager.CurrentDownloads.Remove(this);
+                    Dispose();
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, $"There was an error downloading mapset: {Artist} - {Title} ({MapsetId})");
+            }
         }
 
         /// <inheritdoc />

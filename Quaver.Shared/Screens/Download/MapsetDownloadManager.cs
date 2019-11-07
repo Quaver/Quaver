@@ -80,10 +80,11 @@ namespace Quaver.Shared.Screens.Download
         {
             var game = (QuaverGame) GameBase.Game;
 
+            game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+
             if (game.OnlineHub.IsOpen || game.CurrentScreen.Type == QuaverScreenType.Download)
                 return;
 
-            game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
             DialogManager.Show(new OnlineHubDialog());
         }
     }

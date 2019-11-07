@@ -39,6 +39,33 @@ namespace Quaver.Shared.Helpers
         }
 
         /// <summary>
+        ///     Converts an osu! star rating to Quaver's color system
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <returns></returns>
+        internal static Color OsuStarRatingToColor(float rating)
+        {
+            // Beginnner
+            if (rating < 1)
+                return DifficultyToColor(0.9f);
+            // Easy
+            if (rating < 2)
+                return DifficultyToColor(3.49f);
+            // Normal
+            if (rating < 2.70f)
+                return DifficultyToColor(7.99f);
+            // Hard
+            if (rating < 4)
+                return DifficultyToColor(18.9f);
+            // Insane
+            if (rating < 5.28)
+                return DifficultyToColor(27.9f);
+
+            // Expert
+            return DifficultyToColor(999);
+        }
+
+        /// <summary>
         ///     Converts a hex color code into an XNA color.
         /// </summary>
         /// <param name="hexColor"></param>

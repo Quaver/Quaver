@@ -117,6 +117,7 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapsetDeleted += OnMapsetDeleted;
             MapManager.MapDeleted += OnMapDeleted;
             MapManager.MapUpdated += OnMapUpdated;
+            MapManager.SongRequestPlayed += OnSongRequestPlayed;
 
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
@@ -154,6 +155,7 @@ namespace Quaver.Shared.Screens.Selection
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
+            MapManager.SongRequestPlayed -= OnSongRequestPlayed;
 
             // ReSharper disable once DelegateSubtraction
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
@@ -780,6 +782,21 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMapUpdated(object sender, MapUpdatedEventArgs e) => AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSongRequestPlayed(object sender, SongRequestPlayedEventArgs e)
+        {
+            ThreadScheduler.Run(() =>
+            {
+                MapManager.Selected.Value = e.Map;
+
+                lock (AvailableMapsets.Value)
+                    AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
+            });
+        }
 
         /// <summary>
         /// </summary>

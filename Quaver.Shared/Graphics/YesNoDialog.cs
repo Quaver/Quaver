@@ -202,7 +202,8 @@ namespace Quaver.Shared.Graphics
             Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), ConfirmationText, 26)
             {
                 Parent = Banner,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
+                TextAlignment = TextAlignment.Center
             };
         }
 
