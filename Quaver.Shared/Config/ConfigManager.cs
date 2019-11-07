@@ -421,6 +421,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayFriendOnlineNotifications { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DisplaySongRequestNotifications { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -704,6 +708,7 @@ namespace Quaver.Shared.Config
             MusicPlayerOrderMapsBy = ReadValue(@"MusicPlayerOrderMapsBy", OrderMapsetsBy.Artist, data);
             OnlineUserListFilterType = ReadValue(@"OnlineUserListFilterType", OnlineUserListFilter.All, data);
             DisplayFriendOnlineNotifications = ReadValue(@"DisplayFriendOnlineNotifications", true, data);
+            DisplaySongRequestNotifications = ReadValue(@"DisplaySongRequestNotifications", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -819,6 +824,7 @@ namespace Quaver.Shared.Config
                     SelectGroupMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
                     OnlineUserListFilterType.ValueChanged += AutoSaveConfiguration;
+                    DisplaySongRequestNotifications.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
