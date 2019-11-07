@@ -200,7 +200,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
             AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
-            Grade.Image = SkinManager.Skin?.Grades[GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy)] ?? UserInterface.Logo;
+
+            var grade = score.Item.Grade == API.Enums.Grade.F
+                ? API.Enums.Grade.F
+                : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
+            Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
 
             UpdateTime();
             UpdateModifiers();
