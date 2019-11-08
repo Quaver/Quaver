@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.1</LangVersion>
@@ -111,7 +111,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.0" />
+    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.1" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
