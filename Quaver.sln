@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quaver.Tests", "Quaver.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wobble.Extended", "Wobble\Wobble.Extended\Wobble.Extended.csproj", "{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Client", "Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj", "{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Common", "Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj", "{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +138,26 @@ Global
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Test Server|Any CPU.Build.0 = Debug|Any CPU
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EDF26D5-AE28-49E2-BA45-953B466A4CB0}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Public|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Public|Any CPU.Build.0 = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Test Server|Any CPU.ActiveCfg = Test Server|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Test Server|Any CPU.Build.0 = Test Server|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ADC7E59-2AC1-4CD0-B8AC-66B005AC855B}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Public|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Public|Any CPU.Build.0 = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Test Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Test Server|Any CPU.Build.0 = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Visual Tests|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE23EEE-FFC6-4DB4-B362-C523CCC54299}.Visual Tests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
