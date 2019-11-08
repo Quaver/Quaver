@@ -114,7 +114,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.0" />
+    <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.1" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3-beta1" />
     <PackageReference Include="RestSharp" Version="106.6.10" />

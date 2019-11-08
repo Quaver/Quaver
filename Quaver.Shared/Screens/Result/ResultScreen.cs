@@ -866,6 +866,8 @@ namespace Quaver.Shared.Screens.Result
 
             var qua = Map.LoadQua();
             qua.ApplyMods(replay.Mods);
+            if (replay.Mods.HasFlag(ModIdentifier.Randomize))
+                qua.RandomizeLanes(replay.RandomizeModifierSeed);
 
             JudgementWindows windows = null;
 
