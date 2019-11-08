@@ -933,7 +933,7 @@ namespace Quaver.Shared.Screens.Editor
                 game?.CurrentScreen.Exit(() =>
                 {
                     NotificationManager.Show(NotificationLevel.Error, "Could not create new mapset with that audio file.");
-                    return new SelectScreen();
+                    return new SelectionScreen();
                 });
             }
         }

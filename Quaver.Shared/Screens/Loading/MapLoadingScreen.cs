@@ -24,6 +24,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
@@ -92,7 +93,8 @@ namespace Quaver.Shared.Screens.Loading
                 {
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Failed to load the map. Is your .qua file valid?");
-                    Exit(() => new SelectScreen());
+                    GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+                    Exit(() => new SelectionScreen());
                 }
             });
 

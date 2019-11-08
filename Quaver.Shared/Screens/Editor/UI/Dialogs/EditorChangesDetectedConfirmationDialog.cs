@@ -18,6 +18,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Select;
+using Quaver.Shared.Screens.Selection;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Primitives;
@@ -69,7 +70,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                 {
                     Logger.Error(exception, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Failed to reload editor. Is your .qua file invalid?");
-                    return new SelectScreen();
+                    return new SelectionScreen();
                 }
             });
         }
