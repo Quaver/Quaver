@@ -8,7 +8,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -137,6 +139,7 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
 
             MapManager.Selected.ValueChanged += OnMapChange;
             ModManager.ModsChanged += OnModsChanged;
+            JudgementWindowsDatabaseCache.Selected.ValueChanged += OnSelectedJudgementsChanged;
             LoadBanner(null);
             UpdateText(MapManager.Selected.Value);
         }
@@ -149,6 +152,8 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChange;
             ModManager.ModsChanged -= OnModsChanged;
+            // ReSharper disable once DelegateSubtraction
+            JudgementWindowsDatabaseCache.Selected.ValueChanged -= OnSelectedJudgementsChanged;
 
             base.Destroy();
         }
@@ -281,14 +286,19 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// <summary>
         ///     Creates the text that displays the mods.
         /// </summary>
-        private void CreateMods() => Mods = new SpriteTextBitmap(FontsBitmap.GothamBold, "Mods: " + ModHelper.GetModsString(ModManager.Mods))
+        private void CreateMods()
         {
-            Parent = this,
-            Alignment = Alignment.TopLeft,
-            X = MapDifficultyName.X,
-            Y = 15,
-            FontSize = 16
-        };
+            Mods = new SpriteTextBitmap(FontsBitmap.GothamBold, "")
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                X = MapDifficultyName.X,
+                Y = 15,
+                FontSize = 16
+            };
+
+            SetModsText();
+        }
 
         /// <summary>
         ///     Updates the banner with a new map.
@@ -312,6 +322,19 @@ namespace Quaver.Shared.Screens.Select.UI.Banner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => Mods.Text = $"Mods: {ModHelper.GetModsString(e.Mods)}";
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+            => SetModsText();
+
+        private void OnSelectedJudgementsChanged(object sender, BindableValueChangedEventArgs<JudgementWindows> e)
+            => SetModsText();
+
+        private void SetModsText()
+        {
+            var windows = JudgementWindowsDatabaseCache.Selected.Value == JudgementWindowsDatabaseCache.Standard
+                ? ""
+                : $"({JudgementWindowsDatabaseCache.Selected.Value.Name})";
+
+            Mods.Text = $"Mods: {ModHelper.GetModsString(ModManager.Mods)} {windows}";
+        }
     }
 }

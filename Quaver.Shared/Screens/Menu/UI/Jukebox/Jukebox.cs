@@ -392,7 +392,7 @@ namespace Quaver.Shared.Screens.Menu.UI.Jukebox
                 {
                     var percentage = (MouseManager.CurrentState.X - SongTimeProgressBar.AbsolutePosition.X) / SongTimeProgressBar.AbsoluteSize.X;
 
-                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)}ms ({(int)(percentage * 100)}%)", LogType.Runtime);
+                    Logger.Debug($"Jukebox track seeked to: {(int)(percentage * AudioEngine.Track.Length)} ms ({(int)(percentage * 100)}%)", LogType.Runtime);
 
                     lock (AudioEngine.Track)
                         AudioEngine.Track.Seek(percentage * AudioEngine.Track.Length);

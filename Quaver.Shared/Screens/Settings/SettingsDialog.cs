@@ -365,7 +365,8 @@ namespace Quaver.Shared.Screens.Settings
                     new SettingsBool(this, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover),
                     new SettingsBool(this, "Smooth Accuracy Changes", ConfigManager.SmoothAccuracyChanges),
                     new SettingsBool(this, "Enable Battle Royale Background Flashing", ConfigManager.EnableBattleRoyaleBackgroundFlashing),
-                    new SettingsBool(this, "Enable Battle Royale Alerts", ConfigManager.EnableBattleRoyaleAlerts)
+                    new SettingsBool(this, "Enable Battle Royale Alerts", ConfigManager.EnableBattleRoyaleAlerts),
+                    new SettingsBool(this, "Show Spectators", ConfigManager.ShowSpectators)
                 }),
                 // Editor
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_beaker), "Editor", new List<Drawable>()

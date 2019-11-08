@@ -18,6 +18,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Window;
 using IDrawable = Wobble.Graphics.IDrawable;
@@ -225,7 +226,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Graphing
         /// </summary>
         private void HandleDragging()
         {
-            if (Graph != null && Graph.IsHeld && !AudioEngine.Track.IsDisposed)
+            if (Graph != null && Graph.IsHeld && !AudioEngine.Track.IsDisposed && DialogManager.Dialogs.Count == 0)
             {
                 var percentage = (MouseManager.CurrentState.Y - Graph.AbsolutePosition.Y) / Graph.AbsoluteSize.Y;
                 var targetPos = (1 - percentage) * AudioEngine.Track.Length;

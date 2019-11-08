@@ -31,7 +31,8 @@ namespace Quaver.Shared.Online.Chat
                 "/help - Display this message\n" +
                 "/online - Display all online users\n" +
                 "/chat <username> - Open a private chat with a user\n" +
-                "/join <channel name> - Request to join a chat channel.");
+                "/join <channel name> - Request to join a chat channel.\n");
+            // "/spectate <username> - Start spectating a player");
         }
 
         /// <summary>
@@ -185,5 +186,42 @@ namespace Quaver.Shared.Online.Chat
                                              $"{OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
                                             $"You won't be able to speak 'till then. Check your profile for more details.");
         }
+
+                /// <summary>
+        ///    Executes the `/spectate`
+        ///
+        ///    Opens up a chat with the specified user.
+        /// </summary>
+        public static void ExecuteSpectateCommand(IEnumerable<string> args)
+        {
+            var argsList = new List<string>(args);
+            argsList.RemoveAt(0);
+
+            if (argsList.Count == 0)
+                return;
+
+            // Get the username of the user.
+            var username = string.Join(" ", argsList);
+
+            // Don't allow non-usernames to have this functionality.
+            if (username.StartsWith("#"))
+                return;
+
+            // Check to see if that player is actually online
+            // var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
+            var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.OnlineUser.Username,
+                                    username, StringComparison.CurrentCultureIgnoreCase));
+
+            // User is online, so we'll need to join/switch to that chat channel.
+            if (foundUser != null)
+                OnlineManager.Client?.SpectatePlayer(foundUser.OnlineUser.Id);
+            else
+                SendMessage(ChatManager.Dialog.ActiveChannel, "That user is not online!");
+        }
+
+        /// <summary>
+        ///     Executes the `/stopspectating` command.
+        /// </summary>
+        public static void ExecuteStopSpectatingCommand() => OnlineManager.Client?.StopSpectating();
     }
 }

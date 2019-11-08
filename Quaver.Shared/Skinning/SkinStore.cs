@@ -416,9 +416,6 @@ namespace Quaver.Shared.Skinning
                     case Grade.X:
                         defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-x.png";
                         break;
-                    case Grade.XX:
-                        defaultGrade = $"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-xx.png";
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

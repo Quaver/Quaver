@@ -76,6 +76,31 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             if (Screen.IsPaused || !ShouldCapture)
                 return;
 
+            // If we're in replay mode, we don't want to capture a completely new replay, as that can cause
+            // inaccuracies with GameplayRuleset.StandardizedReplayPlayer (as it calculates standardized score in real-time).
+            // To get around this, we have to feed the captured replay the frames of the watched one.
+            // This will ensure that the StandardizedReplayPlayer is still able to run in real-time, but with the correct
+            // replay frames.
+            if (Screen.InReplayMode)
+            {
+                var inputManager = (KeysInputManager) Screen.Ruleset.InputManager;
+                var replayInputManager = inputManager.ReplayInputManager;
+
+                if (Screen.Ruleset.StandardizedReplayPlayer.Replay.Frames.Count == replayInputManager.CurrentFrame + 1)
+                    return;
+
+                for (var i = Screen.Ruleset.StandardizedReplayPlayer.Replay.Frames.Count; i < replayInputManager.CurrentFrame + 1; i++)
+                {
+                    if (i >= replayInputManager.VirtualPlayer.Replay.Frames.Count)
+                        break;
+
+                    var frame = replayInputManager.VirtualPlayer.Replay.Frames[i];
+                    Replay.AddFrame(frame.Time, frame.Keys);
+                }
+
+                return;
+            }
+
             TimeSinceLastCapture += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             var currentPressState = GetKeyPressState();

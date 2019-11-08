@@ -275,6 +275,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             // Dequeue from pool
             gameplayHitObject = manager.HeldLongNoteLanes[lane].Dequeue();
 
+            var view = (GameplayScreenView) Ruleset.Screen.View;
+
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
             {
@@ -292,7 +294,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 ));
 
                 // Update scoreboard
-                ((GameplayScreenView)Ruleset.Screen.View).UpdateScoreboardUsers();
+                view.UpdateScoreboardUsers();
+                view.UpdateScoreAndAccuracyDisplays();
 
                 // Update Playfield
                 if (ReplayInputManager == null)
@@ -333,7 +336,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
             // Update scoreboard
-            var view = (GameplayScreenView) Ruleset.Screen.View;
             view.UpdateScoreboardUsers();
             view.UpdateScoreAndAccuracyDisplays();
 

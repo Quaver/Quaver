@@ -13,6 +13,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -113,13 +114,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <returns></returns>
         protected override ScoreProcessor CreateScoreProcessor(Qua map)
         {
+            var windows = JudgementWindowsDatabaseCache.Selected.Value;
+
             if (Screen.IsMultiplayerGame)
             {
                 return new ScoreProcessorKeys(map, ModManager.Mods,
-                    new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives));
+                    new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives), windows);
             }
 
-            return new ScoreProcessorKeys(map, ModManager.Mods);
+            return new ScoreProcessorKeys(map, ModManager.Mods, windows);
         }
 
         /// <inheritdoc />

@@ -78,6 +78,8 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#49e6ef");
             if (userGroups.HasFlag(UserGroups.Contributor))
                 return ColorHelper.HexToColor($"#75e475");
+            if (userGroups.HasFlag(UserGroups.Donator))
+                return ColorHelper.HexToColor($"#f47fff");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private void ChangeGradeImage()
         {
             Visible = Scoring.Score > 0;
-            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
+            Grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy);
         }
 
         /// <summary>

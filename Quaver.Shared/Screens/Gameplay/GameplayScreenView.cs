@@ -47,6 +47,7 @@ using Wobble.Graphics.UI;
 using Wobble.Logging;
 using Wobble.Screens;
 using Wobble.Window;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {
@@ -186,6 +187,14 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public ScoreboardUser SelfScoreboard { get; private set; }
 
+        /// <summary>
+        /// </summary>
+        private SpectatorDialog SpectatorDialog { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private SpectatorCount SpectatorCount { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -235,6 +244,24 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
+            if (Screen.SpectatorClient != null)
+            {
+                SpectatorDialog = new SpectatorDialog(Screen.SpectatorClient)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidCenter,
+                    Alpha = 0
+                };
+            }
+
+            SpectatorCount = new SpectatorCount
+            {
+                Parent = Container,
+                Y = 120,
+                Alignment = Alignment.TopRight,
+                X = -10
+            };
+
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
             {
@@ -250,11 +277,12 @@ namespace Quaver.Shared.Screens.Gameplay
             };
 
             // Create pause screen last.
-            PauseScreen = new PauseScreen(Screen) { Parent = Container };
+            if (Screen.SpectatorClient == null)
+                PauseScreen = new PauseScreen(Screen) { Parent = Container };
 
             // Notify the user if their local offset is actually set for this map.
             if (MapManager.Selected.Value.LocalOffset != 0)
-                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset}ms");
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms");
 
             if (Screen.IsCalibratingOffset)
             {
@@ -286,6 +314,12 @@ namespace Quaver.Shared.Screens.Gameplay
             GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
             GradeDisplay.Height = AccuracyDisplay.Height;
             GradeDisplay.UpdateWidth();
+
+            if (SpectatorDialog != null)
+            {
+                SpectatorDialog.Alpha = MathHelper.Lerp(SpectatorDialog.Alpha, Screen.IsPaused ? 1 : 0,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 100, 1));
+            }
         }
 
         /// <inheritdoc />
@@ -402,7 +436,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
-            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.ScoreProcessor.Accuracy));
+            RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
 
@@ -596,7 +630,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 ProgressBar.Parent = Container;
 
             Transitioner.Parent = Container;
-            PauseScreen.Parent = Container;
+
+            if (PauseScreen != null)
+                PauseScreen.Parent = Container;
 
             StopCheckingForScoreboardUsers = true;
             Screen.SetRichPresence();
@@ -625,6 +661,10 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (!ResultsScreenLoadInitiated)
             {
+                // Force all replay frames on failure
+                if (OnlineManager.IsBeingSpectated)
+                    Screen.SendReplayFramesToServer(true);
+
                 if (Screen.IsPlayTesting)
                 {
                     if (AudioEngine.Track.IsPlaying)
