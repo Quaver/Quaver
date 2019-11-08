@@ -271,7 +271,12 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         private void HandleKeyPressF1()
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F1) && ActiveLeftPanel.Value != SelectContainerPanel.Modifiers)
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                return;
+
+            if (ActiveLeftPanel.Value == SelectContainerPanel.Modifiers)
+                ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+            else
                 ActiveLeftPanel.Value = SelectContainerPanel.Modifiers;
         }
 
