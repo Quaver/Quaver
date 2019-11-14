@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Overlays.Chatting;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Wobble.Assets;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
 {
@@ -32,7 +35,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
             Size = new ScalableVector2(650, 125);
             Image = UserInterface.FeedPanel;
 
-            OpenChatButton = new ImageButton(UserInterface.BlankBox, (o, e) => ChatManager.ToggleChatOverlay(true))
+            OpenChatButton = new ImageButton(UserInterface.BlankBox, (o, e) => DialogManager.Show(new OnlineHubDialog()))
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -40,7 +43,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Feed
                 Alpha = 0
             };
 
-            var chat = ChatManager.JoinedChatChannels.Find(x => x.Name.StartsWith("#multiplayer"));
+            var chat = OnlineChat.JoinedChatChannels.Find(x => x.Name.StartsWith("#multiplayer"));
 
             if (chat == null)
                 return;

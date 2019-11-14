@@ -32,7 +32,6 @@ using Quaver.Shared.Screens.Select.UI.Leaderboard.Selector;
 using Quaver.Shared.Screens.Select.UI.Maps;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
-using Quaver.Shared.Screens.Select.UI.Search;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics;
@@ -83,11 +82,6 @@ namespace Quaver.Shared.Screens.Select
         public SelectMapBanner Banner { get; private set; }
 
         /// <summary>
-        ///     Allows for searching mapsets.
-        /// </summary>
-        public MapsetSearchContainer SearchContainer { get; private set; }
-
-        /// <summary>
         ///     Displays the leaderboard to show user scores.
         /// </summary>
         public LeaderboardContainer Leaderboard { get; private set; }
@@ -134,7 +128,6 @@ namespace Quaver.Shared.Screens.Select
             CreateMapBanner();
             CreateMapsetScrollContainer();
             CreateDifficultyScrollContainer();
-            CreateMapsetSearchContainer();
             CreateLeaderboardSelector();
             CreateLeaderboard();
             CreateMenuFooter();
@@ -232,20 +225,6 @@ namespace Quaver.Shared.Screens.Select
         }
 
         /// <summary>
-        ///     Creates the container that has mapset search capabilities.
-        /// </summary>
-        private void CreateMapsetSearchContainer() => SearchContainer = new MapsetSearchContainer(this)
-        {
-            Parent = Container,
-            Alignment = Alignment.TopRight,
-            Position = new ScalableVector2(580, Header.Height),
-            Animations =
-            {
-                new Animation(AnimationProperty.X, Easing.OutBounce, 580, -18, 1200)
-            }
-        };
-
-        /// <summary>
         ///     Creates the container that houses the leaderboard.
         /// </summary>
         private void CreateLeaderboard() => Leaderboard = new LeaderboardContainer(this)
@@ -305,7 +284,6 @@ namespace Quaver.Shared.Screens.Select
             }
 
             ActiveContainer = container;
-            SearchContainer.Parent = Container;
             Banner.Parent = Container;
             Footer.Parent = Container;
             Logger.Debug($"Switched to Select Container: {ActiveContainer}", LogType.Runtime, false);
@@ -323,7 +301,6 @@ namespace Quaver.Shared.Screens.Select
 
             MapsetScrollContainer.MoveToX(MapsetScrollContainer.Width, Easing.OutQuint, 400);
             DifficultyScrollContainer.MoveToX(DifficultyScrollContainer.Width, Easing.OutQuint, 400);
-            SearchContainer.MoveToX(SearchContainer.Width, Easing.OutQuint, 400);
             Banner.MoveToX(-Banner.Width, Easing.OutQuint, 400);
             LeaderboardSelector.MoveToX(-LeaderboardSelector.Width, Easing.OutQuint, 400);
             Leaderboard.MoveToX(-Leaderboard.Width, Easing.OutQuint, 400);
@@ -359,8 +336,6 @@ namespace Quaver.Shared.Screens.Select
                         NotificationManager.Show(NotificationLevel.Error, "You must be logged in to use the chat!");
                         return;
                     }
-
-                    ChatManager.ToggleChatOverlay(true);
                 }),
                 new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
                 {

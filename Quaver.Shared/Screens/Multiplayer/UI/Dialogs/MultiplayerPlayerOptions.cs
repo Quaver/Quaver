@@ -58,19 +58,6 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
             // Other Player Actions
             if (User.Id != OnlineManager.Self.OnlineUser.Id)
             {
-                options.Add(new MenuDialogOption("Private Chat", () =>
-                {
-                    var list = new List<string>()
-                    {
-                        // Have to add a BS element in the beginning since the method assumes that its a chat command
-                        // and removes the first element
-                        "chat"
-                    };
-
-                    QuaverBot.ExecuteChatCommand(list.Concat(User.Username.Split(" ")));
-                    ChatManager.ToggleChatOverlay(true);
-                }));
-
                 // We're the host, so add some host actions
                 if (OnlineManager.Self.OnlineUser.Id == OnlineManager.CurrentGame.HostId)
                 {
