@@ -296,8 +296,6 @@ namespace Quaver.Shared.Screens.Menu
                         NotificationManager.Show(NotificationLevel.Error, "You must be logged in to use the chat!");
                         return;
                     }
-
-                    ChatManager.ToggleChatOverlay(true);
                 }),
                 new ButtonText(FontsBitmap.GothamRegular, "Download Maps", 14, (sender, args) =>
                 {

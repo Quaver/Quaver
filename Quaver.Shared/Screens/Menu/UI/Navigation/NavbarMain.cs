@@ -51,7 +51,6 @@ namespace Quaver.Shared.Screens.Menu.UI.Navigation
 
             // Add community chat button
             OpenChatButton = new NavbarItem("Community Chat") { DestroyIfParentIsNull = false };
-            OpenChatButton.Clicked += (o, e) => ChatManager.ToggleChatOverlay(true);
 
             // Make sure all online buttons are there if applicable
             if (OnlineManager.Status.Value == ConnectionStatus.Connected ||
