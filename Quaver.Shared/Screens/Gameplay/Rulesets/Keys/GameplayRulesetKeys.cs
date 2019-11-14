@@ -101,10 +101,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
+            // This should be _after_ base.Update, since this uses HitObjectManager.CurrentTrackPosition,
+            // which is updated in base.Update.
             if (!Screen.Failed && !Screen.IsPaused && TimingLineManager != null)
                 foreach (var manager in TimingLineManager) manager.UpdateObjectPool();
-
-            base.Update(gameTime);
         }
 
         /// <inheritdoc />
