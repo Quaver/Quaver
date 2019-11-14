@@ -27,6 +27,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Menu;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
@@ -43,6 +44,7 @@ using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.Border;
+using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CreatePlaylists;
 using Quaver.Shared.Screens.Tests.DifficultyBars;
 using Quaver.Shared.Screens.Tests.DrawableLeaderboardScores;
@@ -111,6 +113,10 @@ namespace Quaver.Shared
         /// </summary>
         /// <returns></returns>
         public OnlineHub OnlineHub { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public OnlineChat OnlineChat { get; private set; }
 
         /// <summary>
         ///     The current activated screen.
@@ -189,7 +195,8 @@ namespace Quaver.Shared
             {"DrawableListenerList", typeof(TestScreenListenerList)},
             {"OnlineHub", typeof(TestScreenOnlineHub)},
             {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)},
-            {"Notifications", typeof(TestNotificationScreen)}
+            {"Notifications", typeof(TestNotificationScreen)},
+            {"ChatOverlay", typeof(TestChatScreen)}
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
@@ -305,6 +312,7 @@ namespace Quaver.Shared
                 // Create the online hub on the first update, since it uses text, and we have to wait for things to
                 // be initialized
                 OnlineHub = new OnlineHub();
+                OnlineChat = new OnlineChat();
 
                 FirstUpdateCalled = true;
             }
@@ -314,7 +322,6 @@ namespace Quaver.Shared
 
             BackgroundManager.Update(gameTime);
             BackgroundHelper.Update(gameTime);
-            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
@@ -628,7 +635,7 @@ namespace Quaver.Shared
         /// </summary>
         private void HandleOnlineHubInput()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F9))
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F8) && !KeyboardManager.IsUniqueKeyPress(Keys.F9))
                 return;
 
             if (CloseOnlineHubDialog())
