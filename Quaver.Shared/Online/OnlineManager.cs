@@ -33,6 +33,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
+using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.Chat;
@@ -219,18 +220,10 @@ namespace Quaver.Shared.Online
             Client.OnLoginSuccess += OnLoginSuccess;
             Client.OnUserDisconnected += OnUserDisconnected;
             Client.OnUserConnected += OnUserConnected;
-            Client.OnAvailableChatChannel += ChatManager.OnAvailableChatChannel;
-            Client.OnJoinedChatChannel += ChatManager.OnJoinedChatChannel;
-            Client.OnChatMessageReceived += ChatManager.OnChatMessageReceived;
-            Client.OnLeftChatChannel += ChatManager.OnLeftChatChannel;
-            Client.OnFailedToJoinChatChannel += ChatManager.OnFailedToJoinChatChannel;
-            Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
             Client.OnNotificationReceived += OnNotificationReceived;
             Client.OnRetrievedOnlineScores += OnRetrievedOnlineScores;
             Client.OnScoreSubmitted += OnScoreSubmitted;
-            Client.OnUserConnected += ChatManager.Dialog.OnlineUsersHeader.OnUserConnected;
             Client.OnUsersOnline += OnUsersOnline;
-            Client.OnUsersOnline += ChatManager.Dialog.OnlineUsersHeader.OnUsersOnline;
             Client.OnUserInfoReceived += OnUserInfoReceived;
             Client.OnUserStatusReceived += OnUserStatusReceived;
             Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
@@ -390,22 +383,6 @@ namespace Quaver.Shared.Online
 
             ListeningParty = null;
 
-            ChatManager.MuteTimeLeft = Self.OnlineUser.MuteEndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
-            ChatManager.Dialog.OnlineUserList.ClearAllUsers();
-
-            for (var i = ChatManager.JoinedChatChannels.Count - 1; i >= 0; i--)
-            {
-                var chan = ChatManager.JoinedChatChannels[i];
-
-                if (chan.IsPrivate)
-                    continue;
-
-                if (chan.Name.StartsWith("#multi"))
-                    ChatManager.OnLeftChatChannel(null, new LeftChatChannelEventArgs(chan.Name));
-
-                Client?.JoinChatChannel(chan.Name);
-            }
-
             lock (OnlineUsers)
             {
                 OnlineUsers.Clear();
@@ -426,10 +403,6 @@ namespace Quaver.Shared.Online
 
             if (game.CurrentScreen != null)
                 Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
-
-            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() {Self});
-
-            Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
         /// <summary>
@@ -443,7 +416,6 @@ namespace Quaver.Shared.Online
                 return;
 
             OnlineUsers[e.User.OnlineUser.Id] = e.User;
-            ChatManager.Dialog.OnlineUserList.HandleNewOnlineUsers(new List<User>() { e.User });
 
             // Display notification for online friends
             if (FriendsList.Contains(e.User.OnlineUser.Id) && ConfigManager.DisplayFriendOnlineNotifications != null
@@ -467,15 +439,6 @@ namespace Quaver.Shared.Online
                 return;
 
             OnlineUsers.Remove(e.UserId);
-
-            Console.WriteLine(Self.OnlineUser.Id);
-
-            Console.WriteLine("User disconnected: " + e.UserId);
-            ChatManager.Dialog.OnlineUserList.HandleDisconnectingUser(e.UserId);
-            ChatManager.Dialog.OnlineUsersHeader.UpdateOnlineUserCount();
-
-            Trace.WriteLine($"User: #{e.UserId} has disconnected from the server.");
-            Trace.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
         /// <summary>
@@ -1058,18 +1021,6 @@ namespace Quaver.Shared.Online
             {
                 CurrentGame.RedTeamPlayers.Clear();
                 CurrentGame.BlueTeamPlayers.Clear();
-
-                // Leave the team chat if we're in one
-                for (var i = ChatManager.JoinedChatChannels.Count - 1; i >= 0; i--)
-                {
-                    var chan = ChatManager.JoinedChatChannels[i];
-
-                    if (chan.IsPrivate)
-                        continue;
-
-                    if (chan.Name.StartsWith("#multi_team"))
-                        ChatManager.OnLeftChatChannel(null, new LeftChatChannelEventArgs(chan.Name));
-                }
             }
         }
 
@@ -1702,6 +1653,9 @@ namespace Quaver.Shared.Online
         /// <param name="user"></param>
         public static void AddFriend(User user)
         {
+            if (FriendsList == null)
+                return;
+
             lock (FriendsList)
             {
                 if (!FriendsList.Contains(user.OnlineUser.Id))
@@ -1722,6 +1676,9 @@ namespace Quaver.Shared.Online
         /// <param name="user"></param>
         public static void RemoveFriend(User user)
         {
+            if (FriendsList == null)
+                return;
+
             lock (FriendsList)
             {
                 if (FriendsList.Contains(user.OnlineUser.Id))
