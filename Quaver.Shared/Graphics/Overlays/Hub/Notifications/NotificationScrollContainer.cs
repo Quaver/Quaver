@@ -55,10 +55,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var game = (QuaverGame) GameBase.Game;
-
-            if (game.OnlineHub.IsOpen && game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.Notifications])
-                game.OnlineHub.SelectedSection.MarkAsRead();
+            if (GameBase.Game is QuaverGame game && game.OnlineHub != null && game.OnlineHub.IsOpen
+                && game.OnlineHub?.SelectedSection == game.OnlineHub?.Sections[OnlineHubSectionType.Notifications])
+            {
+                game.OnlineHub?.SelectedSection?.MarkAsRead();
+            }
 
             NoNotifications.Visible = Pool.Count == 0;
 
