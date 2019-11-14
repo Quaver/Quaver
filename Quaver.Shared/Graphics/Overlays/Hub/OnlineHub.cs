@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads;
@@ -9,6 +11,7 @@ using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Graphics.Overlays.Hub.SongRequests;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -51,18 +54,22 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
+        public static int WIDTH { get; } = 447;
+
+        /// <summary>
+        /// </summary>
         public OnlineHub()
         {
             Tint = ColorHelper.HexToColor("#242424");
-            Size = new ScalableVector2(447, WindowManager.Height - MenuBorder.HEIGHT * 2);
+            Size = new ScalableVector2(WIDTH, WindowManager.Height - MenuBorder.HEIGHT);
+
+            DestroyIfParentIsNull = false;
 
             CreateBackground();
             CreateHeaderBackground();
             CreateHeaderText();
             CreateIconContainer();
             CreateSections();
-
-            DestroyIfParentIsNull = false;
         }
 
         /// <inheritdoc />

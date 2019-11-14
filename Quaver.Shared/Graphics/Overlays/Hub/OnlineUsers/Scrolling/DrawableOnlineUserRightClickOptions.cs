@@ -7,6 +7,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -83,11 +84,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             };
 
             // Don't add actions meant for other users
-            if (OnlineManager.Self.OnlineUser.Id == user.OnlineUser.Id)
+            if (OnlineManager.Self?.OnlineUser?.Id == user.OnlineUser.Id)
                 return options;
 
             // Friends List
-            if (OnlineManager.FriendsList.Contains(user.OnlineUser.Id))
+            if (OnlineManager.FriendsList != null && OnlineManager.FriendsList.Contains(user.OnlineUser.Id))
                 options.Add(RemoveFriend, ColorHelper.HexToColor($"#FF6868"));
             else
                 options.Add(AddFriend, ColorHelper.HexToColor("#27B06E"));
@@ -108,7 +109,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             // Chat
             options.Add(Chat, ColorHelper.HexToColor("#b48bff"));
 
-            if (!OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id))
+            if (OnlineManager.SpectatorClients != null && !OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id))
                 options.Add(Spectate, ColorHelper.HexToColor("#0FBAE5"));
 
             return options;
@@ -169,15 +170,24 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <param name="user"></param>
         private void HandleOpenChat(User user)
         {
-            var list = new List<string>()
+            var chan = OnlineChat.JoinedChatChannels.Find(x => x.Name == user.OnlineUser.Username);
+
+            if (chan != null)
             {
-                // Have to add a BS element in the beginning since the method assumes that its a chat command
-                // and removes the first element
-                "chat"
+                OnlineChat.Instance.ActiveChannel.Value = chan;
+                return;
+            }
+
+            var privateChat = new ChatChannel()
+            {
+                Name = user.OnlineUser.Username,
+                AllowedUserGroups = UserGroups.Normal,
+                Description = "Private Chat"
             };
 
-            QuaverBot.ExecuteChatCommand(list.Concat(user.OnlineUser.Username.Split(" ")));
-            ChatManager.ToggleChatOverlay(true);
+            OnlineChat.Instance.ChannelList.ChannelContainer.Add(privateChat);
+            OnlineChat.Instance.MessageContainer.AddChannel(privateChat);
+            OnlineChat.Instance.ActiveChannel.Value = privateChat;
         }
 
         /// <summary>

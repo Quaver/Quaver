@@ -69,7 +69,7 @@ namespace Quaver.Shared.Assets
 
             // Load fallback fonts or fonts that are used across multiple WobbleFonts
             const string emojiString = "Emoji";
-            var emojiFont = GameBase.Game.Resources.Get($@"{folder}/Symbola-Emoji/symbola-emoji.ttf");
+            var emojiFont = GameBase.Game.Resources.Get($@"{folder}/NotoColorEmoji/NotoColorEmoji.ttf");
 
             // Lato-Regular
             FontManager.CacheWobbleFont(LatoRegular, new WobbleFontStore(20,

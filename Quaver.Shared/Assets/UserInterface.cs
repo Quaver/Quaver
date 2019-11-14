@@ -147,5 +147,13 @@ namespace Quaver.Shared.Assets
         public static Texture2D TwitchIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D UnlinkTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/unlink-twitch.png");
+        public static Texture2D Emoji => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emoji.png");
+        public static Texture2D BadgeAdmin => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-admin.png");
+        public static Texture2D BadgeBot => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-bot.png");
+        public static Texture2D BadgeContributor => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-contributor.png");
+        public static Texture2D BadgeDeveloper => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-developer.png");
+        public static Texture2D BadgeModerator => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-moderator.png");
+        public static Texture2D BadgeSupervisor => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-supervisor.png");
+        public static Texture2D TopicHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/topic-header.png");
     }
 }

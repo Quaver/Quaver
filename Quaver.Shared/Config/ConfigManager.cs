@@ -17,7 +17,6 @@ using IniFileParser.Model;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
-using Quaver.Shared.Graphics.Overlays.Chat.Components.Users;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
@@ -217,11 +216,6 @@ namespace Quaver.Shared.Config
         ///     The currently selected game mode.
         /// </summary>
         internal static Bindable<GameMode> SelectedGameMode { get; private set; }
-
-        /// <summary>
-        ///     How the user is currently filtering their online users.
-        /// </summary>
-        internal static Bindable<OnlineUserFilterType> SelectedOnlineUserFilterType { get; private set; }
 
         /// <summary>
         ///     The type of leaderboard that is displayed during song select.
@@ -631,7 +625,6 @@ namespace Quaver.Shared.Config
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
-            SelectedOnlineUserFilterType = ReadValue(@"OnlineUserFilterType", OnlineUserFilterType.All, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
@@ -786,7 +779,6 @@ namespace Quaver.Shared.Config
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                     SelectedGameMode.ValueChanged += AutoSaveConfiguration;
-                    SelectedOnlineUserFilterType.ValueChanged += AutoSaveConfiguration;
                     BlurBackgroundInGameplay.ValueChanged += AutoSaveConfiguration;
                     TapToPause.ValueChanged += AutoSaveConfiguration;
                     DisplayFailedLocalScores.ValueChanged += AutoSaveConfiguration;
