@@ -190,7 +190,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             AvailableChatChannels.Clear();
             Logger.Important("Cleared previously available chat channels", LogType.Runtime);
 
-            // TODO: Handle already joined channels
+            foreach (var chan in JoinedChatChannels)
+            {
+                if (chan.IsPrivate)
+                    continue;
+
+                OnlineManager.Client?.JoinChatChannel(chan.Name);
+                Logger.Important($"Requested to rejoin chat channel: {chan.Name}", LogType.Runtime);
+            }
         }
 
         /// <summary>
