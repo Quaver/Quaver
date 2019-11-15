@@ -243,9 +243,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// </summary>
         private void StartFilterMapsetsTask()
         {
-            if (FilterMapsetsTask.IsRunning)
-                FilterMapsetsTask.Cancel();
-
+            Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
+                LogType.Runtime, false);
             FilterMapsetsTask.Run(0);
         }
 
@@ -268,9 +267,6 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         {
             lock (AvailableMapsets.Value)
             {
-                Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}` | Sort By: {ConfigManager.SelectOrderMapsetsBy?.Value}",
-                    LogType.Runtime, false);
-
                 AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
                 if (AvailableMapsets.Value.Count == 0)

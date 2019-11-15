@@ -220,7 +220,6 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         {
             lock (AvailableSongs.Value)
             {
-                Logger.Important($"Filtering mapsets by -  Query: `{CurrentSearchQuery.Value}`", LogType.Runtime, false);
                 AvailableSongs.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery, true);
             }
         }

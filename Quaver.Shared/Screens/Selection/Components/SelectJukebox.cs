@@ -35,7 +35,6 @@ namespace Quaver.Shared.Screens.Selection.Components
 
             LoadTrackTask = new TaskHandler<int, int>((i, token) =>
             {
-                LogLoadingTrack();
                 AudioEngine.PlaySelectedTrackAtPreview();
                 AudioTrackStoppedInLastFrame = false;
                 return 0;
@@ -88,7 +87,10 @@ namespace Quaver.Shared.Screens.Selection.Components
                 return;
 
             if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning)
+            {
+                LogLoadingTrack();
                 LoadTrackTask.Run(0);
+            }
 
             AudioTrackStoppedInLastFrame = AudioEngine.Track.HasPlayed && AudioEngine.Track.IsDisposed;
         }
@@ -114,6 +116,7 @@ namespace Quaver.Shared.Screens.Selection.Components
                 if (LoadTrackTask.IsRunning)
                     LoadTrackTask.Cancel();
 
+                LogLoadingTrack();
                 LoadTrackTask.Run(0);
             }
         }

@@ -41,7 +41,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
         /// <summary>
         /// </summary>
-        private TaskHandler<int, int> RequestHistoryTask { get; }
+        private TaskHandler<int, GetChannelMessageHistoryResponse> RequestHistoryTask { get; }
 
         /// <summary>
         /// </summary>
@@ -89,7 +89,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
 
-            RequestHistoryTask = new TaskHandler<int, int>(RunRequestHistoryTask);
+            RequestHistoryTask = new TaskHandler<int, GetChannelMessageHistoryResponse>(RunRequestHistoryTask);
+            RequestHistoryTask.OnCompleted += FinishedRequestingHistory;
             Channel.MessageQueued += OnMessageQueued;
             Channel.Closed += OnChannelClosed;
 
@@ -158,7 +159,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// <param name="val"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private int RunRequestHistoryTask(int val, CancellationToken token)
+        private GetChannelMessageHistoryResponse RunRequestHistoryTask(int val, CancellationToken token)
         {
             // While visual testing, the online client can be overwritten, so just create a new client.
             var client = OnlineManager.Client ?? new OnlineClient();
@@ -174,10 +175,18 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 }
             }
 
-            Logger.Important($"Finished Fetching message history for channel: {Channel.Name} w/ {history?.Messages.Count} messages!",
-                LogType.Runtime);
+            return history;
+        }
 
-            return 0;
+        /// <summary>
+        /// Log when RunRequestHistoryTask is completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void FinishedRequestingHistory(object sender, TaskCompleteEventArgs<int, GetChannelMessageHistoryResponse> args)
+        {
+            Logger.Important($"Finished Fetching message history for channel: {Channel.Name} w/ {args.Result.Messages.Count} messages!",
+                LogType.Runtime);
         }
 
         /// <summary>
