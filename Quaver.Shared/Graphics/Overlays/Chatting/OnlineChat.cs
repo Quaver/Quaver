@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -6,11 +9,13 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Wobble;
 using Wobble.Bindables;
@@ -19,6 +24,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Window;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
@@ -225,6 +231,47 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
             NotificationManager.Show(NotificationLevel.Error, log);
             Logger.Important(log, LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Saves a chat log to a file and opens it
+        /// </summary>
+        /// <param name="channel"></param>
+        public static void SaveChatLog(ChatChannel channel)
+        {
+            if (channel.Messages.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "This chat channel contains no messages.");
+                return;
+            }
+
+            var messageStr = new StringBuilder();
+
+            messageStr.AppendLine($"{channel.Name} chat log - {DateTime.Now.ToLongDateString()} @ {DateTime.Now.ToLongTimeString()}");
+            messageStr.AppendLine();
+
+            foreach (var message in channel.Messages)
+            {
+                var dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long) message.Time);
+                var time = $"{dateTime.Hour:00}:{dateTime.Minute:00}:{dateTime.Second:00}";
+
+                messageStr.AppendLine($"[{time}] {message.SenderName}: {message.Message}");
+            }
+
+            if (ConfigManager.DataDirectory == null)
+                return;
+
+            var dir = $"{ConfigManager.DataDirectory}/Chat/";
+            Directory.CreateDirectory(dir);
+
+            var name = $"{channel.Name}-{DateTime.Now.ToShortDateString()}-{DateTime.Now.ToShortTimeString()}.txt";
+            var path = $"{dir}{StringHelper.FileNameSafeString(name)}";
+
+            using (var sw = new StreamWriter(path))
+                sw.Write(messageStr);
+
+            Utils.NativeUtils.HighlightInFileManager(path);
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully saved {channel.Name}'s chat log!");
         }
 
         /// <summary>
