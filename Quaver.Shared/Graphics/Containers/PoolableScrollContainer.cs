@@ -9,9 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
-using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -88,10 +85,9 @@ namespace Quaver.Shared.Graphics.Containers
             // First make sure ContentContainer.Y is up to date.
             base.Update(gameTime);
 
-            if (ContentContainer.Y < PreviousContentContainerY)
-                HandlePoolShifting(Direction.Forward);
-            else if (ContentContainer.Y > PreviousContentContainerY)
-                HandlePoolShifting(Direction.Backward);
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (ContentContainer.Y != PreviousContentContainerY)
+                HandlePoolShifting();
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
@@ -145,72 +141,81 @@ namespace Quaver.Shared.Graphics.Containers
         }
 
         /// <summary>
+        ///     Returns the target PoolStartingIndex given the index of the object currently in the middle of the screen.
+        /// </summary>
+        /// <param name="middleObjectIndex"></param>
+        /// <returns></returns>
+        private int DesiredPoolStartingIndex(int middleObjectIndex)
+        {
+            if (middleObjectIndex < Pool.Count / 2)
+                return 0;
+
+            int index;
+            if (middleObjectIndex + Pool.Count / 2 > AvailableItems.Count)
+                index = AvailableItems.Count - Pool.Count;
+            else
+                index = middleObjectIndex - Pool.Count / 2;
+
+            return Math.Max(index, 0);
+        }
+
+        /// <summary>
         ///     Handles the shifting of the object pool when the user scrolls up or down.
         /// </summary>
-        /// <param name="direction"></param>
-        private void HandlePoolShifting(Direction direction)
+        private void HandlePoolShifting()
         {
             if (AvailableItems == null)
                 return;
 
-            switch (direction)
+            // Compute the index of the object currently in the middle of the container.
+            var middleObjectIndex = (int) ((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
+
+            // Compute the corresponding PoolStartingIndex.
+            var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
+
+            // If our PoolStartingIndex is already correct, then there's nothing to do.
+            if (PoolStartingIndex == desiredPoolStartingIndex)
+                return;
+
+            // Compute the overlap: the number of pooled objects that can be re-used from the previous position.
+            var difference = Math.Abs(PoolStartingIndex - desiredPoolStartingIndex);
+            var overlap = Math.Max(Pool.Count - difference, 0);
+            var refresh = Pool.Count - overlap;
+
+            if (PoolStartingIndex > desiredPoolStartingIndex)
             {
-                case Direction.Forward:
-                    if (PoolStartingIndex > AvailableItems.Count - 1 || PoolStartingIndex + PoolSize > AvailableItems.Count - 1)
-                        return;
+                // The container has been scrolled back. The re-usable objects are in the beginning of the buffer.
+                for (var i = 0; i < refresh; i++)
+                {
+                    var objectIndex = desiredPoolStartingIndex + Pool.Count - 1 - overlap - i;
 
-                    if (Pool.Count == 0)
-                        return;
+                    var drawable = Pool.Last();
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
-                    for (var i = 0; i < Pool.Count; i++)
-                    {
-                        var firstDrawable = Pool.First();
-
-                        // Check if the object is in the rect of the ScrollContainer.
-                        // If it is, then there's no updating that needs to happen.
-                        if (!RectangleF.Intersect(firstDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                            return;
-
-                        // Update the mapset's information and y position.
-                        firstDrawable.Y = (PoolStartingIndex + PoolSize) * DrawableHeight;
-                        firstDrawable.UpdateContent(AvailableItems[PoolStartingIndex + PoolSize], PoolStartingIndex + PoolSize);
-
-                        // Circularly shift the drawable in the list so it's at the end.
-                        Pool.Remove(firstDrawable);
-                        Pool.Add(firstDrawable);
-
-                        PoolStartingIndex++;
-                    }
-                    break;
-                case Direction.Backward:
-                    if (PoolStartingIndex - 1 > AvailableItems.Count - 1 || PoolStartingIndex - 1 < 0)
-                        return;
-
-                    if (Pool.Count == 0)
-                        return;
-
-                    for (var i = Pool.Count - 1; i >= 0; i--)
-                    {
-                        var lastDrawable = Pool.Last();
-
-                        // Check if the object is in the rect of the ScrollContainer.
-                        // If it is, then there's no updating that needs to happen.
-                        if (!RectangleF.Intersect(lastDrawable.ScreenRectangle, ScreenRectangle).IsEmpty)
-                            return;
-
-                        lastDrawable.Y = (PoolStartingIndex - 1) * DrawableHeight;
-                        lastDrawable.UpdateContent(AvailableItems[PoolStartingIndex - 1], PoolStartingIndex - 1);
-
-                        // Circularly shift the drawable in the list so it's at the beginning
-                        Pool.Remove(lastDrawable);
-                        Pool.Insert(0, lastDrawable);
-
-                        PoolStartingIndex--;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    // Circularly shift the list back one.
+                    Pool.RemoveAt(Pool.Count - 1);
+                    Pool.Insert(0, drawable);
+                }
             }
+            else
+            {
+                // The container has been scrolled forward. The re-usable objects are in the end of the buffer.
+                for (var i = 0; i < refresh; i++)
+                {
+                    var objectIndex = desiredPoolStartingIndex + overlap + i;
+
+                    var drawable = Pool.First();
+                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
+
+                    // Circularly shift the list forward one.
+                    Pool.RemoveAt(0);
+                    Pool.Add(drawable);
+                }
+            }
+
+            PoolStartingIndex = desiredPoolStartingIndex;
         }
 
         /// <summary>
