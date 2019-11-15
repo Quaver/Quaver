@@ -74,6 +74,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
+            HandleKeyPressTab();
+
             base.Update(gameTime);
         }
 
@@ -357,6 +359,27 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
         {
             var special = Pool.FindAll(x => x.Item.Name.StartsWith("#multi") || x.Item.Name.StartsWith("#spectator"));
             special.ForEach(x => Remove(x.Item));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressTab()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            if (AvailableItems.Count == 0)
+                return;
+
+            var index = AvailableItems.IndexOf(ActiveChatChannel.Value);
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+            {
+                ActiveChatChannel.Value = index - 1 >= 0 ? AvailableItems[index - 1] : AvailableItems[AvailableItems.Count - 1];
+                return;
+            }
+
+            ActiveChatChannel.Value = index + 1 < AvailableItems.Count ? AvailableItems[index + 1] : AvailableItems.First();
         }
     }
 }
