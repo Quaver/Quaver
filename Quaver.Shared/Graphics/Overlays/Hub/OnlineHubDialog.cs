@@ -26,7 +26,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         private OnlineChat Chat { get; }
 
+        /// <summary>
+        /// </summary>
         private Sprite GapFill { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool IsClosing { get; set; }
 
         /// <summary>
         /// </summary>
@@ -69,7 +75,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
                     break;
             }
 
-            if (game.CurrentScreen.Type != QuaverScreenType.Editor)
+            if (!IsClosing && game.CurrentScreen.Type != QuaverScreenType.Editor)
                 game.GlobalUserInterface.Cursor.Alpha = 1;
 
             base.Update(gameTime);
@@ -144,6 +150,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// </summary>
         public void Close()
         {
+            IsClosing = true;
+
             ClearAnimations();
             FadeTo(0, Easing.Linear, 200);
 
