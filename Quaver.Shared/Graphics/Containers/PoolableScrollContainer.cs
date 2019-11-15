@@ -85,6 +85,9 @@ namespace Quaver.Shared.Graphics.Containers
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            // First make sure ContentContainer.Y is up to date.
+            base.Update(gameTime);
+
             if (ContentContainer.Y < PreviousContentContainerY)
                 HandlePoolShifting(Direction.Forward);
             else if (ContentContainer.Y > PreviousContentContainerY)
@@ -92,8 +95,6 @@ namespace Quaver.Shared.Graphics.Containers
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
-
-            base.Update(gameTime);
         }
 
         public override void Destroy()
