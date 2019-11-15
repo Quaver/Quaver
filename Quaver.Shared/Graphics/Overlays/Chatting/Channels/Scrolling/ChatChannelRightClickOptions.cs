@@ -5,6 +5,7 @@ using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -56,7 +57,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                         ActiveChannel.Value = Channel;
                         break;
                     case SaveChatLog:
-                        NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+                        ThreadScheduler.Run(() => OnlineChat.SaveChatLog(Channel));
                         break;
                     case CloseText:
                         Channel.Close();
