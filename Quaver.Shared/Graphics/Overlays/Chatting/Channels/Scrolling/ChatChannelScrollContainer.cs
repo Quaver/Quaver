@@ -373,15 +373,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
 
             var index = AvailableItems.IndexOf(ActiveChatChannel.Value);
 
-            // Backwards while holding shift
-            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) ||
-                KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
             {
                 ActiveChatChannel.Value = index - 1 >= 0 ? AvailableItems[index - 1] : AvailableItems[AvailableItems.Count - 1];
                 return;
             }
-
-            // Forwards
 
             ActiveChatChannel.Value = index + 1 < AvailableItems.Count ? AvailableItems[index + 1] : AvailableItems.First();
         }
