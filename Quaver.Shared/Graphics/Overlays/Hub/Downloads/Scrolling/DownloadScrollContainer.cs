@@ -78,7 +78,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
 
             RecalculateContainerHeight();
 
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 // Reset the pool item index
                 for (var i = 0; i < Pool.Count; i++)
@@ -142,10 +142,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         /// <param name="e"></param>
         private void OnDownloadAdded(object sender, MapsetDownloadAddedEventArgs e)
         {
-            AddScheduledUpdate(() =>
-            {
-                AddObjectToBottom(e.Download, false);
-            });
+            e.Download.Completed.ValueChanged += (o, args) => Remove(e.Download);
+            AddObjectToBottom(e.Download, false);
+
+            // Running update once immediately here to make sure everything scheduled is initialized properly
+            Update(new GameTime());
 
             var game = (QuaverGame) GameBase.Game;
             game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.ActiveDownloads);

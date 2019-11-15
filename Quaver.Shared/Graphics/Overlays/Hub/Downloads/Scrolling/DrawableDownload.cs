@@ -65,7 +65,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
             UpdateText();
 
             Item.Progress.ValueChanged += OnDownloadProgressChanged;
-            Item.Completed.ValueChanged += OnDownloadCompleted;
         }
 
         /// <inheritdoc />
@@ -75,12 +74,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         public override void Update(GameTime gameTime)
         {
             Button.Alpha = Button.IsHovered ? 0.35f : 0;
-            
+
             var game = (QuaverGame) GameBase.Game;
 
             if (Container != null)
                 Button.IsClickable = game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.ActiveDownloads];
-            
+
             base.Update(gameTime);
         }
 
@@ -91,7 +90,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
         {
             // ReSharper disable twice DelegateSubtraction
             Item.Progress.ValueChanged -= OnDownloadProgressChanged;
-            Item.Completed.ValueChanged -= OnDownloadCompleted;
 
             base.Destroy();
         }
@@ -209,16 +207,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling
                 ProgressBar.Bindable.Value = percent;
                 ProgressPercentage.Text = $"{percent}%";
             });
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDownloadCompleted(object sender, BindableValueChangedEventArgs<AsyncCompletedEventArgs> e)
-        {
-            var container = (DownloadScrollContainer) Container;
-            container.Remove(Item);
         }
     }
 }
