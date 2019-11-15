@@ -889,7 +889,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandlePlayRestart(double dt)
         {
-            if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset)
+            if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset || SpectatorClient != null)
                 return;
 
             if (OnlineManager.CurrentGame != null)
