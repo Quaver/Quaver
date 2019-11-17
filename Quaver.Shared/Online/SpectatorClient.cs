@@ -6,6 +6,7 @@ using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -57,23 +58,31 @@ namespace Quaver.Shared.Online
         public SpectatorClient(User player) => Player = player;
 
         /// <summary>
+        ///     Goes to spectate the user immediately
+        /// </summary>
+        public void WatchUserImmediately() => PlayNewMap(new List<ReplayFrame>(), false, true);
+
+        /// <summary>
         ///     Handles when the client is beginning to play a new map
         /// </summary>
-        private void PlayNewMap(List<ReplayFrame> frames)
+        private void PlayNewMap(List<ReplayFrame> frames, bool createNewReplay = true, bool forceIfImporting = false)
         {
             var game = (QuaverGame) GameBase.Game;
 
-            // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
-            Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
-                (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
-
-            // Add all existing frames
-            if (frames != null)
+            if (createNewReplay)
             {
-                Logger.Important($"Adding existing {frames.Count} replay frames", LogType.Runtime);
+                // Create the new replay first, when playing a new map, we always want to start off with a fresh replay
+                Replay = new Replay((GameMode) Player.CurrentStatus.GameMode, Player.OnlineUser.Username,
+                    (ModIdentifier) Player.CurrentStatus.Modifiers, Player.CurrentStatus.MapMd5);
 
-                foreach (var frame in frames)
-                    Replay.Frames.Add(frame);
+                // Add all existing frames
+                if (frames != null)
+                {
+                    Logger.Important($"Adding existing {frames.Count} replay frames", LogType.Runtime);
+
+                    foreach (var frame in frames)
+                        Replay.Frames.Add(frame);
+                }
             }
 
             // Try to find the new map from the player
@@ -111,7 +120,7 @@ namespace Quaver.Shared.Online
                 BackgroundHelper.Load(Map);
 
             // Don't interrupt importing
-            if (game.CurrentScreen.Type == QuaverScreenType.Importing)
+            if (game.CurrentScreen.Type == QuaverScreenType.Importing && !forceIfImporting)
                 return;
 
             game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), Replay, this));
@@ -180,6 +189,10 @@ namespace Quaver.Shared.Online
 
                     // If we're already downloading it, don't restart
                     if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                        return;
+
+                    // The mapset is currently being imported
+                    if (MapsetImporter.Queue.Contains($"{ConfigManager.DataDirectory.Value}/Downloads/{response.Map.MapsetId}.qp"))
                         return;
 
                     var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
