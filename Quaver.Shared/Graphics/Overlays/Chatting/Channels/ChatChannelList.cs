@@ -7,6 +7,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
@@ -19,7 +20,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
 
         /// <summary>
         /// </summary>
-        public Sprite HeaderBackground { get; private set; }
+        public ImageButton HeaderBackground { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -54,11 +55,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
         /// </summary>
         private void CreateHeaderBackground()
         {
-            HeaderBackground = new Sprite()
+            HeaderBackground = new ImageButton(UserInterface.HubHeaderBackground)
             {
                 Parent = this,
                 Size = new ScalableVector2(Width, 56),
-                Image = UserInterface.HubHeaderBackground
             };
         }
 

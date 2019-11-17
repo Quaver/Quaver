@@ -7,11 +7,12 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 {
-    public class ChannelTopicHeader : Sprite
+    public class ChannelTopicHeader : ImageButton
     {
         /// <summary>
         /// </summary>
@@ -33,12 +34,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// </summary>
         /// <param name="activeChannel"></param>
         /// <param name="size"></param>
-        public ChannelTopicHeader(Bindable<ChatChannel> activeChannel, ScalableVector2 size)
+        public ChannelTopicHeader(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(UserInterface.TopicHeader)
         {
             ActiveChannel = activeChannel;
             Size = size;
-
-            Image = UserInterface.TopicHeader;
 
             CreateName();
             CreateDescription();
