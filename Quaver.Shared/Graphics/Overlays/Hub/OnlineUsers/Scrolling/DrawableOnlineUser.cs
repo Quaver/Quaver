@@ -215,7 +215,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(40, 40),
                 X = 16,
-                Image = UserInterface.YouAvatar,
+                Image = UserInterface.UnknownAvatar,
                 UsePreviousSpriteBatchOptions = true,
                 SetChildrenAlpha = true,
             };
