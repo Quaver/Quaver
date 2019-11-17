@@ -147,14 +147,15 @@ namespace Quaver.Shared.Graphics.Containers
         /// <returns></returns>
         private int DesiredPoolStartingIndex(int middleObjectIndex)
         {
-            if (middleObjectIndex < Pool.Count / 2)
+            if (middleObjectIndex < PoolSize / 2)
                 return 0;
 
             int index;
-            if (middleObjectIndex + Pool.Count / 2 > AvailableItems.Count)
-                index = AvailableItems.Count - Pool.Count;
+
+            if (middleObjectIndex + PoolSize / 2 > AvailableItems.Count)
+                index = AvailableItems.Count - PoolSize;
             else
-                index = middleObjectIndex - Pool.Count / 2;
+                index = middleObjectIndex - PoolSize / 2;
 
             return Math.Max(index, 0);
         }
@@ -164,7 +165,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         private void HandlePoolShifting()
         {
-            if (AvailableItems == null)
+            if (AvailableItems == null || Pool.Count != PoolSize)
                 return;
 
             // Compute the index of the object currently in the middle of the container.

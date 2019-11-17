@@ -133,7 +133,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 Close();
 
-            if (MouseManager.IsUniqueClick(MouseButton.Left) && !Hub.IsHovered() && !Chat.IsHovered())
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && !Hub.IsHovered() && !Chat.IsHovered() && !Chat.IsResizing)
                 Close();
         }
 

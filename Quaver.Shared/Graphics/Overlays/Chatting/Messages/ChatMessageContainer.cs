@@ -23,7 +23,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
         /// <summary>
         /// </summary>
-        private ChannelTopicHeader TopicHeader { get; set; }
+        public ChannelTopicHeader TopicHeader { get; private set; }
 
         /// <summary>
         /// </summary>

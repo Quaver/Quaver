@@ -71,6 +71,11 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         }
 
         /// <summary>
+        ///     If the user is currently resizing the chat
+        /// </summary>
+        public bool IsResizing { get; private set; }
+
+        /// <summary>
         /// </summary>
         public OnlineChat()
         {
@@ -92,18 +97,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // Handle header dragging
-            var rect = new RectangleF(ChannelList.ScreenRectangle.X, ChannelList.ScreenRectangle.Y, Width,
-                ChannelList.HeaderBackground.Height);
-
-            if (rect.Contains(MouseManager.CurrentState.Position.ToPoint()) && MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
-            {
-                var height = MathHelper.Clamp(WindowManager.Height - MouseManager.CurrentState.Y + ChannelList.HeaderBackground.Height / 2f,
-                    MessageContainer.TextboxContainer.Height + 200, WindowManager.Height - MenuBorder.HEIGHT);
-
-                ChangeSize(new ScalableVector2(Width, height));
-            }
-
+            HandleResizing();
             base.Update(gameTime);
         }
 
@@ -125,6 +119,25 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             ClearAnimations();
             MoveToY((int) Height + 10, Easing.OutQuint, 500);
             IsOpen = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleResizing()
+        {
+            if (!ChannelList.HeaderBackground.IsHeld && !MessageContainer.TopicHeader.IsHeld)
+            {
+                IsResizing = false;
+                return;
+            }
+
+            IsResizing = true;
+
+            var min = MessageContainer.TextboxContainer.Height + 200;
+            var max = WindowManager.Height - MenuBorder.HEIGHT;
+            var height = WindowManager.Height - MouseManager.CurrentState.Y + ChannelList.HeaderBackground.Height / 2f;
+
+            ChangeSize(new ScalableVector2(Width, MathHelper.Clamp(height, min, max)));
         }
 
         /// <summary>
