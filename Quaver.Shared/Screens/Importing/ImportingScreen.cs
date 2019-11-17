@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Linq;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Listening;
@@ -128,6 +129,12 @@ namespace Quaver.Shared.Screens.Importing
 
                     return new MusicPlayerScreen();
                 });
+            }
+            else if (OnlineManager.IsSpectatingSomeone)
+            {
+                // TODO: Whenever handling multiple spectatee's, this should be reworked, but it's fine for now.
+                var spectatee = OnlineManager.SpectatorClients.First();
+                spectatee.Value.WatchUserImmediately();
             }
             else
             {

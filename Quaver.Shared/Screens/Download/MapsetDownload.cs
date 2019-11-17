@@ -88,7 +88,7 @@ namespace Quaver.Shared.Screens.Download
             Logger.Important($"Downloading mapset {MapsetId}...", LogType.Network);
 
             var dir = $"{ConfigManager.DataDirectory.Value}/Downloads";
-            var path = $"{dir}/{MapsetId - TimeHelper.GetUnixTimestampMilliseconds()}.qp";
+            var path = $"{dir}/{MapsetId}.qp";
             Directory.CreateDirectory(dir);
 
             try
