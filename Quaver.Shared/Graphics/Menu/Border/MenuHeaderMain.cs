@@ -28,7 +28,6 @@ namespace Quaver.Shared.Graphics.Menu.Border
                 new IconTextButtonDownloadMaps(),
                 new IconTextButtonMusicPlayer(),
                 new IconTextButtonLeaderboards(),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_speech_bubbles_comment_option), FontManager.GetWobbleFont(Fonts.LatoBlack),"Chat"),
             },
             new List<Drawable>
             {
