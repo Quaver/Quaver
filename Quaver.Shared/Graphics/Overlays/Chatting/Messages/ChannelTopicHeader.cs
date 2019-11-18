@@ -56,6 +56,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         public override void Update(GameTime gameTime)
         {
             Depth = OnlineChat.Instance.ActiveJoinChatChannelContainer != null  ? 1 : 0;
+            
+            CloseButton.Visible = !OnlineChat.IsSpecialChannel(ActiveChannel.Value);
+            CloseButton.IsClickable = CloseButton.Visible;
+
             base.Update(gameTime);
         }
 
@@ -93,7 +97,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// </summary>
         private void CreateCloseButton()
         {
-            CloseButton = new IconButton(UserInterface.JudgementWindowCloseButton, (sender, args) => ActiveChannel.Value?.Close())
+            CloseButton = new IconButton(UserInterface.CloseChannelButton, (sender, args) => ActiveChannel.Value?.Close())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

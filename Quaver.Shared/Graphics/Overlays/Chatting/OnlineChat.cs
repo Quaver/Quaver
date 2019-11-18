@@ -329,6 +329,24 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         }
 
         /// <summary>
+        ///     Returns if the channel is considered special
+        /// </summary>
+        /// <param name="chan"></param>
+        /// <returns></returns>
+        public static bool IsSpecialChannel(ChatChannel chan)
+        {
+            if (chan == null)
+                return true;
+
+            if (chan.Name.StartsWith("#spectator"))
+                return true;
+            if (chan.Name.StartsWith("#multi"))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
         ///     Example chat channels used for testing
         /// </summary>
         /// <returns></returns>

@@ -155,5 +155,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D BadgeModerator => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-moderator.png");
         public static Texture2D BadgeSupervisor => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/badge-supervisor.png");
         public static Texture2D TopicHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/topic-header.png");
+        public static Texture2D CloseChannelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/close-channel.png");
     }
 }
