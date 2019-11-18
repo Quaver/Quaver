@@ -45,6 +45,7 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
 using Quaver.Shared.Screens.Tests.Border;
 using Quaver.Shared.Screens.Tests.Chat;
+using Quaver.Shared.Screens.Tests.CheckboxContainers;
 using Quaver.Shared.Screens.Tests.CreatePlaylists;
 using Quaver.Shared.Screens.Tests.DifficultyBars;
 using Quaver.Shared.Screens.Tests.DrawableLeaderboardScores;
@@ -196,7 +197,8 @@ namespace Quaver.Shared
             {"OnlineHub", typeof(TestScreenOnlineHub)},
             {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)},
             {"Notifications", typeof(TestNotificationScreen)},
-            {"ChatOverlay", typeof(TestChatScreen)}
+            {"ChatOverlay", typeof(TestChatScreen)},
+            {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 
         public QuaverGame(HotLoader hl) : base(hl)
