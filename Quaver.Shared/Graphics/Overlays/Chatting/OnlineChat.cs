@@ -202,7 +202,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             var channels = new List<ICheckboxContainerItem>();
             AvailableChatChannels.ForEach(x => channels.Add(new JoinChatChannelCheckboxItem(x)));
 
-            ActiveJoinChatChannelContainer = new CheckboxContainer(channels, new ScalableVector2(250, 400), 180)
+            ActiveJoinChatChannelContainer = new CheckboxContainer(channels, new ScalableVector2(250, 400), 200)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

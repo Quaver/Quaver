@@ -14,7 +14,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int HEIGHT { get; } = 45;
+        public override int HEIGHT { get; } = 50;
 
         /// <summary>
         /// </summary>
