@@ -107,6 +107,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <param name="gameTime"></param>
         public void HandleInput(GameTime gameTime) => InputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
 
+        /// <summary>
+        ///     This will handle anything that has to be rendered before the actual Draw() method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void PreDraw(GameTime gameTime) => Playfield.PreDraw(gameTime);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

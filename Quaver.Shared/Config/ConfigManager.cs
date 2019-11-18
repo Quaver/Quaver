@@ -174,6 +174,16 @@ namespace Quaver.Shared.Config
         internal static Bindable<ScrollDirection> ScrollDirection7K { get; private set; }
 
         /// <summary>
+        ///     Determines how much tilt is applied to the 4K Playfield.
+        /// </summary>
+        internal static BindableInt PlayfieldTilt4K { get; private set; }
+
+        /// <summary>
+        ///     Determines how much tilt is applied to the 7K Playfield.
+        /// </summary>
+        internal static BindableInt PlayfieldTilt7K { get; private set; }
+
+        /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
         internal static BindableInt GlobalAudioOffset { get; private set; }
@@ -654,6 +664,8 @@ namespace Quaver.Shared.Config
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 5, 100, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
+            PlayfieldTilt4K = ReadInt(@"PlayfieldTilt4K", 0, -100, 100, data);
+            PlayfieldTilt7K = ReadInt(@"PlayfieldTilt7K", 0, -100, 100, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
@@ -789,6 +801,8 @@ namespace Quaver.Shared.Config
                     DisplaySongTimeProgress.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
+                    PlayfieldTilt4K.ValueChanged += AutoSaveConfiguration;
+                    PlayfieldTilt7K.ValueChanged += AutoSaveConfiguration;
                     ScrollDirection4K.ValueChanged += AutoSaveConfiguration;
                     ScrollDirection7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;

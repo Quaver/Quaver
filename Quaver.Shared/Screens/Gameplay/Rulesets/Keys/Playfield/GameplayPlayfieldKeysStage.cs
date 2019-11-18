@@ -345,7 +345,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
-                    Parent = Playfield.ForegroundContainer,
+                    Parent = Playfield.HitObjectContainer,
                     Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
@@ -378,7 +378,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
+            Parent = Playfield.HitObjectContainer
         };
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,
-            Parent = Playfield.ForegroundContainer
+            Parent = Playfield.HitObjectContainer
         };
 
         /// <summary>

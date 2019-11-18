@@ -12,10 +12,14 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Quaver.Shared.Screens.Gameplay.UI;
+using Microsoft.Xna.Framework.Graphics;
+using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Window;
+using  Microsoft.Xna.Framework;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 {
@@ -40,6 +44,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The background of the playfield.
         /// </summary>
         public Container BackgroundContainer { get; private set; }
+
+        /// <summary>
+        ///     Where Hit Object and Timing Line elements are contained.
+        /// </summary>
+        public Container HitObjectContainer { get; private set; }
 
         /// <summary>
         ///     The foreground of the playfield.
@@ -107,6 +116,56 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public ScrollDirection[] ScrollDirections { get; private set; }
 
         /// <summary>
+        ///     This is used to render the Playfield itself only when Effects are enabled.
+        /// </summary>
+        private RenderTarget2D PlayfieldRenderer { get; set; }
+
+        /// <summary>
+        ///     This is used to render Playfield effects.
+        /// </summary>
+        private RenderTarget2D EffectRenderer { get; set; }
+
+        /// <summary>
+        ///     Everything rendered to the Playfield Renderer will be displayed in this sprite.
+        /// </summary>
+        private Sprite PlayfieldSprite { get; set; }
+
+        /// <summary>
+        ///     Used to draw the Perspective Playfield Plane Shape.
+        /// </summary>
+        private VertexPositionTexture[] PlayfieldVertices { get; set; }
+
+        /// <summary>
+        ///     Used to render the Perspective Playfield.
+        /// </summary>
+        private BasicEffect PerspectiveEffect { get; set; }
+
+        /// <summary>
+        ///     Total Subdivisions for the Persepective Playfield Plane (X).
+        /// </summary>
+        private const int PLANE_SUBDIVISIONS_COUNT_X = 64;
+
+        /// <summary>
+        ///     Total Subdivisions for the Persepective Playfield Plane (Y).
+        /// </summary>
+        private const int PLANE_SUBDIVISIONS_COUNT_Y = 64;
+
+        /// <summary>
+        ///     Max tilt value. 0.5f means that the texture will be 0 at one of the edges of the screen if the player uses the Max PlayfieldTilt value in their config.
+        /// </summary>
+        private const float TILT_MAX = 0.4f;
+
+        /// <summary>
+        ///     Determines how much stretching will be applied to the Playfield Plane. This value is used to give it a more "3D" feel rather than a distorted one.
+        /// </summary>
+        private const float TILT_EXP = 0.6f;
+
+        /// <summary>
+        ///
+        /// </summary>
+        private bool PerspectiveEnabled { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -119,8 +178,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             SetLaneScrollDirections();
             SetReferencePositions();
             CreateElementContainers();
+            InitializePerspectiveElements();
         }
-
 
         /// <summary>
         ///     Create Foreground and Background Containers, as well as the Stage.
@@ -129,6 +188,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             // Create background container
             BackgroundContainer = new Container
+            {
+                Parent = Container,
+                Size = new ScalableVector2(Width, WindowManager.Height),
+                Alignment = Alignment.TopCenter,
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
+            };
+
+            // Create Hit Object Container
+            HitObjectContainer = new Container()
             {
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
@@ -247,16 +315,172 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Container?.Update(gameTime);
         }
 
-        /// <inheritdoc />
         /// <summary>
+        ///     Initializes Stage Perspective Elements
         /// </summary>
-        /// <param name="gameTime"></param>
-        public void Draw(GameTime gameTime) => Container.Draw(gameTime);
+        private void InitializePerspectiveElements()
+        {
+            // Check if Playfield should be tilted.
+            float tilt;
+            switch (Ruleset.Map.Mode)
+            {
+                case GameMode.Keys4:
+                    tilt = ConfigManager.PlayfieldTilt4K.Value;
+                    break;
+                case GameMode.Keys7:
+                    tilt = ConfigManager.PlayfieldTilt7K.Value;
+                    break;
+                default:
+                    throw new Exception("Map Mode does not exist.");
+
+            }
+
+            PerspectiveEnabled = tilt != 0;
+
+            // Ignore this method if Playfield is not tilted.
+            if (!PerspectiveEnabled)
+                return;
+
+            // Create Renderers and reference Viewport Size
+            var width = GameBase.Game.GraphicsDevice.Viewport.Width;
+            var height = GameBase.Game.GraphicsDevice.Viewport.Height;
+
+            PlayfieldRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, width, height, false,
+                GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+
+            EffectRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, width, height, false,
+                GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+
+            // Compute for tilt.
+            tilt = width * TILT_MAX * (tilt / 100f);
+            tilt = ScrollDirections[0] == ScrollDirection.Down ? tilt : tilt * -1;
+
+            // Compute for warp.
+            var warp = 1 / ((-tilt / (width * TILT_MAX)) * TILT_EXP + 1);
+
+            // Create Playfield Plane Points
+            var points = new List<Vector2>();
+            for (var i = 0; i < PLANE_SUBDIVISIONS_COUNT_X; i++)
+            {
+                for (var j = 0; j < PLANE_SUBDIVISIONS_COUNT_Y; j++)
+                {
+                    // Tri 1
+                    points.Add(new Vector2((float)i / PLANE_SUBDIVISIONS_COUNT_X, (float)j / PLANE_SUBDIVISIONS_COUNT_Y  ));
+                    points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)j / PLANE_SUBDIVISIONS_COUNT_Y  ));
+                    points.Add(new Vector2((float)i / PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
+
+                    // Tri 2
+                    points.Add(new Vector2((float)i/ PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
+                    points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)j / PLANE_SUBDIVISIONS_COUNT_Y  ));
+                    points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
+                }
+            }
+
+            // Create Playfield Plane
+            PlayfieldVertices = new VertexPositionTexture[PLANE_SUBDIVISIONS_COUNT_X * PLANE_SUBDIVISIONS_COUNT_Y * 6];
+            for (var i = 0; i < points.Count; i++)
+            {
+                var y = (float)Math.Pow(points[i].Y, warp);
+                var stretch = tilt * (2f * (y - 0.5f));
+                PlayfieldVertices[i].Position = new Vector3(points[i].X * (width + stretch  * 2) - stretch, y * height, 0);
+                PlayfieldVertices[i].TextureCoordinate = points[i];
+            }
+
+            // Create Perspective Effect
+            var projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, (PLANE_SUBDIVISIONS_COUNT_X - 1) * (PLANE_SUBDIVISIONS_COUNT_Y - 1) );
+            PerspectiveEffect = new BasicEffect(GameBase.Game.GraphicsDevice)
+            {
+                TextureEnabled = true,
+                World = Matrix.Identity,
+                View = Matrix.Identity,
+                Projection = projection,
+                Texture = PlayfieldRenderer
+            };
+
+            // Create Playfield Sprite. Image from Effect Renderer will be displayed on this.
+            PlayfieldSprite = new Sprite()
+            {
+                WidthScale = 1,
+                HeightScale = 1,
+                Parent = Container,
+                Image = EffectRenderer
+            };
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Destroy() => Container?.Destroy();
+        /// <param name="gameTime"></param>
+        public void PreDraw(GameTime gameTime)
+        {
+            // If Config for Perspective is not enabled, ignore this method.
+            if (!PerspectiveEnabled)
+                return;
+
+            // Stop the sprite batch to render the Playfield
+            try
+            {
+                GameBase.Game.SpriteBatch.End();
+            }
+            catch (Exception e)
+            {
+                // Ignored.
+            }
+
+            // Draw Playfield Texture
+            GameBase.Game.GraphicsDevice.SetRenderTarget(PlayfieldRenderer);
+            GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
+            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            BackgroundContainer.Draw(gameTime);
+            HitObjectContainer.Draw(gameTime);
+            GameBase.Game.SpriteBatch.End();
+
+            // Draw Perspective
+            GameBase.Game.GraphicsDevice.SetRenderTarget(EffectRenderer);
+            foreach (var pass in PerspectiveEffect.CurrentTechnique.Passes)
+                pass.Apply();
+
+            GameBase.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, PlayfieldVertices, 0, PLANE_SUBDIVISIONS_COUNT_X * PLANE_SUBDIVISIONS_COUNT_Y * 2,
+                VertexPositionTexture.VertexDeclaration);
+
+            // Reinitialize Sprite Batch for Draw()
+            GameBase.Game.GraphicsDevice.SetRenderTarget(null);
+            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void Draw(GameTime gameTime)
+        {
+            // Draw Regular Playfield if Perspective is disabled.
+            if (!PerspectiveEnabled)
+            {
+                BackgroundContainer.Draw(gameTime);
+                HitObjectContainer.Draw(gameTime);
+                ForegroundContainer.Draw(gameTime);
+                return;
+            }
+
+            // Draw Perspective Playfield if Config is enabled.
+            PlayfieldSprite.Draw(gameTime);
+            ForegroundContainer.Draw(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public void Destroy()
+        {
+            if (PerspectiveEnabled)
+            {
+                PlayfieldRenderer.Dispose();
+                EffectRenderer.Dispose();
+            }
+
+            Container?.Destroy();
+        }
 
         /// <inheritdoc />
         /// <summary>

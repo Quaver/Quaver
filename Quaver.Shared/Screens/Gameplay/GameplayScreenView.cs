@@ -326,6 +326,8 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            Screen.Ruleset?.PreDraw(gameTime);
+
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
             Background.Draw(gameTime);

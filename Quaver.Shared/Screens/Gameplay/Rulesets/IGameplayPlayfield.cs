@@ -22,5 +22,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// </summary>
         /// <param name="gameTime"></param>
         void HandleFailure(GameTime gameTime);
+
+        /// <summary>
+        ///     This will handle anything that has to be rendered before the actual Draw() method.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        void PreDraw(GameTime gameTime);
     }
 }
