@@ -159,7 +159,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Logger.Important($"Fetching message history for channel: {Channel.Name}", LogType.Runtime);
 
             HasRequestedMessageHistory = true;
-            RequestHistoryTask.Run(0, 800);
+            RequestHistoryTask.Run(0);
         }
 
         /// <summary>
