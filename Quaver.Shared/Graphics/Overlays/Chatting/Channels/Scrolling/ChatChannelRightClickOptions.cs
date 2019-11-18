@@ -38,12 +38,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
         /// <param name="activeChannel"></param>
         /// <param name="container"></param>
         public ChatChannelRightClickOptions(ChatChannel channel, Bindable<ChatChannel> activeChannel, ChatChannelScrollContainer container)
-            : base(new Dictionary<string, Color>()
-        {
-            {OpenText, Color.White},
-            {SaveChatLog, ColorHelper.HexToColor("#0787E3")},
-            {CloseText, ColorHelper.HexToColor($"#FF6868")}
-        }, new ScalableVector2(200, 40), 22)
+            : base(GetOptions(channel), new ScalableVector2(200, 40), 22)
         {
             ActiveChannel = activeChannel;
             Container = container;
@@ -67,6 +62,24 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
                         break;
                 }
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        private static Dictionary<string, Color> GetOptions(ChatChannel channel)
+        {
+            var options = new Dictionary<string, Color>()
+            {
+                {OpenText, Color.White},
+                {SaveChatLog, ColorHelper.HexToColor("#0787E3")},
+            };
+
+            if (!OnlineChat.IsSpecialChannel(channel))
+                options.Add(CloseText, ColorHelper.HexToColor($"#FF6868"));
+
+            return options;
         }
     }
 }
