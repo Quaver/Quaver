@@ -80,7 +80,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             Icon.Tint = Username.Tint;
 
             var container = (ChatMessageScrollContainer) Container;
-            UsernameButton.Depth = container.ActiveRightClickOptions != null && container.ActiveRightClickOptions.Opened ? 1 : 0;
+
+            UsernameButton.Depth = container.ActiveRightClickOptions != null && container.ActiveRightClickOptions.Opened
+                                   || OnlineChat.Instance.ActiveJoinChatChannelContainer != null  ? 1 : 0;
 
             base.Update(gameTime);
         }

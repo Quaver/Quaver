@@ -117,7 +117,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
             {
                 Parent = this,
                 Size = Size,
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
+                Alpha = 0
             };
 
             Button.Clicked += (sender, args) => ActiveChannel.Value = Item;

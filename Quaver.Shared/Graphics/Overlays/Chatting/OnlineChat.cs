@@ -10,9 +10,11 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels;
+using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Join;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
@@ -53,6 +55,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// <summary>
         /// </summary>
         public ChatMessageContainer MessageContainer { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public CheckboxContainer ActiveJoinChatChannelContainer { get; private set; }
 
         /// <summary>
         ///     If the chat overlay is opened
@@ -98,6 +104,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         public override void Update(GameTime gameTime)
         {
             HandleResizing();
+            HandleActiveJoinChatChannelDialogClosing();
+
             base.Update(gameTime);
         }
 
@@ -141,6 +149,19 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         }
 
         /// <summary>
+        ///  Handles when the user clicks outside of the join chat dialog
+        /// </summary>
+        private void HandleActiveJoinChatChannelDialogClosing()
+        {
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && ActiveJoinChatChannelContainer != null
+                                                             && !ActiveJoinChatChannelContainer.IsHovered())
+            {
+                ActiveJoinChatChannelContainer.Destroy();
+                ActiveJoinChatChannelContainer = null;
+            }
+        }
+
+        /// <summary>
         /// </summary>
         private void CreateChatChannelList()
             => ChannelList = new ChatChannelList(ActiveChannel, new ScalableVector2(250, Height)) {Parent = this};
@@ -169,6 +190,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
                 if (child is IResizable c)
                     c.ChangeSize(size);
             }
+        }
+
+        /// <summary>
+        ///    Activates the container to join chat channels
+        /// </summary>
+        public void ActivateJoinChatChannelList()
+        {
+            ActiveJoinChatChannelContainer?.Destroy();
+
+            var channels = new List<ICheckboxContainerItem>();
+            AvailableChatChannels.ForEach(x => channels.Add(new JoinChatChannelCheckboxItem(x)));
+
+            ActiveJoinChatChannelContainer = new CheckboxContainer(channels, new ScalableVector2(250, 400), 200)
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Y = ChannelList.HeaderBackground.Height / 2f
+            };
+
+            ActiveJoinChatChannelContainer.X = ActiveJoinChatChannelContainer.Width + 14;
         }
 
         /// <summary>

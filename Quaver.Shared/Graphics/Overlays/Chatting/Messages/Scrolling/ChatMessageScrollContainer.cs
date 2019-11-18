@@ -110,7 +110,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
-                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)
+                           && OnlineChat.Instance.ActiveJoinChatChannelContainer == null;
 
             LoadingIcon.Visible = RequestHistoryTask.IsRunning || !OnlineManager.Connected;
 
