@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
@@ -51,6 +52,18 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            CloseButton.Visible = !OnlineChat.IsSpecialChannel(ActiveChannel.Value);
+            CloseButton.IsClickable = CloseButton.Visible;
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
@@ -82,7 +95,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// </summary>
         private void CreateCloseButton()
         {
-            CloseButton = new IconButton(UserInterface.JudgementWindowCloseButton, (sender, args) => ActiveChannel.Value?.Close())
+            CloseButton = new IconButton(UserInterface.CloseChannelButton, (sender, args) => ActiveChannel.Value?.Close())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
