@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
@@ -46,6 +47,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             SetText();
 
             ActiveChannel.ValueChanged += OnActiveChannelChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            Depth = OnlineChat.Instance.ActiveJoinChatChannelContainer != null  ? 1 : 0;
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />

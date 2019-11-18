@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Form.Checkboxes;
+using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Join;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling;
 using Quaver.Shared.Helpers;
 using TagLib.Id3v2;
@@ -8,6 +12,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels

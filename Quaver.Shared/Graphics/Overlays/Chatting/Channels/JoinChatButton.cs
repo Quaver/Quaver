@@ -13,11 +13,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
         public JoinChatButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol))
         {
             Tint = Color.LimeGreen;
-
-            Clicked += (sender, args) =>
-            {
-                Logger.Important($"User clicked to join a new channel", LogType.Runtime);
-            };
+            Clicked += (sender, args) => OnlineChat.Instance?.ActivateJoinChatChannelList();
         }
     }
 }
