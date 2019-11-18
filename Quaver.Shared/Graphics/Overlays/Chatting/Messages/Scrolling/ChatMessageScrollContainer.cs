@@ -121,6 +121,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            UnsubscribeFromEvents();
+            base.Destroy();
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
