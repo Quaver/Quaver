@@ -18,7 +18,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
 
         /// <summary>
         /// </summary>
-        private ImageButton Button { get; set; }
+        public ImageButton Button { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -71,7 +71,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             ScheduleUpdate(() =>
             {
                 Name.Text = item.GetName();
-                Checkbox.Image = FontAwesome.Get(Item.IsSelected ? FontAwesomeIcon.fa_checked_symbol : FontAwesomeIcon.fa_check_box_empty);
+                Checkbox.Image = FontAwesome.Get(Item.IsSelected ? FontAwesomeIcon.fa_check : FontAwesomeIcon.fa_check_box_empty);
             });
         }
 
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Name.X,
-                Size = new ScalableVector2(Height * 0.50f, Height * 0.50f),
+                Size = new ScalableVector2(Height * 0.40f, Height * 0.40f),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_check_sign_in_a_rounded_black_square)
             };
         }
