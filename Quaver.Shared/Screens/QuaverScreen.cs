@@ -10,10 +10,12 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 using Wobble.Window;
@@ -57,6 +59,11 @@ namespace Quaver.Shared.Screens
         /// </summary>
         private Tooltip ActiveTooltip { get; set; }
 
+        /// <summary>
+        ///     The currently active checkbox container for the screen
+        /// </summary>
+        private CheckboxContainer ActiveCheckboxContainer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -70,6 +77,13 @@ namespace Quaver.Shared.Screens
             }
 
             HandleTooltipAnimation();
+
+            if (DialogManager.Dialogs.Count == 0 &&  MouseManager.IsUniqueClick(MouseButton.Left)
+                && ActiveCheckboxContainer != null && ActiveCheckboxContainer.IsOpen && !ActiveCheckboxContainer.IsHovered())
+            {
+                ActiveCheckboxContainer.Close();
+            }
+
             base.Update(gameTime);
         }
 
@@ -126,6 +140,33 @@ namespace Quaver.Shared.Screens
             ActiveRightClickOptions.Position = new ScalableVector2(x, y);
 
             ActiveRightClickOptions.Open(350);
+        }
+
+        /// <summary>
+        ///     Activates checkbox container for the screen
+        /// </summary>
+        /// <param name="container"></param>
+        public void ActivateCheckboxContainer(CheckboxContainer container)
+        {
+            if (ActiveCheckboxContainer != null)
+            {
+                ActiveCheckboxContainer.Visible = false;
+                ActiveCheckboxContainer.Parent = null;
+                ActiveCheckboxContainer.Destroy();
+            }
+
+            ActiveCheckboxContainer = container;
+            ActiveCheckboxContainer.Parent = View.Container;
+
+            ActiveCheckboxContainer.Visible = true;
+
+            var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveCheckboxContainer.Width, 0,
+                WindowManager.Width - ActiveCheckboxContainer.Width);
+
+            var y = MathHelper.Clamp(MouseManager.CurrentState.Y, 0,
+                WindowManager.Height - ActiveCheckboxContainer.Pool.Count * ActiveCheckboxContainer.Pool.First().Height - 60);
+
+            ActiveCheckboxContainer.Position = new ScalableVector2(x, y);
         }
 
         /// <summary>
