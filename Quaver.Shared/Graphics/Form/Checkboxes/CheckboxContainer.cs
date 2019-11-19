@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
@@ -19,7 +21,10 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         private int MaxHeight { get; }
 
         /// <summary>
-        ///
+        /// </summary>
+        public bool IsOpen { get; private set; } = true;
+
+        /// <summary>
         /// </summary>
         /// <param name="availableItems"></param>
         /// <param name="size"></param>
@@ -29,6 +34,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         {
             InputEnabled = true;
             Tint = ColorHelper.HexToColor("#181818");
+            Image = UserInterface.RoundedPanel;
 
             Scrollbar.X += 6;
             Scrollbar.Tint = Color.White;
@@ -58,6 +64,22 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void Close()
+        {
+            IsOpen = false;
+
+            ClearAnimations();
+            ChangeHeightTo(0, Easing.OutQuint, 450);
+
+            foreach (var item in Pool)
+            {
+                if (item is CheckboxContainerItem i)
+                    i.Button.Visible = false;
+            }
         }
 
         /// <inheritdoc />

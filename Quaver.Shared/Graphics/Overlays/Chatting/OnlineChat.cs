@@ -130,6 +130,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         }
 
         /// <summary>
+        ///     Returns if the dialog to join chat channels is open
+        /// </summary>
+        /// <returns></returns>
+        public bool IsJoinChannelDialogOpen() => ActiveJoinChatChannelContainer != null && ActiveJoinChatChannelContainer.IsOpen;
+
+        /// <summary>
         /// </summary>
         private void HandleResizing()
         {
@@ -156,8 +162,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             if (MouseManager.IsUniqueClick(MouseButton.Left) && ActiveJoinChatChannelContainer != null
                                                              && !ActiveJoinChatChannelContainer.IsHovered())
             {
-                ActiveJoinChatChannelContainer.Destroy();
-                ActiveJoinChatChannelContainer = null;
+                ActiveJoinChatChannelContainer.Close();
             }
         }
 
@@ -202,14 +207,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             var channels = new List<ICheckboxContainerItem>();
             AvailableChatChannels.ForEach(x => channels.Add(new JoinChatChannelCheckboxItem(x)));
 
-            ActiveJoinChatChannelContainer = new CheckboxContainer(channels, new ScalableVector2(250, 400), 200)
+            ActiveJoinChatChannelContainer = new CheckboxContainer(channels, new ScalableVector2(225, 400), 200)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Y = ChannelList.HeaderBackground.Height / 2f
             };
 
-            ActiveJoinChatChannelContainer.X = ActiveJoinChatChannelContainer.Width + 14;
+            ActiveJoinChatChannelContainer.X = ActiveJoinChatChannelContainer.Width + 24;
         }
 
         /// <summary>
