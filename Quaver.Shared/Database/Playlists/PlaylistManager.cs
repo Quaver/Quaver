@@ -19,11 +19,6 @@ namespace Quaver.Shared.Database.Playlists
     public static class PlaylistManager
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         ///     The available playlists
         /// </summary>
         public static List<Playlist> Playlists { get; private set; } = new List<Playlist>();
@@ -49,6 +44,11 @@ namespace Quaver.Shared.Database.Playlists
         public static event EventHandler<PlaylistSyncedEventArgs> PlaylistSynced;
 
         /// <summary>
+        ///     Event invoked when a playlist's maps have been managed
+        /// </summary>
+        public static event EventHandler<PlaylistMapsManagedEventArgs> PlaylistMapsManaged;
+
+        /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
         ///     for gameplay
         /// </summary>
@@ -68,15 +68,11 @@ namespace Quaver.Shared.Database.Playlists
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-
-                conn.CreateTable<Playlist>();
+                DatabaseManager.Connection.CreateTable<Playlist>();
                 Logger.Important($"Playlist Table has been created", LogType.Runtime);
 
-                conn.CreateTable<PlaylistMap>();
+                DatabaseManager.Connection.CreateTable<PlaylistMap>();
                 Logger.Important($"PlaylistMap table has been created", LogType.Runtime);
-
-                conn.Close();
             }
             catch (Exception e)
             {
@@ -95,10 +91,8 @@ namespace Quaver.Shared.Database.Playlists
 
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-
-                var playlists = conn.Table<Playlist>().ToList();
-                var playlistMaps = conn.Table<PlaylistMap>().ToList();
+                var playlists = DatabaseManager.Connection.Table<Playlist>().ToList();
+                var playlistMaps = DatabaseManager.Connection.Table<PlaylistMap>().ToList();
 
                 // Convert playlists into a dictionary w/ the id as its key for quick access
                 var playlistDictionary = playlists.ToDictionary(x => x.Id);
@@ -126,8 +120,6 @@ namespace Quaver.Shared.Database.Playlists
 
                 foreach (var playlist in playlists)
                     Logger.Important($"Loaded Quaver playlist: {playlist.Name ?? ""} w/ {playlist.Maps?.Count ?? 0} maps!", LogType.Runtime);
-
-                conn.Close();
             }
             catch (Exception e)
             {
@@ -195,9 +187,7 @@ namespace Quaver.Shared.Database.Playlists
 
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                id = conn.Insert(playlist);
-                conn.Close();
+                id = DatabaseManager.Connection.Insert(playlist);
 
                 Logger.Important($"Successfully added playlist: {playlist.Name} (#{playlist.Id}) (by: {playlist.Creator}) to the database",
                     LogType.Runtime);
@@ -224,14 +214,11 @@ namespace Quaver.Shared.Database.Playlists
 
         /// <summary>
         /// </summary>
-        public static void EditPlaylist(Playlist playlist, string bannerPath)
+        public static void EditPlaylist(Playlist playlist, string bannerPath, bool emitEvent = true)
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.Update(playlist);
-                conn.Close();
-
+                DatabaseManager.Connection.Update(playlist);
                 CopyPlaylistBanner(playlist, bannerPath);
             }
             catch (Exception e)
@@ -239,7 +226,8 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Error(e, LogType.Runtime);
             }
 
-            PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
+            if (emitEvent)
+                PlaylistCreated?.Invoke(typeof(PlaylistManager), new PlaylistCreatedEventArgs(playlist));
         }
 
         /// <summary>
@@ -250,7 +238,7 @@ namespace Quaver.Shared.Database.Playlists
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Delete(playlist);
+                DatabaseManager.Connection.Delete(playlist);
                 Logger.Important($"Successfully deleted playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
             }
             catch (Exception e)
@@ -301,20 +289,35 @@ namespace Quaver.Shared.Database.Playlists
         /// <param name="map"></param>
         public static void AddMapToPlaylist(Playlist playlist, Map map)
         {
-            var conn = new SQLiteConnection(DatabasePath);
-
             var playlistMap = new PlaylistMap()
             {
                 PlaylistId = playlist.Id,
                 Md5 = map.Md5Checksum
             };
 
-            var check = conn.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
+            // Only add the map if it doesn't already exist
+            if (!playlist.Maps.Contains(map) && playlist.Maps.All(x => x.Md5Checksum != map.Md5Checksum))
+                playlist.Maps.Add(map);
+
+            var check = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
 
             if (check == null)
-                conn.Insert(playlistMap);
+                DatabaseManager.Connection.Insert(playlistMap);
+        }
 
-            conn.Close();
+        /// <summary>
+        ///     Removes an individual map from a playlist
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="map"></param>
+        public static void RemoveMapFromPlaylist(Playlist playlist, Map map)
+        {
+            playlist.Maps.RemoveAll(x => x == map || x.Md5Checksum == map.Md5Checksum);
+
+            var check = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == playlist.Id && y.Md5 == map.Md5Checksum);
+
+            if (check != null)
+                DatabaseManager.Connection.Delete(check);
         }
 
         /// <summary>
@@ -387,14 +390,10 @@ namespace Quaver.Shared.Database.Playlists
 
                 try
                 {
-                    var conn = new SQLiteConnection(DatabasePath);
-
-                    var playlistMap = conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == map.Md5Checksum);
+                    var playlistMap = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == map.Md5Checksum);
 
                     if (playlistMap != null)
-                        conn.Delete(playlistMap);
-
-                    conn.Close();
+                        DatabaseManager.Connection.Delete(playlistMap);
                 }
                 catch (Exception e)
                 {
@@ -422,16 +421,12 @@ namespace Quaver.Shared.Database.Playlists
 
                 try
                 {
-                    var conn = new SQLiteConnection(DatabasePath);
-
-                    var playlistMap = conn.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == outdated.Md5Checksum);
+                    var playlistMap = DatabaseManager.Connection.Find<PlaylistMap>(y => y.PlaylistId == x.Id && y.Md5 == outdated.Md5Checksum);
 
                     if (playlistMap != null)
-                        conn.Delete(playlistMap);
+                        DatabaseManager.Connection.Delete(playlistMap);
 
                     AddMapToPlaylist(x, newMap);
-
-                    conn.Close();
                 }
                 catch (Exception e)
                 {
@@ -439,6 +434,13 @@ namespace Quaver.Shared.Database.Playlists
                 }
             });
         }
+
+        /// <summary>
+        ///     Manually invokes an event that a playlist's maps have been managed
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void InvokePlaylistMapsManagedEvent(Playlist playlist)
+            => PlaylistMapsManaged?.Invoke(typeof(PlaylistManager), new PlaylistMapsManagedEventArgs(playlist));
 
         /// <summary>
         ///     Copies a banner path to the correct directory

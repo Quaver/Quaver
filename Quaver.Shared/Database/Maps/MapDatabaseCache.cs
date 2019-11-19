@@ -27,11 +27,6 @@ namespace Quaver.Shared.Database.Maps
     public static class MapDatabaseCache
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         ///     List of maps to force update after editing them.
         /// </summary>
         public static List<Map> MapsToUpdate { get; } = new List<Map>();
@@ -42,12 +37,6 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void Load(bool fullSync)
         {
-            if (fullSync)
-            {
-                if (File.Exists(DatabasePath))
-                    File.Delete(DatabasePath);
-            }
-
             CreateTable();
 
             // Fetch all of the .qua files inside of the song directory
@@ -67,8 +56,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<Map>();
+                DatabaseManager.Connection.CreateTable<Map>();
                 Logger.Important($"Map Database has been created", LogType.Runtime);
             }
             catch (Exception e)
@@ -111,7 +99,7 @@ namespace Quaver.Shared.Database.Maps
                         {
                             Logger.Error(e, LogType.Runtime);
                             File.Delete(filePath);
-                            new SQLiteConnection(DatabasePath).Delete(map);
+                            DatabaseManager.Connection.Delete(map);
                             Logger.Important($"Removed {filePath} from the cache, as the file could not be parsed.", LogType.Runtime);
                             continue;
                         }
@@ -119,7 +107,7 @@ namespace Quaver.Shared.Database.Maps
                         newMap.CalculateDifficulties();
 
                         newMap.Id = map.Id;
-                        new SQLiteConnection(DatabasePath).Update(newMap);
+                        DatabaseManager.Connection.Update(newMap);
 
                         Logger.Important($"Updated cached map: {newMap.Id}, as the file was updated.", LogType.Runtime);
                     }
@@ -128,7 +116,7 @@ namespace Quaver.Shared.Database.Maps
                 }
 
                 // The file doesn't exist, so we can safely delete it from the cache.
-                new SQLiteConnection(DatabasePath).Delete(map);
+                DatabaseManager.Connection.Delete(map);
                 Logger.Important($"Removed {filePath} from the cache, as the file no longer exists", LogType.Runtime);
             }
         }
@@ -166,7 +154,7 @@ namespace Quaver.Shared.Database.Maps
         ///     Responsible for fetching all the maps from the database and returning them.
         /// </summary>
         /// <returns></returns>
-        public static List<Map> FetchAll() => new SQLiteConnection(DatabasePath).Table<Map>().ToList();
+        public static List<Map> FetchAll() => DatabaseManager.Connection.Table<Map>().ToList();
 
         /// <summary>
         ///     Converts all backslash characters to forward slashes.
@@ -185,9 +173,9 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Insert(map);
+                DatabaseManager.Connection.Insert(map);
 
-                return new SQLiteConnection(DatabasePath).Get<Map>(x => x.Md5Checksum == map.Md5Checksum).Id;
+                return DatabaseManager.Connection.Get<Map>(x => x.Md5Checksum == map.Md5Checksum).Id;
             }
             catch (Exception e)
             {
@@ -205,7 +193,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Update(map);
+                DatabaseManager.Connection.Update(map);
                 Logger.Debug($"Updated map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
             }
             catch (Exception e)
@@ -222,7 +210,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Delete(map);
+                DatabaseManager.Connection.Delete(map);
                 Logger.Debug($"Deleted map: {map.Md5Checksum} (#{map.Id}) in the cache", LogType.Runtime);
             }
             catch (Exception e)
@@ -240,7 +228,7 @@ namespace Quaver.Shared.Database.Maps
             try
             {
 
-                return new SQLiteConnection(DatabasePath).Find<Map>(x => x.MapSetId == id);
+                return DatabaseManager.Connection.Find<Map>(x => x.MapSetId == id);
             }
             catch (Exception e)
             {

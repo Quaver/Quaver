@@ -46,6 +46,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             UpdateContent(item, index);
 
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
+            PlaylistManager.PlaylistMapsManaged += OnPLaylistMapsManaged;
             ModManager.ModsChanged += OnModsChanged;
         }
 
@@ -78,6 +79,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             // ReSharper disable once DelegateSubtraction
             PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
             ModManager.ModsChanged -= OnModsChanged;
+            PlaylistManager.PlaylistMapsManaged -= OnPLaylistMapsManaged;
 
             base.Destroy();
         }
@@ -100,6 +102,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 Select();
             else
                 Deselect();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPLaylistMapsManaged(object sender, PlaylistMapsManagedEventArgs e)
+        {
+            if (e.Playlist != Item)
+                return;
+
+            UpdateContent(Item, Index);
         }
 
         /// <summary>

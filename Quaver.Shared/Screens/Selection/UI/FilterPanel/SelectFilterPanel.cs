@@ -143,6 +143,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             MapManager.Selected.ValueChanged += OnMapChanged;
             ModManager.ModsChanged += OnModsChanged;
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
+            PlaylistManager.PlaylistMapsManaged += OnPlaylistMapsManaged;
 
             AlignRightItems();
         }
@@ -165,6 +166,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ModManager.ModsChanged -= OnModsChanged;
             PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
+            PlaylistManager.PlaylistMapsManaged -= OnPlaylistMapsManaged;
 
             FilterMapsetsTask?.Dispose();
 
@@ -357,5 +359,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> e) => StartFilterMapsetsTask();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlaylistMapsManaged(object sender, PlaylistMapsManagedEventArgs e)
+        {
+            if (ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists)
+                return;
+
+            StartFilterMapsetsTask();
+        }
     }
 }

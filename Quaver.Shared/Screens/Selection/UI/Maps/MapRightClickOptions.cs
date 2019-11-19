@@ -3,11 +3,14 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -144,6 +147,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                         DialogManager.Show(new DeleteLocalScoresDialog(Map));
                         break;
                     case AddToPlaylist:
+                        if (PlaylistManager.Playlists.FindAll(x => x.PlaylistGame == MapGame.Quaver).Count == 0)
+                        {
+                            DialogManager.Show(new CreatePlaylistDialog());
+                            return;
+                        }
+                        
+                        selectScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(Map));
                         break;
                     case Export:
                         ThreadScheduler.Run(() =>

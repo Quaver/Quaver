@@ -16,6 +16,7 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -252,8 +253,7 @@ namespace Quaver.Shared.Screens.Editor.UI.Dialogs
                         foreach (var f in Directory.GetFiles($"{ConfigManager.SongDirectory.Value}/{MapManager.Selected.Value.Directory}", "*.qua"))
                             File.Delete(f);
 
-                        using (var conn = new SQLiteConnection(MapDatabaseCache.DatabasePath))
-                            MapManager.Selected.Value.Mapset.Maps.ForEach(x => conn.Delete(x));
+                        MapManager.Selected.Value.Mapset.Maps.ForEach(x => DatabaseManager.Connection.Delete(x));
 
                         foreach (var map in Response.Maps)
                         {

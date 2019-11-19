@@ -13,11 +13,6 @@ namespace Quaver.Shared.Database.Judgements
     public static class JudgementWindowsDatabaseCache
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         ///     The list of preset judgement windows
         /// </summary>
         public static List<JudgementWindows> Presets { get; private set; } = new List<JudgementWindows>();
@@ -67,8 +62,7 @@ namespace Quaver.Shared.Database.Judgements
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<JudgementWindows>();
+                DatabaseManager.Connection.CreateTable<JudgementWindows>();
                 Logger.Important($"JudgementWindows table has been created", LogType.Runtime);
             }
             catch (Exception e)
@@ -99,7 +93,7 @@ namespace Quaver.Shared.Database.Judgements
         /// </summary>
         private static List<JudgementWindows> FetchAllWindows()
         {
-            return new SQLiteConnection(DatabasePath).Table<JudgementWindows>().ToList();
+            return DatabaseManager.Connection.Table<JudgementWindows>().ToList();
         }
 
         /// <summary>
@@ -144,7 +138,7 @@ namespace Quaver.Shared.Database.Judgements
         {
             try
             {
-                return new SQLiteConnection(DatabasePath).Insert(windows);
+                return DatabaseManager.Connection.Insert(windows);
             }
             catch (Exception e)
             {
@@ -159,7 +153,7 @@ namespace Quaver.Shared.Database.Judgements
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Update(windows);
+                DatabaseManager.Connection.Update(windows);
             }
             catch (Exception e)
             {
@@ -174,7 +168,7 @@ namespace Quaver.Shared.Database.Judgements
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Delete(windows);
+                DatabaseManager.Connection.Delete(windows);
             }
             catch (Exception e)
             {

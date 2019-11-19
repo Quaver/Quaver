@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Mapsets;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -81,6 +86,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         DialogManager.Show(new DeleteMapsetDialog(Mapset.Maps.First().Mapset, selectScreen.AvailableMapsets.Value.IndexOf(Mapset)));
                         break;
                     case AddToPlaylist:
+                        if (PlaylistManager.Playlists.FindAll(x => x.PlaylistGame == MapGame.Quaver).Count == 0)
+                        {
+                            DialogManager.Show(new CreatePlaylistDialog());
+                            return;
+                        }
+
+                        if (MapsetHelper.IsSingleDifficultySorted())
+                            selectScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(Mapset.Maps.First()));
+                        else
+                            selectScreen?.ActivateCheckboxContainer(new AddMapsetToPlaylistCheckboxContainer(Mapset.Maps.First().Mapset));
                         break;
                     case Export:
                         ThreadScheduler.Run(() =>

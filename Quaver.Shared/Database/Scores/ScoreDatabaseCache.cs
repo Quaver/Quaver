@@ -19,11 +19,6 @@ namespace Quaver.Shared.Database.Scores
     public static class ScoreDatabaseCache
     {
          /// <summary>
-        ///     The path of the local scores database
-        /// </summary>
-        private static readonly string DatabasePath = $"{ConfigManager.GameDirectory}/quaver.db";
-
-         /// <summary>
          ///     Event invoked when a score has been deleted
          /// </summary>
          public static event EventHandler<ScoreDeletedEventArgs> ScoreDeleted;
@@ -41,9 +36,7 @@ namespace Quaver.Shared.Database.Scores
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<Score>();
-
+                DatabaseManager.Connection.CreateTable<Score>();
                 Logger.Important("Scores table has been created", LogType.Runtime);
             }
             catch (Exception e)
@@ -62,11 +55,8 @@ namespace Quaver.Shared.Database.Scores
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
                 var sql = $"SELECT * FROM 'Score' WHERE MapMd5=? ORDER BY TotalScore DESC LIMIT 50";
-
-                var scores = conn.Query<Score>(sql, md5);
-                conn.Close();
+                var scores = DatabaseManager.Connection.Query<Score>(sql, md5);
 
                 // Remove all scores that have F grade if "Display Failed Scores" setting is set to yes.
                 if (!ConfigManager.DisplayFailedLocalScores.Value)
@@ -91,9 +81,9 @@ namespace Quaver.Shared.Database.Scores
             try
             {
                 if (score != null)
-                    new SQLiteConnection(DatabasePath).Insert(score);
+                    DatabaseManager.Connection.Insert(score);
 
-                return new SQLiteConnection(DatabasePath).Table<Score>().Count();
+                return DatabaseManager.Connection.Table<Score>().Count();
             }
             catch (Exception e)
             {
@@ -112,7 +102,7 @@ namespace Quaver.Shared.Database.Scores
         {
             try
             {
-                new SQLiteConnection(DatabasePath).Delete(score);
+                DatabaseManager.Connection.Delete(score);
 
                 if (raiseEvent)
                     ScoreDeleted?.Invoke(typeof(ScoreDatabaseCache), new ScoreDeletedEventArgs(score));

@@ -49,8 +49,8 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             Height = 0;
             MaxHeight = maxHeight;
 
-            ChangeHeightTo((int) Math.Min(ContentContainer.Height, maxHeight), Easing.OutQuint, 450);
             RecalculateContainerHeight();
+            ChangeHeightTo((int) Math.Min(ContentContainer.Height, maxHeight), Easing.OutQuint, 450);
         }
 
         /// <inheritdoc />
@@ -62,6 +62,8 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            RecalculateContainerHeight();
 
             base.Update(gameTime);
         }
