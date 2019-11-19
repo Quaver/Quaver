@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -144,6 +145,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                         DialogManager.Show(new DeleteLocalScoresDialog(Map));
                         break;
                     case AddToPlaylist:
+                        selectScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(Map));
                         break;
                     case Export:
                         ThreadScheduler.Run(() =>

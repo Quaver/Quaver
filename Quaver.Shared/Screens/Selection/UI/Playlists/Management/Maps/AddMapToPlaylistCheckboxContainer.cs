@@ -2,26 +2,26 @@ using System.Collections.Generic;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Form.Checkboxes;
+using Quaver.Shared.Screens.Selection.UI.Playlists.Management.Mapsets;
 using Wobble.Graphics;
 
-namespace Quaver.Shared.Screens.Selection.UI.Playlists.Management.Mapsets
+namespace Quaver.Shared.Screens.Selection.UI.Playlists.Management.Maps
 {
-    public class AddMapsetToPlaylistCheckboxContainer : CheckboxContainer
+    public class AddMapToPlaylistCheckboxContainer : CheckboxContainer
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="mapset"></param>
-        public AddMapsetToPlaylistCheckboxContainer(Mapset mapset) : base(GetItems(mapset),
+        /// <param name="map"></param>
+        public AddMapToPlaylistCheckboxContainer(Map map) : base(GetItems(map),
             new ScalableVector2(250, 400), 250)
         {
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="mapset"></param>
         /// <returns></returns>
-        private static List<ICheckboxContainerItem> GetItems(Mapset mapset)
+        private static List<ICheckboxContainerItem> GetItems(Map map)
         {
             var items = new List<ICheckboxContainerItem>();
 
@@ -30,7 +30,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Management.Mapsets
                 if (playlist.PlaylistGame != MapGame.Quaver)
                     continue;
 
-                items.Add(new CheckboxItemPlaylistMapset(playlist, mapset));
+                items.Add(new CheckboxItemPlaylistMap(playlist, map));
             }
 
             return items;
