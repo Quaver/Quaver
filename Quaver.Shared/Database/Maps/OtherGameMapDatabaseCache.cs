@@ -21,11 +21,6 @@ namespace Quaver.Shared.Database.Maps
     public static class OtherGameMapDatabaseCache
     {
         /// <summary>
-        ///     The path of the local database
-        /// </summary>
-        public static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
-
-        /// <summary>
         /// </summary>
         public static Dictionary<OtherGameCacheAction, List<OtherGameMap>> MapsToCache { get; private set; }
 
@@ -106,15 +101,12 @@ namespace Quaver.Shared.Database.Maps
                 else
                     return;
 
-                using (var conn = new SQLiteConnection(DatabasePath))
-                {
-                    AddMaps(conn);
-                    UpdateMaps(conn);
-                    DeleteMaps(conn);
+                AddMaps(DatabaseManager.Connection);
+                UpdateMaps(DatabaseManager.Connection);
+                DeleteMaps(DatabaseManager.Connection);
 
-                    if (SyncMapCount == 0)
-                        NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations for other games!");
-                }
+                if (SyncMapCount == 0)
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations for other games!");
             })
             {
                 IsBackground = true,
@@ -131,8 +123,7 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-                var conn = new SQLiteConnection(DatabasePath);
-                conn.CreateTable<OtherGameMap>();
+                DatabaseManager.Connection.CreateTable<OtherGameMap>();
 
                 Logger.Important($"OtherGameMaps table has been created.", LogType.Runtime);
             }
@@ -146,7 +137,7 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public static List<OtherGameMap> FetchAll() => new SQLiteConnection(DatabasePath).Table<OtherGameMap>().ToList();
+        public static List<OtherGameMap> FetchAll() => DatabaseManager.Connection.Table<OtherGameMap>().ToList();
 
         /// <summary>
         /// </summary>

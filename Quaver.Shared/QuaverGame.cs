@@ -18,6 +18,7 @@ using Quaver.Server.Common.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
@@ -372,6 +373,7 @@ namespace Quaver.Shared
 
             DeleteTemporaryFiles();
 
+            DatabaseManager.Initialize();
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
