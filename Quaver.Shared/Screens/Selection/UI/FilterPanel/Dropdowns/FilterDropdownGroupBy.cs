@@ -88,6 +88,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Dropdowns
         /// <exception cref="NotImplementedException"></exception>
         private void OnGroupingChanged(object sender, BindableValueChangedEventArgs<GroupMapsetsBy> e)
         {
+            Dropdown.SelectedIndex = (int) e.Value;
             Dropdown.SelectedText.Text = Dropdown.Options[(int) e.Value];
             Dropdown.Close();
         }

@@ -60,6 +60,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnLeaderboardSectionChanged(object sender, BindableValueChangedEventArgs<LeaderboardType> e)
-            => Dropdown.SelectedText.Text = Dropdown.Options[(int) e.Value];
+        {
+            Dropdown.SelectedIndex = (int) e.Value;
+            Dropdown.SelectedText.Text = Dropdown.Options[(int) e.Value];
+        }
     }
 }
