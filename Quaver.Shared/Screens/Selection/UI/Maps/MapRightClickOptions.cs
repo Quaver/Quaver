@@ -62,6 +62,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
         private const string DeleteLocalScores = "Delete Local Scores";
 
+        private const string DeleteMapset = "Delete Mapset";
         /// <summary>
         /// </summary>
         public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(), OptionsSize, FontSize)
@@ -136,12 +137,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                         if (selectScreen == null)
                             return;
 
-                        if (ConfigManager.SelectGroupMapsetsBy.Value == GroupMapsetsBy.Playlists)
-                        {
-
-                        }
-
                         DialogManager.Show(new DeleteMapDialog(Map, Map.Mapset.Maps.IndexOf(Map)));
+                        break;
+                    case DeleteMapset:
+                        if (selectScreen == null)
+                            return;
+
+                        DialogManager.Show(new DeleteMapsetDialog(Map.Mapset, selectScreen.AvailableMapsets.Value.IndexOf(Map.Mapset)));
                         break;
                     case DeleteLocalScores:
                         DialogManager.Show(new DeleteLocalScoresDialog(Map));
@@ -152,7 +154,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
                             DialogManager.Show(new CreatePlaylistDialog());
                             return;
                         }
-                        
+
                         selectScreen?.ActivateCheckboxContainer(new AddMapToPlaylistCheckboxContainer(Map));
                         break;
                     case Export:
@@ -182,6 +184,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
             {Edit, ColorHelper.HexToColor("#F2994A")},
             {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
             {Delete, ColorHelper.HexToColor($"#FF6868")},
+            {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},
             {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
             {Export, ColorHelper.HexToColor("#0787E3")},
             {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
