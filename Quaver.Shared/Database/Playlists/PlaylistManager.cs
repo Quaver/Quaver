@@ -168,6 +168,13 @@ namespace Quaver.Shared.Database.Playlists
                     }
                 }
 
+                // Don't load empty osu! collections
+                if (playlist.Maps.Count == 0)
+                {
+                    Logger.Important($"Skipping load on osu! playlist: {playlist.Name ?? ""} because it is empty!", LogType.Runtime);
+                    continue;
+                }
+
                 playlists.Add(playlist);
             }
 
