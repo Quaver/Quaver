@@ -508,8 +508,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         {
             HandleButtonVisibility();
 
-            NameTextbox.Textbox.RawText = e.Value.Name;
-            NameTextbox.Textbox.InputText.Text = e.Value.Name;
+            ScheduleUpdate(() =>
+            {
+                NameTextbox.Textbox.RawText = e.Value.Name;
+                NameTextbox.Textbox.InputText.Text = e.Value.Name;
+            });
         }
 
         /// <summary>
