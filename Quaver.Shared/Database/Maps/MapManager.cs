@@ -15,6 +15,7 @@ using Quaver.API.Maps.Parsers;
 using Quaver.Server.Client;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -27,6 +28,7 @@ using Quaver.Shared.Screens.Selection.UI.Maps;
 using RestSharp;
 using RestSharp.Extensions;
 using SQLite;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Logging;
 
@@ -272,9 +274,29 @@ namespace Quaver.Shared.Database.Maps
                 return;
             }
 
+            // Dispose of the playing track, so it can be deleted
+            // Prevents an exception being thrown where the mp3 is already in use and can't be deleted
+            if (mapset.Maps.Contains(Selected.Value))
+            {
+                var oldTrack = AudioEngine.Track;
+
+                AudioEngine.Track = new AudioTrackVirtual(300000);
+
+                if (oldTrack != null && !oldTrack.IsDisposed)
+                    oldTrack.Dispose();
+            }
+
             try
             {
                 Directory.Delete(Path.Combine(ConfigManager.SongDirectory.Value, mapset.Directory), true);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            try
+            {
                 mapset.Maps.ForEach(MapDatabaseCache.RemoveMap);
             }
             catch (Exception e)
