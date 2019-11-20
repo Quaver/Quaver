@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Playlists;
+using Quaver.Shared.Scheduling;
 using SQLite;
 using Wobble.Bindables;
 using Wobble.Logging;
@@ -210,6 +211,26 @@ namespace Quaver.Shared.Database.Playlists
             }
 
             return id;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="playlist"></param>
+        public static void CopyPlaylist(Playlist playlist)
+        {
+            var newPlaylist = new Playlist()
+            {
+                Name = $"{playlist.Name} (Copy)",
+                Description = playlist.Description,
+                Creator = playlist.Creator,
+                OnlineMapPoolId = playlist.OnlineMapPoolId,
+                OnlineMapPoolCreatorId = playlist.OnlineMapPoolCreatorId
+            };
+
+            playlist.Maps.ForEach(x => newPlaylist.Maps.Add(x));
+
+            AddPlaylist(newPlaylist);
+            ThreadScheduler.Run(() => newPlaylist.Maps.ForEach(x => AddMapToPlaylist(newPlaylist, x)));
         }
 
         /// <summary>
