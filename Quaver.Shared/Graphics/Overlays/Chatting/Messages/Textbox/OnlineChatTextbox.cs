@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
@@ -55,6 +57,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
                             Username = "God"
                         }
                     };
+                }
+
+                foreach (var word in msg.Split(" "))
+                {
+                    var noColon = word.Replace(":", "");
+
+                    if (!EmojiHelper.Emojis.ContainsKey(noColon))
+                        continue;
+
+                    msg = msg.Replace(word, char.ConvertFromUtf32(EmojiHelper.Emojis[noColon]));
                 }
 
                 var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, ActiveChannel.Value.Name,
