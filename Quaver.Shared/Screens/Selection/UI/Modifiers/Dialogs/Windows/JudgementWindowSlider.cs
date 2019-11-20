@@ -192,8 +192,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         {
             SetToValue();
 
-            ValueTextbox.RawText = e.Value.GetValueFromJudgement(Judgement).ToString(CultureInfo.InvariantCulture);
-            ValueTextbox.InputText.Text = ValueTextbox.RawText;
+            AddScheduledUpdate(() =>
+            {
+                ValueTextbox.RawText = e.Value.GetValueFromJudgement(Judgement).ToString(CultureInfo.InvariantCulture);
+                ValueTextbox.InputText.Text = ValueTextbox.RawText;
+            });
         }
 
         /// <summary>
@@ -257,8 +260,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
                     throw new ArgumentOutOfRangeException();
             }
 
-            ValueTextbox.RawText = Bindable.Value.ToString();
-            ValueTextbox.InputText.Text = Bindable.Value.ToString();
+            AddScheduledUpdate(() =>
+            {
+                ValueTextbox.RawText = Bindable.Value.ToString();
+                ValueTextbox.InputText.Text = Bindable.Value.ToString();
+            });
         }
     }
 }

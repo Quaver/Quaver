@@ -87,10 +87,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         /// <param name="item"></param>
         /// <param name="index"></param>
-        public override void UpdateContent(JudgementWindows item, int index)
-        {
-            Name.Text = item.Name;
-        }
+        public override void UpdateContent(JudgementWindows item, int index) => ScheduleUpdate(() => Name.Text = item.Name);
 
         /// <summary>
         /// </summary>
