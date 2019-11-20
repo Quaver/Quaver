@@ -38,6 +38,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 
         private const string UploadAsMapPool = "Upload Playlist";
 
+        private const string Copy = "Copy Playlist";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -99,6 +101,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                     case UploadAsMapPool:
                         DialogManager.Show(new UploadPlaylistConfirmationDialog(Playlist));
                         break;
+                    case Copy:
+                        PlaylistManager.CopyPlaylist(Playlist);
+                        break;
                 }
             };
         }
@@ -130,7 +135,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
                 {Play, Color.White},
                 {Edit, ColorHelper.HexToColor("#F2994A")},
                 {Delete, ColorHelper.HexToColor($"#FF6868")},
-                {ExportToZip, ColorHelper.HexToColor("#0787E3")}
+                {ExportToZip, ColorHelper.HexToColor("#0787E3")},
+                {Copy, ColorHelper.HexToColor("#0FBAE5")}
             };
 
             if (playlist.IsOnlineMapPool())
