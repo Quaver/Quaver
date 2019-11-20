@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     AddContainedDrawable(x);
 
                     var score = x as DrawableLeaderboardScore;
-                    score?.ChildContainer.FadeIn();
+                    score?.AddScheduledUpdate(() => score.ChildContainer.FadeIn());
                 });
             }
 

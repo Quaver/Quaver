@@ -183,34 +183,38 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public void UpdateContent(DrawableLeaderboardScore score)
         {
             Score = score;
-            Tint = BackgroundColor;
 
-            // Empty scores don't need to update its state
-            if (Score.Item.IsEmptyScore)
-                return;
+            AddScheduledUpdate(() =>
+            {
+                Tint = BackgroundColor;
 
-            Tint = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
+                // Empty scores don't need to update its state
+                if (Score.Item.IsEmptyScore)
+                    return;
 
-            // Ranks don't show on PB scores.
-            if (!Score.IsPersonalBest)
-                Rank.Text = $"{Score.Index + 1}.";
+                Tint = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
 
-            Username.Text = $"{score.Item.Name}";
-            Username.Tint = score.Item.Name == ConfigManager.Username.Value ? Colors.MainAccent : ColorHelper.HexToColor("#FBFFB6");
+                // Ranks don't show on PB scores.
+                if (!Score.IsPersonalBest)
+                    Rank.Text = $"{Score.Index + 1}.";
 
-            PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
-            AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
+                Username.Text = $"{score.Item.Name}";
+                Username.Tint = score.Item.Name == ConfigManager.Username.Value ? Colors.MainAccent : ColorHelper.HexToColor("#FBFFB6");
 
-            var grade = score.Item.Grade == API.Enums.Grade.F
-                ? API.Enums.Grade.F
-                : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
-            Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+                PerformanceRating.Text = StringHelper.RatingToString(score.Item.PerformanceRating);
+                AccuracyMaxCombo.Text = $"{score.Item.MaxCombo:N0}x | {StringHelper.AccuracyToString((float) score.Item.Accuracy)}";
 
-            UpdateTime();
-            UpdateModifiers();
-            UpdateAvatar();
-            UpdateCantBeatAlert();
-            UpdateFlag();
+                var grade = score.Item.Grade == API.Enums.Grade.F
+                    ? API.Enums.Grade.F
+                    : GradeHelper.GetGradeFromAccuracy((float) score.Item.Accuracy);
+                Grade.Image = SkinManager.Skin?.Grades[grade] ?? UserInterface.Logo;
+
+                UpdateTime();
+                UpdateModifiers();
+                UpdateAvatar();
+                UpdateCantBeatAlert();
+                UpdateFlag();
+            });
         }
 
         /// <inheritdoc />
@@ -425,8 +429,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             Clock = new Sprite
             {
-                Parent = Username,
-                Alignment = Alignment.MidLeft,
+                Parent = this,
+                Alignment = Alignment.TopLeft,
                 UsePreviousSpriteBatchOptions = true,
                 Image = UserInterface.Clock,
                 Size = new ScalableVector2(12, 12)
@@ -452,6 +456,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             var date = DateTime.Parse(Score.Item.DateTime);
             var timeDifference = DateTime.Now - date;
 
+            Clock.Y = Username.Y + Username.Height / 2f - Clock.Height / 2f;
+            Clock.X = Username.X + Username.Width + 8;
+
+            Time.Parent = Clock;
+            Time.Alignment = Alignment.MidLeft;
+            Time.X = Clock.Width + 2;
+
             // Years
             if ((int) timeDifference.TotalDays > 365)
                 Time.Text = $"{(int) (timeDifference.TotalDays / 365)}y";
@@ -473,14 +484,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             // Seconds
             else
                 Time.Text = $"{(int) timeDifference.TotalSeconds}s";
-
-            Clock.Parent = Username;
-            Clock.Alignment = Alignment.MidLeft;
-            Clock.X = Username.Width + 8;
-
-            Time.Parent = Clock;
-            Time.Alignment = Alignment.MidLeft;
-            Time.X = Clock.Width + 2;
 
             Time.Tint = timeDifference.TotalMilliseconds < 86400000 ? ColorHelper.HexToColor("#6EF7F7") : ColorHelper.HexToColor("#808080");
             Clock.Tint = Time.Tint;
