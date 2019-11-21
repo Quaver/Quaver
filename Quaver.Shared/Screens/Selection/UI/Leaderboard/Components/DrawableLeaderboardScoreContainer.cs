@@ -535,6 +535,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                         Alpha = 1
                     };
 
+                    if (modsList.Count > 5 && i != 0)
+                    {
+                        mod.X = Flag.X + width * 0.70f * i - 4;
+                    }
+
                     Modifiers.Add(mod);
                 }
                 catch (Exception e)
