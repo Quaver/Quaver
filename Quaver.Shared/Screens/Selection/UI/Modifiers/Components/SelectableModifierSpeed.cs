@@ -1,11 +1,16 @@
+using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Form;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 {
@@ -44,6 +49,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             "2.0x"
         };
 
+        /// <summary>
+        ///     The time that the user last clicked. Used to handle double-clicks
+        /// </summary>
+        private long TimeSinceLastClicked { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -69,6 +79,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             };
 
             ModManager.ModsChanged += OnModsChanged;
+            Clicked += OnClicked;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -119,6 +139,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
             }
 
             ModManager.AddMod(ModHelper.GetModsFromRate(float.Parse(val.Replace("x", ""))));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnClicked(object sender, EventArgs e)
+        {
+            var time = GameBase.Game.TimeRunning;
+
+            if (time - TimeSinceLastClicked <= 500)
+            {
+                ModManager.RemoveSpeedMods();
+
+                TimeSinceLastClicked = 0;
+                return;
+            }
+
+            TimeSinceLastClicked = time;
         }
 
         /// <summary>
