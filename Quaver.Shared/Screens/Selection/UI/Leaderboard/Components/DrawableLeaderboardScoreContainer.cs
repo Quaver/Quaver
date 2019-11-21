@@ -687,7 +687,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Flag.FadeTo(targetAlpha, easing, time);
                 Rank.FadeTo(targetAlpha, easing, time);
 
-                Modifiers.ForEach(x =>
+                Modifiers?.ForEach(x =>
                 {
                     x.Alpha = 0;
                     x.FadeTo(targetAlpha, easing, time);
