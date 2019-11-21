@@ -130,12 +130,12 @@ namespace Quaver.Shared.Online
         ///         - Only 1 player is allowed if not running a tournament client
         ///         - Otherwise multiple are allowed.
         /// </summary>
-        public static Dictionary<int, SpectatorClient> SpectatorClients { get; private set; }
+        public static Dictionary<int, SpectatorClient> SpectatorClients { get; private set; } = new Dictionary<int, SpectatorClient>();
 
         /// <summary>
         ///     Players who are currently spectating us
         /// </summary>
-        public static Dictionary<int, User> Spectators { get; private set; }
+        public static Dictionary<int, User> Spectators { get; private set; } = new Dictionary<int, User>();
 
         /// <summary>
         ///     If we're currently being spectated by another user
