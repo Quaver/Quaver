@@ -61,12 +61,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
 
                 foreach (var word in msg.Split(" "))
                 {
-                    var noColon = word.Replace(":", "");
-
-                    if (!EmojiHelper.Emojis.ContainsKey(noColon))
+                    if (!EmojiHelper.Emojis.ContainsKey(word))
                         continue;
 
-                    msg = msg.Replace(word, char.ConvertFromUtf32(EmojiHelper.Emojis[noColon]));
+                    msg = msg.Replace(word, char.ConvertFromUtf32(EmojiHelper.Emojis[word]));
                 }
 
                 var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, ActiveChannel.Value.Name,
