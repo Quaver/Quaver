@@ -39,8 +39,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             Size = new ScalableVector2(Eye.X + Eye.Width + 10 + SpectatorsText.Width, SpectatorsText.Height);
 
-            OnlineManager.Client.OnSpectatorJoined += OnSpectatorJoined;
-            OnlineManager.Client.OnSpectatorLeft += OnSpectatorLeft;
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnSpectatorJoined += OnSpectatorJoined;
+                OnlineManager.Client.OnSpectatorLeft += OnSpectatorLeft;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -52,8 +55,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
         public override void Destroy()
         {
-            OnlineManager.Client.OnSpectatorJoined -= OnSpectatorJoined;
-            OnlineManager.Client.OnSpectatorLeft -= OnSpectatorLeft;
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnSpectatorJoined -= OnSpectatorJoined;
+                OnlineManager.Client.OnSpectatorLeft -= OnSpectatorLeft;
+            }
+
             base.Destroy();
         }
 
