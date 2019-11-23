@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.Shared.Config;
@@ -27,6 +28,7 @@ namespace Quaver.Shared.Database.Scores
          ///     Event invoked when a map's local scores have been deleted
          /// </summary>
         public static event EventHandler<LocalScoresDeletedEventArgs> LocalMapScoresDeleted;
+
 
         /// <summary>
         ///     Asynchronously creates the scores database
@@ -80,16 +82,16 @@ namespace Quaver.Shared.Database.Scores
         {
             try
             {
-                if (score != null)
-                    DatabaseManager.Connection.Insert(score);
-
-                return DatabaseManager.Connection.Table<Score>().Count();
+                DatabaseManager.Connection.Insert(score);
+                return score.Id;
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
                 throw;
             }
+
+            return -1;
         }
 
         /// <summary>
