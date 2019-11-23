@@ -323,7 +323,7 @@ namespace Quaver.Shared.Database.Scores
         ///     Downloads a replay from online
         /// </summary>
         /// <returns></returns>
-        public Replay DownloadOnlineReplay()
+        public Replay DownloadOnlineReplay(bool delete = true)
         {
             if (!IsOnline || !OnlineManager.Connected)
                 return null;
@@ -345,7 +345,8 @@ namespace Quaver.Shared.Database.Scores
             }
             finally
             {
-                File.Delete(path);
+                if (delete)
+                    File.Delete(path);
             }
 
             return replay;
