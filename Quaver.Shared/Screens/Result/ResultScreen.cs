@@ -463,7 +463,8 @@ namespace Quaver.Shared.Screens.Result
 
             try
             {
-                Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
+                if (scoreId != -1)
+                    Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
             }
             catch (Exception e)
             {
