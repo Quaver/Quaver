@@ -34,6 +34,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         private const string WatchReplay = "Watch Replay";
 
+        private const string DownloadReplay = "Download Replay";
+
         private const string ExportReplay = "Export Replay";
 
         private const string PlayerProfile = "Player Profile";
@@ -86,6 +88,34 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
                         game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), new Replay(replayPath)));
                         break;
+                    case DownloadReplay:
+                        if (!Score.IsOnline)
+                            return;
+
+                        // Download Online Replay
+                        if (Score.IsOnline)
+                        {
+                            var dialog = new LoadingDialog("Downloading Replay",
+                                "Fetching online replay! Please wait...", () =>
+                                {
+                                    var replay = Score.DownloadOnlineReplay(false);
+
+                                    if (replay == null)
+                                    {
+                                        NotificationManager.Show(NotificationLevel.Error, "The replay you have tried to download failed. It may be unavailable.");
+                                        return;
+                                    }
+
+                                    var dir = $"{ConfigManager.DataDirectory}/Downloads";
+                                    var downloadPath = $"{dir}/{Score.Id}.qr";
+
+                                    Utils.NativeUtils.HighlightInFileManager(downloadPath);
+                                });
+
+                            DialogManager.Show(dialog);
+                            return;
+                        }
+                        break;
                     case ExportReplay:
                         var path = $"{ConfigManager.DataDirectory.Value}/r/{Score.Id}.qr";
 
@@ -123,6 +153,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             if (score.IsOnline)
             {
+                options.Add(DownloadReplay, ColorHelper.HexToColor("#0FBAE5"));
                 options.Add(PlayerProfile, ColorHelper.HexToColor("#27B06E"));
                 return options;
             }
