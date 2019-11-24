@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
         /// <inheritdoc />
         /// <summary>
-        /// </summary>
+        /// </summary>1
         public Container Container { get; set; }
 
         /// <summary>
@@ -341,14 +341,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             if (!PerspectiveEnabled)
                 return;
 
-            // Create Renderers and reference Viewport Size
-            var width = GameBase.Game.GraphicsDevice.Viewport.Width;
-            var height = GameBase.Game.GraphicsDevice.Viewport.Height;
+            // Create Renderers and reference Window Size
+            var width = (int)WindowManager.Width;
+            var height = (int)WindowManager.Height;
+            Console.WriteLine($"width: {width}, height: {height}");
 
-            PlayfieldRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, width, height, false,
+            PlayfieldRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferWidth, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferHeight, false,
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
 
-            EffectRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, width, height, false,
+            EffectRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferWidth, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferHeight, false,
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
 
             // Compute for tilt.
@@ -356,7 +357,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             tilt = ScrollDirections[0] == ScrollDirection.Down ? tilt : tilt * -1;
 
             // Compute for warp.
-            var warp = 1 / ((-tilt / (width * TILT_MAX)) * TILT_EXP + 1);
+            var warp = 1f;
+            //var warp = 1 / ((-tilt / (width * TILT_MAX)) * TILT_EXP + 1);
 
             // Create Playfield Plane Points
             var points = new List<Vector2>();
@@ -369,7 +371,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)j / PLANE_SUBDIVISIONS_COUNT_Y  ));
                     points.Add(new Vector2((float)i / PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
 
-                    // Tri 2
+                    // Tri 2p
                     points.Add(new Vector2((float)i/ PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
                     points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)j / PLANE_SUBDIVISIONS_COUNT_Y  ));
                     points.Add(new Vector2((float)(i + 1) / PLANE_SUBDIVISIONS_COUNT_X, (float)(j + 1) / PLANE_SUBDIVISIONS_COUNT_Y  ));
@@ -380,9 +382,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             PlayfieldVertices = new VertexPositionTexture[PLANE_SUBDIVISIONS_COUNT_X * PLANE_SUBDIVISIONS_COUNT_Y * 6];
             for (var i = 0; i < points.Count; i++)
             {
-                var y = (float)Math.Pow(points[i].Y, warp);
-                var stretch = tilt * (2f * (y - 0.5f));
-                PlayfieldVertices[i].Position = new Vector3(points[i].X * (width + stretch  * 2) - stretch, y * height, 0);
+                var posY = ScrollDirections[0] == ScrollDirection.Down ? (float)Math.Pow(points[i].Y, warp) : (float)Math.Pow(points[i].Y, warp);
+                var posX = tilt * (2f * (points[i].Y - 0.5f));
+                PlayfieldVertices[i].Position = new Vector3(points[i].X * (width + posX * 2) - posX, posY * height, 0);
                 PlayfieldVertices[i].TextureCoordinate = points[i];
             }
 
@@ -400,9 +402,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Create Playfield Sprite. Image from Effect Renderer will be displayed on this.
             PlayfieldSprite = new Sprite()
             {
-                WidthScale = 1,
-                HeightScale = 1,
                 Parent = Container,
+                Size = new ScalableVector2(width, height),
                 Image = EffectRenderer
             };
         }
@@ -445,7 +446,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             // Reinitialize Sprite Batch for Draw()
             GameBase.Game.GraphicsDevice.SetRenderTarget(null);
-            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            GameBase.DefaultSpriteBatchOptions.Begin();
+            //GameBase.Game.SpriteBatch.Begin();
+            //GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
         }
 
         /// <inheritdoc />
