@@ -99,10 +99,6 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void SetPlayfieldPositions()
         {
-            var mode = TournamentScreen.MainGameplayScreen.Map.Mode;
-            var keyCount = TournamentScreen.MainGameplayScreen.Map.GetKeyCount();
-            var skin = SkinManager.Skin.Keys[mode];
-
             var widthSum = TournamentScreen.GameplayScreens.Sum(x =>
             {
                 var playfield = (GameplayPlayfieldKeys) x.Ruleset.Playfield;
