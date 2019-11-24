@@ -156,9 +156,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         private const float TILT_MAX = 0.4f;
 
         /// <summary>
+        ///     Determines how much offset to apply to the edge of the screen and playfield when tilt is applied.
+        /// </summary>
+        private const float TILT_DISTANCE_OFFSET = 0.12f;
+
+        /// <summary>
         ///     Determines how much stretching will be applied to the Playfield Plane. This value is used to give it a more "3D" feel rather than a distorted one.
         /// </summary>
-        private const float TILT_EXP = 0.6f;
+        private const float TILT_GRAVITY_EXP = 1.3f;
 
         /// <summary>
         ///
@@ -344,7 +349,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Create Renderers and reference Window Size
             var width = (int)WindowManager.Width;
             var height = (int)WindowManager.Height;
-            Console.WriteLine($"width: {width}, height: {height}");
 
             PlayfieldRenderer = new RenderTarget2D(GameBase.Game.GraphicsDevice, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferWidth, GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferHeight, false,
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
@@ -353,12 +357,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
 
             // Compute for tilt.
-            tilt = width * TILT_MAX * (tilt / 100f);
+            var exp = 1 + TILT_GRAVITY_EXP * Math.Abs(tilt / 100f);
+            var startOffset = (float)Math.Pow(Math.Abs(tilt / 100f), 1 + TILT_GRAVITY_EXP) * TILT_DISTANCE_OFFSET;
+            tilt = width * TILT_MAX * tilt / 100f;
             tilt = ScrollDirections[0] == ScrollDirection.Down ? tilt : tilt * -1;
-
-            // Compute for warp.
-            var warp = 1f;
-            //var warp = 1 / ((-tilt / (width * TILT_MAX)) * TILT_EXP + 1);
 
             // Create Playfield Plane Points
             var points = new List<Vector2>();
@@ -382,10 +384,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             PlayfieldVertices = new VertexPositionTexture[PLANE_SUBDIVISIONS_COUNT_X * PLANE_SUBDIVISIONS_COUNT_Y * 6];
             for (var i = 0; i < points.Count; i++)
             {
-                var posY = ScrollDirections[0] == ScrollDirection.Down ? (float)Math.Pow(points[i].Y, warp) : (float)Math.Pow(points[i].Y, warp);
+                var posY = ScrollDirections[0] == ScrollDirection.Down ? points[i].Y * (1 - startOffset) + startOffset: points[i].Y * (1 - startOffset);
                 var posX = tilt * (2f * (points[i].Y - 0.5f));
                 PlayfieldVertices[i].Position = new Vector3(points[i].X * (width + posX * 2) - posX, posY * height, 0);
-                PlayfieldVertices[i].TextureCoordinate = points[i];
+                PlayfieldVertices[i].TextureCoordinate.X = points[i].X;
+                PlayfieldVertices[i].TextureCoordinate.Y = tilt > 0 ? 1 - (float)Math.Pow(1 - points[i].Y, exp) : (float)Math.Pow(points[i].Y, exp);
             }
 
             // Create Perspective Effect
@@ -447,8 +450,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Reinitialize Sprite Batch for Draw()
             GameBase.Game.GraphicsDevice.SetRenderTarget(null);
             GameBase.DefaultSpriteBatchOptions.Begin();
-            //GameBase.Game.SpriteBatch.Begin();
-            //GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
         }
 
         /// <inheritdoc />
