@@ -138,6 +138,9 @@ namespace Quaver.Shared.Database.Maps
                         case QuaverScreenType.Results:
                         case QuaverScreenType.Select:
                             break;
+                        // Replay imports are handled by the screen itself
+                        case QuaverScreenType.Theatre:
+                            return;
                         default:
                             NotificationManager.Show(NotificationLevel.Error, "Please exit this screen before loading a replay");
                             return;

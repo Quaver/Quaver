@@ -16,6 +16,8 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Tournament.Gameplay;
+using Wobble.Bindables;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
@@ -25,7 +27,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     The list of button containers for these keys.
         /// </summary>
-        internal List<InputBindingKeys> BindingStore { get; }
+        internal List<InputBindingKeys> BindingStore { get; private set; }
 
         /// <summary>
         ///     Reference to the ruleset
@@ -44,36 +46,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <param name="mode"></param>
         internal KeysInputManager(GameplayRulesetKeys ruleset, GameMode mode)
         {
-            switch (mode)
-            {
-                case GameMode.Keys4:
-                    // Initialize 4K Input button container.
-                    BindingStore = new List<InputBindingKeys>
-                    {
-                        new InputBindingKeys(ConfigManager.KeyMania4K1),
-                        new InputBindingKeys(ConfigManager.KeyMania4K2),
-                        new InputBindingKeys(ConfigManager.KeyMania4K3),
-                        new InputBindingKeys(ConfigManager.KeyMania4K4)
-                    };
-                    break;
-                case GameMode.Keys7:
-                    // Initialize 7K input button container.
-                    BindingStore = new List<InputBindingKeys>
-                    {
-                        new InputBindingKeys(ConfigManager.KeyMania7K1),
-                        new InputBindingKeys(ConfigManager.KeyMania7K2),
-                        new InputBindingKeys(ConfigManager.KeyMania7K3),
-                        new InputBindingKeys(ConfigManager.KeyMania7K4),
-                        new InputBindingKeys(ConfigManager.KeyMania7K5),
-                        new InputBindingKeys(ConfigManager.KeyMania7K6),
-                        new InputBindingKeys(ConfigManager.KeyMania7K7)
-                    };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-
             Ruleset = ruleset;
+
+            SetInputKeybinds(mode);
 
             // Init replay
             if (Ruleset.Screen != null && Ruleset.Screen.InReplayMode)
@@ -353,7 +328,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void ChangeScrollSpeed()
         {
             // Only allow scroll speed changes if the map hasn't started or if we're on a break
-            if (Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip)
+            if (Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip && !(Ruleset.Screen is TournamentGameplayScreen))
                 return;
 
             // Decrease
@@ -388,6 +363,89 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                         break;
                 }
                 ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
+            }
+        }
+
+        /// <summary>
+        ///     Sets input keybinds based on which player is playing
+        /// </summary>
+        /// <param name="mode"></param>
+        private void SetInputKeybinds(GameMode mode)
+        {
+            if (Ruleset.Screen.TournamentOptions == null || Ruleset.Screen.TournamentOptions?.Index == 0)
+                SetPlayer1Keybinds(mode);
+            else if (Ruleset.Screen.TournamentOptions != null)
+                SetPlayer2Keybinds(mode);
+        }
+
+        /// <summary>
+        ///     Sets the keybinds for player 1
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void SetPlayer1Keybinds(GameMode mode)
+        {
+            switch (mode)
+            {
+                case GameMode.Keys4:
+                    // Initialize 4K Input button container.
+                    BindingStore = new List<InputBindingKeys>
+                    {
+                        new InputBindingKeys(ConfigManager.KeyMania4K1),
+                        new InputBindingKeys(ConfigManager.KeyMania4K2),
+                        new InputBindingKeys(ConfigManager.KeyMania4K3),
+                        new InputBindingKeys(ConfigManager.KeyMania4K4)
+                    };
+                    break;
+                case GameMode.Keys7:
+                    // Initialize 7K input button container.
+                    BindingStore = new List<InputBindingKeys>
+                    {
+                        new InputBindingKeys(ConfigManager.KeyMania7K1),
+                        new InputBindingKeys(ConfigManager.KeyMania7K2),
+                        new InputBindingKeys(ConfigManager.KeyMania7K3),
+                        new InputBindingKeys(ConfigManager.KeyMania7K4),
+                        new InputBindingKeys(ConfigManager.KeyMania7K5),
+                        new InputBindingKeys(ConfigManager.KeyMania7K6),
+                        new InputBindingKeys(ConfigManager.KeyMania7K7)
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        /// <summary>
+        ///     Sets the keybinds for player 1
+        /// </summary>
+        /// <param name="mode"></param>
+        private void SetPlayer2Keybinds(GameMode mode)
+        {
+            switch (mode)
+            {
+                case GameMode.Keys4:
+                    BindingStore = new List<InputBindingKeys>()
+                    {
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K1),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K2),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K3),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P4K4),
+                    };
+                    break;
+                case GameMode.Keys7:
+                    BindingStore = new List<InputBindingKeys>()
+                    {
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K1),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K2),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K3),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K4),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K5),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K6),
+                        new InputBindingKeys(ConfigManager.KeyCoop2P7K7),
+                    };
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
     }

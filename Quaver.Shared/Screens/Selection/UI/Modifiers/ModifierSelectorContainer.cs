@@ -107,6 +107,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                             "Scores will not be submitted while using these", ColorHelper.HexToColor("#F2C94C"), new List<SelectableModifier>()
                         {
                             new SelectableModifierBool(width, new ModAutoplay()),
+                            new SelectableModifierBool(width, new ModCoop()),
                             new SelectableModifierBool(width, new ModNoFail()),
                             new SelectableModifierBool(width, new ModNoSliderVelocities()),
                             new SelectableModifierBool(width, new ModNoLongNotes()),

@@ -32,6 +32,8 @@ using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Quaver.Shared.Screens.Tournament;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -118,7 +120,6 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapDeleted += OnMapDeleted;
             MapManager.MapUpdated += OnMapUpdated;
             MapManager.SongRequestPlayed += OnSongRequestPlayed;
-
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
             View = new SelectionScreenView(this);
@@ -129,11 +130,13 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         public override void OnFirstUpdate()
         {
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
             FadeAudioTrackIn();
             base.OnFirstUpdate();
         }
 
         /// <inheritdoc />
+        /// <summary>
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
@@ -531,6 +534,12 @@ namespace Quaver.Shared.Screens.Selection
 
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();
+
+            if (ModManager.IsActivated(ModIdentifier.Coop))
+            {
+                Exit(() => new TournamentScreen(2));
+                return;
+            }
 
             Exit(() => new MapLoadingScreen(new List<Score>()));
         }

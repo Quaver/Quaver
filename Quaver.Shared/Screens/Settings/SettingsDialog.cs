@@ -408,6 +408,23 @@ namespace Quaver.Shared.Screens.Settings
                         ConfigManager.KeyMania7K6,
                         ConfigManager.KeyMania7K7
                     }),
+                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (4 Keys)", new List<Bindable<Keys>>
+                    {
+                        ConfigManager.KeyCoop2P4K1,
+                        ConfigManager.KeyCoop2P4K2,
+                        ConfigManager.KeyCoop2P4K3,
+                        ConfigManager.KeyCoop2P4K4,
+                    }),
+                    new SettingsKeybindMultiple(this, "Co-op 2 Player Layout (7 Keys)", new List<Bindable<Keys>>
+                    {
+                        ConfigManager.KeyCoop2P7K1,
+                        ConfigManager.KeyCoop2P7K2,
+                        ConfigManager.KeyCoop2P7K3,
+                        ConfigManager.KeyCoop2P7K4,
+                        ConfigManager.KeyCoop2P7K5,
+                        ConfigManager.KeyCoop2P7K6,
+                        ConfigManager.KeyCoop2P7K7,
+                    }),
                     new SettingsKeybind(this, "Pause", ConfigManager.KeyPause),
                     new SettingsKeybind(this, "Skip Intro", ConfigManager.KeySkipIntro),
                     new SettingsKeybind(this, "Restart Map", ConfigManager.KeyRestartMap),
