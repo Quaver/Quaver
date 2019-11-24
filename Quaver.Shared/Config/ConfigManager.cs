@@ -460,13 +460,31 @@ namespace Quaver.Shared.Config
         ///     Keybindings for 7K
         /// </summary>
         internal static Bindable<Keys> KeyMania7K1 { get; private set; }
-
         internal static Bindable<Keys> KeyMania7K2 { get; private set; }
         internal static Bindable<Keys> KeyMania7K3 { get; private set; }
         internal static Bindable<Keys> KeyMania7K4 { get; private set; }
         internal static Bindable<Keys> KeyMania7K5 { get; private set; }
         internal static Bindable<Keys> KeyMania7K6 { get; private set; }
         internal static Bindable<Keys> KeyMania7K7 { get; private set; }
+
+        /// <summary>
+        ///     Keybindings for 4K (co-op 2 player)
+        /// </summary>
+        internal static Bindable<Keys> KeyCoop2P4K1 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K2 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K3 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P4K4 { get; private set; }
+
+        /// <summary>
+        ///     Keybindings for 7K (co-op 2 player)
+        /// </summary>
+        internal static Bindable<Keys> KeyCoop2P7K1 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K2 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K3 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K4 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K5 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K6 { get; private set; }
+        internal static Bindable<Keys> KeyCoop2P7K7 { get; private set; }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -650,6 +668,18 @@ namespace Quaver.Shared.Config
             KeyMania7K5 = ReadValue(@"KeyMania7K5", Keys.J, data);
             KeyMania7K6 = ReadValue(@"KeyMania7K6", Keys.K, data);
             KeyMania7K7 = ReadValue(@"KeyMania7K7", Keys.L, data);
+            KeyCoop2P4K1 = ReadValue(@"KeyCoop2P4K1", Keys.Z, data);
+            KeyCoop2P4K2 = ReadValue(@"KeyCoop2P4K2", Keys.X, data);
+            KeyCoop2P4K3 = ReadValue(@"KeyCoop2P4K3", Keys.OemComma, data);
+            KeyCoop2P4K4 = ReadValue(@"KeyCoop2P4K4", Keys.OemPeriod, data);
+            KeyCoop2P7K1 = ReadValue(@"KeyCoop2P7K1", Keys.Z, data);
+            KeyCoop2P7K2 = ReadValue(@"KeyCoop2P7K2", Keys.X, data);
+            KeyCoop2P7K3 = ReadValue(@"KeyCoop2P7K3", Keys.C, data);
+            KeyCoop2P7K4 = ReadValue(@"KeyCoop2P7K4", Keys.V, data);
+            KeyCoop2P7K5 = ReadValue(@"KeyCoop2P7K5", Keys.M, data);
+            KeyCoop2P7K6 = ReadValue(@"KeyCoop2P7K6", Keys.OemComma, data);
+            KeyCoop2P7K7 = ReadValue(@"KeyCoop2P7K7", Keys.OemPeriod, data);
+
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
@@ -767,6 +797,17 @@ namespace Quaver.Shared.Config
                     KeyMania7K5.ValueChanged += AutoSaveConfiguration;
                     KeyMania7K6.ValueChanged += AutoSaveConfiguration;
                     KeyMania7K7.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K1.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K2.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K3.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P4K4.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K1.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K2.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K3.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K4.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K5.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K6.ValueChanged += AutoSaveConfiguration;
+                    KeyCoop2P7K7.ValueChanged += AutoSaveConfiguration;
                     KeySkipIntro.ValueChanged += AutoSaveConfiguration;
                     KeyPause.ValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.ValueChanged += AutoSaveConfiguration;
