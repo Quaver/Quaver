@@ -27,6 +27,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
                     }),
                 new IconTextButtonDownloadMaps(),
                 new IconTextButtonMusicPlayer(),
+                new IconTextButtonTheater(),
                 new IconTextButtonLeaderboards(),
             },
             new List<Drawable>
