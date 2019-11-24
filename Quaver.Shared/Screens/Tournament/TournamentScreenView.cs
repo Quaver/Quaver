@@ -78,7 +78,6 @@ namespace Quaver.Shared.Screens.Tournament
             DrawPlayfields(gameTime);
             DrawProgressBar(gameTime);
             DrawSkipDisplay(gameTime);
-            DrawScreenTransitioner(gameTime);
         }
 
         /// <inheritdoc />
