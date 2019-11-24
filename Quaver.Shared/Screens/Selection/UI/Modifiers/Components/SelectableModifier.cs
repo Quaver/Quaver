@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public SelectableModifier(int width, IGameplayModifier mod)
         {
             Mod = mod;
-            Size = new ScalableVector2(width, 59);
+            Size = new ScalableVector2(width, 53);
 
             const int paddingLeft = 10;
 
