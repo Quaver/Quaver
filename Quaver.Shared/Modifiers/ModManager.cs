@@ -115,6 +115,9 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Mirror:
                     gameplayModifier = new ModMirror();
                     break;
+                case ModIdentifier.Coop:
+                    gameplayModifier = new ModCoop();
+                    break;
                 default:
                     return;
             }
