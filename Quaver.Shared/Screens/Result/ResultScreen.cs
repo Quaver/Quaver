@@ -43,6 +43,7 @@ using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -362,6 +363,14 @@ namespace Quaver.Shared.Screens.Result
             // Don't submit scores at all if the user has ALL misses for their judgements.
             // They basically haven't actually played the map.
             if (Gameplay.Ruleset.ScoreProcessor.CurrentJudgements[Judgement.Miss] == Gameplay.Ruleset.ScoreProcessor.TotalJudgementCount)
+                return;
+
+            // Don't submit if we're coming from tournament mode
+            if (Gameplay is TournamentGameplayScreen)
+                return;
+
+            // Prevent co-op mode from submitting scores
+            if (ModManager.IsActivated(ModIdentifier.Coop))
                 return;
 
             ThreadScheduler.Run(SaveLocalScore);

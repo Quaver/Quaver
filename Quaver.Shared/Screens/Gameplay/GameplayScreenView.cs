@@ -72,37 +72,37 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     The progress bar that displays the current song time.
         /// </summary>
-        private SongTimeProgressBar ProgressBar { get; set; }
+        public SongTimeProgressBar ProgressBar { get; private set; }
 
         /// <summary>
         ///     The display for the user's score.
         /// </summary>
-        private NumberDisplay ScoreDisplay { get; set; }
+        public NumberDisplay ScoreDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's rating.
         /// </summary>
-        private NumberDisplay RatingDisplay { get; set; }
+        public NumberDisplay RatingDisplay { get; private set; }
 
         /// <summary>
         ///     The display for the user's accuracy
         /// </summary>
-        private NumberDisplay AccuracyDisplay { get; set; }
+        public NumberDisplay AccuracyDisplay { get; private set; }
 
         /// <summary>
         ///     The keys per second display.
         /// </summary>
-        public KeysPerSecond KpsDisplay { get; set; }
+        public KeysPerSecond KpsDisplay { get; private set; }
 
         /// <summary>
         ///     Displays the current judgement counts.
         /// </summary>
-        private JudgementCounter JudgementCounter { get; set; }
+        public JudgementCounter JudgementCounter { get; private set; }
 
         /// <summary>
         ///     Displays the user's current grade.
         /// </summary>
-        private GradeDisplay GradeDisplay { get; set; }
+        public GradeDisplay GradeDisplay { get; private set; }
 
         /// <summary>
         ///     The scoreboard on the left side of the screern
@@ -311,10 +311,7 @@ namespace Quaver.Shared.Screens.Gameplay
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
 
-            // Update the position and size of the grade display.
-            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
-            GradeDisplay.Height = AccuracyDisplay.Height;
-            GradeDisplay.UpdateWidth();
+            UpdateGradeDisplay();
 
             if (SpectatorDialog != null)
             {
@@ -378,7 +375,8 @@ namespace Quaver.Shared.Screens.Gameplay
                 skin.SongTimeProgressInactiveColor, skin.SongTimeProgressActiveColor)
             {
                 Parent = Container,
-                Alignment = Alignment.BotLeft
+                Alignment = Alignment.BotLeft,
+                DestroyIfParentIsNull = false
             };
         }
 
@@ -768,6 +766,16 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Change background dim before switching screens.
                 BackgroundManager.Background.Dim = 0;
             }
+        }
+
+        /// <summary>
+        /// Update the position and size of the grade display.
+        /// </summary>
+        public void UpdateGradeDisplay()
+        {
+            GradeDisplay.X = AccuracyDisplay.X - AccuracyDisplay.Width - 8;
+            GradeDisplay.Height = AccuracyDisplay.Height;
+            GradeDisplay.UpdateWidth();
         }
 
         /// <summary>

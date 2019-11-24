@@ -43,6 +43,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using TagLib.Riff;
 using Wobble;
@@ -165,6 +166,7 @@ namespace Quaver.Shared.Screens.Gameplay
                               && !IsPlayTesting
                               && (!ModManager.IsActivated(ModIdentifier.NoFail)
                               && Ruleset.ScoreProcessor.Health <= 0)
+                              && !(this is TournamentGameplayScreen)
                               || ForceFail;
 
         /// <summary>
@@ -286,6 +288,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public SpectatorClient SpectatorClient { get; }
 
         /// <summary>
+        ///     If a tournament screen, these are the options for that specific player
+        /// </summary>
+        public TournamentPlayerOptions TournamentOptions { get; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -297,7 +304,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isCalibratingOffset"></param>
         /// <param name="spectatorClient"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
-            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null)
+            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             UpdateMapInDatabase();
@@ -322,6 +329,10 @@ namespace Quaver.Shared.Screens.Gameplay
             IsCalibratingOffset = isCalibratingOffset;
             IsMultiplayerGame = OnlineManager.CurrentGame != null;
             SpectatorClient = spectatorClient;
+            TournamentOptions = options;
+
+            if (TournamentOptions != null && !(this is TournamentGameplayScreen))
+                throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
 
             if (SpectatorClient != null)
                 LoadedReplay = SpectatorClient.Replay;
@@ -450,7 +461,7 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Handles the input of the game + individual game modes.
         /// </summary>
         /// <param name="gameTime"></param>
-        private void HandleInput(GameTime gameTime)
+        protected virtual void HandleInput(GameTime gameTime)
         {
             if (Exiting)
                 return;
@@ -662,7 +673,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Pauses the game.
         /// </summary>
-        internal void Pause(GameTime gameTime = null)
+        public void Pause(GameTime gameTime = null, bool removeMods = true)
         {
             // Don't allow pausing if the play is already finished.
             if (IsPlayComplete)
@@ -700,10 +711,12 @@ namespace Quaver.Shared.Screens.Gameplay
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
-                if (InReplayMode)
+                if (InReplayMode || this is TournamentGameplayScreen)
                 {
                     CustomAudioSampleCache.StopAll();
-                    ModManager.RemoveAllMods();
+
+                    if (removeMods)
+                        ModManager.RemoveAllMods();
 
                     if (SpectatorClient != null)
                         OnlineManager.Client?.StopSpectating();
@@ -961,7 +974,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Skips the song to the next object if on a break.
         /// </summary>
-        private void SkipToNextObject(bool force = false)
+        public void SkipToNextObject(bool force = false)
         {
             if (!EligibleToSkip || IsPaused || IsResumeInProgress)
                 return;
