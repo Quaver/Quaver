@@ -131,7 +131,9 @@ namespace Quaver.Shared.Screens.Tournament
 
                 view.ScoreDisplay.Visible = false;
                 view.KpsDisplay.Visible = false;
-                view.JudgementCounter.Visible = false;
+
+                if (view.JudgementCounter != null)
+                    view.JudgementCounter.Visible = false;
 
                 view.RatingDisplay.Parent = screen.Ruleset.Playfield.Container;
                 view.RatingDisplay.Alignment = Alignment.TopCenter;
@@ -181,6 +183,7 @@ namespace Quaver.Shared.Screens.Tournament
                 var view = (GameplayScreenView) screen.View;
 
                view.UpdateGradeDisplay();
+               view.GradeDisplay.X = -view.AccuracyDisplay.Width / 2f - view.GradeDisplay.Width - 4;
                screen.Ruleset?.Playfield.Update(gameTime);
             }
         }
@@ -241,7 +244,7 @@ namespace Quaver.Shared.Screens.Tournament
                 return;
 
             var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
-            view.ProgressBar.Update(gameTime);
+            view.ProgressBar?.Update(gameTime);
         }
 
         /// <summary>
@@ -253,7 +256,7 @@ namespace Quaver.Shared.Screens.Tournament
                 return;
 
             var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
-            view.ProgressBar.Draw(gameTime);
+            view.ProgressBar?.Draw(gameTime);
         }
     }
 }
