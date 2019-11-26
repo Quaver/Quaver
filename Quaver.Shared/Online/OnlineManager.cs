@@ -677,6 +677,7 @@ namespace Quaver.Shared.Online
 
             Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} | {e.Game.HasPassword} | {e.Game.Password}\n", LogType.Network);
 
+            // REMOVE !!!
             var screen = (LobbyScreen) game.CurrentScreen;
 
             screen.AddOrUpdateGame(e.Game);
@@ -751,7 +752,10 @@ namespace Quaver.Shared.Online
 
             var game = MultiplayerGames[e.GameId];
 
-            // Handle disbanding logic UI wise.
+            Logger.Important($"Game: {game.Name} <{game.Id}> has been disbanded", LogType.Network);
+            MultiplayerGames.Remove(e.GameId);
+
+            // Handle disbanding logic UI wise. -- REMOVE
             var quaver = (QuaverGame) GameBase.Game;
 
             if (quaver.CurrentScreen.Type != QuaverScreenType.Lobby)
@@ -759,9 +763,6 @@ namespace Quaver.Shared.Online
 
             var screen = (LobbyScreen) quaver.CurrentScreen;
             screen.DeleteGame(game);
-
-            Logger.Important($"Game: {game.Name} <{game.Id}> has been disbanded", LogType.Network);
-            MultiplayerGames.Remove(e.GameId);
         }
 
         /// <summary>
