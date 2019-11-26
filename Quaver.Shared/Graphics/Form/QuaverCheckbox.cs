@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
@@ -23,6 +24,18 @@ namespace Quaver.Shared.Graphics.Form
         public QuaverCheckbox(Bindable<bool> bindedValue) : base(bindedValue, new Vector2(78, 23), ActiveTexture,
             InactiveTexutre, false)
         {
+        }
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float) Math.Min(dt / 60, 1));
+
+            base.Update(gameTime);
         }
     }
 }

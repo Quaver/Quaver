@@ -40,6 +40,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
@@ -199,6 +200,7 @@ namespace Quaver.Shared
             {"OnlineHubDownloads", typeof(TestOnlineHubDownloadsScreen)},
             {"Notifications", typeof(TestNotificationScreen)},
             {"ChatOverlay", typeof(TestChatScreen)},
+            {"MultiplayerLobbyScreen", typeof(MultiplayerLobbyScreen)},
             {"CheckboxContainer", typeof(TestCheckboxContainerScreen)},
         };
 

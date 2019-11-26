@@ -20,6 +20,7 @@ using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Wobble;
 using Wobble.Bindables;
@@ -419,6 +420,22 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplaySongRequestNotifications { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyRuleset> MultiplayerLobbyRulesetType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyGameMode> MultiplayerLobbyGameModeType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyMapStatus> MultiplayerLobbyMapStatusType { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<MultiplayerLobbyRoomVisibility> MultiplayerLobbyVisibilityType { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -732,6 +749,10 @@ namespace Quaver.Shared.Config
             OnlineUserListFilterType = ReadValue(@"OnlineUserListFilterType", OnlineUserListFilter.All, data);
             DisplayFriendOnlineNotifications = ReadValue(@"DisplayFriendOnlineNotifications", true, data);
             DisplaySongRequestNotifications = ReadValue(@"DisplaySongRequestNotifications", true, data);
+            MultiplayerLobbyRulesetType = ReadValue(@"MultiplayerLobbyRulesetType", MultiplayerLobbyRuleset.All, data);
+            MultiplayerLobbyGameModeType = ReadValue(@"MultiplayerLobbyGameModeType", MultiplayerLobbyGameMode.All, data);
+            MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
+            MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -858,6 +879,10 @@ namespace Quaver.Shared.Config
                     MusicPlayerOrderMapsBy.ValueChanged += AutoSaveConfiguration;
                     OnlineUserListFilterType.ValueChanged += AutoSaveConfiguration;
                     DisplaySongRequestNotifications.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyRulesetType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyGameModeType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyMapStatusType.ValueChanged += AutoSaveConfiguration;
+                    MultiplayerLobbyVisibilityType.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
