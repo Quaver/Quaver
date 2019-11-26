@@ -1,5 +1,7 @@
 using System;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Form;
