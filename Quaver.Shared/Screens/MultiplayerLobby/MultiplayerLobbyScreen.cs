@@ -15,7 +15,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         public MultiplayerLobbyScreen()
         {
+            OnlineManager.Client?.JoinLobby();
             ScreenExiting += (sender, args) => OnlineManager.Client?.LeaveLobby();
+
             View = new MultiplayerLobbyScreenView(this);
         }
 
