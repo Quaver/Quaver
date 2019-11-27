@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
         /// <summary>
         /// </summary>
-        private MultiplayerLobbyMatchesFound MatchesFound { get; set; }
+        private MultiplayerLobbyGamesFound GamesFound { get; set; }
 
         /// <summary>
         /// </summary>
@@ -143,16 +143,24 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new MultiplayerLobbySearchBox(SearchQuery) {Parent = this};
-            RightItems.Add(SearchBox);
+            SearchBox = new MultiplayerLobbySearchBox(SearchQuery)
+            {
+                Parent = this,
+                Alignment  = Alignment.MidLeft,
+                X = 25
+            };
         }
 
         /// <summary>
         /// </summary>
         private void CreateMatchesFound()
         {
-            MatchesFound = new MultiplayerLobbyMatchesFound {Parent = this};
-            RightItems.Add(MatchesFound);
+            GamesFound = new MultiplayerLobbyGamesFound
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+                X = SearchBox.X + SearchBox.Width + 25
+            };
         }
 
         /// <summary>

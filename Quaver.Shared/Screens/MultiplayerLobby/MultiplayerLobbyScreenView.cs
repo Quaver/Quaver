@@ -1,18 +1,30 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
+using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
+using DrawableMapset = Quaver.Shared.Screens.Selection.UI.Mapsets.DrawableMapset;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby
 {
     public class MultiplayerLobbyScreenView : ScreenView
     {
+        /// <summary>
+        /// </summary>
+        private MultiplayerLobbyScreen Lobby => (MultiplayerLobbyScreen) Screen;
+
         /// <summary>
         /// </summary>
         private BackgroundImage Background { get; set; }
@@ -31,6 +43,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
         /// <summary>
         /// </summary>
+        private MultiplayerGameScrollContainer ScrollContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private int ScreenPaddingX = 50;
+
+        /// <summary>
+        /// </summary>
         /// <param name="screen"></param>
         public MultiplayerLobbyScreenView(Screen screen) : base(screen)
         {
@@ -38,6 +58,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             CreateHeader();
             CreateFooter();
             CreateFilterPanel();
+            CreateScrollContainer();
+
+            Header.Parent = Container;
+            Footer.Parent = Container;
+            FilterPanel.Parent = Container;
         }
 
         /// <inheritdoc />
@@ -85,5 +110,20 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             Parent = Container,
             Y = Header.Height
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateScrollContainer()
+        {
+            ScrollContainer = new MultiplayerGameScrollContainer(Lobby.SelectedGame, Lobby.VisibleGames)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = FilterPanel.Y + FilterPanel.Height + 4
+            };
+
+            ScrollContainer.X = ScrollContainer.Width + ScreenPaddingX;
+            ScrollContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 450);
+        }
     }
 }

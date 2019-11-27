@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     {
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyModeDropdown() : base("GAME MODE: ", 22, new Dropdown(GetDropdownItems(),
+        public MultiplayerLobbyModeDropdown() : base("MODE: ", 22, new Dropdown(GetDropdownItems(),
             new ScalableVector2(120, 38), 22, ColorHelper.HexToColor($"#55ec49"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += OnItemSelected;

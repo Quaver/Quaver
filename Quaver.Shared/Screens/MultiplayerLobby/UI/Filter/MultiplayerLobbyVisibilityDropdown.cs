@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             "Full",
             "Password"
         };
-        
+
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>

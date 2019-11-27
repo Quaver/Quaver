@@ -157,5 +157,11 @@ namespace Quaver.Shared.Assets
         public static Texture2D TopicHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/topic-header.png");
         public static Texture2D CloseChannelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/close-channel.png");
         public static Texture2D RoundedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/rounded-panel.png");
+        public static Texture2D Mode4KSmall => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/mode-4k-small.png");
+        public static Texture2D Mode7KSmall => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/mode-7k-small.png");
+        public static Texture2D Mode4K7KSmall => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/mode-4k-7k-small.png");
+        public static Texture2D RulesetFFA => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/ruleset-ffa.png");
+        public static Texture2D RulesetBR => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/ruleset-br.png");
+        public static Texture2D RulesetTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/ruleset-team.png");
     }
 }
