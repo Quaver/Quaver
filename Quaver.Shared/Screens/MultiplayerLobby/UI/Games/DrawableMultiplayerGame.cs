@@ -231,7 +231,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 Size = new ScalableVector2(421, 82),
                 Image = UserInterface.DefaultBanner,
                 Alpha = 0.85f,
-                X = 2,
+                X = -2,
                 UsePreviousSpriteBatchOptions = true
             };
         }
