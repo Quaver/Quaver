@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateTextMatchesFound()
         {
-            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Matches Found", 22)
+            TextMatchesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0 GAMES FOUND", 22)
             {
                 Parent = this,
                 X = TextCount.Width + TextSpacing
@@ -58,24 +58,25 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <summary>
         ///     Updates the text with the proper state and updates the container size
         /// </summary>
-        private void UpdateText()
+        public void ScheduleUpdateText() => ScheduleUpdate(UpdateText);
+
+        /// <summary>
+        /// </summary>
+        public void UpdateText()
         {
-            ScheduleUpdate(() =>
-            {
-                var count = 0;
+            var count = 0;
 
-                TextCount.Text = $"{count:n0}";
+            TextCount.Text = $"{count:n0}";
 
-                if (count == 0 || count > 1)
-                    TextMatchesFound.Text = "MATCHES FOUND";
-                else
-                    TextMatchesFound.Text = "MATCH FOUND";
+            if (count == 0 || count > 1)
+                TextMatchesFound.Text = "GAMES FOUND";
+            else
+                TextMatchesFound.Text = "GAME FOUND";
 
-                TextMatchesFound.X = TextCount.Width + TextSpacing;
+            TextMatchesFound.X = TextCount.Width + TextSpacing;
 
-                Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMatchesFound.Width),
-                    (int) TextMatchesFound.Height);
-            });
+            Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMatchesFound.Width),
+                (int) TextMatchesFound.Height);
         }
     }
 }
