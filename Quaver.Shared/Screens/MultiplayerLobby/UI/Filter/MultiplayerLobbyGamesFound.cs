@@ -6,7 +6,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 {
-    public class MultiplayerLobbyMatchesFound : Container
+    public class MultiplayerLobbyGamesFound : Container
     {
         /// <summary>
         ///    The amount of matches
@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyMatchesFound()
+        public MultiplayerLobbyGamesFound()
         {
             CreateTextCount();
             CreateTextMatchesFound();
