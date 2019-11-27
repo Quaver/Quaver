@@ -25,12 +25,13 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var game = (QuaverGame) GameBase.Game;
+            if (GameBase.Game is QuaverGame game)
+            {
+                var img = game.OnlineHub.Sections.Any(x => x.Value.IsUnread) ? UserInterface.HubNotificationIconUnread : UserInterface.HubNotificationIcon;
 
-            var img = game.OnlineHub.Sections.Any(x => x.Value.IsUnread) ? UserInterface.HubNotificationIconUnread : UserInterface.HubNotificationIcon;
-
-            if (Image != img)
-                Image = img;
+                if (Image != img)
+                    Image = img;
+            }
 
             base.Update(gameTime);
         }
