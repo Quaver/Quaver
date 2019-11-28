@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
         /// <summary>
         /// </summary>
-        private bool IsSelected => SelectedGame.Value == Item;
+        private bool IsSelected => SelectedGame.Value?.Id == Item?.Id;
 
         /// <summary>
         /// </summary>
@@ -197,8 +197,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             Panel = new Sprite
             {
                 Parent = this,
-                Alignment = Alignment.MidRight,
-                Size = new ScalableVector2(Width, 86),
+                Alignment = Alignment.MidLeft,
+                Size = new ScalableVector2(Width - 50, 86),
                 Image = UserInterface.DeselectedMapset,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -227,11 +227,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             Banner = new Sprite
             {
                 Parent = Panel,
-                Alignment = Alignment.MidRight,
+                Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(421, 82),
                 Image = UserInterface.DefaultBanner,
                 Alpha = 0.85f,
-                X = -2,
+                X = 2,
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -243,7 +243,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 24)
             {
                 Parent = Panel,
-                X = 18,
+                X = Banner.X + Banner.Width + 18,
                 Y = 16,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -300,7 +300,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             {
                 Parent = Panel,
                 Alignment = Alignment.BotRight,
-                Position = new ScalableVector2(Banner.X - Banner.Width - 18, DifficultyRating.Y),
+                Position = new ScalableVector2(-18, DifficultyRating.Y),
                 Size = new ScalableVector2(22, 22),
                 Image = FontAwesome.Get(FontAwesomeIcon.fa_padlock),
                 UsePreviousSpriteBatchOptions = true

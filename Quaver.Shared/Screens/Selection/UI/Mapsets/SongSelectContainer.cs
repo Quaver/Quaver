@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        private Sprite ScrollbarBackground { get; set; }
+        protected Sprite ScrollbarBackground { get; set; }
 
         /// <summary>
         ///     Event invoked when the mapset container has had its maps initialized
