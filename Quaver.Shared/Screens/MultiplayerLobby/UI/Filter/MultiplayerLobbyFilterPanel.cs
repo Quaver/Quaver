@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Quaver.API.Enums;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Scheduling;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
@@ -12,9 +19,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
     public class MultiplayerLobbyFilterPanel : Sprite
     {
         /// <summary>
+        /// </summary>
+        private Bindable<List<MultiplayerGame>> VisibleGames { get; }
+
+        /// <summary>
         ///     Query used for the search box
         /// </summary>
-        private Bindable<string> SearchQuery { get; } = new Bindable<string>("") { Value = ""};
+        public Bindable<string> SearchQuery { get; } = new Bindable<string>("") { Value = ""};
 
         /// <summary>
         /// </summary>
@@ -51,11 +62,17 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyFilterPanel()
+        public TaskHandler<int, int> FilterTask { get; }
+
+        /// <summary>
+        /// </summary>
+        public MultiplayerLobbyFilterPanel(Bindable<List<MultiplayerGame>> visibleGames)
         {
+            VisibleGames = visibleGames;
             Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
 
+            FilterTask = new TaskHandler<int, int>(StartFilterTask);
             CreateBanner();
             CreateRulesetDropdown();
             CreateModeDropdown();
@@ -75,6 +92,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             SearchQuery.ValueChanged += OnSearchQueryChanged;
 
             AlignRightItems();
+            FilterGames();
         }
 
         /// <inheritdoc />
@@ -155,7 +173,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         private void CreateMatchesFound()
         {
-            GamesFound = new MultiplayerLobbyGamesFound
+            GamesFound = new MultiplayerLobbyGamesFound(VisibleGames)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -188,47 +206,183 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
         /// <summary>
         /// </summary>
+        public void StartFilterTask() => FilterTask.Run(0);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int StartFilterTask(int arg1, CancellationToken token)
+        {
+            FilterGames();
+            return 0;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void FilterGames()
+        {
+            lock (VisibleGames.Value)
+            {
+                var games = MultiplayerGameScrollContainer.GetTestGames();
+
+                games = games.FindAll(x => GameMeetsFilterRequirements(x, SearchQuery.Value));
+
+                VisibleGames.Value = games;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static bool GameMeetsFilterRequirements(MultiplayerGame game, string query)
+        {
+            return GameMeetsSearchRequirement(game, query) && GameMeetsRulesetFilter(game)
+                 && GameMeetsModeFilter(game) && GameMeetsMapStatusFilter(game)
+                 && GameMeetsRoomVisibilityRequirement(game);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        private static bool GameMeetsSearchRequirement(MultiplayerGame game, string query)
+        {
+            return string.IsNullOrEmpty(query) || game.Name.ToLower().Contains(query.ToLower())
+                                               || game.Map.ToLower().Contains(query.ToLower());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        private static bool GameMeetsRulesetFilter(MultiplayerGame game)
+        {
+            if (ConfigManager.MultiplayerLobbyRulesetType == null)
+                return true;
+
+            switch (ConfigManager.MultiplayerLobbyRulesetType.Value)
+            {
+                case MultiplayerLobbyRuleset.All:
+                    return true;
+                case MultiplayerLobbyRuleset.FreeForAll:
+                    return game.Ruleset == MultiplayerGameRuleset.Free_For_All;
+                case MultiplayerLobbyRuleset.Team:
+                    return game.Ruleset == MultiplayerGameRuleset.Team;
+                case MultiplayerLobbyRuleset.BattleRoyale:
+                    return game.Ruleset == MultiplayerGameRuleset.Battle_Royale;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        private static bool GameMeetsModeFilter(MultiplayerGame game)
+        {
+            if (ConfigManager.MultiplayerLobbyGameModeType == null)
+                return true;
+
+            switch (ConfigManager.MultiplayerLobbyGameModeType.Value)
+            {
+                case MultiplayerLobbyGameMode.All:
+                    return true;
+                case MultiplayerLobbyGameMode.Keys4:
+                    return (GameMode) game.GameMode == GameMode.Keys4;
+                case MultiplayerLobbyGameMode.Keys7:
+                    return (GameMode) game.GameMode == GameMode.Keys7;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        private static bool GameMeetsMapStatusFilter(MultiplayerGame game)
+        {
+            if (ConfigManager.MultiplayerLobbyMapStatusType == null)
+                return true;
+
+            switch (ConfigManager.MultiplayerLobbyMapStatusType.Value)
+            {
+                case MultiplayerLobbyMapStatus.All:
+                    return true;
+                case MultiplayerLobbyMapStatus.Imported:
+                    return MapManager.FindMapFromOnlineId(game.MapId) != null;
+                case MultiplayerLobbyMapStatus.Uploaded:
+                    return game.MapId != -1;
+                case MultiplayerLobbyMapStatus.Unsubmitted:
+                    return game.MapId == -1;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        private static bool GameMeetsRoomVisibilityRequirement(MultiplayerGame game)
+        {
+            if (ConfigManager.MultiplayerLobbyVisibilityType == null)
+                return true;
+
+            switch (ConfigManager.MultiplayerLobbyVisibilityType.Value)
+            {
+                case MultiplayerLobbyRoomVisibility.All:
+                    return true;
+                case MultiplayerLobbyRoomVisibility.Open:
+                    return !game.HasPassword;
+                case MultiplayerLobbyRoomVisibility.Full:
+                    return game.PlayerIds.Count >= game.MaxPlayers;
+                case MultiplayerLobbyRoomVisibility.Password:
+                    return game.HasPassword;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnRulesetChanged(object sender, BindableValueChangedEventArgs<MultiplayerLobbyRuleset> e)
-        {
-            Console.WriteLine($"Ruleset changed to: {e.Value}");
-        }
+            => StartFilterTask();
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnGameModeChanged(object sender, BindableValueChangedEventArgs<MultiplayerLobbyGameMode> e)
-        {
-            Console.WriteLine($"Game Mode Changed to: {e.Value}");
-        }
+            => StartFilterTask();
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMapStatusChanged(object sender, BindableValueChangedEventArgs<MultiplayerLobbyMapStatus> e)
-        {
-            Console.WriteLine($"Map status changed to: {e.Value}");
-        }
+            => StartFilterTask();
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnRoomVisibilityChanged(object sender, BindableValueChangedEventArgs<MultiplayerLobbyRoomVisibility> e)
-        {
-            Console.WriteLine($"Room Visibility changed to: {e.Value}");
-        }
+            => StartFilterTask();
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e)
-        {
-            Console.WriteLine($"Search query changed to: {e.Value}");
-        }
+            => StartFilterTask();
     }
 }

@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
@@ -8,6 +11,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 {
     public class MultiplayerLobbyGamesFound : Container
     {
+        /// <summary>
+        /// </summary>
+        private Bindable<List<MultiplayerGame>> VisibleGames { get; }
+
         /// <summary>
         ///    The amount of matches
         /// </summary>
@@ -25,12 +32,26 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
         /// <summary>
         /// </summary>
-        public MultiplayerLobbyGamesFound()
+        public MultiplayerLobbyGamesFound(Bindable<List<MultiplayerGame>> visibleGames)
         {
+            VisibleGames = visibleGames;
+
             CreateTextCount();
             CreateTextMatchesFound();
 
             UpdateText();
+            VisibleGames.ValueChanged += OnVisibleGamesChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            VisibleGames.ValueChanged -= OnVisibleGamesChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -64,7 +85,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// </summary>
         public void UpdateText()
         {
-            var count = 0;
+            var count = VisibleGames.Value.Count;
 
             TextCount.Text = $"{count:n0}";
 
@@ -78,5 +99,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             Size = new ScalableVector2((int) (TextCount.Width + TextSpacing + TextMatchesFound.Width),
                 (int) TextMatchesFound.Height);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnVisibleGamesChanged(object sender, BindableValueChangedEventArgs<List<MultiplayerGame>> e)
+            => ScheduleUpdateText();
     }
 }

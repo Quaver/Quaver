@@ -14,6 +14,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
+using Wobble.Scheduling;
 using Wobble.Screens;
 using DrawableMapset = Quaver.Shared.Screens.Selection.UI.Mapsets.DrawableMapset;
 
@@ -63,6 +64,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             Header.Parent = Container;
             Footer.Parent = Container;
             FilterPanel.Parent = Container;
+
+            FilterPanel.FilterTask.OnCompleted += OnGamesFiltered;
+            FilterPanel.StartFilterTask();
         }
 
         /// <inheritdoc />
@@ -105,7 +109,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
         /// <summary>
         /// </summary>
-        private void CreateFilterPanel() => FilterPanel = new MultiplayerLobbyFilterPanel
+        private void CreateFilterPanel() => FilterPanel = new MultiplayerLobbyFilterPanel(Lobby.VisibleGames)
         {
             Parent = Container,
             Y = Header.Height
@@ -115,15 +119,24 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         private void CreateScrollContainer()
         {
-            ScrollContainer = new MultiplayerGameScrollContainer(Lobby.SelectedGame, Lobby.VisibleGames)
+            ScrollContainer = new MultiplayerGameScrollContainer(Lobby.SelectedGame, Lobby.VisibleGames, FilterPanel.SearchQuery)
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopLeft,
                 Y = FilterPanel.Y + FilterPanel.Height + 4
             };
 
-            ScrollContainer.X = ScrollContainer.Width + ScreenPaddingX;
-            ScrollContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 450);
+            ScrollContainer.X = -ScrollContainer.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGamesFiltered(object sender, TaskCompleteEventArgs<int, int> e)
+        {
+            ScrollContainer.ClearAnimations();
+            ScrollContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 450);
         }
     }
 }
