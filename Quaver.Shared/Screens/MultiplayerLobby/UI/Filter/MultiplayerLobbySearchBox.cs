@@ -6,6 +6,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Managers;
 
@@ -46,6 +47,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         public override void Update(GameTime gameTime)
         {
             HandleSearchIconAnimations(gameTime);
+            AlwaysFocused = DialogManager.Dialogs.Count == 0;
+
             base.Update(gameTime);
         }
 
