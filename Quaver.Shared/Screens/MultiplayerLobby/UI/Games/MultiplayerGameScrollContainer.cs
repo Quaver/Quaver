@@ -178,14 +178,20 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 var game = new MultiplayerGame()
                 {
                     Id = $"{i}",
-                    Name = $"Example Game #{i}",
+                    Name = $"Game #{i + 1}",
                     Map = $"Example Artist - Title [Map]",
                     PlayerIds = new List<int>() {1, 2, 3, 4, 5},
                     MaxPlayers = 16,
+                    HasPassword = i % 2 == 0,
+                    DifficultyRating = i * 2f,
+                    AllowedGameModes = new List<byte>() {1, 2},
+                    MaximumSongLength = 300,
+                    MaximumDifficultyRating = 23,
+                    FreeModType = i % 2 == 0 ? MultiplayerFreeModType.None : MultiplayerFreeModType.Regular | MultiplayerFreeModType.Rate
                 };
 
                 game.GameMode = i % 2 == 0 ? (byte) 1 : (byte) 2;
-                game.Ruleset = MultiplayerGameRuleset.Team;
+                game.Ruleset = i % 2 == 0 ? MultiplayerGameRuleset.Team : MultiplayerGameRuleset.Free_For_All;
 
                 list.Add(game);
             }
