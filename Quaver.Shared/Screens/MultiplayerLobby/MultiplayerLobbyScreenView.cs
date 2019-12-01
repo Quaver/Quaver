@@ -8,6 +8,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Selected;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -48,6 +49,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
         /// <summary>
         /// </summary>
+        private SelectedGamePanel SelectedPanel { get; set; }
+
+        /// <summary>
+        /// </summary>
         private int ScreenPaddingX = 50;
 
         /// <summary>
@@ -60,6 +65,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             CreateFooter();
             CreateFilterPanel();
             CreateScrollContainer();
+            CreateSelectedGamePanel();
 
             Header.Parent = Container;
             Footer.Parent = Container;
@@ -131,12 +137,27 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
         /// <summary>
         /// </summary>
+        private void CreateSelectedGamePanel()
+        {
+            SelectedPanel = new SelectedGamePanel(Lobby.SelectedGame)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                Y = FilterPanel.Y + FilterPanel.Height + 20
+            };
+
+            SelectedPanel.X = SelectedPanel.Width + ScreenPaddingX;
+            SelectedPanel.MoveToX(-ScreenPaddingX, Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnGamesFiltered(object sender, TaskCompleteEventArgs<int, int> e)
         {
             ScrollContainer.ClearAnimations();
-            ScrollContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 450);
+            ScrollContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 600);
         }
     }
 }

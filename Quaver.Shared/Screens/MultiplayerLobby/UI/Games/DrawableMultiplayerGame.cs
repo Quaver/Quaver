@@ -180,8 +180,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 PlayerCount.Text = $"{Item.PlayerIds.Count}/{Item.MaxPlayers}";
                 PlayerCount.X = Lock.X - Lock.Width - 12;
 
-                Mode.Image = GetModeIcon();
-                Ruleset.Image = GetRulesetIcon();
+                Mode.Image = GetModeIcon(Item);
+                Ruleset.Image = GetRulesetIcon(Item);
 
                 if (IsSelected)
                     Select();
@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             {
                 Parent = Panel,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(421, 82),
+                Size = new ScalableVector2(406, 82),
                 Image = UserInterface.DefaultBanner,
                 Alpha = 0.85f,
                 X = 2,
@@ -369,7 +369,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             FadeSprites(easing, 1, time);
 
             FadeText(Easing.Linear, 1f, 200);
-
         }
 
         /// <summary>
@@ -443,9 +442,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Texture2D GetModeIcon()
+        public static Texture2D GetModeIcon(MultiplayerGame game)
         {
-            switch ((GameMode) Item.GameMode)
+            switch ((GameMode) game.GameMode)
             {
                 case GameMode.Keys4:
                     return UserInterface.Mode4KSmall;
@@ -460,9 +459,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Texture2D GetRulesetIcon()
+        public static Texture2D GetRulesetIcon(MultiplayerGame game)
         {
-            switch (Item.Ruleset)
+            switch (game.Ruleset)
             {
                 case MultiplayerGameRuleset.Free_For_All:
                     return UserInterface.RulesetFFA;
