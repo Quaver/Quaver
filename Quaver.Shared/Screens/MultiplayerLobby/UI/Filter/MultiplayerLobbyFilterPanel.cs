@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -225,8 +226,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         {
             lock (VisibleGames.Value)
             {
-                var games = MultiplayerGameScrollContainer.GetTestGames();
-
+                var games = OnlineManager.MultiplayerGames.Values.ToList();
                 games = games.FindAll(x => GameMeetsFilterRequirements(x, SearchQuery.Value));
 
                 VisibleGames.Value = games;

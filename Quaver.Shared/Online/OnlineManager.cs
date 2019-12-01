@@ -675,14 +675,8 @@ namespace Quaver.Shared.Online
             if (game.CurrentScreen.Type != QuaverScreenType.Lobby || game.CurrentScreen.Exiting)
                 return;
 
-            Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} | {e.Game.HasPassword} | {e.Game.Password}\n", LogType.Network);
-
-            // REMOVE !!!
-            var screen = (LobbyScreen) game.CurrentScreen;
-
-            screen.AddOrUpdateGame(e.Game);
-            var view = screen.View as LobbyScreenView;
-            view?.MatchContainer.FilterGames(view.Searchbox.RawText, true);
+            Logger.Important($"Received multiplayer game info: ({MultiplayerGames.Count}) - {e.Game.Id} | {e.Game.Name} " +
+                             $"| {e.Game.HasPassword} | {e.Game.Password}", LogType.Network);
         }
 
         /// <summary>
@@ -754,15 +748,6 @@ namespace Quaver.Shared.Online
 
             Logger.Important($"Game: {game.Name} <{game.Id}> has been disbanded", LogType.Network);
             MultiplayerGames.Remove(e.GameId);
-
-            // Handle disbanding logic UI wise. -- REMOVE
-            var quaver = (QuaverGame) GameBase.Game;
-
-            if (quaver.CurrentScreen.Type != QuaverScreenType.Lobby)
-                return;
-
-            var screen = (LobbyScreen) quaver.CurrentScreen;
-            screen.DeleteGame(game);
         }
 
         /// <summary>

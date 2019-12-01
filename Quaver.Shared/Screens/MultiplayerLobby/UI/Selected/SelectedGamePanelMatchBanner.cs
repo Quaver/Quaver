@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -59,6 +62,17 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             CreateDifficultyRatingText();
             CreateRuleset();
             CreateMode();
+
+            BackgroundHelper.Loaded += OnBackgroundLoaded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BackgroundHelper.Loaded -= OnBackgroundLoaded;
+            base.Destroy();
         }
 
         /// <summary>
@@ -144,9 +158,23 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             if (SelectedGame.Value == null)
                 return;
 
+            // Load new background
+            ThreadScheduler.Run(() =>
+            {
+                var map = MapManager.FindMapFromOnlineId(SelectedGame.Value.MapId);
+
+                if (BackgroundHelper.Map == map && map != null)
+                    return;
+
+                Background.ClearAnimations();
+                Background.FadeTo(0, Easing.Linear, 200);
+
+                BackgroundHelper.Load(map);
+            });
+
             ScheduleUpdate(() =>
             {
-                var maxWidth = (int) Width - 150;
+                var maxWidth = (int) Width - 225;
 
                 Name.Text = SelectedGame.Value.Name;
                 Name.TruncateWithEllipsis(maxWidth);
@@ -160,6 +188,20 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 Ruleset.Image = DrawableMultiplayerGame.GetRulesetIcon(SelectedGame.Value);
                 Mode.Image = DrawableMultiplayerGame.GetModeIcon(SelectedGame.Value);
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            lock (Background.Image)
+            {
+                Background.Image = e.Texture;
+                Background.ClearAnimations();
+                Background.FadeTo(0.55f, Easing.Linear, 200);
+            }
         }
     }
 }

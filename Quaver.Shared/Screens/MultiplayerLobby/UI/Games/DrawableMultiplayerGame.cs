@@ -114,8 +114,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             FadeSprites(Easing.Linear, 0.85f, 1);
 
             UpdateContent(item, index);
-
-            //Console.WriteLine(SelectedGame == null);
             SelectedGame.ValueChanged += OnSelectedGameChanged;
         }
 
@@ -188,6 +186,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 else
                     Deselect();
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        public void SlideIn(int time = 450)
+        {
+            X = -Width;
+            ClearAnimations();
+            MoveToX(0, Easing.OutQuint, time);
         }
 
         /// <summary>

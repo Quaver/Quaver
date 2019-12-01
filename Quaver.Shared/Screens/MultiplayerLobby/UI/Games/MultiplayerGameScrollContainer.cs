@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
@@ -51,6 +53,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             ScrollbarBackground.Alignment = Alignment.MidLeft;
             ScrollbarBackground.X = -ScrollbarBackground.X;
             VisibleGames.ValueChanged += OnVisibleGamesChanged;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
+                OnlineManager.Client.OnGameDisbanded += OnMultiplayerGameDisbanded;
+            }
         }
 
         /// <inheritdoc />
@@ -60,6 +68,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         {
             // ReSharper disable once DelegateSubtraction
             VisibleGames.ValueChanged -= OnVisibleGamesChanged;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnMultiplayerGameInfoReceived -= OnMultiplayerGameInfoReceived;
+                OnlineManager.Client.OnGameDisbanded -= OnMultiplayerGameDisbanded;
+            }
 
             base.Destroy();
         }
@@ -109,6 +123,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
                 CreatePool();
                 PositionAndContainPoolObjects();
+
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    var item = Pool[i] as DrawableMultiplayerGame;
+                    item?.SlideIn(450 + 50 * i);
+                }
             });
         }
 
@@ -128,15 +148,18 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         public void Add(MultiplayerGame game)
         {
             if (!MultiplayerLobbyFilterPanel.GameMeetsFilterRequirements(game, SearchQuery.Value))
+            {
+                Console.WriteLine("Game didnt meet match requirements");
                 return;
-
-            if (AvailableItems.Any(x => x.Id == game.Id))
-                return;
+            }
 
             if (Pool.Any(x => x.Item.Id == game.Id))
                 return;
 
             AddObjectToBottom(game, false);
+
+            var item = Pool.Last() as DrawableMultiplayerGame;
+            item?.SlideIn();
         }
 
         /// <summary>
@@ -145,6 +168,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         {
             var item = Pool.Find(x => x.Item == game);
             AvailableItems.Remove(game);
+            AvailableItems.RemoveAll(x => x.Id == game.Id);
 
             // Remove the item if it exists in the pool.
             if (item != null)
@@ -161,7 +185,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             {
                 Pool[i].Index = i;
                 Pool[i].ClearAnimations();
-                Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 400);
+                Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 500);
                 Pool[i].UpdateContent(Pool[i].Item, i);
             }
         }
@@ -197,6 +221,49 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultiplayerGameInfoReceived(object sender, MultiplayerGameInfoEventArgs e)
+        {
+            var existing = Pool.Find(x => x.Item.Id == e.Game.Id);
+
+            // In the event that the game already exists in the pool
+            if (existing != null)
+            {
+                // The selected game needs to be updated
+                if (existing.Item == SelectedGame.Value)
+                    SelectedGame.Value = e.Game;
+
+                // Update the game
+                existing.Item = e.Game;
+                existing.UpdateContent(existing.Item, existing.Index);
+                return;
+            }
+
+            AddScheduledUpdate(() => Add(e.Game));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnMultiplayerGameDisbanded(object sender, GameDisbandedEventArgs e)
+        {
+            // Reset the selected game in the event of disbandment
+            if (SelectedGame != null && (SelectedGame.Value?.Id == e.GameId || SelectedGame.Value == null))
+                SelectedGame.Value = null;
+
+            var existing = Pool.Find(x => x.Item.Id == e.GameId);
+
+            if (existing == null)
+                return;
+
+            AddScheduledUpdate(() => Remove(existing.Item));
         }
     }
 }

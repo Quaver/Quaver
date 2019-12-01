@@ -31,10 +31,17 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             CreateBindableVisibleGames();
             CreateBindableSelectedGame();
 
-            OnlineManager.Client?.JoinLobby();
-            ScreenExiting += (sender, args) => OnlineManager.Client?.LeaveLobby();
-
             View = new MultiplayerLobbyScreenView(this);
+            ScreenExiting += (sender, args) => OnlineManager.Client?.LeaveLobby();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            OnlineManager.Client?.JoinLobby();
+            base.OnFirstUpdate();
         }
 
         /// <inheritdoc />
