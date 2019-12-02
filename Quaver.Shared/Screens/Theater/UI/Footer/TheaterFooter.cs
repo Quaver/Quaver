@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Theater.UI.Footer
     {
         public TheaterFooter(TheaterScreen screen) : base(MenuBorderType.Footer, new List<Drawable>()
         {
-            new TheaterFooterBackButton(screen)
+            new FooterBackButton(screen)
         }, new List<Drawable>()
         {
             new TheaterFooterPlayButton(screen)
