@@ -7,6 +7,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Footer;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Selected;
 using Quaver.Shared.Screens.Select.UI.Mapsets;
@@ -73,6 +74,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
             FilterPanel.FilterTask.OnCompleted += OnGamesFiltered;
             FilterPanel.StartFilterTask();
+
+            Lobby.ScreenExiting += OnScreenExiting;
         }
 
         /// <inheritdoc />
@@ -107,7 +110,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
         /// <summary>
         /// </summary>
-        private void CreateFooter() => Footer = new TestMenuBorderFooter
+        private void CreateFooter() => Footer = new MultiplayerLobbyFooter(Lobby)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft
@@ -158,6 +161,19 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         {
             ScrollContainer.ClearAnimations();
             ScrollContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 600);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            ScrollContainer.ClearAnimations();
+            ScrollContainer.MoveToX(-ScrollContainer.Width - ScreenPaddingX, Easing.OutQuint, 400);
+
+            SelectedPanel.ClearAnimations();
+            SelectedPanel.MoveToX(SelectedPanel.Width + ScreenPaddingX, Easing.OutQuint, 400);
         }
     }
 }

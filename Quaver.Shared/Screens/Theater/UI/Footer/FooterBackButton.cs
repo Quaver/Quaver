@@ -5,9 +5,9 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Theater.UI.Footer
 {
-    public class TheaterFooterBackButton : IconTextButton
+    public class FooterBackButton : IconTextButton
     {
-        public TheaterFooterBackButton(TheaterScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
+        public FooterBackButton(QuaverScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Back", (sender, args) =>
             {
                 screen.Exit(() => new MainMenuScreen());

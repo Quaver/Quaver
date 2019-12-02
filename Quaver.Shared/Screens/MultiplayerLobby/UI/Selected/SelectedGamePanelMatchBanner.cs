@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 Alignment = Alignment.MidCenter,
                 Image = UserInterface.MenuBackgroundNormal,
                 UsePreviousSpriteBatchOptions = true,
-                Alpha = 0.50f,
+                Alpha = 0f,
             };
 
             AddContainedDrawable(Background);
@@ -162,9 +162,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             ThreadScheduler.Run(() =>
             {
                 var map = MapManager.FindMapFromOnlineId(SelectedGame.Value.MapId);
-
-                if (BackgroundHelper.Map == map && map != null)
-                    return;
 
                 Background.ClearAnimations();
                 Background.FadeTo(0, Easing.Linear, 200);

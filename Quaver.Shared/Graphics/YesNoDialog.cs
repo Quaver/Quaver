@@ -37,7 +37,7 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        private Sprite Banner { get; set; }
+        protected Sprite Banner { get; set; }
 
         /// <summary>
         /// </summary>
@@ -128,7 +128,7 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             FadeTo(0, Easing.Linear, FadeTime);
 

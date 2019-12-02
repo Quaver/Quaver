@@ -1,9 +1,14 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Main;
 using Wobble.Bindables;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby
 {
@@ -47,12 +52,36 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleInput();
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             VisibleGames.Dispose();
             SelectedGame.Dispose();
 
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleInput()
+        {
+            if (Exiting || DialogManager.Dialogs.Count != 0)
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            {
+                Exit(() => new MainMenuScreen());
+                return;
+            }
         }
 
         /// <summary>
