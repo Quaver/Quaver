@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using osu.Shared;
@@ -9,8 +10,12 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -19,6 +24,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 using GameMode = Quaver.API.Enums.GameMode;
 
@@ -45,7 +51,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
         /// <summary>
         /// </summary>
-        private ImageButton Button { get; set; }
+        private ImageButton ClickableButton { get; set; }
 
         /// <summary>
         /// </summary>
@@ -115,6 +121,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
             UpdateContent(item, index);
             SelectedGame.ValueChanged += OnSelectedGameChanged;
+            BackgroundHelper.BannerLoaded += OnBannerLoaded;
         }
 
         /// <inheritdoc />
@@ -123,8 +130,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Button.Alpha = Button.IsHovered ? 0.35f : 0;
-            Button.Size = Panel.Size;
+            ClickableButton.Alpha = ClickableButton.IsHovered && Button.IsGloballyClickable ? 0.35f : 0;
+            ClickableButton.Size = Panel.Size;
 
             base.Update(gameTime);
         }
@@ -136,6 +143,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         {
             // ReSharper disable once DelegateSubtraction
             SelectedGame.ValueChanged -= OnSelectedGameChanged;
+            BackgroundHelper.BannerLoaded -= OnBannerLoaded;
             base.Destroy();
         }
 
@@ -149,7 +157,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             Item = item;
             Index = index;
 
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 Name.Text = Item.Name ?? "";
                 Name.TruncateWithEllipsis(400);
@@ -180,6 +188,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
                 Mode.Image = GetModeIcon(Item);
                 Ruleset.Image = GetRulesetIcon(Item);
+
+                LoadBanner();
 
                 if (IsSelected)
                     Select();
@@ -215,7 +225,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         private void CreateButton()
         {
-            Button = new ImageButton(UserInterface.BlankBox)
+            ClickableButton = new ImageButton(UserInterface.BlankBox)
             {
                 Parent = Panel,
                 Alignment = Alignment.MidCenter,
@@ -224,7 +234,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Button.Clicked += OnClicked;
+            ClickableButton.Clicked += OnClicked;
         }
 
         /// <summary>
@@ -237,7 +247,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(406, 82),
                 Image = UserInterface.DefaultBanner,
-                Alpha = 0.85f,
+                Alpha = 0f,
                 X = 2,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -360,6 +370,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 SelectedGame.Value = Item;
                 return;
             }
+
+            JoinGame();
         }
 
         /// <summary>
@@ -411,7 +423,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                         continue;
                     case Sprite sprite:
                         // The button & lock are exceptions to the fading
-                        if (sprite == Button || sprite == Lock)
+                        if (sprite == ClickableButton || sprite == Lock || sprite == Banner)
                             continue;
 
                         sprite.ClearAnimations();
@@ -444,6 +456,76 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// <param name="e"></param>
         private void OnSelectedGameChanged(object sender, BindableValueChangedEventArgs<MultiplayerGame> e)
             => UpdateContent(Item, Index);
+
+        /// <summary>
+        /// </summary>
+        private void LoadBanner()
+        {
+            var map = MapManager.FindMapFromMd5(Item.MapMd5);
+
+            // If the user doesn't have the map loaded, and the image isn't the default banner, then
+            // switch to it
+            if (map == null && Banner.Image != UserInterface.DefaultBanner)
+            {
+                Banner.Image = UserInterface.DefaultBanner;
+                FadeBanner();
+                return;
+            }
+
+            // Check if the banner is already the same image
+            if (map != null && BackgroundHelper.MapsetBanners.ContainsKey(map.Mapset.Directory))
+            {
+                if (Banner.Image == BackgroundHelper.MapsetBanners[map.Mapset.Directory])
+                    return;
+
+                Banner.Image = BackgroundHelper.MapsetBanners[map.Mapset.Directory];
+                FadeBanner();
+                return;
+            }
+
+            // Load mapset banner
+            if (map != null)
+                BackgroundHelper.LoadMapsetBanner(map.Mapset);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBannerLoaded(object sender, BannerLoadedEventArgs e)
+        {
+            var map = MapManager.FindMapFromMd5(Item.MapMd5);
+
+            if (map != null && e.Mapset != map.Mapset)
+                return;
+            if (map == null)
+            {
+                Banner.Image = UserInterface.DefaultBanner;
+                FadeBanner();
+                return;
+            }
+
+            Banner.Image = e.Banner;
+            FadeBanner();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void FadeBanner()
+        {
+            Banner.ClearAnimations();
+            Banner.FadeTo(0.85f, Easing.Linear, 200);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void JoinGame()
+        {
+            if (Item.HasPassword)
+                DialogManager.Show(new JoinPasswordGameDialog(Item));
+            else
+                DialogManager.Show(new JoinGameDialog(Item));
+        }
 
         /// <summary>
         /// </summary>
