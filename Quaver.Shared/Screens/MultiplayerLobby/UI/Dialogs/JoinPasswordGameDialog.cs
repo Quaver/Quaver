@@ -4,7 +4,6 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Lobby.UI.Dialogs.Create;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Dialogs;
