@@ -226,8 +226,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         {
             lock (VisibleGames.Value)
             {
-                var games = OnlineManager.MultiplayerGames.Values.ToList();
-                games = games.FindAll(x => GameMeetsFilterRequirements(x, SearchQuery.Value));
+                var games = OnlineManager.MultiplayerGames?.Values?.ToList() ?? new List<MultiplayerGame>();
+                games = games?.FindAll(x => GameMeetsFilterRequirements(x, SearchQuery.Value));
 
                 VisibleGames.Value = games;
             }
