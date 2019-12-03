@@ -8,7 +8,6 @@ using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.Custom;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Lobby.UI.Dialogs.Create;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
