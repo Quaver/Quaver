@@ -42,11 +42,11 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
-using Quaver.Shared.Screens.Lobby;
-using Quaver.Shared.Screens.Lobby.UI.Dialogs.Joining;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multiplayer;
+using Quaver.Shared.Screens.MultiplayerLobby;
+using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
@@ -879,7 +879,7 @@ namespace Quaver.Shared.Online
 
             var game = (QuaverGame) GameBase.Game;
             game.GlobalUserInterface.Cursor.Alpha = 1;
-            game.CurrentScreen.Exit(() => new LobbyScreen());
+            game.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
         }
 
         /// <summary>
@@ -919,7 +919,7 @@ namespace Quaver.Shared.Online
                     case QuaverScreenType.Select:
                     case QuaverScreenType.Download:
                     case QuaverScreenType.Lobby:
-                        DialogManager.Show(new JoiningGameDialog(JoiningGameDialogType.Joining));
+                        DialogManager.Show(new JoinGameDialog(null, null, true));
                         ThreadScheduler.RunAfter(() => Client?.AcceptGameInvite(e.MatchId), 800);
                         break;
                     default:

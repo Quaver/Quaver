@@ -18,6 +18,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Scheduling;
 using Wobble.Screens;
+using CreateGameDialog = Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create.CreateGameDialog;
 using DrawableMapset = Quaver.Shared.Screens.Selection.UI.Mapsets.DrawableMapset;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby
@@ -132,10 +133,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
-                Y = FilterPanel.Y + FilterPanel.Height + 4
+                Y = FilterPanel.Y + FilterPanel.Height + 4,
+                X = ScreenPaddingX
             };
-
-            ScrollContainer.X = -ScrollContainer.Width - ScreenPaddingX;
         }
 
         /// <summary>
@@ -159,8 +159,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// <param name="e"></param>
         private void OnGamesFiltered(object sender, TaskCompleteEventArgs<int, int> e)
         {
-            ScrollContainer.ClearAnimations();
-            ScrollContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 600);
         }
 
         /// <summary>

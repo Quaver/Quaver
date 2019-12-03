@@ -61,11 +61,15 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        private Action YesAction { get; }
+        protected Action YesAction { get; set; }
 
         /// <summary>
         /// </summary>
-        private Action NoAction { get; }
+        protected Action NoAction { get; set; }
+
+        /// <summary>
+        /// </summary>
+        protected Func<bool> ValidateBeforeClosing { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -113,7 +117,18 @@ namespace Quaver.Shared.Graphics
                 if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 {
                     YesAction?.Invoke();
-                    Close();
+
+                    if (ValidateBeforeClosing == null)
+                    {
+                        Close();
+                        return;
+                    }
+
+                    var canClose = ValidateBeforeClosing?.Invoke();
+
+                    if (canClose.Value)
+                        Close();
+
                     return;
                 }
             }
@@ -226,7 +241,17 @@ namespace Quaver.Shared.Graphics
             YesButton = new IconButton(UserInterface.CreateButton, (o, e) =>
             {
                 YesAction?.Invoke();
-                Close();
+
+                if (ValidateBeforeClosing == null)
+                {
+                    Close();
+                    return;
+                }
+
+                var canClose = ValidateBeforeClosing?.Invoke();
+
+                if (canClose.Value)
+                    Close();
             })
             {
                 Parent = Panel,

@@ -40,7 +40,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
-using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
@@ -810,7 +810,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         Exit(() =>
                         {
                             OnlineManager.LeaveGame();
-                            return new LobbyScreen();
+                            return new MultiplayerLobbyScreen();
                         });
 
                         return;

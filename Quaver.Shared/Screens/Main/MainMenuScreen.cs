@@ -14,9 +14,9 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
-using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Main
                 return;
             }
 
-            Exit(() => new LobbyScreen());
+            Exit(() => new MultiplayerLobbyScreen());
         }
 
         /// <summary>

@@ -6,14 +6,19 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Server.Common.Objects.Twitch;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Input;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 {
@@ -37,6 +42,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
         /// <summary>
         /// </summary>
+        private SpriteTextPlus NoGamesFound { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private double TimeActive { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="selectedGame"></param>
         /// <param name="visibleGames"></param>
         /// <param name="searchQuery"></param>
@@ -50,6 +63,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             VisibleGames = visibleGames;
             SearchQuery = searchQuery;
 
+            CreateNoGamesFoundText();
+
             ScrollbarBackground.Alignment = Alignment.MidLeft;
             ScrollbarBackground.X = -ScrollbarBackground.X;
             VisibleGames.ValueChanged += OnVisibleGamesChanged;
@@ -59,6 +74,16 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 OnlineManager.Client.OnMultiplayerGameInfoReceived += OnMultiplayerGameInfoReceived;
                 OnlineManager.Client.OnGameDisbanded += OnMultiplayerGameDisbanded;
             }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            NoGamesFound.Visible = Animations.Count == 0 && Pool?.Count == 0;
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -188,6 +213,19 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                 Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT, Easing.OutQuint, 500);
                 Pool[i].UpdateContent(Pool[i].Item, i);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateNoGamesFoundText()
+        {
+            NoGamesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "No games found!\n\nYou can either modify your filtering settings, or create your own game!".ToUpper(), 20)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                TextAlignment = TextAlignment.Center
+            };
         }
 
         /// <summary>

@@ -1,4 +1,3 @@
-﻿using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
@@ -7,7 +6,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Form;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Lobby.UI.Dialogs.Create
+namespace Quaver.Shared.Graphics.Form
 {
     public class LabelledTextbox : Sprite
     {
