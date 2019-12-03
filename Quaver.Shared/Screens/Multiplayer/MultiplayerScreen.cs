@@ -18,7 +18,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Loading;
-using Quaver.Shared.Screens.Lobby;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Select.UI.Modifiers;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -207,7 +207,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         {
             OnlineManager.LeaveGame();
             ThreadScheduler.RunAfter(Destroy, 1000);
-            return new LobbyScreen();
+            return new MultiplayerLobbyScreen();
         });
 
         /// <summary>

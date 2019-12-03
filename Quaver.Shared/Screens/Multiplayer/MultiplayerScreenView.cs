@@ -16,8 +16,6 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
-using Quaver.Shared.Screens.Lobby;
-using Quaver.Shared.Screens.Lobby.UI.Dialogs.Create;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.Multiplayer.UI;
 using Quaver.Shared.Screens.Multiplayer.UI.Feed;

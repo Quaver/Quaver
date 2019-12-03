@@ -24,7 +24,6 @@ using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
-using Quaver.Shared.Screens.Lobby;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu.UI;
 using Quaver.Shared.Screens.Menu.UI.Buttons;
@@ -34,6 +33,7 @@ using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Panels;
 using Quaver.Shared.Screens.Menu.UI.Tips;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
@@ -436,7 +436,7 @@ namespace Quaver.Shared.Screens.Menu
                 return;
             }
 
-            screen.Exit(() => new LobbyScreen());
+            screen.Exit(() => new MultiplayerLobbyScreen());
         }
 
         /// <summary>
