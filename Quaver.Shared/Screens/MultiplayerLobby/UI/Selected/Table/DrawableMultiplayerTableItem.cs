@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int HEIGHT { get; } = 59;
+        public override int HEIGHT { get; } = 60;
 
         /// <summary>
         /// </summary>
