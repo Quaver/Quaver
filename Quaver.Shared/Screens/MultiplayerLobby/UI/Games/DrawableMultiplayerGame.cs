@@ -160,6 +160,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             AddScheduledUpdate(() =>
             {
                 Name.Text = Item.Name ?? "";
+                Name.Tint = Color.White;
+
+                if (Item.InProgress)
+                {
+                    Name.Text += $" (In Progress)";
+                    Name.Tint = ColorHelper.HexToColor("#808080");
+                }
+
                 Name.TruncateWithEllipsis(400);
 
                 DifficultyRating.Text = $"{Item.DifficultyRating:0.00}";
