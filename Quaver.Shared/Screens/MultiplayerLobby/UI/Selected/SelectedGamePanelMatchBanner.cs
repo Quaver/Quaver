@@ -161,7 +161,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             // Load new background
             ThreadScheduler.Run(() =>
             {
-                var map = MapManager.FindMapFromOnlineId(SelectedGame.Value.MapId);
+                var map = MapManager.FindMapFromMd5(SelectedGame.Value.MapMd5);
+
+                if (map == null)
+                    map = MapManager.FindMapFromMd5(SelectedGame.Value.AlternativeMd5);
 
                 Background.ClearAnimations();
                 Background.FadeTo(0, Easing.Linear, 200);
