@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         {
             Background = new Sprite
             {
-                Size = new ScalableVector2(1366, 768),
+                Size = new ScalableVector2(1280, 720),
                 Alignment = Alignment.MidCenter,
                 Image = UserInterface.MenuBackgroundNormal,
                 UsePreviousSpriteBatchOptions = true,
@@ -197,7 +197,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 Background.Image = e.Texture;
                 Background.ClearAnimations();
-                Background.FadeTo(0.55f, Easing.Linear, 200);
+                Background.FadeTo(0.45f, Easing.Linear, 200);
             }
         }
     }
