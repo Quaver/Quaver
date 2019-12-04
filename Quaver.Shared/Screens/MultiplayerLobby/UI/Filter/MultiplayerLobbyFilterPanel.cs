@@ -166,7 +166,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
             {
                 Parent = this,
                 Alignment  = Alignment.MidLeft,
-                X = 25
+                X = 20
             };
         }
 
@@ -195,7 +195,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
                 item.Alignment = Alignment.MidRight;
 
-                const int padding = 25;
+                const int padding = 20;
                 var spacing = 28;
 
                 if (i == 0)
