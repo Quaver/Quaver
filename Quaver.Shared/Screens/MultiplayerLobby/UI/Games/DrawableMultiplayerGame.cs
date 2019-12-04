@@ -160,6 +160,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             AddScheduledUpdate(() =>
             {
                 Name.Text = Item.Name ?? "";
+                Name.Tint = Color.White;
+
+                if (Item.InProgress)
+                {
+                    Name.Text += $" (In Progress)";
+                    Name.Tint = ColorHelper.HexToColor("#808080");
+                }
+
                 Name.TruncateWithEllipsis(400);
 
                 DifficultyRating.Text = $"{Item.DifficultyRating:0.00}";
@@ -465,7 +473,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
 
             // If the user doesn't have the map loaded, and the image isn't the default banner, then
             // switch to it
-            if (map == null && Banner.Image != UserInterface.DefaultBanner)
+            if (map == null)
             {
                 Banner.Image = UserInterface.DefaultBanner;
                 FadeBanner();
@@ -473,7 +481,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             }
 
             // Check if the banner is already the same image
-            if (map != null && BackgroundHelper.MapsetBanners.ContainsKey(map.Mapset.Directory))
+            if (BackgroundHelper.MapsetBanners.ContainsKey(map.Mapset.Directory))
             {
                 if (Banner.Image == BackgroundHelper.MapsetBanners[map.Mapset.Directory])
                     return;

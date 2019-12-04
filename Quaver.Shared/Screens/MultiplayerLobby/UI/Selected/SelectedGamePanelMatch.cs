@@ -20,10 +20,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
-        private Sprite DividerLine { get; set; }
-
-        /// <summary>
-        /// </summary>
         private DrawableMultiplayerTable Table { get; set; }
 
         /// <summary>
@@ -37,7 +33,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             Alpha = 0;
 
             CreateBanner();
-            CreateBannerDividerLine();
             CreateTable();
 
             UpdateState();
@@ -49,7 +44,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateBanner()
         {
-            Banner = new SelectedGamePanelMatchBanner(SelectedGame, new ScalableVector2(Width, 146))
+            Banner = new SelectedGamePanelMatchBanner(SelectedGame, new ScalableVector2(Width, 136))
             {
                 Parent = this,
                 X = 1,
@@ -59,26 +54,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
-        private void CreateBannerDividerLine()
-        {
-            DividerLine = new Sprite()
-            {
-                Parent = Banner,
-                Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(Width, 2),
-                Tint = Colors.SecondaryAccent
-            };
-        }
-
-        /// <summary>
-        /// </summary>
         private void CreateTable()
         {
             Table = new DrawableMultiplayerTable(SelectedGame, new ScalableVector2(Width,
-                Height - Banner.Height - DividerLine.Height))
+                Height - Banner.Height))
             {
                 Parent = this,
-                Y = Banner.Y + Banner.Height + 1
+                Y = Banner.Y + Banner.Height
             };
         }
 

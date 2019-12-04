@@ -129,7 +129,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
                 Alignment = Alignment.TopCenter,
                 Textbox =
                 {
-                    AllowSubmission = false
+                    AllowSubmission = false,
+                    MaxCharacters = 50
                 }
             };
         }
@@ -146,7 +147,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
                 Alignment = Alignment.TopCenter,
                 Textbox =
                 {
-                    AllowSubmission = false
+                    AllowSubmission = false,
+                    MaxCharacters = 50
                 }
             };
         }

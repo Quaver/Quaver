@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         {
             Background = new Sprite
             {
-                Size = new ScalableVector2(1366, 768),
+                Size = new ScalableVector2(1280, 720),
                 Alignment = Alignment.MidCenter,
                 Image = UserInterface.MenuBackgroundNormal,
                 UsePreviousSpriteBatchOptions = true,
@@ -161,7 +161,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             // Load new background
             ThreadScheduler.Run(() =>
             {
-                var map = MapManager.FindMapFromOnlineId(SelectedGame.Value.MapId);
+                var map = MapManager.FindMapFromMd5(SelectedGame.Value.MapMd5);
+
+                if (map == null)
+                    map = MapManager.FindMapFromMd5(SelectedGame.Value.AlternativeMd5);
 
                 Background.ClearAnimations();
                 Background.FadeTo(0, Easing.Linear, 200);
@@ -197,7 +200,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 Background.Image = e.Texture;
                 Background.ClearAnimations();
-                Background.FadeTo(0.55f, Easing.Linear, 200);
+                Background.FadeTo(0.45f, Easing.Linear, 200);
             }
         }
     }
