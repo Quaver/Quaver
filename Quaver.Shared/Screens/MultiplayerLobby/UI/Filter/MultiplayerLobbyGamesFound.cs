@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Online;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -41,6 +43,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
 
             UpdateText();
             VisibleGames.ValueChanged += OnVisibleGamesChanged;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnMultiplayerGameInfoReceived += OnGameInfoReceived;
+                OnlineManager.Client.OnGameDisbanded += OnGameDisbanded;
+            }
         }
 
         /// <inheritdoc />
@@ -50,6 +58,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         {
             // ReSharper disable once DelegateSubtraction
             VisibleGames.ValueChanged -= OnVisibleGamesChanged;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnMultiplayerGameInfoReceived -= OnGameInfoReceived;
+                OnlineManager.Client.OnGameDisbanded -= OnGameDisbanded;
+            }
 
             base.Destroy();
         }
@@ -106,5 +120,17 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Filter
         /// <param name="e"></param>
         private void OnVisibleGamesChanged(object sender, BindableValueChangedEventArgs<List<MultiplayerGame>> e)
             => ScheduleUpdateText();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameInfoReceived(object sender, MultiplayerGameInfoEventArgs e) => ScheduleUpdateText();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameDisbanded(object sender, GameDisbandedEventArgs e) => ScheduleUpdateText();
     }
 }
