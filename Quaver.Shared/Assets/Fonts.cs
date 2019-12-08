@@ -71,46 +71,55 @@ namespace Quaver.Shared.Assets
             const string emojiString = "Emoji";
             var emojiFont = GameBase.Game.Resources.Get($@"{folder}/NotoColorEmoji/NotoColorEmoji.ttf");
 
+            const string cjkString = "CJK";
+            var notoCjkFont = GameBase.Game.Resources.Get($@"{folder}/NotoCJK/noto-sans-cjk-black.ttf");
+
             // Lato-Regular
             FontManager.CacheWobbleFont(LatoRegular, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoRegular}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
 
             // Lato-Semibold
             FontManager.CacheWobbleFont(LatoSemiBold, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoSemiBold}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
 
             // Lato-Bold
             FontManager.CacheWobbleFont(LatoBold, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBold}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
 
             // Lato-Light
             FontManager.CacheWobbleFont(LatoLight, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoLight}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
 
             // Lato-Heavy
             FontManager.CacheWobbleFont(LatoHeavy, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoHeavy}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
 
             // Lato-Black
             FontManager.CacheWobbleFont(LatoBlack, new WobbleFontStore(20,
                 GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBlack}.ttf"), new Dictionary<string, byte[]>
                 {
-                    {emojiString, emojiFont}
+                    {emojiString, emojiFont},
+                    {cjkString, notoCjkFont}
                 }));
         }
     }
