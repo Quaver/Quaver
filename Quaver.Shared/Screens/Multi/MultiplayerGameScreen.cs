@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Multi
         public MultiplayerGameScreen()
         {
             CreateGameBindable();
-            ScreenExiting += (sender, args) => OnlineManager.Client?.LeaveGame();
+            ScreenExiting += (sender, args) => OnlineManager.LeaveGame();
             View = new MultiplayerGameScreenView(this);
         }
 
