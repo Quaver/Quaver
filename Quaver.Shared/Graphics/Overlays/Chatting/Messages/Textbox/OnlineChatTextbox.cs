@@ -25,13 +25,20 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         private Bindable<ChatChannel> ActiveChannel { get; }
 
         /// <summary>
+        ///     If the chat box is standalone and separate form the chat
+        /// </summary>
+        private bool Standalone { get; }
+
+        /// <summary>
         /// </summary>
         /// <param name="activeChatChannel"></param>
         /// <param name="size"></param>
-        public OnlineChatTextbox(Bindable<ChatChannel> activeChatChannel, ScalableVector2 size)
+        /// <param name="standalone"></param>
+        public OnlineChatTextbox(Bindable<ChatChannel> activeChatChannel, ScalableVector2 size, bool standalone = false)
             : base(size, FontManager.GetWobbleFont(Fonts.LatoBlack), 20, "", "Send a message...")
         {
             ActiveChannel = activeChatChannel;
+            Standalone = standalone;
 
             Image = UserInterface.SearchBox;
             Tint = ColorHelper.HexToColor("#181818");
@@ -91,7 +98,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (OnlineChat.Instance != null)
+            if (!Standalone && OnlineChat.Instance != null)
             {
                 if (OnlineChat.Instance.IsOpen && OnlineChat.Instance.IsHovered())
                 {
