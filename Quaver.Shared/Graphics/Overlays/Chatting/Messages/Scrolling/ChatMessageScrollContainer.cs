@@ -96,10 +96,13 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             CreateLoadingWheel();
             Pool = new List<PoolableSprite<ChatMessage>>();
 
-            OnlineManager.Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
 
-            if (OnlineManager.Connected)
-                OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+                if (OnlineManager.Connected)
+                    OnlineManager.Client.OnChatMessageReceived += OnChatMessageReceived;
+            }
         }
 
         /// <inheritdoc />
@@ -281,7 +284,12 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private void OnMessageQueued(object sender, MessageQueuedEventArgs e)
         {
             lock (MessageQueue)
+            {
+                if (MessageQueue.Contains(e.Message))
+                    return;
+
                 MessageQueue.Add(e.Message);
+            }
         }
 
         /// <summary>
