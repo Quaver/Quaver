@@ -71,8 +71,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         {
             get
             {
-                var game = (QuaverGame) GameBase.Game;
-                return game.OnlineChat;
+                var game = GameBase.Game as QuaverGame;
+                return game?.OnlineChat;
             }
         }
 
