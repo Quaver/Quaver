@@ -164,5 +164,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D RulesetBR => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/ruleset-br.png");
         public static Texture2D RulesetTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Lobby/ruleset-team.png");
         public static Texture2D MultiplayerChatBox => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-chat-box.png");
+        public static Texture2D NotReadyIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/not-ready.png");
+        public static Texture2D ReadyIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/ready.png");
     }
 }
