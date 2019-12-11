@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Chat
         public MultiplayerChatBox(Bindable<MultiplayerGame> game)
         {
             Game = game;
-            Size = new ScalableVector2(MultiplayerPlayerList.ContainerSize.X.Value, 252);
+            Size = new ScalableVector2(MultiplayerPlayerList.ContainerSize.X.Value, 262);
             Image = UserInterface.MultiplayerChatBox;
             Tint = ColorHelper.HexToColor("#242424");
 

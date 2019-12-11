@@ -44,6 +44,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
@@ -1565,34 +1566,32 @@ namespace Quaver.Shared.Online
         ///     Gets a user's activated mods in the current game.
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="game"></param>
         /// <returns></returns>
-        public static ModIdentifier GetUserActivatedMods(int userId)
+        public static ModIdentifier GetUserActivatedMods(int userId, MultiplayerGame game = null)
         {
-            if (CurrentGame == null)
+            game = game ?? CurrentGame;
+
+            if (game == null)
                 return 0;
 
-            var currMods = (ModIdentifier) long.Parse(CurrentGame.Modifiers);
+            var currMods = (ModIdentifier) long.Parse(game.Modifiers ?? "0");
 
             if (currMods < 0)
                 currMods = 0;
 
-            // Console.WriteLine("GAME MODS: " + currMods);
-
-            var playerMods = CurrentGame.PlayerMods.Find(x => x.UserId == userId);
+            var playerMods = game.PlayerMods.Find(x => x.UserId == userId);
 
             if (playerMods != null)
             {
-                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers);
+                var pm =  (ModIdentifier) long.Parse(playerMods.Modifiers ?? "0");
 
                 if (pm < 0)
                     pm = 0;
 
                 currMods |= pm;
-
-                // Console.WriteLine("PLAYER MODS: " + pm);
             }
 
-            // Console.WriteLine("CURRENT MODS COMBINED: " + currMods);
             return currMods;
         }
 
@@ -1604,16 +1603,19 @@ namespace Quaver.Shared.Online
         /// <summary>
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="game"></param>
         /// <returns></returns>
-        public static MultiplayerTeam GetTeam(int userId)
+        public static MultiplayerTeam GetTeam(int userId, MultiplayerGame game = null)
         {
-            if (CurrentGame == null || CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
+            game = game ?? CurrentGame;
+
+            if (game == null || game .Ruleset != MultiplayerGameRuleset.Team)
                 return MultiplayerTeam.Red;
 
-            if (CurrentGame.RedTeamPlayers.Contains(userId))
+            if (game .RedTeamPlayers.Contains(userId))
                 return MultiplayerTeam.Red;
 
-            if (CurrentGame.BlueTeamPlayers.Contains(userId))
+            if (game .BlueTeamPlayers.Contains(userId))
                 return MultiplayerTeam.Blue;
 
             return MultiplayerTeam.Red;

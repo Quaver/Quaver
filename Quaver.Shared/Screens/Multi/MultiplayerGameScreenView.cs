@@ -127,7 +127,7 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         private void CreatePlayerList()
         {
-            PlayerList = new MultiplayerPlayerList()
+            PlayerList = new MultiplayerPlayerList(GameScreen.Game)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
