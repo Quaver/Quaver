@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Multi
                 GameId = 999,
                 Name = "Example Game",
                 Type = MultiplayerGameType.Friendly,
-                Ruleset = MultiplayerGameRuleset.Free_For_All,
+                Ruleset = MultiplayerGameRuleset.Team,
                 GameMode = (byte) GameMode.Keys4,
                 PlayerIds = new List<int>(),
                 MaxPlayers = 16,
@@ -75,6 +75,41 @@ namespace Quaver.Shared.Screens.Multi
                 MapsetId = -1,
                 Map = "Artist - Title [Example]",
                 JudgementCount = 1000,
+                HostId = 7,
+                PlayersReady = new List<int>() { 3, 6, 13, 7 },
+                RedTeamPlayers = new List<int> { 0, 1, 2, 3, 4, 5, 6, },
+                BlueTeamPlayers = new List<int> { 7, 8, 9, 10, 11, 12, 13, 14 },
+                PlayersWithoutMap = new List<int>()
+                {
+                    8, 9, 7, 2
+                },
+                PlayerMods = new List<MultiplayerPlayerMods>()
+                {
+                    new MultiplayerPlayerMods()
+                    {
+                        UserId = 2,
+                        Modifiers = ((long) (ModIdentifier.NoFail)).ToString()
+                    },
+                    new MultiplayerPlayerMods()
+                    {
+                        UserId = 3,
+                        Modifiers = ((long) (ModIdentifier.Mirror | ModIdentifier.Speed07X)).ToString()
+                    }
+                },
+                PlayerWins = new List<MultiplayerPlayerWins>()
+                {
+                    new MultiplayerPlayerWins()
+                    {
+                        UserId = 0,
+                        Wins = 6
+                    },
+                    new MultiplayerPlayerWins()
+                    {
+                        UserId = 5,
+                        Wins = 47
+                    }
+                },
+                RefereeUserId = 15
             };
         }
     }
