@@ -154,17 +154,17 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
             for (var i = 0; i < SLOT_COUNT; i++)
             {
-                // Add red team players to the left column
-                if (i % 2 == 0 && redTeam.Count != 0)
-                {
-                    sorted.Add(redTeam.First());
-                    redTeam.Remove(redTeam.First());
-                }
-                // Add blue players to the right column
-                else if (i % 2 != 0 && blueTeam.Count != 0)
+                // Add blue team players to the left column
+                if (i % 2 == 0 && blueTeam.Count != 0)
                 {
                     sorted.Add(blueTeam.First());
                     blueTeam.Remove(blueTeam.First());
+                }
+                // Add red players to the right column
+                else if (i % 2 != 0 && redTeam.Count != 0)
+                {
+                    sorted.Add(redTeam.First());
+                    redTeam.Remove(redTeam.First());
                 }
                 // Add the referee if possible
                 else if (referee != null && !sorted.Contains(referee))
