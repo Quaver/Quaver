@@ -7,11 +7,13 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Components;
 using SQLite;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -95,7 +97,15 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var game = GameBase.Game as QuaverGame;
+
             Button.Alpha = Button.IsHovered ? 0.35f : 0;
+
+            if (game?.CurrentScreen?.ActiveRightClickOptions != null && game.CurrentScreen.ActiveRightClickOptions.Visible)
+                Button.Depth = 1;
+            else
+                Button.Depth = 0;
+
             base.Update(gameTime);
         }
 
@@ -180,6 +190,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 Size = new ScalableVector2(Width - 4, Height - 4),
                 Alpha = 0
             };
+
+            Button.Clicked += OpenRightClickOptions;
+            Button.RightClicked += OpenRightClickOptions;
         }
 
         /// <summary>
@@ -293,6 +306,16 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
                 Modifiers.Add(mod);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenRightClickOptions(object sender, EventArgs e)
+        {
+            var game = GameBase.Game as QuaverGame;
+            game?.CurrentScreen?.ActivateRightClickOptions(new DrawableOnlineUserRightClickOptions(User));
         }
     }
 }
