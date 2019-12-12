@@ -8,7 +8,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         public EmptyMultiplayerSlot()
         {
             Tint = ColorHelper.HexToColor("#242424");
-            Alpha = 0.5f;
+            Alpha = 0.25f;
         }
     }
 }
