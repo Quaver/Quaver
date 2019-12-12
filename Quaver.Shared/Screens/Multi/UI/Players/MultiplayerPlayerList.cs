@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        public static ScalableVector2 ContainerSize { get; } = new ScalableVector2(DrawableMapset.WIDTH, 556);
+        public static ScalableVector2 ContainerSize { get; } = new ScalableVector2(DrawableMapset.WIDTH, 474);
 
         /// <summary>
         /// </summary>
@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="sort"></param>
         public void AddPlayer(User user, bool sort = false)
         {
-            var player = new MultiplayerPlayer(Game, user);
+            var player = new MultiplayerPlayer(Game, this, user);
             Players.Add(player);
             AddContainedDrawable(player);
 
