@@ -8,11 +8,13 @@ using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using TagLib.Riff;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Input;
 
@@ -37,7 +39,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// </summary>
         private const int SLOT_COUNT = 16;
 
-        private Random RNG = new Random();
+        /// <summary>
+        /// </summary>
+        private Sprite ScrollbarBackground { get; set; }
 
         /// <summary>
         /// </summary>
@@ -47,7 +51,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Size = ContainerSize;
             Alpha = 0f;
 
-            Scrollbar.Visible = false;
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 800;
+            ScrollSpeed = 320;
+            CreateScrollbar();
             InputEnabled = true;
 
             CreatePlayers();
@@ -226,6 +233,25 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 child.Destroy();
                 RemoveContainedDrawable(child);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateScrollbar()
+        {
+            ScrollbarBackground = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                X = 26,
+                Size = new ScalableVector2(4, Height),
+                Tint = ColorHelper.HexToColor("#474747")
+            };
+
+            Scrollbar.Width = ScrollbarBackground.Width;
+            Scrollbar.Parent = ScrollbarBackground;
+            Scrollbar.Alignment = Alignment.BotCenter;
+            Scrollbar.Tint = Color.White;
         }
     }
 }
