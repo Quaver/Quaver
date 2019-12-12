@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
@@ -35,6 +36,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         private const string Spectate = "Spectate";
 
+        private const string Kick = "Kick Player";
+
+        private const string SwitchTeams = "Switch Team";
+
+        private const string GiveHost = "Give Host";
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -67,6 +74,19 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                         break;
                     case Spectate:
                         HandleSpectating(user);
+                        break;
+                    case Kick:
+                        OnlineManager.Client?.KickMultiplayerGamePlayer(user.OnlineUser.Id);
+                        break;
+                    case SwitchTeams:
+                        var team = OnlineManager.GetTeam(user.OnlineUser.Id) == MultiplayerTeam.Red
+                            ? MultiplayerTeam.Blue
+                            : MultiplayerTeam.Red;
+
+                        OnlineManager.Client.ChangeOtherPlayerTeam(user.OnlineUser.Id, team);
+                        break;
+                    case GiveHost:
+                        OnlineManager.Client?.TransferMultiplayerGameHost(user.OnlineUser.Id);
                         break;
                 }
             };
@@ -111,6 +131,20 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             if (OnlineManager.SpectatorClients != null && !OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id))
                 options.Add(Spectate, ColorHelper.HexToColor("#0FBAE5"));
+
+            // Host of the multiplayer game so add more options
+            if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostId == OnlineManager.Self?.OnlineUser?.Id
+                && OnlineManager.CurrentGame.PlayerIds.Contains(user.OnlineUser.Id))
+            {
+                if (user != OnlineManager.Self)
+                {
+                    options.Add(Kick, ColorHelper.HexToColor($"#FF6868"));
+                    options.Add(GiveHost, ColorHelper.HexToColor("#27B06E"));
+                }
+
+                if (OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                    options.Add(SwitchTeams, ColorHelper.HexToColor("#F2994A"));
+            }
 
             return options;
         }

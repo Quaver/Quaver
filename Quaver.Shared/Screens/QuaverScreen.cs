@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens
         /// <summary>
         ///     The currently active right click options for the screen
         /// </summary>
-        private RightClickOptions ActiveRightClickOptions { get; set; }
+        public RightClickOptions ActiveRightClickOptions { get; private set; }
 
         /// <summary>
         ///     The currently active tooltip for the screen
