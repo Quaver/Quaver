@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
@@ -12,6 +14,7 @@ using TagLib.Riff;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multi.UI.Players
 {
@@ -27,12 +30,14 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        private List<MultiplayerSlot> Players { get; set; }
+        private List<MultiplayerSlot> Players { get; set; } = new List<MultiplayerSlot>();
 
         /// <summary>
         ///     The amount of slots allowed in a multiplayer match
         /// </summary>
         private const int SLOT_COUNT = 16;
+
+        private Random RNG = new Random();
 
         /// <summary>
         /// </summary>
@@ -50,31 +55,54 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         }
 
         /// <summary>
+        ///     Adds a player to the list
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="sort"></param>
+        public void AddPlayer(User user, bool sort = false)
+        {
+            var player = new MultiplayerPlayer(Game, user);
+            Players.Add(player);
+            AddContainedDrawable(player);
+
+            RecalculateContainerHeight();
+
+            if (sort)
+                SortPlayers();
+        }
+
+        /// <summary>
+        ///     Removes a player from the list
+        /// </summary>
+        /// <param name="user"></param>
+        public void RemovePlayer(User user)
+        {
+            var player = Players.Find(x => x is MultiplayerPlayer p && p.User == user);
+
+            if (player != null)
+            {
+                player.Destroy();
+                RemoveContainedDrawable(player);
+                Players.Remove(player);
+                RecalculateContainerHeight();
+            }
+
+            SortPlayers();
+        }
+
+        /// <summary>
         /// </summary>
         private void CreatePlayers()
         {
-            Players = new List<MultiplayerSlot>();
-
             for (var i = 0; i < 12; i++)
             {
-                //var player = new EmptyMultiplayerSlot { Parent = this };
-                var player = new MultiplayerPlayer(Game, new User(new OnlineUser()
+                AddPlayer(new User(new OnlineUser()
                 {
                     Id = i,
                     Username = $"User_{i}",
                     CountryFlag = "KR",
                 }));
-
-                player.User.Stats[GameMode.Keys4] = new UserStats()
-                {
-                    Rank = 1
-                };
-
-                Players.Add(player);
-                AddContainedDrawable(player);
             }
-
-            RecalculateContainerHeight();
         }
 
         /// <summary>
@@ -103,10 +131,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <summary>
         ///     Recalculates the content height of the container
         /// </summary>
-        private void RecalculateContainerHeight()
-        {
-            ContentContainer.Height = (Players.First().Height + 20) * 8 - 20;
-        }
+        private void RecalculateContainerHeight() => ContentContainer.Height = (Players.First().Height + 20) * 8 - 20;
 
         /// <summary>
         ///     Sorts players in team play
@@ -191,8 +216,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// </summary>
         private void RemoveUnneededDrawables()
         {
-            foreach (var child in ContentContainer.Children)
+            for (var i = ContentContainer.Children.Count - 1; i >= 0; i--)
             {
+                var child = ContentContainer.Children[i];
+
                 if (Players.Contains(child))
                     continue;
 
