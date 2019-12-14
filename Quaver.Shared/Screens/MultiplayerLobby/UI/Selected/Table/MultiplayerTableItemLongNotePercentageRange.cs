@@ -5,7 +5,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemLongNotePercentageRange : MultiplayerTableItem
     {
-        public MultiplayerTableItemLongNotePercentageRange(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemLongNotePercentageRange(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

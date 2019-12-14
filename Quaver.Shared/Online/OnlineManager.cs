@@ -1003,12 +1003,8 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.Ruleset = e.Ruleset;
-
-            if (CurrentGame.Ruleset != MultiplayerGameRuleset.Team)
-            {
-                CurrentGame.RedTeamPlayers.Clear();
-                CurrentGame.BlueTeamPlayers.Clear();
-            }
+            CurrentGame.RedTeamPlayers.Clear();
+            CurrentGame.BlueTeamPlayers.Clear();
         }
 
         /// <summary>

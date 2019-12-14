@@ -5,7 +5,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemLifeCount : MultiplayerTableItem
     {
-        public MultiplayerTableItemLifeCount(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemLifeCount(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

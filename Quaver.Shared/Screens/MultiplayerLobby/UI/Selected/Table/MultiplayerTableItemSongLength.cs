@@ -6,7 +6,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemSongLength : MultiplayerTableItem
     {
-        public MultiplayerTableItemSongLength(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemSongLength(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

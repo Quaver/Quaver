@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -59,6 +60,45 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
             CreatePlayers();
             SortPlayers();
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
+                OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
+                OnlineManager.Client.OnGameRulesetChanged += OnGameRulesetChanged;
+                OnlineManager.Client.OnGamePlayerTeamChanged += OnPlayerTeamChanged;
+                OnlineManager.Client.OnGameSetReferee += OnRefereeChanged;
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
+                OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+                OnlineManager.Client.OnGameRulesetChanged -= OnGameRulesetChanged;
+                OnlineManager.Client.OnGamePlayerTeamChanged -= OnPlayerTeamChanged;
+                OnlineManager.Client.OnGameSetReferee -= OnRefereeChanged;
+            }
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -101,14 +141,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// </summary>
         private void CreatePlayers()
         {
-            for (var i = 0; i < 12; i++)
+            foreach (var player in Game.Value.PlayerIds)
             {
-                AddPlayer(new User(new OnlineUser()
-                {
-                    Id = i,
-                    Username = $"User_{i}",
-                    CountryFlag = "KR",
-                }));
+                if (OnlineManager.OnlineUsers.ContainsKey(player))
+                    AddPlayer(OnlineManager.OnlineUsers[player]);
             }
         }
 
@@ -253,5 +289,48 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Scrollbar.Alignment = Alignment.BotCenter;
             Scrollbar.Tint = Color.White;
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e)
+        {
+            if (OnlineManager.OnlineUsers.ContainsKey(e.UserId))
+                AddScheduledUpdate(() => AddPlayer(OnlineManager.OnlineUsers[e.UserId], true));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUserLeftGame(object sender, UserLeftGameEventArgs e)
+        {
+            var player = Players.Find(x => x is MultiplayerPlayer p && p.User.OnlineUser.Id == e.UserId)
+                as MultiplayerPlayer;
+
+            if (player == null)
+                return;
+
+            AddScheduledUpdate(() => RemovePlayer(player.User));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameRulesetChanged(object sender, RulesetChangedEventArgs e) => AddScheduledUpdate(SortPlayers);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRefereeChanged(object sender, GameSetRefereeEventArgs e) => AddScheduledUpdate(SortPlayers);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlayerTeamChanged(object sender, PlayerTeamChangedEventArgs e) => AddScheduledUpdate(SortPlayers);
     }
 }
