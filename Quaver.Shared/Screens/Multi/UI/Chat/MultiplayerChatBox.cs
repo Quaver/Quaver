@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Chat
         private void CreateMessageContainer()
         {
             MessageContainer = new ChatMessageScrollContainer(GetChatChannel(),
-                new ScalableVector2(Textbox.Width, Height - 58), 0, 50)
+                new ScalableVector2(Textbox.Width, Height - 64), 0, 50)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
