@@ -1,6 +1,7 @@
 using System;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -56,6 +57,32 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             {
                 Name.Text = item.GetName();
                 Value.Text = item.GetValue();
+
+                var container = (DrawableMultiplayerTable) Container;
+
+                if (container.IsMultiplayer)
+                {
+                    if (item.Selector != null)
+                    {
+                        if (Item.Selector is Dropdown)
+                        {
+                            Item.Selector.Parent = Container.ContentContainer;
+                            Item.Selector.Alignment = Alignment.TopRight;
+                            Item.Selector.Y = Y + Height / 2f - Item.Selector.Height / 2f;
+                        }
+                        else
+                        {
+                            Item.Selector.Parent = this;
+                            Item.Selector.Alignment = Alignment.MidRight;
+                        }
+
+                        Item.Selector.X = -Name.X;
+                        Item.Selector.UsePreviousSpriteBatchOptions = true;
+                        Item.UpdateSelectorState();
+
+                        Value.Visible = false;
+                    }
+                }
             });
         }
 

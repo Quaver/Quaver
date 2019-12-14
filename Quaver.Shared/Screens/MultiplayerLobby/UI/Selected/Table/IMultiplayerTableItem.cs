@@ -1,5 +1,6 @@
 using Quaver.Server.Common.Objects.Multiplayer;
 using Wobble.Bindables;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
@@ -20,5 +21,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         /// <returns></returns>
         string GetValue();
+
+        /// <summary>
+        ///     The drawable used to select the item. This could be a checkbox/dropdown/etc.
+        /// </summary>
+        Drawable Selector { get; set; }
+
+        /// <summary>
+        ///     Updates the state of <see cref="Selector"/>
+        /// </summary>
+        void UpdateSelectorState();
     }
 }

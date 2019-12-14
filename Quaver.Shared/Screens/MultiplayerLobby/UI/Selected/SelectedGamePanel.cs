@@ -13,6 +13,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
     {
         /// <summary>
         /// </summary>
+        public bool IsMultiplayer { get; }
+
+        /// <summary>
+        /// </summary>
         private Bindable<MultiplayerGame> SelectedGame { get; }
 
         /// <summary>
@@ -33,9 +37,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
-        public SelectedGamePanel(Bindable<MultiplayerGame> selectedGame)
+        public SelectedGamePanel(Bindable<MultiplayerGame> selectedGame, bool isMultiplayer = false)
         {
             SelectedGame = selectedGame;
+            IsMultiplayer = isMultiplayer;
+
             Size = new ScalableVector2(564, 838);
             Alpha = 0;
 
@@ -84,7 +90,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 Image = UserInterface.LeaderboardScoresPanel
             };
 
-            Container = new SelectedGamePanelContainer(SelectedGame,
+            Container = new SelectedGamePanelContainer(SelectedGame, IsMultiplayer,
                 new ScalableVector2(PanelRectangle.Width - 4, PanelRectangle.Height - 4))
             {
                 Parent = PanelRectangle,

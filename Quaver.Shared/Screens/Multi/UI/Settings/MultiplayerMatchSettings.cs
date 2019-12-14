@@ -6,7 +6,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Settings
 {
     public class MultiplayerMatchSettings : SelectedGamePanel
     {
-        public MultiplayerMatchSettings(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerMatchSettings(Bindable<MultiplayerGame> game) : base(game, true)
         {
         }
     }

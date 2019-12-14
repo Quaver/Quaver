@@ -6,7 +6,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemDifficultyRange : MultiplayerTableItem
     {
-        public MultiplayerTableItemDifficultyRange(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemDifficultyRange(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

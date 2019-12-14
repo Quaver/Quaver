@@ -9,6 +9,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 {
     public class SelectedGamePanelMatch : Sprite, IMultiplayerGameComponent
     {
+        /// <summary>
+        /// </summary>
+        public bool IsMultiplayer { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -25,10 +29,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// <summary>
         /// </summary>
         /// <param name="selectedGame"></param>
+        /// <param name="isMultiplayer"></param>
         /// <param name="size"></param>
-        public SelectedGamePanelMatch(Bindable<MultiplayerGame> selectedGame, ScalableVector2 size)
+        public SelectedGamePanelMatch(Bindable<MultiplayerGame> selectedGame, bool isMultiplayer, ScalableVector2 size)
         {
             SelectedGame = selectedGame;
+            IsMultiplayer = isMultiplayer;
             Size = size;
             Alpha = 0;
 
@@ -56,7 +62,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateTable()
         {
-            Table = new DrawableMultiplayerTable(SelectedGame, new ScalableVector2(Width,
+            Table = new DrawableMultiplayerTable(SelectedGame, IsMultiplayer, new ScalableVector2(Width,
                 Height - Banner.Height))
             {
                 Parent = this,

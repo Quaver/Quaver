@@ -5,7 +5,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemInProgress : MultiplayerTableItem
     {
-        public MultiplayerTableItemInProgress(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemInProgress(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

@@ -12,6 +12,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
     public class SelectedGamePanelContainer : Sprite
     {
         /// <summary>
+        ///     If the container is for multiplayer. If not, then it'll be for the multiplayer lobby
+        /// </summary>
+        private bool IsMultiplayer { get; }
+
+        /// <summary>
         /// </summary>
         private Bindable<MultiplayerGame> SelectedGame { get; }
 
@@ -26,10 +31,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// <summary>
         /// </summary>
         /// <param name="selectedGame"></param>
+        /// <param name="isMultiplayer"></param>
         /// <param name="size"></param>
-        public SelectedGamePanelContainer(Bindable<MultiplayerGame> selectedGame, ScalableVector2 size)
+        public SelectedGamePanelContainer(Bindable<MultiplayerGame> selectedGame, bool isMultiplayer, ScalableVector2 size)
         {
             SelectedGame = selectedGame;
+            IsMultiplayer = isMultiplayer;
 
             Alpha = 0;
             Size = size;
@@ -67,7 +74,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateSelectedGamePanelMatch()
         {
-            Match = new SelectedGamePanelMatch(SelectedGame, Size)
+            Match = new SelectedGamePanelMatch(SelectedGame, IsMultiplayer, Size)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

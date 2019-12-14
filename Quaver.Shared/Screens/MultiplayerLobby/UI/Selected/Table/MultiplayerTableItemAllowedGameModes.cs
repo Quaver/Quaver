@@ -8,7 +8,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
     public class MultiplayerTableItemAllowedGameModes : MultiplayerTableItem
     {
-        public MultiplayerTableItemAllowedGameModes(Bindable<MultiplayerGame> game) : base(game)
+        public MultiplayerTableItemAllowedGameModes(Bindable<MultiplayerGame> game, bool isMultiplayer)
+            : base(game, isMultiplayer)
         {
         }
 

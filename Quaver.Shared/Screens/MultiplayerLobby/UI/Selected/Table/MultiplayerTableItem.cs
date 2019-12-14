@@ -1,5 +1,6 @@
 using Quaver.Server.Common.Objects.Multiplayer;
 using Wobble.Bindables;
+using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
@@ -12,8 +13,22 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 
         /// <summary>
         /// </summary>
+        public bool IsMultiplayer { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public virtual Drawable Selector { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="game"></param>
-        public MultiplayerTableItem(Bindable<MultiplayerGame> game) => SelectedGame = game;
+        /// <param name="isMultiplayer"></param>
+        public MultiplayerTableItem(Bindable<MultiplayerGame> game, bool isMultiplayer)
+        {
+            IsMultiplayer = isMultiplayer;
+            SelectedGame = game;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -31,6 +46,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <summary>
         /// </summary>
         public virtual void UpdateState()
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UpdateSelectorState()
         {
         }
     }
