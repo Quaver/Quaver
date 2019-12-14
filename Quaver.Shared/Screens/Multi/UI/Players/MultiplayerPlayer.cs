@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -87,6 +88,25 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             UpdateModifiers();
             AddBorder(ColorHelper.HexToColor("#0587E5"), 2);
 
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnUserInfoReceived += OnUserInfoReceived;
+                OnlineManager.Client.OnGameHostChanged += OnGameHostChanged;
+                OnlineManager.Client.OnGameMapChanged += OnGameMapChanged;
+                OnlineManager.Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
+                OnlineManager.Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
+                OnlineManager.Client.OnPlayerReady += OnGamePlayerReady;
+                OnlineManager.Client.OnPlayerNotReady += OnGamePlayerNotReady;
+                OnlineManager.Client.OnUserStats += OnUserStats;
+                OnlineManager.Client.OnGamePlayerWinCount += OnGamePlayerWinCount;
+                OnlineManager.Client.OnGameTeamWinCount += OnGameTeamWinCount;
+                OnlineManager.Client.OnPlayerChangedModifiers += OnPlayerChangedModifiers;
+                OnlineManager.Client.OnChangedModifiers += OnGameChangedModifiers;
+                OnlineManager.Client.OnGameSetReferee += OnGameSetReferee;
+                OnlineManager.Client.OnGamePlayerTeamChanged += OnTeamChanged;
+                SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+            }
+
             // Always request updated user stats
             OnlineManager.Client?.RequestUserStats(new List<int>{ User.OnlineUser.Id });
             UpdateContent();
@@ -111,7 +131,34 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        public void UpdateContent() => ScheduleUpdate(() =>
+        public override void Destroy()
+        {
+            if (OnlineManager.Client != null)
+            {
+                // ReSharper disable once DelegateSubtraction
+                SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+                OnlineManager.Client.OnUserInfoReceived -= OnUserInfoReceived;
+                OnlineManager.Client.OnGameHostChanged -= OnGameHostChanged;
+                OnlineManager.Client.OnGameMapChanged -= OnGameMapChanged;
+                OnlineManager.Client.OnGamePlayerNoMap -= OnGamePlayerNoMap;
+                OnlineManager.Client.OnGamePlayerHasMap -= OnGamePlayerHasMap;
+                OnlineManager.Client.OnPlayerReady -= OnGamePlayerReady;
+                OnlineManager.Client.OnUserStats -= OnUserStats;
+                OnlineManager.Client.OnPlayerNotReady -= OnGamePlayerNotReady;
+                OnlineManager.Client.OnGamePlayerWinCount -= OnGamePlayerWinCount;
+                OnlineManager.Client.OnGameTeamWinCount -= OnGameTeamWinCount;
+                OnlineManager.Client.OnPlayerChangedModifiers -= OnPlayerChangedModifiers;
+                OnlineManager.Client.OnChangedModifiers -= OnGameChangedModifiers;
+                OnlineManager.Client.OnGameSetReferee -= OnGameSetReferee;
+                OnlineManager.Client.OnGamePlayerTeamChanged -= OnTeamChanged;
+            }
+
+            base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UpdateContent() => AddScheduledUpdate(() =>
         {
             // Update username & flag
             if (User.HasUserInfo)
@@ -176,6 +223,14 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Avatar.Border.Tint = Border.Tint;
             Avatar.Border.Tint = new Color(Avatar.Border.Tint.R / 2, Avatar.Border.Tint.G / 2,
                 Avatar.Border.Tint.B / 2);
+
+            if (SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey((ulong) User.OnlineUser.SteamId))
+                Avatar.Image = SteamManager.UserAvatars[(ulong) User.OnlineUser.SteamId];
+            else
+            {
+                Avatar.Image = UserInterface.UnknownAvatar;
+                SteamManager.SendAvatarRetrievalRequest((ulong) User.OnlineUser.SteamId);
+            }
         });
 
         /// <summary>
@@ -317,5 +372,35 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             var game = GameBase.Game as QuaverGame;
             game?.CurrentScreen?.ActivateRightClickOptions(new DrawableOnlineUserRightClickOptions(User));
         }
+
+        private void OnGameSetReferee(object sender, GameSetRefereeEventArgs e) => UpdateContent();
+
+        private void OnGameChangedModifiers(object sender, ChangeModifiersEventArgs e) => UpdateContent();
+
+        private void OnPlayerChangedModifiers(object sender, PlayerChangedModifiersEventArgs e) => UpdateContent();
+
+        private void OnGameTeamWinCount(object sender, TeamWinCountEventArgs e) => UpdateContent();
+
+        private void OnGamePlayerWinCount(object sender, PlayerWinCountEventArgs e) => UpdateContent();
+
+        private void OnGamePlayerNotReady(object sender, PlayerNotReadyEventArgs e) => UpdateContent();
+
+        private void OnUserStats(object sender, UserStatsEventArgs e) => UpdateContent();
+
+        private void OnGamePlayerReady(object sender, PlayerReadyEventArgs e) => UpdateContent();
+
+        private void OnGamePlayerHasMap(object sender, GamePlayerHasMapEventArgs e) => UpdateContent();
+
+        private void OnGamePlayerNoMap(object sender, PlayerGameNoMapEventArgs e) => UpdateContent();
+
+        private void OnGameMapChanged(object sender, GameMapChangedEventArgs e) => UpdateContent();
+
+        private void OnGameHostChanged(object sender, GameHostChangedEventArgs e) => UpdateContent();
+
+        private void OnUserInfoReceived(object sender, UserInfoEventArgs e) => UpdateContent();
+
+        private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e) => UpdateContent();
+
+        private void OnTeamChanged(object sender, PlayerTeamChangedEventArgs e) => UpdateContent();
     }
 }
