@@ -494,20 +494,29 @@ namespace Quaver.Shared
                 case FpsLimitType.Unlimited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     IsFixedTimeStep = false;
+                    WaylandVsync = false;
                     break;
                 case FpsLimitType.Limited:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     IsFixedTimeStep = true;
                     TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                    WaylandVsync = false;
                     break;
                 case FpsLimitType.Vsync:
                     Graphics.SynchronizeWithVerticalRetrace = true;
                     IsFixedTimeStep = true;
+                    WaylandVsync = false;
+                    break;
+                case FpsLimitType.WaylandVsync:
+                    Graphics.SynchronizeWithVerticalRetrace = false;
+                    IsFixedTimeStep = false;
+                    WaylandVsync = true;
                     break;
                 case FpsLimitType.Custom:
                     Graphics.SynchronizeWithVerticalRetrace = false;
                     TargetElapsedTime = TimeSpan.FromSeconds(1d / ConfigManager.CustomFpsLimit.Value);
                     IsFixedTimeStep = true;
+                    WaylandVsync = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -554,6 +563,10 @@ namespace Quaver.Shared
                     break;
                 case FpsLimitType.Vsync:
                     NotificationManager.Show(NotificationLevel.Info, $"Vsync Enabled");
+                    break;
+                case FpsLimitType.WaylandVsync:
+                    NotificationManager.Show(NotificationLevel.Info,
+                        "Wayland VSync is enabled. Note: it only works on Linux under Wayland.");
                     break;
                 case FpsLimitType.Custom:
                     NotificationManager.Show(NotificationLevel.Info,
