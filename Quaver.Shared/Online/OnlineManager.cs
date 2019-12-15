@@ -260,6 +260,8 @@ namespace Quaver.Shared.Online
             Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
             Client.OnGameSetReferee += OnGameSetReferee;
             Client.OnGameMapChanged += OnGameMapChanged;
+            Client.OnPlayerReady += OnGamePlayerReady;
+            Client.OnPlayerNotReady += OnGamePlayerNotReady;
             Client.OnJoinedListeningParty += OnJoinedListeningParty;
             Client.OnLeftListeningParty += OnLeftListeningParty;
             Client.OnListeningPartyStateUpdate += OnListeningPartyStateUpdate;
@@ -1217,6 +1219,30 @@ namespace Quaver.Shared.Online
             CurrentGame.RedTeamPlayers.Remove(e.UserId);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGamePlayerReady(object sender, PlayerReadyEventArgs e)
+        {
+            if (!CurrentGame.PlayersReady.Contains(e.UserId))
+                CurrentGame.PlayersReady.Add(e.UserId);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGamePlayerNotReady(object sender, PlayerNotReadyEventArgs e)
+        {
+            if (CurrentGame.PlayersReady.Contains(e.UserId))
+                CurrentGame.PlayersReady.Remove(e.UserId);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void OnStartedSpectatingPlayer(object sender, StartSpectatePlayerEventArgs e)
         {
             if (SpectatorClients.ContainsKey(e.UserId))
