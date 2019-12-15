@@ -162,7 +162,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 SetSelectedIndex();
 
                 // Reset the starting index so we can be aware of the mapsets that are needed
-                PoolStartingIndex = GetPoolStartingIndex();
+                PoolStartingIndex = DesiredPoolStartingIndex(SelectedIndex.Value);
 
                 // Recreate the object pool
                 CreatePool();
