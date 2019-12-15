@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateBanner()
         {
-            Banner = new SelectedGamePanelMatchBanner(SelectedGame, new ScalableVector2(Width, 136))
+            Banner = new SelectedGamePanelMatchBanner(SelectedGame, new ScalableVector2(Width, 136), IsMultiplayer)
             {
                 Parent = this,
                 X = 1,

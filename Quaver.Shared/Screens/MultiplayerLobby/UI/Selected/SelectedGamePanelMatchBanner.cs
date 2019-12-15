@@ -1,17 +1,35 @@
+using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.Maps;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Download.UI.Drawable;
+using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Games;
+using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
@@ -21,6 +39,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// <summary>
         /// </summary>
         public Bindable<MultiplayerGame> SelectedGame { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool IsMultiplayer { get; }
 
         /// <summary>
         /// </summary>
@@ -40,20 +62,52 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
+        private FilterMetadataBpm Bpm { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private FilterMetadataLength Length { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private FilterMetadataLongNotePercentage LongNotePercentage { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private FilterMetadataNotesPerSecond NotesPerSecond { get; set; }
+
+        /// <summary>
+        /// </summary>
         private Sprite Ruleset { get; set; }
 
         /// <summary>
         /// </summary>
         private Sprite Mode { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private ImageButton Button { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextPlus DownloadStatus { get; set; }
+
+        /// <summary>
+        ///     The color the text is displayed as when not having the map
+        /// </summary>
+        private Color DontHaveMapColor { get; } = ColorHelper.HexToColor("#fa4d4d");
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="selectedGame"></param>
         /// <param name="size"></param>
-        public SelectedGamePanelMatchBanner(Bindable<MultiplayerGame> selectedGame, ScalableVector2 size) : base(size, size)
+        /// <param name="isMultiplayer"></param>
+        public SelectedGamePanelMatchBanner(Bindable<MultiplayerGame> selectedGame, ScalableVector2 size, bool isMultiplayer)
+            : base(size, size)
         {
             SelectedGame = selectedGame;
+            IsMultiplayer = isMultiplayer;
             Alpha = 0;
 
             CreateBackground();
@@ -62,8 +116,36 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             CreateDifficultyRatingText();
             CreateRuleset();
             CreateMode();
+            CreateBpm();
+            CreateLength();
+            CreateLongNotePercentage();
+            CreateNotesPerSecond();
+            CreateDownloadStatus();
+            CreateButton();
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
+            MapManager.Selected.ValueChanged += OnMapChanged;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnGameMapChanged += OnMultplayerMapChanged;
+                OnlineManager.Client.OnGameRulesetChanged += OnMultiplayerGameRulesetChanged;
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (IsMultiplayer)
+            {
+                Button.Alpha = MathHelper.Lerp(Button.Alpha, Button.IsHovered ? 0.55f : 0,
+                    (float) GameBase.Game.TimeSinceLastFrame / 40);
+            }
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -72,6 +154,16 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         public override void Destroy()
         {
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
+
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnGameMapChanged -= OnMultplayerMapChanged;
+                OnlineManager.Client.OnGameRulesetChanged -= OnMultiplayerGameRulesetChanged;
+            }
+
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
+
             base.Destroy();
         }
 
@@ -98,7 +190,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 24)
             {
                 Parent = this,
-                Position = new ScalableVector2(14, 14)
+                Position = new ScalableVector2(14, 14),
+                Visible = !IsMultiplayer
             };
         }
 
@@ -111,6 +204,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 32)
             };
+
+            if (IsMultiplayer)
+                Map.Y = Name.Y + Name.Height + 6;
         }
 
         /// <summary>
@@ -150,6 +246,97 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             };
         }
 
+        /// <summary>
+        /// </summary>
+        private void CreateBpm() => Bpm = new FilterMetadataBpm()
+        {
+            Parent = this,
+            X = Name.X,
+            Y = DifficultyRating.Y + DifficultyRating.Height + 10,
+            Visible = IsMultiplayer,
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateLength() => Length = new FilterMetadataLength()
+        {
+            Parent = this,
+            Y = Bpm.Y,
+            X = Bpm.X + Bpm.Width + 22,
+            Visible = IsMultiplayer,
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateLongNotePercentage() => LongNotePercentage = new FilterMetadataLongNotePercentage
+        {
+            Parent = this,
+            Y = Bpm.Y,
+            X = Length.X + Length.Width + 22,
+            Visible = IsMultiplayer,
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateNotesPerSecond() => NotesPerSecond = new FilterMetadataNotesPerSecond()
+        {
+            Parent = this,
+            Y = Bpm.Y,
+            X = LongNotePercentage.X + LongNotePercentage.Width + 22,
+            Visible = IsMultiplayer
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateButton()
+        {
+            Button = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = this,
+                Size = Size,
+                Alpha = 0,
+                Tint = Color.Black
+            };
+
+            Button.Clicked += (sender, args) =>
+            {
+                if (!IsMultiplayer)
+                    return;
+
+                // Have the host select the map
+                if (SelectedGame.Value.HostId == OnlineManager.Self?.OnlineUser?.Id)
+                {
+                    var game = (QuaverGame) GameBase.Game;
+
+                    // Automatically start importing
+                    var multi = (MultiplayerGameScreen) game.CurrentScreen;
+                    multi.DontLeaveGameUponScreenSwitch = true;
+
+                    multi.Exit(() => new SelectionScreen());
+                }
+                else if (MapManager.Selected.Value == null)
+                    DownloadMapset();
+                else if (SelectedGame.Value.MapId != -1)
+                    BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");
+                else if (SelectedGame.Value.MapId == -1)
+                    NotificationManager.Show(NotificationLevel.Warning, "Cannot view online listing because this map is not submitted online!");
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateDownloadStatus()
+        {
+            DownloadStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            {
+                Parent = this,
+                Alignment = Bpm.Alignment,
+                Position = Bpm.Position,
+                Visible = false,
+                Tint = DontHaveMapColor
+            };
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -166,10 +353,19 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 if (map == null)
                     map = MapManager.FindMapFromMd5(SelectedGame.Value.AlternativeMd5);
 
-                Background.ClearAnimations();
-                Background.FadeTo(0, Easing.Linear, 200);
+                if (BackgroundHelper.Map == map)
+                {
+                    Background.Image = BackgroundHelper.RawTexture;
+                    Background.Alpha = IsMultiplayer ? 0.45f : 0;
+                }
+                else
+                {
+                    Background.ClearAnimations();
+                    Background.FadeTo(0, Easing.Linear, 200);
 
-                BackgroundHelper.Load(map);
+                    if (!IsMultiplayer || map != null)
+                        BackgroundHelper.Load(map);
+                }
             });
 
             ScheduleUpdate(() =>
@@ -182,13 +378,96 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 Map.Text = SelectedGame.Value.GetMapName();
                 Map.TruncateWithEllipsis(maxWidth);
 
-                DifficultyRating.Text = $"{StringHelper.RatingToString(SelectedGame.Value.DifficultyRating)} - {SelectedGame.Value.GetDifficultyName()}";
-                DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) SelectedGame.Value.DifficultyRating);
+                var map = MapManager.FindMapFromMd5(SelectedGame.Value.MapMd5);
+
+                if (map == null)
+                    map = MapManager.FindMapFromMd5(SelectedGame.Value.AlternativeMd5);
+
+                if (map != null)
+                {
+                    DifficultyRating.Text = $"{map.DifficultyFromMods(ModManager.Mods):0.00}";
+                    DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) map.DifficultyFromMods(ModManager.Mods));
+
+                    if (IsMultiplayer)
+                    {
+                        DownloadStatus.Visible = false;
+                        Bpm.Visible = true;
+                        Length.Visible = true;
+                        NotesPerSecond.Visible = true;
+                        LongNotePercentage.Visible = true;
+                    }
+                }
+                else
+                {
+                    DifficultyRating.Text = $"{StringHelper.RatingToString(SelectedGame.Value.DifficultyRating)}";
+                    DifficultyRating.Tint = ColorHelper.DifficultyToColor((float) SelectedGame.Value.DifficultyRating);
+
+                    if (IsMultiplayer)
+                    {
+                        DownloadStatus.Visible = true;
+                        Bpm.Visible = false;
+                        Length.Visible = false;
+                        NotesPerSecond.Visible = false;
+                        LongNotePercentage.Visible = false;
+
+                        if (SelectedGame.Value.MapsetId == -1)
+                            DownloadStatus.Text = $"The download for this map is not available.";
+                        else
+                            DownloadStatus.Text = $"You do not have this map. Click here to download!";
+                    }
+                }
+
+                DifficultyRating.Text += $" - {SelectedGame.Value.GetDifficultyName()}";
+                DifficultyRating.TruncateWithEllipsis(maxWidth);
 
                 Ruleset.Image = DrawableMultiplayerGame.GetRulesetIcon(SelectedGame.Value);
                 Mode.Image = DrawableMultiplayerGame.GetModeIcon(SelectedGame.Value);
             });
         }
+
+        /// <summary>
+        /// </summary>
+        private void DownloadMapset() => ThreadScheduler.Run(() =>
+        {
+            if (MapManager.Selected.Value != null)
+                return;
+
+            // Map is already downloading
+            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.MapsetId))
+                return;
+
+            try
+            {
+                var response = new APIRequestMapInformation(SelectedGame.Value.MapId).ExecuteRequest();
+
+                // If we're already downloading it, don't restart
+                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                    return;
+
+                // The mapset is currently being imported
+                if (MapsetImporter.Queue.Contains(
+                    $"{ConfigManager.DataDirectory.Value}/Downloads/{response.Map.MapsetId}.qp"))
+                    return;
+
+                var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
+
+                var game = (QuaverGame) GameBase.Game;
+
+                // Automatically start importing
+                var multi = (MultiplayerGameScreen) game.CurrentScreen;
+                multi.DontLeaveGameUponScreenSwitch = true;
+
+                download.Completed.ValueChanged +=
+                    (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+
+                MapsetDownloadManager.OpenOnlineHub();
+                game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Network);
+            }
+        });
 
         /// <summary>
         /// </summary>
@@ -199,9 +478,34 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             lock (Background.Image)
             {
                 Background.Image = e.Texture;
+
                 Background.ClearAnimations();
                 Background.FadeTo(0.45f, Easing.Linear, 200);
+
+                if (IsMultiplayer && e.Texture == UserInterface.MenuBackgroundRaw)
+                {
+                    Background.ClearAnimations();
+                    Background.FadeTo(0, Easing.Linear, 200);
+                }
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultiplayerGameRulesetChanged(object sender, RulesetChangedEventArgs e) => UpdateState();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultplayerMapChanged(object sender, GameMapChangedEventArgs e) => UpdateState();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => UpdateState();
     }
 }
