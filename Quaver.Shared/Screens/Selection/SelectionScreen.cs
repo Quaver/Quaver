@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
@@ -52,7 +53,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     If the user is in multiplayer, this is the current screen
         /// </summary>
-        public MultiplayerScreen MultiplayerScreen { get; }
+        public bool IsMultiplayer { get; }
 
         /// <summary>
         ///     Stores the currently available mapsets to play in the screen
@@ -90,19 +91,19 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
-        public SelectionScreen(MultiplayerScreen multiplayerScreen = null)
+        public SelectionScreen()
         {
-            MultiplayerScreen = multiplayerScreen;
+            IsMultiplayer = OnlineManager.CurrentGame != null;
 
             // Go to the import screen if we've imported a map not on the select screen
             if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
                                                || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
-                Exit(() => new ImportingScreen(MultiplayerScreen, true));
+                Exit(() => new ImportingScreen(null, true));
                 return;
             }
 
-            if (MultiplayerScreen != null)
+            if (IsMultiplayer)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);
             else
                 SetRichPresence();
@@ -551,11 +552,10 @@ namespace Quaver.Shared.Screens.Selection
         {
             Exit(() =>
             {
-                if (MultiplayerScreen != null)
+                if (IsMultiplayer)
                 {
-                    MultiplayerScreen.Exiting = false;
                     OnlineManager.Client?.SetGameCurrentlySelectingMap(false);
-                    return MultiplayerScreen;
+                    return new MultiplayerGameScreen();
                 }
 
                 return new MainMenuScreen();
@@ -615,11 +615,7 @@ namespace Quaver.Shared.Screens.Selection
 
                 OnlineManager.Client.SetGameCurrentlySelectingMap(false);
 
-                Exit(() =>
-                {
-                    MultiplayerScreen.Exiting = false;
-                    return MultiplayerScreen;
-                });
+                Exit(() => new MultiplayerGameScreen());
             });
         }
 
@@ -833,7 +829,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
-            => Exit(() => new ImportingScreen(MultiplayerScreen, true));
+            => Exit(() => new ImportingScreen(null, true));
 
         /// <inheritdoc />
         /// <summary>

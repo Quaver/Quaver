@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Select;
@@ -103,19 +104,16 @@ namespace Quaver.Shared.Screens.Importing
         {
             Logger.Important($"Map import has completed", LogType.Runtime);
 
-            if (OnlineManager.CurrentGame != null && MultiplayerScreen != null)
+            if (OnlineManager.CurrentGame != null)
             {
                 MapManager.Selected.Value = PreviouslySelectedMap;
-
-                var view = (MultiplayerScreenView) MultiplayerScreen.View;
-                view.Map.UpdateContent();
 
                 Exit(() =>
                 {
                     if (ComingFromSelect)
-                        return new SelectionScreen(MultiplayerScreen);
+                        return new SelectionScreen();
 
-                    return MultiplayerScreen;
+                    return new MultiplayerGameScreen();
                 });
             }
             else if (OnlineManager.ListeningParty != null)
@@ -138,7 +136,7 @@ namespace Quaver.Shared.Screens.Importing
             }
             else
             {
-                Exit(() => new SelectionScreen(MultiplayerScreen));
+                Exit(() => new SelectionScreen());
             }
         }
     }
