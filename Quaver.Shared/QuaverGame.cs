@@ -366,6 +366,8 @@ namespace Quaver.Shared
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
+
+            ClearAlphaChannel(gameTime);
         }
 
         /// <summary>
