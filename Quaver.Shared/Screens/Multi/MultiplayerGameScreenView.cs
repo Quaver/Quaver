@@ -5,6 +5,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Multi.UI.Chat;
+using Quaver.Shared.Screens.Multi.UI.Footer;
 using Quaver.Shared.Screens.Multi.UI.Players;
 using Quaver.Shared.Screens.Multi.UI.Settings;
 using Quaver.Shared.Screens.Multi.UI.Status;
@@ -122,7 +123,7 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
-        private void CreateFooter() => Footer = new TestMenuBorderFooter()
+        private void CreateFooter() => Footer = new MultiplayerGameFooter(GameScreen, GameScreen.Game)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft
