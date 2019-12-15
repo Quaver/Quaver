@@ -75,7 +75,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
                 Tint = BaseColor
             };
 
-            Size = new ScalableVector2(Icon.Width + Text.Width + Spacing, Icon.Height);
+            UpdateSize();
             Alpha = 0;
 
             Hovered += OnHoverEnter;
@@ -95,6 +95,19 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
             base.Update(gameTime);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="text"></param>
+        public void UpdateText(string text)
+        {
+            Text.Text = text.ToUpper();
+            UpdateSize();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UpdateSize() => Size = new ScalableVector2(Icon.Width + Text.Width + Spacing, Icon.Height);
 
         public override void DrawToSpriteBatch()
         {
