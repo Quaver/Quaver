@@ -28,15 +28,30 @@ namespace Quaver.Shared.Screens.Selection.Components
 
         /// <summary>
         /// </summary>
-        public SelectJukebox(QuaverScreen screen = null)
+        private bool PlayFromBeginning { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public SelectJukebox(QuaverScreen screen = null, bool playFromBeginning = false)
         {
             Screen = screen;
+            PlayFromBeginning = playFromBeginning;
             Size = new ScalableVector2(0, 0);
 
             LoadTrackTask = new TaskHandler<int, int>((i, token) =>
             {
                 LogLoadingTrack();
-                AudioEngine.PlaySelectedTrackAtPreview();
+
+                if (PlayFromBeginning)
+                {
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track.Play();
+                }
+                else
+                {
+                    AudioEngine.PlaySelectedTrackAtPreview();
+                }
+
                 AudioTrackStoppedInLastFrame = false;
                 return 0;
             });

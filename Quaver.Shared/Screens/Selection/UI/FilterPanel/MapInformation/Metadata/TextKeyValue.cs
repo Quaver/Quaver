@@ -13,12 +13,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         /// <summary>
         ///     Displays the key of the metadata
         /// </summary>
-        protected SpriteTextPlus Key { get; private set; }
+        public SpriteTextPlus Key { get; private set; }
 
         /// <summary>
         ///     Displays the value of the metadata
         /// </summary>
-        protected SpriteTextPlus Value { get; private set; }
+        public SpriteTextPlus Value { get; private set; }
 
         /// <summary>
         ///     The size of the font

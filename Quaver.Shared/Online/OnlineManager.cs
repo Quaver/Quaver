@@ -259,6 +259,7 @@ namespace Quaver.Shared.Online
             Client.OnGamePlayerHasMap += OnGamePlayerHasMap;
             Client.OnGameHostSelectingMap += OnGameHostSelectingMap;
             Client.OnGameSetReferee += OnGameSetReferee;
+            Client.OnGameMapChanged += OnGameMapChanged;
             Client.OnJoinedListeningParty += OnJoinedListeningParty;
             Client.OnLeftListeningParty += OnLeftListeningParty;
             Client.OnListeningPartyStateUpdate += OnListeningPartyStateUpdate;
@@ -707,7 +708,7 @@ namespace Quaver.Shared.Online
             game.CurrentScreen.Exit(() =>
             {
                 Logger.Important($"Successfully joined game: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
-                return new MultiplayerScreen(CurrentGame);
+                return new MultiplayerGameScreen();
             });
         }
 
@@ -1180,6 +1181,26 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.HostSelectingMap = e.IsSelecting;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameMapChanged(object sender, GameMapChangedEventArgs e)
+        {
+            // Make sure to clear all the players that don't have the map, as this information is
+            // now outdated.
+            CurrentGame.PlayersWithoutMap.Clear();
+
+            CurrentGame.MapMd5 = e.MapMd5;
+            CurrentGame.AlternativeMd5 = e.AlternativeMd5;
+            CurrentGame.MapId = e.MapId;
+            CurrentGame.MapsetId = e.MapsetId;
+            CurrentGame.Map = e.Map;
+            CurrentGame.DifficultyRating = e.DifficultyRating;
+            CurrentGame.AllDifficultyRatings = e.AllDifficultyRatings;
+            CurrentGame.GameMode = e.GameMode;
         }
 
         /// <summary>

@@ -107,7 +107,7 @@ namespace Quaver.Shared.Database.Maps
                     if (OnlineManager.CurrentGame != null)
                     {
                         var select = game.CurrentScreen as SelectionScreen;
-                        screen.Exit(() => new ImportingScreen(select?.MultiplayerScreen, true));
+                        screen.Exit(() => new ImportingScreen(null, true));
                         return;
                     }
 

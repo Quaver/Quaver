@@ -1,3 +1,5 @@
+using System;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -6,9 +8,15 @@ using Quaver.Shared.Screens.Multi.UI.Chat;
 using Quaver.Shared.Screens.Multi.UI.Players;
 using Quaver.Shared.Screens.Multi.UI.Settings;
 using Quaver.Shared.Screens.Multi.UI.Status;
+using Quaver.Shared.Screens.Selection.Components;
+using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Leaderboard;
+using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 
@@ -42,11 +50,19 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private LeaderboardContainer Leaderboard { get; set; }
+
+        /// <summary>
+        /// </summary>
         private MultiplayerPlayerList PlayerList { get; set; }
 
         /// <summary>
         /// </summary>
         private MultiplayerChatBox Chat { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public float ScreenPaddingX { get; } = 50;
 
         /// <inheritdoc />
         /// <summary>
@@ -54,16 +70,22 @@ namespace Quaver.Shared.Screens.Multi
         /// <param name="screen"></param>
         public MultiplayerGameScreenView(Screen screen) : base(screen)
         {
+            // ReSharper disable once ObjectCreationAsStatement
+            new SelectJukebox(GameScreen, true) {Parent = Container};
+
             CreateBackground();
             CreateHeader();
             CreateFooter();
             CreateStatusPanel();
             CreateMatchSettings();
+            CreateLeaderboard();
             CreatePlayerList();
             CreateChat();
 
             Header.Parent = Container;
             Footer.Parent = Container;
+
+            GameScreen.ActiveLeftPanel.ValueChanged += OnActiveLeftPanelChanged;
         }
 
         /// <inheritdoc />
@@ -125,6 +147,20 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private void CreateLeaderboard()
+        {
+            Leaderboard = new LeaderboardContainer
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Y = MatchSettings.Y
+            };
+
+            Leaderboard.X = -Leaderboard.Width - 50;
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreatePlayerList()
         {
             PlayerList = new MultiplayerPlayerList(GameScreen.Game)
@@ -147,6 +183,35 @@ namespace Quaver.Shared.Screens.Multi
                 Y = PlayerList.Y + PlayerList.Height + 20,
                 X = -MatchSettings.X
             };
+        }
+
+        /// <summary>
+        ///     Called when the active left panel is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnActiveLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
+        {
+            Leaderboard.ClearAnimations();
+            MatchSettings.ClearAnimations();
+
+            const int animTime = 400;
+            const Easing easing = Easing.OutQuint;
+            var inactivePos = -Leaderboard.Width - ScreenPaddingX;
+
+            switch (e.Value)
+            {
+                case SelectContainerPanel.Leaderboard:
+                    Leaderboard.MoveToX(ScreenPaddingX, easing, animTime);
+                    MatchSettings.MoveToX(inactivePos, easing, animTime);
+                    break;
+                case SelectContainerPanel.MatchSettings:
+                    MatchSettings.MoveToX(ScreenPaddingX, easing, animTime);
+                    Leaderboard.MoveToX(inactivePos, easing, animTime);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

@@ -145,6 +145,16 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             {
                 if (OnlineManager.OnlineUsers.ContainsKey(player))
                     AddPlayer(OnlineManager.OnlineUsers[player]);
+                else
+                {
+                    AddPlayer(new User(new OnlineUser()
+                    {
+                        Id = player,
+                        SteamId = player,
+                        Username = $"User_{player}",
+                        CountryFlag = "US"
+                    }));
+                }
             }
         }
 

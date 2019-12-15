@@ -164,20 +164,20 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             if (User.HasUserInfo)
             {
                 Username.Text = User.OnlineUser.Username;
-
-                if (User.Stats.ContainsKey((GameMode) Game.Value.GameMode))
-                    Username.Text += $"";
-
                 Flag.Image = Flags.Get(User.OnlineUser.CountryFlag ?? "XX");
             }
             else
             {
                 // Request the user's information from the server
                 OnlineManager.Client?.RequestUserInfo(new List<int>{ User.OnlineUser.Id });
+                OnlineManager.Client?.RequestUserStats(new List<int>{ User.OnlineUser.Id });
 
                 Username.Text = "Loading...";
                 Flag.Image = Flags.Get("XX");
             }
+
+            if (User.Stats.ContainsKey((GameMode) Game.Value.GameMode))
+                Username.Text += $" (#{User.Stats[(GameMode) Game.Value.GameMode].Rank})";
 
             // Update host crown visibility
             HostCrown.Visible = Game.Value.HostId == User.OnlineUser.Id;
