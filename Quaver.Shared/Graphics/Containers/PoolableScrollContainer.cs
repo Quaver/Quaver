@@ -145,7 +145,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         /// <param name="middleObjectIndex"></param>
         /// <returns></returns>
-        private int DesiredPoolStartingIndex(int middleObjectIndex)
+        protected int DesiredPoolStartingIndex(int middleObjectIndex)
         {
             if (middleObjectIndex < PoolSize / 2)
                 return 0;

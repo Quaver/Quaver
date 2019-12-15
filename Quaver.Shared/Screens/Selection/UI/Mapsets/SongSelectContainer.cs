@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             // ReSharper disable once VirtualMemberCallInConstructor
             SetSelectedIndex();
 
-            PoolStartingIndex = GetPoolStartingIndex();
+            PoolStartingIndex = DesiredPoolStartingIndex(SelectedIndex.Value);
             SnapToSelected();
             CreatePool();
             PositionAndContainPoolObjects();
@@ -128,26 +128,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             Scrollbar.Parent = ScrollbarBackground;
             Scrollbar.Alignment = Alignment.BotCenter;
             Scrollbar.Tint = Color.White;
-        }
-
-        /// <summary>
-        ///    Retrieves the starting index for the object pool
-        /// </summary>
-        /// <returns></returns>
-        protected int GetPoolStartingIndex()
-        {
-            const int ITEMS_DISPLAYED_BEFORE_POOL_SHIFT = 5;
-
-            var val = SelectedIndex.Value - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT;
-
-            if (SelectedIndex.Value <= 0)
-                return 0;
-
-            if (SelectedIndex.Value <= AvailableItems.Count - ITEMS_DISPLAYED_BEFORE_POOL_SHIFT)
-                return val < 0 ? 0 : val;
-
-            var proposed = AvailableItems.Count - PoolSize;
-            return proposed < 0 ? 0 : proposed;
         }
 
         /// <summary>
