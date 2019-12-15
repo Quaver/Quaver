@@ -34,12 +34,12 @@ namespace Quaver.Shared.Graphics.Menu.Border
         /// <summary>
         ///     The items that are aligned from left to right of the footer
         /// </summary>
-        private List<Drawable> LeftAlignedItems { get; }
+        protected List<Drawable> LeftAlignedItems { get; }
 
         /// <summary>
         ///     The items that are aligned from right to left of the footer
         /// </summary>
-        private List<Drawable> RightAlignedItems { get; }
+        protected List<Drawable> RightAlignedItems { get; }
 
         /// <summary>
         /// </summary>
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
         /// <summary>
         ///     Aligns the drawables from right to left
         /// </summary>
-        private void AlignRightItems()
+        protected void AlignRightItems()
         {
             if (RightAlignedItems == null || RightAlignedItems.Count == 0)
                 return;
