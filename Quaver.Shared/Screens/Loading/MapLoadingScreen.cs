@@ -194,8 +194,16 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         public static void AddModsFromIdentifiers(ModIdentifier mods)
         {
-            // Remove all the current mods that we have on.
-            ModManager.RemoveAllMods();
+            // Only remove the modifiers that need to be removed and aren't already activated
+            for (var i = ModManager.CurrentModifiersList.Count - 1; i >= 0; i--)
+            {
+                var mod = ModManager.CurrentModifiersList[i];
+
+                if (mods.HasFlag(mod.ModIdentifier))
+                    continue;
+
+                ModManager.RemoveMod(mod.ModIdentifier, false, false);
+            }
 
             for (var i = 0; i <= Math.Log((long)mods, 2); i++)
             {
@@ -206,13 +214,19 @@ namespace Quaver.Shared.Screens.Loading
 
                 try
                 {
-                    ModManager.AddMod(mod);
+                    // Mod is already activated
+                    if (ModManager.Mods.HasFlag(mod))
+                        continue;
+
+                    ModManager.AddMod(mod, false, false);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+
+            ModManager.FireModsChangedEvent();
         }
     }
 }
