@@ -75,7 +75,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 {
                     UsePreviousSpriteBatchOptions = true,
                     Tint = Mod.ModColor
-                }
+                },
+                SetChildrenAlpha = true
             };
 
             ModManager.ModsChanged += OnModsChanged;
@@ -88,6 +89,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            RateChanger.SelectedItemText.Alpha = Name.Alpha;
+            RateChanger.ButtonSelectLeft.Alpha = Name.Alpha;
+            RateChanger.ButtonSelectRight.Alpha = Name.Alpha;
+
             base.Update(gameTime);
         }
 
