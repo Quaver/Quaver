@@ -361,9 +361,6 @@ namespace Quaver.Shared.Screens.Selection
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
-            if (OnlineManager.CurrentGame != null)
-                return;
-
             // Increase rate.
             if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus) || KeyboardManager.IsUniqueKeyPress(Keys.Add))
                 ModManager.AddSpeedMods(GetNextRate(true));

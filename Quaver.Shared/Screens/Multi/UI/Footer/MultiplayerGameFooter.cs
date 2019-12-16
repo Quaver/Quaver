@@ -28,13 +28,14 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
             {
                 new IconTextButtonLeaveMultiplayerGame(screen),
                 new IconTextButtonOptions(),
+                new IconTextButtonMultiplayerModifiers((MultiplayerGameScreen) screen),
                 new IconTextButtonMultiplayerLeaderboard((MultiplayerGameScreen) screen),
-                new IconTextButtonMultiplayerCommands(),
             },
             new List<Drawable>()
             {
                 new IconTextButtonMultiplayerReady(game),
                 new IconTextButtonMultiplayerMatchHistory(game),
+                new IconTextButtonMultiplayerCommands(),
             })
         {
             Game = game;

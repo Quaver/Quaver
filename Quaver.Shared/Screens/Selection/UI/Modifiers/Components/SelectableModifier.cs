@@ -1,11 +1,14 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
+using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -24,7 +27,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
         /// <summary>
         /// </summary>
-        protected IGameplayModifier Mod { get; }
+        public IGameplayModifier Mod { get; }
 
         /// <summary>
         /// </summary>
@@ -90,10 +93,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 if (Mod is ModSpeed || Mod is ModJudgementWindows)
                     return;
 
+                if (!CanActivateMultiplayerMod())
+                    return;
+
                 if (ModManager.IsActivated(Mod.ModIdentifier))
-                    ModManager.RemoveMod(Mod.ModIdentifier);
+                    ModManager.RemoveMod(Mod.ModIdentifier, true);
                 else
-                    ModManager.AddMod(Mod.ModIdentifier);
+                    ModManager.AddMod(Mod.ModIdentifier, true);
             };
 
             ModManager.ModsChanged += OnModsChanged;
@@ -106,6 +112,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public override void Update(GameTime gameTime)
         {
             PerformHoverAnimation(gameTime);
+
+            Name.Alpha = CanActivateMultiplayerMod() ? 1f : 0.60f;
+            Icon.Alpha = Name.Alpha;
 
             base.Update(gameTime);
         }
@@ -148,6 +157,37 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-JW.png");
 
             return ModManager.GetTexture(Mod.ModIdentifier, !ModManager.IsActivated(Mod.ModIdentifier));
+        }
+
+        /// <summary>
+        ///     Returns if the user is allowed to activate the multiplayer mod
+        /// </summary>
+        /// <returns></returns>
+        protected bool CanActivateMultiplayerMod()
+        {
+            var game = OnlineManager.CurrentGame;
+
+            if (game == null)
+                return true;
+
+            if (Mod is ModJudgementWindows)
+                return true;
+
+            if (!Mod.AllowedInMultiplayer)
+                return false;
+
+            var isHost = game.HostId == OnlineManager.Self.OnlineUser.Id;
+
+            if (Mod.OnlyMultiplayerHostCanCanChange && !isHost)
+                return false;
+
+            if (Mod is ModSpeed && !isHost && !game.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+                return false;
+
+            if (!(Mod is ModSpeed) && !isHost && !game.FreeModType.HasFlag(MultiplayerFreeModType.Regular))
+                return false;
+
+            return true;
         }
     }
 }

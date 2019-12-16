@@ -9,7 +9,9 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Selection.UI;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
@@ -60,6 +62,15 @@ namespace Quaver.Shared.Screens.Multi
                 OnlineManager.Client.OnGameMapChanged += OnMapChanged;
 
             View = new MultiplayerGameScreenView(this);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
+            base.OnFirstUpdate();
         }
 
         /// <summary>
@@ -147,8 +158,21 @@ namespace Quaver.Shared.Screens.Multi
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                HandleKeyPressF1();
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 HandleKeyPressF2();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF1()
+        {
+            if (ActiveLeftPanel.Value != SelectContainerPanel.Modifiers)
+                ActiveLeftPanel.Value = SelectContainerPanel.Modifiers;
+            else
+                ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
         }
 
         /// <summary>

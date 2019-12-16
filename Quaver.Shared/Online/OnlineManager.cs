@@ -833,8 +833,7 @@ namespace Quaver.Shared.Online
             CurrentGame.Modifiers = e.Modifiers.ToString();
             CurrentGame.DifficultyRating = e.DifficultyRating;
 
-            if (ModManager.Mods != (ModIdentifier) e.Modifiers)
-                MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
+            MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
         }
 
         /// <summary>
