@@ -468,13 +468,9 @@ namespace Quaver.Shared
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
-                TextFps =
-                {
-                    Tint = Color.White
-                },
                 X = -5,
                 Y = -36,
-                Alpha = 0
+                Visible = false
             };
 
             ShowFpsCounter(fpsCounter);
@@ -482,9 +478,9 @@ namespace Quaver.Shared
         }
 
         /// <summary>
-        ///     Shows the FPs counter based on the current config variable.
+        ///     Shows the FPS counter based on the current config variable.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
+        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
 
         /// <summary>
         ///    Handles limiting/unlimiting FPS based on user config
