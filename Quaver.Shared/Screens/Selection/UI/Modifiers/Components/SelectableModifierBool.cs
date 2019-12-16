@@ -26,12 +26,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             OnOffButton = new IconButton(Texture, (sender, args) =>
             {
-                if (!CanActivateMultiplayerMod())
-                {
-                    NotificationManager.Show(NotificationLevel.Warning,  "You must either be host or free mod/rate must be activated to use this mod.");
-                    return;
-                }
-
                 if (ModManager.IsActivated(Mod.ModIdentifier))
                     ModManager.RemoveMod(Mod.ModIdentifier, true);
                 else
@@ -58,10 +52,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
             if (!OnOffButton.IsPerformingFadeAnimations)
                 OnOffButton.Alpha = Name.Alpha;
-            
+
             base.Update(gameTime);
         }
-        
+
 
         /// <inheritdoc />
         /// <summary>
