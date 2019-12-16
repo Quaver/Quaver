@@ -55,6 +55,10 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private ModifierSelectorContainer Modifiers { get; set; }
+
+        /// <summary>
+        /// </summary>
         private MultiplayerPlayerList PlayerList { get; set; }
 
         /// <summary>
@@ -82,6 +86,7 @@ namespace Quaver.Shared.Screens.Multi
             CreateLeaderboard();
             CreatePlayerList();
             CreateChat();
+            CreateModifiers();
 
             Header.Parent = Container;
             Footer.Parent = Container;
@@ -157,7 +162,21 @@ namespace Quaver.Shared.Screens.Multi
                 Y = MatchSettings.Y
             };
 
-            Leaderboard.X = -Leaderboard.Width - 50;
+            Leaderboard.X = -Leaderboard.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateModifiers()
+        {
+            Modifiers = new ModifierSelectorContainer(GameScreen.ActiveLeftPanel)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Y = MatchSettings.Y
+            };
+
+            Modifiers.X = -Modifiers.Width - ScreenPaddingX;
         }
 
         /// <summary>
@@ -195,6 +214,7 @@ namespace Quaver.Shared.Screens.Multi
         {
             Leaderboard.ClearAnimations();
             MatchSettings.ClearAnimations();
+            Modifiers.ClearAnimations();
 
             const int animTime = 400;
             const Easing easing = Easing.OutQuint;
@@ -205,9 +225,16 @@ namespace Quaver.Shared.Screens.Multi
                 case SelectContainerPanel.Leaderboard:
                     Leaderboard.MoveToX(ScreenPaddingX, easing, animTime);
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
+                    Modifiers.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.MatchSettings:
                     MatchSettings.MoveToX(ScreenPaddingX, easing, animTime);
+                    Leaderboard.MoveToX(inactivePos, easing, animTime);
+                    Modifiers.MoveToX(inactivePos, easing, animTime);
+                    break;
+                case SelectContainerPanel.Modifiers:
+                    Modifiers.MoveToX(ScreenPaddingX, easing, animTime);
+                    MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
                     break;
                 default:

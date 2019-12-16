@@ -130,15 +130,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// </summary>
         /// <param name="val"></param>
         /// <param name="index"></param>
-        private static void OnSelected(string val, int index)
+        private void OnSelected(string val, int index)
         {
-            if (val == "1.0x")
+            if (!CanActivateMultiplayerMod())
             {
-                ModManager.RemoveSpeedMods();
+                RateChanger.SelectedIndex = GetSelectedIndex();
+                RateChanger.SelectedItemText.Text = Speeds[GetSelectedIndex()];
                 return;
             }
 
-            ModManager.AddMod(ModHelper.GetModsFromRate(float.Parse(val.Replace("x", ""))));
+            if (val == "1.0x")
+            {
+                ModManager.RemoveSpeedMods(true);
+                return;
+            }
+
+            ModManager.AddMod(ModHelper.GetModsFromRate(float.Parse(val.Replace("x", ""))), true);
         }
 
         /// <summary>
@@ -150,9 +157,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             var time = GameBase.Game.TimeRunning;
 
-            if (time - TimeSinceLastClicked <= 500)
+            if (time - TimeSinceLastClicked <= 500 && CanActivateMultiplayerMod())
             {
-                ModManager.RemoveSpeedMods();
+                ModManager.RemoveSpeedMods(true);
 
                 TimeSinceLastClicked = 0;
                 return;
@@ -167,8 +174,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <param name="e"></param>
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            RateChanger.SelectedIndex = GetSelectedIndex();
-            RateChanger.SelectedItemText.Text = Speeds[GetSelectedIndex()];
+            ScheduleUpdate(() =>
+            {
+                RateChanger.SelectedIndex = GetSelectedIndex();
+                RateChanger.SelectedItemText.Text = Speeds[GetSelectedIndex()];
+            });
         }
     }
 }

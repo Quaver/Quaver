@@ -5,6 +5,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -126,7 +127,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
                 if (ActiveLeftPanel == null)
                     return;
 
-                ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                var game = GameBase.Game as QuaverGame;
+
+                switch (game?.CurrentScreen?.Type)
+                {
+                    case QuaverScreenType.Select:
+                        ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+                        break;
+                    case QuaverScreenType.Multiplayer:
+                        ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
+                        break;
+                }
             })
             {
                 Parent = ButtonBackground,

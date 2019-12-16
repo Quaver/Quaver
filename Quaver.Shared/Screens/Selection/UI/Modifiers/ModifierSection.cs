@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Selection.UI.Modifiers.Components;
 using TagLib.Id3v2;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -50,6 +52,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         public ModifierSection(int width, Texture2D icon, string name, string subText, Color color, List<SelectableModifier> modifiers)
         {
             Modifiers = modifiers;
+
+            // If in multiplayer, remove any modifiers that aren't allowed for multi.
+            //if (OnlineManager.CurrentGame != null)
+            //    Modifiers = Modifiers.FindAll(x => x.Mod.AllowedInMultiplayer);
 
             Header = new Sprite
             {

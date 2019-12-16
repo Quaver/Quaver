@@ -1,5 +1,7 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Assets;
@@ -24,10 +26,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             OnOffButton = new IconButton(Texture, (sender, args) =>
             {
+                if (!CanActivateMultiplayerMod())
+                {
+                    NotificationManager.Show(NotificationLevel.Warning,  "You must either be host or free mod/rate must be activated to use this mod.");
+                    return;
+                }
+
                 if (ModManager.IsActivated(Mod.ModIdentifier))
-                    ModManager.RemoveMod(Mod.ModIdentifier);
+                    ModManager.RemoveMod(Mod.ModIdentifier, true);
                 else
-                    ModManager.AddMod(Mod.ModIdentifier);
+                    ModManager.AddMod(Mod.ModIdentifier, true);
             })
             {
                 Parent = this,
@@ -43,12 +51,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            OnOffButton.IsPerformingFadeAnimations = CanActivateMultiplayerMod();
+
+            if (!OnOffButton.IsPerformingFadeAnimations)
+                OnOffButton.Alpha = Name.Alpha;
+            
+            base.Update(gameTime);
+        }
+        
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             ModManager.ModsChanged -= OnModsChanged;
             base.Destroy();
         }
 
-        private void OnModsChanged(object sender, ModsChangedEventArgs e) => OnOffButton.Image = Texture;
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => ScheduleUpdate(() => OnOffButton.Image = Texture);
     }
 }
