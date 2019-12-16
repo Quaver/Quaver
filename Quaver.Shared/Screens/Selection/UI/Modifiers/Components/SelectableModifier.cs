@@ -93,6 +93,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 if (Mod is ModSpeed || Mod is ModJudgementWindows)
                     return;
 
+                if (!CanActivateMultiplayerMod())
+                    return;
+
                 if (ModManager.IsActivated(Mod.ModIdentifier))
                     ModManager.RemoveMod(Mod.ModIdentifier, true);
                 else

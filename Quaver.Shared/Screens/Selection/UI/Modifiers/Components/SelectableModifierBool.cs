@@ -26,6 +26,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             OnOffButton = new IconButton(Texture, (sender, args) =>
             {
+                if (!CanActivateMultiplayerMod())
+                    return;
+
                 if (ModManager.IsActivated(Mod.ModIdentifier))
                     ModManager.RemoveMod(Mod.ModIdentifier, true);
                 else
