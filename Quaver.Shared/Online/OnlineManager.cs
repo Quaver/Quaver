@@ -833,8 +833,7 @@ namespace Quaver.Shared.Online
             CurrentGame.Modifiers = e.Modifiers.ToString();
             CurrentGame.DifficultyRating = e.DifficultyRating;
 
-            // TODO: This should be refactored so its scheduled on update
-            GameBase.Game.GlobalUserInterface.ScheduleUpdate(() => MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods()));
+            MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
         }
 
         /// <summary>
@@ -866,9 +865,8 @@ namespace Quaver.Shared.Online
             {
                 playerMods.Modifiers = e.Modifiers.ToString();
 
-                // TODO: Refactor this, so its scheduled on update.
                 if (playerMods.UserId == Self.OnlineUser.Id)
-                    GameBase.Game.GlobalUserInterface.ScheduleUpdate(() => MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods()));
+                    MapLoadingScreen.AddModsFromIdentifiers(GetSelfActivatedMods());
             }
         }
 

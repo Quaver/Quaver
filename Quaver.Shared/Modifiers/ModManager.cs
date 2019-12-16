@@ -247,7 +247,7 @@ namespace Quaver.Shared.Modifiers
         /// <summary>
         ///     Makes sure that the speed gameplayModifier selected matches up with the game clock and sets the correct one.
         /// </summary>
-        private static void CheckModInconsistencies()
+        public static void CheckModInconsistencies()
         {
             try
             {
@@ -348,6 +348,9 @@ namespace Quaver.Shared.Modifiers
             // while the rate is activated as a player-specific modifier.
             else if (game.FreeModType == MultiplayerFreeModType.Rate)
             {
+                if (long.Parse(ourMods.Modifiers) != (long) rate)
+                    OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) rate);
+
                 if (isHost)
                 {
                     ModIdentifier globalMods = 0;
@@ -358,23 +361,12 @@ namespace Quaver.Shared.Modifiers
                     var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
                     OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
                 }
-
-                if (long.Parse(ourMods.Modifiers) != (long) rate)
-                    OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) rate);
             }
             // Both free mod and free rate are activated. If host, activate host mods globally.
             // otherwise activate all other mods customly.
             else if (game.FreeModType.HasFlag(MultiplayerFreeModType.Regular) &&
                      game.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
             {
-                if (isHost)
-                {
-                    var globalMods = (ModIdentifier) hostChangeableMods.Sum(x => (long) x.ModIdentifier);
-
-                    var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
-                    OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
-                }
-
                 ModIdentifier customMods = 0;
 
                 if (rate > 0)
@@ -384,6 +376,14 @@ namespace Quaver.Shared.Modifiers
 
                 if (long.Parse(ourMods.Modifiers) != (long) customMods)
                     OnlineManager.Client?.MultiplayerChangePlayerModifiers((long) customMods);
+
+                if (isHost)
+                {
+                    var globalMods = (ModIdentifier) hostChangeableMods.Sum(x => (long) x.ModIdentifier);
+
+                    var difficulty = MapManager.Selected.Value.DifficultyFromMods(globalMods);
+                    OnlineManager.Client?.MultiplayerChangeGameModifiers((long) globalMods, difficulty);
+                }
             }
 
             Logger.Important($"Updating multiplayer mods: {Mods}", LogType.Runtime);

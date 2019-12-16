@@ -194,6 +194,9 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         public static void AddModsFromIdentifiers(ModIdentifier mods)
         {
+            if (ModManager.Mods == mods)
+                return;
+
             // Only remove the modifiers that need to be removed and aren't already activated
             for (var i = ModManager.CurrentModifiersList.Count - 1; i >= 0; i--)
             {
@@ -227,6 +230,7 @@ namespace Quaver.Shared.Screens.Loading
             }
 
             ModManager.FireModsChangedEvent();
+            ModManager.CheckModInconsistencies();
         }
     }
 }
