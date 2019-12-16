@@ -202,7 +202,7 @@ namespace Quaver.Shared.Screens.Loading
                 if (mods.HasFlag(mod.ModIdentifier))
                     continue;
 
-                ModManager.RemoveMod(mod.ModIdentifier, false, false);
+                ModManager.RemoveMod(mod.ModIdentifier);
             }
 
             for (var i = 0; i <= Math.Log((long)mods, 2); i++)
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Loading
                     if (ModManager.Mods.HasFlag(mod))
                         continue;
 
-                    ModManager.AddMod(mod, false, false);
+                    ModManager.AddMod(mod);
                 }
                 catch (Exception e)
                 {

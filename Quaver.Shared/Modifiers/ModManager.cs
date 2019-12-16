@@ -56,7 +56,7 @@ namespace Quaver.Shared.Modifiers
         ///     Adds a gameplayModifier to our list, getting rid of any incompatible mods that are currently in there.
         ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.ManiaModSpeed
         /// </summary>
-        public static void AddMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false, bool invokeEvent = true)
+        public static void AddMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
             IGameplayModifier gameplayModifier;
 
@@ -127,7 +127,7 @@ namespace Quaver.Shared.Modifiers
 
             // Remove incompatible mods.
             var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
-            incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier, false, invokeEvent));
+            incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier, false));
 
             // Remove the mod if it's already on.
             var alreadyOnMod = CurrentModifiersList.Find(x => x.ModIdentifier == gameplayModifier.ModIdentifier);
@@ -142,8 +142,7 @@ namespace Quaver.Shared.Modifiers
             if (updateMultiplayerMods)
                 UpdateMultiplayerMods();
 
-            if (invokeEvent)
-                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, modIdentifier));
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Add, Mods, modIdentifier));
 
             Logger.Debug($"Added mod: {gameplayModifier.ModIdentifier}.", LogType.Runtime, false);
         }
@@ -151,7 +150,7 @@ namespace Quaver.Shared.Modifiers
          /// <summary>
         ///     Removes a gameplayModifier from our GameBase
         /// </summary>
-        public static void RemoveMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false, bool invokeEvent = true)
+        public static void RemoveMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
             try
             {
@@ -164,8 +163,7 @@ namespace Quaver.Shared.Modifiers
                 if (updateMultiplayerMods)
                     UpdateMultiplayerMods();
 
-                if (invokeEvent)
-                    ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Removal, Mods, modIdentifier));
+                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.Removal, Mods, modIdentifier));
 
                 Logger.Debug($"Removed mod: {removedMod.ModIdentifier}.", LogType.Runtime, false);
             }
@@ -191,8 +189,7 @@ namespace Quaver.Shared.Modifiers
             CheckModInconsistencies();
             UpdateMultiplayerMods();
 
-            if (invokeEvent)
-                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveAll, Mods, ModIdentifier.None));
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveAll, Mods, ModIdentifier.None));
 
             Logger.Debug("Removed all modifiers", LogType.Runtime, false);
         }
@@ -206,7 +203,7 @@ namespace Quaver.Shared.Modifiers
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (rate == 1.0f)
             {
-                RemoveSpeedMods();
+                RemoveSpeedMods(true);
                 return;
             }
 
