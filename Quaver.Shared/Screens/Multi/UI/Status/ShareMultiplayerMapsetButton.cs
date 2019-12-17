@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -32,6 +33,27 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
                 UserInterface.MultiplayerUploadMapset.Height * scale);
 
             Clicked += (sender, args) => ShareMapset();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (Game.Value.HostId != OnlineManager.Self?.OnlineUser?.Id || Game.Value.IsMapsetShared)
+            {
+                IsPerformingFadeAnimations = false;
+                Alpha = 0.45f;
+                IsClickable = false;
+            }
+            else
+            {
+                IsPerformingFadeAnimations = true;
+                IsClickable = true;
+            }
+
+            base.Update(gameTime);
         }
 
         /// <summary>
