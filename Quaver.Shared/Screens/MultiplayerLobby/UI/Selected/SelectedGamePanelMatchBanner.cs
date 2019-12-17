@@ -130,6 +130,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 OnlineManager.Client.OnGameMapChanged += OnMultplayerMapChanged;
                 OnlineManager.Client.OnGameRulesetChanged += OnMultiplayerGameRulesetChanged;
+                OnlineManager.Client.OnGameMapsetShared += OnMultiplayerMapsetShared;
             }
         }
 
@@ -410,7 +411,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                         NotesPerSecond.Visible = false;
                         LongNotePercentage.Visible = false;
 
-                        if (SelectedGame.Value.MapsetId == -1)
+                        if (SelectedGame.Value.MapsetId == -1 && !SelectedGame.Value.IsMapsetShared)
                             DownloadStatus.Text = $"The download for this map is not available.";
                         else
                             DownloadStatus.Text = $"You do not have this map. Click here to download!";
@@ -436,37 +437,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.MapsetId))
                 return;
 
-            try
-            {
-                var response = new APIRequestMapInformation(SelectedGame.Value.MapId).ExecuteRequest();
+            // Prevent multiple downloads of the map
+            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == -SelectedGame.Value.GameId))
+                return;
 
-                // If we're already downloading it, don't restart
-                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
-                    return;
-
-                // The mapset is currently being imported
-                if (MapsetImporter.Queue.Contains(
-                    $"{ConfigManager.DataDirectory.Value}/Downloads/{response.Map.MapsetId}.qp"))
-                    return;
-
-                var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
-
-                var game = (QuaverGame) GameBase.Game;
-
-                // Automatically start importing
-                var multi = (MultiplayerGameScreen) game.CurrentScreen;
-                multi.DontLeaveGameUponScreenSwitch = true;
-
-                download.Completed.ValueChanged +=
-                    (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
-
-                MapsetDownloadManager.OpenOnlineHub();
-                game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, LogType.Network);
-            }
+            if (SelectedGame.Value.IsMapsetShared && SelectedGame.Value.MapId == -1)
+                DownloadSharedMapset();
+            else
+                DownloadOnlineMapset();
         });
 
         /// <summary>
@@ -492,6 +470,75 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
+        private void DownloadOnlineMapset()
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            try
+            {
+                var response = new APIRequestMapInformation(SelectedGame.Value.MapId).ExecuteRequest();
+
+                // If we're already downloading it, don't restart
+                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == response.Map.MapsetId))
+                    return;
+
+                // The mapset is currently being imported
+                if (MapsetImporter.Queue.Contains($"{ConfigManager.DataDirectory.Value}/Downloads/{response.Map.MapsetId}.qp"))
+                    return;
+
+                var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
+
+                // Automatically start importing
+                var multi = (MultiplayerGameScreen) game.CurrentScreen;
+                multi.DontLeaveGameUponScreenSwitch = true;
+
+                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+
+                MapsetDownloadManager.OpenOnlineHub();
+                game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Network);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DownloadSharedMapset()
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            try
+            {
+                // If we're already downloading it, don't restart
+                if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.GameId))
+                    return;
+
+                // The mapset is currently being imported
+                if (MapsetImporter.Queue.Contains($"{ConfigManager.DataDirectory.Value}/Downloads/{SelectedGame.Value.GameId}.qp"))
+                    return;
+
+                // Make a request to the server for the DL link
+                var download = MapsetDownloadManager.DownloadSharedMultiplayerMapset(SelectedGame.Value.GetMapName(), "");
+
+                // Automatically start importing
+                var multi = (MultiplayerGameScreen) game.CurrentScreen;
+                multi.DontLeaveGameUponScreenSwitch = true;
+
+                download.Completed.ValueChanged += (sender2, args2) => game.CurrentScreen.Exit(() => new ImportingScreen());
+
+                MapsetDownloadManager.OpenOnlineHub();
+                game.OnlineHub.SelectSection(OnlineHubSectionType.ActiveDownloads);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Network);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMultiplayerGameRulesetChanged(object sender, RulesetChangedEventArgs e) => UpdateState();
@@ -507,5 +554,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e) => UpdateState();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultiplayerMapsetShared(object sender, GameMapsetSharedEventArgs e) => UpdateState();
     }
 }
