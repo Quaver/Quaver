@@ -166,5 +166,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D MultiplayerChatBox => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-chat-box.png");
         public static Texture2D NotReadyIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/not-ready.png");
         public static Texture2D ReadyIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/ready.png");
+        public static Texture2D MultiplayerUploadMapset => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-upload-mapset.png");
     }
 }
