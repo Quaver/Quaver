@@ -160,6 +160,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 OnlineManager.Client.OnGameMapChanged -= OnMultplayerMapChanged;
                 OnlineManager.Client.OnGameRulesetChanged -= OnMultiplayerGameRulesetChanged;
+                OnlineManager.Client.OnGameMapsetShared -= OnMultiplayerMapsetShared;
             }
 
             // ReSharper disable once DelegateSubtraction
