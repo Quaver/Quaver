@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Download
     {
         /// <summary>
         /// </summary>
-        public bool IsDownloading { get; private set; }
+        public bool IsDownloading { get; protected set; }
 
         /// <summary>
         ///     Json containing the mapset.
@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Download
                 Download();
         }
 
-        public void Download()
+        public virtual void Download()
         {
             if (IsDownloading)
                 return;
