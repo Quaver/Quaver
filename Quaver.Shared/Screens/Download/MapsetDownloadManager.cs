@@ -76,6 +76,31 @@ namespace Quaver.Shared.Screens.Download
 
         /// <summary>
         /// </summary>
+        /// <returns></returns>
+        public static MapsetDownload DownloadSharedMultiplayerMapset(string artist, string title)
+        {
+            // Require login in order to download.
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download mapsets!");
+                return null;
+            }
+
+            if (OnlineManager.CurrentGame == null)
+                return null;
+
+            var download = new MultiplayerSharedMapsetDownload(OnlineManager.CurrentGame.GameId, artist, title,
+                CurrentDownloads.Count + 1 <= MAX_CONCURRENT_DOWNLOADS);
+
+            CurrentDownloads.Add(download);
+
+            DownloadAdded?.Invoke(typeof(MapsetDownloadManager), new MapsetDownloadAddedEventArgs(download));
+
+            return download;
+        }
+
+        /// <summary>
+        /// </summary>
         public static void OpenOnlineHub()
         {
             var game = (QuaverGame) GameBase.Game;

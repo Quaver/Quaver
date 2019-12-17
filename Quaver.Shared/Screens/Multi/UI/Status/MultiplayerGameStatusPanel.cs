@@ -28,6 +28,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
 
         /// <summary>
         /// </summary>
+        private ShareMultiplayerMapsetButton ShareMapset { get; set; }
+
+        /// <summary>
+        /// </summary>
         public MultiplayerGameStatusPanel(Bindable<MultiplayerGame> game)
         {
             Game = game;
@@ -38,6 +42,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
             CreateBanner();
             CreateName();
             CreateStatus();
+            CreateShareMapsetButton();
         }
 
         /// <summary>
@@ -71,6 +76,18 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
                 Parent = Banner,
                 Alignment = Alignment.BotLeft,
                 Position = new ScalableVector2(Name.X, -Name.Y)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateShareMapsetButton()
+        {
+            ShareMapset = new ShareMultiplayerMapsetButton(Game)
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -25
             };
         }
     }
