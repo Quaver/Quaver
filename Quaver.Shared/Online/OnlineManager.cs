@@ -278,6 +278,7 @@ namespace Quaver.Shared.Online
             Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
             Client.OnSongRequestReceived += OnSongRequestReceived;
             Client.OnTwitchConnectionReceived += OnTwitchConnectionReceived;
+            Client.OnGameMapsetShared += OnGameMapsetShared;
         }
 
         /// <summary>
@@ -1575,6 +1576,21 @@ namespace Quaver.Shared.Online
         {
             TwitchUsername = e.Connected ? e.TwitchUsername : null;
             Logger.Important($"Received Twitch Connection Status: Connected: {e.Connected} | Username: {e.TwitchUsername}", LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameMapsetShared(object sender, GameMapsetSharedEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.IsMapsetShared = e.IsShared;
+
+            Logger.Important($"Received multiplayer game mapset shared status: {CurrentGame.IsMapsetShared}",
+                LogType.Runtime);
         }
 
         /// <summary>
