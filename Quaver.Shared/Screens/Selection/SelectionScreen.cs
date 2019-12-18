@@ -432,7 +432,7 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         /// <param name="faster">If true, returns the higher rate, otherwise the lower rate.</param>
         /// <returns></returns>
-        private static float GetNextRate(bool faster)
+        public static float GetNextRate(bool faster)
         {
             var current = ModHelper.GetRateFromMods(ModManager.Mods);
             var adjustment = 0.1f;
