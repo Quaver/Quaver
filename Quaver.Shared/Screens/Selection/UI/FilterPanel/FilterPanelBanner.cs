@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
         /// <summary>
         /// </summary>
         /// <param name="panel"></param>
-        public FilterPanelBanner(SelectFilterPanel panel)
+        public FilterPanelBanner(Drawable panel)
         {
             Size = new ScalableVector2(960, panel.Height);
 
@@ -129,7 +129,9 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             if (MapManager.Selected?.Value != e.Map)
                 return;
 
-            Background.Image = e.Texture;
+            lock (Background.Image)
+                Background.Image = e.Texture;
+
             FadeIn();
         }
     }
