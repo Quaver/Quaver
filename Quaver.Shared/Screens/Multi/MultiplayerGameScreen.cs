@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
 using Wobble.Bindables;
@@ -235,6 +236,9 @@ namespace Quaver.Shared.Screens.Multi
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 HandleKeyPressF2();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                Exit(() => new MultiplayerLobbyScreen());
 
             HandleKeyPressControlInput();
         }
