@@ -1,6 +1,8 @@
 using System;
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Online;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -28,6 +30,20 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
 
             CreateName();
             UpdateText();
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameNameChanged += OnMultiplayerGameNameChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameNameChanged -= OnMultiplayerGameNameChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -47,5 +63,11 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
             Name.Text = Game.Value.Name;
             Size = new ScalableVector2(Name.Width, Name.Height);
         });
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultiplayerGameNameChanged(object sender, GameNameChangedEventArgs e) => UpdateText();
     }
 }
