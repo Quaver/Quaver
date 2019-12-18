@@ -1,10 +1,8 @@
-using System;
-using System.Threading;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Multi.UI.Status
+namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
 {
     public class ShareMultiplayerMapsetConfirmDialog : YesNoDialog
     {
