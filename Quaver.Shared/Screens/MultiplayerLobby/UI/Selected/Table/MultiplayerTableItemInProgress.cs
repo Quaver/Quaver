@@ -1,4 +1,6 @@
+using Quaver.Server.Client.Handlers;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Online;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
