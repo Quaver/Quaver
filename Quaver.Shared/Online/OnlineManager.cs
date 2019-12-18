@@ -279,6 +279,8 @@ namespace Quaver.Shared.Online
             Client.OnSongRequestReceived += OnSongRequestReceived;
             Client.OnTwitchConnectionReceived += OnTwitchConnectionReceived;
             Client.OnGameMapsetShared += OnGameMapsetShared;
+            Client.OnGameCountdownStart += OnGameCountdownStarted;
+            Client.OnGameCountdownStop += OnGameCountdownStopped;
         }
 
         /// <summary>
@@ -897,6 +899,7 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.Name = e.Name;
+            Logger.Important($"Received new multiplayer game name: {CurrentGame.Name}", LogType.Runtime);
         }
 
         /// <summary>
@@ -1133,6 +1136,8 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.InProgress = false;
+            CurrentGame.CountdownStartTime = -1;
+            CurrentGame.PlayersReady.Clear();
         }
 
         /// <summary>
@@ -1591,6 +1596,30 @@ namespace Quaver.Shared.Online
 
             Logger.Important($"Received multiplayer game mapset shared status: {CurrentGame.IsMapsetShared}",
                 LogType.Runtime);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameCountdownStopped(object sender, StopCountdownEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.CountdownStartTime = -1;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnGameCountdownStarted(object sender, StartCountdownEventArgs e)
+        {
+            if (CurrentGame == null)
+                return;
+
+            CurrentGame.CountdownStartTime = e.TimeStarted;
         }
 
         /// <summary>

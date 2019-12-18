@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -8,10 +9,16 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.MultiplayerLobby;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
@@ -56,11 +63,13 @@ namespace Quaver.Shared.Screens.Multi
                 OnlineManager.LeaveGame();
             };
 
-            SelectMultiplayerMap();
-
             if (OnlineManager.Client != null)
+            {
                 OnlineManager.Client.OnGameMapChanged += OnMapChanged;
+                OnlineManager.Client.OnGameStarted += OnGameStarted;
+            }
 
+            SelectMultiplayerMap();
             View = new MultiplayerGameScreenView(this);
         }
 
@@ -90,7 +99,10 @@ namespace Quaver.Shared.Screens.Multi
             Game?.Dispose();
 
             if (OnlineManager.Client != null)
+            {
                 OnlineManager.Client.OnGameMapChanged -= OnMapChanged;
+                OnlineManager.Client.OnGameStarted -= OnGameStarted;
+            }
 
             base.Destroy();
         }
@@ -145,6 +157,67 @@ namespace Quaver.Shared.Screens.Multi
         /// <param name="e"></param>
         private void OnMapChanged(object sender, GameMapChangedEventArgs e) => SelectMultiplayerMap();
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGameStarted(object sender, GameStartedEventArgs e)
+        {
+            OnlineManager.CurrentGame.PlayersReady.Clear();
+            OnlineManager.CurrentGame.CountdownStartTime = -1;
+
+            // User doesn't have the map
+            if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "The match was started, but you do not have the map!");
+                return;
+            }
+
+            // User is a referee, so don't start for them
+            if (OnlineManager.CurrentGame.RefereeUserId == OnlineManager.Self.OnlineUser.Id)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
+                    (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}"));
+
+                return;
+            }
+
+            DontLeaveGameUponScreenSwitch = true;
+            MapManager.Selected.Value.Scores.Value = GetScoresFromMultiplayerUsers();
+            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+        }
+
+        /// <summary>
+        ///     Returns a list of empty scores to represent each multiplayer user
+        /// </summary>
+        /// <returns></returns>
+        private List<Score> GetScoresFromMultiplayerUsers()
+        {
+            var users = OnlineManager.OnlineUsers.ToList();
+
+            var playingUsers = users.FindAll(x =>
+                Game.Value.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
+                !Game.Value.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
+                Game.Value.RefereeUserId != x.Value.OnlineUser.Id &&
+                x.Value != OnlineManager.Self);
+
+            var scores = new List<Score>();
+
+            playingUsers.ForEach(x =>
+            {
+                scores.Add(new Score
+                {
+                    PlayerId = x.Key,
+                    SteamId = x.Value.OnlineUser.SteamId,
+                    Name = x.Value.OnlineUser.Username,
+                    Mods = (long) OnlineManager.GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    IsMultiplayer = true,
+                    IsOnline = true
+                });
+            });
+
+            return scores;
+        }
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -163,6 +236,52 @@ namespace Quaver.Shared.Screens.Multi
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 HandleKeyPressF2();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                Exit(() => new MultiplayerLobbyScreen());
+
+            HandleKeyPressControlInput();
+        }
+
+        /// <summary>
+        ///     Handles when the user holds control down and performs input actions
+        /// </summary>
+        private void HandleKeyPressControlInput()
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            // Increase rate.
+            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id ||
+                Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus) || KeyboardManager.IsUniqueKeyPress(Keys.Add))
+                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(true));
+
+                // Decrease Rate
+                if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus) || KeyboardManager.IsUniqueKeyPress(Keys.Subtract))
+                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false));
+            }
+
+            // Change from pitched to non-pitched
+            if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
+                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+
+            // Pause/Unpause music
+            if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+            {
+                if (AudioEngine.Track.IsPaused)
+                {
+                    AudioEngine.Track.Play();
+                    NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
+                }
+                else if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    NotificationManager.Show(NotificationLevel.Info, "Music Paused");
+                }
+            }
         }
 
         /// <summary>

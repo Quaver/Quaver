@@ -1,6 +1,5 @@
-using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -9,10 +8,9 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 
-namespace Quaver.Shared.Screens.Multi.UI.Status
+namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
 {
     public class ShareMultiplayerMapsetButton : IconButton
     {
@@ -27,10 +25,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
         {
             Game = game;
 
-            var scale = 0.80f;
+            var scale = 0.85f;
 
-            Size = new ScalableVector2(UserInterface.MultiplayerUploadMapset.Width * scale,
-                UserInterface.MultiplayerUploadMapset.Height * scale);
+            Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
 
             Clicked += (sender, args) => ShareMapset();
         }

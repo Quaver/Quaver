@@ -21,6 +21,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Selection;
@@ -123,7 +124,10 @@ namespace Quaver.Shared.Database.Maps
 
                 if (screen.Type == QuaverScreenType.Multiplayer)
                 {
-                    screen.Exit(() => new ImportingScreen((MultiplayerScreen) screen));
+                    var multi = (MultiplayerGameScreen) screen;
+                    multi.DontLeaveGameUponScreenSwitch = true;
+
+                    screen.Exit(() => new ImportingScreen());
                     return;
                 }
             }

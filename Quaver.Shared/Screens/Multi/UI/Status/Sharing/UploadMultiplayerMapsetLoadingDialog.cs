@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using System.Threading;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Wobble.Logging;
 
-namespace Quaver.Shared.Screens.Multi.UI.Status
+namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
 {
     public class UploadMultiplayerMapsetLoadingDialog : LoadingDialog
     {

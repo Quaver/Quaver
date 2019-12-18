@@ -1,6 +1,14 @@
+using System.Collections.Generic;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Multi.UI.Status.Name;
+using Quaver.Shared.Screens.Multi.UI.Status.Password;
+using Quaver.Shared.Screens.Multi.UI.Status.Selection;
+using Quaver.Shared.Screens.Multi.UI.Status.Sharing;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
+using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -16,7 +24,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
 
         /// <summary>
         /// </summary>
-        private MultiplayerLobbyFilterPanelBanner Banner { get; set; }
+        private FilterPanelBanner Banner { get; set; }
 
         /// <summary>
         /// </summary>
@@ -28,7 +36,28 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
 
         /// <summary>
         /// </summary>
+        private PausePlayButton PausePlayButton { get; set; }
+
+        /// <summary>
+        /// </summary>
         private ShareMultiplayerMapsetButton ShareMapset { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MultiplayerChangeGameNameButton ChangeName { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MultiplayerEditPasswordButton EditPasswordButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private MultiplayerSelectMapButton SelectMap { get; set; }
+
+        /// <summary>
+        ///     Items that are aligned from right to left
+        /// </summary>
+        private List<Drawable> RightItems { get; } = new List<Drawable>();
 
         /// <summary>
         /// </summary>
@@ -42,16 +71,22 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
             CreateBanner();
             CreateName();
             CreateStatus();
+            CreatePausePlayButton();
             CreateShareMapsetButton();
+            CreateEditPasswordButton();
+            CreateChangeGameNameButton();
+            //CreateSelectMapButton();
+
+            AlignRightItems();
         }
 
         /// <summary>
         /// </summary>
         private void CreateBanner()
         {
-            Banner = new MultiplayerLobbyFilterPanelBanner(new ScalableVector2(960, Height))
+            Banner = new FilterPanelBanner(this)
             {
-                Parent = this
+                Parent = this,
             };
         }
 
@@ -63,7 +98,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
             {
                 Parent = Banner,
                 Alignment = Alignment.TopLeft,
-                Position = new ScalableVector2(16, 18)
+                Position = new ScalableVector2(24, 18)
             };
         }
 
@@ -81,14 +116,68 @@ namespace Quaver.Shared.Screens.Multi.UI.Status
 
         /// <summary>
         /// </summary>
+        private void CreatePausePlayButton()
+        {
+            PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton)
+            {
+                Size = new ScalableVector2(36, 36),
+            };
+
+            RightItems.Add(PausePlayButton);
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateShareMapsetButton()
         {
-            ShareMapset = new ShareMultiplayerMapsetButton(Game)
+            ShareMapset = new ShareMultiplayerMapsetButton(Game);
+            RightItems.Add(ShareMapset);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateEditPasswordButton()
+        {
+            EditPasswordButton = new MultiplayerEditPasswordButton(Game);
+            RightItems.Add(EditPasswordButton);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateChangeGameNameButton()
+        {
+            ChangeName = new MultiplayerChangeGameNameButton(Game);
+            RightItems.Add(ChangeName);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSelectMapButton()
+        {
+            SelectMap = new MultiplayerSelectMapButton(Game);
+        }
+
+        /// <summary>
+        ///     Aligns the items from right to left
+        /// </summary>
+        private void AlignRightItems()
+        {
+            for (var i = 0; i < RightItems.Count; i++)
             {
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                X = -25
-            };
+                var item = RightItems[i];
+
+                item.Parent = this;
+
+                item.Alignment = Alignment.MidRight;
+
+                const int padding = 25;
+                var spacing = 36;
+
+                if (i == 0)
+                    item.X = -padding;
+                else
+                    item.X = RightItems[i - 1].X - RightItems[i - 1].Width - spacing;
+            }
         }
     }
 }

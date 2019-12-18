@@ -39,6 +39,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
@@ -500,8 +501,7 @@ namespace Quaver.Shared.Screens.Result
                     return;
                 }
 
-                Exit(() => MultiplayerScreen ?? new MultiplayerScreen(OnlineManager.CurrentGame));
-                MultiplayerScreen.SetRichPresence();
+                Exit(() => new MultiplayerGameScreen());
                 return;
             }
 

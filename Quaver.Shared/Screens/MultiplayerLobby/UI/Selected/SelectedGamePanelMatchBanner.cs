@@ -62,6 +62,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
+        private FilterMetadataCreator Creator { get; set; }
+
+        /// <summary>
+        /// </summary>
         private FilterMetadataBpm Bpm { get; set; }
 
         /// <summary>
@@ -120,11 +124,13 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             CreateLength();
             CreateLongNotePercentage();
             CreateNotesPerSecond();
+            CreateCreator();
             CreateDownloadStatus();
             CreateButton();
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
             MapManager.Selected.ValueChanged += OnMapChanged;
+            ModManager.ModsChanged += OnModsChanged;
 
             if (OnlineManager.Client != null)
             {
@@ -165,6 +171,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
         }
@@ -175,8 +182,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         {
             Background = new Sprite
             {
-                Size = new ScalableVector2(1280, 720),
-                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(576, 324),
+                Alignment = Alignment.TopCenter,
+                Y = -75,
                 Image = UserInterface.MenuBackgroundNormal,
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0f,
@@ -290,6 +298,16 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
 
         /// <summary>
         /// </summary>
+        private void CreateCreator() => Creator = new FilterMetadataCreator()
+        {
+            Parent = this,
+            X = Name.X,
+            Y = Map.Y + Map.Height + 10,
+            Visible = IsMultiplayer,
+        };
+
+        /// <summary>
+        /// </summary>
         private void CreateButton()
         {
             Button = new ImageButton(UserInterface.BlankBox)
@@ -333,7 +351,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
             {
                 Parent = this,
                 Alignment = Bpm.Alignment,
-                Position = Bpm.Position,
+                Position = new ScalableVector2(Bpm.X, Bpm.Y - 20),
                 Visible = false,
                 Tint = DontHaveMapColor
             };
@@ -397,6 +415,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                         Length.Visible = true;
                         NotesPerSecond.Visible = true;
                         LongNotePercentage.Visible = true;
+                        Creator.Visible = true;
                     }
                 }
                 else
@@ -411,6 +430,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                         Length.Visible = false;
                         NotesPerSecond.Visible = false;
                         LongNotePercentage.Visible = false;
+                        Creator.Visible = false;
 
                         if (SelectedGame.Value.MapsetId == -1 && !SelectedGame.Value.IsMapsetShared)
                             DownloadStatus.Text = $"The download for this map is not available.";
@@ -418,6 +438,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                             DownloadStatus.Text = $"You do not have this map. Click here to download!";
                     }
                 }
+
+                if (IsMultiplayer)
+                    DifficultyRating.Y = Name.Y;
 
                 DifficultyRating.Text += $" - {SelectedGame.Value.GetDifficultyName()}";
                 DifficultyRating.TruncateWithEllipsis(maxWidth);
@@ -561,5 +584,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMultiplayerMapsetShared(object sender, GameMapsetSharedEventArgs e) => UpdateState();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e) => UpdateState();
     }
 }

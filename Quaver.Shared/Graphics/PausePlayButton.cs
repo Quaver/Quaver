@@ -11,8 +11,15 @@ namespace Quaver.Shared.Graphics
 {
     public class PausePlayButton : IconButton
     {
-        public PausePlayButton() : base(FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
+        private Texture2D PauseButton { get; }
+
+        private Texture2D PlayButton { get; }
+
+        public PausePlayButton(Texture2D pauseButton = null, Texture2D playButton = null) : base(pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
         {
+            PauseButton = pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
+            PlayButton = playButton ?? FontAwesome.Get(FontAwesomeIcon.fa_play_button);
+
             Clicked += (sender, args) =>
             {
                 if (AudioEngine.Track == null)
@@ -35,14 +42,14 @@ namespace Quaver.Shared.Graphics
             {
                 if (AudioEngine.Track.IsPlaying)
                 {
-                    var pause = FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
+                    var pause = PauseButton;
 
                     if (Image != pause)
                         Image = pause;
                 }
                 else if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
                 {
-                    var play = FontAwesome.Get(FontAwesomeIcon.fa_play_button);
+                    var play = PlayButton;
 
                     if (Image != play)
                         Image = play;

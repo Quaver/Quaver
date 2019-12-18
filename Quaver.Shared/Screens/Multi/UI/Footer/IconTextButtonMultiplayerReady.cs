@@ -27,9 +27,19 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
             FontManager.GetWobbleFont(Fonts.LatoBlack),"", (sender, args) =>
             {
                 if (game.Value.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
+                {
                     OnlineManager.Client?.MultiplayerGameIsNotReady();
+
+                    if (game.Value.HostId == OnlineManager.Self.OnlineUser.Id)
+                        OnlineManager.Client?.MultiplayerGameStopCountdown();
+                }
                 else
+                {
                     OnlineManager.Client?.MultiplayerGameIsReady();
+
+                    if (game.Value.HostId == OnlineManager.Self.OnlineUser.Id)
+                        OnlineManager.Client?.MultiplayerGameStartCountdown();
+                }
             })
         {
             Game = game;

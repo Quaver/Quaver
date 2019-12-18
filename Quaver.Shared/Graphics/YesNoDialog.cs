@@ -45,11 +45,11 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus Header { get; set; }
+        protected SpriteTextPlus Header { get; set; }
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus Confirmation { get; set; }
+        protected SpriteTextPlus Confirmation { get; set; }
 
         /// <summary>
         /// </summary>
@@ -70,6 +70,11 @@ namespace Quaver.Shared.Graphics
         /// <summary>
         /// </summary>
         protected Func<bool> ValidateBeforeClosing { get; set; }
+
+        /// <summary>
+        ///     If true, it'll call the yes action upon pressing enter and close the dialog.
+        /// </summary>
+        protected bool HandleEnterPress { get; set; } = true;
 
         /// <inheritdoc />
         /// <summary>
@@ -114,7 +119,7 @@ namespace Quaver.Shared.Graphics
                     return;
                 }
 
-                if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                if (HandleEnterPress && KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 {
                     YesAction?.Invoke();
 
