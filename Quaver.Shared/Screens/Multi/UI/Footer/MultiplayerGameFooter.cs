@@ -106,9 +106,15 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
             AlignRightItems();
         });
 
-        private void OnPlayerNotReady(object sender, PlayerNotReadyEventArgs e) => UpdateState();
+        private void OnPlayerNotReady(object sender, PlayerNotReadyEventArgs e)
+        {
+            //UpdateState();
+        }
 
-        private void OnPlayerReady(object sender, PlayerReadyEventArgs e) => UpdateState();
+        private void OnPlayerReady(object sender, PlayerReadyEventArgs e)
+        {
+            //UpdateState();
+        }
 
         private void OnHostChanged(object sender, GameHostChangedEventArgs e) => UpdateState();
 
