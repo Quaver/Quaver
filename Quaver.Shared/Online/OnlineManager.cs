@@ -1199,6 +1199,7 @@ namespace Quaver.Shared.Online
             // Make sure to clear all the players that don't have the map, as this information is
             // now outdated.
             CurrentGame.PlayersWithoutMap.Clear();
+            CurrentGame.PlayersReady.Clear();
 
             CurrentGame.MapMd5 = e.MapMd5;
             CurrentGame.AlternativeMd5 = e.AlternativeMd5;
