@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main;
 using Wobble.Bindables;
@@ -36,6 +37,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
             CreateBindableVisibleGames();
             CreateBindableSelectedGame();
 
+            SetRichPresence();
             View = new MultiplayerLobbyScreenView(this);
             ScreenExiting += (sender, args) => OnlineManager.Client?.LeaveLobby();
         }
@@ -94,6 +96,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// <summary>
         /// </summary>
         private void CreateBindableSelectedGame() => SelectedGame = new Bindable<MultiplayerGame>(null);
+
+        /// <summary>
+        /// </summary>
+        private void SetRichPresence()
+        {
+            DiscordHelper.Presence.Details = "Multiplayer Lobby";
+            DiscordHelper.Presence.State = $"In the menus";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+        }
 
         /// <inheritdoc />
         /// <summary>

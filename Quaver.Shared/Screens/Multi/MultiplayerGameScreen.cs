@@ -12,6 +12,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -67,8 +68,13 @@ namespace Quaver.Shared.Screens.Multi
             {
                 OnlineManager.Client.OnGameMapChanged += OnMapChanged;
                 OnlineManager.Client.OnGameStarted += OnGameStarted;
+                OnlineManager.Client.OnGameNameChanged += OnGameNameChanged;
+                OnlineManager.Client.OnUserJoinedGame += OnUserJoinedGame;
+                OnlineManager.Client.OnUserLeftGame += OnUserLeftGame;
+                OnlineManager.Client.OnGameMaxPlayersChanged += OnMaxPlayersChanged;
             }
 
+            SetRichPresence();
             SelectMultiplayerMap();
             View = new MultiplayerGameScreenView(this);
         }
@@ -102,6 +108,10 @@ namespace Quaver.Shared.Screens.Multi
             {
                 OnlineManager.Client.OnGameMapChanged -= OnMapChanged;
                 OnlineManager.Client.OnGameStarted -= OnGameStarted;
+                OnlineManager.Client.OnGameNameChanged -= OnGameNameChanged;
+                OnlineManager.Client.OnUserJoinedGame -= OnUserJoinedGame;
+                OnlineManager.Client.OnUserLeftGame -= OnUserLeftGame;
+                OnlineManager.Client.OnGameMaxPlayersChanged -= OnMaxPlayersChanged;
             }
 
             base.Destroy();
@@ -306,6 +316,15 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private void SetRichPresence()
+        {
+            DiscordHelper.Presence.Details = "Waiting to Start";
+            DiscordHelper.Presence.State = $"{Game.Value.Name} ({Game.Value.PlayerIds.Count} of {Game.Value.MaxPlayers})";
+            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+        }
+
+        /// <summary>
+        /// </summary>
         /// <returns></returns>
         private MultiplayerGame GetTestGame()
         {
@@ -364,5 +383,13 @@ namespace Quaver.Shared.Screens.Multi
                 FreeModType = MultiplayerFreeModType.Regular,
             };
         }
+
+        private void OnGameNameChanged(object sender, GameNameChangedEventArgs e) => SetRichPresence();
+
+        private void OnUserJoinedGame(object sender, UserJoinedGameEventArgs e) => SetRichPresence();
+
+        private void OnUserLeftGame(object sender, UserLeftGameEventArgs e) => SetRichPresence();
+
+        private void OnMaxPlayersChanged(object sender, MaxPlayersChangedEventArgs e) => SetRichPresence();
     }
 }
