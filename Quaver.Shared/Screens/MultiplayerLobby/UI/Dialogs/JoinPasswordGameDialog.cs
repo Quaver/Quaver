@@ -12,7 +12,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
 {
-    public sealed class JoinPasswordGameDialog : YesNoDialog
+    public class JoinPasswordGameDialog : YesNoDialog
     {
         /// <summary>
         /// </summary>
@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
 
         /// <summary>
         /// </summary>
-        private Textbox Textbox { get; set; }
+        protected Textbox Textbox { get; set; }
 
         /// <inheritdoc />
         /// <summary>
