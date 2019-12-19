@@ -1,9 +1,11 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Wobble;
@@ -41,6 +43,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             var game = (QuaverGame) GameBase.Game;
             Hub = game.OnlineHub;
             Chat = game.OnlineChat;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameStarted += OnMultiplayerGameStarted;
 
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
@@ -87,6 +92,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         {
             Hub.Parent = null;
             Chat.Parent = null;
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnGameStarted -= OnMultiplayerGameStarted;
 
             base.Destroy();
         }
@@ -163,5 +171,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultiplayerGameStarted(object sender, GameStartedEventArgs e) => Close();
     }
 }
