@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -49,7 +50,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            SelectedIndex = (int) Game.Value.Ruleset;
+            SelectedIndex = Game.Value.MaxPlayers - 2;
             SelectedText.Text = Game.Value.MaxPlayers.ToString();
 
             base.Update(gameTime);
