@@ -1,10 +1,11 @@
+using System;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 {
-    public abstract class MultiplayerTableItem : IMultiplayerTableItem, IMultiplayerGameComponent
+    public abstract class MultiplayerTableItem : IMultiplayerTableItem, IMultiplayerGameComponent, IDisposable
     {
         /// <inheritdoc />
         /// <summary>
@@ -19,6 +20,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <summary>
         /// </summary>
         public virtual Drawable Selector { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public virtual Action ClickAction { get; protected set; }
+
+        /// <summary>
+        ///     If true, the item will update its content in <see cref="DrawableMultiplayerTableItem"/>
+        /// </summary>
+        public bool NeedsStateUpdate { get; set; }
 
         /// <summary>
         /// </summary>
@@ -53,6 +63,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         public void UpdateSelectorState()
         {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public virtual void Dispose()
+        {
+            Selector?.Dispose();
         }
     }
 }

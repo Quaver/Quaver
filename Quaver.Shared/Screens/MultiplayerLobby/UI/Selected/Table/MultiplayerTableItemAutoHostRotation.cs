@@ -12,7 +12,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public MultiplayerTableItemAutoHostRotation(Bindable<MultiplayerGame> game, bool isMultiplayer)
             : base(game, isMultiplayer)
         {
-            Selector = new MultiplayerAutoHostRotationCheckbox(game);
+            var checkbox = new MultiplayerAutoHostRotationCheckbox(game);
+            Selector = checkbox;
+
+            if (OnlineManager.CurrentGame != null)
+                ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
         public override string GetName() => "Auto Host Rotation";

@@ -94,18 +94,29 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         private static List<MultiplayerTableItem> GetAvailableItems(Bindable<MultiplayerGame> game, bool isMultiplayer)
         {
-            var items = new List<MultiplayerTableItem>()
+            var items = new List<MultiplayerTableItem>();
+
+            if (!isMultiplayer)
+                items.Add(new MultiplayerTableItemInProgress(game, false));
+
+            items.AddRange(new List<MultiplayerTableItem>()
             {
-                new MultiplayerTableItemInProgress(game, isMultiplayer),
                 new MultiplayerTableItemFreeMod(game, isMultiplayer),
                 new MultiplayerTableItemFreeRate(game, isMultiplayer),
                 new MultiplayerTableItemAutoHostRotation(game, isMultiplayer),
                 new MultiplayerTableItemHealthType(game, isMultiplayer),
+            });
+
+            if (isMultiplayer)
+                items.Add(new MultiplayerTableItemInProgress(game, false));
+
+            items.AddRange(new List<MultiplayerTableItem>()
+            {
                 new MultiplayerTableItemLifeCount(game, isMultiplayer),
                 new MultiplayerTableItemSongLength(game, isMultiplayer),
                 new MultiplayerTableItemDifficultyRange(game, isMultiplayer),
                 new MultiplayerTableItemLongNotePercentageRange(game, isMultiplayer)
-            };
+            });
 
             items.Insert(0, new MultiplayerTableItemPlayers(game, isMultiplayer));
             items.Insert(0, new MultiplayerTableItemRuleset(game, isMultiplayer));
