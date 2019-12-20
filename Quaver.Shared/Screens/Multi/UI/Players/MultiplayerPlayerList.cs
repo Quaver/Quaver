@@ -17,6 +17,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multi.UI.Players
@@ -79,7 +80,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
-                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)
+                           && DialogManager.Dialogs.Count == 0;
 
             base.Update(gameTime);
         }
