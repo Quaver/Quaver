@@ -248,7 +248,18 @@ namespace Quaver.Shared.Screens.Multi
                 HandleKeyPressF2();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Exit(() => new MultiplayerLobbyScreen());
+            {
+                if (ActiveLeftPanel.Value != SelectContainerPanel.MatchSettings)
+                    ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
+                else
+                {
+                    Exit(() => new MultiplayerLobbyScreen());
+                    return;
+                }
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Tab) && ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
+                SelectionScreen.HandleKeyPressTab();
 
             HandleKeyPressControlInput();
         }

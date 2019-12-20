@@ -339,7 +339,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Handles when the user presses the tab key
         /// </summary>
-        private void HandleKeyPressTab()
+        public static void HandleKeyPressTab()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
                 return;
