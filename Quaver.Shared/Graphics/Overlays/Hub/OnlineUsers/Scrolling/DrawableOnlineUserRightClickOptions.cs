@@ -83,7 +83,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                             ? MultiplayerTeam.Blue
                             : MultiplayerTeam.Red;
 
-                        OnlineManager.Client.ChangeOtherPlayerTeam(user.OnlineUser.Id, team);
+                        if (user == OnlineManager.Self)
+                            OnlineManager.Client?.ChangeGameTeam(team);
+                        else
+                            OnlineManager.Client.ChangeOtherPlayerTeam(user.OnlineUser.Id, team);
                         break;
                     case GiveHost:
                         OnlineManager.Client?.TransferMultiplayerGameHost(user.OnlineUser.Id);
@@ -105,7 +108,12 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
             // Don't add actions meant for other users
             if (OnlineManager.Self?.OnlineUser?.Id == user.OnlineUser.Id)
+            {
+                if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.Ruleset == MultiplayerGameRuleset.Team)
+                    options.Add(SwitchTeams, ColorHelper.HexToColor("#F2994A"));
+
                 return options;
+            }
 
             // Friends List
             if (OnlineManager.FriendsList != null && OnlineManager.FriendsList.Contains(user.OnlineUser.Id))

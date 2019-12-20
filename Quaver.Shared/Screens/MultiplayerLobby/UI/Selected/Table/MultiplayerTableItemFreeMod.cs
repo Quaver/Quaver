@@ -12,7 +12,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public MultiplayerTableItemFreeMod(Bindable<MultiplayerGame> game, bool isMultiplayer)
             : base(game, isMultiplayer)
         {
-            Selector = new MultiplayerFreeModCheckbox(game);
+            var checkbox  = new MultiplayerFreeModCheckbox(game);
+            Selector = checkbox;
+
+            if (OnlineManager.CurrentGame != null)
+                ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
         /// <inheritdoc />

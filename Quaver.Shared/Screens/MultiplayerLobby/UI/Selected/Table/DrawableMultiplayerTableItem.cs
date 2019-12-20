@@ -1,10 +1,15 @@
 using System;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
@@ -24,6 +29,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         private SpriteTextPlus Value { get; set; }
 
+        /// <summary>
+        /// </summary>
+        public Color BackgroundColor => Index % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -41,6 +50,30 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleHoverAnimations(gameTime);
+            HandleClick();
+
+            if (Item.NeedsStateUpdate)
+                UpdateContent(Item, Index);
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            Item.Dispose();
+            base.Destroy();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         /// <param name="item"></param>
         /// <param name="index"></param>
         public override void UpdateContent(MultiplayerTableItem item, int index)
@@ -48,7 +81,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             Item = item;
             Index = index;
 
-            Tint = index  % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
+            Tint = BackgroundColor;
 
             if (item.SelectedGame.Value == null)
                 return;
@@ -83,6 +116,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                         Value.Visible = false;
                     }
                 }
+
+                Item.NeedsStateUpdate = false;
             });
         }
 
@@ -110,6 +145,41 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
                 X = -Name.X,
                 UsePreviousSpriteBatchOptions = true
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandleHoverAnimations(GameTime gameTime)
+        {
+            var color = IsHovered() && !IsSelectorHovered() && DialogManager.Dialogs.Count == 0 ? ColorHelper.HexToColor("#575757"): BackgroundColor;
+            FadeToColor(color, gameTime.ElapsedGameTime.TotalMilliseconds, 30);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private bool IsSelectorHovered()
+        {
+            var container = (DrawableMultiplayerTable) Container;
+
+            if (container.IsMultiplayer)
+                return container.Pool.Any(x => x.Item.Selector is Button b && b.IsHovered || x.Item.Selector is Dropdown d && d.Opened);
+
+            return false;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleClick()
+        {
+            if (!IsHovered() || IsSelectorHovered() || DialogManager.Dialogs.Count != 0)
+                return;
+
+            if (!MouseManager.IsUniqueClick(MouseButton.Left))
+                return;
+
+            Item.ClickAction?.Invoke();
         }
     }
 }

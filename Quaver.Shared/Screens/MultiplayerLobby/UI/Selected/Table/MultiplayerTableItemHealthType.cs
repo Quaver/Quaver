@@ -14,7 +14,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         public MultiplayerTableItemHealthType(Bindable<MultiplayerGame> game, bool isMultiplayer)
             : base(game, isMultiplayer)
         {
-            Selector = new MultiplayerHealthTypeCheckbox(game);
+            var checkbox = new MultiplayerHealthTypeCheckbox(game);
+            Selector = checkbox;
+
+            if (OnlineManager.CurrentGame != null)
+                ClickAction = () => checkbox?.FireButtonClickEvent();
         }
 
         public override string GetName() => "Lose A Life Upon Failing";
