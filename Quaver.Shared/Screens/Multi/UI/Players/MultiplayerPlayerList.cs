@@ -110,6 +110,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="sort"></param>
         public void AddPlayer(User user, bool sort = false)
         {
+            // Player already exists
+            if (Players.Any(x => x is MultiplayerPlayer p && p.User == user))
+                return;
+
             var player = new MultiplayerPlayer(Game, this, user);
             Players.Add(player);
             AddContainedDrawable(player);
@@ -126,9 +130,9 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <param name="user"></param>
         public void RemovePlayer(User user)
         {
-            var player = Players.Find(x => x is MultiplayerPlayer p && p.User == user);
+            var players = Players.FindAll(x => x is MultiplayerPlayer p && p.User == user);
 
-            if (player != null)
+            foreach (var player in players)
             {
                 player.Destroy();
                 RemoveContainedDrawable(player);
