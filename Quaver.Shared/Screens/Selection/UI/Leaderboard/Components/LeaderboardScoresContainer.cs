@@ -203,7 +203,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public void HandleFetchedScores(Map map, FetchedScoreStore store)
         {
             if (map == null)
+            {
+                StatusText.Text = "There is currently no map selected!".ToUpper();
+                FadeStatusTextIn();
                 return;
+            }
 
             var isConnected = OnlineManager.Connected;
             var isDonator = OnlineManager.IsDonator;
