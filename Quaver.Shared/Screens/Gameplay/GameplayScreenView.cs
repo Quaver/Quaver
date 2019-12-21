@@ -532,7 +532,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsPlayTesting || StopCheckingForScoreboardUsers)
                 return;
 
-            var mapScores = MapManager.Selected.Value.Scores.Value;
+            var mapScores = Screen.IsMultiplayerGame ? Screen.LocalScores : MapManager.Selected.Value.Scores.Value;
 
             if (mapScores == null || mapScores.Count <= 0 || (ScoreboardLeft.Users?.Count < 1 && ScoreboardRight != null && ScoreboardRight.Users.Count < 1))
                 return;

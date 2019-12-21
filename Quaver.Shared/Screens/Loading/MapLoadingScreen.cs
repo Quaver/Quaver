@@ -186,7 +186,7 @@ namespace Quaver.Shared.Screens.Loading
                     throw new ArgumentOutOfRangeException();
             }
 
-            Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<Score>(), Replay, false, 0, false, SpectatorClient));
+            Exit(() => new GameplayScreen(MapManager.Selected.Value.Qua, md5, Scores ?? new List<Score>(), Replay, false, 0, false, SpectatorClient));
         }
 
         /// <summary>

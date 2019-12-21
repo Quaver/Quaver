@@ -193,8 +193,7 @@ namespace Quaver.Shared.Screens.Multi
             }
 
             DontLeaveGameUponScreenSwitch = true;
-            MapManager.Selected.Value.Scores.Value = GetScoresFromMultiplayerUsers();
-            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+            Exit(() => new MapLoadingScreen(GetScoresFromMultiplayerUsers()));
         }
 
         /// <summary>

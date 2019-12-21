@@ -181,6 +181,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
             // Update host crown visibility
             HostCrown.Visible = Game.Value.HostId == User.OnlineUser.Id;
+            HostCrown.Position = new ScalableVector2(Username.X + Username.Width + 8, Username.Y + 4);
 
             // Update ready status
             Ready.Image = Game.Value.PlayersReady.Contains(User.OnlineUser.Id) ? UserInterface.ReadyIcon : UserInterface.NotReadyIcon;
@@ -319,8 +320,8 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// </summary>
         private void CreateHostCrown() => HostCrown = new Sprite
         {
-            Parent = Avatar,
-            Alignment = Alignment.BotLeft,
+            Parent = Flag,
+            Alignment = Alignment.TopLeft,
             Size = new ScalableVector2(14, 14),
             Position = new ScalableVector2(-4, 0),
             UsePreviousSpriteBatchOptions = true,
