@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main;
@@ -34,6 +36,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
         /// </summary>
         public MultiplayerLobbyScreen()
         {
+            if (MapManager.Selected.Value == null && MapManager.Mapsets.Count != 0)
+                MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
+
             CreateBindableVisibleGames();
             CreateBindableSelectedGame();
 
