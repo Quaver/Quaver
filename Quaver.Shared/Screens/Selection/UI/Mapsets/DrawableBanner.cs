@@ -162,7 +162,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             {
                 case DrawableBannerType.Mapsets:
                     // ReSharper disable once DelegateSubtraction
-                    MapManager.Selected.ValueChanged -= OnMapChanged;
                     break;
                 case DrawableBannerType.Playlists:
                     // ReSharper disable once DelegateSubtraction
@@ -173,6 +172,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             BackgroundHelper.BannerLoaded -= OnBannerLoaded;
+
+            // ReSharper disable once DelegateSubtraction
+            MapManager.Selected.ValueChanged -= OnMapChanged;
 
             base.Destroy();
         }
