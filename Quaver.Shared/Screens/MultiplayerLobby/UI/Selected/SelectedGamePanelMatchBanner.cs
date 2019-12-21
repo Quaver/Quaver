@@ -457,9 +457,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void DownloadMapset() => ThreadScheduler.Run(() =>
         {
-            if (MapManager.Selected.Value != null)
-                return;
-
             // Map is already downloading
             if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedGame.Value.MapsetId))
                 return;
