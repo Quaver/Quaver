@@ -77,6 +77,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             Type = type;
             Team = team;
+            Users = users.ToList();
 
             if (OnlineManager.CurrentGame != null)
             {
@@ -87,7 +88,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 {
                     BattleRoyalePlayersLeft = new Bindable<int>(0)
                     {
-                        Value = MapManager.Selected.Value.Scores.Value.Count + 1
+                        Value = Users.Count + 1
                     };
                 }
             }
@@ -112,8 +113,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     Y = 235
                 };
             }
-            else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All &&
-                     MapManager.Selected.Value.Scores.Value.Count == 1)
+            else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All && Users.Count == 2)
             {
                 OneVsOneWinsBanner = new ScoreboardOneVsOneWins(this)
                 {
@@ -331,7 +331,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 {
                     try
                     {
-                        users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && MapManager.Selected.Value?.Scores?.Value?.Count != 1)
+                        users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && Users.Count != 1)
                                                    &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
                             ? Math.Min(users.Count, 5) * -users[i].Height / 2f
                             : 4 * -users[i].Height / 2f + 14;
