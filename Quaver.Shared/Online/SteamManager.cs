@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -62,6 +63,11 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static EventHandler<SteamAvatarLoadedEventArgs> SteamUserAvatarLoaded;
 
+        /// <summary>
+        ///     The ids of the skins that are available in the workshop
+        /// </summary>
+        public static List<PublishedFileId_t> WorkshopItemIds { get; private set; } = new List<PublishedFileId_t>();
+
         #region Callbacks
 
         /// <summary>
@@ -84,6 +90,16 @@ namespace Quaver.Shared.Online
         ///     Called after calling ISteamUGC::CreateItem.
         /// </summary>
         public static CallResult<CreateItemResult_t> OnCreateItemResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after subscribing to a workshop item
+        /// </summary>
+        public static CallResult<RemoteStoragePublishedFileSubscribed_t> OnFileSubscribedResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after unsubscribing to a workshop item
+        /// </summary>
+        public static CallResult<RemoteStoragePublishedFileUnsubscribed_t> OnFileUbsubscribedResponse { get; private set; }
 
         #endregion
 
@@ -130,6 +146,7 @@ namespace Quaver.Shared.Online
 
             InitializeCallbacks();
             StartAuthSession();
+            RefreshWorkshopSkins();
 
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
@@ -144,6 +161,8 @@ namespace Quaver.Shared.Online
             PersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
             OnSubmitUpdateResponse = CallResult<SubmitItemUpdateResult_t>.Create(OnSubmittedItemUpdate);
             OnCreateItemResponse = CallResult<CreateItemResult_t>.Create(OnCreateItemResultCallResponse);
+            OnFileSubscribedResponse = CallResult<RemoteStoragePublishedFileSubscribed_t>.Create(OnFileSubscribed);
+            OnFileUbsubscribedResponse = CallResult<RemoteStoragePublishedFileUnsubscribed_t>.Create(OnfileUnsubscribed);
         }
 
         /// <summary>
@@ -334,6 +353,50 @@ namespace Quaver.Shared.Online
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// </summary>
+        public static void RefreshWorkshopSkins()
+        {
+            var numSubscribed = SteamUGC.GetNumSubscribedItems();
+
+            PublishedFileId_t[] fileIds = {};
+            var entries = SteamUGC.GetSubscribedItems(fileIds, numSubscribed);
+
+            Logger.Important($"Found {fileIds.Length} subscribed workshop items | # of subscribed: " +
+                             $"{numSubscribed} | Entries: {entries}", LogType.Runtime);
+
+            WorkshopItemIds = new List<PublishedFileId_t>(fileIds);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="biofailure"></param>
+        private static void OnFileSubscribed(RemoteStoragePublishedFileSubscribed_t result, bool biofailure)
+        {
+            if (result.m_nAppID.m_AppId != ApplicationId)
+                return;
+
+            if (WorkshopItemIds.Any(x => x.m_PublishedFileId == result.m_nPublishedFileId.m_PublishedFileId))
+                return;
+
+            Logger.Important($"Subscribed to fule: {result.m_nPublishedFileId}", LogType.Runtime);
+            RefreshWorkshopSkins();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="biofailure"></param>
+        private static void OnfileUnsubscribed(RemoteStoragePublishedFileUnsubscribed_t result, bool biofailure)
+        {
+            if (result.m_nAppID.m_AppId != ApplicationId)
+                return;
+
+            Logger.Important($"Unsubscribed from file: {result.m_nPublishedFileId}", LogType.Runtime);
+            RefreshWorkshopSkins();
         }
     }
 }
