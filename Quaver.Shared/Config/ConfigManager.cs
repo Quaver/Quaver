@@ -985,10 +985,6 @@ namespace Quaver.Shared.Config
                             throw new ArgumentException();
                         break;
                     case SpecialConfigType.Skin:
-                        if (Directory.Exists(SkinDirectory + "/" + parsedVal))
-                            binded.Value = parsedVal;
-                        else
-                            throw new ArgumentException();
                         break;
                     default:
                         throw new InvalidEnumArgumentException();
