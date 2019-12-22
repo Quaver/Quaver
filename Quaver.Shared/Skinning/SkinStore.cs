@@ -24,10 +24,24 @@ namespace Quaver.Shared.Skinning
 {
     public class SkinStore
     {
-         /// <summary>
+        /// <summary>
         ///     The directory of the skin.
         /// </summary>
-        internal static string Dir => $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}/";
+        internal static string Dir
+        {
+            get
+            {
+                if (!ConfigManager.UseSteamWorkshopSkin.Value)
+                    return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+
+                var match = Regex.Match(ConfigManager.Skin.Value, @"\((\d+)\)");
+
+                if (match.Groups.Count == 0)
+                    return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+
+                return $"{ConfigManager.SteamWorkshopDirectory.Value}/{match.Groups[1]}";
+            }
+        }
 
         /// <summary>
         ///     The skin.ini file.

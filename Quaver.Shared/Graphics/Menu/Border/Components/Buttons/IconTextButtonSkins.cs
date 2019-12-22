@@ -1,5 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
@@ -9,7 +10,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonSkins() : base(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Skins", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://steamcommunity.com/app/980610/workshop/");
+                BrowserHelper.OpenURL($"https://steamcommunity.com/app/{SteamManager.ApplicationId}/workshop/");
             })
         {
         }

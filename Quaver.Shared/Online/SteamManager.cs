@@ -294,10 +294,11 @@ namespace Quaver.Shared.Online
             // Write a file with the workshop id
             File.WriteAllText(SteamWorkshopSkin.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
 
-            SteamUGC.SetItemTitle(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.Title);
-
             if (SteamWorkshopSkin.Current.ExistingWorkshopFileId == 0)
+            {
+                SteamUGC.SetItemTitle(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.Title);
                 SteamUGC.SetItemVisibility(SteamWorkshopSkin.Current.Handle, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
+            }
 
             if (SteamWorkshopSkin.Current.PreviewFilePath != null && File.Exists(SteamWorkshopSkin.Current.PreviewFilePath))
                 SteamUGC.SetItemPreview(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.PreviewFilePath);
@@ -359,15 +360,22 @@ namespace Quaver.Shared.Online
         /// </summary>
         public static void RefreshWorkshopSkins()
         {
-            var numSubscribed = SteamUGC.GetNumSubscribedItems();
+            try
+            {
+                var numSubscribed = SteamUGC.GetNumSubscribedItems();
 
-            PublishedFileId_t[] fileIds = {};
-            var entries = SteamUGC.GetSubscribedItems(fileIds, numSubscribed);
+                PublishedFileId_t[] fileIds = {};
+                var entries = SteamUGC.GetSubscribedItems(fileIds, 1);
 
-            Logger.Important($"Found {fileIds.Length} subscribed workshop items | # of subscribed: " +
-                             $"{numSubscribed} | Entries: {entries}", LogType.Runtime);
+                Logger.Important($"Found {fileIds.Length} subscribed workshop items | # of subscribed: " +
+                                 $"{numSubscribed} | Entries: {entries}", LogType.Runtime);
 
-            WorkshopItemIds = new List<PublishedFileId_t>(fileIds);
+                WorkshopItemIds = new List<PublishedFileId_t>(fileIds);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>

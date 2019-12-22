@@ -15,14 +15,14 @@ using Quaver.Shared.Skinning;
 
 namespace Quaver.Shared.Screens.Settings.Elements
 {
-    public class SettingsCustomSkin : SettingsHorizontalSelector
+    public class SettingsWorkshopSkin : SettingsHorizontalSelector
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="dialog"></param>
         /// <param name="name"></param>
-        public SettingsCustomSkin(SettingsDialog dialog, string name)
+        public SettingsWorkshopSkin(SettingsDialog dialog, string name)
             : base(dialog, name, GetCustomSkinList(), (val, index) => OnChange(dialog, val, index), GetSelectedIndex())
         {
         }
@@ -32,11 +32,23 @@ namespace Quaver.Shared.Screens.Settings.Elements
         /// <returns></returns>
         private static List<string> GetCustomSkinList()
         {
-            var skins = new List<string> { "Default Skin" };
+            var skins = new List<string> { "None" };
 
-            var skinDirectories = Directory.GetDirectories(ConfigManager.SkinDirectory.Value);
-            skins.AddRange(skinDirectories.Select(dir => new DirectoryInfo(dir).Name));
-            skins.Sort();
+            var steamWorkshopSkins = Directory.GetDirectories(ConfigManager.SteamWorkshopDirectory.Value);
+
+            foreach (var directory in steamWorkshopSkins)
+            {
+                if (File.Exists($"{directory}/skin.ini"))
+                {
+                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                        .ReadFile($"{directory}/skin.ini")["General"];
+
+                    if (data["Name"] != null)
+                        skins.Add($"{data["Name"]} ({new DirectoryInfo(directory).Name})");
+                }
+                else
+                    skins.Add($"({new DirectoryInfo(directory).Name})");
+            }
 
             return skins;
         }
@@ -55,16 +67,16 @@ namespace Quaver.Shared.Screens.Settings.Elements
             {
                 // Check if the user already has the default skin enabled and switched back to it.
                 // User wants to choose the default skin
-                case "Default Skin" when string.IsNullOrEmpty(skin):
-                    SkinManager.NewQueuedSkin = null;
+                case "None" when string.IsNullOrEmpty(skin):
+                    SkinManager.NewWorkshopSkin = null;
                     break;
                 // User is selecting a custom skin
-                case "Default Skin" when !string.IsNullOrEmpty(skin):
-                    SkinManager.NewQueuedSkin = "";
+                case "None" when !string.IsNullOrEmpty(skin):
+                    SkinManager.NewWorkshopSkin = "";
                     break;
                 default:
                     if (val != skin)
-                        SkinManager.NewQueuedSkin = val;
+                        SkinManager.NewWorkshopSkin = val;
                     break;
             }
         }
