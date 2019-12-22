@@ -254,6 +254,7 @@ namespace Quaver.Shared.Online
                              $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
                              $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
 
+                SteamWorkshopSkin.Current.HasUploaded = true;
                 return;
             }
 
@@ -261,7 +262,11 @@ namespace Quaver.Shared.Online
 
             // Open in Steam client to accept legal agreement for workshop
             if (result.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+            {
                 BrowserHelper.OpenURL($"steam://url/CommunityFilePage/{result.m_nPublishedFileId}");
+                SteamWorkshopSkin.Current.HasUploaded = true;
+                return;
+            }
 
             var publishedFileId = result.m_nPublishedFileId;
 
