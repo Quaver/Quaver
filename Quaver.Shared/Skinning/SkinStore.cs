@@ -31,12 +31,15 @@ namespace Quaver.Shared.Skinning
         {
             get
             {
+                if (string.IsNullOrEmpty(ConfigManager.Skin.Value))
+                    ConfigManager.Skin.Value = "";
+                
                 if (!ConfigManager.UseSteamWorkshopSkin.Value)
                     return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
 
-                var match = Regex.Match(ConfigManager.Skin.Value, @"\((\d+)\)");
+                var match = Regex.Match(ConfigManager.Skin.Value ?? "", @"\((\d+)\)");
 
-                if (match.Groups.Count == 0)
+                if (match?.Groups?.Count == 0)
                     return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
 
                 return $"{ConfigManager.SteamWorkshopDirectory.Value}/{match.Groups[1]}";
