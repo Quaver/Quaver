@@ -235,8 +235,11 @@ namespace Quaver.Shared.Graphics
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,
-                TextAlignment = TextAlignment.Center
+                TextAlignment = TextAlignment.Center,
+                Alpha = 0
             };
+
+            Confirmation.FadeTo(1, Easing.Linear, FadeTime + 50);
         }
 
         /// <summary>

@@ -11,6 +11,8 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Steamworks;
 using Wobble;
@@ -72,6 +74,17 @@ namespace Quaver.Shared.Online
         /// </summary>
         private static Callback<PersonaStateChange_t> PersonaStateChanged { get; set; }
 
+        /// <summary>
+        ///     Called when submitting the workshop update has completed
+        /// </summary>
+        /// <returns></returns>
+        public static CallResult<SubmitItemUpdateResult_t> OnSubmitUpdateResponse { get; private set; }
+
+        /// <summary>
+        ///     Called after calling ISteamUGC::CreateItem.
+        /// </summary>
+        public static CallResult<CreateItemResult_t> OnCreateItemResponse { get; private set; }
+
         #endregion
 
         /// <summary>
@@ -129,6 +142,8 @@ namespace Quaver.Shared.Online
         {
             GetAuthSessionTickResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnValidateAuthSessionTicketResponse);
             PersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
+            OnSubmitUpdateResponse = CallResult<SubmitItemUpdateResult_t>.Create(OnSubmittedItemUpdate);
+            OnCreateItemResponse = CallResult<CreateItemResult_t>.Create(OnCreateItemResultCallResponse);
         }
 
         /// <summary>
@@ -189,6 +204,90 @@ namespace Quaver.Shared.Online
         {
             if (callback.m_nChangeFlags == EPersonaChange.k_EPersonaChangeAvatar)
                 LoadAvatarIfNotExists(callback.m_ulSteamID);
+        }
+
+        /// <summary>
+        ///     Called after submitting an update
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="bIOfailure"></param>
+        public static void OnSubmittedItemUpdate(SubmitItemUpdateResult_t result, bool bIOfailure)
+        {
+            SteamWorkshopSkin.Current.HasUploaded = true;
+
+            if (bIOfailure)
+            {
+                Logger.Error("Failed to Create workshop item:\n" +
+                             $"m_eResult: {result.m_eResult}\n" +
+                             $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
+                             $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
+
+                return;
+            }
+
+            Logger.Important($"Workshop upload result: {result.m_eResult}", LogType.Network);
+
+            if (result.m_eResult == EResult.k_EResultOK)
+            {
+                Logger.Important($"Workshop upload successful!", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Success, "You have successfully uploaded your Steam workshop skin!");
+                BrowserHelper.OpenURL($"https://steamcommunity.com/sharedfiles/filedetails/?id={result.m_nPublishedFileId.m_PublishedFileId}");
+            }
+            else
+            {
+                Logger.Important($"Workshop upload failed! - {result.m_eResult}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, $"The Steam workshop upload has failed due to: {result.m_eResult}");
+            }
+        }
+
+        /// <summary>
+        ///     Called when after calling SteamUGC.CreateItem();
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="bIOfailure"></param>
+        public static void OnCreateItemResultCallResponse(CreateItemResult_t result, bool bIOfailure)
+        {
+            if (bIOfailure)
+            {
+                Logger.Error("Failed to Create workshop item:\n" +
+                             $"m_eResult: {result.m_eResult}\n" +
+                             $"m_nPublishedFileId: {result.m_nPublishedFileId}\n" +
+                             $"m_bUserNeedsToAcceptWorkshopLegalAgreement: {result.m_bUserNeedsToAcceptWorkshopLegalAgreement}", LogType.Network);
+
+                SteamWorkshopSkin.Current.HasUploaded = true;
+                return;
+            }
+
+            Logger.Important($"Starting Steam workshop upload....", LogType.Runtime);
+
+            // Open in Steam client to accept legal agreement for workshop
+            if (result.m_bUserNeedsToAcceptWorkshopLegalAgreement)
+            {
+                BrowserHelper.OpenURL($"steam://url/CommunityFilePage/{result.m_nPublishedFileId}");
+                SteamWorkshopSkin.Current.HasUploaded = true;
+                return;
+            }
+
+            var publishedFileId = result.m_nPublishedFileId;
+
+            SteamWorkshopSkin.Current.Handle = SteamUGC.StartItemUpdate((AppId_t) ApplicationId, publishedFileId);
+
+            // Write a file with the workshop id
+            File.WriteAllText(SteamWorkshopSkin.Current.WorkshopIdFilePath, result.m_nPublishedFileId.m_PublishedFileId.ToString());
+
+            SteamUGC.SetItemTitle(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.Title);
+
+            if (SteamWorkshopSkin.Current.ExistingWorkshopFileId == 0)
+                SteamUGC.SetItemVisibility(SteamWorkshopSkin.Current.Handle, ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate);
+
+            if (SteamWorkshopSkin.Current.PreviewFilePath != null && File.Exists(SteamWorkshopSkin.Current.PreviewFilePath))
+                SteamUGC.SetItemPreview(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.PreviewFilePath);
+
+            SteamUGC.SetItemContent(SteamWorkshopSkin.Current.Handle, SteamWorkshopSkin.Current.SkinFolderPath);
+
+            // Start updating to Steam
+            var call = SteamUGC.SubmitItemUpdate(SteamWorkshopSkin.Current.Handle, "");
+            OnSubmitUpdateResponse.Set(call);
         }
 
         /// <summary>
