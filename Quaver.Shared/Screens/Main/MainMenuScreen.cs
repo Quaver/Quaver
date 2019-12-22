@@ -48,6 +48,11 @@ namespace Quaver.Shared.Screens.Main
             View = new MainMenuScreenView(this);
         }
 
+        public override void OnFirstUpdate()
+        {
+            base.OnFirstUpdate();
+        }
+
         public override void Update(GameTime gameTime)
         {
             HandleInput(gameTime);

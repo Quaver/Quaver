@@ -386,7 +386,8 @@ namespace Quaver.Shared.Screens.Settings
                 {
                     new SettingsCustomSkin(this, "Custom Skin"),
                     new SettingsDefaultSkin(this, "Default Skin"),
-                    new SettingsExportSkin(this, "Export Custom Skin")
+                    new SettingsExportSkin(this, "Export Custom Skin"),
+                    new SettingUploadToWorkshop(this, "Upload Custom Skin To Workshop")
                 }),
                 // Input
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_keyboard), "Input", new List<Drawable>
