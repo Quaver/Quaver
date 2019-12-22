@@ -33,6 +33,11 @@ namespace Quaver.Shared.Skinning
         public static string NewQueuedSkin { get; set; }
 
         /// <summary>
+        ///     If non-null, this is the workshop skin that'll be reloaded
+        /// </summary>
+        public static string NewWorkshopSkin { get; set; }
+
+        /// <summary>
         ///     The currently selected skin
         /// </summary>
         public static SkinStore Skin { get; private set; }

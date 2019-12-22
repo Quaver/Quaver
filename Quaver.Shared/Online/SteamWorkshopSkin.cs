@@ -3,6 +3,7 @@ using System.IO;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble.Logging;
 
@@ -63,7 +64,7 @@ namespace Quaver.Shared.Online
 
             Current = this;
             Title = skin;
-            SkinFolderPath = $"{ConfigManager.SkinDirectory.Value}/{skin}".Replace("\\", "/");
+            SkinFolderPath = SkinStore.Dir.Replace("\\", "/");
             PreviewFilePath = $"{SkinFolderPath}/steam_workshop_preview.png";
 
             if (!File.Exists(PreviewFilePath))

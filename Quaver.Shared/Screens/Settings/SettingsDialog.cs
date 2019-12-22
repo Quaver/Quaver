@@ -238,10 +238,11 @@ namespace Quaver.Shared.Screens.Settings
                 var dismissDalog = true;
 
                 // Handle skin reloads
-                if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value
+                if (SkinManager.NewQueuedSkin != null && SkinManager.NewQueuedSkin != ConfigManager.Skin.Value ||
+                    SkinManager.NewWorkshopSkin != null && SkinManager.NewWorkshopSkin != ConfigManager.Skin.Value
                     || NewQueuedDefaultSkin != ConfigManager.DefaultSkin.Value)
                 {
-                    ConfigManager.Skin.Value = SkinManager.NewQueuedSkin;
+                    ConfigManager.Skin.Value = ConfigManager.UseSteamWorkshopSkin.Value ? SkinManager.NewWorkshopSkin : SkinManager.NewQueuedSkin;
                     ConfigManager.DefaultSkin.Value = NewQueuedDefaultSkin;
 
                     Transitioner.FadeIn();
@@ -385,7 +386,9 @@ namespace Quaver.Shared.Screens.Settings
                 new SettingsSection(this, FontAwesome.Get(FontAwesomeIcon.fa_pencil), "Skin", new List<Drawable>()
                 {
                     new SettingsCustomSkin(this, "Custom Skin"),
+                    new SettingsWorkshopSkin(this, "Steam Workshop Skin"),
                     new SettingsDefaultSkin(this, "Default Skin"),
+                    new SettingsBool(this, "Use Steam Workshop Skin", ConfigManager.UseSteamWorkshopSkin),
                     new SettingsExportSkin(this, "Export Custom Skin"),
                     new SettingUploadToWorkshop(this, "Upload Custom Skin To Workshop")
                 }),

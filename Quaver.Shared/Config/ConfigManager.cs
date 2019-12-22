@@ -18,6 +18,7 @@ using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Filter;
@@ -71,6 +72,12 @@ namespace Quaver.Shared.Config
         /// </summary>
         private static string _songDirectory;
         internal static Bindable<string> SongDirectory { get; private set; }
+
+        /// <summary>
+        ///     The directory of the Steam workshop
+        /// </summary>
+        private static string _steamWorkshopDirectory;
+        internal static Bindable<string> SteamWorkshopDirectory { get; private set; }
 
         /// <summary>
         ///     The username of the user.
@@ -436,6 +443,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<MultiplayerLobbyRoomVisibility> MultiplayerLobbyVisibilityType { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> UseSteamWorkshopSkin { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -635,6 +646,9 @@ namespace Quaver.Shared.Config
             LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
             DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
             SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
+
+            _steamWorkshopDirectory = $"{GameDirectory.Value}/../../workshop/content/{SteamManager.ApplicationId}";
+            SteamWorkshopDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SteamWorkshopDirectory", _steamWorkshopDirectory, data);
             SelectedGameMode = ReadValue(@"SelectedGameMode", GameMode.Keys4, data);
             Username = ReadValue(@"Username", "Player", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
@@ -753,6 +767,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyGameModeType = ReadValue(@"MultiplayerLobbyGameModeType", MultiplayerLobbyGameMode.All, data);
             MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
+            UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -883,6 +898,8 @@ namespace Quaver.Shared.Config
                     MultiplayerLobbyGameModeType.ValueChanged += AutoSaveConfiguration;
                     MultiplayerLobbyMapStatusType.ValueChanged += AutoSaveConfiguration;
                     MultiplayerLobbyVisibilityType.ValueChanged += AutoSaveConfiguration;
+                    SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
+                    UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
@@ -1006,7 +1023,7 @@ namespace Quaver.Shared.Config
             var attempts = 0;
 
             // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory + "/quaver.cfg") && !FirstWrite)
+            while (!IsFileReady(GameDirectory.Value + "/quaver.cfg") && !FirstWrite)
             {
             }
 
@@ -1038,7 +1055,7 @@ namespace Quaver.Shared.Config
             try
             {
                 // Create a new stream
-                var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
+                var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
                 {
                     AutoFlush = true
                 };
@@ -1057,7 +1074,7 @@ namespace Quaver.Shared.Config
                     attempts++;
 
                     // Create a new stream
-                    var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
+                    var sw = new StreamWriter(GameDirectory.Value + "/quaver.cfg")
                     {
                         AutoFlush = true
                     };
