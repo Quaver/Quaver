@@ -50,7 +50,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             : base(new Bindable<bool>(game?.Value?.HealthType == (byte) MultiplayerHealthType.Lives))
         {
             Game = game;
-            Depth = 1;
 
             Clicked += (sender, args) =>
             {

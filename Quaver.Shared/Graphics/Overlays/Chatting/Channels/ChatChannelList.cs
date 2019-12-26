@@ -56,6 +56,16 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
             CreateChannelContainer();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HeaderBackground.Depth = JoinChatButton.IsHovered() ? 1 : 0;
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// </summary>
         private void CreateHeaderBackground()

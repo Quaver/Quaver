@@ -54,6 +54,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         {
             Mod = mod;
             Size = new ScalableVector2(width, 53);
+            Depth = 1;
 
             const int paddingLeft = 10;
 

@@ -91,6 +91,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         /// </summary>
         public FooterJukebox() : base(UserInterface.BlankBox)
         {
+            Depth = 1;
             Size = new ScalableVector2(500, 54);
             Tint = ColorHelper.HexToColor("#292929");
 
@@ -136,7 +137,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(40, 40),
-                Y = -1
+                Y = -1,
             };
         }
 

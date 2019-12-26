@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 X = -30,
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0,
-                ButtonSelectLeft = {UsePreviousSpriteBatchOptions = true},
+                ButtonSelectLeft = {UsePreviousSpriteBatchOptions = true,},
                 ButtonSelectRight = {UsePreviousSpriteBatchOptions = true},
                 SelectedItemText =
                 {

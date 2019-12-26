@@ -98,13 +98,13 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
             Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
 
-            Button = new ImageButton(UserInterface.BlankBox)
+            /*Button = new ImageButton(UserInterface.BlankBox)
             {
                 Parent = this,
                 Size = Size,
                 Alpha = 0,
                 Depth = 1
-            };
+            };*/
 
             Banner = new FilterPanelBanner(this)
             {

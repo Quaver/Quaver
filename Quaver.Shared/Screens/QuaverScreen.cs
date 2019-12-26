@@ -12,6 +12,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Quaver.Shared.Graphics.Menu.Border.Components.Users;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
@@ -63,6 +64,10 @@ namespace Quaver.Shared.Screens
         ///     The currently active checkbox container for the screen
         /// </summary>
         private CheckboxContainer ActiveCheckboxContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public LoggedInUserDropdown ActiveLoggedInUserDropdown { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -218,6 +223,24 @@ namespace Quaver.Shared.Screens
 
             ActiveTooltip.X = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveTooltip.Width, 5, WindowManager.Width - 5);
             ActiveTooltip.Y = MathHelper.Clamp(MouseManager.CurrentState.Y - ActiveTooltip.Height - 2, 5, WindowManager.Height - 5);
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ActivateLoggedInUserDropdown(LoggedInUserDropdown dropdown, ScalableVector2 position)
+        {
+            if (ActiveLoggedInUserDropdown != null)
+            {
+                ActiveLoggedInUserDropdown.Visible = false;
+                ActiveLoggedInUserDropdown.Parent = null;
+                ActiveLoggedInUserDropdown.Destroy();
+            }
+
+            ActiveLoggedInUserDropdown = dropdown;
+            ActiveLoggedInUserDropdown.Parent = View.Container;
+            ActiveLoggedInUserDropdown.Visible = true;
+
+            ActiveLoggedInUserDropdown.Position = position;
         }
 
         /// <summary>
