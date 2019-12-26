@@ -135,7 +135,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
 
                 item.Parent = this;
 
-                item.Y = item is IMenuBorderItem borderItem && borderItem.UseCustomPaddingY ? borderItem.CustomPaddingY : ForegroundLine.Height;
+                item.Y = item is IMenuBorderItem borderItem && borderItem.UseCustomPaddingY ? borderItem.CustomPaddingY : 0;
                 item.Alignment = direction == AlignmentDirection.LeftToRight ? Alignment.MidLeft : Alignment.MidRight;
 
                 const int padding = 25;
