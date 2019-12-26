@@ -56,18 +56,19 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// </summary>
         public DrawableSessionTime() : base(UserInterface.DropdownClosed)
         {
-            Size = new ScalableVector2(114, 30);
+            Size = new ScalableVector2(100, 26);
             Tint = ColorHelper.HexToColor($"#363636");
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 22)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 19)
             {
                 Parent = this,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
+                Y = 1
             };
 
-            Tooltip = new Tooltip($"This displays how long the game has been running.\nBe sure to take breaks often!",
+            Tooltip = new Tooltip($"This displays how long the game has been running. Be sure to take breaks often!",
                 Colors.MainAccent) {DestroyIfParentIsNull = false};
 
             Hovered += (sender, args) =>
