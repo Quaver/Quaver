@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(78, 23),
                 X = -12,
-                UsePreviousSpriteBatchOptions = true
+                UsePreviousSpriteBatchOptions = true,
             };
 
             ModManager.ModsChanged += OnModsChanged;

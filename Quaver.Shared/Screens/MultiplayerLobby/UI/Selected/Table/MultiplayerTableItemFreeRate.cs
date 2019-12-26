@@ -46,7 +46,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             : base(new Bindable<bool>(game?.Value?.FreeModType.HasFlag(MultiplayerFreeModType.Rate) ?? false))
         {
             Game = game;
-            Depth = 1;
 
             Clicked += (sender, args) =>
             {

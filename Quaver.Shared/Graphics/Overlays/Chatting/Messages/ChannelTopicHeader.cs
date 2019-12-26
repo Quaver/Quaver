@@ -55,10 +55,10 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Depth = OnlineChat.Instance.IsJoinChannelDialogOpen() ? 1 : 0;
-
             CloseButton.Visible = !OnlineChat.IsSpecialChannel(ActiveChannel.Value);
             CloseButton.IsClickable = CloseButton.Visible;
+
+            Depth = CloseButton.IsHovered() ? 1 : 0;
 
             base.Update(gameTime);
         }

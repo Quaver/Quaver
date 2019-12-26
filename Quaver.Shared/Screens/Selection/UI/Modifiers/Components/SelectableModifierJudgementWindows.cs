@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 X = -Icon.X,
-                Size = new ScalableVector2(102, 22)
+                Size = new ScalableVector2(102, 22),
             };
 
             Clicked += (sender, args) => DialogManager.Show(new JudgementWindowDialog());

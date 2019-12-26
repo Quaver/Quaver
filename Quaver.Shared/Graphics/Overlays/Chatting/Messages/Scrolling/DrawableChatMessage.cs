@@ -81,9 +81,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             var container = (ChatMessageScrollContainer) Container;
 
-            UsernameButton.Depth = container.ActiveRightClickOptions != null && container.ActiveRightClickOptions.Opened
-                                   || OnlineChat.Instance.IsJoinChannelDialogOpen() ? 1 : 0;
-
             base.Update(gameTime);
         }
 

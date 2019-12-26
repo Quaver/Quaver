@@ -37,7 +37,6 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
             : base(new Bindable<bool>(game?.Value?.HostRotation ?? false))
         {
             Game = game;
-            Depth = 1;
 
             Clicked += (sender, args) =>
             {
