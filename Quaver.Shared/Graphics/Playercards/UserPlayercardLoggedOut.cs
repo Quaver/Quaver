@@ -93,9 +93,8 @@ namespace Quaver.Shared.Graphics.Playercards
             Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),"", 20)
             {
                 Parent = Avatar,
+                Alignment = Alignment.MidLeft,
                 X = Avatar.Width + 12,
-                Y = -2,
-                Tint = ColorHelper.HexToColor("#808080"),
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -109,10 +108,10 @@ namespace Quaver.Shared.Graphics.Playercards
             LoginButton = new IconButton(UserInterface.LoginButtonPlayercard)
             {
                 Parent = this,
-                Alignment = Alignment.BotRight,
+                Alignment = Alignment.MidRight,
                 UsePreviousSpriteBatchOptions = true,
-                Size = new ScalableVector2(70, 21),
-                Position = new ScalableVector2(-12, -12),
+                Size = new ScalableVector2(76, 25),
+                Position = new ScalableVector2(-16, 0),
                 Visible = false
             };
 
@@ -126,10 +125,10 @@ namespace Quaver.Shared.Graphics.Playercards
             Wheel = new LoadingWheel()
             {
                 Parent = this,
-                Alignment = Alignment.BotRight,
+                Alignment = Alignment.MidRight,
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(24, 24),
-                Position = new ScalableVector2(-12, -12)
+                Position = new ScalableVector2(-16, 0)
             };
         }
 
@@ -138,16 +137,16 @@ namespace Quaver.Shared.Graphics.Playercards
             switch (OnlineManager.Status.Value)
             {
                 case ConnectionStatus.Disconnected:
-                    Status.Text = "Disconnected";
+                    Status.Text = "Disconnected from the server.";
                     break;
                 case ConnectionStatus.Connecting:
-                    Status.Text = "Connecting...";
+                    Status.Text = "Connecting to the server...";
                     break;
                 case ConnectionStatus.Connected:
                     Status.Text = "Connected!";
                     break;
                 case ConnectionStatus.Reconnecting:
-                    Status.Text = "Reconnecting...";
+                    Status.Text = "Reconnecting to the server...";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
