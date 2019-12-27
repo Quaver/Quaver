@@ -173,5 +173,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D OfflineAvatar => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/offline-avatar.png");
         public static Texture2D OfflinePlayercardPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/offline-playercard-panel.png");
         public static Texture2D LoginButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/login-button.png");
+        public static Texture2D LogoutButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/logout-button.png");
+        public static Texture2D UserPlayercardPanel=> TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/user-playercard-panel.png");
+        public static Texture2D Mode4KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-4k-on.png");
+        public static Texture2D Mode7KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-7k-on.png");
     }
 }
