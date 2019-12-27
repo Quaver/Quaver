@@ -141,7 +141,7 @@ namespace Quaver.Shared.Graphics.Playercards
                     Status.Text = "Disconnected";
                     break;
                 case ConnectionStatus.Connecting:
-                    Status.Text = "Conecting...";
+                    Status.Text = "Connecting...";
                     break;
                 case ConnectionStatus.Connected:
                     Status.Text = "Connected!";
