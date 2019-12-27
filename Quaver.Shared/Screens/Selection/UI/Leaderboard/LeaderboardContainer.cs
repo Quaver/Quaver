@@ -426,7 +426,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             if (e.Value != ConnectionStatus.Connected || ConfigManager.LeaderboardSection.Value == LeaderboardType.Local)
                 return;
 
-            FetchScores();
+            ScheduleUpdate(FetchScores);
         }
 
         /// <summary>
