@@ -169,6 +169,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D MultiplayerUploadMapset => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-upload-mapset.png");
         public static Texture2D MultiplayerChangeName => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-change-name.png");
         public static Texture2D MultiplayerEditPassword => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-edit-password.png");
-        public static Texture2D MultiplayerSelectMap=> TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-select-map.png");
+        public static Texture2D MultiplayerSelectMap => TextureManager.Load(@"Quaver.Resources/Textures/UI/Multi/multiplayer-select-map.png");
+        public static Texture2D OfflineAvatar => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/offline-avatar.png");
+        public static Texture2D OfflinePlayercardPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/offline-playercard-panel.png");
+        public static Texture2D LoginButtonPlayercard => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/login-button.png");
     }
 }

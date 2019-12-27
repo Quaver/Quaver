@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Playercards;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Tests.UI;
@@ -31,6 +33,12 @@ namespace Quaver.Shared.Screens.Tests.Border
                 Parent = Container,
                 Alignment = Alignment.BotLeft
             };
+
+            new UserPlayercardLoggedOut()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter
+            };
         }
 
         /// <inheritdoc />
@@ -45,7 +53,7 @@ namespace Quaver.Shared.Screens.Tests.Border
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2f2f2f"));
+            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#000000"));
             Container?.Draw(gameTime);
         }
 
