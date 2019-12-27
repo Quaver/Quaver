@@ -22,11 +22,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
     {
         /// <summary>
         /// </summary>
-        public static ScalableVector2 ContainerSize { get; } = new ScalableVector2(480, 300);
-
-        /// <summary>
-        /// </summary>
-        private Sprite ScreenDarkness { get; set; }
+        public static ScalableVector2 ContainerSize { get; } = new ScalableVector2(436, 300);
 
         /// <summary>
         /// </summary>
@@ -38,7 +34,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
-        private UserPlayercard UserPlayercard { get; set; }
+        private UserPlayercard UserPlayercard { get; }
 
         /// <summary>
         /// </summary>
@@ -47,6 +43,10 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// <summary>
         /// </summary>
         private Drawable ActiveSprite => OnlineManager.Connected ? (Drawable) UserPlayercard : LoggedOutPlayercard;
+
+        /// <summary>
+        /// </summary>
+        private Sprite ScreenDarkness { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -58,14 +58,14 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
             var game = GameBase.Game as QuaverGame;
 
-            /*ScreenDarkness = new Sprite()
+            ScreenDarkness = new Sprite()
             {
                 Parent = game?.CurrentScreen.View.Container,
-                Tint = Color.Black,
-                Alpha = 0.85f,
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height - 56 * 2),
-                Y = 56
-            };*/
+                Y = 56,
+                Tint = Color.Black,
+                Alpha = 0
+            };
 
             Scrollbar.Visible = false;
 
@@ -79,19 +79,18 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             LoggedOutPlayercard = new UserPlayercardLoggedOut
             {
                 Parent = this,
-                Alignment = Alignment.TopCenter,
-                Y = 14,
+                Alignment = Alignment.TopRight
             };
 
             UserPlayercard = new UserPlayercard(OnlineManager.Self)
             {
                 Parent = this,
-                Alignment = Alignment.TopCenter,
-                Y = 14
+                Alignment = Alignment.TopRight
             };
 
             AddContainedDrawable(LoggedOutPlayercard);
             AddContainedDrawable(UserPlayercard);
+
             Open();
 
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
@@ -120,7 +119,9 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             if (DialogManager.Dialogs.Count == 0)
             {
                 if (LoggedOutPlayercard.Visible && LoggedOutPlayercard.LoginButton.IsHovered()
-                    || UserPlayercard.Visible && (UserPlayercard.ModeButton.IsHovered() || UserPlayercard.LogoutButton.IsHovered()))
+                    || UserPlayercard.Visible
+                    && (UserPlayercard.ModeButton.IsHovered() || UserPlayercard.LogoutButton.IsHovered()
+                        || UserPlayercard.ViewProfileButton.IsHovered()))
                     Button.Depth = 1;
                 else
                     Button.Depth = 0;
@@ -150,10 +151,13 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         public void Open()
         {
             IsOpen = true;
-            var height = ActiveSprite.Visible ? ActiveSprite.Height + 38 : 0;
+            var height = ActiveSprite.Visible ? ActiveSprite.Height + 40 : 0;
 
             ClearAnimations();
             ChangeHeightTo((int) height, Easing.OutQuint, 450);
+
+            ScreenDarkness.ClearAnimations();
+            ScreenDarkness.FadeTo(0.75f, Easing.Linear, 200);
         }
 
         public void Close()
@@ -161,6 +165,9 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             ClearAnimations();
             ChangeHeightTo(0, Easing.OutQuint, 550);
             IsOpen = false;
+
+            ScreenDarkness.ClearAnimations();
+            ScreenDarkness.FadeTo(0f, Easing.Linear, 200);
         }
 
         private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)

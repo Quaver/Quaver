@@ -56,6 +56,10 @@ namespace Quaver.Shared.Graphics.Playercards
 
         /// <summary>
         /// </summary>
+        public IconButton ViewProfileButton { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private TextKeyValue GlobalRanking { get; set; }
 
         /// <summary>
@@ -85,6 +89,7 @@ namespace Quaver.Shared.Graphics.Playercards
             CreateStatus();
             CreateModeButton();
             CreateLogoutButton();
+            CreateViewProfileButton();
             CreateGlobalRanking();
             CreateOverallRating();
             CreateOverallAccuracy();
@@ -143,7 +148,7 @@ namespace Quaver.Shared.Graphics.Playercards
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
-                Size = new ScalableVector2(46, 46),
+                Size = new ScalableVector2(40, 40),
                 Position = new ScalableVector2(20, 16)
             };
 
@@ -159,7 +164,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 Size = new ScalableVector2(22, 22),
-                Position = new ScalableVector2(Avatar.X + Avatar.Width + 10, Avatar.Y)
+                Position = new ScalableVector2(Avatar.X + Avatar.Width + 10, Avatar.Y - 2)
             };
         }
 
@@ -167,7 +172,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 21)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -185,8 +190,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Flag.X,
-                Y = Flag.Y + Avatar.Height - 20,
-                Tint = ColorHelper.HexToColor("#808080")
+                Y = Flag.Y + Avatar.Height - 16,
             };
         }
 
@@ -199,8 +203,8 @@ namespace Quaver.Shared.Graphics.Playercards
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 X = Avatar.X,
-                Y = Avatar.Y + Avatar.Height + 18,
-                Size = new ScalableVector2(78 * 1.1f, 20 * 1.1f)
+                Y = Avatar.Y + Avatar.Height + 16,
+                Size = new ScalableVector2(89, 25)
             };
 
             ModeButton.Clicked += (sender, args) =>
@@ -235,13 +239,30 @@ namespace Quaver.Shared.Graphics.Playercards
                 UsePreviousSpriteBatchOptions = true,
                 X = -Avatar.X,
                 Y = ModeButton.Y,
-                Size = new ScalableVector2(61 * 1.1f, 20 * 1.1f),
+                Size = new ScalableVector2(76, 25),
             };
 
             LogoutButton.Clicked += (sender, args) =>
             {
                 ThreadScheduler.Run(() => OnlineManager.Client?.Disconnect());
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateViewProfileButton()
+        {
+            ViewProfileButton = new IconButton(UserInterface.ViewProfileButtonPlayercard)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                UsePreviousSpriteBatchOptions = true,
+                X = LogoutButton.X - LogoutButton.Width - 10,
+                Y = ModeButton.Y,
+                Size = new ScalableVector2(110, 25),
+            };
+
+            ViewProfileButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User?.OnlineUser?.Id}");
         }
 
         /// <summary>
@@ -330,7 +351,7 @@ namespace Quaver.Shared.Graphics.Playercards
             Username.Tint = Avatar.Border.Tint;
             Username.TruncateWithEllipsis((int) Width - 30);
 
-            Status.Text = "Online";
+            Status.Text = GetStatusText();
             ModeButton.Image = GetModeImage();
 
             if (User != null && User.Stats.ContainsKey(ActiveMode))
