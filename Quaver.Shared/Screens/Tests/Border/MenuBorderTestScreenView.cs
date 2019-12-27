@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Playercards;
@@ -38,6 +41,23 @@ namespace Quaver.Shared.Screens.Tests.Border
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
+            };
+
+            new UserPlayercard(new User(new OnlineUser()
+            {
+                Id = 0,
+                CountryFlag = "CA",
+                SteamId = 0,
+                UserGroups = UserGroups.Normal,
+                Username = "TestUser27"
+            })
+                {
+                    CurrentStatus = new UserClientStatus(ClientStatus.Paused, -1, "", 1, "", 0)
+                })
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                X = 400
             };
         }
 

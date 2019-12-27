@@ -39,7 +39,7 @@ namespace Quaver.Shared.Graphics.Playercards
         public UserPlayercardLoggedOut()
         {
             Image = UserInterface.OfflinePlayercardPanel;
-            Size = new ScalableVector2(323, 68);
+            Size = new ScalableVector2(436, 68);
 
             CreateAvatar();
             CreateUsername();

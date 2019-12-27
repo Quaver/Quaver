@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -109,6 +110,12 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
                Button?.FireButtonClickEvent();
             }
 
+            if (DialogManager.Dialogs.Count == 0)
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.F10))
+                    Button?.FireButtonClickEvent();
+            }
+
             base.Update(gameTime);
         }
 
@@ -154,7 +161,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
                 {
                     game?.CurrentScreen?.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
                         new ScalableVector2(AbsolutePosition.X + AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
-                            AbsolutePosition.Y + AbsoluteSize.Y + 12));
+                            AbsolutePosition.Y + AbsoluteSize.Y + 13));
 
                     return;
                 }
