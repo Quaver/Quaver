@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -48,7 +49,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
-        private Sprite Avatar { get; set; }
+        private CircleAvatar Avatar { get; set; }
 
         /// <summary>
         /// </summary>
@@ -82,6 +83,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
             if (ConfigManager.Username != null)
                 ConfigManager.Username.ValueChanged += OnUsernameChanged;
+
+            OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
         }
 
         /// <inheritdoc />
@@ -100,7 +103,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
             if (MouseManager.IsUniqueClick(MouseButton.Left) && !Button.IsHovered
                && game?.CurrentScreen?.ActiveLoggedInUserDropdown != null
-               && !game.CurrentScreen.ActiveLoggedInUserDropdown.Button.IsHovered
+               && !game.CurrentScreen.ActiveLoggedInUserDropdown.Button.IsHovered()
                && IsOpen)
             {
                Button?.FireButtonClickEvent();
@@ -117,6 +120,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             if (ConfigManager.Username != null)
                 ConfigManager.Username.ValueChanged -= OnUsernameChanged;
 
+            OnlineManager.Status.ValueChanged -= OnOnlineStatusChanged;
             Resized = null;
 
             base.Destroy();
@@ -163,19 +167,9 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         private void CreateAvatar()
         {
-            var image = UserInterface.UnknownAvatar;
+            const float scale = 0.60f;
 
-            if (SteamManager.UserAvatars != null)
-            {
-                var id = SteamUser.GetSteamID().m_SteamID;
-
-                if (SteamManager.UserAvatars.ContainsKey(id))
-                    image = SteamManager.UserAvatars[id];
-            }
-
-            const float scale = 0.65f;
-
-            Avatar = new CircleAvatar(new ScalableVector2(Height * scale, Height * scale), image)
+            Avatar = new CircleAvatar(new ScalableVector2(Height * scale, Height * scale), GetAvatar())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -186,7 +180,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Player", 21)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Login", 21)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,
@@ -214,8 +208,11 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// </summary>
         private void UpdateText() => ScheduleUpdate(() =>
         {
-            Username.Text = ConfigManager.Username?.Value ?? "Player";
+            Avatar.AvatarSprite.Image = GetAvatar();
+            Username.Text = OnlineManager.Connected ? ConfigManager.Username?.Value : "Login";
+
             UpdateSize();
+
             Resized?.Invoke(this, new LoggedInUserResizedEventArgs());
         });
 
@@ -237,6 +234,31 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
             Caret.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.Linear,
                 MathHelper.ToDegrees(Caret.Rotation), rotation, 200));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnOnlineStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
+            => UpdateText();
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private Texture2D GetAvatar()
+        {
+            var image = UserInterface.OfflineAvatar;
+
+            if (OnlineManager.Status.Value == ConnectionStatus.Connected && SteamManager.UserAvatars != null)
+            {
+                var id = SteamUser.GetSteamID().m_SteamID;
+
+                if (SteamManager.UserAvatars.ContainsKey(id))
+                    image = SteamManager.UserAvatars[id];
+            }
+
+            return image;
         }
     }
 }
