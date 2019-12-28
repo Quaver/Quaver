@@ -71,6 +71,7 @@ using Quaver.Shared.Screens.Tests.MenuJukebox;
 using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
+using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -177,6 +178,7 @@ namespace Quaver.Shared
         {
             {"Dropdown", typeof(DropdownTestScreen)},
             {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"ReplayController", typeof(TestReplayControllerScreen)},
             {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
             {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
             {"DrawableMapset", typeof(TestMapsetScreen)},

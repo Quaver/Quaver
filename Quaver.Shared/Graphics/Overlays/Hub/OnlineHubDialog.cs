@@ -8,6 +8,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Gameplay;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -167,7 +168,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             Chat.Close();
 
             if (GameBase.Game is QuaverGame game && game.CurrentScreen.Type == QuaverScreenType.Gameplay)
-                game.GlobalUserInterface.Cursor.Alpha = 0;
+            {
+                if (game.CurrentScreen is GameplayScreen gameplay)
+                    game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode && gameplay.SpectatorClient == null ? 1 : 0;
+            }
 
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);
         }

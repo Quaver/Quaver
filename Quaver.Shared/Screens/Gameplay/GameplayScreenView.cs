@@ -32,6 +32,7 @@ using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
 using Quaver.Shared.Screens.Gameplay.UI.Multiplayer;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
+using Quaver.Shared.Screens.Gameplay.UI.Replays;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
@@ -196,6 +197,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private SpectatorCount SpectatorCount { get; }
 
+        /// <summary>
+        /// </summary>
+        private ReplayController ReplayController { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -262,6 +267,16 @@ namespace Quaver.Shared.Screens.Gameplay
                 Alignment = Alignment.TopRight,
                 X = -10
             };
+
+            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+            {
+                ReplayController = new ReplayController(Screen)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.BotRight,
+                    Position = new ScalableVector2(-12, -140)
+                };
+            }
 
             // Create screen transitioner to perform any animations.
             Transitioner = new Sprite()
@@ -438,6 +453,7 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             // Update score and accuracy displays
             ScoreDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Score);
+
             RatingDisplay.UpdateValue(RatingProcessor.CalculateRating(Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy));
             AccuracyDisplay.UpdateValue(Screen.Ruleset.ScoreProcessor.Accuracy);
         }
@@ -462,7 +478,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Creates the GradeDisplay sprite
         /// </summary>
-        private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
+        private void CreateGradeDisplay() => GradeDisplay = new GradeDisplay(Screen)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,

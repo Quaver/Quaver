@@ -64,6 +64,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private int CurrentVirtualReplayStat { get; set; } = -1;
 
         /// <summary>
+        /// </summary>
+        private JudgementWindows Windows { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="screen"></param>
@@ -72,11 +76,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Screen = screen;
             Replay = Screen.LoadedReplay;
 
-            var windows = Screen.SpectatorClient != null
-                ? JudgementWindowsDatabaseCache.Standard
-                : JudgementWindowsDatabaseCache.Selected.Value;
-
-            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, windows, Screen.SpectatorClient != null);
+            Windows = Screen.SpectatorClient != null ? JudgementWindowsDatabaseCache.Standard : JudgementWindowsDatabaseCache.Selected.Value;
+            VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Windows, Screen.SpectatorClient != null);
 
             VirtualPlayer.PlayAllFrames();
 
@@ -91,14 +92,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// <summary>
         ///     Determines which frame we are on in the replay and sets if it has unique key presses/releases.
         /// </summary>
-        internal void HandleInput()
+        internal void HandleInput(bool forceInput = false)
         {
             if (Screen.SpectatorClient != null)
                 VirtualPlayer.PlayAllFrames();
 
             HandleScoring();
 
-            if (CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
+            if (!forceInput && CurrentFrame >= Replay.Frames.Count || !(Manager.CurrentAudioPosition >= Replay.Frames[CurrentFrame].Time) || !Screen.InReplayMode)
                 return;
 
             if (Math.Abs(Manager.CurrentAudioPosition - Replay.Frames[CurrentFrame].Time) >= 200)
@@ -197,12 +198,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
         internal void HandleSkip()
         {
-            var frame = Replay.Frames.FindLastIndex(x => x.Time <= Manager.CurrentAudioPosition);
+            var time = AudioEngine.Track.Time;
+
+            var frame = Replay.Frames.FindLastIndex(x => x.Time < time);
 
             if (frame == -1)
                 return;
 
-            CurrentFrame = ModManager.IsActivated(ModIdentifier.Autoplay) ? frame + 1 : frame;
+            CurrentFrame = frame - 1;
+
+            if (CurrentFrame < 0)
+                CurrentFrame = 0;
+
+            // Reset the replay input state to one frame prior
+            UniquePresses.Clear();
+            UniqueReleases.Clear();
+
+            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            {
+                UniquePresses.Add(false);
+                UniqueReleases.Add(false);
+            }
+
+            Screen.Ruleset.InputManager.HandleInput(0);
+
+            CurrentVirtualReplayStat = -1;
+
+            // Create a fresh scrore processor, so the score can be recalculated
+            Screen.Ruleset.ScoreProcessor = new ScoreProcessorKeys(Screen.Map, ModManager.Mods, Windows);
         }
     }
 }

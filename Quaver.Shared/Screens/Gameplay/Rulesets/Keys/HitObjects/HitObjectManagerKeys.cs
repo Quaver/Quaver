@@ -770,33 +770,41 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void HandleSkip()
         {
-            ActiveNoteLanes.ForEach(x =>
-            {
-                if (x.Count == 0)
-                    return;
+            DestroyAllObjects();
 
-                x.Dequeue().Destroy();
-            });
-
-            DeadNoteLanes.ForEach(x =>
-            {
-                if (x.Count == 0)
-                    return;
-
-                x.Dequeue().Destroy();
-            });
-
-            HeldLongNoteLanes.ForEach(x =>
-            {
-                if (x.Count == 0)
-                    return;
-
-                x.Dequeue().Destroy();
-            });
-
+            CurrentSvIndex = 0;
             UpdateCurrentTrackPosition();
+
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void DestroyAllObjects()
+        {
+            DestroyPoolList(ActiveNoteLanes);
+            DestroyPoolList(HeldLongNoteLanes);
+            DestroyPoolList(DeadNoteLanes);
+
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+
+            for (var i = playfield.Stage.HitObjectContainer.Children.Count - 1; i >= 0; i--)
+                playfield.Stage.HitObjectContainer.Children[i].Destroy();
+
+            playfield.Stage.HitObjectContainer.Children.Clear();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="objects"></param>
+        private void DestroyPoolList(List<Queue<GameplayHitObjectKeys>> objects)
+        {
+            foreach (var lane in objects)
+            {
+                while (lane.Count > 0)
+                    lane.Dequeue().Destroy();
+            }
         }
     }
 }
