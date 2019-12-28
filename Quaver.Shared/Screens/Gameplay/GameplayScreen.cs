@@ -293,6 +293,11 @@ namespace Quaver.Shared.Screens.Gameplay
         public TournamentPlayerOptions TournamentOptions { get; }
 
         /// <summary>
+        ///     If true, the game will not play the next combo break sound
+        /// </summary>
+        private bool DontPlayNextComboBreak { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -378,6 +383,9 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (IsCalibratingOffset)
                 Metronome = new Metronome(map);
+
+            if (InReplayMode && SpectatorClient == null)
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             View = new GameplayScreenView(this);
         }
@@ -830,6 +838,12 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void PlayComboBreakSound()
         {
+            if (DontPlayNextComboBreak)
+            {
+                DontPlayNextComboBreak = false;
+                return;
+            }
+
             if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
                 SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
 
@@ -1309,6 +1323,36 @@ namespace Quaver.Shared.Screens.Gameplay
             map.LastTimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             MapDatabaseCache.UpdateMap(map);
+        }
+
+        /// <summary>
+        ///     Handles seeking while in replay mode
+        /// </summary>
+        /// <param name="time"></param>
+        public void HandleReplaySeeking(double time)
+        {
+            if (!InReplayMode)
+                return;
+
+            var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
+            hitobjectManager.DestroyAllObjects();
+
+            time = MathHelper.Clamp((float) time, 0, (float) AudioEngine.Track.Length);
+            AudioEngine.Track.Seek(time);
+
+            Timing.Time = AudioEngine.Track.Time;
+            Timing.Update(new GameTime());
+            HasStarted = true;
+
+            hitobjectManager.HandleSkip();
+
+            var inputManager = (KeysInputManager)Ruleset.InputManager;
+            inputManager.ReplayInputManager.HandleSkip();
+
+            // Stop all playing sound effects and move NextSoundEffectIndex ahead.
+            CustomAudioSampleCache.StopAll();
+            UpdateNextSoundEffectIndex();
+            DontPlayNextComboBreak = true;
         }
     }
 }

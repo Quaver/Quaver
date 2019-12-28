@@ -18,6 +18,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using WebSocketSharp;
 using Wobble.Logging;
@@ -60,7 +61,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <summary>
         ///     Manages all the scoring for this play session and ruleset.
         /// </summary>
-        public ScoreProcessor ScoreProcessor { get; private set; }
+        public ScoreProcessor ScoreProcessor { get; set; }
 
         /// <summary>
         ///    Handles the *real* scoring values with standardized judgements.
@@ -85,6 +86,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
 
             StandardizedReplayPlayer = new VirtualReplayPlayer(new Replay(Map.Mode,
                 ConfigManager.Username.Value, ModManager.Mods, Screen.MapHash), map, null, true);
+
+            // If in replay mode, pass all the existing replay frames to the standardized player.
+            // there's no need to manually dump frames as the play goes on.
+            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+            {
+                var inputManager = (KeysInputManager) InputManager;
+
+                StandardizedReplayPlayer.Replay.Frames = inputManager.ReplayInputManager.Replay.Frames;
+                StandardizedReplayPlayer.PlayAllFrames();
+            }
         }
 
         /// <inheritdoc />
@@ -124,6 +135,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// </summary>
         private void UpdateStandardizedScoreProcessor()
         {
+            // No need to update the processor in replay mode
+            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+                return;
+
             if (Screen.ReplayCapturer.Replay.Frames.Count == StandardizedReplayPlayer.Replay.Frames.Count)
                 return;
 

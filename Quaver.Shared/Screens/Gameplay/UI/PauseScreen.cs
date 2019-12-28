@@ -283,6 +283,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed || Screen.SpectatorClient != null)
                 Visible = false;
 
+            Continue.IsClickable = Screen.IsPaused && Visible;
+            Retry.IsClickable = Screen.IsPaused && Visible;
+            Quit.IsClickable = Screen.IsPaused && Visible;
+
             if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null)
             {
                 HandleKeyPressDown();
