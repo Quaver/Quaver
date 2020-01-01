@@ -27,19 +27,24 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                     Background = { X = -450 }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Competitive".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
-                {
-                    Background = { Tint = Color.LimeGreen }
-                },
-                new MenuPanel(this, UserInterface.BlankBox,
                     "Multiplayer".ToUpper(), "Play custom matches online with others".ToUpper(), menuScreen.ExitToMultiplayer)
                 {
-                    Background = { Tint = Color.MediumPurple }
+                    Background = { Tint = Color.Purple }
                 },
                 new MenuPanel(this, UserInterface.BlankBox,
-                    "Editor".ToUpper(), "Create or edit a map to any song you'd like".ToUpper(), menuScreen.ExitToEditor)
+                    "Competitive".ToUpper(), "Compete against players all over the world".ToUpper(), menuScreen.ExitToCompetitive)
+                {
+                    Background = { Tint = Color.Green }
+                },
+                new MenuPanel(this, UserInterface.BlankBox,
+                    "Map Editor".ToUpper(), "Create or edit a map to any song you'd like".ToUpper(), menuScreen.ExitToEditor)
                 {
                     Background = { Tint = Color.Orange }
+                },
+                new MenuPanel(this, UserInterface.BlankBox,
+                    "Download Maps".ToUpper(), "Find new songs from the community to play".ToUpper(), menuScreen.ExitToDownload)
+                {
+                    Background = { Tint = Color.PaleVioletRed }
                 }
             };
 
