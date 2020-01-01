@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens
         /// <summary>
         ///     The currently active tooltip for the screen
         /// </summary>
-        private Tooltip ActiveTooltip { get; set; }
+        public Tooltip ActiveTooltip { get; private set; }
 
         /// <summary>
         ///     The currently active checkbox container for the screen
