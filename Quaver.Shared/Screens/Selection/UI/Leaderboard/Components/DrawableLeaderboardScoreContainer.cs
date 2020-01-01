@@ -629,7 +629,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         {
             // Handle if it is impossible to beat this score with the currently activated mods
             if (new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods)).CalculateRating(100) >=
-                Score.Item.PerformanceRating || Score.IsPersonalBest)
+                Score.Item.PerformanceRating)
             {
                 CantBeatAlert.Visible = false;
             }
