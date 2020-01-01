@@ -17,7 +17,6 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Result;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Quaver.Shared.Skinning;
-using RestSharp.Validation;
 using SQLite;
 using TimeAgo;
 using Wobble;
