@@ -5,9 +5,9 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
-    public class CantBeatAlert : IconButton
+    public class FadeableButton : IconButton
     {
-        public CantBeatAlert(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
+        public FadeableButton(Texture2D image, EventHandler clickAction = null) : base(image, clickAction)
         {
             IsPerformingFadeAnimations = false;
         }
