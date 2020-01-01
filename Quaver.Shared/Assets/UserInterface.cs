@@ -178,5 +178,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D UserPlayercardPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/user-playercard-panel.png");
         public static Texture2D Mode4KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-4k-on.png");
         public static Texture2D Mode7KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-7k-on.png");
+        public static Texture2D RequiredAccAlert => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/required-acc-alert.png");
     }
 }

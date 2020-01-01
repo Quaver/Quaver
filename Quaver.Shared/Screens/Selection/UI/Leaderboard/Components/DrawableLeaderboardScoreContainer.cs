@@ -99,9 +99,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         private IconButton CantBeatAlert { get; set; }
 
         /// <summary>
-        ///     The x position of <see cref="PerformanceRating"/> when the score is able to be beaten
+        ///     Sprite displayed which tells the user what accuracy they need to achieve in order to beat the score
+        ///     with their current mods
         /// </summary>
-        private int BeatablePerformanceRatingX { get; } = -12;
+        private IconButton RequiredAccuracyAlert { get; set; }
+
+        /// <summary>
+        ///     The x position of <see cref="PerformanceRating"/>
+        /// </summary>
+        private int PerformanceRatingX { get; } = -12;
 
         /// <summary>
         ///     Returns the background color of the table
@@ -162,9 +168,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             CreateAccuracyMaxCombo();
             CreateMods();
             CreateCantBeatAlert();
+            CreateRequiredAccuracyAlert();
             CreateTime();
 
             SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -192,7 +200,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (Score.Item.IsEmptyScore)
                     return;
 
-                Tint = Button.IsHovered || CantBeatAlert.IsHovered ? ColorHelper.HexToColor("#575757"): BackgroundColor;
+                Tint = Button.IsHovered || CantBeatAlert.IsHovered || RequiredAccuracyAlert.IsHovered
+                    ? ColorHelper.HexToColor("#575757"): BackgroundColor;
 
                 // Ranks don't show on PB scores.
                 if (!Score.IsPersonalBest)
@@ -213,6 +222,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 UpdateModifiers();
                 UpdateAvatar();
                 UpdateCantBeatAlert();
+                UpdateRequiredAccuracyAlert();
                 UpdateFlag();
             });
         }
@@ -227,6 +237,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             // ReSharper disable once DelegateSubtraction
             SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
+            ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
         }
@@ -351,7 +362,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Y = 6,
-                X = BeatablePerformanceRatingX,
+                X = PerformanceRatingX,
                 Tint = ColorHelper.HexToColor("#E9B736"),
                 UsePreviousSpriteBatchOptions = true
             };
@@ -392,14 +403,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateCantBeatAlert()
         {
-            CantBeatAlert = new CantBeatAlert(UserInterface.WarningRed)
+            CantBeatAlert = new FadeableButton(UserInterface.WarningRed)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(20, 20),
                 UsePreviousSpriteBatchOptions = true,
                 Y = PerformanceRating.Y + 5,
-                X = BeatablePerformanceRatingX,
+                X = PerformanceRatingX,
                 Alpha = 0
             };
 
@@ -416,6 +427,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             };
 
             CantBeatAlert.LeftHover += (sender, args) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen.DeactivateTooltip();
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateRequiredAccuracyAlert()
+        {
+            RequiredAccuracyAlert = new FadeableButton(UserInterface.RequiredAccAlert)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(20, 20),
+                UsePreviousSpriteBatchOptions = true,
+                Y = PerformanceRating.Y + 5,
+                X = PerformanceRatingX,
+                Alpha = 0,
+                Tint = ColorHelper.HexToColor("#5dd2f9")
+            };
+
+            RequiredAccuracyAlert.Hovered += (sender, args) => ActivateRequiredAccuracyTooltip();
+
+            RequiredAccuracyAlert.LeftHover += (sender, args) =>
             {
                 var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.DeactivateTooltip();
@@ -605,6 +641,22 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         }
 
         /// <summary>
+        /// </summary>
+        private void UpdateRequiredAccuracyAlert()
+        {
+            if (CantBeatAlert.Visible ||
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                ModHelper.GetRateFromMods(ModManager.Mods) == ModHelper.GetRateFromMods((ModIdentifier) Score.Item.Mods))
+            {
+                RequiredAccuracyAlert.Visible = false;
+                return;
+            }
+
+            RequiredAccuracyAlert.Visible = true;
+            RequiredAccuracyAlert.X = PerformanceRating.X - PerformanceRating.Width - 10;
+        }
+
+        /// <summary>
         ///     Updates the state of <see cref="Flag"/>
         /// </summary>
         private void UpdateFlag()
@@ -654,6 +706,41 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Avatar.FadeTo(1, Easing.Linear, 400);
                 Avatar.Image = e.Texture;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            var game = GameBase.Game as QuaverGame;
+
+            if (!RequiredAccuracyAlert.IsHovered || !RequiredAccuracyAlert.Visible)
+                return;
+
+            if (game?.CurrentScreen?.ActiveTooltip == UnbeatableTooltip)
+                return;
+
+            game?.CurrentScreen?.DeactivateTooltip();
+            ActivateRequiredAccuracyTooltip();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ActivateRequiredAccuracyTooltip()
+        {
+            var game = (QuaverGame) GameBase.Game;
+
+            var processor = new RatingProcessorKeys(MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods));
+
+            var requiredAcc = processor.GetAccuracyFromRating(Score.Item.PerformanceRating);
+
+            var tooltip = new Tooltip("In order to beat this score with your current modifiers,\n" +
+                                      $"you must achieve at least {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.",
+                Colors.MainAccent);
+
+            game.CurrentScreen.ActivateTooltip(tooltip);
         }
 
         /// <summary>
