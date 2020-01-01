@@ -23,12 +23,12 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// <summary>
         ///     The initial size of the panel
         /// </summary>
-        public static ScalableVector2 PanelSize { get; } = new ScalableVector2(324, 970);
+        public static ScalableVector2 PanelSize => new ScalableVector2(WindowManager.Width / 5, 970);
 
         /// <summary>
         ///     The width of a panel when it is expanded
         /// </summary>
-        private const int ExpandedWidth = 517;
+        private const int ExpandedWidth = 620;
 
         /// <summary>
         /// </summary>
@@ -148,7 +148,7 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             Title.X = MathHelper.Lerp(Title.X, 0, (float) Math.Min(dt / animTime, 1));
             Background.X = MathHelper.Lerp(Background.X, -450, (float) Math.Min(dt / animTime, 1));
 
-            Width = MathHelper.Lerp(Width, 260, (float) Math.Min(dt / animTime, 1));
+            Width = MathHelper.Lerp(Width, (WindowManager.Width - ExpandedWidth) / 4, (float) Math.Min(dt / animTime, 1));
             Darkness.Alpha = MathHelper.Lerp(Darkness.Alpha, 0.6f, (float) Math.Min(dt / animTime, 1));
         }
 

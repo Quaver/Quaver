@@ -72,7 +72,7 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#242424"));
+            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
             Container?.Draw(gameTime);
         }
 
@@ -108,12 +108,8 @@ namespace Quaver.Shared.Screens.Main
             PanelContainer = new MenuPanelContainer((MainMenuScreen) Screen)
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
                 Y = Header.Height
             };
-
-            PanelContainer.X = PanelContainer.Width + 50;
-            PanelContainer.MoveToX(0, Easing.OutQuint, 600);
         }
 
         /// <summary>
@@ -137,7 +133,7 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="e"></param>
         private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
         {
-            PanelContainer.MoveToX(PanelContainer.Width + 50, Easing.OutQuint, 600);
+            PanelContainer.MoveToX(PanelContainer.Width + 400, Easing.OutQuint, 450);
         }
     }
 }

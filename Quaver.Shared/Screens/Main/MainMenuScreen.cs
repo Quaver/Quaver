@@ -178,6 +178,19 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
+        public void ExitToDownload()
+        {
+            if (!OnlineManager.Connected)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download maps!");
+                return;
+            }
+
+            Exit(() => new DownloadScreen());
+        }
+
+        /// <summary>
+        /// </summary>
         private void SetDiscordRichPresence()
         {
             DiscordHelper.Presence.Details = "Main Menu";
