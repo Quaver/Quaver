@@ -154,7 +154,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             ProgressBarButton.Clicked += (sender, args) =>
             {
                 var percentage = (MouseManager.CurrentState.X - ProgressBarButton.AbsolutePosition.X) / ProgressBarButton.AbsoluteSize.X;
-                Screen?.HandleReplaySeeking(AudioEngine.Track.Length * percentage);
+                Screen?.HandleReplaySeeking(Screen.Map.Length * percentage);
             };
         }
 
