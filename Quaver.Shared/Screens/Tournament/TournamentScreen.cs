@@ -10,6 +10,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
@@ -187,6 +188,9 @@ namespace Quaver.Shared.Screens.Tournament
             DiscordHelper.Presence.PartySize = GameplayScreens.Count;
             DiscordHelper.Presence.PartyMax = 4;
             DiscordHelper.Presence.EndTimestamp = 0;
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
     }

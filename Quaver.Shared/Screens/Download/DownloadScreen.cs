@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json.Linq;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
@@ -84,6 +85,9 @@ namespace Quaver.Shared.Screens.Download
 
             DiscordHelper.Presence.Details = "Downloading Maps";
             DiscordHelper.Presence.State = "In the Menus";
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             base.OnFirstUpdate();
