@@ -85,6 +85,7 @@ namespace Quaver.Shared.Screens.Download
 
             DiscordHelper.Presence.Details = "Downloading Maps";
             DiscordHelper.Presence.State = "In the Menus";
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);

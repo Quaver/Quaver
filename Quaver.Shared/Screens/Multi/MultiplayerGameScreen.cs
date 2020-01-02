@@ -331,6 +331,7 @@ namespace Quaver.Shared.Screens.Multi
         {
             DiscordHelper.Presence.Details = "Waiting to Start";
             DiscordHelper.Presence.State = $"{Game.Value.Name} ({Game.Value.PlayerIds.Count} of {Game.Value.MaxPlayers})";
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);

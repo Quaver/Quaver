@@ -715,6 +715,7 @@ namespace Quaver.Shared.Screens.Result
         private void ChangeDiscordPresence()
         {
             DiscordHelper.Presence.EndTimestamp = 0;
+            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
             DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
 
