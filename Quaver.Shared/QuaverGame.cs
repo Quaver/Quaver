@@ -73,6 +73,7 @@ using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
+using Quaver.Shared.Screens.Tests.Volume;
 using Quaver.Shared.Skinning;
 using Steamworks;
 using Wobble;
@@ -113,7 +114,7 @@ namespace Quaver.Shared
         /// <summary>
         ///     The volume controller for the game.
         /// </summary>
-        public VolumeController VolumeController { get; private set; }
+        public VolumeControl VolumeController { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -179,6 +180,7 @@ namespace Quaver.Shared
         {
             {"Dropdown", typeof(DropdownTestScreen)},
             {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"VolumeController", typeof(TestVolumeControlScreen)},
             {"ReplayController", typeof(TestReplayControllerScreen)},
             {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
             {"SelectJukebox", typeof(TestSelectJukeboxScreen)},
@@ -270,13 +272,9 @@ namespace Quaver.Shared
 
             // Create the global FPS counter.
             CreateFpsCounter();
-            VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
             Transitioner.Initialize();
 
-            // Make the cursor appear over the volume controller.
-            ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
-                                                            GlobalUserInterface.Children.IndexOf(VolumeController));
             IsReadyToUpdate = true;
 
             Logger.Debug($"Currently running Quaver version: `{Version}`", LogType.Runtime);
@@ -323,6 +321,7 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
+                VolumeController = new VolumeControl();
 
                 FirstUpdateCalled = true;
             }
@@ -339,6 +338,7 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
+            VolumeController.Update(gameTime);
             Transitioner.Update(gameTime);
 
 #if VISUAL_TESTS
@@ -364,8 +364,7 @@ namespace Quaver.Shared
             DialogManager.Draw(gameTime);
 
             NotificationManager.Draw(gameTime);
-
-            // Draw the global container last.
+            VolumeController.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
