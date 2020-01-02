@@ -187,6 +187,8 @@ namespace Quaver.Shared.Screens.Tournament
             DiscordHelper.Presence.PartySize = GameplayScreens.Count;
             DiscordHelper.Presence.PartyMax = 4;
             DiscordHelper.Presence.EndTimestamp = 0;
+            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
         }
     }

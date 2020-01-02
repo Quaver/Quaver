@@ -170,6 +170,8 @@ namespace Quaver.Shared.Screens.Editor
             DiscordHelper.Presence.State = "Editing";
             DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
             DiscordHelper.Presence.EndTimestamp = 0;
+            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
+            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
             ActiveLayerInterface = new Bindable<EditorLayerInterface>(EditorLayerInterface.Composition) { Value = EditorLayerInterface.Composition };
