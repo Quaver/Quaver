@@ -179,5 +179,12 @@ namespace Quaver.Shared.Assets
         public static Texture2D Mode4KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-4k-on.png");
         public static Texture2D Mode7KOn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Playercard/mode-7k-on.png");
         public static Texture2D RequiredAccAlert => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/required-acc-alert.png");
+        public static Texture2D VolumeControllerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/volume-controller-panel.png");
+        public static Texture2D EffectVolumeIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/effect-volume-icon.png");
+        public static Texture2D MusicVolumeIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/music-volume-icon.png");
+        public static Texture2D MasterVolumeIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/master-volume-icon.png");
+        public static Texture2D VolumeSliderProgressBall => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-progress-ball.png");
+        public static Texture2D VolumeSliderActive => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-active-color.png");
+        public static Texture2D VolumeSliderInactive => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-inactive-color.png");
     }
 }
