@@ -283,9 +283,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (Screen.Failed || Screen.SpectatorClient != null)
                 Visible = false;
 
-            Continue.IsClickable = Screen.IsPaused && Visible;
-            Retry.IsClickable = Screen.IsPaused && Visible;
-            Quit.IsClickable = Screen.IsPaused && Visible;
+            Continue.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
+            Retry.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
+            Quit.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
 
             if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null)
             {

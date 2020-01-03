@@ -186,5 +186,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D VolumeSliderProgressBall => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-progress-ball.png");
         public static Texture2D VolumeSliderActive => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-active-color.png");
         public static Texture2D VolumeSliderInactive => TextureManager.Load(@"Quaver.Resources/Textures/UI/Volume/slider-inactive-color.png");
+        public static Texture2D ReplayControllerActiveBar => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-active-bar.png");
+        public static Texture2D ReplayControllerInactiveBar => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-inactive-bar.png");
+        public static Texture2D ReplayControllerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-panel.png");
+        public static Texture2D ReplayControllerSpeedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Replay/replay-controller-speed-panel.png");
     }
 }
