@@ -215,6 +215,12 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float BattleRoyaleEliminatedPosY { get; private set; }
 
+        [FixedScale]
+        internal float HealthBarPosOffsetX { get; private set; }
+
+        [FixedScale]
+        internal float HealthBarPosOffsetY { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -453,6 +459,8 @@ namespace Quaver.Shared.Skinning
             BattleRoyaleAlertScale = ConfigHelper.ReadInt32((int) BattleRoyaleAlertScale, ini["BattleRoyaleAlertScale"]);
             BattleRoyaleEliminatedPosX = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosX, ini["BattleRoyaleEliminatedPosX"]);
             BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
+            HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
+            HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
         }
 
         /// <summary>
