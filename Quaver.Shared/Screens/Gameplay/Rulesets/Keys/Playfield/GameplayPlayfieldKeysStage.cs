@@ -564,6 +564,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            HealthBar.X += Skin.HealthBarPosOffsetX;
+            HealthBar.Y += Skin.HealthBarPosOffsetY;
         }
 
         /// <summary>
