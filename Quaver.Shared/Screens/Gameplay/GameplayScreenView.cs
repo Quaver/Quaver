@@ -274,7 +274,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     Parent = Container,
                     Alignment = Alignment.BotRight,
-                    Position = new ScalableVector2(-12, -140)
+                    Position = new ScalableVector2(-12, -110)
                 };
             }
 

@@ -3,6 +3,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -34,12 +35,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         {
             Screen = screen;
 
-            Tint = ColorHelper.HexToColor("#181818");
+            Image = UserInterface.ReplayControllerSpeedPanel;
             Size = size;
 
             CreateRate();
             CreateSlider();
-            AddBorder(Colors.MainAccent, 2);
         }
 
         /// <summary>
@@ -68,19 +68,16 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
             Slider = new Slider(new BindableInt(value, 10, 200),
                 new Vector2(Width * 0.70f, 4),
-                FontAwesome.Get(FontAwesomeIcon.fa_circle))
+                UserInterface.VolumeSliderProgressBall)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = -Rate.X,
+                Tint = ColorHelper.HexToColor("#5B5B5B"),
                 ActiveColor =
                 {
-                    Tint = Colors.MainAccent
+                    Tint = ColorHelper.HexToColor("#45D6F5")
                 },
-                ProgressBall =
-                {
-                    Tint = Colors.MainAccent
-                }
             };
 
             Slider.BindedValue.ValueChanged += (sender, args) =>

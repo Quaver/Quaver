@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,8 +9,10 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
+using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI;
@@ -20,7 +23,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 {
-    public class ReplayController : Sprite
+    public class ReplayController : DraggableButton
     {
         /// <summary>
         /// </summary>
@@ -29,6 +32,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// <summary>
         /// </summary>
         private ProgressBar SongTimeProgressBar { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private Sprite ProgressBarActiveBar { get; set; }
 
         /// <summary>
         /// </summary>
@@ -76,7 +83,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
         /// <summary>
         /// </summary>
-        private const int BUTTON_SPACING = 22;
+        private const int BUTTON_SPACING = 24;
+
+        /// <summary>
+        /// </summary>
+        private const int BUTTON_SIZE = 26;
 
         /// <summary>
         /// </summary>
@@ -84,13 +95,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
         /// <summary>
         /// </summary>
-        public ReplayController(GameplayScreen screen)
+        public ReplayController(GameplayScreen screen) : base(UserInterface.ReplayControllerPanel)
         {
+            Depth = 1;
             Screen = screen;
 
-            Size = new ScalableVector2(500, 124);
-            Tint = ColorHelper.HexToColor("#181818");
-            AddBorder(Colors.MainAccent, 2);
+            Size = new ScalableVector2(513, 201);
 
             CreateProgressBar();
             CreateCurrentTime();
@@ -100,8 +110,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             CreateBackwardButton();
             CreateRestartButton();
             CreateSkipToEndButton();
-            CreateSpeedButton();
-            CreateToggleSvButton();
+            // CreateSpeedButton();
+            //CreateToggleSvButton();
             CreateHidePrompt();
             CreateSpeedSlider();
         }
@@ -129,27 +139,61 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
         /// <summary>
         /// </summary>
-        private void UpdateProgressBar() => SongTimeProgressBar.Bindable.Value = AudioEngine.Track?.Time ?? 0;
+        private void UpdateProgressBar()
+        {
+            SongTimeProgressBar.Bindable.Value = AudioEngine.Track?.Time ?? 0;
+
+            ProgressBarActiveBar.SpriteBatchOptions.Shader.SetParameter("p_position", new Vector2(SongTimeProgressBar.ActiveBar.Width,
+                0f), true);
+        }
 
         /// <summary>
         /// </summary>
         private void CreateProgressBar()
         {
-            SongTimeProgressBar = new ProgressBar(new Vector2(Width * 0.72f, 14), 0, Screen?.Map?.Length ?? 0,
+            SongTimeProgressBar = new ProgressBar(new Vector2(Width * 0.90f, 14), 0, Screen?.Map?.Length ?? 0,
                 AudioEngine.Track?.Time ?? 0,
-                Color.LightGray, Colors.MainAccent)
+                Color.LightGray, ColorHelper.HexToColor("#45D6F5"))
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Y = 34
+                Y = 68,
+                Image = UserInterface.ReplayControllerInactiveBar,
+                ActiveBar = { Visible = false }
+            };
+
+            ProgressBarActiveBar = new Sprite
+            {
+                Parent = SongTimeProgressBar,
+                Image = UserInterface.ReplayControllerActiveBar,
+                Size = SongTimeProgressBar.Size,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    SortMode = SpriteSortMode.Deferred,
+                    BlendState = BlendState.NonPremultiplied,
+                    SamplerState = SamplerState.PointClamp,
+                    DepthStencilState = DepthStencilState.Default,
+                    RasterizerState = RasterizerState.CullNone,
+                    Shader = new Shader(GameBase.Game.Resources.Get("Quaver.Resources/Shaders/semi-transparent.mgfxo"),
+                        new Dictionary<string, object>()
+                    {
+                        {"p_position", new Vector2(0, 0)},
+                        {"p_rectangle", new Vector2(SongTimeProgressBar.Width, SongTimeProgressBar.Height)},
+                        {"p_dimensions", new Vector2(SongTimeProgressBar.Width, SongTimeProgressBar.Height)},
+                        {"p_alpha", 0f}
+                    })
+                }
             };
 
             ProgressBarButton = new ImageButton(UserInterface.BlankBox)
             {
                 Parent = SongTimeProgressBar,
-                Size = SongTimeProgressBar.Size,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(SongTimeProgressBar.Width, SongTimeProgressBar.Height + 30),
                 Alpha = 0
             };
+
+            ProgressBarButton.Y -= 30;
 
             ProgressBarButton.Clicked += (sender, args) =>
             {
@@ -162,38 +206,40 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreateCurrentTime()
         {
-            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00:00", 22)
+            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "00:00:00", 22)
             {
                 Parent = SongTimeProgressBar,
-                Alignment = Alignment.MidLeft,
-                X = -10
+                Alignment = Alignment.TopLeft,
+                Y = -10
             };
 
-            CurrentTime.X -= CurrentTime.Width;
+            CurrentTime.Y -= CurrentTime.Height;
         }
 
         /// <summary>
         /// </summary>
         private void CreateTimeLeft()
         {
-            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "-00:00", 22)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "-00:00:00", 22)
             {
                 Parent = SongTimeProgressBar,
-                Alignment = Alignment.MidRight,
-                X = -CurrentTime.X + 4
+                Alignment = Alignment.TopRight,
+                Y = -10
             };
+
+            TimeLeft.Y -= TimeLeft.Height;
         }
 
         /// <summary>
         /// </summary>
         private void CreatePausePlayButton()
         {
-            PausePlayButton = new PausePlayButton()
+            PausePlayButton = new PausePlayButton(UserInterface.JukeboxPauseButton, UserInterface.JukeboxPlayButton)
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
-                Y = -SongTimeProgressBar.Y + 10,
-                Size = new ScalableVector2(26, 26)
+                Y = -SongTimeProgressBar.Y + 30,
+                Size = new ScalableVector2(50, 50)
             };
 
             PausePlayButton.Clicked += (sender, args) =>
@@ -211,11 +257,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         {
             FastForwardButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_forward_button))
             {
-                Parent = this,
-                Alignment = PausePlayButton.Alignment,
-                Y = PausePlayButton.Y,
-                Size = PausePlayButton.Size,
-                X = PausePlayButton.X + PausePlayButton.Width + BUTTON_SPACING
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidRight,
+                Size = new ScalableVector2(BUTTON_SIZE, BUTTON_SIZE),
+                X = BUTTON_SIZE + BUTTON_SPACING
             };
 
             FastForwardButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(AudioEngine.Track.Time + 10000);
@@ -227,12 +272,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         {
             BackwardButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_forward_button))
             {
-                Parent = this,
+                Parent = PausePlayButton,
                 SpriteEffect = SpriteEffects.FlipHorizontally,
-                Alignment = PausePlayButton.Alignment,
-                Y = PausePlayButton.Y,
-                Size = PausePlayButton.Size,
-                X = PausePlayButton.X - PausePlayButton.Width - BUTTON_SPACING
+                Alignment = Alignment.MidLeft,
+                Size = FastForwardButton.Size,
+                X = -BUTTON_SIZE - BUTTON_SPACING
             };
 
             BackwardButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(AudioEngine.Track.Time - 10000);
@@ -244,11 +288,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         {
             RestartButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
             {
-                Parent = this,
-                Alignment = PausePlayButton.Alignment,
-                Y = PausePlayButton.Y,
-                Size = PausePlayButton.Size,
-                X = BackwardButton.X - BackwardButton.Width - BUTTON_SPACING + 6
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidLeft,
+                Size = FastForwardButton.Size,
+                X = BackwardButton.X - BackwardButton.Width - BUTTON_SPACING
             };
 
             RestartButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(0);
@@ -260,11 +303,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         {
             SkipToEndButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
             {
-                Parent = this,
-                Alignment = PausePlayButton.Alignment,
-                Y = PausePlayButton.Y,
-                Size = PausePlayButton.Size,
-                X = FastForwardButton.X + FastForwardButton.Width + BUTTON_SPACING - 6
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidRight,
+                Size = FastForwardButton.Size,
+                X = FastForwardButton.X + FastForwardButton.Width + BUTTON_SPACING
             };
 
             SkipToEndButton.Clicked += (sender, args) => Screen?.HandleReplaySeeking(Screen.Map.Length);
@@ -309,7 +351,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Y = -6
+                Y = -12
             };
 
             F1ToHide.Y -= F1ToHide.Height;
@@ -319,10 +361,10 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
         /// </summary>
         private void CreateSpeedSlider()
         {
-            SpeedSlider = new ReplayControllerSpeed(Screen, new ScalableVector2(Width * 0.50f, 40))
+            SpeedSlider = new ReplayControllerSpeed(Screen, new ScalableVector2(264, 38))
             {
                 Parent = this,
-                Y = -40,
+                Y = -14
             };
 
             SpeedSlider.Y -= SpeedSlider.Height;
