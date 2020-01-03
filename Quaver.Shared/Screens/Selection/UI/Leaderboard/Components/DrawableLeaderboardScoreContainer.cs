@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -29,9 +30,11 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using MathHelper = Quaver.API.Helpers.MathHelper;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
@@ -182,6 +185,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         public override void Update(GameTime gameTime)
         {
             PerformHoverAnimation(gameTime);
+            ContainAlertIconClickableStatus();
+
             base.Update(gameTime);
         }
 
@@ -441,12 +446,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Size = new ScalableVector2(20, 20),
+                Size = new ScalableVector2(18, 18),
                 UsePreviousSpriteBatchOptions = true,
                 Y = PerformanceRating.Y + 5,
                 X = PerformanceRatingX,
                 Alpha = 0,
-                Tint = ColorHelper.HexToColor("#5dd2f9")
+                Tint = ColorHelper.HexToColor("#5dc7f9")
             };
 
             RequiredAccuracyAlert.Hovered += (sender, args) => ActivateRequiredAccuracyTooltip();
@@ -737,8 +742,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             var requiredAcc = processor.GetAccuracyFromRating(Score.Item.PerformanceRating);
 
             var tooltip = new Tooltip("In order to beat this score with your current modifiers,\n" +
-                                      $"you must achieve at least {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.",
-                Colors.MainAccent);
+                                      $"you must achieve higher than {StringHelper.AccuracyToString((float) requiredAcc)} accuracy.",
+                ColorHelper.HexToColor("#5dc7f9"));
 
             game.CurrentScreen.ActivateTooltip(tooltip);
         }
@@ -785,6 +790,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     x.FadeTo(targetAlpha, easing, time);
                 });
             }
+        }
+
+        /// <summary>
+        ///     Makes sure that <see cref="CantBeatAlert"/> and <see cref="RequiredAccuracyAlert"/>
+        ///     can only be clickable if the score is visible in the leaderboard
+        /// </summary>
+        private void ContainAlertIconClickableStatus()
+        {
+            if (Score.IsPersonalBest || Score.Item.IsEmptyScore)
+                return;
+
+            CantBeatAlert.IsClickable = CantBeatAlert.ScreenRectangle.Intersects(Score.Container.ScreenRectangle);
+            RequiredAccuracyAlert.IsClickable = CantBeatAlert.IsClickable;
         }
     }
 }
