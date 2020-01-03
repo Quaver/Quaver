@@ -156,7 +156,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
             // any other action. That is automatically the focused slider.
             var focused = Sliders.Find(x => x.Slider.MouseInHoldSequence) ?? Sliders.Find(x => x.Slider.IsHovered);
 
-            if (focused != null)
+            if (focused != null && X <= 0)
             {
                 FocusedSlider = focused;
                 TimeInactive = 0;
