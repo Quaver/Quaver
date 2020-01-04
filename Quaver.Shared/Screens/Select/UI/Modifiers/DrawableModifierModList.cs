@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         private string DefaultDescription { get; }
 
         public DrawableModifierModList(ModifiersDialog dialog, IGameplayModifier[] modifiers, string name, string defaultDescription)
-            : base(dialog, name, defaultDescription, modifiers.All(x => x.Ranked))
+            : base(dialog, name, defaultDescription, modifiers.All(x => x.Ranked()))
         {
             Modifiers = modifiers;
             DefaultDescription = defaultDescription;

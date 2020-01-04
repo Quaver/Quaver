@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="dialog"></param>
         /// <param name="modifier"></param>
         public DrawableModifier(ModifiersDialog dialog, IGameplayModifier modifier)
-            : this(dialog, modifier.Name, modifier.Description, modifier.Ranked)
+            : this(dialog, modifier.Name, modifier.Description, modifier.Ranked())
         {
         }
 
