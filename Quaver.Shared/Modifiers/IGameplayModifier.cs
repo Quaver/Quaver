@@ -35,7 +35,7 @@ namespace Quaver.Shared.Modifiers
         /// <summary>
         ///     Is the gameplayModifier ranked?
         /// </summary>
-        bool Ranked { get; set; }
+        bool Ranked();
 
         /// <summary>
         ///     Is the modifier allowed in multiplayer?

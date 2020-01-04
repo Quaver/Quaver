@@ -250,6 +250,23 @@ namespace Quaver.Shared.Database.Maps
             var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
             MapManager.RecentlyPlayed = new List<Map>();
+
+            // Schedule maps that don't have difficulty ratings to recalculate.
+            // If forcing a full recalculation due to diff calc updates, then the difficulty processor version should just be bumped
+            // instead of adding things here.
+            foreach (var mapset in MapManager.Mapsets)
+            {
+                foreach (var map in mapset.Maps)
+                {
+                    // The difficulty calculator only calculates for maps with >= 2 hitobjects
+                    if (map.RegularNoteCount + map.LongNoteCount >= 2)
+                    {
+                        // ReSharper disable once CompareOfFloatsByEqualityOperator
+                        if (map.Difficulty105X == 0f)
+                            OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Update].Add(map);
+                    }
+                }
+            }
         }
 
         /// <summary>

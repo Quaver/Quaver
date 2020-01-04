@@ -14,7 +14,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Flips the map horizontally.";
 
-        public bool Ranked { get; set; } = true;
+        public bool Ranked() => true;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 

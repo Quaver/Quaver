@@ -24,7 +24,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "You'll need to be super accurate.";
 
-        public bool Ranked { get; set; } = true;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 

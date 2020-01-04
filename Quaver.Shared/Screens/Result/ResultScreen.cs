@@ -380,6 +380,13 @@ namespace Quaver.Shared.Screens.Result
             if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
                 return;
 
+            // Don't submit scores that have unranked modifiers
+            if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
+            {
+                Logger.Important($"Skipping score submission due to having unranked modifiers activated", LogType.Runtime);
+                return;
+            }
+
             if (Gameplay.IsMultiplayerGame)
             {
                 if (!Gameplay.IsPlayComplete)

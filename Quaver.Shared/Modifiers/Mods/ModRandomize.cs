@@ -32,7 +32,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Swap up the lanes.";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = false;
 

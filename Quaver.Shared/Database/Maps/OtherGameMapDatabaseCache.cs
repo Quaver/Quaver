@@ -22,7 +22,7 @@ namespace Quaver.Shared.Database.Maps
     {
         /// <summary>
         /// </summary>
-        public static Dictionary<OtherGameCacheAction, List<OtherGameMap>> MapsToCache { get; private set; }
+        public static Dictionary<OtherGameCacheAction, List<Map>> MapsToCache { get; private set; }
 
         /// <summary>
         ///     Dictates if we need to update the
@@ -94,7 +94,7 @@ namespace Quaver.Shared.Database.Maps
                 if (MapsToCache != null && NeedsSync)
                 {
                     NotificationManager.Show(NotificationLevel.Info,
-                        $"Calculating difficulty ratings of other games' maps in the background. {SyncMapCount} maps left!");
+                        $"Recalculating the difficulty of outdated maps in the background. {SyncMapCount} maps left!");
 
                     Logger.Important($"Starting other game sync thread.", LogType.Runtime);
                 }
@@ -106,7 +106,7 @@ namespace Quaver.Shared.Database.Maps
                 DeleteMaps(DatabaseManager.Connection);
 
                 if (SyncMapCount == 0)
-                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations for other games!");
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations!");
             })
             {
                 IsBackground = true,
@@ -145,11 +145,11 @@ namespace Quaver.Shared.Database.Maps
         {
             Logger.Important($"Starting sync of other game maps...", LogType.Runtime);
 
-            MapsToCache = new Dictionary<OtherGameCacheAction, List<OtherGameMap>>()
+            MapsToCache = new Dictionary<OtherGameCacheAction, List<Map>>()
             {
-                {OtherGameCacheAction.Add, new List<OtherGameMap>()},
-                {OtherGameCacheAction.Update, new List<OtherGameMap>()},
-                {OtherGameCacheAction.Delete, new List<OtherGameMap>()}
+                {OtherGameCacheAction.Add, new List<Map>()},
+                {OtherGameCacheAction.Update, new List<Map>()},
+                {OtherGameCacheAction.Delete, new List<Map>()}
             };
 
             var currentlyCached = FetchAll();
@@ -310,7 +310,17 @@ namespace Quaver.Shared.Database.Maps
                     // to avoid potential failures
                     try
                     {
-                        conn.Insert(map);
+                        switch (map.Game)
+                        {
+                            case MapGame.Quaver:
+                                conn.Insert(map);
+                                break;
+                            case MapGame.Osu:
+                                conn.Insert((OtherGameMap) map);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                     }
                     // ReSharper disable once EmptyGeneralCatchClause
                     catch (Exception)
@@ -347,7 +357,17 @@ namespace Quaver.Shared.Database.Maps
                 {
                     try
                     {
-                        conn.Update(map);
+                        switch (map.Game)
+                        {
+                            case MapGame.Quaver:
+                                conn.Update(map);
+                                break;
+                            case MapGame.Osu:
+                                conn.Update((OtherGameMap) map);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
                     }
                     // ReSharper disable once EmptyGeneralCatchClause
                     catch (Exception e)
@@ -373,7 +393,17 @@ namespace Quaver.Shared.Database.Maps
 
                 try
                 {
-                    conn.Delete(map);
+                    switch (map.Game)
+                    {
+                        case MapGame.Quaver:
+                            conn.Delete(map);
+                            break;
+                        case MapGame.Osu:
+                            conn.Delete((OtherGameMap) map);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
                 catch (Exception)

@@ -229,15 +229,25 @@ namespace Quaver.Shared.Database.Maps
         public double Difficulty09X { get; set; }
         public double Difficulty095X { get; set; }
         public double Difficulty10X { get; set; }
+        public double Difficulty105X { get; set; }
         public double Difficulty11X { get; set; }
+        public double Difficulty115X { get; set; }
         public double Difficulty12X { get; set; }
+        public double Difficulty125X { get; set; }
         public double Difficulty13X { get; set; }
+        public double Difficulty135X { get; set; }
         public double Difficulty14X { get; set; }
+        public double Difficulty145X { get; set; }
         public double Difficulty15X { get; set; }
+        public double Difficulty155X { get; set; }
         public double Difficulty16X { get; set; }
+        public double Difficulty165X { get; set; }
         public double Difficulty17X { get; set; }
+        public double Difficulty175X { get; set; }
         public double Difficulty18X { get; set; }
+        public double Difficulty185X { get; set; }
         public double Difficulty19X { get; set; }
+        public double Difficulty195X { get; set; }
         public double Difficulty20X { get; set; }
  #endregion
 
@@ -417,15 +427,25 @@ namespace Quaver.Shared.Database.Maps
             Difficulty09X = qua.SolveDifficulty(ModIdentifier.Speed09X).OverallDifficulty;
             Difficulty095X = qua.SolveDifficulty(ModIdentifier.Speed095X).OverallDifficulty;
             Difficulty10X = qua.SolveDifficulty().OverallDifficulty;
+            Difficulty105X = qua.SolveDifficulty(ModIdentifier.Speed105X).OverallDifficulty;
             Difficulty11X = qua.SolveDifficulty(ModIdentifier.Speed11X).OverallDifficulty;
+            Difficulty115X = qua.SolveDifficulty(ModIdentifier.Speed115X).OverallDifficulty;
             Difficulty12X = qua.SolveDifficulty(ModIdentifier.Speed12X).OverallDifficulty;
+            Difficulty125X = qua.SolveDifficulty(ModIdentifier.Speed125X).OverallDifficulty;
             Difficulty13X = qua.SolveDifficulty(ModIdentifier.Speed13X).OverallDifficulty;
+            Difficulty135X = qua.SolveDifficulty(ModIdentifier.Speed135X).OverallDifficulty;
             Difficulty14X = qua.SolveDifficulty(ModIdentifier.Speed14X).OverallDifficulty;
+            Difficulty145X = qua.SolveDifficulty(ModIdentifier.Speed145X).OverallDifficulty;
             Difficulty15X = qua.SolveDifficulty(ModIdentifier.Speed15X).OverallDifficulty;
+            Difficulty155X = qua.SolveDifficulty(ModIdentifier.Speed155X).OverallDifficulty;
             Difficulty16X = qua.SolveDifficulty(ModIdentifier.Speed16X).OverallDifficulty;
+            Difficulty165X = qua.SolveDifficulty(ModIdentifier.Speed165X).OverallDifficulty;
             Difficulty17X = qua.SolveDifficulty(ModIdentifier.Speed17X).OverallDifficulty;
+            Difficulty175X = qua.SolveDifficulty(ModIdentifier.Speed175X).OverallDifficulty;
             Difficulty18X = qua.SolveDifficulty(ModIdentifier.Speed18X).OverallDifficulty;
+            Difficulty185X = qua.SolveDifficulty(ModIdentifier.Speed185X).OverallDifficulty;
             Difficulty19X = qua.SolveDifficulty(ModIdentifier.Speed19X).OverallDifficulty;
+            Difficulty195X = qua.SolveDifficulty(ModIdentifier.Speed195X).OverallDifficulty;
             Difficulty20X = qua.SolveDifficulty(ModIdentifier.Speed20X).OverallDifficulty;
         }
 
@@ -455,24 +475,44 @@ namespace Quaver.Shared.Database.Maps
                 return Difficulty09X;
             if (mods.HasFlag(ModIdentifier.Speed095X))
                 return Difficulty095X;
+            if (mods.HasFlag(ModIdentifier.Speed105X))
+                return Difficulty105X;
             if (mods.HasFlag(ModIdentifier.Speed11X))
                 return Difficulty11X;
+            if (mods.HasFlag(ModIdentifier.Speed115X))
+                return Difficulty115X;
             if (mods.HasFlag(ModIdentifier.Speed12X))
                 return Difficulty12X;
+            if (mods.HasFlag(ModIdentifier.Speed125X))
+                return Difficulty125X;
             if (mods.HasFlag(ModIdentifier.Speed13X))
                 return Difficulty13X;
+            if (mods.HasFlag(ModIdentifier.Speed135X))
+                return Difficulty135X;
             if (mods.HasFlag(ModIdentifier.Speed14X))
                 return Difficulty14X;
+            if (mods.HasFlag(ModIdentifier.Speed145X))
+                return Difficulty145X;
             if (mods.HasFlag(ModIdentifier.Speed15X))
                 return Difficulty15X;
+            if (mods.HasFlag(ModIdentifier.Speed155X))
+                return Difficulty155X;
             if (mods.HasFlag(ModIdentifier.Speed16X))
                 return Difficulty16X;
+            if (mods.HasFlag(ModIdentifier.Speed165X))
+                return Difficulty165X;
             if (mods.HasFlag(ModIdentifier.Speed17X))
                 return Difficulty17X;
+            if (mods.HasFlag(ModIdentifier.Speed175X))
+                return Difficulty175X;
             if (mods.HasFlag(ModIdentifier.Speed18X))
                 return Difficulty18X;
+            if (mods.HasFlag(ModIdentifier.Speed185X))
+                return Difficulty185X;
             if (mods.HasFlag(ModIdentifier.Speed19X))
                 return Difficulty19X;
+            if (mods.HasFlag(ModIdentifier.Speed195X))
+                return Difficulty195X;
             if (mods.HasFlag(ModIdentifier.Speed20X))
                 return Difficulty20X;
 
