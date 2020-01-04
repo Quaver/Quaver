@@ -73,15 +73,25 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Speed085X:
                 case ModIdentifier.Speed09X:
                 case ModIdentifier.Speed095X:
+                case ModIdentifier.Speed105X:
                 case ModIdentifier.Speed11X:
+                case ModIdentifier.Speed115X:
                 case ModIdentifier.Speed12X:
+                case ModIdentifier.Speed125X:
                 case ModIdentifier.Speed13X:
+                case ModIdentifier.Speed135X:
                 case ModIdentifier.Speed14X:
+                case ModIdentifier.Speed145X:
                 case ModIdentifier.Speed15X:
+                case ModIdentifier.Speed155X:
                 case ModIdentifier.Speed16X:
+                case ModIdentifier.Speed165X:
                 case ModIdentifier.Speed17X:
+                case ModIdentifier.Speed175X:
                 case ModIdentifier.Speed18X:
+                case ModIdentifier.Speed185X:
                 case ModIdentifier.Speed19X:
+                case ModIdentifier.Speed195X:
                 case ModIdentifier.Speed20X:
                     gameplayModifier = new ModSpeed(modIdentifier);
                     break;

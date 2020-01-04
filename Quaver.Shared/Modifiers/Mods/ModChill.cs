@@ -24,7 +24,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Make it easier on yourself.";
 
-        public bool Ranked { get; set; } = true;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 

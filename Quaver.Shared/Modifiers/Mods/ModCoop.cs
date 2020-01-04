@@ -14,7 +14,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Grab a friend, and play together. You do have friends... right?";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = false;
 

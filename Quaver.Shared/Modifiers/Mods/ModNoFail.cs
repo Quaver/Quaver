@@ -21,9 +21,10 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Failure is not an option.";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
+
         public bool OnlyMultiplayerHostCanCanChange { get; set; }
 
         public ModIdentifier[] IncompatibleMods { get; set; } =

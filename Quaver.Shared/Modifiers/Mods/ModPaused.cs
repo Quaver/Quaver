@@ -20,7 +20,7 @@ namespace Quaver.Shared.Modifiers.Mods
 
         public string Description { get; set; } = "Player paused in gameplay";
 
-        public bool Ranked { get; set; } = false;
+        public bool Ranked() => false;
 
         public bool AllowedInMultiplayer { get; set; } = true;
 
