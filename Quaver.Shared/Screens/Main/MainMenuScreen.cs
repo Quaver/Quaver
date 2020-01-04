@@ -46,6 +46,8 @@ namespace Quaver.Shared.Screens.Main
 #if  !VISUAL_TESTS
             SetDiscordRichPresence();
 #endif
+            ModManager.RemoveSpeedMods();
+
             View = new MainMenuScreenView(this);
         }
 
