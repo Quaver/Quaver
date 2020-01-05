@@ -43,7 +43,7 @@ namespace Quaver.Shared.Skinning
         internal float StageReceptorPadding { get; private set; }
 
         [FixedScale]
-        internal float HitPosOffsetY { get; private set; }
+        internal float HitPosOffsetY { get; set; }
 
         [FixedScale]
         internal float NotePadding { get; private set; }

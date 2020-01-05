@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     The original value for the combo display's Y position,
         ///     so we can use this to set it back after it's done with its animation.
         /// </summary>
-        private float OriginalComboDisplayY { get; set; }
+        public float OriginalComboDisplayY { get; set; }
 
         /// <summary>
         ///     The HitError bar.
@@ -495,7 +495,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Set size w/ scaling.
             var size = new Vector2(firstFrame.Width, firstFrame.Height) * Skin.JudgementHitBurstScale / firstFrame.Height;
 
-            JudgementHitBurst = new JudgementHitBurst(frames, size, Skin.JudgementBurstPosY)
+            JudgementHitBurst = new JudgementHitBurst(Screen, frames, size, Skin.JudgementBurstPosY)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,

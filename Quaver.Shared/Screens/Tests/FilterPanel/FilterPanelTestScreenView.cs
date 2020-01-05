@@ -14,6 +14,7 @@ using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
 using Wobble.Input;
@@ -48,7 +49,7 @@ namespace Quaver.Shared.Screens.Tests.FilterPanel
                 Alignment = Alignment.BotLeft
             };
 
-            FilterPanel = new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery)
+            FilterPanel = new SelectFilterPanel(screen.AvailableMapsets, screen.CurrentSearchQuery, new Bindable<bool>(false))
             {
                 Parent = Container,
                 Y = Header.Height + Header.ForegroundLine.Height

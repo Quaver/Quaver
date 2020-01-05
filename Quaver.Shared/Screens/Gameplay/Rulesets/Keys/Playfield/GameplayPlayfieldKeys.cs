@@ -59,17 +59,49 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     Padding of the playfield.
         /// </summary>
-        public float Padding => SkinManager.Skin.Keys[Screen.Map.Mode].StageReceptorPadding;
+        public float Padding
+        {
+            get
+            {
+                if (Screen.IsSongSelectPreview)
+                    return 0;
+
+                return SkinManager.Skin.Keys[Screen.Map.Mode].StageReceptorPadding;
+            }
+        }
+
+        /// <summary>
+        ///     The column size of the song select preview's playfield
+        /// </summary>
+        public static float PREVIEW_COLUMN_SIZE { get; }= 400f;
 
         /// <summary>
         ///     The size of the each ane.
         /// </summary>
-        public float LaneSize => SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize;
+        public float LaneSize
+        {
+            get
+            {
+                if (Screen.IsSongSelectPreview)
+                    return PREVIEW_COLUMN_SIZE / Screen.Map.GetKeyCount();
+
+                return SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize;
+            }
+        }
 
         /// <summary>
         ///     Padding of the receptor.
         /// </summary>
-        internal float ReceptorPadding => SkinManager.Skin.Keys[Screen.Map.Mode].NotePadding;
+        internal float ReceptorPadding
+        {
+            get
+            {
+                if (Screen.IsSongSelectPreview)
+                    return 0;
+
+                return SkinManager.Skin.Keys[Screen.Map.Mode].NotePadding;
+            }
+        }
 
         /// <summary>
         ///     Position for each Receptor in each lane from the top of the screen.
@@ -203,6 +235,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             TimingLinePositionY = new float[ScrollDirections.Length];
             LongNoteSizeAdjustment = new float[ScrollDirections.Length];
 
+
             for (var i = 0; i < ScrollDirections.Length; i++)
             {
                 var hitObOffset = LaneSize * skin.NoteHitObjects[i][0].Height / skin.NoteHitObjects[i][0].Width;
@@ -214,6 +247,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     LongNoteSizeAdjustment[i] = (holdHitObOffset - holdEndOffset) / 2;
                 else
                     LongNoteSizeAdjustment[i] = holdHitObOffset / 2;
+
+                var oldHitpos = skin.HitPosOffsetY;
+
+                if (Ruleset.Screen.IsSongSelectPreview)
+                    skin.HitPosOffsetY = PREVIEW_COLUMN_SIZE / Ruleset.Map.GetKeyCount();
 
                 switch (ScrollDirections[i])
                 {
@@ -234,6 +272,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     default:
                         throw new Exception($"Scroll Direction in current lane index {i} does not exist.");
                 }
+
+                skin.HitPosOffsetY = oldHitpos;
             }
         }
 

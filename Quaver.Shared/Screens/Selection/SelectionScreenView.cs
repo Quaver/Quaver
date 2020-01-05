@@ -20,6 +20,7 @@ using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Playlists;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
+using Quaver.Shared.Screens.Selection.UI.Preview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
@@ -83,6 +84,10 @@ namespace Quaver.Shared.Screens.Selection
         private PlaylistContainer PlaylistContainer { get; set; }
 
         /// <summary>
+        /// </summary>
+        private SelectMapPreviewContainer MapPreviewContainer { get; set; }
+
+        /// <summary>
         ///     The position of the active panel on the left
         /// </summary>
         private const int ScreenPaddingX = 50;
@@ -106,6 +111,7 @@ namespace Quaver.Shared.Screens.Selection
             CreateFilterPanel();
             CreateMapsetContainer();
             CreateMapContainer();
+            CreateMapPreviewContainer();
             CreatePlaylistContainer();
             ReorderContainerLayerDepth();
             CreateLeaderboardContainer();
@@ -205,7 +211,8 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Creates <see cref="FilterPanel"/>
         /// </summary>
-        private void CreateFilterPanel() => FilterPanel = new SelectFilterPanel(SelectScreen.AvailableMapsets, SelectScreen.CurrentSearchQuery)
+        private void CreateFilterPanel() => FilterPanel = new SelectFilterPanel(SelectScreen.AvailableMapsets,
+            SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview)
         {
             Parent = Container,
             Y = Header.Height + Header.ForegroundLine.Height
@@ -240,6 +247,21 @@ namespace Quaver.Shared.Screens.Selection
             };
 
             ModifierSelector.X = -ModifierSelector.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
+        ///     Creates <see cref="MapPreviewContainer"/>
+        /// </summary>
+        private void CreateMapPreviewContainer()
+        {
+            MapPreviewContainer = new SelectMapPreviewContainer(SelectScreen.IsPlayTestingInPreview, SelectScreen.ActiveLeftPanel,
+                (int) (WindowManager.Height - MenuBorder.HEIGHT * 2 - FilterPanel.Height))
+            {
+                Parent = Container,
+                Y = FilterPanel.Y + FilterPanel.Height
+            };
+
+            MapPreviewContainer.X = -MapPreviewContainer.Width - ScreenPaddingX;
         }
 
         /// <summary>
@@ -306,11 +328,18 @@ namespace Quaver.Shared.Screens.Selection
             {
                 case SelectContainerPanel.Leaderboard:
                     LeaderboardContainer.MoveToX(ScreenPaddingX, easing, animTime);
+                    MapPreviewContainer.MoveToX(inactivePos, easing, animTime);
                     ModifierSelector.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.Modifiers:
                     LeaderboardContainer.MoveToX(inactivePos, easing, animTime);
+                    MapPreviewContainer.MoveToX(inactivePos, easing, animTime);
                     ModifierSelector.MoveToX(ScreenPaddingX, easing, animTime);
+                    break;
+                case SelectContainerPanel.MapPreview:
+                    LeaderboardContainer.MoveToX(inactivePos, easing, animTime);
+                    ModifierSelector.MoveToX(inactivePos, easing, animTime);
+                    MapPreviewContainer.MoveToX(ScreenPaddingX, easing, animTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -400,12 +429,14 @@ namespace Quaver.Shared.Screens.Selection
             MapContainer.ClearAnimations();
             MapsetContainer.ClearAnimations();
             PlaylistContainer.ClearAnimations();
+            MapPreviewContainer.ClearAnimations();
 
             const Easing easing = Easing.OutQuint;
             const int time = 400;
 
             LeaderboardContainer.MoveToX(-LeaderboardContainer.Width - ScreenPaddingX, easing, time);
             ModifierSelector.MoveToX(-ModifierSelector.Width - ScreenPaddingX, easing, time);
+            MapPreviewContainer.MoveToX(-MapPreviewContainer.Width - ScreenPaddingX, easing, time);
 
             MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
             MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);

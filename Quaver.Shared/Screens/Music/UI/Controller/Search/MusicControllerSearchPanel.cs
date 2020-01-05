@@ -167,7 +167,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller.Search
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, "Type to search...")
+            SearchBox = new FilterPanelSearchBox(CurrentSearchQuery, AvailableSongs, new Bindable<bool>(false),
+                "Type to search...")
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

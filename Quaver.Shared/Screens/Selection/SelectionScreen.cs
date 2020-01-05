@@ -90,6 +90,11 @@ namespace Quaver.Shared.Screens.Selection
         private bool IsExportingMapset { get; set; }
 
         /// <summary>
+        ///     Keeps track of if the user is play testing in the map preview
+        /// </summary>
+        public Bindable<bool> IsPlayTestingInPreview { get; private set; }
+
+        /// <summary>
         /// </summary>
         public SelectionScreen()
         {
@@ -112,6 +117,7 @@ namespace Quaver.Shared.Screens.Selection
             InitializeAvailableMapsetsBindable();
             InitializeActiveLeftPanelBindable();
             InitializeActiveScrollContainerBindable();
+            InitializeTestPlayingBindable();
             InitializeSelectedPlaylist();
 
             // Do initial filtering of mapsets for the screen
@@ -156,6 +162,7 @@ namespace Quaver.Shared.Screens.Selection
             AvailableMapsets?.Dispose();
             ActiveLeftPanel?.Dispose();
             ActiveScrollContainer?.Dispose();
+            IsPlayTestingInPreview?.Dispose();
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
@@ -209,6 +216,13 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Initializes the bindable that determines if we're currently play testing
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void InitializeTestPlayingBindable()
+            => IsPlayTestingInPreview = new Bindable<bool>(false) {Value = false};
+
+        /// <summary>
         ///     If the initial playlist is null this will set it apporpriately
         /// </summary>
         private void InitializeSelectedPlaylist()
@@ -233,7 +247,9 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
-            HandleKeyPressTab();
+
+            if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
+                HandleKeyPressTab();
         }
 
         /// <summary>
@@ -262,10 +278,8 @@ namespace Quaver.Shared.Screens.Selection
 
                     ExitToMenu();
                     break;
-                case SelectContainerPanel.Modifiers:
-                    ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
-                    break;
                 default:
+                    ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     break;
             }
         }
@@ -306,7 +320,10 @@ namespace Quaver.Shared.Screens.Selection
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F3))
                 return;
 
-            ExportSelectedMapset();
+            if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+            else
+                ActiveLeftPanel.Value = SelectContainerPanel.MapPreview;
         }
 
         /// <summary>

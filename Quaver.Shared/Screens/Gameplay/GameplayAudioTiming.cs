@@ -42,6 +42,9 @@ namespace Quaver.Shared.Screens.Gameplay
         {
             Screen = screen;
 
+            if (Screen.IsSongSelectPreview)
+                return;
+
             try
             {
                 if (Screen.IsCalibratingOffset)
