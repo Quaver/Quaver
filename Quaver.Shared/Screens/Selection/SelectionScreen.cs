@@ -442,7 +442,7 @@ namespace Quaver.Shared.Screens.Selection
             var adjustment = 0.1f;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (current < 1.0f || OnlineManager.CurrentGame == null && forceHalfRate)
+            if (current < 1.0f || OnlineManager.CurrentGame == null && forceHalfRate || current == 1.0f && !faster)
                 adjustment = 0.05f;
 
             var next = current + adjustment * (faster ? 1f : -1f);
