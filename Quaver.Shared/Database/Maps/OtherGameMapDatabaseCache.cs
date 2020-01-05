@@ -33,10 +33,9 @@ namespace Quaver.Shared.Database.Maps
             {
                 try
                 {
-                    return ConfigManager.AutoLoadOsuBeatmaps.Value &&
-                           (MapsToCache[OtherGameCacheAction.Delete]?.Count > 0 ||
-                            MapsToCache[OtherGameCacheAction.Add]?.Count > 0 ||
-                            MapsToCache[OtherGameCacheAction.Update]?.Count > 0);
+                    return MapsToCache[OtherGameCacheAction.Delete]?.Count > 0 ||
+                           MapsToCache[OtherGameCacheAction.Add]?.Count > 0 ||
+                           MapsToCache[OtherGameCacheAction.Update]?.Count > 0;
                 }
                 catch (Exception e)
                 {
@@ -59,13 +58,24 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     If we're currently able to sync maps.
         /// </summary>
-        public static bool EligibleToSync => ConfigManager.AutoLoadOsuBeatmaps.Value && NeedsSync && OnSyncableScreen();
+        public static bool EligibleToSync => NeedsSync && OnSyncableScreen();
 
         /// <summary>
         ///     The amount of maps left to sync
         /// </summary>
         public static int SyncMapCount => MapsToCache[OtherGameCacheAction.Delete].Count + MapsToCache[OtherGameCacheAction.Add].Count
                                                 + MapsToCache[OtherGameCacheAction.Update].Count;
+
+        public static void Initialize()
+        {
+            MapsToCache= new Dictionary<OtherGameCacheAction, List<Map>>()
+            {
+                {OtherGameCacheAction.Add, new List<Map>()},
+                {OtherGameCacheAction.Update, new List<Map>()},
+                {OtherGameCacheAction.Delete, new List<Map>()}
+            };
+        }
+
         /// <summary>
         ///   Loads maps from other games if necessary
         /// </summary>
@@ -144,13 +154,6 @@ namespace Quaver.Shared.Database.Maps
         private static List<OtherGameMap> SyncMaps()
         {
             Logger.Important($"Starting sync of other game maps...", LogType.Runtime);
-
-            MapsToCache = new Dictionary<OtherGameCacheAction, List<Map>>()
-            {
-                {OtherGameCacheAction.Add, new List<Map>()},
-                {OtherGameCacheAction.Update, new List<Map>()},
-                {OtherGameCacheAction.Delete, new List<Map>()}
-            };
 
             var currentlyCached = FetchAll();
             var osuMaps = LoadOsuBeatmapDatabase();
