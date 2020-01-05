@@ -242,6 +242,8 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         public static void OrderAndSetMapsets()
         {
+            OtherGameMapDatabaseCache.Initialize();
+
             var maps = FetchAll();
 
             if (ConfigManager.AutoLoadOsuBeatmaps.Value)
