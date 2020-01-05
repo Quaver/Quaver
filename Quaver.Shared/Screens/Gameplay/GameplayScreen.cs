@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Handlers;
@@ -22,6 +23,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
@@ -298,6 +300,21 @@ namespace Quaver.Shared.Screens.Gameplay
         private bool DontPlayNextComboBreak { get; set; }
 
         /// <summary>
+        ///     If true, the gameplay screen is solely for song select preview usage
+        /// </summary>
+        public bool IsSongSelectPreview { get; }
+
+        /// <summary>
+        ///     Used to reset the input manager when toggling autoplay on/off.
+        ///     Prevents having to virtually play all replay frames again
+        /// </summary>
+        private ReplayInputManagerKeys CachedReplayInputManager { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -308,13 +325,14 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="playTestTime"></param>
         /// <param name="isCalibratingOffset"></param>
         /// <param name="spectatorClient"></param>
+        /// <param name="options"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
-            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null)
+            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview= false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             UpdateMapInDatabase();
 
-            if (isPlayTesting)
+            if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = ObjectHelper.DeepClone(map);
                 testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
@@ -335,6 +353,7 @@ namespace Quaver.Shared.Screens.Gameplay
             IsMultiplayerGame = OnlineManager.CurrentGame != null;
             SpectatorClient = spectatorClient;
             TournamentOptions = options;
+            IsSongSelectPreview = isSongSelectPreview;
 
             if (TournamentOptions != null && !(this is TournamentGameplayScreen))
                 throw new InvalidOperationException("Cannot provide tournament options for a non-tournament gameplay screen");
@@ -354,7 +373,16 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Initialize the custom audio sample cache and the sound effect index.
             if (!IsCalibratingOffset)
-                CustomAudioSampleCache.LoadSamples(MapManager.Selected.Value, MapHash);
+            {
+                try
+                {
+                    CustomAudioSampleCache.LoadSamples(MapManager.Selected.Value, MapHash);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
 
             NextSoundEffectIndex = 0;
             UpdateNextSoundEffectIndex();
@@ -369,9 +397,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Determine if we're in replay mode.
             if (LoadedReplay != null)
-            {
                 InReplayMode = true;
-            }
 
             // Create the current replay that will be captured.
             ReplayCapturer = new ReplayCapturer(this);
@@ -388,6 +414,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             View = new GameplayScreenView(this);
+
+            if (IsSongSelectPreview)
+                HasStarted = true;
         }
 
         /// <summary>
@@ -462,6 +491,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             Metronome?.Dispose();
+            IsDisposed = true;
             base.Destroy();
         }
 
@@ -477,7 +507,7 @@ namespace Quaver.Shared.Screens.Gameplay
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Handle pausing
-            if (!Failed && !IsPlayComplete)
+            if (!Failed && !IsPlayComplete && !IsSongSelectPreview)
                 HandlePauseInput(gameTime);
 
             // Show/hide scoreboard.
@@ -485,7 +515,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
             // CTRL+ input while play testing
-            if (IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+            if (!IsSongSelectPreview && IsPlayTesting && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
                                   KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.P))
@@ -513,7 +543,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsPaused || Failed)
                 return;
 
-            if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame)
+            if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame || IsSongSelectPreview)
             {
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
                     HandleQuickExit();
@@ -525,7 +555,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     SkipToNextObject();
 
                 // Go back to editor at the same time
-                if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
+                if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 {
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
@@ -538,24 +568,40 @@ namespace Quaver.Shared.Screens.Gameplay
                 {
                     var inputManager = (KeysInputManager) Ruleset.InputManager;
 
-                    if (LoadedReplay == null)
+                    if (inputManager.ReplayInputManager != null)
+                        CachedReplayInputManager = inputManager.ReplayInputManager;
+
+                    if (LoadedReplay == null || inputManager.ReplayInputManager == null)
                     {
-                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
-                        inputManager.ReplayInputManager = new ReplayInputManagerKeys(this);
+                        if (LoadedReplay == null)
+                        {
+                            LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                            CachedReplayInputManager = new ReplayInputManagerKeys(this);
+                            inputManager.ReplayInputManager = CachedReplayInputManager;
+                        }
+
+                        if (inputManager.ReplayInputManager == null)
+                            inputManager.ReplayInputManager = CachedReplayInputManager;
+
                         inputManager.ReplayInputManager.HandleSkip();
                         inputManager.ReplayInputManager.CurrentFrame++;
                     }
 
                     InReplayMode = !InReplayMode;
-                    inputManager.ReplayInputManager.HandleSkip();
-                    inputManager.ReplayInputManager.CurrentFrame++;
+
+                    if (inputManager.ReplayInputManager != null)
+                    {
+                        inputManager.ReplayInputManager.HandleSkip();
+                        inputManager.ReplayInputManager.CurrentFrame++;
+                    }
 
                     if (!InReplayMode)
                     {
+                        inputManager.ReplayInputManager = null;
+                        Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+
                         for (var i = 0; i < Map.GetKeyCount(); i++)
                         {
-                            inputManager.ReplayInputManager.UniquePresses[i] = false;
-                            inputManager.ReplayInputManager.UniqueReleases[i] = true;
                             inputManager.BindingStore[i].Pressed = false;
 
                             var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
@@ -566,11 +612,11 @@ namespace Quaver.Shared.Screens.Gameplay
                         inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
                     }
 
-                    NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}");
+                    NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.");
                 }
 
                 // Only allow offset changes if the map hasn't started or if we're on a break
-                if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
+                if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
                 {
                     var change = 5;
                     if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
@@ -644,7 +690,7 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             // If the pause key was just pressed...
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            if (!IsSongSelectPreview && KeyboardManager.IsUniqueKeyPress(Keys.Escape) || KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
             {
                 // Go back to editor if we're currently play testing.
                 if (IsPlayTesting)
@@ -916,7 +962,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandlePlayRestart(double dt)
         {
-            if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset || SpectatorClient != null)
+            if (!IsPlayTesting && (IsPaused || Failed) || IsCalibratingOffset || SpectatorClient != null || IsSongSelectPreview)
                 return;
 
             if (OnlineManager.CurrentGame != null)
@@ -1331,16 +1377,22 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Handles seeking while in replay mode
         /// </summary>
         /// <param name="time"></param>
-        public void HandleReplaySeeking(double time)
+        public void HandleReplaySeeking(double time = -1)
         {
             if (!InReplayMode)
                 return;
 
+            var hitsoundConfig = ConfigManager.EnableHitsounds.Value;
+            ConfigManager.EnableHitsounds.Value = false;
+
             var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
             hitobjectManager.DestroyAllObjects();
 
-            time = MathHelper.Clamp((float) time, 0, (float) AudioEngine.Track.Length);
-            AudioEngine.Track.Seek(time);
+            if (time != -1)
+            {
+                time = MathHelper.Clamp((float) time, 0, (float) AudioEngine.Track.Length);
+                AudioEngine.Track.Seek(time);
+            }
 
             Timing.Time = AudioEngine.Track.Time;
             Timing.Update(new GameTime());
@@ -1355,6 +1407,8 @@ namespace Quaver.Shared.Screens.Gameplay
             CustomAudioSampleCache.StopAll();
             UpdateNextSoundEffectIndex();
             DontPlayNextComboBreak = true;
+
+            ConfigManager.EnableHitsounds.Value = hitsoundConfig;
         }
     }
 }

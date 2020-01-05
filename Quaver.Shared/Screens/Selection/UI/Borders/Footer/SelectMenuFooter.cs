@@ -15,6 +15,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
             new IconTextButtonSelectBack(screen),
             new IconTextButtonOptions(),
             new IconTextButtonModifiers(screen.ActiveLeftPanel),
+            new IconTextButtonMapPreview(screen.ActiveLeftPanel),
             new IconTextButtonCreatePlaylist()
         }, new List<Drawable>
         {

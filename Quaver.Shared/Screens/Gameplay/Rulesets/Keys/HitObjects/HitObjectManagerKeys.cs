@@ -16,10 +16,13 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Selection;
+using Wobble;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -38,7 +41,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             get
             {
                 var speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
-                return speed.Value / (20f * AudioEngine.Track.Rate) * QuaverGame.SkinScalingFactor;
+
+                var scalingFactor = QuaverGame.SkinScalingFactor;
+
+                var game = GameBase.Game as QuaverGame;
+
+                if (game?.CurrentScreen is SelectionScreen)
+                    scalingFactor = (1920f - 400f) / 1366f;
+
+                var scrollSpeed = speed.Value / (20f * AudioEngine.Track.Rate) * scalingFactor;
+
+                return scrollSpeed;
             }
         }
 

@@ -297,7 +297,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 PauseScreen = new PauseScreen(Screen) { Parent = Container };
 
             // Notify the user if their local offset is actually set for this map.
-            if (MapManager.Selected.Value.LocalOffset != 0)
+            if (!Screen.IsSongSelectPreview && MapManager.Selected.Value.LocalOffset != 0)
                 NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset} ms");
 
             if (Screen.IsCalibratingOffset)
@@ -675,7 +675,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePlayCompletion(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting)
+            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting || Screen.IsSongSelectPreview)
                 return;
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
