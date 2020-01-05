@@ -603,6 +603,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         for (var i = 0; i < Map.GetKeyCount(); i++)
                         {
                             inputManager.BindingStore[i].Pressed = false;
+                            inputManager.HandleInput(0);
 
                             var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
                             playfield.Stage.HitLightingObjects[i].StopHolding();
