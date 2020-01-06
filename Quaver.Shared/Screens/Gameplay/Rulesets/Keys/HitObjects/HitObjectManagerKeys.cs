@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var game = GameBase.Game as QuaverGame;
 
                 if (game?.CurrentScreen is SelectionScreen)
-                    scalingFactor = (1920f - 400f) / 1366f;
+                    scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_COLUMN_SIZE) / 1366f;
 
                 var scrollSpeed = speed.Value / (20f * AudioEngine.Track.Rate) * scalingFactor;
 

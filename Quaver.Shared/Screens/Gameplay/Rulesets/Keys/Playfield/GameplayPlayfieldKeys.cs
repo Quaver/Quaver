@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The column size of the song select preview's playfield
         /// </summary>
-        public static float PREVIEW_COLUMN_SIZE { get; }= 400f;
+        public static float PREVIEW_COLUMN_SIZE { get; }= 420f;
 
         /// <summary>
         ///     The size of the each ane.
