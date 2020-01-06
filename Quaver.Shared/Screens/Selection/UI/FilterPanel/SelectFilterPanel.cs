@@ -356,7 +356,8 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 return;
 
             var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
-                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X;
+                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
+                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
 
             if (e.Type == ModChangeType.RemoveAll || e.Type == ModChangeType.RemoveSpeed || isSpeedMod)
                 StartFilterMapsetsTask();
