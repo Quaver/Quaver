@@ -287,6 +287,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 LoadedGameplayScreen?.Update(gameTime);
                 IsPlayTesting.Value = !LoadedGameplayScreen?.InReplayMode ?? false;
+
+                if (LoadedGameplayScreen != null)
+                    LoadedGameplayScreen.IsPaused = AudioEngine.Track.IsPaused;
             }
             catch (Exception)
             {
