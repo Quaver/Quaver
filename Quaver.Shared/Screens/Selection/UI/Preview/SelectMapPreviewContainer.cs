@@ -79,21 +79,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             CreateLoadingWheel();
             CreateTestPlayPrompt();
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 200);
+            RunLoadTask();
+
             MapManager.Selected.ValueChanged += OnMapChanged;
-
             ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
-        }
-
-        private void CreateTestPlayPrompt()
-        {
-            TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "Press [TAB] to toggle autoplay on/off", 22)
-            {
-                Alignment = Alignment.TopCenter,
-                Y = 175,
-                DestroyIfParentIsNull = false
-            };
+            SkinManager.SkinLoaded += OnSkinLoaded;
         }
 
         /// <inheritdoc />
@@ -116,6 +106,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
+            SkinManager.SkinLoaded -= OnSkinLoaded;
 
             LoadGameplayScreenTask?.Dispose();
             LoadedGameplayScreen?.Destroy();
@@ -262,7 +253,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 LoadedGameplayScreen.Destroy();
             }
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 400);
+            RunLoadTask();
         }
 
         /// <summary>
@@ -304,6 +295,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             if (e.Value != SelectContainerPanel.MapPreview)
                 return;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void RunLoadTask() => LoadGameplayScreenTask.Run(MapManager.Selected.Value, 350);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
+
+        /// <summary>
+        /// </summary>
+        private void CreateTestPlayPrompt()
+        {
+            TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "Press [TAB] to toggle autoplay on/off", 22)
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 175,
+                DestroyIfParentIsNull = false
+            };
         }
     }
 }
