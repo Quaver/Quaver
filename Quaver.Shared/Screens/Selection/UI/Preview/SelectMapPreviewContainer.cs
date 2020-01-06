@@ -172,11 +172,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
                     false, null, null, true);
 
-                AddScheduledUpdate(() =>
-                {
-                    if (!gameplay.IsDisposed)
-                        gameplay.HandleReplaySeeking();
-                });
+                gameplay.HandleReplaySeeking();
 
                 if (token.IsCancellationRequested)
                     gameplay.Destroy();
