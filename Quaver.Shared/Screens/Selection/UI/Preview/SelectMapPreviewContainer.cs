@@ -11,6 +11,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
@@ -85,6 +86,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             MapManager.Selected.ValueChanged += OnMapChanged;
             ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
             SkinManager.SkinLoaded += OnSkinLoaded;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -108,6 +110,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
             SkinManager.SkinLoaded -= OnSkinLoaded;
+            ModManager.ModsChanged -= OnModsChanged;
 
             LoadGameplayScreenTask?.Dispose();
             LoadedGameplayScreen?.Destroy();
@@ -156,6 +159,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             var qua = map.LoadQua();
             map.Qua = qua;
+            map.Qua.ApplyMods(ModManager.Mods);
 
             lock (map.Qua)
             {
@@ -335,6 +339,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Y = 175,
                 DestroyIfParentIsNull = false
             };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
+                || e.ChangedMods.HasFlag(ModIdentifier.Randomize) || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
+            {
+                return;
+            }
+
+            var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
+                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
+                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
+
+            if (isSpeedMod)
+                return;
+
+            // Reload the entire
+            RunLoadTask();
         }
     }
 }
