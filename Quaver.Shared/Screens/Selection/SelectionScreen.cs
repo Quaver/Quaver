@@ -43,7 +43,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection
 {
-    public sealed class SelectionScreen : QuaverScreen
+    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel
     {
         /// <inheritdoc />
         /// <summary>
@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     The currently active panel on the left side of the screen
         /// </summary>
-        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; private set; }
+        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; }
 
         /// <summary>
         ///     The currently active scroll container on the right-side of the screen

@@ -13,7 +13,9 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Skinning;
+using Wobble;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
 {
@@ -73,6 +75,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// </summary>
         public static void PlayObjectHitSounds(HitObjectInfo hitObject)
         {
+            var game = GameBase.Game as QuaverGame;
+
+            // Disable hitsounds for left panel screens if the map preview isnt active
+            if (game?.CurrentScreen is IHasLeftPanel screen)
+            {
+                if (screen.ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                    return;
+            }
+
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
                 SkinManager.Skin.SoundHit.CreateChannel().Play();
