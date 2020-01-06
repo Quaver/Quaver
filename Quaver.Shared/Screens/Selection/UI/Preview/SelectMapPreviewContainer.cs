@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             CreateLoadingWheel();
             CreateTestPlayPrompt();
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 400);
+            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 200);
             MapManager.Selected.ValueChanged += OnMapChanged;
 
             ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
