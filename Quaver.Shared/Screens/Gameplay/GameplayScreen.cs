@@ -416,7 +416,10 @@ namespace Quaver.Shared.Screens.Gameplay
             View = new GameplayScreenView(this);
 
             if (IsSongSelectPreview)
+            {
+                IsMultiplayerGameStarted = true;
                 HasStarted = true;
+            }
         }
 
         /// <summary>
@@ -563,85 +566,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     Exit(() => new EditorScreen(OriginalEditorMap));
                 }
 
-                // Handle play test autoplay input.
-                if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab))
-                {
-                    var inputManager = (KeysInputManager) Ruleset.InputManager;
-
-                    if (inputManager.ReplayInputManager != null)
-                        CachedReplayInputManager = inputManager.ReplayInputManager;
-
-                    if (LoadedReplay == null || inputManager.ReplayInputManager == null)
-                    {
-                        if (LoadedReplay == null)
-                        {
-                            LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
-                            CachedReplayInputManager = new ReplayInputManagerKeys(this);
-                            inputManager.ReplayInputManager = CachedReplayInputManager;
-                        }
-
-                        if (inputManager.ReplayInputManager == null)
-                            inputManager.ReplayInputManager = CachedReplayInputManager;
-
-                        inputManager.ReplayInputManager.HandleSkip();
-                        inputManager.ReplayInputManager.CurrentFrame++;
-                    }
-
-                    InReplayMode = !InReplayMode;
-
-                    if (inputManager.ReplayInputManager != null)
-                    {
-                        inputManager.ReplayInputManager.HandleSkip();
-                        inputManager.ReplayInputManager.CurrentFrame++;
-                    }
-
-                    if (!InReplayMode)
-                    {
-                        inputManager.ReplayInputManager = null;
-                        Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
-
-                        for (var i = 0; i < Map.GetKeyCount(); i++)
-                        {
-                            inputManager.BindingStore[i].Pressed = false;
-                            inputManager.HandleInput(0);
-
-                            var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
-                            playfield.Stage.HitLightingObjects[i].StopHolding();
-                            playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
-                        }
-
-                        inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
-                    }
-
-                    NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.");
-                }
-
-                // Only allow offset changes if the map hasn't started or if we're on a break
-                if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
-                {
-                    var change = 5;
-                    if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
-                        KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
-                    {
-                        change = 1;
-                    }
-
-                    // Handle offset +
-                    if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
-                    {
-                        MapManager.Selected.Value.LocalOffset += change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
-                    }
-
-                    // Handle offset -
-                    if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
-                    {
-                        MapManager.Selected.Value.LocalOffset -= change;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
-                    }
-                }
+                if (!IsSongSelectPreview)
+                    HandleAutoplayTabInput(gameTime);
             }
 
             // Handle input per game mode.
@@ -844,7 +770,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleQuickExit()
         {
-            if (InReplayMode && !Failed && !IsPlayComplete || Exiting)
+            if (IsSongSelectPreview || InReplayMode && !Failed && !IsPlayComplete || Exiting)
                 return;
 
             TimesRequestedToPause++;
@@ -1096,6 +1022,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SetRichPresence()
         {
+            if (IsSongSelectPreview)
+                return;
+
             DiscordHelper.Presence.Details = Map.ToString();
 
             if (OnlineManager.CurrentGame != null)
@@ -1383,9 +1312,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode)
                 return;
 
-            var hitsoundConfig = ConfigManager.EnableHitsounds.Value;
-            ConfigManager.EnableHitsounds.Value = false;
-
             var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
             hitobjectManager.DestroyAllObjects();
 
@@ -1408,8 +1334,92 @@ namespace Quaver.Shared.Screens.Gameplay
             CustomAudioSampleCache.StopAll();
             UpdateNextSoundEffectIndex();
             DontPlayNextComboBreak = true;
+        }
 
-            ConfigManager.EnableHitsounds.Value = hitsoundConfig;
+                /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void HandleAutoplayTabInput(GameTime gameTime)
+        {
+            // Handle play test autoplay input.
+            if (IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+            {
+                var inputManager = (KeysInputManager) Ruleset.InputManager;
+
+                if (inputManager.ReplayInputManager != null)
+                    CachedReplayInputManager = inputManager.ReplayInputManager;
+
+                if (LoadedReplay == null || inputManager.ReplayInputManager == null)
+                {
+                    if (LoadedReplay == null)
+                    {
+                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                        CachedReplayInputManager = new ReplayInputManagerKeys(this);
+                        inputManager.ReplayInputManager = CachedReplayInputManager;
+                    }
+
+                    if (inputManager.ReplayInputManager == null)
+                        inputManager.ReplayInputManager = CachedReplayInputManager;
+
+                    inputManager.ReplayInputManager.HandleSkip();
+                    inputManager.ReplayInputManager.CurrentFrame++;
+                }
+
+                InReplayMode = !InReplayMode;
+
+                if (inputManager.ReplayInputManager != null)
+                {
+                    inputManager.ReplayInputManager.HandleSkip();
+                    inputManager.ReplayInputManager.CurrentFrame++;
+                }
+
+                if (!InReplayMode)
+                {
+                    inputManager.ReplayInputManager = null;
+                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, 0, JudgementWindowsDatabaseCache.Selected.Value);
+
+                    for (var i = 0; i < Map.GetKeyCount(); i++)
+                    {
+                        inputManager.BindingStore[i].Pressed = false;
+                        inputManager.HandleInput(0);
+
+                        var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+                        playfield.Stage.HitLightingObjects[i].StopHolding();
+                        playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
+                    }
+
+                    inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
+                }
+
+                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.");
+            }
+
+            // Only allow offset changes if the map hasn't started or if we're on a break
+            if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
+            {
+                var change = 5;
+                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                    KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                {
+                    change = 1;
+                }
+
+                // Handle offset +
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
+                {
+                    MapManager.Selected.Value.LocalOffset += change;
+                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                }
+
+                // Handle offset -
+                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
+                {
+                    MapManager.Selected.Value.LocalOffset -= change;
+                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                }
+            }
         }
     }
 }

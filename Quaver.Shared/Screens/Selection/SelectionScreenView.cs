@@ -215,7 +215,7 @@ namespace Quaver.Shared.Screens.Selection
             SelectScreen.CurrentSearchQuery, SelectScreen.IsPlayTestingInPreview)
         {
             Parent = Container,
-            Y = Header.Height + Header.ForegroundLine.Height
+            Y = Header.Height + Header.ForegroundLine.Height - 2
         };
 
         /// <summary>

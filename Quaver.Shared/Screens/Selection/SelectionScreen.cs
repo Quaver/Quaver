@@ -43,7 +43,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection
 {
-    public sealed class SelectionScreen : QuaverScreen
+    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel
     {
         /// <inheritdoc />
         /// <summary>
@@ -68,7 +68,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     The currently active panel on the left side of the screen
         /// </summary>
-        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; private set; }
+        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; }
 
         /// <summary>
         ///     The currently active scroll container on the right-side of the screen
@@ -149,6 +149,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!Exiting)
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+
             HandleInput(gameTime);
             base.Update(gameTime);
         }
@@ -263,6 +266,7 @@ namespace Quaver.Shared.Screens.Selection
             switch (ActiveLeftPanel.Value)
             {
                 case SelectContainerPanel.Leaderboard:
+                case SelectContainerPanel.MapPreview:
                     if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
                     {
                         ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
@@ -276,7 +280,11 @@ namespace Quaver.Shared.Screens.Selection
                         return;
                     }
 
-                    ExitToMenu();
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
+                        ExitToMenu();
+
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                        ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     break;
                 default:
                     ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;

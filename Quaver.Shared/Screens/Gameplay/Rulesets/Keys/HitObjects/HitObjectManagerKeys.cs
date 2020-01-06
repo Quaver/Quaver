@@ -40,14 +40,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             get
             {
-                var speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
+                var speed = ConfigManager.ScrollSpeed4K;
+
+                if (MapManager.Selected.Value.Qua != null)
+                    speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
 
                 var scalingFactor = QuaverGame.SkinScalingFactor;
 
                 var game = GameBase.Game as QuaverGame;
 
                 if (game?.CurrentScreen is SelectionScreen)
-                    scalingFactor = (1920f - 400f) / 1366f;
+                    scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
 
                 var scrollSpeed = speed.Value / (20f * AudioEngine.Track.Rate) * scalingFactor;
 

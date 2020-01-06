@@ -37,6 +37,9 @@ namespace Quaver.Shared.Audio
         /// <param name="md5"></param>
         public static void LoadSamples(Map map, string md5)
         {
+            if (map.Qua == null)
+                return;
+
             // Always clean up the left-over channels.
             StopAll();
 

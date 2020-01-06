@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -79,19 +80,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             CreateLoadingWheel();
             CreateTestPlayPrompt();
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 400);
-            MapManager.Selected.ValueChanged += OnMapChanged;
-        }
+            RunLoadTask();
 
-        private void CreateTestPlayPrompt()
-        {
-            TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "Press [TAB] to toggle autoplay on/off", 22)
-            {
-                Alignment = Alignment.TopCenter,
-                Y = 175,
-                DestroyIfParentIsNull = false
-            };
+            MapManager.Selected.ValueChanged += OnMapChanged;
+            ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
+            SkinManager.SkinLoaded += OnSkinLoaded;
         }
 
         /// <inheritdoc />
@@ -111,12 +104,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
+            SkinManager.SkinLoaded -= OnSkinLoaded;
 
             LoadGameplayScreenTask?.Dispose();
             LoadedGameplayScreen?.Destroy();
             TestPlayPrompt?.Destroy();
+
 
             base.Destroy();
         }
@@ -161,17 +157,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             var qua = map.LoadQua();
             map.Qua = qua;
 
-            var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
+            lock (map.Qua)
+            {
+                var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
-            var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
-                false, null, null, true);
+                var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
+                    false, null, null, true);
 
-            if (token.IsCancellationRequested)
-                gameplay.Destroy();
+                gameplay.HandleReplaySeeking();
 
-            gameplay.HandleReplaySeeking();
+                if (token.IsCancellationRequested)
+                    gameplay.Destroy();
 
-            return gameplay;
+                return gameplay;
+            }
         }
 
         /// <summary>
@@ -183,18 +182,30 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (MapManager.Selected.Value != e.Input)
                 return;
 
-            MapManager.Selected.Value.Qua = e.Result.Map;
+            lock (e.Input.Qua = e.Result.Map)
+                e.Input.Qua = e.Result.Map;
+
             LoadedGameplayScreen = e.Result;
 
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 var playfield = (GameplayPlayfieldKeys) LoadedGameplayScreen.Ruleset.Playfield;
 
                 playfield.Stage.HealthBar.Visible = false;
 
+                Wheel.ClearAnimations();
+                Wheel.FadeTo(0, Easing.Linear, 250);
+
+                playfield.Stage.FadeIn();
                 playfield.Container.Parent = this;
                 playfield.Container.Size = Size;
                 playfield.Container.X = 0;
+                playfield.ForegroundContainer.X = 0;
+                playfield.BackgroundContainer.X = 0;
+                playfield.Stage.HitLightingObjects.ForEach(x =>
+                {
+                    x.StopHolding();
+                });
 
                 var scroll = LoadedGameplayScreen.Map.Mode == GameMode.Keys4
                     ? ConfigManager.ScrollDirection4K
@@ -243,25 +254,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (e.OldValue != null)
-                e.OldValue.Qua = null;
-
             if (LoadedGameplayScreen != null)
             {
+                if (e.OldValue != null)
+                    e.OldValue.Qua = null;
+
                 TestPlayPrompt.Parent = null;
                 LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
                 LoadedGameplayScreen.Destroy();
             }
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 400);
+            RunLoadTask();
         }
 
         /// <summary>
         /// </summary>
         private void UpdateGameplayScreen(GameTime gameTime)
         {
-            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview ||
-                LoadedGameplayScreen != null && LoadedGameplayScreen.IsDisposed)
+            if (LoadedGameplayScreen != null && LoadedGameplayScreen.IsDisposed)
+                return;
+
+            if (MapManager.Selected.Value?.Qua == null)
                 return;
 
             try
@@ -270,13 +283,58 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 if (AudioEngine.Track != TrackInPreviousFrame)
                     LoadedGameplayScreen?.HandleReplaySeeking();
 
+                if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                    LoadedGameplayScreen?.HandleAutoplayTabInput(gameTime);
+
                 LoadedGameplayScreen?.Update(gameTime);
                 IsPlayTesting.Value = !LoadedGameplayScreen?.InReplayMode ?? false;
+
+                if (LoadedGameplayScreen != null)
+                    LoadedGameplayScreen.IsPaused = AudioEngine.Track.IsPaused;
             }
             catch (Exception)
             {
                 // ignored
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
+        {
+            if (e.Value != SelectContainerPanel.MapPreview)
+                return;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void RunLoadTask()
+        {
+            Wheel.ClearAnimations();
+            Wheel.FadeTo(1, Easing.Linear, 150);
+
+            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 350);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
+
+        /// <summary>
+        /// </summary>
+        private void CreateTestPlayPrompt()
+        {
+            TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                "Press [TAB] to toggle autoplay on/off", 22)
+            {
+                Alignment = Alignment.TopCenter,
+                Y = 175,
+                DestroyIfParentIsNull = false
+            };
         }
     }
 }

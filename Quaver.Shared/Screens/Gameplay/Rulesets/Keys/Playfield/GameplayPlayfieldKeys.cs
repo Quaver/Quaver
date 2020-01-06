@@ -71,9 +71,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         }
 
         /// <summary>
-        ///     The column size of the song select preview's playfield
+        ///     The width of the entire playfield for song select previews
         /// </summary>
-        public static float PREVIEW_COLUMN_SIZE { get; }= 400f;
+        public static float PREVIEW_PLAYFIELD_WIDTH { get; }= 420f;
 
         /// <summary>
         ///     The size of the each ane.
@@ -83,7 +83,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             get
             {
                 if (Screen.IsSongSelectPreview)
-                    return PREVIEW_COLUMN_SIZE / Screen.Map.GetKeyCount();
+                    return PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
 
                 return SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize;
             }
@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <returns></returns>
         private void SetLaneScrollDirections()
         {
-            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+            var keys = Ruleset.Screen.Map?.GetKeyCount() ?? 4;
 
             ScrollDirection direction;
             switch (Ruleset.Map.Mode)
@@ -251,7 +251,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var oldHitpos = skin.HitPosOffsetY;
 
                 if (Ruleset.Screen.IsSongSelectPreview)
-                    skin.HitPosOffsetY = PREVIEW_COLUMN_SIZE / Ruleset.Map.GetKeyCount();
+                    skin.HitPosOffsetY = PREVIEW_PLAYFIELD_WIDTH / Ruleset.Map.GetKeyCount();
 
                 switch (ScrollDirections[i])
                 {
