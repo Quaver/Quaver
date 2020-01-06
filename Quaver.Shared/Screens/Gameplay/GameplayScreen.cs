@@ -1383,9 +1383,6 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode)
                 return;
 
-            var hitsoundConfig = ConfigManager.EnableHitsounds.Value;
-            ConfigManager.EnableHitsounds.Value = false;
-
             var hitobjectManager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
             hitobjectManager.DestroyAllObjects();
 
@@ -1408,8 +1405,6 @@ namespace Quaver.Shared.Screens.Gameplay
             CustomAudioSampleCache.StopAll();
             UpdateNextSoundEffectIndex();
             DontPlayNextComboBreak = true;
-
-            ConfigManager.EnableHitsounds.Value = hitsoundConfig;
         }
     }
 }

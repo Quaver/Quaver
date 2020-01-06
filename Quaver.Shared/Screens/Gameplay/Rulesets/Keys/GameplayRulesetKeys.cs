@@ -49,14 +49,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         {
             get
             {
-                switch (MapManager.Selected.Value.Qua.Mode)
+                switch (MapManager.Selected.Value?.Qua?.Mode)
                 {
                     case GameMode.Keys4:
                         return ConfigManager.ScrollDirection4K.Value;
                     case GameMode.Keys7:
                         return ConfigManager.ScrollDirection7K.Value;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return ConfigManager.ScrollDirection4K.Value;
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 
             var direction = ScrollDirection;
             var playfield = (GameplayPlayfieldKeys)Playfield;
-            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+            var keys = MapManager.Selected.Value.Qua?.GetKeyCount() ?? 4;
 
             if (direction.Equals(ScrollDirection.Split))
             {

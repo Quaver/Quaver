@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <returns></returns>
         private void SetLaneScrollDirections()
         {
-            var keys = MapManager.Selected.Value.Qua.GetKeyCount();
+            var keys = Ruleset.Screen.Map?.GetKeyCount() ?? 4;
 
             ScrollDirection direction;
             switch (Ruleset.Map.Mode)

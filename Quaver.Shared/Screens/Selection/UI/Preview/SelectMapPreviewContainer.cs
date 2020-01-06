@@ -81,6 +81,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             LoadGameplayScreenTask.Run(MapManager.Selected.Value, 400);
             MapManager.Selected.ValueChanged += OnMapChanged;
+
+            ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
         }
 
         private void CreateTestPlayPrompt()
@@ -111,12 +113,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
 
             LoadGameplayScreenTask?.Dispose();
             LoadedGameplayScreen?.Destroy();
             TestPlayPrompt?.Destroy();
+
 
             base.Destroy();
         }
@@ -161,17 +165,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             var qua = map.LoadQua();
             map.Qua = qua;
 
-            var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
+            lock (map.Qua)
+            {
+                var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
-            var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
-                false, null, null, true);
+                var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
+                    false, null, null, true);
 
-            if (token.IsCancellationRequested)
-                gameplay.Destroy();
+                AddScheduledUpdate(() =>
+                {
+                    if (!gameplay.IsDisposed)
+                        gameplay.HandleReplaySeeking();
+                });
 
-            gameplay.HandleReplaySeeking();
+                if (token.IsCancellationRequested)
+                    gameplay.Destroy();
 
-            return gameplay;
+                return gameplay;
+            }
         }
 
         /// <summary>
@@ -183,10 +194,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (MapManager.Selected.Value != e.Input)
                 return;
 
-            MapManager.Selected.Value.Qua = e.Result.Map;
+            lock (e.Input.Qua = e.Result.Map)
+                e.Input.Qua = e.Result.Map;
+
             LoadedGameplayScreen = e.Result;
 
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 var playfield = (GameplayPlayfieldKeys) LoadedGameplayScreen.Ruleset.Playfield;
 
@@ -243,11 +256,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
-            if (e.OldValue != null)
-                e.OldValue.Qua = null;
-
             if (LoadedGameplayScreen != null)
             {
+                if (e.OldValue != null)
+                    e.OldValue.Qua = null;
+
                 TestPlayPrompt.Parent = null;
                 LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
                 LoadedGameplayScreen.Destroy();
@@ -260,8 +273,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         private void UpdateGameplayScreen(GameTime gameTime)
         {
-            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview ||
-                LoadedGameplayScreen != null && LoadedGameplayScreen.IsDisposed)
+            if (LoadedGameplayScreen != null && LoadedGameplayScreen.IsDisposed)
+                return;
+
+            if (MapManager.Selected.Value?.Qua == null)
                 return;
 
             try
@@ -277,6 +292,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             {
                 // ignored
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLeftPanelChanged(object sender, BindableValueChangedEventArgs<SelectContainerPanel> e)
+        {
+            if (e.Value != SelectContainerPanel.MapPreview)
+                return;
+
+            AddScheduledUpdate(() => LoadedGameplayScreen?.HandleReplaySeeking());
         }
     }
 }
