@@ -14,6 +14,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -192,9 +193,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 playfield.Stage.HealthBar.Visible = false;
 
+                Wheel.ClearAnimations();
+                Wheel.FadeTo(0, Easing.Linear, 250);
+
+                playfield.Stage.FadeIn();
                 playfield.Container.Parent = this;
                 playfield.Container.Size = Size;
                 playfield.Container.X = 0;
+                playfield.ForegroundContainer.X = 0;
+                playfield.BackgroundContainer.X = 0;
+                playfield.Stage.HitLightingObjects.ForEach(x =>
+                {
+                    x.StopHolding();
+                });
 
                 var scroll = LoadedGameplayScreen.Map.Mode == GameMode.Keys4
                     ? ConfigManager.ScrollDirection4K
@@ -299,13 +310,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
         /// <summary>
         /// </summary>
-        private void RunLoadTask() => LoadGameplayScreenTask.Run(MapManager.Selected.Value, 350);
+        private void RunLoadTask()
+        {
+            Wheel.ClearAnimations();
+            Wheel.FadeTo(1, Easing.Linear, 150);
+
+            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 350);
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e)
+        {
+            RunLoadTask();
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+        }
 
         /// <summary>
         /// </summary>

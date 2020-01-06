@@ -24,6 +24,7 @@ using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Window;
 
@@ -529,8 +530,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // otherwise we'll use the one from their skin config.
                 hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
 
+                var hitlightingY = Skin.HitLightingY;
+
+                if (Screen.IsSongSelectPreview)
+                    hitlightingY = Screen.Map.GetKeyCount() * (GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount());
+
                 hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f - hl.Width / 2f + Skin.HitLightingX,
-                    HitPositionOverlay.Y - hl.Width / 2f + Skin.HitLightingY);
+                    HitPositionOverlay.Y - hl.Width / 2f + hitlightingY);
 
                 HitLightingObjects.Add(hl);
             }
@@ -652,6 +658,51 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Alignment = Alignment.TopLeft,
                 Parent = LaneCoverContainer,
             };
+        }
+
+        public void FadeIn()
+        {
+            const int time = 400;
+            const Easing easing = Easing.Linear;
+
+            BgMask.Alpha = 0;
+            BgMask.FadeTo(1, Easing.Linear, time);
+
+            Receptors.ForEach(x =>
+            {
+                x.Alpha = 0;
+                x.FadeTo(1, Easing.Linear, time);
+            });
+
+            ComboDisplay.Digits.ForEach(x =>
+            {
+                x.Alpha = 0;
+                x.FadeTo(1, Easing.Linear, time);
+            });
+
+            HitObjectContainer.Children.ForEach(x =>
+            {
+                if (x is Sprite sprite)
+                {
+                    sprite.Alpha = 0;
+                    sprite.FadeTo(1, Easing.Linear, time - 200);
+                }
+            });
+
+            HitError.Children.ForEach(x =>
+            {
+                if (x is Sprite sprite)
+                {
+                    sprite.Alpha = 0;
+                    sprite.FadeTo(1, Easing.Linear, time);
+                }
+            });
+
+            StageLeft.Alpha = 0;
+            StageLeft.FadeTo(1, Easing.Linear, time);
+
+            StageRight.Alpha = 0;
+            StageRight.FadeTo(1, Easing.Linear, time);
         }
     }
 }
