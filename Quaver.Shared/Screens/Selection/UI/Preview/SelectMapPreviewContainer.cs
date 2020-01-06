@@ -302,8 +302,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             if (e.Value != SelectContainerPanel.MapPreview)
                 return;
-
-            AddScheduledUpdate(() => LoadedGameplayScreen?.HandleReplaySeeking());
         }
     }
 }
