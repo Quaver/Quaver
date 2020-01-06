@@ -416,7 +416,10 @@ namespace Quaver.Shared.Screens.Gameplay
             View = new GameplayScreenView(this);
 
             if (IsSongSelectPreview)
+            {
+                IsMultiplayerGameStarted = true;
                 HasStarted = true;
+            }
         }
 
         /// <summary>
