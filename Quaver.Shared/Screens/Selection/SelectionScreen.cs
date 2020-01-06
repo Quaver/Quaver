@@ -266,6 +266,7 @@ namespace Quaver.Shared.Screens.Selection
             switch (ActiveLeftPanel.Value)
             {
                 case SelectContainerPanel.Leaderboard:
+                case SelectContainerPanel.MapPreview:
                     if (ActiveScrollContainer.Value == SelectScrollContainerType.Maps)
                     {
                         ActiveScrollContainer.Value = SelectScrollContainerType.Mapsets;
@@ -279,7 +280,11 @@ namespace Quaver.Shared.Screens.Selection
                         return;
                     }
 
-                    ExitToMenu();
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
+                        ExitToMenu();
+
+                    if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                        ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
                     break;
                 default:
                     ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
