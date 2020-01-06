@@ -285,6 +285,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 if (AudioEngine.Track != TrackInPreviousFrame)
                     LoadedGameplayScreen?.HandleReplaySeeking();
 
+                if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
+                    LoadedGameplayScreen?.HandleAutoplayTabInput(gameTime);
+
                 LoadedGameplayScreen?.Update(gameTime);
                 IsPlayTesting.Value = !LoadedGameplayScreen?.InReplayMode ?? false;
 
