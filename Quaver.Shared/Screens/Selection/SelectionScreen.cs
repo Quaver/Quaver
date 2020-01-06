@@ -149,6 +149,9 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!Exiting)
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+
             HandleInput(gameTime);
             base.Update(gameTime);
         }

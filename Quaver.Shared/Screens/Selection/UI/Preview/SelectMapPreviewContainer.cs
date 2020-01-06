@@ -322,11 +322,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e)
-        {
-            RunLoadTask();
-            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
-        }
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => RunLoadTask();
 
         /// <summary>
         /// </summary>
