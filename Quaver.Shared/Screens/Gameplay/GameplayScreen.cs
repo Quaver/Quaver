@@ -1096,6 +1096,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SetRichPresence()
         {
+            if (IsSongSelectPreview)
+                return;
+
             DiscordHelper.Presence.Details = Map.ToString();
 
             if (OnlineManager.CurrentGame != null)
