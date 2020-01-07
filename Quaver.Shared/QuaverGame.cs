@@ -541,6 +541,7 @@ namespace Quaver.Shared
             HandleKeyPressF7();
             HandleKeyPressCtrlO();
             HandleKeyPressCtrlS();
+            HandleKeyPressAltEnter();
         }
 
         /// <summary>
@@ -633,6 +634,21 @@ namespace Quaver.Shared
                     SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
                     break;
             }
+        }
+
+        /// <summary>
+        ///    Handles when the user holds either Alt (ALT) button and presses Enter
+        /// </summary>
+        private void HandleKeyPressAltEnter()
+        {
+            // Check for modifier keys
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
 
         /// <summary>
