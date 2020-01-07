@@ -633,13 +633,13 @@ namespace Quaver.Shared
         private void HandleKeyPressAltEnter()
         {
             // Check for modifier keys
-            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
 
-            Graphics.ToggleFullScreen();
+            ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
         }
 
         /// <summary>
