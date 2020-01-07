@@ -139,15 +139,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (LoadedGameplayScreen == null)
                 return HandleLoadGameplayScreen(map, token);
 
-            lock (LoadedGameplayScreen)
-            {
-                TestPlayPrompt.Parent = null;
-                LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
-                LoadedGameplayScreen.Destroy();
-                LoadedGameplayScreen = null;
+            TestPlayPrompt.Parent = null;
+            LoadedGameplayScreen.Ruleset.Playfield.Container.Parent = null;
+            LoadedGameplayScreen.Destroy();
+            LoadedGameplayScreen = null;
 
-                return HandleLoadGameplayScreen(map, token);
-            }
+            return HandleLoadGameplayScreen(map, token);
         }
 
         /// <summary>
@@ -348,7 +345,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
             if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
-                || e.ChangedMods.HasFlag(ModIdentifier.Randomize) || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
+                || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
             {
                 return;
             }

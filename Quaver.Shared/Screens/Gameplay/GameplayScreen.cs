@@ -45,6 +45,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using TagLib.Riff;
@@ -811,6 +812,9 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void PlayComboBreakSound()
         {
+            if (IsSongSelectPreview)
+                return;
+
             if (DontPlayNextComboBreak)
             {
                 DontPlayNextComboBreak = false;
@@ -1275,6 +1279,15 @@ namespace Quaver.Shared.Screens.Gameplay
 
         private void HandleSoundEffects()
         {
+            var game = GameBase.Game as QuaverGame;
+
+            // Disable hitsounds for left panel screens if the map preview isnt active
+            if (game?.CurrentScreen is IHasLeftPanel screen && IsSongSelectPreview)
+            {
+                if (screen.ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                    return;
+            }
+
             if (NextSoundEffectIndex == Map.SoundEffects.Count)
                 return;
 

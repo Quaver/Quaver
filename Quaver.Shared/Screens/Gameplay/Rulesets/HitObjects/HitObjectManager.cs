@@ -106,6 +106,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// </summary>
         public static void PlayObjectKeySounds(HitObjectInfo hitObject)
         {
+            var game = GameBase.Game as QuaverGame;
+
+            // Disable hitsounds for left panel screens if the map preview isnt active
+            if (game?.CurrentScreen is IHasLeftPanel screen)
+            {
+                if (screen.ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                    return;
+            }
+
             foreach (var keySound in hitObject.KeySounds)
                 CustomAudioSampleCache.Play(keySound.Sample - 1, keySound.Volume);
         }
