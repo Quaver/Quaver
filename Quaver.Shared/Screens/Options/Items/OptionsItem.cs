@@ -11,7 +11,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Items
 {
-    public class OptionsItem : ImageButton
+    public class OptionsItem : Sprite
     {
         /// <summary>
         /// </summary>
@@ -21,10 +21,10 @@ namespace Quaver.Shared.Screens.Options.Items
         /// </summary>
         /// <param name="containerWidth"></param>
         /// <param name="name"></param>
-        public OptionsItem(float containerWidth, string name) : base(AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-item-bg.png"))
+        public OptionsItem(float containerWidth, string name)
         {
+            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-item-bg.png");
             Size = new ScalableVector2(containerWidth * 0.96f, 54);
-            Depth = 1;
 
             Tint = ColorHelper.HexToColor("#242424");
             CreateName(name);
@@ -38,10 +38,10 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            var alpha = IsHovered ? 1 : 0.50f;
+            var color = IsHovered() ? ColorHelper.HexToColor("#3F3F3F") : ColorHelper.HexToColor("#242424");;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-            Alpha = MathHelper.Lerp(Alpha, alpha, (float) Math.Min(dt / 20f, 1));
+            FadeToColor(color, dt, 20);
 
             base.Update(gameTime);
         }

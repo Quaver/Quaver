@@ -1,6 +1,8 @@
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Graphics.Form;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Options.Items
 {
@@ -21,10 +23,21 @@ namespace Quaver.Shared.Screens.Options.Items
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                X = -Name.X
+                X = -Name.X,
+                UsePreviousSpriteBatchOptions = true
             };
+        }
 
-            Clicked += (sender, args) => Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && IsHovered())
+                Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
+
+            base.Update(gameTime);
         }
     }
 }
