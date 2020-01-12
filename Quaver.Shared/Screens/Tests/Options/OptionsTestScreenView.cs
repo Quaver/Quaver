@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Tests.Options
 
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#6e6e6e"));
+            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#3b3b3b"));
             Container?.Draw(gameTime);
         }
 
