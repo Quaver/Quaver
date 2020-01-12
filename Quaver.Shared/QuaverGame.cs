@@ -44,6 +44,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
@@ -612,7 +613,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
-                    DialogManager.Show(new SettingsDialog());
+                    DialogManager.Show(new OptionsDialog());
                     break;
             }
         }
