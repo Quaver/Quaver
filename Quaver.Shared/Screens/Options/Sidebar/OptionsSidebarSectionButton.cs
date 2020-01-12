@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
     {
         /// <summary>
         /// </summary>
-        public static int HEIGHT { get; } = 56;
+        public static int HEIGHT { get; } = 66;
 
         /// <summary>
         /// </summary>
