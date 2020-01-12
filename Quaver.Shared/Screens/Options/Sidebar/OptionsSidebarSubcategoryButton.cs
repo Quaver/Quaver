@@ -2,6 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -72,10 +74,11 @@ namespace Quaver.Shared.Screens.Options.Sidebar
                 Alignment = Alignment.MidLeft,
                 UsePreviousSpriteBatchOptions = true,
                 X = Width * 0.18f,
-                Alpha = 0
+                Alpha = 0,
+                Tint = ColorHelper.HexToColor("#45D6F5")
             };
 
-            Name.FadeTo(1, Easing.Linear, 225);
+            Name.FadeTo(0.95f, Easing.Linear, 225);
         }
     }
 }
