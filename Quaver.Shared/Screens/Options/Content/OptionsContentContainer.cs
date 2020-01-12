@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
@@ -31,6 +34,15 @@ namespace Quaver.Shared.Screens.Options.Content
             Size = size;
             Alpha = 0;
             DestroyIfParentIsNull = false;
+            Scrollbar.Width = 0;
+            MinScrollBarY = -10;
+            Scrollbar.X = -8;
+            Scrollbar.Tint = Color.White;
+            InputEnabled = true;
+
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 1200;
+            ScrollSpeed = 320;
 
             Initialize();
         }
@@ -50,14 +62,14 @@ namespace Quaver.Shared.Screens.Options.Content
                 // Create header if the subcategory has a valid name
                 if (!string.IsNullOrEmpty(subcategory.Name))
                 {
-                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subcategory.Name, 22)
+                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), subcategory.Name, 24)
                     {
-                        Position = new ScalableVector2(22, totalHeight),
-                        Tint = ColorHelper.HexToColor("#CACACA")
+                        Position = new ScalableVector2(28, totalHeight),
+                        Tint = ColorHelper.HexToColor("#45D6F5")
                     };
 
                     AddContainedDrawable(header);
-                    totalHeight += header.Height + 16;
+                    totalHeight += header.Height + 20;
                 }
 
                 foreach (var item in subcategory.Items)
