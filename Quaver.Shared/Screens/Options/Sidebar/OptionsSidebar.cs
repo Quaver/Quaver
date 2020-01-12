@@ -43,6 +43,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             SelectedSection = selectedSection;
             Sections = sections;
 
+            Scrollbar.Visible = false;
             Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-sidebar.png");
 
             CreateSidebarButtons();

@@ -114,9 +114,24 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Gameplay", FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Sound", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(contentWidth, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                        new OptionsItemCheckbox(contentWidth, "Enable Keysounds", ConfigManager.EnableKeysounds)
+                    }),
                 }),
                 new OptionsSection("Editor", FontAwesome.Get(FontAwesomeIcon.fa_pencil), new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Sound", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(contentWidth, "Enable Hitsounds", ConfigManager.EditorEnableHitsounds),
+                        new OptionsItemCheckbox(contentWidth, "Enable Keysounds", ConfigManager.EditorEnableKeysounds),
+                    }),
+                    new OptionsSubcategory("Metronome", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(contentWidth, "Enable Metronome", ConfigManager.EditorPlayMetronome),
+                        new OptionsItemCheckbox(contentWidth, "Play Metronome Half Beats", ConfigManager.EditorMetronomePlayHalfBeats)
+                    })
                 }),
                 new OptionsSection("Skin", FontAwesome.Get(FontAwesomeIcon.fa_check), new List<OptionsSubcategory>
                 {
