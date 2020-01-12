@@ -1,5 +1,6 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Options.Search;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -26,11 +27,15 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private float SidebarWidth { get; set; }
+        private float SidebarWidth { get; }
 
         /// <summary>
         /// </summary>
         private SpriteTextPlus ActiveSectionText { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private OptionsHeaderSearch SearchBox { get; set; }
 
         /// <summary>
         /// </summary>
@@ -47,6 +52,7 @@ namespace Quaver.Shared.Screens.Options
 
             CreateTextOptionsMenu();
             CreateActiveSectionText();
+            CreateSearchBox();
 
             SelectedSection.ValueChanged += OnSelectedSectionChanged;
         }
@@ -65,13 +71,12 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateTextOptionsMenu()
         {
-            TextOptionsMenu = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "OPTIONS MENU", 26)
+            TextOptionsMenu = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "OPTIONS MENU", 24)
             {
                 Parent = this,
-                Y = -12
+                Alignment = Alignment.MidLeft,
+                X = 20
             };
-
-            TextOptionsMenu.Y -= TextOptionsMenu.Height;
         }
 
         /// <summary>
@@ -94,6 +99,18 @@ namespace Quaver.Shared.Screens.Options
         {
             ActiveSectionText.Text = $"{SelectedSection.Value.Name} Settings".ToUpper();
         });
+
+        /// <summary>
+        /// </summary>
+        private void CreateSearchBox()
+        {
+            SearchBox = new OptionsHeaderSearch(new Bindable<string>("") {Value = ""})
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                X = -20
+            };
+        }
 
         /// <summary>
         /// </summary>
