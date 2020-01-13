@@ -187,7 +187,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Sharing", new List<OptionsItem>()
                     {
-                        new OptionsItemExportSkin(containerRect, "Export Skin")
+                        new OptionsItemExportSkin(containerRect, "Export Skin"),
+                        new OptionsItemUploadSkinToWorkshop(containerRect, "Upload Skin To Steam Workshop")
                     })
                 }),
                 new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
