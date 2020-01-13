@@ -14,7 +14,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         ///     The list of options in the dropdown
         /// </summary>
         public List<string> Options => Item.Dropdown.Options;
-        
+
         /// <summary>
         ///     The index of <see cref="Options"/> that was selected
         /// </summary>
