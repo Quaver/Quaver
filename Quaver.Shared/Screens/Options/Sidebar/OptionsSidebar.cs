@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Assets;
@@ -7,6 +9,8 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Options.Sidebar
 {
@@ -43,6 +47,10 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             SelectedSection = selectedSection;
             Sections = sections;
 
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 1200;
+            ScrollSpeed = 320;
+
             Scrollbar.Visible = false;
             Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-sidebar.png");
 
@@ -50,6 +58,19 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             AlignAndCreateSubcategoryButtons(false);
 
             SelectedSection.ValueChanged += OnSelectedSectionChanged;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />

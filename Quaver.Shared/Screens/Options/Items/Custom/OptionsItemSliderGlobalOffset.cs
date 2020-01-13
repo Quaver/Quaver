@@ -1,12 +1,13 @@
 using System;
+using MonoGame.Extended;
 using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemSliderGlobalOffset : OptionsSlider
     {
-        public OptionsItemSliderGlobalOffset(float containerWidth, string name, BindableInt bindedValue) : base(containerWidth, name, bindedValue,
-            i => $"{i} ms")
+        public OptionsItemSliderGlobalOffset(RectangleF containerRect, string name, BindableInt bindedValue) 
+            : base(containerRect, name, bindedValue, i => $"{i} ms")
         {
         }
     }

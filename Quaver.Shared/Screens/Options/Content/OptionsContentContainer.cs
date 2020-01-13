@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
@@ -13,6 +14,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Options.Content
@@ -34,17 +36,28 @@ namespace Quaver.Shared.Screens.Options.Content
             Size = size;
             Alpha = 0;
             DestroyIfParentIsNull = false;
-            Scrollbar.Width = 0;
-            MinScrollBarY = -10;
-            Scrollbar.X = -8;
-            Scrollbar.Tint = Color.White;
-            InputEnabled = true;
+            Scrollbar.Width = 4;
+            Scrollbar.X = 0;
+            Scrollbar.Tint = ColorHelper.HexToColor("#636363");
 
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 320;
 
             Initialize();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            base.Update(gameTime);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Options.Content;
@@ -46,9 +47,9 @@ namespace Quaver.Shared.Screens.Options
             Size = new ScalableVector2(1366, 768);
             Alpha = 0;
 
+            CreateContainer();
             CreateSections();
             CreateSidebar();
-            CreateContainer();
             CreateContentContainers();
             CreateHeader();
 
@@ -75,7 +76,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateSections()
         {
-            var contentWidth = Width - OptionsSidebar.WIDTH + 2;
+            var containerRect = Content.ScreenRectangle;
 
             Sections = new List<OptionsSection>
             {
@@ -83,95 +84,103 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Window", new List<OptionsItem>()
                     {
-                        new OptionsItemScreenResolution(contentWidth, "Screen Resolution"),
-                        new OptionsItemCheckbox(contentWidth, "Enable Fullscreen", ConfigManager.WindowFullScreen),
-                        new OptionsItemCheckbox(contentWidth, "Enable Borderless Window", ConfigManager.WindowBorderless)
+                        new OptionsItemScreenResolution(containerRect, "Screen Resolution"),
+                        new OptionsItemCheckbox(containerRect, "Enable Fullscreen", ConfigManager.WindowFullScreen),
+                        new OptionsItemCheckbox(containerRect, "Enable Borderless Window", ConfigManager.WindowBorderless)
                     }),
                     new OptionsSubcategory("Frame Time", new List<OptionsItem>()
                     {
-                        new OptionsItemFrameLimiter(contentWidth, "Frame Limiter"),
-                        new OptionsItemCheckbox(contentWidth, "Display FPS Counter", ConfigManager.FpsCounter)
+                        new OptionsItemFrameLimiter(containerRect, "Frame Limiter"),
+                        new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter)
                     })
                 }),
                 new OptionsSection("Audio", FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
-                        new OptionsSlider(contentWidth, "Master Volume", ConfigManager.VolumeGlobal),
-                        new OptionsSlider(contentWidth, "Music Volume", ConfigManager.VolumeMusic),
-                        new OptionsSlider(contentWidth, "Effect Volume", ConfigManager.VolumeEffect),
+                        new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
+                        new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic),
+                        new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect),
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
-                        new OptionsItemSliderGlobalOffset(contentWidth, "Global Offset", ConfigManager.GlobalAudioOffset),
-                        new OptionsItem(contentWidth, "Calibrate Offset")
+                        new OptionsItemSliderGlobalOffset(containerRect, "Global Offset", ConfigManager.GlobalAudioOffset),
+                        new OptionsItemCalibrateOffset(containerRect, "Calibrate Offset")
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {
-                       new OptionsItemCheckbox(contentWidth, "Pitch Audio With Playback Rate", ConfigManager.Pitched)
+                       new OptionsItemCheckbox(containerRect, "Pitch Audio With Playback Rate", ConfigManager.Pitched)
                     }),
                     new OptionsSubcategory("Linux", new List<OptionsItem>()
                     {
-                        new OptionsSlider(contentWidth, "Audio Device Period", ConfigManager.DevicePeriod),
-                        new OptionsSlider(contentWidth, "Audio Device Buffer Length", ConfigManager.DeviceBufferLengthMultiplier)
+                        new OptionsSlider(containerRect, "Audio Device Period", ConfigManager.DevicePeriod, i => $"{i} ms"),
+                        new OptionsItemAudioBufferLength(containerRect, "Audio Device Buffer Length", ConfigManager.DeviceBufferLengthMultiplier,
+                            ConfigManager.DevicePeriod, (multiplier, period) => $"{multiplier * period} ms"),
                     })
                 }),
                 new OptionsSection("Gameplay", FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Scrolling", new List<OptionsItem>()
                     {
-                       new OptionsSlider(contentWidth, "Scroll Speed (4 Keys)", ConfigManager.ScrollSpeed4K),
-                       new OptionsSlider(contentWidth, "Scroll Speed (7 Keys)", ConfigManager.ScrollSpeed7K)
+                        new OptionsItemScrollDirection(containerRect, "4K Scroll Direction", ConfigManager.ScrollDirection4K),
+                        new OptionsItemScrollDirection(containerRect, "7K Scroll Direction", ConfigManager.ScrollDirection7K),
+                        new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i}"),
+                        new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i}"),
                     }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
-                       new OptionsSlider(contentWidth, "Background Brightness", ConfigManager.BackgroundBrightness),
-                       new OptionsItemCheckbox(contentWidth, "Enable Background Blur", ConfigManager.BlurBackgroundInGameplay)
+                       new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
+                       new OptionsItemCheckbox(containerRect, "Enable Background Blur", ConfigManager.BlurBackgroundInGameplay)
                     }),
                     new OptionsSubcategory("Sound", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Enable Hitsounds", ConfigManager.EnableHitsounds),
-                        new OptionsItemCheckbox(contentWidth, "Enable Keysounds", ConfigManager.EnableKeysounds)
+                        new OptionsItemCheckbox(containerRect, "Enable Hitsounds", ConfigManager.EnableHitsounds),
+                        new OptionsItemCheckbox(containerRect, "Enable Keysounds", ConfigManager.EnableKeysounds)
                     }),
                     new OptionsSubcategory("Input", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Enable Tap To Pause", ConfigManager.TapToPause),
-                        new OptionsItemCheckbox(contentWidth, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit)
+                        new OptionsItemCheckbox(containerRect, "Enable Tap To Pause", ConfigManager.TapToPause),
+                        new OptionsItemCheckbox(containerRect, "Skip Results Screen After Quitting", ConfigManager.SkipResultsScreenAfterQuit)
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Show Spectators", ConfigManager.ShowSpectators),
-                        new OptionsItemCheckbox(contentWidth, "Display Timing Lines", ConfigManager.DisplayTimingLines),
-                        new OptionsItemCheckbox(contentWidth, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
-                        new OptionsItemCheckbox(contentWidth, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
-                        new OptionsItemCheckbox(contentWidth, "Enable Accuracy Display Animations", ConfigManager.SmoothAccuracyChanges),
+                        new OptionsItemCheckbox(containerRect, "Show Spectators", ConfigManager.ShowSpectators),
+                        new OptionsItemCheckbox(containerRect, "Display Timing Lines", ConfigManager.DisplayTimingLines),
+                        new OptionsItemCheckbox(containerRect, "Display Judgement Counter", ConfigManager.DisplayJudgementCounter),
+                        new OptionsItemCheckbox(containerRect, "Enable Combo Alerts", ConfigManager.DisplayComboAlerts),
+                        new OptionsItemCheckbox(containerRect, "Enable Accuracy Display Animations", ConfigManager.SmoothAccuracyChanges),
                     }),
                     new OptionsSubcategory("Scoreboard", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Display Scoreboard", ConfigManager.ScoreboardVisible),
-                        new OptionsItemCheckbox(contentWidth, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay)
+                        new OptionsItemCheckbox(containerRect, "Display Scoreboard", ConfigManager.ScoreboardVisible),
+                        new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay)
                     }),
                     new OptionsSubcategory("Progress Bar", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Display Song Time Progress Bar", ConfigManager.DisplaySongTimeProgress),
-                        new OptionsItemCheckbox(contentWidth, "Display Song Time Progress Bar Time Numbers", ConfigManager.DisplaySongTimeProgressNumbers)
+                        new OptionsItemCheckbox(containerRect, "Display Song Time Progress Bar", ConfigManager.DisplaySongTimeProgress),
+                        new OptionsItemCheckbox(containerRect, "Display Song Time Progress Bar Time Numbers", ConfigManager.DisplaySongTimeProgressNumbers)
                     }),
                     new OptionsSubcategory("Lane Cover", new List<OptionsItem>()
                     {
-                       new OptionsItemCheckbox(contentWidth, "Enable Top Lane Cover", ConfigManager.LaneCoverTop),
-                       new OptionsSlider(contentWidth, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
-                       new OptionsItemCheckbox(contentWidth, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
-                       new OptionsSlider(contentWidth, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
-                       new OptionsItemCheckbox(contentWidth, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
+                       new OptionsItemCheckbox(containerRect, "Enable Top Lane Cover", ConfigManager.LaneCoverTop),
+                       new OptionsSlider(containerRect, "Top Lane Cover Height", ConfigManager.LaneCoverTopHeight),
+                       new OptionsItemCheckbox(containerRect, "Enable Bottom Lane Cover", ConfigManager.LaneCoverBottom),
+                       new OptionsSlider(containerRect, "Bottom Lane Cover Height", ConfigManager.LaneCoverBottomHeight),
+                       new OptionsItemCheckbox(containerRect, "Display UI Elements Over Lane Covers", ConfigManager.UIElementsOverLaneCover)
                     }),
                     new OptionsSubcategory("Multiplayer", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Enable Battle Royale Alerts", ConfigManager.EnableBattleRoyaleAlerts),
-                        new OptionsItemCheckbox(contentWidth, "Enable Battle Royale Background Flashing", ConfigManager.EnableBattleRoyaleBackgroundFlashing)
+                        new OptionsItemCheckbox(containerRect, "Enable Battle Royale Alerts", ConfigManager.EnableBattleRoyaleAlerts),
+                        new OptionsItemCheckbox(containerRect, "Enable Battle Royale Background Flashing", ConfigManager.EnableBattleRoyaleBackgroundFlashing)
                     })
                 }),
                 new OptionsSection("Skin", FontAwesome.Get(FontAwesomeIcon.fa_check), new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Selection", new List<OptionsItem>()
+                    {
+                        new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
+                        new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
+                    })
                 }),
                 new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
                 {
@@ -180,30 +189,30 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Login", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Automatically Log Into The Server", ConfigManager.AutoLoginToServer),
+                        new OptionsItemCheckbox(containerRect, "Automatically Log Into The Server", ConfigManager.AutoLoginToServer),
                     }),
                     new OptionsSubcategory("Notifications", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Display Online Friend Notifications", ConfigManager.DisplayFriendOnlineNotifications),
-                        new OptionsItemCheckbox(contentWidth, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
+                        new OptionsItemCheckbox(containerRect, "Display Online Friend Notifications", ConfigManager.DisplayFriendOnlineNotifications),
+                        new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
                     })
                 }),
                 new OptionsSection("Integration", FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Games", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
+                        new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
                     }),
                 }),
                 new OptionsSection("Miscellaneous", FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
+                        new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
                     }),
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(contentWidth, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
+                        new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
                     })
                 }),
             };
@@ -235,12 +244,12 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateContainer()
         {
-            Content = new OptionsContent(new ScalableVector2(Width - Sidebar.Width + 2,
+            Content = new OptionsContent(new ScalableVector2(Width - OptionsSidebar.WIDTH + 2,
                 Height - OptionsHeader.HEIGHT))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                X = Sidebar.Width - 2,
+                X = OptionsSidebar.WIDTH - 2,
                 Y = OptionsHeader.HEIGHT
             };
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
@@ -10,7 +11,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 {
     public class OptionsItemFrameLimiter : OptionsItemDropdown
     {
-        public OptionsItemFrameLimiter(float containerWidth, string name) : base(containerWidth, name,
+        public OptionsItemFrameLimiter(RectangleF containerRect, string name) : base(containerRect, name,
             new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex()))
         {
             Dropdown.ItemSelected += (sender, args) =>

@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Shared.Graphics.Form;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -14,10 +15,10 @@ namespace Quaver.Shared.Screens.Options.Items
 
         /// <summary>
         /// </summary>
-        /// <param name="containerWidth"></param>
+        /// <param name="containerRect"></param>
         /// <param name="name"></param>
         /// <param name="bindable"></param>
-        public OptionsItemCheckbox(float containerWidth, string name, Bindable<bool> bindable) : base(containerWidth, name)
+        public OptionsItemCheckbox(RectangleF containerRect, string name, Bindable<bool> bindable) : base(containerRect, name)
         {
             Checkbox = new QuaverCheckbox(bindable ?? new Bindable<bool>(false))
             {

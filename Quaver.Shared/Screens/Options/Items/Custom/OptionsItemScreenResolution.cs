@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
@@ -21,7 +22,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// </summary>
         /// <param name="containerWidth"></param>
         /// <param name="name"></param>
-        public OptionsItemScreenResolution(float containerWidth, string name) : base(containerWidth, name,
+        public OptionsItemScreenResolution(RectangleF containerRect, string name) : base(containerRect, name,
             new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22, Colors.MainAccent, GetSelectedIndex()))
         {
             Dropdown.SelectedText.Text = Resolution;
