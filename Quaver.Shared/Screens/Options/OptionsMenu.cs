@@ -184,6 +184,10 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
                     {
                         new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder")
+                    }),
+                    new OptionsSubcategory("Sharing", new List<OptionsItem>()
+                    {
+                        new OptionsItemExportSkin(containerRect, "Export Skin")
                     })
                 }),
                 new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
