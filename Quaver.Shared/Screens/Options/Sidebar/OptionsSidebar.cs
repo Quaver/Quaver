@@ -148,6 +148,13 @@ namespace Quaver.Shared.Screens.Options.Sidebar
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedSectionChanged(object sender, BindableValueChangedEventArgs<OptionsSection> e)
-            => AlignAndCreateSubcategoryButtons(true);
+        {
+            AlignAndCreateSubcategoryButtons(true);
+
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y = 0;
+            TargetY = 0;
+            PreviousTargetY = 0;
+        }
     }
 }
