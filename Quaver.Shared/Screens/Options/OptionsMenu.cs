@@ -180,6 +180,10 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemCustomSkin(containerRect, "Custom Skin", ConfigManager.Skin),
                         new OptionsItemDefaultSkin(containerRect, "Default Skin", ConfigManager.DefaultSkin)
+                    }),
+                    new OptionsSubcategory("Navigation", new List<OptionsItem>()
+                    {
+                        new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder")
                     })
                 }),
                 new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
