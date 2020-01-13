@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Options.Content
         /// </summary>
         private void Initialize()
         {
-            const float spacing = 26f;
+            const float spacing = 24f;
 
             var totalHeight = spacing;
 
