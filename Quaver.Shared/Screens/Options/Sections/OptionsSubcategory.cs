@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Quaver.Shared.Screens.Options.Items;
 
@@ -16,6 +17,10 @@ namespace Quaver.Shared.Screens.Options.Sections
 
         /// <summary>
         /// </summary>
+        public event EventHandler<EventArgs> ScrolledTo;
+
+        /// <summary>
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="items"></param>
         public OptionsSubcategory(string name, List<OptionsItem> items = null)
@@ -26,5 +31,9 @@ namespace Quaver.Shared.Screens.Options.Sections
             if (Items == null)
                 Items = new List<OptionsItem>();
         }
+
+        /// <summary>
+        /// </summary>
+        public void FireScrollToEvent() => ScrolledTo?.Invoke(this, EventArgs.Empty);
     }
 }

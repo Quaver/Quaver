@@ -47,6 +47,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             Size = new ScalableVector2(width, HEIGHT);
             Alpha = 0;
 
+            Clicked += (sender, args) => Subcategory.FireScrollToEvent();
             CreateName();
         }
 

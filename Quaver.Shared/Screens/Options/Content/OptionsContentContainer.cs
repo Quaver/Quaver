@@ -60,6 +60,17 @@ namespace Quaver.Shared.Screens.Options.Content
             base.Update(gameTime);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            foreach (var category in Section.Subcategories)
+                category.ScrolledTo -= OnScrolledToCategory;
+
+            base.Destroy();
+        }
+
         /// <summary>
         /// </summary>
         private void Initialize()
@@ -104,6 +115,29 @@ namespace Quaver.Shared.Screens.Options.Content
                 AddContainedDrawable(dropdowns[i]);
 
             ContentContainer.Height = Math.Max(Height, totalHeight);
+
+            foreach (var category in Section.Subcategories)
+                category.ScrolledTo += OnScrolledToCategory;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrolledToCategory(object sender, EventArgs e)
+        {
+            var category = (OptionsSubcategory) sender;
+
+            foreach (var child in ContentContainer.Children)
+            {
+                if (child is SpriteTextPlus text && text.Text == category.Name)
+                {
+                    ContentContainer.ClearAnimations();
+                    ScrollTo(-text.Y + 22, 450);
+
+                    break;
+                }
+            }
         }
     }
 }
