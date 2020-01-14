@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Options.Items
     {
         /// <summary>
         /// </summary>
-        protected SpriteTextPlus Name { get; set; }
+        public SpriteTextPlus Name { get; protected set; }
 
         /// <summary>
         /// </summary>

@@ -114,6 +114,18 @@ namespace Quaver.Shared.Screens.Options.Sidebar
 
                 totalHeight += OptionsSidebarSectionButton.HEIGHT;
 
+                // Search Result
+                if (SelectedSection.Value.Name == string.Empty)
+                {
+                    SubcategoryButtons.ForEach(x =>
+                    {
+                        x.Destroy();
+                        RemoveContainedDrawable(x);
+                    });
+
+                    SubcategoryButtons.Clear();
+                }
+
                 // Create subcategory buttons
                 if (SelectedSection.Value == SectionButtons[i].Section)
                 {

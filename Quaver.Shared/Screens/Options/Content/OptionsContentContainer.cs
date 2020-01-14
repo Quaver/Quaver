@@ -71,6 +71,17 @@ namespace Quaver.Shared.Screens.Options.Content
             base.Destroy();
         }
 
+        public void ReInitialize()
+        {
+            for (var i = Children.Count - 1; i >= 0; i--)
+            {
+                if (Children[i] is SpriteTextPlus text)
+                    text.Destroy();
+            }
+
+            Initialize();
+        }
+
         /// <summary>
         /// </summary>
         private void Initialize()

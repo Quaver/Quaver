@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonoGame.Extended;
+using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Content;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Items.Custom;
@@ -16,6 +19,10 @@ namespace Quaver.Shared.Screens.Options
 {
     public class OptionsMenu : Sprite
     {
+        /// <summary>
+        /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = ""};
+
         /// <summary>
         /// </summary>
         private OptionsHeader Header { get; set; }
@@ -55,10 +62,8 @@ namespace Quaver.Shared.Screens.Options
 
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
+            CurrentSearchQuery.ValueChanged += OnSearchChanged;
         }
-
-        private void OnSectionChanged(object sender, BindableValueChangedEventArgs<OptionsSection> e)
-            => ScheduleUpdate(SetActiveContentContainer);
 
         /// <inheritdoc />
         /// <summary>
@@ -68,6 +73,7 @@ namespace Quaver.Shared.Screens.Options
             // ReSharper disable once DelegateSubtraction
             SelectedSection.ValueChanged -= OnSectionChanged;
             SelectedSection?.Dispose();
+            CurrentSearchQuery?.Dispose();
 
             base.Destroy();
         }
@@ -206,13 +212,6 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
                     })
                 }),
-                new OptionsSection("Integration", FontAwesome.Get(FontAwesomeIcon.fa_plus_black_symbol), new List<OptionsSubcategory>
-                {
-                    new OptionsSubcategory("Games", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
-                    }),
-                }),
                 new OptionsSection("Miscellaneous", FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
@@ -222,7 +221,11 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
-                    })
+                    }),
+                    new OptionsSubcategory("Installed Games", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
+                    }),
                 }),
             };
 
@@ -231,7 +234,7 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new OptionsHeader(SelectedSection, Width, Sidebar.Width)
+        private void CreateHeader() => Header = new OptionsHeader(SelectedSection, Width, Sidebar.Width, CurrentSearchQuery)
         {
             Parent = this,
             Alignment = Alignment.TopLeft
@@ -279,6 +282,81 @@ namespace Quaver.Shared.Screens.Options
         {
             foreach (var container in ContentContainers)
                 container.Value.Parent = SelectedSection.Value == container.Key ? Content : null;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSearchChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            ScheduleUpdate(() =>
+            {
+                // User searched nothing, so clear the search and select the first section again
+                if (SelectedSection.Value.Name == string.Empty)
+                {
+                    ClearSearchAndReiRenitializeSections(SelectedSection.Value);
+
+                    if (string.IsNullOrEmpty(e.Value))
+                    {
+                        SelectedSection.Value = Sections.First();
+                        return;
+                    }
+                }
+
+                var items = new List<OptionsItem>();
+
+                foreach (var section in Sections)
+                {
+                    foreach (var category in section.Subcategories)
+                        items.AddRange(category.Items.FindAll(x => x.Name.Text.ToLower().Contains(e.Value.ToLower())));
+                }
+
+                // Create a temporary section
+                var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
+                    new List<OptionsSubcategory> { new OptionsSubcategory($"{items.Count} Search Results", items) });
+
+                ContentContainers.Add(newSection, new OptionsContentContainer(newSection, Content.Size));
+                SelectedSection.Value = newSection;
+            });
+        }
+
+        /// <summary>
+        ///     Handles when removing all the text from the search field, and reinitializing the containers
+        ///     so they regain their initial state
+        /// </summary>
+        /// <param name="section"></param>
+        private void ClearSearchAndReiRenitializeSections(OptionsSection section)
+        {
+            var searchedSection = section;
+
+            if (!ContentContainers.ContainsKey(searchedSection))
+                return;
+
+            var container = ContentContainers[searchedSection];
+
+            ContentContainers.Remove(searchedSection);
+
+            foreach (var contentContainer in ContentContainers)
+                contentContainer.Value.ReInitialize();
+
+            container.Destroy();
+            Sections.Remove(searchedSection);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSectionChanged(object sender, BindableValueChangedEventArgs<OptionsSection> e)
+        {
+            ScheduleUpdate(() =>
+            {
+                if (e.OldValue.Name == string.Empty)
+                    ClearSearchAndReiRenitializeSections(e.OldValue);
+
+                SetActiveContentContainer();
+            });
         }
     }
 }

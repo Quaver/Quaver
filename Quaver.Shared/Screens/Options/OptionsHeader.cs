@@ -15,6 +15,10 @@ namespace Quaver.Shared.Screens.Options
     {
         /// <summary>
         /// </summary>
+        private Bindable<string> CurrentSearchQuery { get; }
+
+        /// <summary>
+        /// </summary>
         public static int HEIGHT { get; } = 66;
 
         /// <summary>
@@ -42,10 +46,12 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="selectedSection"></param>
         /// <param name="width"></param>
         /// <param name="sidebarWidth"></param>
-        public OptionsHeader(Bindable<OptionsSection> selectedSection, float width, float sidebarWidth)
+        /// <param name="searchQuery"></param>
+        public OptionsHeader(Bindable<OptionsSection> selectedSection, float width, float sidebarWidth, Bindable<string> searchQuery)
         {
             SelectedSection = selectedSection;
             SidebarWidth = sidebarWidth;
+            CurrentSearchQuery = searchQuery;
 
             Size = new ScalableVector2(width, HEIGHT);
             Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-header.png");
@@ -104,7 +110,7 @@ namespace Quaver.Shared.Screens.Options
         /// </summary>
         private void CreateSearchBox()
         {
-            SearchBox = new OptionsHeaderSearch(new Bindable<string>("") {Value = ""})
+            SearchBox = new OptionsHeaderSearch(CurrentSearchQuery)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
