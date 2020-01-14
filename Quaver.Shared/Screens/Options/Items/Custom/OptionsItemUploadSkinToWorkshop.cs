@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MonoGame.Extended;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
@@ -31,7 +32,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             const float scale = 0.85f;
 
-            Button = new IconButton(AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop/upload-skin-button.png"))
+            Button = new IconButton(UserInterface.OptionsUploadSkinButton)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

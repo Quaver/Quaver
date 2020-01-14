@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Options.Items
         {
             ContainerRectangle = containerRect;
 
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-item-bg.png");
+            Image = UserInterface.OptionsItemBackground;
             Size = new ScalableVector2(containerRect.Width * 0.96f, 54);
 
             Tint = ColorHelper.HexToColor("#242424");

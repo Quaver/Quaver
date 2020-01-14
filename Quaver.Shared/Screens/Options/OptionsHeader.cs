@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Options
             CurrentSearchQuery = searchQuery;
 
             Size = new ScalableVector2(width, HEIGHT);
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-header.png");
+            Image = UserInterface.OptionsHeader;
 
             CreateTextOptionsMenu();
             CreateActiveSectionText();

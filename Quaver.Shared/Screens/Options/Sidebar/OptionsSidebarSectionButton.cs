@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             Size = new ScalableVector2(width, HEIGHT);
             Alpha = 0f;
 
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\sidebar-button-bg.png");
+            Image = UserInterface.OptionsSidebarButtonBackground;
             CreateIcon();
             CreateName();
             CreateTickerFlag();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Assets;
@@ -52,7 +53,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
             ScrollSpeed = 320;
 
             Scrollbar.Visible = false;
-            Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\options-sidebar.png");
+            Image = UserInterface.OptionsSidebar;
 
             CreateSidebarButtons();
             AlignAndCreateSubcategoryButtons(false);

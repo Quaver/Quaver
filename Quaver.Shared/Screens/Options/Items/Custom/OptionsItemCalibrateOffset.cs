@@ -3,6 +3,7 @@ using System.Linq;
 using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -34,7 +35,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             const float scale = 0.85f;
 
-            Button = new IconButton(AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop/calibrate-offset-button.png"))
+            Button = new IconButton(UserInterface.OptionsCalibrateOffsetButton)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
