@@ -40,11 +40,8 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape)
-                || MouseManager.IsUniqueClick(MouseButton.Left) && !Menu.IsHovered())
-            {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 Close();
-            }
         }
 
         /// <summary>
