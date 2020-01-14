@@ -11,6 +11,7 @@ using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
@@ -70,8 +71,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
         /// <param name="screen"></param>
         public static void Exit(QuaverScreen screen) => screen.Exit(() =>
         {
-            var options = new SettingsDialog();
-            options.SwitchSelected(options.Sections[1]);
+            var options = new OptionsDialog();
+            // options.SwitchSelected(options.Sections[1]);
             DialogManager.Show(options);
 
             ModManager.RemoveAllMods();
