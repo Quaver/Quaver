@@ -6,7 +6,10 @@ using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Transitions;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -24,7 +27,9 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     return;
 
                 skin.Value = (DefaultSkins) args.Index;
-                SkinManager.Load();
+
+                Transitioner.FadeIn();
+                SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
             };
         }
 

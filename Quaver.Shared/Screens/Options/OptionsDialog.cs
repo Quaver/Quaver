@@ -4,6 +4,7 @@ using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
@@ -25,6 +26,7 @@ namespace Quaver.Shared.Screens.Options
             var quaver = (QuaverGame) GameBase.Game;
             quaver.OptionsMenu.Parent = this;
             quaver.OptionsMenu.Alignment = Alignment.MidCenter;
+            quaver.OptionsMenu.Visible = true;
         }
 
         /// <inheritdoc />
@@ -35,17 +37,27 @@ namespace Quaver.Shared.Screens.Options
         {
             var quaver = (QuaverGame) GameBase.Game;
 
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                return;
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape)
+                || MouseManager.IsUniqueClick(MouseButton.Left) && !quaver.OptionsMenu.IsHovered())
+            {
+                Close();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void Close()
+        {
+            var quaver = (QuaverGame) GameBase.Game;
 
             if (quaver.OptionsMenu.IsKeybindFocused.Value)
                 return;
 
+            quaver.OptionsMenu.Visible = false;
             quaver.OptionsMenu.Parent = null;
-
-            ClearAnimations();
-            FadeTo(0, Easing.Linear, 200);
-            ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 200);
+            DialogManager.Dismiss(this);
+            Destroy();
+            ButtonManager.Remove(this);
         }
     }
 }

@@ -8,8 +8,10 @@ using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Skinning;
 using TagLib.Riff;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -60,7 +62,8 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     skin.Value = option;
                 }
 
-                SkinManager.Load();
+                Transitioner.FadeIn();
+                SkinManager.TimeSkinReloadRequested = GameBase.Game.TimeRunning;
             };
         }
 

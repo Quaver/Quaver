@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Items.Custom;
 using Quaver.Shared.Screens.Options.Sections;
 using Quaver.Shared.Screens.Options.Sidebar;
+using Quaver.Shared.Skinning;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -80,6 +81,8 @@ namespace Quaver.Shared.Screens.Options
         public override void Update(GameTime gameTime)
         {
             SetKeybindFocusedState();
+            SkinManager.HandleSkinReloading();
+
             base.Update(gameTime);
         }
 
