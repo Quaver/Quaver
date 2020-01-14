@@ -128,10 +128,6 @@ namespace Quaver.Shared
         public OnlineChat OnlineChat { get; private set; }
 
         /// <summary>
-        /// </summary>
-        public OptionsMenu OptionsMenu { get; private set; }
-
-        /// <summary>
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
@@ -329,7 +325,6 @@ namespace Quaver.Shared
                 // be initialized
                 OnlineHub = new OnlineHub();
                 OnlineChat = new OnlineChat();
-                OptionsMenu = new OptionsMenu();
                 VolumeController = new VolumeControl();
 
                 FirstUpdateCalled = true;
