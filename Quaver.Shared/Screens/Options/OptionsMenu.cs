@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.API.Helpers;
@@ -50,6 +51,10 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> IsKeybindFocused { get; } = new Bindable<bool>(false) { Value =  false };
+
+        /// <summary>
+        /// </summary>
         public OptionsMenu()
         {
             Size = new ScalableVector2(1366, 768);
@@ -69,12 +74,23 @@ namespace Quaver.Shared.Screens.Options
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            SetKeybindFocusedState();
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
             SelectedSection.ValueChanged -= OnSectionChanged;
             SelectedSection?.Dispose();
             CurrentSearchQuery?.Dispose();
+            IsKeybindFocused?.Dispose();
 
             base.Destroy();
         }
@@ -318,7 +334,8 @@ namespace Quaver.Shared.Screens.Options
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new OptionsHeader(SelectedSection, Width, Sidebar.Width, CurrentSearchQuery)
+        private void CreateHeader() => Header = new OptionsHeader(SelectedSection, Width, Sidebar.Width, CurrentSearchQuery,
+            IsKeybindFocused)
         {
             Parent = this,
             Alignment = Alignment.TopLeft
@@ -447,6 +464,32 @@ namespace Quaver.Shared.Screens.Options
 
                 SetActiveContentContainer();
             });
+        }
+
+        /// <summary>
+        ///     Looks through each section and checks if any of the keybinds are currently focused.
+        ///     This sets the bindable, so that the search textbox knows when to become always active or not
+        /// </summary>
+        private void SetKeybindFocusedState()
+        {
+            var isFocused = false;
+
+            foreach (var section in Sections)
+            {
+                foreach (var category in section.Subcategories)
+                {
+                    foreach (var item in category.Items)
+                    {
+                        if (item is OptionsItemKeybind keybind && keybind.Focused
+                            || item is OptionsItemKeybindMultiple keybindMultiple && keybindMultiple.Focused)
+                        {
+                            isFocused = true;
+                        }
+                    }
+                }
+            }
+
+            IsKeybindFocused.Value = isFocused;
         }
     }
 }

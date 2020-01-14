@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private bool Focused { get; set; }
+        public bool Focused { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -49,6 +49,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="containerRect"></param>
         /// <param name="name"></param>
         /// <param name="keys"></param>
+        /// <param name="isKeybindFocused"></param>
         public OptionsItemKeybindMultiple(RectangleF containerRect, string name, List<Bindable<Keys>> keys) : base(containerRect, name)
         {
             BindedKeys = keys;
