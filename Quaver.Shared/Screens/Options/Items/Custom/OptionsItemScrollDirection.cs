@@ -20,6 +20,12 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             : base(containerRect, name, new Dropdown(GetOptions(), new ScalableVector2(180, 35), 22,
                 Colors.MainAccent, GetSelectedIndex(direction)))
         {
+            Tags = new List<string>()
+            {
+                "upscroll",
+                "downscroll"
+            };
+
             Dropdown.ItemSelected += (sender, args) =>
             {
                 if (direction == null)

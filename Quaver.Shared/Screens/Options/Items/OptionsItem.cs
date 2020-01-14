@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
@@ -21,6 +22,11 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <summary>
         /// </summary>
         protected RectangleF ContainerRectangle { get; set; }
+
+        /// <summary>
+        ///     Any tags to search the item by
+        /// </summary>
+        public List<string> Tags { get; set; } = new List<string>();
 
         /// <summary>
         /// </summary>

@@ -96,7 +96,10 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Frame Time", new List<OptionsItem>()
                     {
-                        new OptionsItemFrameLimiter(containerRect, "Frame Limiter"),
+                        new OptionsItemFrameLimiter(containerRect, "Frame Limiter")
+                        {
+                            Tags = new List<string> { "fps", "limited", "unlimited", "vsync", "wayland"}
+                        },
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter)
                     })
                 }),
@@ -106,7 +109,10 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsSlider(containerRect, "Master Volume", ConfigManager.VolumeGlobal),
                         new OptionsSlider(containerRect, "Music Volume", ConfigManager.VolumeMusic),
-                        new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect),
+                        new OptionsSlider(containerRect, "Effect Volume", ConfigManager.VolumeEffect)
+                        {
+                            Tags = new List<string> {"fx", "sfx"}
+                        },
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
@@ -116,12 +122,21 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {
                        new OptionsItemCheckbox(containerRect, "Pitch Audio With Playback Rate", ConfigManager.Pitched)
+                       {
+                           Tags = new List<string> { "speed" }
+                       }
                     }),
                     new OptionsSubcategory("Linux", new List<OptionsItem>()
                     {
-                        new OptionsSlider(containerRect, "Audio Device Period", ConfigManager.DevicePeriod, i => $"{i} ms"),
+                        new OptionsSlider(containerRect, "Audio Device Period", ConfigManager.DevicePeriod, i => $"{i} ms")
+                        {
+                            Tags = new List<string> { "linux" }
+                        },
                         new OptionsItemAudioBufferLength(containerRect, "Audio Device Buffer Length", ConfigManager.DeviceBufferLengthMultiplier,
-                            ConfigManager.DevicePeriod, (multiplier, period) => $"{multiplier * period} ms"),
+                            ConfigManager.DevicePeriod, (multiplier, period) => $"{multiplier * period} ms")
+                        {
+                            Tags = new List<string> { "linux" }
+                        },
                     })
                 }),
                 new OptionsSection("Gameplay", FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsSubcategory>
@@ -225,6 +240,9 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Installed Games", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
+                        {
+                            Tags = new List<string>{ "osu!", "other games", "db" }
+                        }
                     }),
                 }),
             };
@@ -309,12 +327,18 @@ namespace Quaver.Shared.Screens.Options
                 foreach (var section in Sections)
                 {
                     foreach (var category in section.Subcategories)
-                        items.AddRange(category.Items.FindAll(x => x.Name.Text.ToLower().Contains(e.Value.ToLower())));
+                        items.AddRange(category.Items.FindAll(x => x.Name.Text.ToLower().Contains(e.Value.ToLower())
+                                                                   || x.Tags.Any(y => y.ToLower().Contains(e.Value.ToLower()))));
                 }
 
                 // Create a temporary section
+                var categoryName = $"{items.Count} Search Result";
+
+                if (items.Count > 1 || items.Count == 0)
+                    categoryName += "s";
+
                 var newSection = new OptionsSection(string.Empty, FontAwesome.Get(FontAwesomeIcon.fa_magnifying_glass),
-                    new List<OptionsSubcategory> { new OptionsSubcategory($"{items.Count} Search Results", items) });
+                    new List<OptionsSubcategory> { new OptionsSubcategory(categoryName, items) });
 
                 ContentContainers.Add(newSection, new OptionsContentContainer(newSection, Content.Size));
                 SelectedSection.Value = newSection;

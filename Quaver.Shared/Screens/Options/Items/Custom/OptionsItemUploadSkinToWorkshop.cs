@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
@@ -23,6 +24,11 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         /// <param name="name"></param>
         public OptionsItemUploadSkinToWorkshop(RectangleF containerRect, string name) : base(containerRect, name)
         {
+            Tags = new List<string>()
+            {
+                "steam"
+            };
+
             const float scale = 0.85f;
 
             Button = new IconButton(AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop/upload-skin-button.png"))
