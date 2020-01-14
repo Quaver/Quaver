@@ -35,7 +35,7 @@ namespace Quaver.Shared.Screens.Options.Items
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (MouseManager.IsUniqueClick(MouseButton.Left) && IsHovered())
+            if (MouseManager.IsUniqueClick(MouseButton.Left) && IsHovered() && !Checkbox.IsHovered)
                 Checkbox.BindedValue.Value = !Checkbox.BindedValue.Value;
 
             base.Update(gameTime);
