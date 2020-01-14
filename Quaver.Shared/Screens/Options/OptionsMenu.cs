@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
@@ -214,6 +215,71 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Gameplay", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybindMultiple(containerRect, "4K Gameplay Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyMania4K1,
+                            ConfigManager.KeyMania4K2,
+                            ConfigManager.KeyMania4K3,
+                            ConfigManager.KeyMania4K4
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyMania7K1,
+                            ConfigManager.KeyMania7K2,
+                            ConfigManager.KeyMania7K3,
+                            ConfigManager.KeyMania7K4,
+                            ConfigManager.KeyMania7K5,
+                            ConfigManager.KeyMania7K6,
+                            ConfigManager.KeyMania7K7,
+                        }),
+                    }),
+                    new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybindMultiple(containerRect, "4K Co-op Player 2 Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyCoop2P4K1,
+                            ConfigManager.KeyCoop2P4K2,
+                            ConfigManager.KeyCoop2P4K3,
+                            ConfigManager.KeyCoop2P4K4
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K Co-op Player 2 Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyCoop2P7K1,
+                            ConfigManager.KeyCoop2P7K2,
+                            ConfigManager.KeyCoop2P7K3,
+                            ConfigManager.KeyCoop2P7K4,
+                            ConfigManager.KeyCoop2P7K5,
+                            ConfigManager.KeyCoop2P7K6,
+                            ConfigManager.KeyCoop2P7K7,
+                        })
+                    }),
+                    new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybind(containerRect, "Pause", ConfigManager.KeyPause),
+                        new OptionsItemKeybind(containerRect, "Quick Restart", ConfigManager.KeyRestartMap),
+                        new OptionsItemKeybind(containerRect, "Quick Exit", ConfigManager.KeyQuickExit),
+                        new OptionsItemKeybind(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
+                        new OptionsItemKeybind(containerRect, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
+                        new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
+                        new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
+                        new OptionsItemKeybind(containerRect, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
+                    }),
+                    new OptionsSubcategory("Gameplay User Interface", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybind(containerRect, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
+                    }),
+                    new OptionsSubcategory("User Interface", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybind(containerRect, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay)
+                    }),
+                    new OptionsSubcategory("Editor", new List<OptionsItem>()
+                    {
+                        new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
+                        new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
+                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
+                    })
                 }),
                 new OptionsSection("Network", FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), new List<OptionsSubcategory>
                 {

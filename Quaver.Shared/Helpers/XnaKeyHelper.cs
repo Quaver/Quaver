@@ -490,7 +490,7 @@ namespace Quaver.Shared.Helpers
                     keyStr = "Back";
                     return keyStr;
                 case Keys.Insert:
-                    keyStr = "INSERT";
+                    keyStr = "INS";
                     return keyStr;
                 case Keys.Home:
                     keyStr = "HOME";
