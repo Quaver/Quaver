@@ -140,6 +140,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> WindowFullScreen { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> WindowBorderless { get; private set; }
+
+        /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
         internal static Bindable<bool> FpsCounter { get; private set; }
@@ -659,6 +663,7 @@ namespace Quaver.Shared.Config
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
+            WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
@@ -669,7 +674,7 @@ namespace Quaver.Shared.Config
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
-            Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
+            Skin = ReadValue(@"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Bar, data);
             Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
@@ -900,6 +905,7 @@ namespace Quaver.Shared.Config
                     MultiplayerLobbyVisibilityType.ValueChanged += AutoSaveConfiguration;
                     SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
                     UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
+                    WindowBorderless.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

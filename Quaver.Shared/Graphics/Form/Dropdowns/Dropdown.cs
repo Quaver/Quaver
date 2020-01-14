@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Options.Search;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -94,6 +95,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// </summary>
         public int MaxWidth { get; }
 
+        /// <summary>
+        /// </summary>
+        private int MaxHeight { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -103,7 +108,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         /// <param name="color"></param>
         /// <param name="selectedIndex"></param>
         /// <param name="maxWidth"></param>
-        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0, int maxWidth = 0)
+        public Dropdown(List<string> options, ScalableVector2 size, int fontSize, Color? color = null, int selectedIndex = 0,
+            int maxWidth = 0, int maxHeight = 0)
             : base(UserInterface.DropdownClosed)
         {
             Options = options;
@@ -111,6 +117,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             HoverColor = color ?? Colors.MainAccent;
             FontSize = fontSize;
             MaxWidth = maxWidth;
+            MaxHeight = maxHeight;
 
             if (Options == null || Options.Count == 0)
                 throw new InvalidOperationException("You cannot create a dropdown with zero elements");
@@ -209,7 +216,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         {
             var height = Height * Options.Count;
 
-            ItemContainer = new ScrollContainer(new ScalableVector2(Width, 0), new ScalableVector2(Width, height))
+            ItemContainer = new ScrollContainer(new ScalableVector2(Width, 0),
+                new ScalableVector2(Width, height))
             {
                 Parent = this,
                 Y = DividerLine.Y + DividerLine.Height,
@@ -258,7 +266,13 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, MathHelper.ToDegrees(Chevron.Rotation), 180, time));
 
             ItemContainer.ClearAnimations();
-            ItemContainer.ChangeHeightTo((int) Height * Options.Count, Easing.OutQuint, time);
+
+            var height = (int) Height * Options.Count;
+
+            if (MaxHeight != 0 && height >= MaxHeight)
+                height = MaxHeight;
+
+            ItemContainer.ChangeHeightTo(height, Easing.OutQuint, time);
 
             Items.ForEach(x => x.IsClickable = true);
         }

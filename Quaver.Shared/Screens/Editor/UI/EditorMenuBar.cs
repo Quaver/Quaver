@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.UI.Graphing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Settings;
 using Wobble.Graphics;
 using Wobble.Graphics.ImGUI;
@@ -301,7 +302,7 @@ namespace Quaver.Shared.Screens.Editor.UI
                 BrowserHelper.OpenURL($"{OnlineClient.WEBSITE_URL}/wiki/Editor");
 
             if (ImGui.MenuItem("Settings", "CTRL+O"))
-                DialogManager.Show(new SettingsDialog());
+                DialogManager.Show(new OptionsDialog());
 
             ImGui.EndMenu();
         }

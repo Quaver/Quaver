@@ -44,6 +44,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel;
 using Quaver.Shared.Screens.Settings;
@@ -72,6 +73,7 @@ using Quaver.Shared.Screens.Tests.MenuJukebox;
 using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
+using Quaver.Shared.Screens.Tests.Options;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Screens.Tests.Volume;
 using Quaver.Shared.Skinning;
@@ -180,6 +182,7 @@ namespace Quaver.Shared
         {
             {"Dropdown", typeof(DropdownTestScreen)},
             {"MenuBorder", typeof(MenuBorderTestScreen)},
+            {"OptionsMenu", typeof(OptionsTestScreen)},
             {"VolumeController", typeof(TestVolumeControlScreen)},
             {"ReplayController", typeof(TestReplayControllerScreen)},
             {"SelectFilterPanel", typeof(FilterPanelTestScreen)},
@@ -236,6 +239,7 @@ namespace Quaver.Shared
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+            Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
             // Apply all graphics changes
             Graphics.ApplyChanges();
@@ -409,6 +413,7 @@ namespace Quaver.Shared
             ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ApplyRate(e.Value);
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
+            ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
             ConfigManager.SelectedGameMode.ValueChanged += (sender, args) =>
             {
                 DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(args.Value);
@@ -608,7 +613,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
-                    DialogManager.Show(new SettingsDialog());
+                    DialogManager.Show(new OptionsDialog());
                     break;
             }
         }

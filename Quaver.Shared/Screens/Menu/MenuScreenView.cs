@@ -34,6 +34,7 @@ using Quaver.Shared.Screens.Menu.UI.Panels;
 using Quaver.Shared.Screens.Menu.UI.Tips;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
 using Quaver.Shared.Screens.MultiplayerLobby;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Settings;
@@ -288,7 +289,7 @@ namespace Quaver.Shared.Screens.Menu
                         game?.Exit();
                     }));
                 }),
-                new ButtonText(FontsBitmap.GothamRegular, "Options", 14, (sender, args) => DialogManager.Show(new SettingsDialog())),
+                new ButtonText(FontsBitmap.GothamRegular, "Options", 14, (sender, args) => DialogManager.Show(new OptionsDialog())),
                 new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)

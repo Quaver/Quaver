@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Menu.UI.Visualizer;
+using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Select.UI.Banner;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Select.UI.Leaderboard.Selector;
@@ -328,7 +329,7 @@ namespace Quaver.Shared.Screens.Select
             var leftButtons = new List<ButtonText>()
             {
                 new ButtonText(FontsBitmap.GothamRegular, "Back", 14, (sender, args) => screen.ExitToMenu()),
-                new ButtonText(FontsBitmap.GothamRegular, "Options", 14,(sender, args) => DialogManager.Show(new SettingsDialog())),
+                new ButtonText(FontsBitmap.GothamRegular, "Options", 14,(sender, args) => DialogManager.Show(new OptionsDialog())),
                 new ButtonText(FontsBitmap.GothamRegular, "Chat", 14, (sender, args) =>
                 {
                     if (OnlineManager.Status.Value != ConnectionStatus.Connected)
