@@ -69,6 +69,8 @@ namespace Quaver.Shared.Screens.Options
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
             CurrentSearchQuery.ValueChanged += OnSearchChanged;
+
+            DestroyIfParentIsNull = false;
         }
 
         /// <inheritdoc />
