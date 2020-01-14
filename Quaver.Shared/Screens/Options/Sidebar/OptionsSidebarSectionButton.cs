@@ -96,14 +96,12 @@ namespace Quaver.Shared.Screens.Options.Sidebar
         /// </summary>
         private void CreateIcon()
         {
-            const float scale = 0.35f;
-
             Icon = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 20,
-                Size = new ScalableVector2(Height * scale, Height * scale),
+                Size = new ScalableVector2(Section.Icon.Width, Section.Icon.Height),
                 Image = Section.Icon,
                 UsePreviousSpriteBatchOptions = true
             };

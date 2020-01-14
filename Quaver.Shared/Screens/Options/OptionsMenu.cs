@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.Options
 
             Sections = new List<OptionsSection>
             {
-                new OptionsSection("Video", FontAwesome.Get(FontAwesomeIcon.fa_desktop_monitor), new List<OptionsSubcategory>
+                new OptionsSection("Video", UserInterface.OptionsVideo, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Window", new List<OptionsItem>()
                     {
@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Display FPS Counter", ConfigManager.FpsCounter)
                     })
                 }),
-                new OptionsSection("Audio", FontAwesome.Get(FontAwesomeIcon.fa_volume_up_interface_symbol), new List<OptionsSubcategory>
+                new OptionsSection("Audio", UserInterface.OptionsAudio, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Volume", new List<OptionsItem>()
                     {
@@ -161,7 +161,7 @@ namespace Quaver.Shared.Screens.Options
                         },
                     })
                 }),
-                new OptionsSection("Gameplay", FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), new List<OptionsSubcategory>
+                new OptionsSection("Gameplay", UserInterface.OptionsGameplay, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Scrolling", new List<OptionsItem>()
                     {
@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemCheckbox(containerRect, "Enable Battle Royale Background Flashing", ConfigManager.EnableBattleRoyaleBackgroundFlashing)
                     })
                 }),
-                new OptionsSection("Skin", FontAwesome.Get(FontAwesomeIcon.fa_check), new List<OptionsSubcategory>
+                new OptionsSection("Skin", UserInterface.OptionsSkin, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Selection", new List<OptionsItem>()
                     {
@@ -234,7 +234,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemUploadSkinToWorkshop(containerRect, "Upload Skin To Steam Workshop")
                     })
                 }),
-                new OptionsSection("Input", FontAwesome.Get(FontAwesomeIcon.fa_keyboard), new List<OptionsSubcategory>
+                new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Gameplay", new List<OptionsItem>()
                     {
@@ -302,7 +302,7 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate)
                     })
                 }),
-                new OptionsSection("Network", FontAwesome.Get(FontAwesomeIcon.fa_earth_globe), new List<OptionsSubcategory>
+                new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
                     new OptionsSubcategory("Login", new List<OptionsItem>()
                     {
@@ -312,10 +312,7 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemCheckbox(containerRect, "Display Online Friend Notifications", ConfigManager.DisplayFriendOnlineNotifications),
                         new OptionsItemCheckbox(containerRect, "Display Song Request Notifications", ConfigManager.DisplaySongRequestNotifications)
-                    })
-                }),
-                new OptionsSection("Miscellaneous", FontAwesome.Get(FontAwesomeIcon.fa_question_sign), new List<OptionsSubcategory>
-                {
+                    }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Menu Audio Visualizer", ConfigManager.DisplayMenuAudioVisualizer),
