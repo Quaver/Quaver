@@ -724,7 +724,7 @@ namespace Quaver.Shared.Config
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyDecreaseMapOffset = ReadValue(@"KeyDecreaseMapOffset", Keys.OemMinus, data);
             KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
-            KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
+            KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
@@ -737,7 +737,7 @@ namespace Quaver.Shared.Config
             EditorEnableKeysounds = ReadValue(@"EditorEnableKeysounds", true, data);
             EditorBeatSnapColorType = ReadValue(@"EditorBeatSnapColorType", EditorBeatSnapColor.Default, data);
             EditorOnlyShowMeasureLines = ReadValue(@"EditorOnlyShowMeasureLines", false, data);
-            EditorShowLaneDividerLines = ReadValue(@"EditorShowDividerLines", true, data);
+            EditorShowLaneDividerLines = ReadValue(@"EditorShowLaneDividerLines", true, data);
             EditorHitObjectsMidpointAnchored = ReadValue(@"EditorHitObjectsMidpointAnchored", false, data);
             EditorPlayMetronome = ReadValue(@"EditorPlayMetronome", true, data);
             EditorMetronomePlayHalfBeats = ReadValue(@"EditorMetronomePlayHalfBeats", false, data);
