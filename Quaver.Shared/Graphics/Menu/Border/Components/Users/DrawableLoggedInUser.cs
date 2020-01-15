@@ -42,7 +42,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public int CustomPaddingX { get; } = 20;
+        public int CustomPaddingX { get; } = 30;
 
         /// <summary>
         /// </summary>
