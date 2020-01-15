@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonMusicPlayer : IconTextButton
     {
         public IconTextButtonMusicPlayer() : base(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Music Player", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack),"Jukebox", (sender, args) =>
             {
                 var game = (QuaverGame) GameBase.Game;
                 game.CurrentScreen.Exit(() => new MusicPlayerScreen());

@@ -16,14 +16,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
             new IconTextButtonOptions(),
             new IconTextButtonModifiers(screen.ActiveLeftPanel),
             new IconTextButtonMapPreview(screen.ActiveLeftPanel),
-            new IconTextButtonCreatePlaylist()
         }, new List<Drawable>
         {
             new IconTextButtonPlay(screen),
             new IconTextButtonEdit(screen),
-            new IconTextButtonExport(screen),
             new IconTextButtonRandom(screen),
-            new IconTextButtonOnlineListing()
+            new IconTextButtonCreatePlaylist()
         })
         {
         }
