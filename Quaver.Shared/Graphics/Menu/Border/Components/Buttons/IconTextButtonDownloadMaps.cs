@@ -12,7 +12,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     public class IconTextButtonDownloadMaps : IconTextButton
     {
         public IconTextButtonDownloadMaps() : base(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Download Maps", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack),"Maps", (sender, args) =>
             {
                 if (!OnlineManager.Connected)
                 {

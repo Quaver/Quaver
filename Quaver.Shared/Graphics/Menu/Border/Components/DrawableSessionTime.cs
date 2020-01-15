@@ -31,7 +31,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public int CustomPaddingX { get; } = 25;
+        public int CustomPaddingX { get; } = 34;
 
         /// <summary>
         ///     The time that the game has been running for
