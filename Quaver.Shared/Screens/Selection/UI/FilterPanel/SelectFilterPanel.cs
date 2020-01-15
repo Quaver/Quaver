@@ -240,7 +240,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel
                 item.Alignment = Alignment.MidRight;
 
                 const int padding = 25;
-                var spacing = 25;
+                var spacing = 30;
 
                 if (i == 0)
                     item.X = -padding;
