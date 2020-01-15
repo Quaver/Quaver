@@ -10,8 +10,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
+using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
@@ -69,6 +72,11 @@ namespace Quaver.Shared.Screens.Editor.UI.Rulesets.Keys.Scrolling.HitObjects
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            if (!ConfigManager.EditorViewLayers.Value && SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseAndRotateHitObjectSheet)
+                Rotation = GameplayHitObjectKeys.GetObjectRotation(MapManager.Selected.Value.Mode, Info.Lane - 1);
+            else
+                Rotation = 0;
+
             DrawToSpriteBatch();
 
             if (SelectionSprite.Visible)

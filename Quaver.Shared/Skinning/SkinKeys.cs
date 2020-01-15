@@ -221,6 +221,8 @@ namespace Quaver.Shared.Skinning
         [FixedScale]
         internal float HealthBarPosOffsetY { get; private set; }
 
+        internal bool UseAndRotateHitObjectSheet { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -461,6 +463,7 @@ namespace Quaver.Shared.Skinning
             BattleRoyaleEliminatedPosY = ConfigHelper.ReadInt32((int) BattleRoyaleEliminatedPosY, ini["BattleRoyaleEliminatedPosY"]);
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
+            UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
         }
 
         /// <summary>
@@ -615,8 +618,18 @@ namespace Quaver.Shared.Skinning
                     ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ModeHelper.ToShortHand(Mode).ToUpper()][$"ColumnColor{i + 1}"]);
 
                 // HitObjects
-                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
-                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                if (!UseAndRotateHitObjectSheet)
+                {
+                    LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                    LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                }
+                else
+                {
+                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, 8, 1);
+
+                    NoteHitObjects.Add(objects);
+                    NoteHoldHitObjects.Add(objects);
+                }
 
                 // LNS
                 NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
