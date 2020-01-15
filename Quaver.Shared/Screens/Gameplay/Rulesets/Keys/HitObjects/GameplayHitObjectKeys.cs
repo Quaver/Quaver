@@ -153,6 +153,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 SpriteEffect = flipNoteBody ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
+            // Handle rotating the objects automatically
+            if (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].UseAndRotateHitObjectSheet)
+                HitObjectSprite.Rotation = GetObjectRotation(MapManager.Selected.Value.Mode, lane);
+
             // Create Hold Body
             var bodies = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldBodies[lane];
             LongNoteBodySprite = new AnimatableSprite(bodies)
@@ -387,5 +391,54 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     It will only be initiated when the player releases the note.
         /// </summary>
         public void StopLongNoteAnimation() => LongNoteBodySprite.StopLoop();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="lane"></param>
+        /// <returns></returns>
+        public static float GetObjectRotation(GameMode mode, int lane)
+        {
+            switch (mode)
+            {
+                case GameMode.Keys4:
+                    switch (lane)
+                    {
+                        case 0:
+                            return  90;
+                        case 1:
+                            // Already downwards
+                            break;
+                        case 2:
+                            return 180;
+                        case 3:
+                            return 270;
+                    }
+                    break;
+                case GameMode.Keys7:
+                    switch (lane)
+                    {
+                        case 0:
+                            return 90;
+                        case 1:
+                            return 135;
+                        case 2:
+                            return 180;
+                        case 3:
+                            // Already downwards
+                            break;
+                        case 4:
+                            return 180;
+                        case 5:
+                            return 225;
+                        case 6:
+                            return 270;
+                    }
+
+                    break;
+            }
+
+            return 0;
+        }
     }
 }
