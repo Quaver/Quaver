@@ -58,8 +58,16 @@ namespace Quaver.Shared.Database.Playlists
             CreateTables();
             LoadPlaylists();
 
-            if (ConfigManager.AutoLoadOsuBeatmaps.Value)
-                LoadOsuCollections();
+            try
+            {
+                if (ConfigManager.AutoLoadOsuBeatmaps.Value)
+                    LoadOsuCollections();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to load osu! collections!", LogType.Runtime);
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
