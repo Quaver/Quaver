@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Quaver.API.Maps.Parsers;
-using Quaver.API.Maps.Parsers.StepMania;
+using Quaver.API.Maps.Parsers.Stepmania;
 using Quaver.Shared.Config;
 using Wobble.Logging;
 
@@ -30,7 +30,7 @@ namespace Quaver.Shared.Converters.StepMania
 
             try
             {
-                var quaFiles = new StepmaniaConverter(file).ToQua();
+                var quaFiles = new StepFile(file).ToQuas();
                 Directory.CreateDirectory(extractDirectory);
 
                 for (var i = 0; i < quaFiles.Count; i++)
