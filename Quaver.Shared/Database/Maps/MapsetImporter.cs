@@ -207,6 +207,32 @@ namespace Quaver.Shared.Database.Maps
                         return;
                 }
             }
+            // Other-game database files
+            else if (path.EndsWith(".db"))
+            {
+                var loadedDb = false;
+
+                if (path.Contains("osu!.db"))
+                {
+                    ConfigManager.OsuDbPath.Value = path;
+                    loadedDb = true;
+                }
+
+                if (path.Contains("cache.db"))
+                {
+                    ConfigManager.EtternaDbPath.Value = path;
+                    loadedDb = true;
+                }
+
+                if (!loadedDb)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, $"Unable to detect supported .db file.");
+                    return;
+                }
+
+                ConfigManager.AutoLoadOsuBeatmaps.Value = true;
+                NotificationManager.Show(NotificationLevel.Success, $"Successfully set the path for your .db file");
+            }
         }
 
         /// <summary>
