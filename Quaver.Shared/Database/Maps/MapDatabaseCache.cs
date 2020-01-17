@@ -253,6 +253,8 @@ namespace Quaver.Shared.Database.Maps
             MapManager.Mapsets = MapsetHelper.OrderMapsByDifficulty(MapsetHelper.OrderMapsetsByArtist(mapsets));
             MapManager.RecentlyPlayed = new List<Map>();
 
+            PlaylistManager.Load();
+
             // Schedule maps that don't have difficulty ratings to recalculate.
             // If forcing a full recalculation due to diff calc updates, then the difficulty processor version should just be bumped
             // instead of adding things here.

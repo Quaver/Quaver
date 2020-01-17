@@ -389,7 +389,6 @@ namespace Quaver.Shared
             ScoreDatabaseCache.CreateTable();
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
-            PlaylistManager.Load();
             JudgementWindowsDatabaseCache.Load();
 
             // Force garabge collection.

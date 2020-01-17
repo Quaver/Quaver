@@ -157,8 +157,15 @@ namespace Quaver.Shared.Database.Maps
             Logger.Important($"Starting sync of other game maps...", LogType.Runtime);
 
             var currentlyCached = FetchAll();
-            var osuMaps = LoadOsuBeatmapDatabase();
-            var etternaCharts = EtternaDatabaseCache.Load();
+
+            var osuMaps = new List<OtherGameMap>();
+            var etternaCharts = new List<OtherGameMap>();
+
+            if (!string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value))
+                osuMaps = LoadOsuBeatmapDatabase();
+
+            if (!string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
+                etternaCharts = EtternaDatabaseCache.Load();
 
             // Remove all osu! cached maps if the db isn't loaded
             if (string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value) || osuMaps.Count == 0)
