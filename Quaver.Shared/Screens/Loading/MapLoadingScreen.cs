@@ -182,6 +182,10 @@ namespace Quaver.Shared.Screens.Loading
                 case MapGame.Osu:
                     md5 = MapsetHelper.GetMd5Checksum($"{MapManager.OsuSongsFolder}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
                     break;
+                // Etterna uses a "Chart Key" rather than an md5 hash, so allow it
+                case MapGame.Etterna:
+                    md5 = MapManager.Selected.Value.Md5Checksum;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

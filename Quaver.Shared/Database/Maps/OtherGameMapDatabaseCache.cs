@@ -8,6 +8,7 @@ using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps.Etterna;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
 using SQLite;
@@ -104,7 +105,7 @@ namespace Quaver.Shared.Database.Maps
                 if (MapsToCache != null && NeedsSync)
                 {
                     NotificationManager.Show(NotificationLevel.Info,
-                        $"Recalculating the difficulty of outdated maps in the background. {SyncMapCount} maps left!");
+                        $"Syncing outdated maps in the background. Performance may be lower. {SyncMapCount} maps left!");
 
                     Logger.Important($"Starting other game sync thread.", LogType.Runtime);
                 }
@@ -157,21 +158,33 @@ namespace Quaver.Shared.Database.Maps
 
             var currentlyCached = FetchAll();
             var osuMaps = LoadOsuBeatmapDatabase();
+            var etternaCharts = EtternaDatabaseCache.Load();
+
+            // Remove all osu! cached maps if the db isn't loaded
+            if (string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value) || osuMaps.Count == 0)
+                currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Osu);
+
+            // Remove all ett charts if the db isn't loaded
+            if (string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value) || etternaCharts.Count == 0)
+                currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Etterna);
 
             // Find maps that need to be deleted/updated from the cache
             for (var i = currentlyCached.Count - 1; i >= 0; i--)
             {
                 var map = currentlyCached[i];
 
-                if (osuMaps.All(x => x.Md5Checksum != map.Md5Checksum))
+                if (osuMaps.All(x => x.Md5Checksum != map.Md5Checksum)
+                    && etternaCharts.All(x => x.Md5Checksum != map.Md5Checksum))
                 {
-                    MapsToCache[OtherGameCacheAction.Delete].Add(map);
-                    currentlyCached.Remove(map);
+                    if (map.OriginalGame == OtherGameMapDatabaseGame.Osu && osuMaps.Count != 0
+                        || map.OriginalGame == OtherGameMapDatabaseGame.Etterna && etternaCharts.Count != 0)
+                    {
+                        MapsToCache[OtherGameCacheAction.Delete].Add(map);
+                        currentlyCached.Remove(map);
+                    }
+
                     continue;
                 }
-
-                if (map.DifficultyProcessorVersion != DifficultyProcessorKeys.Version)
-                    MapsToCache[OtherGameCacheAction.Update].Add(map);
             }
 
             // Find maps that need to be added to the database.
@@ -180,11 +193,44 @@ namespace Quaver.Shared.Database.Maps
                 if (currentlyCached.Find(x => x.Md5Checksum == map.Md5Checksum) != null)
                     continue;
 
-                MapsToCache[OtherGameCacheAction.Add].Add(map);
-                currentlyCached.Add(map);
+                if (!currentlyCached.Contains(map))
+                {
+                    MapsToCache[OtherGameCacheAction.Add].Add(map);
+                    currentlyCached.Add(map);
+                }
             }
 
-            currentlyCached.ForEach(x => x.Game = MapGame.Osu);
+            // Find maps that need to be added to the database.
+            foreach (var map in etternaCharts)
+            {
+                if (currentlyCached.Find(x => x.Md5Checksum == map.Md5Checksum) != null)
+                    continue;
+
+                if (!currentlyCached.Contains(map))
+                {
+                    MapsToCache[OtherGameCacheAction.Add].Add(map);
+                    currentlyCached.Add(map);
+                }
+            }
+
+            currentlyCached.ForEach(x =>
+            {
+                if (x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version && !MapsToCache[OtherGameCacheAction.Add].Contains(x))
+                    MapsToCache[OtherGameCacheAction.Update].Add(x);
+
+                switch (x.OriginalGame)
+                {
+                    case OtherGameMapDatabaseGame.Osu:
+                        x.Game = MapGame.Osu;
+                        break;
+                    case OtherGameMapDatabaseGame.Etterna:
+                        x.Game = MapGame.Etterna;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            });
+
             return currentlyCached;
         }
 
@@ -227,6 +273,7 @@ namespace Quaver.Shared.Database.Maps
                         Mode = map.CircleSize == 4 ? Quaver.API.Enums.GameMode.Keys4 : Quaver.API.Enums.GameMode.Keys7,
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
+                        OriginalGame = OtherGameMapDatabaseGame.Osu,
                         BackgroundPath = "",
                         RegularNoteCount = map.CountHitCircles,
                         LongNoteCount = map.CountSliders,
@@ -302,6 +349,17 @@ namespace Quaver.Shared.Database.Maps
                 {
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     map.CalculateDifficulties();
+
+                    // Etterna doesn't store the object count/common bpm, so add it here.
+                    if (map is OtherGameMap ogm && ogm.OriginalGame == OtherGameMapDatabaseGame.Etterna)
+                    {
+                        var qua = map.LoadQua();
+
+                        map.LongNoteCount = qua.HitObjects.FindAll(x => x.IsLongNote).Count;
+                        map.RegularNoteCount = qua.HitObjects.FindAll(x => !x.IsLongNote).Count;
+                        map.Bpm = qua.GetCommonBpm();
+                        map.SongLength = qua.Length;
+                    }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
                 catch (Exception)
@@ -319,6 +377,7 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Insert(map);
                                 break;
                             case MapGame.Osu:
+                            case MapGame.Etterna:
                                 conn.Insert((OtherGameMap) map);
                                 break;
                             default:
@@ -351,6 +410,17 @@ namespace Quaver.Shared.Database.Maps
                 {
                     map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     map.CalculateDifficulties();
+
+                    // Etterna doesn't store the object count/common bpm, so add it here.
+                    if (map is OtherGameMap ogm && ogm.OriginalGame == OtherGameMapDatabaseGame.Etterna)
+                    {
+                        var qua = map.LoadQua();
+
+                        map.LongNoteCount = qua.HitObjects.FindAll(x => x.IsLongNote).Count;
+                        map.RegularNoteCount = qua.HitObjects.FindAll(x => !x.IsLongNote).Count;
+                        map.Bpm = qua.GetCommonBpm();
+                        map.SongLength = qua.Length;
+                    }
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
                 catch (Exception)
@@ -366,6 +436,7 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Update(map);
                                 break;
                             case MapGame.Osu:
+                            case MapGame.Etterna:
                                 conn.Update((OtherGameMap) map);
                                 break;
                             default:
@@ -402,6 +473,7 @@ namespace Quaver.Shared.Database.Maps
                             conn.Delete(map);
                             break;
                         case MapGame.Osu:
+                        case MapGame.Etterna:
                             conn.Delete((OtherGameMap) map);
                             break;
                         default:

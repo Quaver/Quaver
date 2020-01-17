@@ -68,6 +68,45 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Error("Failed to load osu! collections!", LogType.Runtime);
                 Logger.Error(e, LogType.Runtime);
             }
+
+            try
+            {
+                // Remove all ett charts if the db isn't loaded
+                if (ConfigManager.AutoLoadOsuBeatmaps.Value && !string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
+                {
+                    var charts = new List<Map>();
+                    var playlists = new List<Playlist>();
+
+                    foreach (var mapset in MapManager.Mapsets)
+                    {
+                        var found = mapset.Maps.FindAll(x => x.Game == MapGame.Etterna);
+                        charts.AddRange(found);
+                    }
+
+                    var packs = charts.GroupBy(x => new DirectoryInfo(Path.GetFullPath(Path.Combine(x.Directory, @"..\"))).Name).ToDictionary(x => x.Key);
+
+                    foreach (var item in packs)
+                    {
+                        var playlist = new Playlist()
+                        {
+                            Id = -(Playlists.Count + 1),
+                            Name = item.Key,
+                            Creator = "External Game",
+                            Maps = new List<Map>(),
+                            PlaylistGame = MapGame.Etterna
+                        };
+
+                        foreach (var map in item.Value)
+                            playlist.Maps.Add(map);
+
+                        Playlists.Add(playlist);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
