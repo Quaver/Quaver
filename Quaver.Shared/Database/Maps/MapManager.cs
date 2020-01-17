@@ -109,6 +109,8 @@ namespace Quaver.Shared.Database.Maps
                     return $@"{OsuSongsFolder}/{map.Directory}/{osu.Background}";
                 case MapGame.Quaver:
                     return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath;
+                case MapGame.Etterna:
+                    return map.BackgroundPath;
                 default:
                     return "";
             }
@@ -141,6 +143,8 @@ namespace Quaver.Shared.Database.Maps
                     return OsuSongsFolder + "/" + map.Directory + "/" + map.AudioPath;
                 case MapGame.Quaver:
                     return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.AudioPath;
+                case MapGame.Etterna:
+                    return map.AudioPath;
                 default:
                     return "";
             }

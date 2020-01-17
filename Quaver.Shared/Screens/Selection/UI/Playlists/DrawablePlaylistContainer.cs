@@ -357,8 +357,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             if (Playlist.Item.Maps.Count == 0)
                 return UserInterface.StatusNone;
 
-            if (Playlist.Item.PlaylistGame == MapGame.Osu)
-                return UserInterface.StatusOtherGameOsu;
+            if (Playlist.Item.PlaylistGame != MapGame.Quaver)
+            {
+                switch (Playlist.Item.PlaylistGame)
+                {
+                    case MapGame.Osu:
+                        return UserInterface.StatusOtherGameOsu;
+                    case MapGame.Etterna:
+                        return UserInterface.StatusOtherGameEtterna;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
 
             if (Playlist.Item.Maps.Any(o => o.RankedStatus != Playlist.Item.Maps.First().RankedStatus))
                 return UserInterface.StatusVarious;

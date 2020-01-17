@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Maps.Parsers.Stepmania;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -87,15 +88,31 @@ namespace Quaver.Shared.Database.Maps
 
                                 Logger.Debug($"Successfully converted osu beatmap: {osuPath}", LogType.Runtime);
                                 break;
+                            case MapGame.Etterna:
+                                var stepFile = new StepFile(map.Path);
+                                var fileName = StringHelper.FileNameSafeString($"{map.Artist} - {map.Title} [{map.DifficultyName}].qua");
+                                var fileSavePath = $"{tempFolder}/{fileName}";
+                                stepFile.ToQuas().Find(x => x.DifficultyName == map.DifficultyName).Save(fileSavePath);
+
+                                Logger.Debug($"Successfully converted stepmania chart: {map.Path}", LogType.Runtime);
+                                break;
                         }
 
                         // Copy over audio file if necessary
-                        if (File.Exists(MapManager.GetAudioPath(map)) && !File.Exists($"{tempFolder}/{map.AudioPath}"))
-                            File.Copy(MapManager.GetAudioPath(map), $"{tempFolder}/{map.AudioPath}");
+                        var audioPath = map.Game != MapGame.Etterna ?
+                            $"{tempFolder}/{map.AudioPath}" :
+                            $"{tempFolder}/{Path.GetFileName(map.AudioPath)}";
+
+                        if (File.Exists(MapManager.GetAudioPath(map)) && !File.Exists(audioPath))
+                            File.Copy(MapManager.GetAudioPath(map), audioPath);
 
                         // Copy over background file if necessary
-                        if (File.Exists(MapManager.GetBackgroundPath(map)) && !File.Exists($"{tempFolder}/{map.BackgroundPath}"))
-                            File.Copy(MapManager.GetBackgroundPath(map), $"{tempFolder}/{map.BackgroundPath}");
+                        var bgPath = map.Game != MapGame.Etterna ?
+                            $"{tempFolder}/{map.BackgroundPath}" :
+                            $"{tempFolder}/{Path.GetFileName(map.BackgroundPath)}";
+
+                        if (File.Exists(MapManager.GetBackgroundPath(map)) && !File.Exists(bgPath))
+                            File.Copy(MapManager.GetBackgroundPath(map), bgPath);
                     }
                     catch (Exception e)
                     {

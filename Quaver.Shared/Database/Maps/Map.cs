@@ -16,6 +16,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Maps.Parsers.Stepmania;
 using Quaver.Server.Client;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Scores;
@@ -377,6 +378,10 @@ namespace Quaver.Shared.Database.Maps
                     var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
                     break;
+                case MapGame.Etterna:
+                    var stepFile = new StepFile(Path).ToQuas();
+                    qua = stepFile.Find(x => x.DifficultyName == DifficultyName);
+                    break;
                 default:
                     throw new InvalidEnumArgumentException();
             }
@@ -623,5 +628,6 @@ namespace Quaver.Shared.Database.Maps
     {
         Quaver,
         Osu,
+        Etterna
     }
 }

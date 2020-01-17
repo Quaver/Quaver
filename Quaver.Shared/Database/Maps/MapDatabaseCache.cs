@@ -264,7 +264,7 @@ namespace Quaver.Shared.Database.Maps
                     if (map.RegularNoteCount + map.LongNoteCount >= 2)
                     {
                         // ReSharper disable once CompareOfFloatsByEqualityOperator
-                        if (map.Difficulty105X == 0f)
+                        if (map.Difficulty105X == 0f && !OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Add].Contains(map))
                             OtherGameMapDatabaseCache.MapsToCache[OtherGameCacheAction.Update].Add(map);
                     }
                 }

@@ -352,9 +352,9 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 }
 
                 // Give map backgrounds second priority
-                if (!File.Exists(path) && playlist.Maps.Count != 0)
+                if (playlist.Maps.Count != 0 && playlist.PlaylistGame == MapGame.Etterna || !File.Exists(path))
                 {
-                    path = MapManager.GetBackgroundPath(playlist.Maps.First());
+                    path = MapManager.GetBackgroundPath(playlist.Maps.First()).Replace("//", "/");
                     bannerExists = false;
                 }
 

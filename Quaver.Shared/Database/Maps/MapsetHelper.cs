@@ -678,6 +678,12 @@ namespace Quaver.Shared.Database.Maps
                                         if (!CompareValues("osu", searchQuery.Value, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
+                                    case MapGame.Etterna:
+                                        if (!CompareValues("etterna", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("sm", searchQuery.Value, searchQuery.Operator) &&
+                                            !CompareValues("stepmania", searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
                                     default:
                                         throw new ArgumentOutOfRangeException();
                                 }
