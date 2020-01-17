@@ -524,7 +524,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 Time.Text = $"{(int) timeDifference.TotalMinutes}m";
             // Seconds
             else
-                Time.Text = $"{(int) timeDifference.TotalSeconds}s";
+            {
+                var seconds = (int) timeDifference.TotalSeconds;
+
+                if (seconds <= 0)
+                    Time.Text = "now";
+                else
+                    Time.Text = $"{seconds}s";
+            }
+
 
             Time.Tint = timeDifference.TotalMilliseconds < 86400000 ? ColorHelper.HexToColor("#6EF7F7") : ColorHelper.HexToColor("#808080");
             Clock.Tint = Time.Tint;
