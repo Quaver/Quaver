@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Microsoft.Win32;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
@@ -69,7 +70,10 @@ namespace Quaver.Shared.Database.Maps
 
         public static void Initialize()
         {
-            MapsToCache= new Dictionary<OtherGameCacheAction, List<Map>>()
+            FindOsuStableInstallation();
+            FindEtternaInstallation();
+
+            MapsToCache = new Dictionary<OtherGameCacheAction, List<Map>>()
             {
                 {OtherGameCacheAction.Add, new List<Map>()},
                 {OtherGameCacheAction.Update, new List<Map>()},
@@ -495,6 +499,66 @@ namespace Quaver.Shared.Database.Maps
                 {
                     MapsToCache[OtherGameCacheAction.Delete].Remove(map);
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Tries to find a user's osu! installation if their db path isn't already set
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void FindOsuStableInstallation()
+        {
+            if (!string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value))
+                return;
+
+            try
+            {
+                using (var key = Registry.ClassesRoot.OpenSubKey("osu"))
+                {
+                    var value = key?.OpenSubKey(@"shell\open\command")?.GetValue(string.Empty).ToString();
+                    var installPath = value?.Split('"')[1]?.Replace("osu!.exe", "");
+
+                    if (string.IsNullOrEmpty(installPath))
+                        return;
+
+                    ConfigManager.OsuDbPath.Value = $"{installPath}/osu!.db";
+
+                    Logger.Important($"Successfully detected osu! installation at path: {ConfigManager.OsuDbPath.Value}",
+                        LogType.Runtime);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warning($"Failed to find osu! installation in the registry", LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Tries to find a user's etterna installation if their db path isn't already set
+        /// </summary>
+        private static void FindEtternaInstallation()
+        {
+            if (!string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
+                return;
+
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey("SOFTWARE")?.OpenSubKey("Wow6432Node"))
+                {
+                    var etterna = key?.OpenSubKey("Etterna Team")?.OpenSubKey("Etterna")?.GetValue(string.Empty).ToString();
+
+                    if (string.IsNullOrEmpty(etterna))
+                        return;
+
+                    ConfigManager.EtternaDbPath.Value = $"{etterna}/Cache/cache.db";
+
+                    Logger.Important($"Successfully detected Etterna installation at path: {ConfigManager.EtternaDbPath.Value}",
+                        LogType.Runtime);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warning($"Failed to find Ett installation in the registry", LogType.Runtime);
             }
         }
     }
