@@ -121,7 +121,7 @@ namespace Quaver.Shared.Database.Maps
                 DeleteMaps(DatabaseManager.Connection);
 
                 if (SyncMapCount == 0)
-                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations!");
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed syncing outdated maps!");
             })
             {
                 IsBackground = true,
@@ -226,20 +226,25 @@ namespace Quaver.Shared.Database.Maps
 
             currentlyCached.ForEach(x =>
             {
-                if (x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version && !MapsToCache[OtherGameCacheAction.Add].Contains(x))
-                    MapsToCache[OtherGameCacheAction.Update].Add(x);
+                var diffOutdated = x.DifficultyProcessorVersion != DifficultyProcessorKeys.Version;
+                var versionOutdated = false;
 
                 switch (x.OriginalGame)
                 {
                     case OtherGameMapDatabaseGame.Osu:
                         x.Game = MapGame.Osu;
+                        versionOutdated = OtherGameMap.OsuSyncVersion != x.SyncVersion;
                         break;
                     case OtherGameMapDatabaseGame.Etterna:
                         x.Game = MapGame.Etterna;
+                        versionOutdated = OtherGameMap.EtternaSyncVersion != x.SyncVersion;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                if ((diffOutdated || versionOutdated) && !MapsToCache[OtherGameCacheAction.Add].Contains(x))
+                    MapsToCache[OtherGameCacheAction.Update].Add(x);
             });
 
             return currentlyCached;
@@ -388,8 +393,14 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Insert(map);
                                 break;
                             case MapGame.Osu:
+                                var osuMap = (OtherGameMap) map;
+                                osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
+                                conn.Insert(osuMap);
+                                break;
                             case MapGame.Etterna:
-                                conn.Insert((OtherGameMap) map);
+                                var etternaChart = (OtherGameMap) map;
+                                etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
+                                conn.Insert(etternaChart);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -447,8 +458,14 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Update(map);
                                 break;
                             case MapGame.Osu:
+                                var osuMap = (OtherGameMap) map;
+                                osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
+                                conn.Update(osuMap);
+                                break;
                             case MapGame.Etterna:
-                                conn.Update((OtherGameMap) map);
+                                var etternaChart = (OtherGameMap) map;
+                                etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
+                                conn.Update(etternaChart);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
