@@ -70,9 +70,6 @@ namespace Quaver.Shared.Database.Maps
 
         public static void Initialize()
         {
-            FindOsuStableInstallation();
-            FindEtternaInstallation();
-
             MapsToCache = new Dictionary<OtherGameCacheAction, List<Map>>()
             {
                 {OtherGameCacheAction.Add, new List<Map>()},
@@ -523,11 +520,8 @@ namespace Quaver.Shared.Database.Maps
         ///     Tries to find a user's osu! installation if their db path isn't already set
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private static void FindOsuStableInstallation()
+        public static void FindOsuStableInstallation()
         {
-            if (!string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value))
-                return;
-
             try
             {
                 using (var key = Registry.ClassesRoot.OpenSubKey("osu"))
@@ -553,11 +547,8 @@ namespace Quaver.Shared.Database.Maps
         /// <summary>
         ///     Tries to find a user's etterna installation if their db path isn't already set
         /// </summary>
-        private static void FindEtternaInstallation()
+        public static void FindEtternaInstallation()
         {
-            if (!string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
-                return;
-
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey("SOFTWARE")?.OpenSubKey("Wow6432Node"))
