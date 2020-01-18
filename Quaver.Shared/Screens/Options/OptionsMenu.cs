@@ -304,6 +304,17 @@ namespace Quaver.Shared.Screens.Options
                 }),
                 new OptionsSection("Miscellaneous", UserInterface.OptionsMisc, new List<OptionsSubcategory>
                 {
+                    new OptionsSubcategory("Installed Games", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
+                        {
+                            Tags = new List<string>{ "osu!", "other games", "db", "etterna", "sm", "stepmania" }
+                        },
+                        new OptionsItemDetectOtherGames(containerRect, "Detect Songs From Other Installed Games")
+                        {
+                            Tags = new List<string>{ "osu!", "other games", "db", "etterna", "sm", "stepmania" }
+                        },
+                    }),
                     new OptionsSubcategory("Login", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Automatically Log Into The Server", ConfigManager.AutoLoginToServer),
@@ -320,13 +331,6 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Song Select", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Failed Local Scores", ConfigManager.DisplayFailedLocalScores)
-                    }),
-                    new OptionsSubcategory("Installed Games", new List<OptionsItem>()
-                    {
-                        new OptionsItemCheckbox(containerRect, "Load Songs From Other Installed Games", ConfigManager.AutoLoadOsuBeatmaps)
-                        {
-                            Tags = new List<string>{ "osu!", "other games", "db" }
-                        }
                     }),
                 }),
             };
