@@ -456,6 +456,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> UseSteamWorkshopSkin { get; private set; }
 
         /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -779,6 +784,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
+            LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -913,6 +919,7 @@ namespace Quaver.Shared.Config
                     SteamWorkshopDirectory.ValueChanged += AutoSaveConfiguration;
                     UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
+                    LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

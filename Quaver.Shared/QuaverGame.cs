@@ -660,7 +660,7 @@ namespace Quaver.Shared
         /// </summary>
         private void LimitFpsOnInactiveWindow()
         {
-            if (CurrentScreen != null && CurrentScreen.Exiting)
+            if (!ConfigManager.LowerFpsOnWindowInactive.Value || CurrentScreen != null && CurrentScreen.Exiting)
                 return;
 
             if (!IsActive && WindowActiveInPreviousFrame && OtherGameMapDatabaseCache.OnSyncableScreen() ||
