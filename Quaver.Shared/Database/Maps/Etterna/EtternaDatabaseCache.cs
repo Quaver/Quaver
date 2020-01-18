@@ -27,8 +27,15 @@ namespace Quaver.Shared.Database.Maps.Etterna
             {
                 var connection = new SQLiteConnection(ConfigManager.EtternaDbPath.Value);
 
-                var songs = connection.Table<EtternaSong>().ToDictionary(x => x.SongFileName);
+                var songs = connection.Table<EtternaSong>();
                 var steps = connection.Table<EtternaStep>().ToList();
+                var songDictionary = new Dictionary<string, EtternaSong>();
+
+                foreach (var song in songs)
+                {
+                    if (!songDictionary.ContainsKey(song.SongFileName))
+                        songDictionary.Add(song.SongFileName, song);
+                }
 
                 var maps = new List<OtherGameMap>();
 
@@ -37,7 +44,11 @@ namespace Quaver.Shared.Database.Maps.Etterna
                     if (step.StepsType != "dance-single")
                         continue;
 
-                    var song = songs[step.StepFileName];
+                    // Not reading .ssc for now
+                    if (step.StepFileName.EndsWith(".ssc"))
+                        continue;
+
+                    var song = songDictionary[step.StepFileName];
                     var etternaDirectory = ConfigManager.EtternaDbPath.Value.Split("Etterna")[0] + "Etterna";
 
                     var map = new OtherGameMap()
@@ -61,6 +72,13 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         SongLength = (int) (song.MusicLength * 1000)
                     };
 
+                    if (!File.Exists(map.Path))
+                    {
+                        Logger.Warning($"Skipping load on file: {step.StepFileName} because the file could not be found " +
+                                       $"at: {map.Path}", LogType.Runtime);
+                        continue;
+                    }
+
                     // Try and fetch the creator name from the directory name
                     // Example /Songs/Pack/Artist - Title (Creator)
                     if (string.IsNullOrEmpty(map.Creator))
@@ -71,7 +89,7 @@ namespace Quaver.Shared.Database.Maps.Etterna
                             map.Creator = match.Groups[1].ToString().Replace(")", "");
                     }
 
-                    map.Tags = new DirectoryInfo(Path.GetFullPath(Path.Combine(map.Directory, @"..\"))).Name;
+                    map.Tags = new DirectoryInfo(Path.GetFullPath(Path.Combine(map.Directory, @"../"))).Name;
                     maps.Add(map);
                 }
 
