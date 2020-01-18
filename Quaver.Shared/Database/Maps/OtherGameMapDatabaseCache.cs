@@ -121,7 +121,7 @@ namespace Quaver.Shared.Database.Maps
                 DeleteMaps(DatabaseManager.Connection);
 
                 if (SyncMapCount == 0)
-                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed difficulty rating calculations!");
+                    NotificationManager.Show(NotificationLevel.Success, "Successfully completed syncing outdated maps!");
             })
             {
                 IsBackground = true,
