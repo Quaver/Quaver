@@ -393,8 +393,14 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Insert(map);
                                 break;
                             case MapGame.Osu:
+                                var osuMap = (OtherGameMap) map;
+                                osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
+                                conn.Insert(osuMap);
+                                break;
                             case MapGame.Etterna:
-                                conn.Insert((OtherGameMap) map);
+                                var etternaChart = (OtherGameMap) map;
+                                etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
+                                conn.Insert(etternaChart);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -452,8 +458,14 @@ namespace Quaver.Shared.Database.Maps
                                 conn.Update(map);
                                 break;
                             case MapGame.Osu:
+                                var osuMap = (OtherGameMap) map;
+                                osuMap.SyncVersion = OtherGameMap.OsuSyncVersion;
+                                conn.Update(osuMap);
+                                break;
                             case MapGame.Etterna:
-                                conn.Update((OtherGameMap) map);
+                                var etternaChart = (OtherGameMap) map;
+                                etternaChart.SyncVersion = OtherGameMap.EtternaSyncVersion;
+                                conn.Update(etternaChart);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
