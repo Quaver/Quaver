@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -176,13 +176,25 @@ namespace Quaver.Shared.Database.Maps
             if (string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value) || etternaCharts.Count == 0)
                 currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Etterna);
 
+            // Make sure there're no duplicate Checksums
+            osuMaps = Helpers.ListHelper.DistinctBy(osuMaps, x => x.Md5Checksum).ToList();
+            etternaCharts = Helpers.ListHelper.DistinctBy(etternaCharts, x => x.Md5Checksum).ToList();
+
+            // Creating hash objects
+            var osuMapsHash = new Dictionary<string, OtherGameMap>();
+            osuMaps.ForEach(x => osuMapsHash.Add(x.Md5Checksum, x));
+
+            var etternaChartsHash = new Dictionary<string, OtherGameMap>();
+            etternaCharts.ForEach(x => etternaChartsHash.Add(x.Md5Checksum, x));
+
+            var currentlyCachedHash = new HashSet<string>(currentlyCached.Select(x => x.Md5Checksum));
+
             // Find maps that need to be deleted/updated from the cache
             for (var i = currentlyCached.Count - 1; i >= 0; i--)
             {
                 var map = currentlyCached[i];
 
-                if (osuMaps.All(x => x.Md5Checksum != map.Md5Checksum)
-                    && etternaCharts.All(x => x.Md5Checksum != map.Md5Checksum))
+                if (!osuMapsHash.ContainsKey(map.Md5Checksum) && !etternaChartsHash.ContainsKey(map.Md5Checksum))
                 {
                     if (map.OriginalGame == OtherGameMapDatabaseGame.Osu && osuMaps.Count != 0
                         || map.OriginalGame == OtherGameMapDatabaseGame.Etterna && etternaCharts.Count != 0)
@@ -198,7 +210,7 @@ namespace Quaver.Shared.Database.Maps
                 if (map.OriginalGame == OtherGameMapDatabaseGame.Osu)
                 {
                     // Update directory and path if changed
-                    var refMap = osuMaps.FirstOrDefault(x => x.Md5Checksum == map.Md5Checksum);
+                    var refMap = osuMapsHash[map.Md5Checksum];
                     if (refMap != null && (refMap.Directory != map.Directory || refMap.Path != map.Path))
                     {
                         MapsToCache[OtherGameCacheAction.Update].Add(map);
@@ -210,10 +222,7 @@ namespace Quaver.Shared.Database.Maps
             // Find maps that need to be added to the database.
             foreach (var map in osuMaps)
             {
-                if (currentlyCached.Find(x => x.Md5Checksum == map.Md5Checksum) != null)
-                    continue;
-
-                if (!currentlyCached.Contains(map))
+                if (!currentlyCachedHash.Contains(map.Md5Checksum))
                 {
                     MapsToCache[OtherGameCacheAction.Add].Add(map);
                     currentlyCached.Add(map);
@@ -223,10 +232,7 @@ namespace Quaver.Shared.Database.Maps
             // Find maps that need to be added to the database.
             foreach (var map in etternaCharts)
             {
-                if (currentlyCached.Find(x => x.Md5Checksum == map.Md5Checksum) != null)
-                    continue;
-
-                if (!currentlyCached.Contains(map))
+                if (!currentlyCachedHash.Contains(map.Md5Checksum))
                 {
                     MapsToCache[OtherGameCacheAction.Add].Add(map);
                     currentlyCached.Add(map);
@@ -259,7 +265,7 @@ namespace Quaver.Shared.Database.Maps
             return currentlyCached;
         }
 
-         /// <summary>
+        /// <summary>
         ///     Reads the osu!.db file defined in config and loads all of those maps into the cache.
         /// </summary>
         private static List<OtherGameMap> LoadOsuBeatmapDatabase()
