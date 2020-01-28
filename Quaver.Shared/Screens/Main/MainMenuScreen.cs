@@ -13,6 +13,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main.UI;
@@ -103,7 +104,7 @@ namespace Quaver.Shared.Screens.Main
                 // If they're online, send them to the download screen
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadScreen());
+                    Exit(() => new DownloadingScreen());
                     return;
                 }
 
@@ -139,7 +140,7 @@ namespace Quaver.Shared.Screens.Main
             {
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadScreen());
+                    Exit(() => new DownloadingScreen());
                     return;
                 }
 
@@ -181,16 +182,7 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         /// </summary>
-        public void ExitToDownload()
-        {
-            if (!OnlineManager.Connected)
-            {
-                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download maps!");
-                return;
-            }
-
-            Exit(() => new DownloadScreen());
-        }
+        public void ExitToDownload() => Exit(() => new DownloadingScreen(Type));
 
         /// <summary>
         /// </summary>

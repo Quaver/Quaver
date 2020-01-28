@@ -39,6 +39,7 @@ using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
+using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Multi;
@@ -180,6 +181,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"DownloadingScreen", typeof(DownloadingScreen)},
             {"Dropdown", typeof(DropdownTestScreen)},
             {"MenuBorder", typeof(MenuBorderTestScreen)},
             {"OptionsMenu", typeof(OptionsTestScreen)},
@@ -612,6 +614,7 @@ namespace Quaver.Shared
                 case QuaverScreenType.Multiplayer:
                 case QuaverScreenType.Lobby:
                 case QuaverScreenType.Music:
+                case QuaverScreenType.Download:
                     DialogManager.Show(new OptionsDialog());
                     break;
             }

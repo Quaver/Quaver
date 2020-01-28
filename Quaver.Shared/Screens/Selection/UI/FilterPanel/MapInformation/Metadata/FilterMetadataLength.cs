@@ -10,13 +10,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataLength : TextKeyValue
     {
-        public FilterMetadataLength() : base("Length:", "00:00", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public Bindable<Map> Map { get; }
+
+        public FilterMetadataLength(Bindable<Map> map = null) : base("Length:", "00:00", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
-            if (MapManager.Selected.Value != null)
+            Map = map ?? MapManager.Selected;
+
+            if (Map.Value != null)
                 Value.Text = $"{GetLength()}";
 
             ModManager.ModsChanged += OnModsChanged;
-            MapManager.Selected.ValueChanged += OnMapChanged;
+            Map.ValueChanged += OnMapChanged;
         }
 
         /// <inheritdoc />
@@ -25,7 +29,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            MapManager.Selected.ValueChanged -= OnMapChanged;
+            Map.ValueChanged -= OnMapChanged;
             ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
@@ -37,10 +41,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
         private string GetLength()
         {
-            if (MapManager.Selected.Value == null)
+            if (Map.Value == null)
                 return "00:00";
 
-            var length = TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
+            var length = TimeSpan.FromMilliseconds(Map.Value.SongLength / ModHelper.GetRateFromMods(ModManager.Mods));
             return length.Hours > 0 ? length.ToString(@"hh\:mm\:ss") : length.ToString(@"mm\:ss");
         }
 

@@ -227,7 +227,6 @@ namespace Quaver.Shared.Database.Maps
         {
             try
             {
-
                 return DatabaseManager.Connection.Find<Map>(x => x.MapSetId == id);
             }
             catch (Exception e)

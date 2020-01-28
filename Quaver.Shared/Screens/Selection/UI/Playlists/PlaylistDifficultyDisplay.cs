@@ -6,11 +6,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
 {
     public class PlaylistDifficultyDisplay : PlaylistKeyValueDisplay
     {
-        private SpriteTextPlus Dash { get; }
+        public SpriteTextPlus Dash { get; }
 
-        private SpriteTextPlus MaxDifficulty { get; }
+        public SpriteTextPlus MaxDifficulty { get; private set; }
 
-        public PlaylistDifficultyDisplay() : base("Difficulty:", "0", Color.White, false)
+        public PlaylistDifficultyDisplay(string key = null) : base(key ?? "Difficulty:", "0", Color.White, false)
         {
             Dash = new SpriteTextPlus(Key.Font, "-", Key.FontSize)
             {
