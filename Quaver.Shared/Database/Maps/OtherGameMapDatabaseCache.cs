@@ -193,6 +193,18 @@ namespace Quaver.Shared.Database.Maps
 
                     continue;
                 }
+
+                // Updates for osu
+                if (map.OriginalGame == OtherGameMapDatabaseGame.Osu)
+                {
+                    // Update directory and path if changed
+                    var refMap = osuMaps.FirstOrDefault(x => x.Md5Checksum == map.Md5Checksum);
+                    if (refMap != null && (refMap.Directory != map.Directory || refMap.Path != map.Path))
+                    {
+                        MapsToCache[OtherGameCacheAction.Update].Add(map);
+                        currentlyCached[i] = refMap;
+                    }
+                }
             }
 
             // Find maps that need to be added to the database.
