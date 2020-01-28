@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Width = Width,
-                Height = 880,
+                Height = HEIGHT,
             };
 
             SelectedIndex = new BindableInt(-1, 0, int.MaxValue);

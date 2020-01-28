@@ -9,13 +9,17 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
     public class FilterMetadataBpm : TextKeyValue
     {
-        public FilterMetadataBpm() : base("BPM:", "000", 20, ColorHelper.HexToColor($"#ffe76b"))
+        public Bindable<Map> Map { get; }
+
+        public FilterMetadataBpm(Bindable<Map> map = null) : base("BPM:", "000", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
-            if (MapManager.Selected.Value != null)
+            Map = map ?? MapManager.Selected;
+
+            if (Map.Value != null)
                 Value.Text = $"{GetBpm()}";
 
             ModManager.ModsChanged += OnModsChanged;
-            MapManager.Selected.ValueChanged += OnMapChanged;
+            Map.ValueChanged += OnMapChanged;
         }
 
         /// <inheritdoc />
@@ -24,7 +28,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         public override void Destroy()
         {
             // ReSharper disable once DelegateSubtraction
-            MapManager.Selected.ValueChanged -= OnMapChanged;
+            Map.ValueChanged -= OnMapChanged;
             ModManager.ModsChanged -= OnModsChanged;
 
             base.Destroy();
@@ -36,10 +40,10 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 
         private int GetBpm()
         {
-            if (MapManager.Selected.Value == null)
+            if (Map.Value == null)
                 return 0;
 
-            return (int) (MapManager.Selected.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods));
+            return (int) (Map.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods));
         }
 
         private void SetText() => Value.Text = GetBpm().ToString();

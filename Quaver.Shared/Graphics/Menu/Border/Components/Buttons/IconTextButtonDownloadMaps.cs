@@ -1,7 +1,9 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Settings;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -14,14 +16,17 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonDownloadMaps() : base(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Maps", (sender, args) =>
             {
-                if (!OnlineManager.Connected)
+                var game = (QuaverGame) GameBase.Game;
+
+                if (game.CurrentScreen.Type == QuaverScreenType.Multiplayer)
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download maps!");
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        $"You can only download maps in multiplayer while you are host during song select!");
+
                     return;
                 }
 
-                var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen.Exit(() => new DownloadScreen());
+                game.CurrentScreen.Exit(() => new DownloadingScreen(game.CurrentScreen.Type));
             })
         {
         }

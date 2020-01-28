@@ -1,0 +1,220 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Online.API.MapsetSearch;
+using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Wobble.Bindables;
+using Wobble.Graphics.Animations;
+using Wobble.Scheduling;
+using Wobble.Window;
+
+namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
+{
+    public class DownloadableMapsetContainer : SongSelectContainer<DownloadableMapset>
+    {
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override SelectScrollContainerType Type { get; }
+
+        /// <summary>
+        /// </summary>
+        private BindableList<DownloadableMapset> AvailableMapsets { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<DownloadableMapset> SelectedMapset { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<int> Page { get; }
+
+        /// <summary>
+        /// </summary>
+        private TaskHandler<int, int> SearchTask { get; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <param name="selectedMapset"></param>
+        /// <param name="page"></param>
+        /// <param name="searchTask"></param>
+        public DownloadableMapsetContainer(BindableList<DownloadableMapset> mapsets,
+            Bindable<DownloadableMapset> selectedMapset, Bindable<int> page, TaskHandler<int, int> searchTask)
+            : base(mapsets.Value, int.MaxValue)
+        {
+            AvailableMapsets = mapsets;
+            SelectedMapset = selectedMapset;
+            Page = page;
+            SearchTask = searchTask;
+
+            AvailableMapsets.ItemRemoved += OnAvailableItemRemoved;
+            AvailableMapsets.ValueChanged += OnAvailableMapsetChanged;
+            AvailableMapsets.MultipleItemsAdded += OnMultipleItemsAdded;
+            MapsetDownloadManager.DownloadAdded += OnDowloadAdded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            // Handle infinite scrolling
+            if (ContentContainer.Height - Math.Abs(ContentContainer.Y) - Height < 500 && !SearchTask.IsRunning
+                && ContentContainer.Y != 0)
+            {
+                Page.Value++;
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            MapsetDownloadManager.DownloadAdded -= OnDowloadAdded;
+            base.Destroy();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void HandleInput(GameTime gameTime)
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected override PoolableSprite<DownloadableMapset> CreateObject(DownloadableMapset item, int index)
+            => new DrawableDownloadableMapset(this, item, index, SelectedMapset);
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected override float GetSelectedPosition() => (-SelectedIndex.Value + 4) * DrawableMapset.MapsetHeight;
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        protected override void SetSelectedIndex()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes the container with new maps
+        /// </summary>
+        /// <param name="maps"></param>
+        public void Initialize(List<DownloadableMapset> maps)
+        {
+            DestroyAndClearPool();
+
+            AvailableItems = maps;
+
+            // Get the new selected mapset index
+            SetSelectedIndex();
+
+            // Reset the starting index so we can be aware of the mapsets that are needed
+            PoolStartingIndex = DesiredPoolStartingIndex(SelectedIndex.Value);
+
+            // Recreate the object pool
+            CreatePool();
+
+            if (maps == null || maps.Count == 0)
+                ContentContainer.Height = Height;
+
+            PositionAndContainPoolObjects();
+
+            // Snap to it immediately
+            SnapToSelected();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAvailableMapsetChanged(object sender, BindableValueChangedEventArgs<List<DownloadableMapset>> e)
+            => ScheduleUpdate(() => Initialize(e.Value));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDowloadAdded(object sender, MapsetDownloadAddedEventArgs e)
+        {
+            e.Download.Completed.ValueChanged += (o, args) =>
+            {
+                if (args.Value.Error == null)
+                {
+                    NotificationManager.Show(NotificationLevel.Success,
+                        $"Finished dowwnloading: {e.Download.Artist} - {e.Download.Title}!");
+                }
+
+                var availableItem = AvailableMapsets.Value.Find(x => x.Id == e.Download.MapsetId);
+
+                if (availableItem != null)
+                    AvailableMapsets.Remove(availableItem);
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAvailableItemRemoved(object sender, BindableListItemRemovedEventArgs<DownloadableMapset> e)
+        {
+            ScheduleUpdate(() =>
+            {
+                var item = Pool.Find(x => x.Item.Id == e.Item.Id);
+
+                if (item == null)
+                    return;
+
+                Pool.Remove(item);
+                item.Destroy();
+
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+
+                    Pool[i].ClearAnimations();
+                    Pool[i].MoveToY((PoolStartingIndex + i) * Pool[i].HEIGHT + PaddingTop, Easing.OutQuint, 450);
+                }
+
+                RecalculateContainerHeight();
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<DownloadableMapset> e)
+        {
+            foreach (var item in e.Items)
+            {
+                var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
+                mapset.UpdateContent(mapset.Item, mapset.Index);
+
+                Pool.Add(mapset);
+                AddContainedDrawable(mapset);
+                mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
+            }
+
+            RecalculateContainerHeight();
+        }
+    }
+}
