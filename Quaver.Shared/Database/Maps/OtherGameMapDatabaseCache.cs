@@ -11,6 +11,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps.Etterna;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens;
 using SQLite;
 using UniversalThreadManagement;
@@ -177,18 +178,14 @@ namespace Quaver.Shared.Database.Maps
                 currentlyCached.RemoveAll(x => x.OriginalGame == OtherGameMapDatabaseGame.Etterna);
 
             // Make sure there're no duplicate Checksums
-            osuMaps = Helpers.ListHelper.DistinctBy(osuMaps, x => x.Md5Checksum).ToList();
-            etternaCharts = Helpers.ListHelper.DistinctBy(etternaCharts, x => x.Md5Checksum).ToList();
+            osuMaps = ListHelper.DistinctBy(osuMaps, x => x.Md5Checksum).ToList();
+            etternaCharts = ListHelper.DistinctBy(etternaCharts, x => x.Md5Checksum).ToList();
 
             // Creating hash objects
-            var osuMapsHash = new Dictionary<string, OtherGameMap>();
-            osuMaps.ForEach(x => osuMapsHash.Add(x.Md5Checksum, x));
-
-            var etternaChartsHash = new Dictionary<string, OtherGameMap>();
-            etternaCharts.ForEach(x => etternaChartsHash.Add(x.Md5Checksum, x));
-
-            var currentlyCachedHash = new HashSet<string>(currentlyCached.Select(x => x.Md5Checksum));
-
+            var osuMapsHash = osuMaps.ToDictionary(x => x.Md5Checksum);
+            var etternaChartsHash = etternaCharts.ToDictionary(x => x.Md5Checksum);
+            var currentlyCachedHash = currentlyCached.Select(x => x.Md5Checksum).ToHashSet();
+            
             // Find maps that need to be deleted/updated from the cache
             for (var i = currentlyCached.Count - 1; i >= 0; i--)
             {
