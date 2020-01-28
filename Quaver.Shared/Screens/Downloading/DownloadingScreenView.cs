@@ -8,6 +8,7 @@ using Quaver.Shared.Screens.Downloading.UI.Mapsets;
 using Quaver.Shared.Screens.Downloading.UI.Search;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 
@@ -63,6 +64,8 @@ namespace Quaver.Shared.Screens.Downloading
             Header.Parent = Container;
             Footer.Parent = Container;
             SearchPanel.Parent = Container;
+
+            DownloadingScreen.ScreenExiting += OnScreenExiting;
         }
 
         /// <inheritdoc />
@@ -125,8 +128,10 @@ namespace Quaver.Shared.Screens.Downloading
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
                 Y = SearchPanel.Y + SearchPanel.Height + 20,
-                X = ScreenPaddingX
             };
+
+            FilterContainer.X = -FilterContainer.Width - 50;
+            FilterContainer.MoveToX(ScreenPaddingX, Easing.OutQuint, 450);
         }
 
         /// <summary>
@@ -139,8 +144,23 @@ namespace Quaver.Shared.Screens.Downloading
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 Y = SearchPanel.Y + SearchPanel.Height + 8,
-                X = -ScreenPaddingX
             };
+
+            MapsetContainer.X = MapsetContainer.Width + 50;
+            MapsetContainer.MoveToX(-ScreenPaddingX, Easing.OutQuint, 450);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScreenExiting(object sender, ScreenExitingEventArgs e)
+        {
+            MapsetContainer.ClearAnimations();
+            MapsetContainer.MoveToX(MapsetContainer.Width + 50, Easing.OutQuint, 450);
+
+            FilterContainer.ClearAnimations();
+            FilterContainer.MoveToX(-FilterContainer.Width - 50, Easing.OutQuint, 450);
         }
     }
 }
