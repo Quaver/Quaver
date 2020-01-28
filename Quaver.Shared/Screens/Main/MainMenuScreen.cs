@@ -104,7 +104,7 @@ namespace Quaver.Shared.Screens.Main
                 // If they're online, send them to the download screen
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadScreen());
+                    Exit(() => new DownloadingScreen());
                     return;
                 }
 
@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.Main
             {
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected)
                 {
-                    Exit(() => new DownloadScreen());
+                    Exit(() => new DownloadingScreen());
                     return;
                 }
 

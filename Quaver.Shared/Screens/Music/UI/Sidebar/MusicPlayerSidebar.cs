@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Music.UI.Sidebar.Playlists;
 using Quaver.Shared.Screens.Selection;
@@ -166,14 +167,8 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             DownloadSongs = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
                 FontManager.GetWobbleFont(Fonts.LatoBlack), "Download Songs", (sender, args) =>
                 {
-                    if (!OnlineManager.Connected)
-                    {
-                        NotificationManager.Show(NotificationLevel.Error, "You must be logged in to download songs!");
-                        return;
-                    }
-
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new DownloadScreen());
+                    game.CurrentScreen.Exit(() => new DownloadingScreen());
                 })
             {
                 Parent = ExploreContainer,
