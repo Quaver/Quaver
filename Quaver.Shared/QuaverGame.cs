@@ -704,6 +704,8 @@ namespace Quaver.Shared
                 if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     return;
 
+                NotificationManager.Show(NotificationLevel.Info, "Uploading screenshot. Please wait...");
+
                 ThreadScheduler.Run(() =>
                 {
                     try
