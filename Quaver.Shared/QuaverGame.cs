@@ -672,6 +672,8 @@ namespace Quaver.Shared
 
             try
             {
+                SkinManager.Skin.SoundScreenshot?.CreateChannel()?.Play();
+
                 var w = GraphicsDevice.PresentationParameters.BackBufferWidth;
                 var h = GraphicsDevice.PresentationParameters.BackBufferHeight;
 
@@ -701,8 +703,6 @@ namespace Quaver.Shared
                 // Upload file to imgur
                 if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
                     return;
-
-                NotificationManager.Show(NotificationLevel.Info, "Uploading screenshot. Please wait...");
 
                 ThreadScheduler.Run(() =>
                 {
