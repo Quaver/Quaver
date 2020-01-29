@@ -13,6 +13,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.MapsetSearch;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Downloading.UI.Search;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
@@ -20,6 +21,8 @@ using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Theater;
+using Wobble.Audio;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -131,18 +134,42 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public TaskHandler<int, int> SearchTask { get; }
+        public TaskHandler<int, int> SearchTask { get; private set; }
 
         /// <summary>
         /// </summary>
         private List<DownloadableMapset> PreviousPageMapsets { get; set; }
 
         /// <summary>
+        ///    Cached audio tracks for the song previews
+        /// </summary>
+        public Dictionary<int, IAudioTrack> AudioPreviews { get; private set; } = new Dictionary<int, IAudioTrack>();
+
+        /// <summary>
+        ///     The song preview that is currently playing
+        /// </summary>
+        private IAudioTrack CurrentPreview { get; set; } = new AudioTrackVirtual(10000);
+
+        /// <summary>
+        /// </summary>
+        public DownloadingScreen()
+        {
+            PreviousScreen = QuaverScreenType.Menu;
+            Initialize();
+        }
+
+        /// <summary>
         /// </summary>
         public DownloadingScreen(QuaverScreenType previousScreen = QuaverScreenType.Menu)
         {
             PreviousScreen = previousScreen;
+            Initialize();
+        }
 
+        /// <summary>
+        /// </summary>
+        private void Initialize()
+        {
             if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
                 AudioEngine.Track?.Stop();
 
@@ -163,11 +190,13 @@ namespace Quaver.Shared.Screens.Downloading
             MaxUploadDate.ValueChanged += OnMaxUploadDateChanged;
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
             Page.ValueChanged += OnPageChanged;
+            SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
 
             SearchTask = new TaskHandler<int, int>(SearchMapsets);
 
-            SetRichPresence();
-
+#if !VISUAL_TESTS
+           SetRichPresence();
+#endif
             View = new DownloadingScreenView(this);
             StartSearchTask();
         }
@@ -271,6 +300,7 @@ namespace Quaver.Shared.Screens.Downloading
             Mapsets?.Dispose();
             SelectedMapset?.Dispose();
             DisplayOwnedMapsets?.Dispose();
+            DisposePreviews();
 
             base.Destroy();
         }
@@ -420,15 +450,85 @@ namespace Quaver.Shared.Screens.Downloading
         private void OnPageChanged(object sender, BindableValueChangedEventArgs<int> e) => StartSearchTask();
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
+            => LoadAudioPreview();
+
+        /// <summary>
+        ///     Loads an plays the audio preview for the selected map
+        /// </summary>
+        private void LoadAudioPreview()
+        {
+            if (CurrentPreview != null && CurrentPreview.IsPlaying)
+                CurrentPreview?.Stop();
+
+            if (SelectedMapset.Value == null)
+                return;
+
+            ThreadScheduler.Run(() =>
+            {
+                lock (CurrentPreview)
+                lock (AudioPreviews)
+                {
+                    try
+                    {
+                        if (AudioPreviews.ContainsKey(SelectedMapset.Value.Id))
+                        {
+                            CurrentPreview = AudioPreviews[SelectedMapset.Value.Id];
+                            CurrentPreview.Seek(0);
+                            CurrentPreview.Play();
+                            return;
+                        }
+
+                        var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{SelectedMapset.Value.Id}.mp3");
+                        CurrentPreview = new AudioTrack(uri, false, false);
+                        AudioPreviews.Add(SelectedMapset.Value.Id, CurrentPreview);
+                        CurrentPreview.Play();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, LogType.Network);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
         /// </summary>
         private void SetRichPresence()
         {
-            DiscordHelper.Presence.Details = "Downloading Maps";
-            DiscordHelper.Presence.State = "In the menus";
-            DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
-            DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
-            DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
-            DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            try
+            {
+                DiscordHelper.Presence.Details = "Downloading Maps";
+                DiscordHelper.Presence.State = "In the menus";
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DisposePreviews()
+        {
+            foreach (var track in AudioPreviews.Values)
+            {
+                if (!track.IsDisposed)
+                    track.Dispose();
+
+                if (!CurrentPreview.IsDisposed)
+                    CurrentPreview.Dispose();
+            }
+
+            AudioPreviews = null;
         }
 
         /// <inheritdoc />
