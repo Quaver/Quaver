@@ -716,6 +716,7 @@ namespace Quaver.Shared
                         if (response == null)
                             throw new Exception("Failed to upload screenshot to imgur");
 
+                        Clipboard.NativeClipboard.SetText(response);
                         BrowserHelper.OpenURL(response, true);
                         NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded screenshot!");
                     }
