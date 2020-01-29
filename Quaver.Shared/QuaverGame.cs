@@ -35,6 +35,7 @@ using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.Imgur;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
@@ -93,6 +94,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.IO;
 using Wobble.Logging;
+using Wobble.Platform;
 using Wobble.Window;
 using Version = YamlDotNet.Core.Version;
 
@@ -241,6 +243,7 @@ namespace Quaver.Shared
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
             // Apply all graphics changes
@@ -548,6 +551,7 @@ namespace Quaver.Shared
             HandleKeyPressCtrlO();
             HandleKeyPressCtrlS();
             HandleKeyPressAltEnter();
+            HandleKeyPressF12();
         }
 
         /// <summary>
@@ -656,6 +660,78 @@ namespace Quaver.Shared
                 return;
 
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
+        }
+
+        /// <summary>
+        ///     Handles taking screenshots of the game when the user presses F12, and shift to upload.
+        /// </summary>
+        private void HandleKeyPressF12()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F12))
+                return;
+
+            try
+            {
+                SkinManager.Skin.SoundScreenshot?.CreateChannel()?.Play();
+
+                var w = GraphicsDevice.PresentationParameters.BackBufferWidth;
+                var h = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+                var backBuffer = new int[w * h];
+
+                GraphicsDevice.GetBackBufferData(backBuffer);
+
+                //copy into a texture
+                var texture = new Texture2D(GraphicsDevice, w, h, false, GraphicsDevice.PresentationParameters.BackBufferFormat);
+                texture.SetData(backBuffer);
+
+                var now = DateTime.Now;
+
+                var path = $"{ConfigManager.ScreenshotDirectory.Value}/{now.Month}{now.Day}{now.Year} {now.Hour}-{now.Minute}-" +
+                           $"{now.Second}-{now.Millisecond}.jpg";
+
+                var stream = File.OpenWrite(path);
+
+                texture.SaveAsJpeg(stream, w, h);
+                stream.Dispose();
+
+                texture.Dispose();
+
+                NotificationManager.Show(NotificationLevel.Success, $"Screenshot saved. Click here to view!" ,
+                    (sender, args) => Utils.NativeUtils.HighlightInFileManager(path));
+
+                // Upload file to imgur
+                if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftShift) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightShift))
+                    return;
+
+                NotificationManager.Show(NotificationLevel.Info, "Uploading screenshot. Please wait...");
+
+                ThreadScheduler.Run(() =>
+                {
+                    try
+                    {
+                        var request = new APIRequestImgurUpload(path);
+                        var response = request.ExecuteRequest();
+
+                        if (response == null)
+                            throw new Exception("Failed to upload screenshot to imgur");
+
+                        Clipboard.NativeClipboard.SetText(response);
+                        BrowserHelper.OpenURL(response, true);
+                        NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded screenshot!");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, LogType.Network);
+                        NotificationManager.Show(NotificationLevel.Error, "Failed to upload screenshot!");
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
