@@ -171,8 +171,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             ScheduleUpdate(() =>
             {
                 Banner.UpdateMapset(Item);
+
                 ArtistTitle.Text = $"{Item.Artist} - {Item.Title}";
                 ArtistTitle.TruncateWithEllipsis(450);
+                ArtistTitle.Tint = Item.IsOwned ? ColorHelper.HexToColor("#808080") : Color.White;
+                
                 Creator.Text = Item.CreatorUsername;
 
                 RankedStatusIcon.Image = GetRankedStatusTexture(Item);
@@ -208,7 +211,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             {
                 Parent = ContentContainer,
                 Size = ContentContainer.Size,
-                Alpha = 0
+                Alpha = 0,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Button.Clicked += (sender, args) =>
@@ -391,6 +395,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true,
             };
 
+            DifficultyRange.Key.UsePreviousSpriteBatchOptions = true;
+            DifficultyRange.Dash.UsePreviousSpriteBatchOptions = true;
+            DifficultyRange.Value.UsePreviousSpriteBatchOptions = true;
+
             DifficultyRange.Key.Alpha = 0.85f;
             DifficultyRange.Value.Alpha = 0.85f;
             DifficultyRange.Dash.Alpha = 0.85f;
@@ -402,7 +410,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         public void Select(bool changeWidthInstantly = false)
         {
-            ContentContainer.Image = UserInterface.SelectedMapset;
+            ContentContainer.Image = Item.IsOwned ? UserInterface.GrayedMapset : UserInterface.SelectedMapset;
 
             const int time = 200;
             AnimateSprites(1, 200);
@@ -417,7 +425,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         public void Deselect(bool changeWidthInstantly = false)
         {
-            ContentContainer.Image = UserInterface.DeselectedMapset;
+            ContentContainer.Image = Item.IsOwned ? UserInterface.GrayedMapset : UserInterface.DeselectedMapset;
 
             const int time = 200;
             AnimateSprites(0.85f, 200);

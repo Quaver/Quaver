@@ -72,5 +72,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         [JsonProperty("max_date_submitted")]
         public DateTime MaxDateSubmitted { get; set; }
+
+        public bool IsOwned { get; set; }
     }
 }

@@ -52,7 +52,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                     return;
 
                 Image = x.Result;
-                FadeTo(0.85f, Easing.Linear, 250);
+
+                var alpha = Mapset.IsOwned ? 0.45f : 0.85f;
+                FadeTo(alpha, Easing.Linear, 250);
             });
         }
     }

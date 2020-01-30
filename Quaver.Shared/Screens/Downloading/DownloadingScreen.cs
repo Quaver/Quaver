@@ -381,10 +381,11 @@ namespace Quaver.Shared.Screens.Downloading
 
                 var result = request.ExecuteRequest();
 
-                var mapsets = !DisplayOwnedMapsets.Value ?
-                    result?.Mapsets?.FindAll(x => MapDatabaseCache.FindSet(x.Id) == null)
-                    : result.Mapsets;
+                List<DownloadableMapset> mapsets;
 
+                result.Mapsets.ForEach(x => x.IsOwned = MapDatabaseCache.FindSet(x.Id) != null);
+
+                mapsets = !DisplayOwnedMapsets.Value ? result?.Mapsets?.FindAll(x => !x.IsOwned) : result.Mapsets;
                 mapsets = SortMapsets(mapsets);
 
                 PreviousPageMapsets = result?.Mapsets ?? new List<DownloadableMapset>();
@@ -558,7 +559,7 @@ namespace Quaver.Shared.Screens.Downloading
                     {
                         if (CurrentPreview != null && CurrentPreview.IsPlaying)
                             CurrentPreview?.Stop();
-                        
+
                         if (AudioPreviews.ContainsKey(mapset.Id))
                         {
                             CurrentPreview = AudioPreviews[mapset.Id];
