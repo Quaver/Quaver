@@ -586,6 +586,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<Keys> KeyScreenshot { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -726,7 +730,6 @@ namespace Quaver.Shared.Config
             KeyCoop2P7K5 = ReadValue(@"KeyCoop2P7K5", Keys.M, data);
             KeyCoop2P7K6 = ReadValue(@"KeyCoop2P7K6", Keys.OemComma, data);
             KeyCoop2P7K7 = ReadValue(@"KeyCoop2P7K7", Keys.OemPeriod, data);
-
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
@@ -737,6 +740,7 @@ namespace Quaver.Shared.Config
             KeyIncreaseMapOffset = ReadValue(@"KeyIncreaseMapOffset", Keys.OemPlus, data);
             KeyScoreboardVisible = ReadValue(@"KeyScoreboardVisible", Keys.Tab, data);
             KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
+            KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             BlurBackgroundInGameplay = ReadValue(@"BlurBackgroundInGameplay", false, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
@@ -920,6 +924,7 @@ namespace Quaver.Shared.Config
                     UseSteamWorkshopSkin.ValueChanged += AutoSaveConfiguration;
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
+                    KeyScreenshot.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
