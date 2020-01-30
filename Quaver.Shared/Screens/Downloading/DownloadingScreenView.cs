@@ -109,7 +109,7 @@ namespace Quaver.Shared.Screens.Downloading
         /// </summary>
         private void CreateSearchPanel() => SearchPanel = new DownloadSearchPanel(DownloadingScreen.CurrentSearchQuery,
             DownloadingScreen.FilterGameMode, DownloadingScreen.FilterRankedStatus, DownloadingScreen.Mapsets,
-            DownloadingScreen.SelectedMapset)
+            DownloadingScreen.SelectedMapset, DownloadingScreen.SortBy)
         {
             Parent = Container,
             Y = Header.Y + Header.Height

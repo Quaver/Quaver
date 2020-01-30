@@ -31,6 +31,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         private Bindable<DownloadableMapset> SelectedMapset { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<DownloadSortBy> SortBy { get; }
+
+        /// <summary>
         ///     Items that are aligned from right to left
         /// </summary>
         private List<Drawable> RightItems { get; } = new List<Drawable>();
@@ -38,6 +42,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <summary>
         /// </summary>
         private DownloadSearchBox SearchBox { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private DownloadSortByDropdown SortByDropdown { get; set; }
 
         /// <summary>
         /// </summary>
@@ -66,20 +74,23 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// <param name="status"></param>
         /// <param name="availableMapsets"></param>
         /// <param name="selectedMapset"></param>
+        /// <param name="sortBy"></param>
         public DownloadSearchPanel(Bindable<string> searchQuery, Bindable<DownloadFilterMode> mode,
             Bindable<DownloadFilterRankedStatus> status, BindableList<DownloadableMapset> availableMapsets,
-            Bindable<DownloadableMapset> selectedMapset)
+            Bindable<DownloadableMapset> selectedMapset, Bindable<DownloadSortBy> sortBy)
         {
             SearchQuery = searchQuery;
             Mode = mode;
             Status = status;
             AvailableMapsets = availableMapsets;
             SelectedMapset = selectedMapset;
+            SortBy = sortBy;
 
             Size = new ScalableVector2(WindowManager.Width, 88);
             Tint = ColorHelper.HexToColor("#242424");
 
             CreateBanner();
+            CreateSortBy();
             //CreateDifficulty();
             CreateRankedStatus();
             CreateMode();
@@ -87,6 +98,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             CreateFoundResults();
 
             AlignRightItems();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSortBy()
+        {
+            SortByDropdown = new DownloadSortByDropdown(SortBy);
+            RightItems.Add(SortByDropdown);
         }
 
         /// <summary>
