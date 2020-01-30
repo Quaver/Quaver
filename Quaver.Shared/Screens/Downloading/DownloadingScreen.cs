@@ -11,6 +11,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Scheduling;
@@ -155,6 +156,11 @@ namespace Quaver.Shared.Screens.Downloading
         private IAudioTrack CurrentPreview { get; set; } = new AudioTrackVirtual(10000);
 
         /// <summary>
+        ///     Determines if the audio preview should be playing
+        /// </summary>
+        private bool ShouldPreviewPlay { get; set; } = true;
+
+        /// <summary>
         /// </summary>
         public DownloadingScreen()
         {
@@ -224,6 +230,7 @@ namespace Quaver.Shared.Screens.Downloading
                 return;
 
             HandleKeyPressEscape();
+            HandleKeyPressCtrlP();
         }
 
         /// <summary>
@@ -234,6 +241,33 @@ namespace Quaver.Shared.Screens.Downloading
                 return;
 
             ExitToPreviousScreen();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressCtrlP()
+        {
+            var state = KeyboardManager.CurrentState;
+
+            if (state.IsKeyUp(Keys.LeftControl) && state.IsKeyUp(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.P))
+                return;
+
+            ShouldPreviewPlay = !ShouldPreviewPlay;
+
+            Logger.Important($"Playing preview audio: {ShouldPreviewPlay}", LogType.Runtime);
+
+            NotificationManager.Show(NotificationLevel.Info, ShouldPreviewPlay ? $"Music is currently paused!" : $"Music is now playing!");
+
+            if (CurrentPreview.IsDisposed)
+                return;
+
+            if (ShouldPreviewPlay && !CurrentPreview.IsPlaying)
+                CurrentPreview.Play();
+            else if (!ShouldPreviewPlay && CurrentPreview.IsPlaying)
+                CurrentPreview.Pause();
         }
 
         /// <summary>
@@ -524,14 +558,18 @@ namespace Quaver.Shared.Screens.Downloading
                         {
                             CurrentPreview = AudioPreviews[SelectedMapset.Value.Id];
                             CurrentPreview.Seek(0);
-                            CurrentPreview.Play();
+
+                            if (ShouldPreviewPlay)
+                                CurrentPreview.Play();
                             return;
                         }
 
                         var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{SelectedMapset.Value.Id}.mp3");
                         CurrentPreview = new AudioTrack(uri, false, false);
                         AudioPreviews.Add(SelectedMapset.Value.Id, CurrentPreview);
-                        CurrentPreview.Play();
+
+                        if (ShouldPreviewPlay)
+                            CurrentPreview.Play();
                     }
                     catch (Exception e)
                     {
