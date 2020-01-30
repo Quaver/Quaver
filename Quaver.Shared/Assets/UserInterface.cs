@@ -208,5 +208,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D OptionsInput => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-input.png");
         public static Texture2D OptionsMisc => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-misc.png");
         public static Texture2D DetectOtherGamesButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/detect-other-games-button.png");
+        public static Texture2D GrayedMapset => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/grayed-mapset.png");
     }
 }
