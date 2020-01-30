@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
@@ -8,6 +9,7 @@ using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Scheduling;
 using Wobble.Window;
@@ -37,6 +39,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private TaskHandler<int, int> SearchTask { get; }
 
+        /// <summary>
+        /// </summary>
+        private LoadingWheel LoadingWheel { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -52,6 +58,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             SelectedMapset = selectedMapset;
             Page = page;
             SearchTask = searchTask;
+
+            CreateLoadingWheel();
 
             AvailableMapsets.ItemRemoved += OnAvailableItemRemoved;
             AvailableMapsets.ValueChanged += OnAvailableMapsetChanged;
@@ -71,6 +79,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             {
                 Page.Value++;
             }
+
+            var alpha = Page.Value == 0 && SearchTask.IsRunning ? 1 : 0;
+
+            LoadingWheel.Alpha = MathHelper.Lerp(LoadingWheel.Alpha, alpha,
+                (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
 
             base.Update(gameTime);
         }
@@ -141,6 +154,16 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             // Snap to it immediately
             SnapToSelected();
         }
+
+        /// <summary>
+        /// </summary>
+        private void CreateLoadingWheel() => LoadingWheel = new LoadingWheel
+        {
+            Parent = this,
+            Size = new ScalableVector2(50, 50),
+            Alignment = Alignment.MidCenter,
+            Alpha = 0
+        };
 
         /// <summary>
         /// </summary>
