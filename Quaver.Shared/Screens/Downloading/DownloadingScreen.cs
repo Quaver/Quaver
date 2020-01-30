@@ -547,6 +547,8 @@ namespace Quaver.Shared.Screens.Downloading
             if (SelectedMapset.Value == null)
                 return;
 
+            var mapset = SelectedMapset.Value;
+
             ThreadScheduler.Run(() =>
             {
                 lock (CurrentPreview)
@@ -554,9 +556,12 @@ namespace Quaver.Shared.Screens.Downloading
                 {
                     try
                     {
-                        if (AudioPreviews.ContainsKey(SelectedMapset.Value.Id))
+                        if (CurrentPreview != null && CurrentPreview.IsPlaying)
+                            CurrentPreview?.Stop();
+                        
+                        if (AudioPreviews.ContainsKey(mapset.Id))
                         {
-                            CurrentPreview = AudioPreviews[SelectedMapset.Value.Id];
+                            CurrentPreview = AudioPreviews[mapset.Id];
                             CurrentPreview.Seek(0);
 
                             if (ShouldPreviewPlay)
@@ -564,9 +569,9 @@ namespace Quaver.Shared.Screens.Downloading
                             return;
                         }
 
-                        var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{SelectedMapset.Value.Id}.mp3");
+                        var uri = new Uri($"https://cdn.quavergame.com/audio-previews/{mapset.Id}.mp3");
                         CurrentPreview = new AudioTrack(uri, false, false);
-                        AudioPreviews.Add(SelectedMapset.Value.Id, CurrentPreview);
+                        AudioPreviews.Add(mapset.Id, CurrentPreview);
 
                         if (ShouldPreviewPlay)
                             CurrentPreview.Play();
