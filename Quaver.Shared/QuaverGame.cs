@@ -551,7 +551,7 @@ namespace Quaver.Shared
             HandleKeyPressCtrlO();
             HandleKeyPressCtrlS();
             HandleKeyPressAltEnter();
-            HandleKeyPressF12();
+            HandleKeyPressScreenshot();
         }
 
         /// <summary>
@@ -665,9 +665,9 @@ namespace Quaver.Shared
         /// <summary>
         ///     Handles taking screenshots of the game when the user presses F12, and shift to upload.
         /// </summary>
-        private void HandleKeyPressF12()
+        private void HandleKeyPressScreenshot()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F12))
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScreenshot.Value))
                 return;
 
             try
