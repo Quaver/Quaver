@@ -317,14 +317,17 @@ namespace Quaver.Shared.Screens.Downloading
         {
             // Handles whether or not the search task will be performed again when scrolling to the bottom
             if (Page.Value == 0)
+            {
+                Mapsets.Value = new List<DownloadableMapset>();
                 PreviousPageMapsets = new List<DownloadableMapset>();
+            }
             else if (PreviousPageMapsets.Count < 50)
                 return;
 
             if (SearchTask.IsRunning)
                 SearchTask.Cancel();
 
-            SearchTask.Run(0);
+            SearchTask.Run(0, 250);
         }
 
         /// <summary>
