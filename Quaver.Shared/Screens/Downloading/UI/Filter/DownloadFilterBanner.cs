@@ -229,10 +229,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 21)
             {
                 Parent = this,
-                Y = Title.Y + Title.Height + 8,
+                Y = Title.Y + Title.Height + 14,
                 X = -RankedStatus.X,
                 Tint = Colors.MainAccent,
                 Visible = false
@@ -289,7 +289,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
-                Y = Creator.Y + Creator.Height + 12,
+                Y = Creator.Y + Creator.Height + 14,
                 X = Creator.X,
                 Visible = false
             };
@@ -362,7 +362,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             Mode.Image = DrawableDownloadableMapset.GetModeIcon(e.Value);
             RankedStatus.Image = DrawableDownloadableMapset.GetRankedStatusTexture(e.Value);
 
-            const int spacing = 20;
+            const int spacing = 30;
 
             Bpm.X = MapCount.X + MapCount.Width + spacing;
             Length.X = Bpm.X + Bpm.Width + spacing;

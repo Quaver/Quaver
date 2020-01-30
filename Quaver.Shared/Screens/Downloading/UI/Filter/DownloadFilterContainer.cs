@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateBanner()
         {
-            Banner = new DownloadFilterBanner(SelectedMapset, new ScalableVector2(Container.Width - 4, 150))
+            Banner = new DownloadFilterBanner(SelectedMapset, new ScalableVector2(Container.Width - 4, 154))
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateTable()
         {
-            var tableWidth = (int) Width - 3;
+            var tableWidth = (int) Width - 4;
 
             TableItems = new List<DownloadFilterTableItem>()
             {
@@ -178,7 +178,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 new DownloadFilterTableItem(tableWidth, ""),
                 new DownloadFilterTableItem(tableWidth, ""),
                 new DownloadFilterTableItem(tableWidth, ""),
-                new DownloadFilterTableItem(tableWidth, ""),
             };
 
             TabControl = new TextboxTabControl(new List<Textbox>()) { Parent = this };
@@ -188,7 +187,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 var item = TableItems[i];
 
                 item.Alignment = Alignment.TopCenter;
-                item.Height = (Container.Height - Banner.Height - 4) / TableItems.Count;
+                item.Height = (Container.Height - Banner.Height - 2) / TableItems.Count;
 
                 item.Y = Banner.Height + i * item.Height;
                 item.Tint = i % 2 == 0 ? ColorHelper.HexToColor("#363636") : ColorHelper.HexToColor("#242424");
