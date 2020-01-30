@@ -134,6 +134,10 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
+        public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.Artist) { Value = DownloadSortBy.Artist};
+
+        /// <summary>
+        /// </summary>
         public TaskHandler<int, int> SearchTask { get; private set; }
 
         /// <summary>
@@ -191,11 +195,12 @@ namespace Quaver.Shared.Screens.Downloading
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
             Page.ValueChanged += OnPageChanged;
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
+            SortBy.ValueChanged += OnSortByChanged;
 
             SearchTask = new TaskHandler<int, int>(SearchMapsets);
 
 #if !VISUAL_TESTS
-           SetRichPresence();
+           // SetRichPresence();
 #endif
             View = new DownloadingScreenView(this);
             StartSearchTask();
@@ -300,6 +305,7 @@ namespace Quaver.Shared.Screens.Downloading
             Mapsets?.Dispose();
             SelectedMapset?.Dispose();
             DisplayOwnedMapsets?.Dispose();
+            SortBy?.Dispose();
             DisposePreviews();
 
             base.Destroy();
@@ -342,6 +348,8 @@ namespace Quaver.Shared.Screens.Downloading
                     result?.Mapsets?.FindAll(x => MapDatabaseCache.FindSet(x.Id) == null)
                     : result.Mapsets;
 
+                mapsets = SortMapsets(mapsets);
+
                 PreviousPageMapsets = result?.Mapsets ?? new List<DownloadableMapset>();
 
                 if (mapsets == null)
@@ -357,6 +365,34 @@ namespace Quaver.Shared.Screens.Downloading
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        private List<DownloadableMapset> SortMapsets(List<DownloadableMapset> mapsets)
+        {
+            if (mapsets == null || mapsets.Count <= 1)
+                return mapsets;
+
+            switch (SortBy.Value)
+            {
+                case DownloadSortBy.Newest:
+                    return mapsets;
+                case DownloadSortBy.Artist:
+                    return mapsets.OrderBy(x => x.Artist).ToList();
+                case DownloadSortBy.Title:
+                    return mapsets.OrderBy(x => x.Title).ToList();
+                case DownloadSortBy.Creator:
+                    return mapsets.OrderBy(x => x.CreatorUsername).ToList();
+                case DownloadSortBy.Bpm:
+                    return mapsets.OrderBy(x => x.Bpms.Max()).ToList();
+                case DownloadSortBy.Length:
+                    return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -442,6 +478,12 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisplayOwnedMapsetsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSortByChanged(object sender, BindableValueChangedEventArgs<DownloadSortBy> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>
