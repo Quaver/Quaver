@@ -15,6 +15,7 @@ using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Selection.UI.Maps.Components;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Selection.UI.Playlists;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -228,6 +229,12 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 }
 
                 SelectedMapset.Value = Item;
+            };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                game?.CurrentScreen?.ActivateRightClickOptions(new DownloadableMapsetRightClickOptions(Item, SelectedMapset));
             };
         }
 
