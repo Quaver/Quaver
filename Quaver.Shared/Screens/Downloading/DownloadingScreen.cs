@@ -435,7 +435,12 @@ namespace Quaver.Shared.Screens.Downloading
                 }
 
                 if (Page.Value == 0)
+                {
                     Mapsets.Value = mapsets;
+
+                    if (Mapsets.Value.Count != 0)
+                        SelectedMapset.Value = Mapsets.Value.First();
+                }
                 else
                     Mapsets.AddRange(mapsets);
             }
