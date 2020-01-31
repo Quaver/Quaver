@@ -461,6 +461,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DownloadDisplayOwnedMapsets { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DownloadReverseSort { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -789,6 +797,8 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
+            DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
+            DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -925,6 +935,8 @@ namespace Quaver.Shared.Config
                     WindowBorderless.ValueChanged += AutoSaveConfiguration;
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                     KeyScreenshot.ValueChanged += AutoSaveConfiguration;
+                    DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
+                    DownloadReverseSort.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
