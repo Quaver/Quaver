@@ -76,6 +76,14 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
+        private long LastUpdatedStartDate { get; }
+
+        /// <summary>
+        /// </summary>
+        private long LastUpdatedEndDate { get; }
+
+        /// <summary>
+        /// </summary>
         private int Page { get; }
 
         /// <summary>
@@ -95,9 +103,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="maxPlayCount"></param>
         /// <param name="startUploadDate"></param>
         /// <param name="endUploadDate"></param>
+        /// <param name="startUpdateDate"></param>
+        /// <param name="endUpdateDate"></param>
+        /// <param name="page"></param>
         public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status, float minDiff,
             float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln, int minPlayCount,
-            int maxPlayCount, string startUploadDate, string endUploadDate, int page)
+            int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate, string endUpdateDate, int page)
         {
             Query = query;
             Mode = mode;
@@ -114,17 +125,31 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             MaxPlayCount = maxPlayCount;
             Page = page;
 
+            // Upload Date
             if (string.IsNullOrEmpty(startUploadDate))
                 startUploadDate = "01-01-0000";
 
             if (string.IsNullOrEmpty(endUploadDate))
-                endUploadDate = "12-13-9999";
+                endUploadDate = "12-31-9999";
 
             DateTime.TryParse(startUploadDate, out var startDate);
             DateTime.TryParse(endUploadDate, out var endDate);
 
             UploadStartDate = (long) DateTimeToUnixTimestamp(startDate);
             UploadEndDate = (long) DateTimeToUnixTimestamp(endDate);
+
+            // Update Date
+            if (string.IsNullOrEmpty(startUpdateDate))
+                startUpdateDate = "01-01-0000";
+
+            if (string.IsNullOrEmpty(endUpdateDate))
+                endUpdateDate = "12-31-9999";
+
+            DateTime.TryParse(startUpdateDate, out var startLastUpdateDate);
+            DateTime.TryParse(endUpdateDate, out var endLastUpdateDate);
+
+            LastUpdatedStartDate = (long) DateTimeToUnixTimestamp(startLastUpdateDate);
+            LastUpdatedEndDate = (long) DateTimeToUnixTimestamp(endLastUpdateDate);
         }
 
         /// <summary>
@@ -134,7 +159,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         {
             try
             {
-                var endpoint = "https://api.quavergame.com/v1/";
+                var endpoint = "http://localhost:8082/v1/";
+                //var endpoint = "https://api.quavergame.com/v1/";
 
                 var request = new RestRequest($"{endpoint}mapsets/maps/search", Method.GET);
                 var client = new RestClient(endpoint) { UserAgent = "Quaver" };
@@ -152,6 +178,9 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("maxlns", MaxLongNotePercent.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("mindate", UploadStartDate.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("maxdate", UploadEndDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("mindatelastupdated",LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("maxdatelastupdated",LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
+
                 request.AddQueryParameter("page", Page.ToString());
 
                 var response = client.Execute(request);

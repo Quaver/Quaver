@@ -68,6 +68,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
+        private Bindable<string> MinLastUpdateDate { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<string> MaxLastUpdateDate { get; }
+
+        /// <summary>
+        /// </summary>
         private Bindable<bool> DisplayOwnedMapsets { get; }
 
         /// <summary>
@@ -99,7 +107,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         public DownloadFilterContainer(BindableFloat minDiff, BindableFloat maxDiff, BindableFloat minBpm, BindableFloat maxBpm,
             BindableInt minLength, BindableInt maxLength, BindableInt minlns, BindableInt maxlns, BindableInt minPlayCount,
             BindableInt maxPlayCount, Bindable<string> minUploadDate, Bindable<string> maxUploadDate,
-            Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets, Bindable<bool> reverseSort)
+            Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets, Bindable<bool> reverseSort,
+            Bindable<string> minLastUpdateDate, Bindable<string> maxLastUpdateDate)
         {
             SelectedMapset = selectedMapset;
             MinDifficulty = minDiff;
@@ -116,6 +125,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             MaxUploadDate = maxUploadDate;
             DisplayOwnedMapsets = displayOwnedMapsets;
             ReverseSort = reverseSort;
+            MinLastUpdateDate = minLastUpdateDate;
+            MaxLastUpdateDate = maxLastUpdateDate;
 
             Alpha = 0f;
             Size = new ScalableVector2(564, 838);
@@ -180,7 +191,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),
                 new DownloadFilterTableItemLongNotePercent(tableWidth, MinLongNotePercent, MaxLongNotePercent),
                 new DownloadFilterTableItemPlayCount(tableWidth, MinPlayCount, MaxPlayCount),
-                new DownloadFilterTableItemUploadDate(tableWidth, MinUploadDate, MaxUploadDate),
+                new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
+                new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),
                 new DownloadFilterTableItem(tableWidth, ""),
                 new DownloadFilterTableItem(tableWidth, ""),
             };
