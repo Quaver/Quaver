@@ -414,12 +414,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Size = new ScalableVector2(180, DifficultyRange.Key.Height),
+                Size = new ScalableVector2(180, 60),
                 X = RankedStatusIcon.X,
-                Y = ByText.Y + 3,
+                Y = ByText.Y + 3
                 Alpha = 0,
                 UsePreviousSpriteBatchOptions = true,
             };
+
+            DifficultyHoverInvisibleButton.Y -= DifficultyHoverInvisibleButton.Height / 2f;
 
             DifficultyHoverInvisibleButton.Hovered += (sender, args) =>
             {
