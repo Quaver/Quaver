@@ -156,8 +156,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
             PositionAndContainPoolObjects();
 
-            // Snap to it immediately
-            SnapToSelected();
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y = 0;
+            PreviousContentContainerY = ContentContainer.Y;
+            TargetY = PreviousContentContainerY;
+            PreviousTargetY = PreviousContentContainerY;
         }
 
         /// <summary>
