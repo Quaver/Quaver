@@ -288,7 +288,7 @@ namespace Quaver.Shared.Screens.Downloading
 
             Logger.Important($"Playing preview audio: {ShouldPreviewPlay}", LogType.Runtime);
 
-            NotificationManager.Show(NotificationLevel.Info, ShouldPreviewPlay ? $"Music is currently paused!" : $"Music is now playing!");
+            NotificationManager.Show(NotificationLevel.Info, !ShouldPreviewPlay ? $"Music is currently paused!" : $"Music is now playing!");
 
             if (CurrentPreview.IsDisposed)
                 return;
