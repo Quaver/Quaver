@@ -410,13 +410,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             DifficultyRange.MaxDifficulty.Alpha = 0.85f;
             DifficultyRange.ChangeValue(0, 0);
 
-            DifficultyHoverInvisibleButton = new ImageButton(UserInterface.BlankBox)
+            DifficultyHoverInvisibleButton = new ContainedButton(Container, UserInterface.BlankBox)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 Size = new ScalableVector2(180, 60),
                 X = RankedStatusIcon.X,
-                Y = ByText.Y + 3
+                Y = ByText.Y + 3,
                 Alpha = 0,
                 UsePreviousSpriteBatchOptions = true,
             };
