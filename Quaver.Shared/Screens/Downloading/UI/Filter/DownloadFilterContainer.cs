@@ -194,7 +194,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
                 new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),
                 new DownloadFilterTableItem(tableWidth, ""),
-                new DownloadFilterTableItem(tableWidth, ""),
             };
 
             TabControl = new TextboxTabControl(new List<Textbox>()) { Parent = this };
