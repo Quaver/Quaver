@@ -8,7 +8,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
 {
-    public class DownloadFilterTableItemUploadDate : DownloadFilterTableItem
+    public class DownloadFilterTableItemDate : DownloadFilterTableItem
     {
         /// <summary>
         /// </summary>
@@ -22,8 +22,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// <summary>
         /// </summary>
         /// <param name="width"></param>
-        public DownloadFilterTableItemUploadDate(int width, Bindable<string> min, Bindable<string> max)
-            : base(width, "Upload Date")
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public DownloadFilterTableItemDate(int width, string name, Bindable<string> min, Bindable<string> max)
+            : base(width, name)
         {
             const int spacing = 12;
 

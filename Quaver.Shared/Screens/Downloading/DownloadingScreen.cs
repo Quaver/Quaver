@@ -127,6 +127,14 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
+        public Bindable<string> MinLastUpdateDate { get; } = new Bindable<string>("") { Value = "01-01-1970"};
+
+        /// <summary>
+        /// </summary>
+        public Bindable<string> MaxLastUpdateDate { get; } = new Bindable<string>("") { Value = "12-31-9999"};
+
+        /// <summary>
+        /// </summary>
         public Bindable<bool> DisplayOwnedMapsets => ConfigManager.DownloadDisplayOwnedMapsets ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
@@ -202,6 +210,8 @@ namespace Quaver.Shared.Screens.Downloading
             MaxPlayCount.ValueChanged += OnMaxPlayCountChanged;
             MinUploadDate.ValueChanged += OnMinUploadDateChanged;
             MaxUploadDate.ValueChanged += OnMaxUploadDateChanged;
+            MinLastUpdateDate.ValueChanged += OnMinLastUpdateDateChanged;
+            MaxLastUpdateDate.ValueChanged += OnMaxLastUpdateDateChanged;
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
             ReverseSort.ValueChanged += OnReverseSortChanged;
             Page.ValueChanged += OnPageChanged;
@@ -345,6 +355,8 @@ namespace Quaver.Shared.Screens.Downloading
             SelectedMapset?.Dispose();
             SortBy?.Dispose();
             DisposePreviews();
+            MinLastUpdateDate?.Dispose();
+            MaxLastUpdateDate?.Dispose();
 
             // ReSharper disable twice DelegateSubtraction
             DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
@@ -391,7 +403,7 @@ namespace Quaver.Shared.Screens.Downloading
                     FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
                     MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
                     MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
-                    Page.Value);
+                    MinLastUpdateDate.Value, MaxLastUpdateDate.Value, Page.Value);
 
                 var result = request.ExecuteRequest();
 
@@ -575,6 +587,18 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSortByChanged(object sender, BindableValueChangedEventArgs<DownloadSortBy> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMinLastUpdateDateChanged(object sender, BindableValueChangedEventArgs<string> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMaxLastUpdateDateChanged(object sender, BindableValueChangedEventArgs<string> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>
