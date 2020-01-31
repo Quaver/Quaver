@@ -25,7 +25,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Length",
             "Difficulty",
             "Long Note %",
-            "Play Count"
+            "Play Count",
+            "Max Combo"
         };
 
         private static int GetSelectedIndex() => 0;
@@ -41,6 +42,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         Length,
         Difficulty,
         LNs,
-        PlayCount
+        PlayCount,
+        MaxCombo
     }
 }

@@ -79,6 +79,12 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         [JsonProperty("max_date_last_updated")]
         public DateTime MaxDateLastUpdated { get; set; }
 
+        [JsonProperty("min_combo")]
+        public int MinCombo { get; set; }
+
+        [JsonProperty("max_combo")]
+        public int MaxCombo { get; set; }
+        
         public bool IsOwned { get; set; }
     }
 }

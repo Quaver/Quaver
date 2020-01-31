@@ -84,6 +84,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
+        private BindableInt MinCombo { get; }
+
+        /// <summary>
+        /// </summary>
+        private BindableInt MaxCombo { get; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Header { get; set; }
 
         /// <summary>
@@ -108,7 +116,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             BindableInt minLength, BindableInt maxLength, BindableInt minlns, BindableInt maxlns, BindableInt minPlayCount,
             BindableInt maxPlayCount, Bindable<string> minUploadDate, Bindable<string> maxUploadDate,
             Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets, Bindable<bool> reverseSort,
-            Bindable<string> minLastUpdateDate, Bindable<string> maxLastUpdateDate)
+            Bindable<string> minLastUpdateDate, Bindable<string> maxLastUpdateDate, BindableInt minCombo, BindableInt maxCombo)
         {
             SelectedMapset = selectedMapset;
             MinDifficulty = minDiff;
@@ -127,6 +135,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             ReverseSort = reverseSort;
             MinLastUpdateDate = minLastUpdateDate;
             MaxLastUpdateDate = maxLastUpdateDate;
+            MinCombo = minCombo;
+            MaxCombo = maxCombo;
 
             Alpha = 0f;
             Size = new ScalableVector2(564, 838);
@@ -191,9 +201,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),
                 new DownloadFilterTableItemLongNotePercent(tableWidth, MinLongNotePercent, MaxLongNotePercent),
                 new DownloadFilterTableItemPlayCount(tableWidth, MinPlayCount, MaxPlayCount),
+                new DownloadFilterTableItemMaxCombo(tableWidth, MinCombo, MaxCombo),
                 new DownloadFilterTableItemDate(tableWidth, "Upload Date", MinUploadDate, MaxUploadDate),
                 new DownloadFilterTableItemDate(tableWidth, "Last Update Date", MinLastUpdateDate, MaxLastUpdateDate),
-                new DownloadFilterTableItem(tableWidth, ""),
             };
 
             TabControl = new TextboxTabControl(new List<Textbox>()) { Parent = this };

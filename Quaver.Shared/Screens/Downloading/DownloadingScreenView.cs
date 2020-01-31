@@ -124,7 +124,8 @@ namespace Quaver.Shared.Screens.Downloading
                 DownloadingScreen.MinLongNotePercent, DownloadingScreen.MaxLongNotePercent,
                 DownloadingScreen.MinPlayCount, DownloadingScreen.MaxPlayCount, DownloadingScreen.MinUploadDate,
                 DownloadingScreen.MaxUploadDate, DownloadingScreen.SelectedMapset, DownloadingScreen.DisplayOwnedMapsets,
-                DownloadingScreen.ReverseSort, DownloadingScreen.MinLastUpdateDate, DownloadingScreen.MaxLastUpdateDate)
+                DownloadingScreen.ReverseSort, DownloadingScreen.MinLastUpdateDate, DownloadingScreen.MaxLastUpdateDate,
+                DownloadingScreen.MinCombo, DownloadingScreen.MaxCombo)
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,

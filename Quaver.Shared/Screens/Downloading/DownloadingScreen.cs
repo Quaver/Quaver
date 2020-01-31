@@ -135,6 +135,14 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
+        public BindableInt MinCombo { get; } = new BindableInt(0, 0, int.MaxValue) { Value = 0};
+
+        /// <summary>
+        /// </summary>
+        public BindableInt MaxCombo { get; } = new BindableInt(int.MaxValue, 0, int.MaxValue) { Value = int.MaxValue};
+
+        /// <summary>
+        /// </summary>
         public Bindable<bool> DisplayOwnedMapsets => ConfigManager.DownloadDisplayOwnedMapsets ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
@@ -214,6 +222,8 @@ namespace Quaver.Shared.Screens.Downloading
             MaxLastUpdateDate.ValueChanged += OnMaxLastUpdateDateChanged;
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
             ReverseSort.ValueChanged += OnReverseSortChanged;
+            MinCombo.ValueChanged += OnMinComboChanged;
+            MaxCombo.ValueChanged += OnMaxComboChanged;
             Page.ValueChanged += OnPageChanged;
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
             SortBy.ValueChanged += OnSortByChanged;
@@ -357,6 +367,8 @@ namespace Quaver.Shared.Screens.Downloading
             DisposePreviews();
             MinLastUpdateDate?.Dispose();
             MaxLastUpdateDate?.Dispose();
+            MinCombo?.Dispose();
+            MaxCombo?.Dispose();
 
             // ReSharper disable twice DelegateSubtraction
             DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
@@ -403,7 +415,7 @@ namespace Quaver.Shared.Screens.Downloading
                     FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
                     MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
                     MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
-                    MinLastUpdateDate.Value, MaxLastUpdateDate.Value, Page.Value);
+                    MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, Page.Value);
 
                 var result = request.ExecuteRequest();
 
@@ -487,6 +499,11 @@ namespace Quaver.Shared.Screens.Downloading
                         return mapsets.OrderByDescending(x => x.MaxPlayCount).ToList();
 
                     return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
+                case DownloadSortBy.MaxCombo:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.MaxCombo).ToList();
+
+                    return mapsets.OrderBy(x => x.MaxCombo).ToList();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -599,6 +616,18 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMaxLastUpdateDateChanged(object sender, BindableValueChangedEventArgs<string> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMinComboChanged(object sender, BindableValueChangedEventArgs<int> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMaxComboChanged(object sender, BindableValueChangedEventArgs<int> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>

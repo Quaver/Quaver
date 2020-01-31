@@ -84,6 +84,14 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         /// <summary>
         /// </summary>
+        private int MinCombo { get; }
+
+        /// <summary>
+        /// </summary>
+        private int MaxCombo { get; }
+
+        /// <summary>
+        /// </summary>
         private int Page { get; }
 
         /// <summary>
@@ -105,10 +113,13 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         /// <param name="endUploadDate"></param>
         /// <param name="startUpdateDate"></param>
         /// <param name="endUpdateDate"></param>
+        /// <param name="minCombo"></param>
+        /// <param name="maxCombo"></param>
         /// <param name="page"></param>
         public APIRequestMapsetSearch(string query, DownloadFilterMode mode, DownloadFilterRankedStatus status, float minDiff,
             float maxDiff, float minBpm, float maxBpm, int minLength, int maxLength, int minln, int maxln, int minPlayCount,
-            int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate, string endUpdateDate, int page)
+            int maxPlayCount, string startUploadDate, string endUploadDate, string startUpdateDate, string endUpdateDate,
+            int minCombo, int maxCombo, int page)
         {
             Query = query;
             Mode = mode;
@@ -123,6 +134,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
             MaxLongNotePercent = maxln;
             MinPlayCount = minPlayCount;
             MaxPlayCount = maxPlayCount;
+            MinCombo = minCombo;
+            MaxCombo = maxCombo;
             Page = page;
 
             // Upload Date
@@ -159,8 +172,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         {
             try
             {
-                var endpoint = "http://localhost:8082/v1/";
-                //var endpoint = "https://api.quavergame.com/v1/";
+                //var endpoint = "http://localhost:8082/v1/";
+                var endpoint = "https://api.quavergame.com/v1/";
 
                 var request = new RestRequest($"{endpoint}mapsets/maps/search", Method.GET);
                 var client = new RestClient(endpoint) { UserAgent = "Quaver" };
@@ -180,7 +193,8 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 request.AddQueryParameter("maxdate", UploadEndDate.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("mindatelastupdated",LastUpdatedStartDate.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("maxdatelastupdated",LastUpdatedEndDate.ToString(CultureInfo.InvariantCulture));
-
+                request.AddQueryParameter("mincombo", MinCombo.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("maxcombo", MaxCombo.ToString(CultureInfo.InvariantCulture));
                 request.AddQueryParameter("page", Page.ToString());
 
                 var response = client.Execute(request);
