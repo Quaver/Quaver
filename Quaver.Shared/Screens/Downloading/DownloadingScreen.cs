@@ -499,6 +499,11 @@ namespace Quaver.Shared.Screens.Downloading
                         return mapsets.OrderByDescending(x => x.MaxPlayCount).ToList();
 
                     return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
+                case DownloadSortBy.MaxCombo:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.MaxCombo).ToList();
+
+                    return mapsets.OrderBy(x => x.MaxCombo).ToList();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
