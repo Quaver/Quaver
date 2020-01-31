@@ -139,6 +139,10 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> ReverseSort => ConfigManager.DownloadReverseSort ?? new Bindable<bool>(false) {Value = false};
+
+        /// <summary>
+        /// </summary>
         public TaskHandler<int, int> SearchTask { get; private set; }
 
         /// <summary>
@@ -199,6 +203,7 @@ namespace Quaver.Shared.Screens.Downloading
             MinUploadDate.ValueChanged += OnMinUploadDateChanged;
             MaxUploadDate.ValueChanged += OnMaxUploadDateChanged;
             DisplayOwnedMapsets.ValueChanged += OnDisplayOwnedMapsetsChanged;
+            ReverseSort.ValueChanged += OnReverseSortChanged;
             Page.ValueChanged += OnPageChanged;
             SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
             SortBy.ValueChanged += OnSortByChanged;
@@ -341,11 +346,15 @@ namespace Quaver.Shared.Screens.Downloading
             SortBy?.Dispose();
             DisposePreviews();
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
-            
+            ReverseSort.ValueChanged -= OnReverseSortChanged;
+
             if (DisplayOwnedMapsets != ConfigManager.DownloadDisplayOwnedMapsets)
                 DisplayOwnedMapsets?.Dispose();
+
+            if (ReverseSort != ConfigManager.DownloadReverseSort)
+                ReverseSort?.Dispose();
 
             base.Destroy();
         }
@@ -422,22 +431,49 @@ namespace Quaver.Shared.Screens.Downloading
             switch (SortBy.Value)
             {
                 case DownloadSortBy.Newest:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.DateLastUpdated).ToList();
+
                     return mapsets;
                 case DownloadSortBy.Artist:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.Artist).ToList();
+
                     return mapsets.OrderBy(x => x.Artist).ToList();
                 case DownloadSortBy.Title:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.Title).ToList();
+
                     return mapsets.OrderBy(x => x.Title).ToList();
                 case DownloadSortBy.Creator:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.CreatorUsername).ToList();
+
                     return mapsets.OrderBy(x => x.CreatorUsername).ToList();
                 case DownloadSortBy.Bpm:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.Bpms.Max()).ToList();
+
                     return mapsets.OrderBy(x => x.Bpms.Max()).ToList();
                 case DownloadSortBy.Length:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.MaxLengthSeconds).ToList();
+
                     return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
                 case DownloadSortBy.Difficulty:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.DifficultyRange.Max()).ToList();
+
                     return mapsets.OrderBy(x => x.DifficultyRange.Max()).ToList();
                 case DownloadSortBy.LNs:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.MaxLongNotePercent).ToList();
+
                     return mapsets.OrderBy(x => x.MaxLongNotePercent).ToList();
                 case DownloadSortBy.PlayCount:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.MaxPlayCount).ToList();
+
                     return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -527,6 +563,12 @@ namespace Quaver.Shared.Screens.Downloading
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisplayOwnedMapsetsChanged(object sender, BindableValueChangedEventArgs<bool> e) => Page.Value = 0;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnReverseSortChanged(object sender, BindableValueChangedEventArgs<bool> e) => Page.Value = 0;
 
         /// <summary>
         /// </summary>

@@ -72,6 +72,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ReverseSort { get; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus Header { get; set; }
 
         /// <summary>
@@ -95,7 +99,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         public DownloadFilterContainer(BindableFloat minDiff, BindableFloat maxDiff, BindableFloat minBpm, BindableFloat maxBpm,
             BindableInt minLength, BindableInt maxLength, BindableInt minlns, BindableInt maxlns, BindableInt minPlayCount,
             BindableInt maxPlayCount, Bindable<string> minUploadDate, Bindable<string> maxUploadDate,
-            Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets)
+            Bindable<DownloadableMapset> selectedMapset, Bindable<bool> displayOwnedMapsets, Bindable<bool> reverseSort)
         {
             SelectedMapset = selectedMapset;
             MinDifficulty = minDiff;
@@ -111,6 +115,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             MinUploadDate = minUploadDate;
             MaxUploadDate = maxUploadDate;
             DisplayOwnedMapsets = displayOwnedMapsets;
+            ReverseSort = reverseSort;
 
             Alpha = 0f;
             Size = new ScalableVector2(564, 838);
@@ -169,13 +174,13 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
             TableItems = new List<DownloadFilterTableItem>()
             {
                 new DownloadFilterTableItemCheckbox(tableWidth, "Display Owned Mapsets", DisplayOwnedMapsets),
+                new DownloadFilterTableItemCheckbox(tableWidth, "Reverse Sort", ReverseSort),
                 new DownloadFilterTableItemDifficulty(tableWidth, MinDifficulty, MaxDifficulty),
                 new DownloadFilterTableItemBpm(tableWidth, MinBpm, MaxBpm),
                 new DownloadFilterTableLength(tableWidth, MinLength, MaxLength),
                 new DownloadFilterTableItemLongNotePercent(tableWidth, MinLongNotePercent, MaxLongNotePercent),
                 new DownloadFilterTableItemPlayCount(tableWidth, MinPlayCount, MaxPlayCount),
                 new DownloadFilterTableItemUploadDate(tableWidth, MinUploadDate, MaxUploadDate),
-                new DownloadFilterTableItem(tableWidth, ""),
                 new DownloadFilterTableItem(tableWidth, ""),
                 new DownloadFilterTableItem(tableWidth, ""),
             };

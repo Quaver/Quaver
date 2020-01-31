@@ -465,6 +465,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DownloadDisplayOwnedMapsets { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> DownloadReverseSort { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -794,6 +798,7 @@ namespace Quaver.Shared.Config
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
+            DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -931,6 +936,7 @@ namespace Quaver.Shared.Config
                     LowerFpsOnWindowInactive.ValueChanged += AutoSaveConfiguration;
                     KeyScreenshot.ValueChanged += AutoSaveConfiguration;
                     DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
+                    DownloadReverseSort.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
