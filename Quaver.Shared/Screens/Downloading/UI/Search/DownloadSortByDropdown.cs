@@ -24,7 +24,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Bpm",
             "Length",
             "Difficulty",
-            "Long Note %"
+            "Long Note %",
+            "Play Count"
         };
 
         private static int GetSelectedIndex() => 0;
@@ -39,6 +40,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         Bpm,
         Length,
         Difficulty,
-        LNs
+        LNs,
+        PlayCount
     }
 }

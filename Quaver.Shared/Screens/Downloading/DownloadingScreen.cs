@@ -432,6 +432,8 @@ namespace Quaver.Shared.Screens.Downloading
                     return mapsets.OrderBy(x => x.DifficultyRange.Max()).ToList();
                 case DownloadSortBy.LNs:
                     return mapsets.OrderBy(x => x.MaxLongNotePercent).ToList();
+                case DownloadSortBy.PlayCount:
+                    return mapsets.OrderBy(x => x.MaxPlayCount).ToList();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
