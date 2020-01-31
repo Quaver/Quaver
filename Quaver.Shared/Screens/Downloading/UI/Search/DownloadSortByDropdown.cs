@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
     public class DownloadSortByDropdown : LabelledDropdown
     {
         public DownloadSortByDropdown(Bindable<DownloadSortBy> sortBy) : base("SORT BY: ", 22, new Dropdown(GetDropdownItems(),
-            new ScalableVector2(160, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
+            new ScalableVector2(170, 38), 22, ColorHelper.HexToColor($"#ffe76b"), GetSelectedIndex()))
         {
             Dropdown.ItemSelected += (sender, args) => sortBy.Value = (DownloadSortBy) args.Index;
         }
@@ -23,7 +23,8 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Creator",
             "Bpm",
             "Length",
-            "Difficulty"
+            "Difficulty",
+            "Long Note %"
         };
 
         private static int GetSelectedIndex() => 0;
@@ -38,5 +39,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         Bpm,
         Length,
         Difficulty,
+        LNs
     }
 }
