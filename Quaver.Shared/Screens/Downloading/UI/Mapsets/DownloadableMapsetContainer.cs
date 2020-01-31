@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
@@ -65,6 +66,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             AvailableMapsets.ValueChanged += OnAvailableMapsetChanged;
             AvailableMapsets.MultipleItemsAdded += OnMultipleItemsAdded;
             MapsetDownloadManager.DownloadAdded += OnDowloadAdded;
+            SelectedMapset.ValueChanged += OnSelectedMapsetChanged;
         }
 
         /// <inheritdoc />
@@ -94,6 +96,9 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         public override void Destroy()
         {
             MapsetDownloadManager.DownloadAdded -= OnDowloadAdded;
+            // ReSharper disable once DelegateSubtraction
+            SelectedMapset.ValueChanged -= OnSelectedMapsetChanged;
+
             base.Destroy();
         }
 
@@ -151,8 +156,11 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
             PositionAndContainPoolObjects();
 
-            // Snap to it immediately
-            SnapToSelected();
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y = 0;
+            PreviousContentContainerY = ContentContainer.Y;
+            TargetY = PreviousContentContainerY;
+            PreviousTargetY = PreviousContentContainerY;
         }
 
         /// <summary>
@@ -186,10 +194,21 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                         $"Finished dowwnloading: {e.Download.Artist} - {e.Download.Title}!");
                 }
 
+                var index = AvailableMapsets.Value.FindIndex(x => x.Id == e.Download.MapsetId);
+
                 var availableItem = AvailableMapsets.Value.Find(x => x.Id == e.Download.MapsetId);
 
                 if (availableItem != null)
                     AvailableMapsets.Remove(availableItem);
+
+                if (SelectedMapset.Value.Id != e.Download.MapsetId)
+                    return;
+
+                // Select the next mapset if the selected one was downloaded
+                if (index <= 0 && AvailableMapsets.Value.Count != 0)
+                    SelectedMapset.Value = AvailableMapsets.Value.First();
+                else if (index > 0 && index < AvailableMapsets.Value.Count)
+                    SelectedMapset.Value = AvailableMapsets.Value[index];
             };
         }
 
@@ -238,6 +257,16 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             }
 
             RecalculateContainerHeight();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedMapsetChanged(object sender, BindableValueChangedEventArgs<DownloadableMapset> e)
+        {
+            SelectedIndex.Value = AvailableMapsets.Value.IndexOf(e.Value);
+            ScrollToSelected();
         }
     }
 }
