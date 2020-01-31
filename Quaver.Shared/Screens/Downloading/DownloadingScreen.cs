@@ -484,7 +484,12 @@ namespace Quaver.Shared.Screens.Downloading
                         return mapsets.OrderByDescending(x => x.MaxLengthSeconds).ToList();
 
                     return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
-                case DownloadSortBy.Difficulty:
+                case DownloadSortBy.MinDifficulty:
+                    if (ReverseSort.Value)
+                        return mapsets.OrderByDescending(x => x.DifficultyRange.Min()).ToList();
+
+                    return mapsets.OrderBy(x => x.DifficultyRange.Min()).ToList();
+                case DownloadSortBy.MaxDifficulty:
                     if (ReverseSort.Value)
                         return mapsets.OrderByDescending(x => x.DifficultyRange.Max()).ToList();
 
