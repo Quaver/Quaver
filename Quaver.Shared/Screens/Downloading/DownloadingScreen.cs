@@ -428,6 +428,8 @@ namespace Quaver.Shared.Screens.Downloading
                     return mapsets.OrderBy(x => x.Bpms.Max()).ToList();
                 case DownloadSortBy.Length:
                     return mapsets.OrderBy(x => x.MaxLengthSeconds).ToList();
+                case DownloadSortBy.Difficulty:
+                    return mapsets.OrderBy(x => x.DifficultyRange.Max()).ToList();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

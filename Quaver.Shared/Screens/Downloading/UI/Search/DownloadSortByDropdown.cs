@@ -23,6 +23,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Creator",
             "Bpm",
             "Length",
+            "Difficulty"
         };
 
         private static int GetSelectedIndex() => 0;
@@ -36,5 +37,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         Creator,
         Bpm,
         Length,
+        Difficulty,
     }
 }
