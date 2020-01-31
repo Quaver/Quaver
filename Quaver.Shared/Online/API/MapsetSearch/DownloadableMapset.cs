@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Newtonsoft.Json;
 using Quaver.API.Enums;
 
@@ -46,6 +48,9 @@ namespace Quaver.Shared.Online.API.MapsetSearch
         [JsonProperty("game_modes")]
         public List<GameMode> GameModes { get; set; }
 
+        [JsonProperty("difficulty_names")]
+        public List<string> DifficultyNames { get; set; }
+
         [JsonProperty("difficulty_range")]
         public List<double> DifficultyRange { get; set; }
 
@@ -84,7 +89,26 @@ namespace Quaver.Shared.Online.API.MapsetSearch
 
         [JsonProperty("max_combo")]
         public int MaxCombo { get; set; }
-        
+
+        /// <summary>
+        ///     Whether or not we already have the set downloaded
+        /// </summary>
         public bool IsOwned { get; set; }
+
+        /// <summary>
+        ///     The difficulty names + ratings in the set
+        /// </summary>
+        public Dictionary<string, double> Difficulties
+        {
+            get
+            {
+                var diffs = new Dictionary<string, double>();
+
+                for (var i = 0; i < DifficultyNames.Count; i++)
+                    diffs.Add(DifficultyNames[i], DifficultyRange[i]);
+
+                return diffs.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
     }
 }

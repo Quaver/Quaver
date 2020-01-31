@@ -23,6 +23,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
 using Wobble.Managers;
 using Color = Microsoft.Xna.Framework.Color;
@@ -84,6 +85,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <summary>
         /// </summary>
         private ProgressBar DownloadProgressBar { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private ImageButton DifficultyHoverInvisibleButton { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -175,7 +180,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 ArtistTitle.Text = $"{Item.Artist} - {Item.Title}";
                 ArtistTitle.TruncateWithEllipsis(450);
                 ArtistTitle.Tint = Item.IsOwned ? ColorHelper.HexToColor("#808080") : Color.White;
-                
+
                 Creator.Text = Item.CreatorUsername;
 
                 RankedStatusIcon.Image = GetRankedStatusTexture(Item);
@@ -404,6 +409,31 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             DifficultyRange.Dash.Alpha = 0.85f;
             DifficultyRange.MaxDifficulty.Alpha = 0.85f;
             DifficultyRange.ChangeValue(0, 0);
+
+            DifficultyHoverInvisibleButton = new ContainedButton(Container, UserInterface.BlankBox)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(180, 60),
+                X = RankedStatusIcon.X,
+                Y = ByText.Y + 3,
+                Alpha = 0,
+                UsePreviousSpriteBatchOptions = true,
+            };
+
+            DifficultyHoverInvisibleButton.Y -= DifficultyHoverInvisibleButton.Height / 2f;
+
+            DifficultyHoverInvisibleButton.Hovered += (sender, args) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                game?.CurrentScreen?.ActivateTooltip(new DownloadableMapsetTooltip(Item));
+            };
+
+            DifficultyHoverInvisibleButton.LeftHover += (sender, args) =>
+            {
+                var game = GameBase.Game as QuaverGame;
+                game?.CurrentScreen?.DeactivateTooltip();
+            };
         }
 
         /// <summary>
