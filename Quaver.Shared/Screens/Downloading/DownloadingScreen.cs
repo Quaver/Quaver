@@ -127,7 +127,7 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> DisplayOwnedMapsets { get; } = new Bindable<bool>(false) { Value = false};
+        public Bindable<bool> DisplayOwnedMapsets => ConfigManager.DownloadDisplayOwnedMapsets ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
@@ -338,9 +338,14 @@ namespace Quaver.Shared.Screens.Downloading
             MaxUploadDate?.Dispose();
             Mapsets?.Dispose();
             SelectedMapset?.Dispose();
-            DisplayOwnedMapsets?.Dispose();
             SortBy?.Dispose();
             DisposePreviews();
+
+            // ReSharper disable once DelegateSubtraction
+            DisplayOwnedMapsets.ValueChanged -= OnDisplayOwnedMapsetsChanged;
+            
+            if (DisplayOwnedMapsets != ConfigManager.DownloadDisplayOwnedMapsets)
+                DisplayOwnedMapsets?.Dispose();
 
             base.Destroy();
         }
