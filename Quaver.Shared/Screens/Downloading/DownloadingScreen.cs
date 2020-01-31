@@ -15,6 +15,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.MapsetSearch;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Downloading.UI.Search;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
@@ -256,6 +257,9 @@ namespace Quaver.Shared.Screens.Downloading
 
             HandleKeyPressEscape();
             HandleKeyPressCtrlP();
+            HandleKeyPressNext();
+            HandleKeyPressPrevious();
+            HandleKeyPressEnter();
         }
 
         /// <summary>
@@ -293,6 +297,71 @@ namespace Quaver.Shared.Screens.Downloading
                 CurrentPreview.Play();
             else if (!ShouldPreviewPlay && CurrentPreview.IsPlaying)
                 CurrentPreview.Pause();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressPrevious()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Left) && !KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                return;
+
+            var state = KeyboardManager.CurrentState;
+
+            if (state.IsKeyDown(Keys.LeftAlt) || state.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (Mapsets.Value.Count == 0)
+                return;
+
+            var index = Mapsets.Value.IndexOf(SelectedMapset.Value);
+
+            if (index == -1 || index == 0)
+                return;
+
+            SelectedMapset.Value = Mapsets.Value[index - 1];
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEnter()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
+                return;
+
+            if (SelectedMapset.Value == null)
+                return;
+
+            if (MapsetDownloadManager.CurrentDownloads.Any(x => x.MapsetId == SelectedMapset.Value.Id))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, $"This mapset is already downloading!");
+                return;
+            }
+
+            MapsetDownloadManager.Download(SelectedMapset.Value.Id, SelectedMapset.Value.Artist, SelectedMapset.Value.Title);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressNext()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right) && !KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                return;
+
+            var state = KeyboardManager.CurrentState;
+
+            if (state.IsKeyDown(Keys.LeftAlt) || state.IsKeyDown(Keys.RightAlt))
+                return;
+
+            if (Mapsets.Value.Count == 0)
+                return;
+
+            var index = Mapsets.Value.IndexOf(SelectedMapset.Value);
+
+            if (index == -1 || index == Mapsets.Value.Count - 1)
+                return;
+
+            SelectedMapset.Value = Mapsets.Value[index + 1];
         }
 
         /// <summary>
