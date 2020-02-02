@@ -512,7 +512,7 @@ namespace Quaver.Shared.Screens.Downloading
                     return 0;
                 }
 
-                if (Page.Value == 0 || mapsets.Count == 1)
+                if (Page.Value == 0)
                 {
                     Mapsets.Value = mapsets;
 
@@ -521,6 +521,13 @@ namespace Quaver.Shared.Screens.Downloading
                 }
                 else
                     Mapsets.AddRange(mapsets);
+
+                if (!DisplayOwnedMapsets.Value && Mapsets.Value.Count < 50 && result.Mapsets.Count == 50)
+                {
+                    Page.Value++;
+                    SearchTask.Run(0);
+                    return 0;
+                }
             }
 
             return 0;
