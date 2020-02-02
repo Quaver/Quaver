@@ -468,7 +468,7 @@ namespace Quaver.Shared.Screens.Downloading
             if (SearchTask.IsRunning)
                 SearchTask.Cancel();
 
-            SearchTask.Run(0, 250);
+            SearchTask.Run(0, 50);
         }
 
         /// <summary>
@@ -480,19 +480,29 @@ namespace Quaver.Shared.Screens.Downloading
         {
             lock (Mapsets)
             {
-                var request = new APIRequestMapsetSearch(CurrentSearchQuery.Value, FilterGameMode.Value,
-                    FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
-                    MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
-                    MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
-                    MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, Page.Value);
-
-                var result = request.ExecuteRequest();
-
                 List<DownloadableMapset> mapsets;
 
+                var request = CreateSearchRequest(Page.Value);
+
+                var result = request.ExecuteRequest();
                 result.Mapsets.ForEach(x => x.IsOwned = MapDatabaseCache.FindSet(x.Id) != null);
 
                 mapsets = !DisplayOwnedMapsets.Value ? result?.Mapsets?.FindAll(x => !x.IsOwned) : result.Mapsets;
+
+                if (!DisplayOwnedMapsets.Value)
+                {
+                    List<DownloadableMapset> nextPageSets = null;
+
+                    while (!DisplayOwnedMapsets.Value && (nextPageSets == null || nextPageSets?.Count == 50) && mapsets.Count < 10)
+                    {
+                        Page.ChangeWithoutTrigger(Page.Value + 1);
+                        nextPageSets = CreateSearchRequest(Page.Value).ExecuteRequest().Mapsets;
+
+                        nextPageSets.ForEach(x => x.IsOwned = MapDatabaseCache.FindSet(x.Id) != null);
+                        mapsets.AddRange(nextPageSets.FindAll(x => !x.IsOwned));
+                    }
+                }
+
                 mapsets = SortMapsets(mapsets);
 
                 PreviousPageMapsets = result?.Mapsets ?? new List<DownloadableMapset>();
@@ -517,6 +527,18 @@ namespace Quaver.Shared.Screens.Downloading
             return 0;
         }
 
+        /// <summary>
+        ///        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        private APIRequestMapsetSearch CreateSearchRequest(int page)
+        {
+            return new APIRequestMapsetSearch(CurrentSearchQuery.Value, FilterGameMode.Value,
+                FilterRankedStatus.Value, MinDifficulty.Value, MaxDifficulty.Value, MinBpm.Value,
+                MaxBpm.Value, MinLength.Value, MaxLength.Value, MinLongNotePercent.Value, MaxLongNotePercent.Value,
+                MinPlayCount.Value, MaxPlayCount.Value, MinUploadDate.Value, MaxUploadDate.Value,
+                MinLastUpdateDate.Value, MaxLastUpdateDate.Value, MinCombo.Value, MaxCombo.Value, page);
+        }
         /// <summary>
         /// </summary>
         /// <param name="mapsets"></param>

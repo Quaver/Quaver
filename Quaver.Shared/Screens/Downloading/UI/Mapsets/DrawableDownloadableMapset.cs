@@ -444,11 +444,15 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
             const int time = 200;
             AnimateSprites(1, 200);
+            DifficultyRange.Fade(1, 200);
 
             if (changeWidthInstantly)
                 ContentContainer.Width = Width;
             else
+            {
+                ContentContainer.ClearAnimations();
                 ContentContainer.ChangeWidthTo((int) Width, Easing.OutQuint, time + 400);
+            }
         }
 
         /// <summary>
@@ -458,12 +462,19 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             ContentContainer.Image = Item.IsOwned ? UserInterface.GrayedMapset : UserInterface.DeselectedMapset;
 
             const int time = 200;
-            AnimateSprites(0.85f, 200);
+
+            var alpha = !Item.IsOwned ? 0.85f : 0.70f;
+
+            AnimateSprites(alpha, 200);
+            DifficultyRange.Fade(alpha, 200);
 
             if (changeWidthInstantly)
                 ContentContainer.Width = Width - 50;
             else
+            {
+                ContentContainer.ClearAnimations();
                 ContentContainer.ChangeWidthTo((int) Width - 50, Easing.OutQuint, time + 400);
+            }
         }
 
         /// <summary>
