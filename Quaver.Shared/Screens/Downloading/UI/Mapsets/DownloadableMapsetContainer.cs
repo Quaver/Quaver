@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnAvailableMapsetChanged(object sender, BindableValueChangedEventArgs<List<DownloadableMapset>> e)
-            => ScheduleUpdate(() => Initialize(e.Value));
+            => AddScheduledUpdate(() => Initialize(e.Value));
 
         /// <summary>
         /// </summary>
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="e"></param>
         private void OnAvailableItemRemoved(object sender, BindableListItemRemovedEventArgs<DownloadableMapset> e)
         {
-            ScheduleUpdate(() =>
+            AddScheduledUpdate(() =>
             {
                 var item = Pool.Find(x => x.Item.Id == e.Item.Id);
 
@@ -246,17 +246,20 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="e"></param>
         private void OnMultipleItemsAdded(object sender, BindableListMultipleItemsAddedEventArgs<DownloadableMapset> e)
         {
-            foreach (var item in e.Items)
+            AddScheduledUpdate(() =>
             {
-                var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
-                mapset.UpdateContent(mapset.Item, mapset.Index);
+                foreach (var item in e.Items)
+                {
+                    var mapset = new DrawableDownloadableMapset(this, item, Pool.Count, SelectedMapset);
+                    mapset.UpdateContent(mapset.Item, mapset.Index);
 
-                Pool.Add(mapset);
-                AddContainedDrawable(mapset);
-                mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
-            }
+                    Pool.Add(mapset);
+                    AddContainedDrawable(mapset);
+                    mapset.Y = (PoolStartingIndex + mapset.Index) * Pool[mapset.Index].HEIGHT + PaddingTop;
+                }
 
-            RecalculateContainerHeight();
+                RecalculateContainerHeight();
+            });
         }
 
         /// <summary>
