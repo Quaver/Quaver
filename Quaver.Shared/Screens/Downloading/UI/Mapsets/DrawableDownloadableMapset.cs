@@ -449,7 +449,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             if (changeWidthInstantly)
                 ContentContainer.Width = Width;
             else
+            {
+                ContentContainer.ClearAnimations();
                 ContentContainer.ChangeWidthTo((int) Width, Easing.OutQuint, time + 400);
+            }
         }
 
         /// <summary>
@@ -468,7 +471,10 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             if (changeWidthInstantly)
                 ContentContainer.Width = Width - 50;
             else
+            {
+                ContentContainer.ClearAnimations();
                 ContentContainer.ChangeWidthTo((int) Width - 50, Easing.OutQuint, time + 400);
+            }
         }
 
         /// <summary>
