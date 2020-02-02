@@ -468,7 +468,7 @@ namespace Quaver.Shared.Screens.Downloading
             if (SearchTask.IsRunning)
                 SearchTask.Cancel();
 
-            SearchTask.Run(0, 250);
+            SearchTask.Run(0, 50);
         }
 
         /// <summary>
@@ -503,7 +503,16 @@ namespace Quaver.Shared.Screens.Downloading
                     return 0;
                 }
 
-                if (Page.Value == 0)
+                // Need to search the next page for mapsets if the user already has all 50 downloaded
+                if (!DisplayOwnedMapsets.Value && mapsets.Count == 0 && result.Mapsets.Count == 50)
+                {
+                    Logger.Important($"Skipping page {Page.Value}, as all mapsets are already downloaded", LogType.Network);
+                    Page.Value++;
+                    SearchTask.Run(0);
+                    return 0;
+                }
+
+                if (Page.Value == 0 || mapsets.Count == 1)
                 {
                     Mapsets.Value = mapsets;
 

@@ -82,7 +82,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 Page.Value++;
             }
 
-            var alpha = Page.Value == 0 && SearchTask.IsRunning ? 1 : 0;
+            var alpha = (Page.Value == 0 || AvailableMapsets.Value.Count == 0) && SearchTask.IsRunning ? 1 : 0;
 
             LoadingWheel.Alpha = MathHelper.Lerp(LoadingWheel.Alpha, alpha,
                 (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 30, 1));
