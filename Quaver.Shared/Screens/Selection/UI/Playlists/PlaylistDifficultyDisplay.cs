@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Helpers;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
 
 namespace Quaver.Shared.Screens.Selection.UI.Playlists
@@ -46,6 +47,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
             MaxDifficulty.X = Dash.X + Dash.Width + spacing;
 
             base.UpdateSize();
+        }
+
+        public void Fade(float alpha, int time)
+        {
+            foreach (var child in Children)
+            {
+                if (child is SpriteTextPlus s)
+                {
+                    s.ClearAnimations();
+                    s.FadeTo(alpha, Easing.Linear, time);
+                }
+            }
         }
     }
 }
