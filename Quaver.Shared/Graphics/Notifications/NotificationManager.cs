@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Logging;
@@ -81,7 +82,17 @@ namespace Quaver.Shared.Graphics.Notifications
             foreach (var notification in QueuedNotifications)
             {
                 notification.Parent = Container;
-                notification.Y = InitialY;
+
+                if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                {
+                    notification.Alignment = Alignment.BotRight;
+                    notification.Y = -InitialY;
+                }
+                else
+                {
+                    notification.Y = InitialY;
+                }
+
                 ActiveNotifications.Add(notification);
             }
 
@@ -109,6 +120,10 @@ namespace Quaver.Shared.Graphics.Notifications
                 if (!notification.IsSlidingOut)
                 {
                     var targetY = InitialY + (ActiveNotifications.Last().Height + 20) * iteration;
+
+                    if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
+                        targetY = -targetY;
+                    
                     notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
                 }
 
