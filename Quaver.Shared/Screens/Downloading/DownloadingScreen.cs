@@ -496,7 +496,6 @@ namespace Quaver.Shared.Screens.Downloading
                     while (!DisplayOwnedMapsets.Value && (nextPageSets == null || nextPageSets?.Count == 50) && mapsets.Count < 10)
                     {
                         Page.ChangeWithoutTrigger(Page.Value + 1);
-                        Console.WriteLine(mapsets.Count + " " + Page.Value);
                         nextPageSets = CreateSearchRequest(Page.Value).ExecuteRequest().Mapsets;
 
                         nextPageSets.ForEach(x => x.IsOwned = MapDatabaseCache.FindSet(x.Id) != null);
