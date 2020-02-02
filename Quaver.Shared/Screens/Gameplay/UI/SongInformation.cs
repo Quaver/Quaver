@@ -17,6 +17,8 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay.UI
@@ -31,32 +33,32 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Text that says "watching" when watching a replay.
         /// </summary>
-        private SpriteText Watching { get; }
+        private SpriteTextPlus Watching { get; }
 
         /// <summary>
         ///     The title of the song
         /// </summary>
-        private SpriteText Title { get; }
+        private SpriteTextPlus Title { get; }
 
         /// <summary>
         ///     The difficulty name of the song
         /// </summary>
-        private SpriteText Difficulty { get; }
+        private SpriteTextPlus Difficulty { get; }
 
         /// <summary>
         ///     The creator of the map
         /// </summary>
-        private SpriteText Creator { get; }
+        private SpriteTextPlus Creator { get; }
 
         /// <summary>
         ///     The map's difficulty rating
         /// </summary>
-        private SpriteText Rating { get; }
+        private SpriteTextPlus Rating { get; }
 
         /// <summary>
         ///     The activated mods.
         /// </summary>
-        private SpriteText Mods { get; }
+        private SpriteTextPlus Mods { get; }
 
         /// <summary>
         ///     The amount of spacing between each piece of text.
@@ -81,7 +83,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Alpha = 0;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteText(Fonts.SourceSansProSemiBold, $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 13)
+            Watching = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -89,7 +92,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Title = new SpriteText(Fonts.SourceSansProSemiBold, $"{Screen.Map.Artist} - {Screen.Map.Title}", 13)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                $"{Screen.Map.Artist} - {Screen.Map.Title}", 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -97,7 +101,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0,
             };
 
-            Difficulty = new SpriteText(Fonts.SourceSansProSemiBold, $"[{Screen.Map.DifficultyName}]", 13)
+            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                $"[{Screen.Map.DifficultyName}]", 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -105,7 +110,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Creator = new SpriteText(Fonts.SourceSansProSemiBold, $"Mapped By: \"{Screen.Map.Creator}\"", 13)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+                $"Mapped By: \"{Screen.Map.Creator}\"", 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -115,9 +121,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             var difficulty = (float) MapManager.Selected.Value.DifficultyFromMods(ModManager.Mods);
 
-            Rating = new SpriteText(Fonts.SourceSansProSemiBold,
+            Rating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",
-                13)
+                20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -131,7 +137,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             modsString += $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
 
-            Mods = new SpriteText(Fonts.SourceSansProSemiBold, modsString, 13)
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), modsString, 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
