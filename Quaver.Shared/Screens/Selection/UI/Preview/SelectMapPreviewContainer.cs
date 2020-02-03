@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
@@ -10,8 +11,11 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
@@ -65,6 +69,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         ///     The audio track in the previous frame, so the replay can be seeked back if it changes
         /// </summary>
         private IAudioTrack TrackInPreviousFrame { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private DifficultySeekBar SeekBar { get; set; }
 
         /// <summary>
         /// </summary>
@@ -246,6 +254,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                     ShownTestPlayPrompt = true;
                 }
+
+                ThreadScheduler.Run(() =>
+                {
+                    if (SeekBar != null)
+                    {
+                        lock (SeekBar)
+                            CreateSeekBar(e.Input.Qua, playfield);
+
+                        return;
+                    }
+
+                    CreateSeekBar(e.Input.Qua, playfield);
+                });
+
+                playfield.Container.X -= SeekBar.X;
+                playfield.Container.X -= SeekBar.Width / 3f;
+                playfield.Container.X += 8;
             });
         }
 
@@ -355,10 +380,64 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                              e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
 
             if (isSpeedMod)
+            {
+                CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys) LoadedGameplayScreen?.Ruleset?.Playfield, false);
                 return;
-
+            }
             // Reload the entire
             RunLoadTask();
+        }
+
+        /// <summary>
+        ///     Handles creating and initializing the seek bar that displays the map's difficulty
+        /// </summary>
+        private void CreateSeekBar(Qua qua, GameplayPlayfieldKeys playfield, bool animate = true)
+        {
+            SeekBar?.Destroy();
+
+            if (playfield == null || qua == null)
+                return;
+
+            var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
+
+            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(70, Height), 95)
+            {
+                Alignment = Alignment.BotRight,
+                Y = -playfield.Container.Y,
+                X =  stageRightWidth + 6,
+                Tint = ColorHelper.HexToColor("#181818"),
+                SetChildrenAlpha = true,
+            };
+
+            if (animate)
+                SeekBar.Alpha = 0;
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = SeekBar,
+                Size = new ScalableVector2(2, SeekBar.Height),
+                Tint = ColorHelper.HexToColor("#808080")
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = SeekBar,
+                Alignment = Alignment.BotRight,
+                Size = new ScalableVector2(2, SeekBar.Height),
+                Tint = ColorHelper.HexToColor("#808080")
+            };
+
+            SeekBar.AudioSeeked += (o, args) => LoadedGameplayScreen?.HandleReplaySeeking();
+
+            AddScheduledUpdate(() =>
+            {
+                SeekBar.Parent = playfield.Container;
+
+                if (animate)
+                    SeekBar.FadeTo(1, Easing.Linear, 300);
+            });
         }
     }
 }
