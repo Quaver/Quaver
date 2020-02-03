@@ -55,6 +55,7 @@ using Quaver.Shared.Screens.Tests.Chat;
 using Quaver.Shared.Screens.Tests.CheckboxContainers;
 using Quaver.Shared.Screens.Tests.CreatePlaylists;
 using Quaver.Shared.Screens.Tests.DifficultyBars;
+using Quaver.Shared.Screens.Tests.DifficultyGraph;
 using Quaver.Shared.Screens.Tests.DrawableLeaderboardScores;
 using Quaver.Shared.Screens.Tests.DrawableMaps;
 using Quaver.Shared.Screens.Tests.DrawableMapsets;
@@ -183,6 +184,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
             {"DownloadingScreen", typeof(DownloadingScreen)},
             {"Dropdown", typeof(DropdownTestScreen)},
             {"MenuBorder", typeof(MenuBorderTestScreen)},
