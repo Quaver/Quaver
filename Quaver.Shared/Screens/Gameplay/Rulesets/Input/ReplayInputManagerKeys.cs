@@ -220,6 +220,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 UniqueReleases.Add(false);
             }
 
+            var im = Screen.Ruleset.InputManager as KeysInputManager;
+            im?.BindingStore.ForEach(x => x.Pressed = false);
             Screen.Ruleset.InputManager.HandleInput(0);
 
             CurrentVirtualReplayStat = -1;
