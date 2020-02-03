@@ -14,7 +14,7 @@ namespace Quaver.Shared.Screens.Tests.DifficultyGraph
     {
         public TestDifficultyGraphScreenView(Screen screen) : base(screen)
         {
-            var map = Qua.Parse(@"C:\users\swan\desktop\a.qua");
+            var map = Qua.Parse("");
 
             // ReSharper disable once ObjectCreationAsStatement
             var seekBar = new DifficultySeekBar(map, ModIdentifier.None, new ScalableVector2(70, WindowManager.Height), 150)
