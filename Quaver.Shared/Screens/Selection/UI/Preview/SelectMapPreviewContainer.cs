@@ -396,11 +396,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
 
-            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(70, Height), 120)
+            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height))
             {
                 Alignment = Alignment.BotRight,
                 Y = -playfield.Container.Y,
-                X =  stageRightWidth + 6,
+                X =  stageRightWidth + 4,
                 Tint = ColorHelper.HexToColor("#181818"),
                 SetChildrenAlpha = true,
             };
@@ -437,7 +437,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                     playfield.Container.X -= SeekBar.X;
                     playfield.Container.X -= SeekBar.Width / 3f;
-                    playfield.Container.X += 8;
+                    playfield.Container.X += 2;
                 }
             });
         }
