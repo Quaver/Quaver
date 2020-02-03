@@ -400,7 +400,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
 
-            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(70, Height), 95)
+            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(70, Height), 120)
             {
                 Alignment = Alignment.BotRight,
                 Y = -playfield.Container.Y,
