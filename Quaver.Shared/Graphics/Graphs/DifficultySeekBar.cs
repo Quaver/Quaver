@@ -63,7 +63,7 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <param name="mods"></param>
         /// <param name="size"></param>
         /// <param name="maxBars"></param>
-        public DifficultySeekBar(Qua map, ModIdentifier mods, ScalableVector2 size, int maxBars = 150) : base(UserInterface.BlankBox)
+        public DifficultySeekBar(Qua map, ModIdentifier mods, ScalableVector2 size, int maxBars = 120) : base(UserInterface.BlankBox)
         {
             Map = map;
             Mods = mods;
@@ -130,7 +130,12 @@ namespace Quaver.Shared.Graphics.Graphs
                 if (s.Count != 0)
                     s.ForEach(x => qua.HitObjects.Add(x));
 
-                calculators.Add((DifficultyProcessorKeys) qua.SolveDifficulty(Mods));
+                var diff = (DifficultyProcessorKeys) qua.SolveDifficulty(Mods);
+
+                if (s.Count != 0 && diff.StrainSolverData.Count == 0)
+                    diff.StrainSolverData.Add(new StrainSolverData(new StrainSolverHitObject(s.First())));
+
+                calculators.Add(diff);
             }
 
             foreach (var calculator in calculators)
@@ -145,7 +150,7 @@ namespace Quaver.Shared.Graphics.Graphs
                 {
                     Parent = this,
                     Alignment = Alignment.BotLeft,
-                    Size = new ScalableVector2((int) width, 4),
+                    Size = new ScalableVector2((int) width, 3),
                     Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / (Track.Length / Track.Rate)) - 2,
                     Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
                 };
