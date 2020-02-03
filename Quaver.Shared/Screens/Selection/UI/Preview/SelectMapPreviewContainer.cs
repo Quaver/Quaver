@@ -430,12 +430,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             AddScheduledUpdate(() =>
             {
                 SeekBar.Parent = playfield.Container;
-                playfield.Container.X -= SeekBar.X;
-                playfield.Container.X -= SeekBar.Width / 3f;
-                playfield.Container.X += 8;
 
                 if (animate)
+                {
                     SeekBar.FadeTo(1, Easing.Linear, 300);
+
+                    playfield.Container.X -= SeekBar.X;
+                    playfield.Container.X -= SeekBar.Width / 3f;
+                    playfield.Container.X += 8;
+                }
             });
         }
     }
