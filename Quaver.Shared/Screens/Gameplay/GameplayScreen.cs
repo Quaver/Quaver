@@ -515,7 +515,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 HandlePauseInput(gameTime);
 
             // Show/hide scoreboard.
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
+            if (!IsSongSelectPreview && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
             // CTRL+ input while play testing
