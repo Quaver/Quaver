@@ -14,6 +14,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Replays;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Converters.Malody;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Notifications;
@@ -93,7 +94,7 @@ namespace Quaver.Shared.Database.Maps
             var screen = game.CurrentScreen;
 
             // Mapset files
-            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm"))
+            if (path.EndsWith(".qp") || path.EndsWith(".osz") || path.EndsWith(".sm") || path.EndsWith(".mcz") || path.EndsWith(".mc"))
             {
                 Queue.Add(path);
 
@@ -267,6 +268,13 @@ namespace Quaver.Shared.Database.Maps
                     }
                     else if (file.EndsWith(".sm"))
                         Stepmania.ConvertFile(file, extractDirectory);
+                    else if (file.EndsWith(".mc"))
+                        Malody.ExtractFile(file, extractDirectory);
+                    else if (file.EndsWith(".mcz"))
+                    {
+                        Malody.ExtractZip(file, extractDirectory);
+                        File.Delete(file);
+                    }
 
                     selectedMap = InsertAndUpdateSelectedMap(extractDirectory);
 
