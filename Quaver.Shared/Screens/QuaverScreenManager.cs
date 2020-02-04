@@ -129,6 +129,7 @@ namespace Quaver.Shared.Screens
                 OnlineManager.Client?.UpdateClientStatus(status);
 
             OtherGameMapDatabaseCache.RunThread();
+            GC.Collect();
         }
 
         /// <summary>

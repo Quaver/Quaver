@@ -168,6 +168,7 @@ namespace Quaver.Shared.Screens.Selection
             IsPlayTestingInPreview?.Dispose();
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
+            MapManager.MapDeleted -= OnMapDeleted;
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
 
