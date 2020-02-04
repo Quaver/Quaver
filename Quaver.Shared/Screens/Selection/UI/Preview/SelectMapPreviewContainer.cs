@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -396,7 +397,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
 
-            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height))
+            SeekBar = new DifficultySeekBar(qua, ModManager.Mods, new ScalableVector2(56, Height), 200)
             {
                 Alignment = Alignment.BotRight,
                 Y = -playfield.Container.Y,
@@ -425,7 +426,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Tint = ColorHelper.HexToColor("#808080")
             };
 
-            SeekBar.AudioSeeked += (o, args) => LoadedGameplayScreen?.HandleReplaySeeking();
+            SeekBar.AudioSeeked += (o, args) =>
+            {
+                if (LoadedGameplayScreen == null)
+                    return;
+
+                if (LoadedGameplayScreen.InReplayMode)
+                    LoadedGameplayScreen.HandleReplaySeeking();
+                else
+                {
+                    var hitobjectManager = (HitObjectManagerKeys) LoadedGameplayScreen.Ruleset.HitObjectManager;
+                    hitobjectManager.HandleSkip();
+                }
+            };
 
             AddScheduledUpdate(() =>
             {
