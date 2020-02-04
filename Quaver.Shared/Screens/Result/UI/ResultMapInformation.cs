@@ -85,6 +85,15 @@ namespace Quaver.Shared.Screens.Result.UI
             BackgroundHelper.Loaded += OnBackgroundLoaded;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BackgroundHelper.Loaded -= OnBackgroundLoaded;
+            base.Destroy();
+        }
+
         /// <summary>
         ///     Creates the thumbnail of the map
         /// </summary>

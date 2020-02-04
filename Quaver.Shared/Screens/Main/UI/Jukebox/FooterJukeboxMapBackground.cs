@@ -42,6 +42,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
         {
             // ReSharper disable once DelegateSubtraction
             MapManager.Selected.ValueChanged -= OnMapChanged;
+            BackgroundHelper.Loaded -= OnBackgroundLoadded;
 
             base.Destroy();
         }
