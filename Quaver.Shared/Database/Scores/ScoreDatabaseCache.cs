@@ -29,7 +29,6 @@ namespace Quaver.Shared.Database.Scores
          /// </summary>
         public static event EventHandler<LocalScoresDeletedEventArgs> LocalMapScoresDeleted;
 
-
         /// <summary>
         ///     Asynchronously creates the scores database
         /// </summary>
