@@ -114,8 +114,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (ActiveScrollContainer.Value != SelectScrollContainerType.Mapsets)
                 return;
 
+            var currentMapset = (Pool[Pool.Count() / 2] as DrawableMapset).Item;
+
+            if ((KeyboardManager.IsUniqueKeyPress(Keys.Right) || KeyboardManager.IsUniqueKeyPress(Keys.Left)) && currentMapset.Maps.First() != MapManager.Selected.Value)
+            {
+                MapManager.Selected.Value = currentMapset.Maps.First();
+                SelectedIndex.Value = AvailableMapsets.Value.IndexOf(currentMapset);
+
+                ScrollToSelected();
+            }
             // Move to the next mapset
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            else if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || KeyboardManager.IsUniqueKeyPress(Keys.Down))
             {
                 if (SelectedIndex.Value + 1 >= AvailableMapsets.Value.Count)
                     return;
@@ -135,6 +144,67 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                 SelectedIndex.Value--;
                 ScrollToSelected();
+            }
+            //
+            // Move to the next difficulty of a mapset
+            else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)) && KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
+            {
+                InputEnabled = false;
+
+                if (!MapsetHelper.IsSingleDifficultySorted())
+                    return;
+
+                var val = SelectedIndex.Value;
+
+                for (var i = val; i != val - 1; i++)
+                {
+                    if (i == AvailableMapsets.Value.Count)
+                        i = 0;
+
+                    var mapset = AvailableMapsets.Value[i];
+
+                    if (AvailableMapsets.Value[i].Maps.First().Mapset != MapManager.Selected.Value.Mapset)
+                        continue;
+
+                    if (mapset.Maps.First() == MapManager.Selected.Value)
+                        continue;
+
+                    SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
+                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+
+                    ScrollToSelected();
+                    break;
+                }
+            }
+            // Move to the previous difficulty of a mapset
+            else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)) && KeyboardManager.IsUniqueKeyPress(Keys.PageUp))
+            {
+                InputEnabled = false;
+
+                if (!MapsetHelper.IsSingleDifficultySorted())
+                    return;
+
+                var val = SelectedIndex.Value;
+
+                for (var i = val; i != val + 1; i--)
+                {
+                    if (i == -1)
+                        i = AvailableMapsets.Value.Count - 1;
+
+                    var mapset = AvailableMapsets.Value[i];
+
+                    if (AvailableMapsets.Value[i].Maps.First().Mapset != MapManager.Selected.Value.Mapset)
+                        continue;
+
+                    if (mapset.Maps.First() == MapManager.Selected.Value)
+                        continue;
+
+                    SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
+                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+
+                    ScrollToSelected();
+                    break;
+                }
             }
         }
 
