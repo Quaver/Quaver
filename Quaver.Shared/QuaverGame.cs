@@ -23,6 +23,7 @@ using Quaver.Shared.Database;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
@@ -43,6 +44,7 @@ using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
+using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Music;
@@ -77,6 +79,7 @@ using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
 using Quaver.Shared.Screens.Tests.OnlineHubs;
 using Quaver.Shared.Screens.Tests.Options;
+using Quaver.Shared.Screens.Tests.Profiles;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Screens.Tests.Volume;
 using Quaver.Shared.Skinning;
@@ -184,6 +187,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"UserProfileContainer", typeof(TestUserProfileContainerScreen)},
             {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
             {"DownloadingScreen", typeof(DownloadingScreen)},
             {"Dropdown", typeof(DropdownTestScreen)},
