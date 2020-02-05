@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using Quaver.API.Maps.Parsers;
+using Quaver.API.Maps.Parsers.Malody;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Converters.Malody
@@ -33,7 +34,7 @@ namespace Quaver.Shared.Converters.Malody
             {
                 try
                 {
-                    var map = JsonConvert.DeserializeObject<MalodyFile>(File.ReadAllText(malFile));
+                    var map = MalodyFile.Parse(malFile);
 
                     // Convert the map to .qua
                     map.ToQua().Save(Path.Combine(tempFolder, Path.GetFileName(malFile).Replace(".mc", ".qua")));
