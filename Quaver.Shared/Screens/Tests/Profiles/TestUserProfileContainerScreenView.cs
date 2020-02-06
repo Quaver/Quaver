@@ -19,7 +19,7 @@ namespace Quaver.Shared.Screens.Tests.Profiles
             {
                 Value = new UserProfile()
                 {
-                    Username = "Test",
+                    Username = "Testuser28",
                 }
             };
 
