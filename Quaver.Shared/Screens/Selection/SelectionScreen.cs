@@ -248,6 +248,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF1();
             HandleKeyPressF2();
             HandleKeyPressF3();
+            HandleKeyPressF4();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
@@ -333,6 +334,22 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
             else
                 ActiveLeftPanel.Value = SelectContainerPanel.MapPreview;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF4()
+        {
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F4))
+                return;
+
+            if (ActiveLeftPanel.Value == SelectContainerPanel.UserProfile)
+                ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+            else
+                ActiveLeftPanel.Value = SelectContainerPanel.UserProfile;
         }
 
         /// <summary>

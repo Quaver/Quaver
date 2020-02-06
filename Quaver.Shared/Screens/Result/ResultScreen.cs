@@ -27,6 +27,7 @@ using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -449,7 +450,10 @@ namespace Quaver.Shared.Screens.Result
 
             try
             {
-                var localScore = Score.FromScoreProcessor(Gameplay.Ruleset.ScoreProcessor, Gameplay.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                var profileName = UserProfileDatabaseCache.Selected.Value.Username;
+                var name = !string.IsNullOrEmpty(profileName) ? profileName : ConfigManager.Username.Value;
+
+                var localScore = Score.FromScoreProcessor(Gameplay.Ruleset.ScoreProcessor, Gameplay.MapHash, name, ScrollSpeed,
                     Gameplay.PauseCount, Gameplay.Map.RandomizeModifierSeed);
 
                 localScore.RatingProcessorVersion = RatingProcessorKeys.Version;
@@ -469,6 +473,12 @@ namespace Quaver.Shared.Screens.Result
                     localScore.PerformanceRating = 0;
                 else
                     localScore.PerformanceRating = new RatingProcessorKeys(Map.DifficultyFromMods(Gameplay.Ruleset.ScoreProcessor.Mods)).CalculateRating(Gameplay.Ruleset.StandardizedReplayPlayer.ScoreProcessor.Accuracy);
+
+                if (UserProfileDatabaseCache.Selected.Value.Id != 0 &&
+                    !UserProfileDatabaseCache.Selected.Value.IsOnline)
+                {
+                    localScore.UserProfileId = UserProfileDatabaseCache.Selected.Value.Id;
+                }
 
                 scoreId = ScoreDatabaseCache.InsertScoreIntoDatabase(localScore);
             }

@@ -117,6 +117,7 @@
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="2.1.1" />
     <PackageReference Include="IniFileParserStandard" Version="1.0.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3-beta1" />
     <PackageReference Include="RestSharp" Version="106.6.10" />
     <PackageReference Include="SharpCompress" Version="0.22.0" />
