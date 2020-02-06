@@ -352,10 +352,13 @@ namespace Quaver.Shared.Graphics.Backgrounds
                 }
 
                 // Give map backgrounds second priority
-                if (playlist.Maps.Count != 0 && playlist.PlaylistGame == MapGame.Etterna || !File.Exists(path))
+                if (playlist.PlaylistGame == MapGame.Etterna || !File.Exists(path))
                 {
-                    path = MapManager.GetBackgroundPath(playlist.Maps.First()).Replace("//", "/");
-                    bannerExists = false;
+                    if (playlist.Maps.Count != 0)
+                    {
+                        path = MapManager.GetBackgroundPath(playlist.Maps.First()).Replace("//", "/");
+                        bannerExists = false;
+                    }
                 }
 
                 Texture2D mapTexture;
