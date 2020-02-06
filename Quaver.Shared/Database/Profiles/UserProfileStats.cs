@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.Shared.Database.Scores;
 
@@ -15,6 +16,14 @@ namespace Quaver.Shared.Database.Profiles
         /// <summary>
         /// </summary>
         public GameMode Mode { get; }
+
+        /// <summary>
+        /// </summary>
+        public int GlobalRank { get; set; } = -1;
+
+        /// <summary>
+        /// </summary>
+        public int CountryRank { get; set; } = -1;
 
         /// <summary>
         /// </summary>
@@ -38,11 +47,19 @@ namespace Quaver.Shared.Database.Profiles
 
         /// <summary>
         /// </summary>
+        public int FailCount { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public int PauseCount { get; set; }
+
+        /// <summary>
+        /// </summary>
         public List<Score> Scores { get; set; }
 
         /// <summary>
         /// </summary>
-        public Dictionary<Judgement, int> JudgementCounts { get; private set; }
+        public Dictionary<Judgement, int> JudgementCounts { get; set; }
 
         /// <summary>
         /// </summary>
@@ -61,17 +78,8 @@ namespace Quaver.Shared.Database.Profiles
         /// </summary>
         public void FetchStats()
         {
-            if (Profile.IsOnline)
-                PopulateOnlineStats();
-            else
+            if (!Profile.IsOnline)
                 PopulateLocalStats();
-        }
-
-        /// <summary>
-        ///     Fetches statistics from online
-        /// </summary>
-        private void PopulateOnlineStats()
-        {
         }
 
         /// <summary>
@@ -89,33 +97,38 @@ namespace Quaver.Shared.Database.Profiles
 
             Scores = Scores.OrderByDescending(x => x.PerformanceRating).ToList();
 
-            PlayCount = Scores.Count;
+            var topScores = Scores.DistinctBy(x => x.MapMd5).ToList();
+            topScores = topScores.FindAll(x => x.Grade != Grade.F).ToList();
 
-            CalculateOverallRating();
-            CalculateOverallAccuracy();
+            PlayCount = Scores.Count;
+            FailCount = Scores.FindAll(x => x.Grade == Grade.F).Count;
+
+            CalculateOverallRating(topScores);
+            CalculateOverallAccuracy(topScores);
             CalculateJudgementsMaxComboAndTotalScore();
         }
 
         /// <summary>
         ///     Calculates overall rating from the list of scores
         /// </summary>
-        private void CalculateOverallRating() => OverallRating = Scores.Select((t, i) => t.PerformanceRating * Math.Pow(0.95, i)).Sum();
+        private void CalculateOverallRating(List<Score> topScores)
+            => OverallRating = topScores.Select((t, i) => t.PerformanceRating * Math.Pow(0.95, i)).Sum();
 
         /// <summary>
         ///     Calculates overall accuracy from the list of scores
         /// </summary>
-        private void CalculateOverallAccuracy()
+        private void CalculateOverallAccuracy(List<Score> topScores)
         {
             var total = 0d;
             var divideTotal = 0d;
 
-            for (var i = 0; i < Scores.Count; i++)
+            for (var i = 0; i < topScores.Count; i++)
             {
                 if (Scores[i].Grade == Grade.F)
                     continue;
 
                 var add = Math.Pow(0.95f, i) * 100;
-                total += Scores[i].Accuracy * add;
+                total += topScores[i].Accuracy * add;
                 divideTotal += add;
             }
 
@@ -140,10 +153,14 @@ namespace Quaver.Shared.Database.Profiles
                 JudgementCounts.Add(j, 0);
             }
 
+            TotalScore = 0;
+            PauseCount = 0;
+
             foreach (var score in Scores)
             {
                 MaxCombo = Math.Max(MaxCombo, score.MaxCombo);
                 TotalScore += score.TotalScore;
+                PauseCount += score.PauseCount;
 
                 JudgementCounts[Judgement.Marv] += score.CountMarv;
                 JudgementCounts[Judgement.Perf] += score.CountPerf;
@@ -152,6 +169,17 @@ namespace Quaver.Shared.Database.Profiles
                 JudgementCounts[Judgement.Okay] += score.CountOkay;
                 JudgementCounts[Judgement.Miss] += score.CountMiss;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public Score GetTopScore()
+        {
+            if (Scores.Count == 0)
+                return null;
+
+            return Scores.First().Grade == Grade.F ? null : Scores.First();
         }
     }
 }
