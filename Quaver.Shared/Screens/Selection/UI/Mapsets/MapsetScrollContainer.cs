@@ -136,6 +136,32 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 SelectedIndex.Value--;
                 ScrollToSelected();
             }
+            else if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) && KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
+            {
+                InputEnabled = false;
+
+                if (!MapsetHelper.IsSingleDifficultySorted())
+                    return;
+
+                var val = SelectedIndex.Value;
+
+                for (var i = val; i < AvailableMapsets.Value.Count; i++)
+                {
+                    var mapset = AvailableMapsets.Value[i];
+
+                    if (AvailableMapsets.Value[i].Maps.First().Mapset != MapManager.Selected.Value.Mapset)
+                        continue;
+
+                    if (mapset.Maps.First() == MapManager.Selected.Value)
+                        continue;
+
+                    SelectedIndex.Value = AvailableMapsets.Value.IndexOf(mapset);
+                    MapManager.Selected.Value = AvailableMapsets.Value[SelectedIndex.Value].Maps.First();
+
+                    ScrollToSelected();
+                    break;
+                }
+            }
         }
 
         /// <summary>
