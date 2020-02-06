@@ -87,10 +87,10 @@ namespace Quaver.Shared.Database.Profiles
         /// </summary>
         private void PopulateLocalStats()
         {
-            Scores = DatabaseManager.Connection?.Table<Score>()
-                .ToList()
-                .FindAll(x => x.UserProfileId == Profile.Id && x.Mode == Mode)
-                .ToList();
+            Scores = DatabaseManager.Connection?.Table<Score>().ToList().FindAll(x => x.Mode == Mode).ToList();
+
+            if (Profile.Id != 0)
+                Scores = Scores?.FindAll(x => x.UserProfileId == Profile.Id).ToList();
 
             if (Scores == null)
                 Scores = new List<Score>();
