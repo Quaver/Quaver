@@ -187,7 +187,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
-            {"UserProfileContainer", typeof(TestUserProfileContainerScreen)},
+            {"LocalProfileContainer", typeof(TestUserProfileContainerScreen)},
             {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
             {"DownloadingScreen", typeof(DownloadingScreen)},
             {"Dropdown", typeof(DropdownTestScreen)},
@@ -401,6 +401,7 @@ namespace Quaver.Shared
             MapDatabaseCache.Load(false);
             QuaverSettingsDatabaseCache.Initialize();
             JudgementWindowsDatabaseCache.Load();
+            UserProfileDatabaseCache.Load();
 
             // Force garabge collection.
             GC.Collect();
