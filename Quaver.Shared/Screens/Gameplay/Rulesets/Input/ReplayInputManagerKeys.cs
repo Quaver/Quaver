@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (Math.Abs(Manager.CurrentAudioPosition - Replay.Frames[CurrentFrame].Time) >= 200)
             {
                 CurrentFrame = Replay.Frames.FindLastIndex(x => x.Time < AudioEngine.Track.Time);
-                Logger.Important($"Skipped to replay frame: {CurrentFrame}", LogType.Runtime);
+                Logger.Important($"Skipped to replay frame: {CurrentFrame}", LogType.Runtime, false);
             }
 
             try
