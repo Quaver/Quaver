@@ -123,7 +123,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         public bool HasQuit { get; private set; }
 
         public bool IsOneVersusOne => OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All
-                                      && MapManager.Selected.Value?.Scores?.Value?.Count == 1;
+                                      && Screen.LocalScores.Count <= 2;
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor

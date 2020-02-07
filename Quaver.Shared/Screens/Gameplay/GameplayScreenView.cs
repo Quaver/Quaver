@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 };
             }
 
-            if (OnlineManager.Client != null)
+            if (OnlineManager.Client != null && !Screen.IsSongSelectPreview)
                 OnlineManager.Client.OnGameEnded += OnGameEnded;
         }
 

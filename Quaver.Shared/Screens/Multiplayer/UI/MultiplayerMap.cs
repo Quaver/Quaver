@@ -235,7 +235,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         public void UpdateContent()
         {
-            Map map;
+            /*Map map;
 
             if (MapManager.Selected.Value?.Md5Checksum == Game.MapMd5)
                 map = MapManager.Selected.Value;
@@ -344,7 +344,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     AudioEngine.Track.Stop();
 
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
-            }
+            }*/
         }
 
         /// <summary>

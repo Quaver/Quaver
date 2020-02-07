@@ -189,60 +189,8 @@ namespace Quaver.Shared.Screens.Multi
         /// <param name="e"></param>
         private void OnGameStarted(object sender, GameStartedEventArgs e)
         {
-            OnlineManager.CurrentGame.PlayersReady.Clear();
-            OnlineManager.CurrentGame.CountdownStartTime = -1;
-
-            // User doesn't have the map
-            if (OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
-            {
-                NotificationManager.Show(NotificationLevel.Warning, "The match was started, but you do not have the map!");
-                return;
-            }
-
-            // User is a referee, so don't start for them
-            if (OnlineManager.CurrentGame.RefereeUserId == OnlineManager.Self.OnlineUser.Id)
-            {
-                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
-                    (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}"));
-
-                return;
-            }
-
-            DontLeaveGameUponScreenSwitch = true;
-            Exit(() => new MapLoadingScreen(GetScoresFromMultiplayerUsers()));
         }
 
-        /// <summary>
-        ///     Returns a list of empty scores to represent each multiplayer user
-        /// </summary>
-        /// <returns></returns>
-        private List<Score> GetScoresFromMultiplayerUsers()
-        {
-            var users = OnlineManager.OnlineUsers.ToList();
-
-            var playingUsers = users.FindAll(x =>
-                Game.Value.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
-                !Game.Value.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
-                Game.Value.RefereeUserId != x.Value.OnlineUser.Id &&
-                x.Value != OnlineManager.Self);
-
-            var scores = new List<Score>();
-
-            playingUsers.ForEach(x =>
-            {
-                scores.Add(new Score
-                {
-                    PlayerId = x.Key,
-                    SteamId = x.Value.OnlineUser.SteamId,
-                    Name = x.Value.OnlineUser.Username,
-                    Mods = (long) OnlineManager.GetUserActivatedMods(x.Value.OnlineUser.Id),
-                    IsMultiplayer = true,
-                    IsOnline = true
-                });
-            });
-
-            return scores;
-        }
         /// <inheritdoc />
         /// <summary>
         /// </summary>

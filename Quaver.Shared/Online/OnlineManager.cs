@@ -30,11 +30,13 @@ using Quaver.Server.Common.Objects.Twitch;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
@@ -1150,6 +1152,32 @@ namespace Quaver.Shared.Online
                 return;
 
             CurrentGame.InProgress = true;
+
+            CurrentGame.PlayersReady.Clear();
+            CurrentGame.CountdownStartTime = -1;
+
+            // User doesn't have the map
+            if (CurrentGame.PlayersWithoutMap.Contains(Self.OnlineUser.Id))
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "The match was started, but you do not have the map!");
+                return;
+            }
+
+            // User is a referee, so don't start for them
+            if (CurrentGame.RefereeUserId == Self.OnlineUser.Id)
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
+                    (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{CurrentGame.GameId}"));
+
+                return;
+            }
+
+            var game = (QuaverGame) GameBase.Game;
+
+            if (game.CurrentScreen is MultiplayerGameScreen screen)
+                screen.DontLeaveGameUponScreenSwitch = true;
+
+            game.CurrentScreen.Exit(() => new MapLoadingScreen(GetScoresFromMultiplayerUsers()));
         }
 
         /// <summary>
@@ -1768,6 +1796,38 @@ namespace Quaver.Shared.Online
                 Logger.Important($"{user.OnlineUser.Id} has been removed from our friends list.", LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Success, $"{user.OnlineUser.Username} has been removed from your friends list!");
             }
+        }
+
+        /// <summary>
+        ///     Returns a list of empty scores to represent each multiplayer user
+        /// </summary>
+        /// <returns></returns>
+        private static List<Score> GetScoresFromMultiplayerUsers()
+        {
+            var users = OnlineUsers.ToList();
+
+            var playingUsers = users.FindAll(x =>
+                CurrentGame.PlayerIds.Contains(x.Value.OnlineUser.Id) &&
+                !CurrentGame.PlayersWithoutMap.Contains(x.Value.OnlineUser.Id) &&
+                CurrentGame.RefereeUserId != x.Value.OnlineUser.Id &&
+                x.Value != Self);
+
+            var scores = new List<Score>();
+
+            playingUsers.ForEach(x =>
+            {
+                scores.Add(new Score
+                {
+                    PlayerId = x.Key,
+                    SteamId = x.Value.OnlineUser.SteamId,
+                    Name = x.Value.OnlineUser.Username,
+                    Mods = (long) GetUserActivatedMods(x.Value.OnlineUser.Id),
+                    IsMultiplayer = true,
+                    IsOnline = true
+                });
+            });
+
+            return scores;
         }
     }
 }
