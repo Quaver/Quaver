@@ -28,7 +28,7 @@ using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multi
 {
-    public sealed class MultiplayerGameScreen : QuaverScreen
+    public sealed class MultiplayerGameScreen : QuaverScreen, IHasLeftPanel
     {
         /// <inheritdoc />
         /// <summary>
@@ -43,7 +43,12 @@ namespace Quaver.Shared.Screens.Multi
         /// <summary>
         ///     The currently active panel on the left side of the screen
         /// </summary>
-        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; private set; }
+        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if the user is play testing in the map preview
+        /// </summary>
+        public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
         /// <summary>
         ///     If true, when the screen exits, it will not exit the user out of the game
@@ -56,6 +61,7 @@ namespace Quaver.Shared.Screens.Multi
         {
             CreateGameBindable();
             InitializeActiveLeftPanelBindable();
+            InitializeTestPlayingBindable();
 
             ScreenExiting += (sender, args) =>
             {
@@ -104,6 +110,8 @@ namespace Quaver.Shared.Screens.Multi
         public override void Destroy()
         {
             Game?.Dispose();
+            ActiveLeftPanel?.Dispose();
+            IsPlayTestingInPreview?.Dispose();
 
             if (OnlineManager.Client != null)
             {
@@ -137,6 +145,13 @@ namespace Quaver.Shared.Screens.Multi
                 Value = SelectContainerPanel.MatchSettings
             };
         }
+
+        /// <summary>
+        ///     Initializes the bindable that determines if we're currently play testing
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void InitializeTestPlayingBindable()
+            => IsPlayTestingInPreview = new Bindable<bool>(false) {Value = false};
 
         /// <summary>
         ///     Finds and selects the multiplayer map
@@ -247,6 +262,9 @@ namespace Quaver.Shared.Screens.Multi
             if (KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 HandleKeyPressF2();
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
+                HandleKeyPressF3();
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
                 if (ActiveLeftPanel.Value != SelectContainerPanel.MatchSettings)
@@ -321,6 +339,16 @@ namespace Quaver.Shared.Screens.Multi
         {
             if (ActiveLeftPanel.Value != SelectContainerPanel.Leaderboard)
                 ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
+            else
+                ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF3()
+        {
+            if (ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                ActiveLeftPanel.Value = SelectContainerPanel.MapPreview;
             else
                 ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
         }

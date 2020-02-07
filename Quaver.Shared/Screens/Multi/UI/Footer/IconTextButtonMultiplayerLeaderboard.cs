@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
     {
         public IconTextButtonMultiplayerLeaderboard(MultiplayerGameScreen screen)
             : base(FontAwesome.Get(FontAwesomeIcon.fa_trophy),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Map Leaderboard", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.LatoBlack),"Leaderboard", (sender, args) =>
             {
                 if (screen.ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
                     screen.ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
