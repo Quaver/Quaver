@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Selection.Components;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Preview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
@@ -20,6 +21,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Multi
 {
@@ -59,6 +61,10 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private SelectMapPreviewContainer MapPreview { get; set; }
+
+        /// <summary>
+        /// </summary>
         private MultiplayerPlayerList PlayerList { get; set; }
 
         /// <summary>
@@ -87,7 +93,9 @@ namespace Quaver.Shared.Screens.Multi
             CreatePlayerList();
             CreateChat();
             CreateModifiers();
+            CreateMapPreview();
 
+            StatusPanel.Parent = Container;
             Header.Parent = Container;
             Footer.Parent = Container;
 
@@ -181,6 +189,21 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private void CreateMapPreview()
+        {
+            MapPreview = new SelectMapPreviewContainer(GameScreen.IsPlayTestingInPreview, GameScreen.ActiveLeftPanel,
+                (int) (WindowManager.Height - MenuBorder.HEIGHT * 2 - StatusPanel.Height))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Y = StatusPanel.Y + StatusPanel.Height
+            };
+
+            MapPreview.X = -MapPreview.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreatePlayerList()
         {
             PlayerList = new MultiplayerPlayerList(GameScreen.Game)
@@ -226,16 +249,25 @@ namespace Quaver.Shared.Screens.Multi
                     Leaderboard.MoveToX(ScreenPaddingX, easing, animTime);
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Modifiers.MoveToX(inactivePos, easing, animTime);
+                    MapPreview.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.MatchSettings:
                     MatchSettings.MoveToX(ScreenPaddingX, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
                     Modifiers.MoveToX(inactivePos, easing, animTime);
+                    MapPreview.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.Modifiers:
                     Modifiers.MoveToX(ScreenPaddingX, easing, animTime);
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
+                    MapPreview.MoveToX(inactivePos, easing, animTime);
+                    break;
+                case SelectContainerPanel.MapPreview:
+                    MapPreview.MoveToX(ScreenPaddingX, easing, animTime);
+                    MatchSettings.MoveToX(inactivePos, easing, animTime);
+                    Leaderboard.MoveToX(inactivePos, easing, animTime);
+                    Modifiers.MoveToX(inactivePos, easing, animTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -4,6 +4,7 @@ using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.Selection.UI.Borders.Footer;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -23,13 +24,14 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         /// </summary>
         private IconTextButtonMultiplayerSwitchTeams SwitchTeams { get; }
 
-        public MultiplayerGameFooter(QuaverScreen screen, Bindable<MultiplayerGame> game) : base(MenuBorderType.Footer,
+        public MultiplayerGameFooter(MultiplayerGameScreen screen, Bindable<MultiplayerGame> game) : base(MenuBorderType.Footer,
             new List<Drawable>()
             {
                 new IconTextButtonLeaveMultiplayerGame(screen),
                 new IconTextButtonOptions(),
-                new IconTextButtonMultiplayerModifiers((MultiplayerGameScreen) screen),
-                new IconTextButtonMultiplayerLeaderboard((MultiplayerGameScreen) screen),
+                new IconTextButtonMultiplayerModifiers(screen),
+                new IconTextButtonMultiplayerLeaderboard(screen),
+                new IconTextButtonMapPreview(screen.ActiveLeftPanel),
             },
             new List<Drawable>()
             {
