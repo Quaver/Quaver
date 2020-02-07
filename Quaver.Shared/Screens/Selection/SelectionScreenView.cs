@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
@@ -21,6 +22,7 @@ using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Playlists;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Quaver.Shared.Screens.Selection.UI.Preview;
+using Quaver.Shared.Screens.Selection.UI.Profile;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
@@ -88,6 +90,10 @@ namespace Quaver.Shared.Screens.Selection
         private SelectMapPreviewContainer MapPreviewContainer { get; set; }
 
         /// <summary>
+        /// </summary>
+        private LocalProfileContainer ProfileContainer { get; set; }
+
+        /// <summary>
         ///     The position of the active panel on the left
         /// </summary>
         private const int ScreenPaddingX = 50;
@@ -116,6 +122,7 @@ namespace Quaver.Shared.Screens.Selection
             ReorderContainerLayerDepth();
             CreateLeaderboardContainer();
             CreateModifierSelectorContainer();
+            CreateUserProfileContainer();
 
             SelectScreen.ActiveLeftPanel.ValueChanged += OnActiveLeftPanelChanged;
             SelectScreen.AvailableMapsets.ValueChanged += OnAvailableMapsetsChanged;
@@ -265,6 +272,23 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///     Creates <see cref="ProfileContainer"/>
+        /// </summary>
+        private void CreateUserProfileContainer()
+        {
+            ProfileContainer = new LocalProfileContainer(UserProfileDatabaseCache.Selected ?? new Bindable<UserProfile>(null)
+            {
+                Value = new UserProfile()
+            })
+            {
+                Parent = Container,
+                Y = LeaderboardContainer.Y
+            };
+
+            ProfileContainer.X = -ProfileContainer.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
         ///     Creates <see cref="MapsetContainer"/>
         /// </summary>
         private void CreateMapsetContainer()
@@ -330,16 +354,25 @@ namespace Quaver.Shared.Screens.Selection
                     LeaderboardContainer.MoveToX(ScreenPaddingX, easing, animTime);
                     MapPreviewContainer.MoveToX(inactivePos, easing, animTime);
                     ModifierSelector.MoveToX(inactivePos, easing, animTime);
+                    ProfileContainer.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.Modifiers:
                     LeaderboardContainer.MoveToX(inactivePos, easing, animTime);
                     MapPreviewContainer.MoveToX(inactivePos, easing, animTime);
                     ModifierSelector.MoveToX(ScreenPaddingX, easing, animTime);
+                    ProfileContainer.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.MapPreview:
                     LeaderboardContainer.MoveToX(inactivePos, easing, animTime);
                     ModifierSelector.MoveToX(inactivePos, easing, animTime);
                     MapPreviewContainer.MoveToX(ScreenPaddingX, easing, animTime);
+                    ProfileContainer.MoveToX(inactivePos, easing, animTime);
+                    break;
+                case SelectContainerPanel.UserProfile:
+                    LeaderboardContainer.MoveToX(inactivePos, easing, animTime);
+                    ModifierSelector.MoveToX(inactivePos, easing, animTime);
+                    MapPreviewContainer.MoveToX(inactivePos, easing, animTime);
+                    ProfileContainer.MoveToX(ScreenPaddingX, easing, animTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -430,6 +463,7 @@ namespace Quaver.Shared.Screens.Selection
             MapsetContainer.ClearAnimations();
             PlaylistContainer.ClearAnimations();
             MapPreviewContainer.ClearAnimations();
+            ProfileContainer.ClearAnimations();
 
             const Easing easing = Easing.OutQuint;
             const int time = 400;
@@ -437,6 +471,7 @@ namespace Quaver.Shared.Screens.Selection
             LeaderboardContainer.MoveToX(-LeaderboardContainer.Width - ScreenPaddingX, easing, time);
             ModifierSelector.MoveToX(-ModifierSelector.Width - ScreenPaddingX, easing, time);
             MapPreviewContainer.MoveToX(-MapPreviewContainer.Width - ScreenPaddingX, easing, time);
+            ProfileContainer.MoveToX(-ProfileContainer.Width - ScreenPaddingX, easing, time);
 
             MapContainer.MoveToX(MapContainer.Width + ScreenPaddingX, easing, time);
             MapsetContainer.MoveToX(MapsetContainer.Width + ScreenPaddingX, easing, time);

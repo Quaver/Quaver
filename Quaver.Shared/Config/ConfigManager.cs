@@ -473,6 +473,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> DisplayNotificationsBottomToTop { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static BindableInt SelectedProfileId { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -804,6 +808,7 @@ namespace Quaver.Shared.Config
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);
             DownloadReverseSort = ReadValue(@"DownloadReverseSort", false, data);
             DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);
+            SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -943,6 +948,7 @@ namespace Quaver.Shared.Config
                     DownloadDisplayOwnedMapsets.ValueChanged += AutoSaveConfiguration;
                     DownloadReverseSort.ValueChanged += AutoSaveConfiguration;
                     DisplayNotificationsBottomToTop.ValueChanged += AutoSaveConfiguration;
+                    SelectedProfileId.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
