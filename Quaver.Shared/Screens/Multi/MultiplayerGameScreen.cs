@@ -156,12 +156,12 @@ namespace Quaver.Shared.Screens.Multi
         /// <summary>
         ///     Finds and selects the multiplayer map
         /// </summary>
-        private void SelectMultiplayerMap()
+        public static void SelectMultiplayerMap()
         {
-            var map = MapManager.FindMapFromMd5(Game.Value.MapMd5);
+            var map = MapManager.FindMapFromMd5(OnlineManager.CurrentGame.MapMd5);
 
             if (map == null)
-                map = MapManager.FindMapFromMd5(Game.Value.AlternativeMd5);
+                map = MapManager.FindMapFromMd5(OnlineManager.CurrentGame.AlternativeMd5);
 
             if (map == null)
             {
