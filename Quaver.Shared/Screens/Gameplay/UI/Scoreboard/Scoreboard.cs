@@ -292,20 +292,20 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             if (Users.First().Processor.MultiplayerProcessor != null)
             {
-               users = Users
+               users = Users?
                     .OrderBy(x => x.HasQuit)
-                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
-                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
-                    .ThenByDescending(x => x.CalculateRating())
-                    .ThenByDescending(x => x.Processor.Accuracy)
+                    .ThenBy(x => x.Processor?.MultiplayerProcessor?.IsEliminated)
+                    .ThenBy(x => x.Processor?.MultiplayerProcessor?.IsRegeneratingHealth)
+                    .ThenByDescending(x => x?.CalculateRating())
+                    .ThenByDescending(x => x?.Processor?.Accuracy)
                     .ToList();
             }
             else
             {
-                users = Users
-                    .OrderBy(x => x.Processor.Health <= 0)
-                    .ThenByDescending(x => x.CalculateRating())
-                    .ThenByDescending(x => x.Processor.Accuracy)
+                users = Users?
+                    .OrderBy(x => x.Processor?.Health <= 0)
+                    .ThenByDescending(x => x?.CalculateRating())
+                    .ThenByDescending(x => x?.Processor.Accuracy)
                     .ToList();
             }
 
