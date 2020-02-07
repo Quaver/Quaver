@@ -22,6 +22,7 @@ using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -100,6 +101,9 @@ namespace Quaver.Shared.Screens.Multi
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!Exiting)
+                GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+
             HandleInput();
             base.Update(gameTime);
         }
