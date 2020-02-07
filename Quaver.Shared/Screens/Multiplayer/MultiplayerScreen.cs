@@ -58,9 +58,9 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             SetRichPresence();
 
-            OnlineManager.Client.OnGameStarted += OnGameStarted;
-            OnlineManager.Client.OnGameCountdownStart += OnCountdownStart;
-            OnlineManager.Client.OnGameCountdownStop += OnCountdownStop;
+            //OnlineManager.Client.OnGameStarted += OnGameStarted;
+            //OnlineManager.Client.OnGameCountdownStart += OnCountdownStart;
+            //OnlineManager.Client.OnGameCountdownStop += OnCountdownStop;
             View = new MultiplayerScreenView(this);
         }
 
@@ -114,9 +114,9 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// </summary>
         public override void Destroy()
         {
-            OnlineManager.Client.OnGameStarted -= OnGameStarted;
-            OnlineManager.Client.OnGameCountdownStart -= OnCountdownStart;
-            OnlineManager.Client.OnGameCountdownStop -= OnCountdownStop;
+            //OnlineManager.Client.OnGameStarted -= OnGameStarted;
+            //OnlineManager.Client.OnGameCountdownStart -= OnCountdownStart;
+            //OnlineManager.Client.OnGameCountdownStop -= OnCountdownStop;
             base.Destroy();
         }
 
@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Multiplayer
         /// <param name="e"></param>
         private void OnGameStarted(object sender, GameStartedEventArgs e)
         {
-            OnlineManager.CurrentGame.PlayersReady.Clear();
+            /*OnlineManager.CurrentGame.PlayersReady.Clear();
             OnlineManager.CurrentGame.CountdownStartTime = -1;
 
             var view = (MultiplayerScreenView) View;
@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 view.Map.UpdateContent();
 
                 return new MapLoadingScreen(MapManager.Selected.Value.Scores.Value);
-            });
+            });*/
         }
 
         /// <summary>

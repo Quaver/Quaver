@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
         {
             Type = type;
             Team = team;
-            Users = users.ToList();
+            Users = users?.ToList();
 
             if (OnlineManager.CurrentGame != null)
             {
@@ -113,13 +113,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     Y = 235
                 };
             }
-            else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All && Users.Count == 2)
+            else if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Free_For_All && Users.Count <= 2)
             {
-                OneVsOneWinsBanner = new ScoreboardOneVsOneWins(this)
+                /*OneVsOneWinsBanner = new ScoreboardOneVsOneWins(this)
                 {
                     Parent = this,
                     Y = 235
-                };
+                };*/
             }
 
             Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.RatingProcessor.CalculateRating(x.Processor.Accuracy)).ToList();
@@ -292,20 +292,20 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
 
             if (Users.First().Processor.MultiplayerProcessor != null)
             {
-               users = Users
+               users = Users?
                     .OrderBy(x => x.HasQuit)
-                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsEliminated)
-                    .ThenBy(x => x.Processor.MultiplayerProcessor.IsRegeneratingHealth)
-                    .ThenByDescending(x => x.CalculateRating())
-                    .ThenByDescending(x => x.Processor.Accuracy)
+                    .ThenBy(x => x.Processor?.MultiplayerProcessor?.IsEliminated)
+                    .ThenBy(x => x.Processor?.MultiplayerProcessor?.IsRegeneratingHealth)
+                    .ThenByDescending(x => x?.CalculateRating())
+                    .ThenByDescending(x => x?.Processor?.Accuracy)
                     .ToList();
             }
             else
             {
-                users = Users
-                    .OrderBy(x => x.Processor.Health <= 0)
-                    .ThenByDescending(x => x.CalculateRating())
-                    .ThenByDescending(x => x.Processor.Accuracy)
+                users = Users?
+                    .OrderBy(x => x.Processor?.Health <= 0)
+                    .ThenByDescending(x => x?.CalculateRating())
+                    .ThenByDescending(x => x?.Processor.Accuracy)
                     .ToList();
             }
 

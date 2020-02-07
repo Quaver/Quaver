@@ -16,12 +16,14 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
@@ -158,6 +160,21 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         private void LoadGameplayScreen()
         {
+            // Make sure the absolutely correct map is selected
+            if (OnlineManager.CurrentGame != null)
+            {
+                MultiplayerGameScreen.SelectMultiplayerMap();
+
+                if (MapManager.Selected.Value == null)
+                {
+                    Exit(() => new MultiplayerGameScreen());
+                    return;
+                }
+
+                BackgroundHelper.Load(MapManager.Selected.Value);
+                MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
+            }
+
             // Stop the current audio and load it again before moving onto the next state.
             try
             {
