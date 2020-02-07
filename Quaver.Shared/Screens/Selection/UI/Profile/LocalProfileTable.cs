@@ -64,8 +64,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 new LocalProfileTableItem("Total Score", $"{stats.TotalScore:n0}"),
                 new LocalProfileTableItem("Total Hits", $"{stats.JudgementCounts.Values.Sum() - stats.JudgementCounts[Judgement.Miss]:n0}"),
                 new LocalProfileTableItem($"Play Count", $"{stats.PlayCount:n0}"),
-                new LocalProfileTableItem("Pass/Failure Count", $"{stats.PlayCount - stats.FailCount}/{stats.FailCount:n0}"),
-                new LocalProfileTableItem("Max Combo", $"{stats.MaxCombo}x"),
+                new LocalProfileTableItem("Pass/Failure Count", $"{stats.PlayCount - stats.FailCount:n0}/{stats.FailCount:n0}"),
+                new LocalProfileTableItem("Max Combo", $"{stats.MaxCombo:n0}x"),
                 new LocalProfileTableItem("Marvelous/Perfect Ratio", $"{ratio:0.00}"),
             });
 

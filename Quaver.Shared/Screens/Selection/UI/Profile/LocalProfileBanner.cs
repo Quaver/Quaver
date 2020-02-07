@@ -264,7 +264,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 if (!Profile.Value.IsOnline)
                 {
                     NotificationManager.Show(NotificationLevel.Warning,
-                        "Not implemented yet. You can only the scores the 'Online' profile at the moment!");
+                        "Not implemented yet. You can only view the scores for the 'Online' profile at the moment!");
                     return;
                 }
 
