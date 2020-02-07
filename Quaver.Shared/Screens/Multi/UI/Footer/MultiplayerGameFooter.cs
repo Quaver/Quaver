@@ -32,6 +32,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
                 new IconTextButtonMultiplayerModifiers(screen),
                 new IconTextButtonMultiplayerLeaderboard(screen),
                 new IconTextButtonMapPreview(screen.ActiveLeftPanel),
+                new IconTextButtonProfile(screen.ActiveLeftPanel)
             },
             new List<Drawable>()
             {

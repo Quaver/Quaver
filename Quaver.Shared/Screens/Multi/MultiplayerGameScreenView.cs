@@ -2,8 +2,10 @@ using System;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Menu.UI.Navigation.User;
 using Quaver.Shared.Screens.Multi.UI.Chat;
 using Quaver.Shared.Screens.Multi.UI.Footer;
 using Quaver.Shared.Screens.Multi.UI.Players;
@@ -14,6 +16,7 @@ using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using Quaver.Shared.Screens.Selection.UI.Preview;
+using Quaver.Shared.Screens.Selection.UI.Profile;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
@@ -65,6 +68,10 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private LocalProfileContainer Profile { get; set; }
+
+        /// <summary>
+        /// </summary>
         private MultiplayerPlayerList PlayerList { get; set; }
 
         /// <summary>
@@ -94,6 +101,7 @@ namespace Quaver.Shared.Screens.Multi
             CreateChat();
             CreateModifiers();
             CreateMapPreview();
+            CreateProfile();
 
             StatusPanel.Parent = Container;
             Header.Parent = Container;
@@ -189,6 +197,20 @@ namespace Quaver.Shared.Screens.Multi
 
         /// <summary>
         /// </summary>
+        private void CreateProfile()
+        {
+            Profile = new LocalProfileContainer(UserProfileDatabaseCache.Selected)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopLeft,
+                Y = MatchSettings.Y
+            };
+
+            Profile.X = -Profile.Width - ScreenPaddingX;
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreateMapPreview()
         {
             MapPreview = new SelectMapPreviewContainer(GameScreen.IsPlayTestingInPreview, GameScreen.ActiveLeftPanel,
@@ -250,24 +272,35 @@ namespace Quaver.Shared.Screens.Multi
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Modifiers.MoveToX(inactivePos, easing, animTime);
                     MapPreview.MoveToX(inactivePos, easing, animTime);
+                    Profile.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.MatchSettings:
                     MatchSettings.MoveToX(ScreenPaddingX, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
                     Modifiers.MoveToX(inactivePos, easing, animTime);
                     MapPreview.MoveToX(inactivePos, easing, animTime);
+                    Profile.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.Modifiers:
                     Modifiers.MoveToX(ScreenPaddingX, easing, animTime);
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
                     MapPreview.MoveToX(inactivePos, easing, animTime);
+                    Profile.MoveToX(inactivePos, easing, animTime);
                     break;
                 case SelectContainerPanel.MapPreview:
                     MapPreview.MoveToX(ScreenPaddingX, easing, animTime);
                     MatchSettings.MoveToX(inactivePos, easing, animTime);
                     Leaderboard.MoveToX(inactivePos, easing, animTime);
                     Modifiers.MoveToX(inactivePos, easing, animTime);
+                    Profile.MoveToX(inactivePos, easing, animTime);
+                    break;
+                case SelectContainerPanel.UserProfile:
+                    Profile.MoveToX(ScreenPaddingX, easing, animTime);
+                    MatchSettings.MoveToX(inactivePos, easing, animTime);
+                    Leaderboard.MoveToX(inactivePos, easing, animTime);
+                    Modifiers.MoveToX(inactivePos, easing, animTime);
+                    MapPreview.MoveToX(inactivePos, easing, animTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
