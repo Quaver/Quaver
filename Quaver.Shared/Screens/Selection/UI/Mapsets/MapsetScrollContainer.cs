@@ -49,6 +49,20 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private bool HasReinitialized { get; set; }
 
+        /// <summary>
+        ///     The mapset that is in the middle of the screen
+        /// </summary>
+        private DrawableMapset MiddleMapset
+        {
+            get
+            {
+                if (Pool.Count == 0)
+                    return null;
+
+                return Pool[Pool.Count / 2] as DrawableMapset;
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -114,12 +128,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             if (ActiveScrollContainer.Value != SelectScrollContainerType.Mapsets)
                 return;
 
-            var currentMapset = (Pool[Pool.Count() / 2] as DrawableMapset).Item;
-
-            if ((KeyboardManager.IsUniqueKeyPress(Keys.Right) || KeyboardManager.IsUniqueKeyPress(Keys.Left)) && currentMapset.Maps.First() != MapManager.Selected.Value)
+            // Pressing up and down while the current mapset is not visible to scroll to the one
+            // that is in the middle
+            if ((KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)) && CanScrollToMiddleMapset())
             {
-                MapManager.Selected.Value = currentMapset.Maps.First();
-                SelectedIndex.Value = AvailableMapsets.Value.IndexOf(currentMapset);
+                MapManager.Selected.Value = MiddleMapset.Item.Maps.First();
+                SelectedIndex.Value = AvailableMapsets.Value.IndexOf(MiddleMapset.Item);
 
                 ScrollToSelected();
             }
@@ -145,7 +159,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 SelectedIndex.Value--;
                 ScrollToSelected();
             }
-            //
             // Move to the next difficulty of a mapset
             else if ((KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)) && KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
             {
@@ -303,6 +316,36 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 return;
 
             SelectedIndex.Value = e.Index - 1;
+        }
+
+        /// <summary>
+        ///     Tries to find the currently selected mapset if it is in the pool
+        /// </summary>
+        /// <returns></returns>
+        private DrawableMapset GetCurrentlySelectedMapset()
+        {
+            for (var i = 0; i < Pool.Count; i++)
+            {
+                var item = (DrawableMapset) Pool[i];
+
+                if (item.Item.Maps.Contains(MapManager.Selected.Value))
+                    return item;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns if the user is eligible to scroll to the middle mapset.
+        ///
+        ///     - The mapset must not already be selected
+        ///     - The currently selected mapset must be out of view
+        /// </summary>
+        /// <returns></returns>
+        private bool CanScrollToMiddleMapset()
+        {
+            var mapsetNotSelected = MiddleMapset != null && MiddleMapset.Item.Maps.First() != MapManager.Selected.Value;
+            return mapsetNotSelected && GetCurrentlySelectedMapset() == null;
         }
     }
 }
