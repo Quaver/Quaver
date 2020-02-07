@@ -144,6 +144,6 @@ namespace Quaver.Shared.Screens.Selection.Components
             }
         }
 
-        private void LogLoadingTrack() => Logger.Important($"Loading AudioTrack for: {MapManager.Selected.Value}", LogType.Runtime);
+        private void LogLoadingTrack() => Logger.Important($"Loading AudioTrack for: {MapManager.Selected.Value}", LogType.Runtime, false);
     }
 }
