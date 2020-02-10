@@ -151,19 +151,16 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             // Recreate the object pool
             CreatePool(false);
 
-            ScheduleUpdate(() =>
-            {
-                if (maps == null || maps.Count == 0)
-                    ContentContainer.Height = Height;
+            if (maps == null || maps.Count == 0)
+                ContentContainer.Height = Height;
 
-                PositionAndContainPoolObjects();
+            PositionAndContainPoolObjects();
 
-                ContentContainer.Animations.Clear();
-                ContentContainer.Y = 0;
-                PreviousContentContainerY = ContentContainer.Y;
-                TargetY = PreviousContentContainerY;
-                PreviousTargetY = PreviousContentContainerY;
-            });
+            ContentContainer.Animations.Clear();
+            ContentContainer.Y = 0;
+            PreviousContentContainerY = ContentContainer.Y;
+            TargetY = PreviousContentContainerY;
+            PreviousTargetY = PreviousContentContainerY;
         }
 
         /// <summary>
@@ -181,7 +178,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnAvailableMapsetChanged(object sender, BindableValueChangedEventArgs<List<DownloadableMapset>> e)
-            => Initialize(e.Value);
+            => ScheduleUpdate(() => Initialize(e.Value));
 
         /// <summary>
         /// </summary>
