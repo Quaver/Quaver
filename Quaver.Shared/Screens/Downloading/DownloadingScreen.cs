@@ -152,7 +152,10 @@ namespace Quaver.Shared.Screens.Downloading
 
         /// <summary>
         /// </summary>
-        public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.Artist) { Value = DownloadSortBy.Artist};
+        public Bindable<DownloadSortBy> SortBy { get; } = new Bindable<DownloadSortBy>(DownloadSortBy.Newest)
+        {
+            Value = DownloadSortBy.Newest
+        };
 
         /// <summary>
         /// </summary>
@@ -492,8 +495,10 @@ namespace Quaver.Shared.Screens.Downloading
                 if (!DisplayOwnedMapsets.Value)
                 {
                     List<DownloadableMapset> nextPageSets = null;
+                    const int MAX_MAPSETS_PER_PAGE = 50;
 
-                    while (!DisplayOwnedMapsets.Value && (nextPageSets == null || nextPageSets?.Count == 50) && mapsets.Count < 10)
+                    while (!DisplayOwnedMapsets.Value && (nextPageSets == null || nextPageSets?.Count == MAX_MAPSETS_PER_PAGE)
+                                                      && mapsets.Count < 10)
                     {
                         Page.ChangeWithoutTrigger(Page.Value + 1);
                         nextPageSets = CreateSearchRequest(Page.Value).ExecuteRequest().Mapsets;
@@ -552,7 +557,7 @@ namespace Quaver.Shared.Screens.Downloading
             {
                 case DownloadSortBy.Newest:
                     if (ReverseSort.Value)
-                        return mapsets.OrderByDescending(x => x.DateLastUpdated).ToList();
+                        return mapsets.OrderBy(x => x.DateLastUpdated).ToList();
 
                     return mapsets;
                 case DownloadSortBy.Artist:
