@@ -444,6 +444,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     playfield.Container.X -= SeekBar.Width / 3f;
                     playfield.Container.X += 2;
                 }
+
+                TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
             });
         }
 
@@ -459,7 +461,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             TestPlayPrompt.DestroyIfParentIsNull = false;
             TestPlayPrompt.Parent = this;
-            TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
             TestPlayPrompt.Alpha = 0;
 
             if (!ShownTestPlayPrompt)
