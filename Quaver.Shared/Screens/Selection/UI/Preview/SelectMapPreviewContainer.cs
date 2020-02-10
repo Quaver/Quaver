@@ -244,17 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                         throw new ArgumentOutOfRangeException();
                 }
 
-                TestPlayPrompt.Parent = this;
-                TestPlayPrompt.Alpha = 0;
-
-                if (!ShownTestPlayPrompt)
-                {
-                    TestPlayPrompt.FadeTo(1, Easing.Linear, 300);
-                    TestPlayPrompt.Wait(2500);
-                    TestPlayPrompt.FadeTo(0, Easing.Linear, 300);
-
-                    ShownTestPlayPrompt = true;
-                }
+                ShowTestPlayPrompt();
 
                 ThreadScheduler.Run(() =>
                 {
@@ -329,6 +319,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             if (e.Value != SelectContainerPanel.MapPreview)
                 return;
+
+            ShowTestPlayPrompt();
         }
 
         /// <summary>
@@ -352,7 +344,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void CreateTestPlayPrompt()
         {
             TestPlayPrompt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                "Press [TAB] to toggle autoplay on/off", 22)
+                "Press [TAB] to toggle play testing", 22)
             {
                 Alignment = Alignment.TopCenter,
                 Y = 175,
@@ -453,6 +445,31 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     playfield.Container.X += 2;
                 }
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ShowTestPlayPrompt()
+        {
+            if (ShownTestPlayPrompt || ActiveLeftPanel.Value != SelectContainerPanel.MapPreview)
+                return;
+
+            if (LoadedGameplayScreen == null)
+                return;
+
+            TestPlayPrompt.DestroyIfParentIsNull = false;
+            TestPlayPrompt.Parent = this;
+            TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
+            TestPlayPrompt.Alpha = 0;
+
+            if (!ShownTestPlayPrompt)
+            {
+                TestPlayPrompt.FadeTo(1, Easing.Linear, 300);
+                TestPlayPrompt.Wait(3000);
+                TestPlayPrompt.FadeTo(0, Easing.Linear, 300);
+
+                ShownTestPlayPrompt = true;
+            }
         }
     }
 }
