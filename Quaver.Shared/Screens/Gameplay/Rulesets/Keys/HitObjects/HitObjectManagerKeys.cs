@@ -135,6 +135,46 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public double CurrentAudioPosition { get; private set; }
 
+        /// <summary>
+        ///     A mapping from hit objects to the associated hit stats from a replay.
+        ///
+        ///     Set to null when not applicable (e.g. outside of a replay).
+        /// </summary>
+        public Dictionary<HitObjectInfo, List<HitStat>> HitStats { get; private set; }
+
+        private bool _showHits = false;
+        /// <summary>
+        ///     Whether hits are currently shown.
+        /// </summary>
+        public bool ShowHits
+        {
+            get => _showHits;
+            set
+            {
+                if (HitStats == null)
+                    return;
+
+                _showHits = value;
+
+                ((GameplayPlayfieldKeys) Ruleset.Playfield).Stage.HitContainer.Children.ForEach(x =>
+                {
+                    if (x is Sprite sprite)
+                    {
+                        if (_showHits)
+                        {
+                            sprite.Alpha = 0;
+                            sprite.FadeTo(1, Easing.OutQuad, 250);
+                        }
+                        else
+                        {
+                            sprite.Alpha = 1;
+                            sprite.FadeTo(0, Easing.OutQuad, 250);
+                        }
+                    }
+                });
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -235,9 +275,34 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
 
+            InitializeHitStats();
+
             // Initialize Object Pool
             InitializeInfoPool(map);
             InitializeObjectPool();
+        }
+
+        /// <summary>
+        ///     Fills in the HitStats dictionary.
+        /// </summary>
+        private void InitializeHitStats()
+        {
+            // Don't show hit stats in the song select preview.
+            if (Ruleset.Screen.IsSongSelectPreview)
+                return;
+
+            var inputManager = ((KeysInputManager) Ruleset.InputManager).ReplayInputManager;
+            if (inputManager == null)
+                return;
+
+            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>();
+            foreach (var hitStat in inputManager.VirtualPlayer.ScoreProcessor.Stats)
+            {
+                if (!HitStats.ContainsKey(hitStat.HitObject))
+                    HitStats.Add(hitStat.HitObject, new List<HitStat>());
+
+                HitStats[hitStat.HitObject].Add(hitStat);
+            }
         }
 
         /// <summary>

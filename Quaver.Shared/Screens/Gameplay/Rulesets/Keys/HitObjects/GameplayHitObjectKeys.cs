@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -17,6 +18,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -27,12 +29,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
     {
         /// <summary>
         /// </summary>
-        private GameplayRuleset Ruleset { get; }
+        private GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Reference to the HitObjectManager controlling the object.
         /// </summary>
-        private HitObjectManager HitObjectManager { get; }
+        private HitObjectManagerKeys HitObjectManager { get; }
 
         /// <summary>
         ///     Is determined by whether the player is holding the key that this hit object is binded to
@@ -113,6 +115,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private float LongNoteSizeDifference { get; }
 
+        /// <summary>
+        ///     The hit representing the press of this object.
+        /// </summary>
+        private Hit PressHit { get; set; }
+
+        /// <summary>
+        ///     The hit representing the release of this object.
+        /// </summary>
+        private Hit ReleaseHit { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -185,6 +197,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
+
+            // Hits go above the hit object.
+            PressHit = new Hit(Ruleset, HitObjectManager, lane);
+            ReleaseHit = new Hit(Ruleset, HitObjectManager, lane);
         }
 
         /// <summary>
@@ -228,8 +244,41 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 InitialLongNoteSize = CurrentLongNoteSize;
             }
 
+            InitializeHits();
+
             // Update Positions
             UpdateSpritePositions(manager.CurrentTrackPosition);
+        }
+
+        /// <summary>
+        ///     Initializes press and release hits with new data.
+        /// </summary>
+        private void InitializeHits()
+        {
+            PressHit.Visible = false;
+            ReleaseHit.Visible = false;
+
+            if (HitObjectManager.HitStats == null)
+                return;
+
+            if (!HitObjectManager.HitStats.ContainsKey(Info))
+                return;
+
+            var hitStats = HitObjectManager.HitStats[Info];
+            foreach (var hitStat in hitStats)
+            {
+                if (hitStat.KeyPressType == KeyPressType.Release
+                    || (hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay))
+                {
+                    ReleaseHit.InitializeWithHitStat(hitStat);
+                    ReleaseHit.Visible = true;
+                }
+                else
+                {
+                    PressHit.InitializeWithHitStat(hitStat);
+                    PressHit.Visible = true;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -240,6 +289,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Destroy();
             LongNoteBodySprite.Destroy();
             LongNoteEndSprite.Destroy();
+            PressHit.Destroy();
+            ReleaseHit.Destroy();
         }
 
         /// <summary>
@@ -298,6 +349,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Update HitBody
             HitObjectSprite.Y = SpritePosition;
+
+            PressHit.UpdateSpritePositions(offset);
+            ReleaseHit.UpdateSpritePositions(offset);
 
             // Disregard the rest if it isn't a long note.
             if (!Info.IsLongNote)
