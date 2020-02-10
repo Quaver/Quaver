@@ -488,6 +488,13 @@ namespace Quaver.Shared.Screens.Downloading
                 var request = CreateSearchRequest(Page.Value);
 
                 var result = request.ExecuteRequest();
+
+                if (result.Mapsets == null)
+                {
+                    Mapsets.Value = new List<DownloadableMapset>();
+                    return 0;
+                }
+
                 result.Mapsets.ForEach(x => x.IsOwned = MapDatabaseCache.FindSet(x.Id) != null);
 
                 mapsets = !DisplayOwnedMapsets.Value ? result?.Mapsets?.FindAll(x => !x.IsOwned) : result.Mapsets;
