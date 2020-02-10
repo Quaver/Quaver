@@ -1,3 +1,4 @@
+using System;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.MapsetSearch;
@@ -24,8 +25,6 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
             Size = size;
             Alpha = 0f;
             UsePreviousSpriteBatchOptions = true;
-
-            LoadBanner();
         }
 
         /// <summary>
