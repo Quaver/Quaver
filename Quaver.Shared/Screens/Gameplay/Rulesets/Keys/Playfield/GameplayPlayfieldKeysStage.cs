@@ -53,6 +53,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         public Container TimingLineContainer { get; private set; }
 
         /// <summary>
+        ///     The container that holds all hits.
+        /// </summary>
+        public Container HitContainer { get; private set; }
+
+        /// <summary>
         ///     The left side of the stage.
         /// </summary>
         public Sprite StageLeft { get; private set; }
@@ -168,6 +173,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
+                CreateHitContainer();
                 CreateReceptorsAndLighting();
                 CreateHitPositionOverlay();
             }
@@ -177,6 +183,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 CreateHitPositionOverlay();
                 CreateTimingLineContainer();
                 CreateHitObjectContainer();
+                CreateHitContainer();
             }
 
             CreateDistantOverlay();
@@ -386,6 +393,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         ///     Creates the TimingLineContainer
         /// </summary>
         private void CreateTimingLineContainer() => TimingLineContainer = new Container
+        {
+            Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
+            Alignment = Alignment.TopCenter,
+            Parent = Playfield.ForegroundContainer
+        };
+
+        /// <summary>
+        ///     Creates the HitContainer
+        /// </summary>
+        private void CreateHitContainer() => HitContainer = new Container
         {
             Size = new ScalableVector2(Playfield.Width, 0, 0, 1),
             Alignment = Alignment.TopCenter,
