@@ -92,9 +92,10 @@ namespace Quaver.Shared.Graphics.Graphs
 
                     if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
                     {
-                        if (Math.Abs(Track.Time - targetPos) > 500)
-                            Track.Seek(targetPos);
+                        if (Math.Abs(Track.Time - targetPos) < 500)
+                            return;
 
+                        Track.Seek(targetPos);
                         AudioSeeked?.Invoke(this, new SeekBarAudioSeekedEventArgs());
                     }
                 }
