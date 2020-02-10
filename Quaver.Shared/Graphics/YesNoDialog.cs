@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Helpers;
+using Quaver.Shared.Helpers.Input;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Assets;
@@ -33,7 +35,7 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        protected Sprite Panel { get; private set; }
+        public Sprite Panel { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -45,19 +47,19 @@ namespace Quaver.Shared.Graphics
 
         /// <summary>
         /// </summary>
-        protected SpriteTextPlus Header { get; set; }
+        public SpriteTextPlus Header { get; private set; }
 
         /// <summary>
         /// </summary>
-        protected SpriteTextPlus Confirmation { get; set; }
+        public SpriteTextPlus Confirmation { get; private set; }
 
         /// <summary>
         /// </summary>
-        protected IconButton YesButton { get; set; }
+        public IconButton YesButton { get; protected set; }
 
         /// <summary>
         /// </summary>
-        protected IconButton NoButton { get; set; }
+        public IconButton NoButton { get; protected set; }
 
         /// <summary>
         /// </summary>
@@ -246,7 +248,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateButtons()
         {
-            YesButton = new IconButton(UserInterface.CreateButton, (o, e) =>
+            YesButton = new IconButton(UserInterface.SureButton, (o, e) =>
             {
                 YesAction?.Invoke();
 

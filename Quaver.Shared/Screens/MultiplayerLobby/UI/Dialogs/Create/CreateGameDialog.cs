@@ -74,6 +74,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
             Password.Height = 0;
 
             YesButton.Y = -30;
+            YesButton.Image = UserInterface.CreateButton;
             NoButton.Y = YesButton.Y;
 
             YesAction += OnCreateClicked;
