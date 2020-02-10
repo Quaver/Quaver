@@ -544,7 +544,8 @@ namespace Quaver.Shared.Screens.Gameplay
             HandlePlayRestart(dt);
 
             // Everything after this point is applicable to gameplay ONLY.
-            if (IsPaused || Failed)
+            // But we can change the scroll speed while paused in replay mode.
+            if ((IsPaused && !InReplayMode) || Failed)
                 return;
 
             if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame || IsSongSelectPreview)
