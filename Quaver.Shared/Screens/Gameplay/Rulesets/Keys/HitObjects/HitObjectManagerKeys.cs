@@ -64,7 +64,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Reference to the ruleset this HitObject manager is for.
         /// </summary>
-        public GameplayRulesetKeys Ruleset { get; private set; }
+        public GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Hit Object info used for object pool and gameplay
@@ -150,10 +150,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public const float SHOW_HITS_NOTE_ALPHA = 0.3f;
 
-        private bool _showHits = false;
         /// <summary>
         ///     Whether hits are currently shown.
         /// </summary>
+        private bool _showHits = false;
         public bool ShowHits
         {
             get => _showHits;
@@ -180,20 +180,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     hitObject.LongNoteEndSprite.FadeToColor(newTint, Easing.OutQuad, 250);
                 }
 
-                ((GameplayPlayfieldKeys) Ruleset.Playfield).Stage.HitContainer.Children.ForEach(x =>
+                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+
+                playfield.Stage.HitContainer.Children.ForEach(x =>
                 {
-                    if (x is Sprite sprite)
+                    if (!(x is Sprite sprite))
+                        return;
+
+                    if (_showHits)
                     {
-                        if (_showHits)
-                        {
-                            sprite.Alpha = 0;
-                            sprite.FadeTo(1, Easing.OutQuad, 250);
-                        }
-                        else
-                        {
-                            sprite.Alpha = 1;
-                            sprite.FadeTo(0, Easing.OutQuad, 250);
-                        }
+                        sprite.Alpha = 0;
+                        sprite.FadeTo(1, Easing.OutQuad, 250);
+                    }
+                    else
+                    {
+                        sprite.Alpha = 1;
+                        sprite.FadeTo(0, Easing.OutQuad, 250);
                     }
                 });
             }
@@ -316,10 +318,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 return;
 
             var inputManager = ((KeysInputManager) Ruleset.InputManager).ReplayInputManager;
+
             if (inputManager == null)
                 return;
 
             HitStats = new Dictionary<HitObjectInfo, List<HitStat>>();
+
             foreach (var hitStat in inputManager.VirtualPlayer.ScoreProcessor.Stats)
             {
                 if (!HitStats.ContainsKey(hitStat.HitObject))

@@ -87,17 +87,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        public Sprite HitObjectSprite { get; set; }
+        public Sprite HitObjectSprite { get; private set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
         /// </summary>
-        public AnimatableSprite LongNoteBodySprite { get; set; }
+        public AnimatableSprite LongNoteBodySprite { get; private set; }
 
         /// <summary>
         ///     The hold end sprite for long notes.
         /// </summary>
-        public Sprite LongNoteEndSprite { get; set; }
+        public Sprite LongNoteEndSprite { get; private set; }
 
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
@@ -117,17 +117,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///
         ///     Used for tint animation.
         /// </summary>
-        public Color Tint { get; set; }
+        public Color Tint { get; private set; }
 
         /// <summary>
         ///     The hit representing the press of this object.
         /// </summary>
-        private Hit PressHit { get; set; }
+        private DrawableReplayHit PressHit { get; set; }
 
         /// <summary>
         ///     The hit representing the release of this object.
         /// </summary>
-        private Hit ReleaseHit { get; set; }
+        private DrawableReplayHit ReleaseHit { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -142,7 +142,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var lane = info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+
             LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
+
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
@@ -203,8 +205,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
 
             // Hits go above the hit object.
-            PressHit = new Hit(Ruleset, HitObjectManager, lane);
-            ReleaseHit = new Hit(Ruleset, HitObjectManager, lane);
+            PressHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
+            ReleaseHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
         }
 
         /// <summary>
@@ -273,10 +275,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 return;
 
             var hitStats = HitObjectManager.HitStats[Info];
+
             foreach (var hitStat in hitStats)
             {
-                if (hitStat.KeyPressType == KeyPressType.Release
-                    || (hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay))
+                if (hitStat.KeyPressType == KeyPressType.Release ||
+                    hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay)
                 {
                     ReleaseHit.InitializeWithHitStat(hitStat);
                     ReleaseHit.Visible = true;
