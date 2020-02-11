@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -83,7 +84,7 @@ namespace Quaver.Shared.Graphics.Graphs
         public override void Update(GameTime gameTime)
         {
             // Handle dragging in the song
-            if (IsHeld)
+            if (IsHeld && MouseManager.CurrentState.LeftButton == ButtonState.Pressed)
             {
                 if (!Track.IsDisposed)
                 {
