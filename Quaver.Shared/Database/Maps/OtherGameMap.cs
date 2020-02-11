@@ -18,6 +18,6 @@ namespace Quaver.Shared.Database.Maps
         public static int OsuSyncVersion { get; set; } = 0;
 
         [Ignore]
-        public static int EtternaSyncVersion { get; set; } = 1;
+        public static int EtternaSyncVersion { get; set; } = 2;
     }
 }

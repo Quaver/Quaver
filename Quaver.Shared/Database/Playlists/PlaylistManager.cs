@@ -99,8 +99,11 @@ namespace Quaver.Shared.Database.Playlists
                         foreach (var map in item.Value)
                             playlist.Maps.Add(map);
 
-                        Playlists.Add(playlist);
+                        playlists.Add(playlist);
                     }
+
+                    playlists = playlists.OrderBy(x => x.Name).ToList();
+                    Playlists.AddRange(playlists);
                 }
             }
             catch (Exception e)
