@@ -5,17 +5,14 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits;
@@ -90,17 +87,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        private Sprite HitObjectSprite { get; set; }
+        public Sprite HitObjectSprite { get; set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
         /// </summary>
-        private AnimatableSprite LongNoteBodySprite { get; set; }
+        public AnimatableSprite LongNoteBodySprite { get; set; }
 
         /// <summary>
         ///     The hold end sprite for long notes.
         /// </summary>
-        private Sprite LongNoteEndSprite { get; set; }
+        public Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
@@ -114,6 +111,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     difference takes those two half-heights into account.
         /// </summary>
         private float LongNoteSizeDifference { get; }
+
+        /// <summary>
+        ///     Base tint of the sprites.
+        ///
+        ///     Used for tint animation.
+        /// </summary>
+        public Color Tint { get; set; }
 
         /// <summary>
         ///     The hit representing the press of this object.
@@ -214,10 +218,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
             Info = info;
 
+            Tint = Color.White;
+            var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
+            tint.A = 255;
+
             // Update Hit Object State
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
-            HitObjectSprite.Tint = Color.White;
+            HitObjectSprite.Tint = tint;
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
@@ -235,8 +243,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
-                LongNoteBodySprite.Tint = Color.White;
-                LongNoteEndSprite.Tint = Color.White;
+                LongNoteBodySprite.Tint = tint;
+                LongNoteEndSprite.Tint = tint;
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
                 InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
@@ -410,12 +418,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void Kill()
         {
-            var deadNoteColor = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
-            HitObjectSprite.Tint = deadNoteColor;
+            Tint = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
+            var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
+            tint.A = 255;
+            HitObjectSprite.Tint = tint;
             if (Info.IsLongNote)
             {
-                LongNoteBodySprite.Tint = deadNoteColor;
-                LongNoteEndSprite.Tint = deadNoteColor;
+                LongNoteBodySprite.Tint = tint;
+                LongNoteEndSprite.Tint = tint;
             }
         }
 

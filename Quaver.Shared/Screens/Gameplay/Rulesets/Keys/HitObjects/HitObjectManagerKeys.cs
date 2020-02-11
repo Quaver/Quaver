@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring.Data;
@@ -23,6 +24,8 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -142,6 +145,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public Dictionary<HitObjectInfo, List<HitStat>> HitStats { get; private set; }
 
+        /// <summary>
+        ///     Note alpha when showing hits.
+        /// </summary>
+        public const float SHOW_HITS_NOTE_ALPHA = 0.3f;
+
         private bool _showHits = false;
         /// <summary>
         ///     Whether hits are currently shown.
@@ -155,6 +163,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     return;
 
                 _showHits = value;
+
+                foreach (GameplayHitObjectKeys hitObject in ActiveNoteLanes.Concat(DeadNoteLanes).Concat(HeldLongNoteLanes).Flatten())
+                {
+                    var tint = hitObject.Tint * (_showHits ? 1 : SHOW_HITS_NOTE_ALPHA);
+                    var newTint = hitObject.Tint * (_showHits ? SHOW_HITS_NOTE_ALPHA : 1);
+
+                    hitObject.HitObjectSprite.Tint = tint;
+                    hitObject.HitObjectSprite.ClearAnimations();
+                    hitObject.HitObjectSprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                    hitObject.LongNoteBodySprite.Tint = tint;
+                    hitObject.LongNoteBodySprite.ClearAnimations();
+                    hitObject.LongNoteBodySprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                    hitObject.LongNoteEndSprite.Tint = tint;
+                    hitObject.LongNoteEndSprite.ClearAnimations();
+                    hitObject.LongNoteEndSprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                }
 
                 ((GameplayPlayfieldKeys) Ruleset.Playfield).Stage.HitContainer.Children.ForEach(x =>
                 {
