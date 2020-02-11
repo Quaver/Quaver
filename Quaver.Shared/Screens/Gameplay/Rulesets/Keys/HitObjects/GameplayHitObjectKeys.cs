@@ -5,18 +5,17 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
-using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
-using Quaver.Shared.Graphics;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -27,12 +26,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
     {
         /// <summary>
         /// </summary>
-        private GameplayRuleset Ruleset { get; }
+        private GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Reference to the HitObjectManager controlling the object.
         /// </summary>
-        private HitObjectManager HitObjectManager { get; }
+        private HitObjectManagerKeys HitObjectManager { get; }
 
         /// <summary>
         ///     Is determined by whether the player is holding the key that this hit object is binded to
@@ -88,17 +87,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        private Sprite HitObjectSprite { get; set; }
+        public Sprite HitObjectSprite { get; private set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
         /// </summary>
-        private AnimatableSprite LongNoteBodySprite { get; set; }
+        public AnimatableSprite LongNoteBodySprite { get; private set; }
 
         /// <summary>
         ///     The hold end sprite for long notes.
         /// </summary>
-        private Sprite LongNoteEndSprite { get; set; }
+        public Sprite LongNoteEndSprite { get; private set; }
 
         /// <summary>
         ///     General Position for hitting. Calculated from Hit Body Height and Hit Position Offset
@@ -113,6 +112,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private float LongNoteSizeDifference { get; }
 
+        /// <summary>
+        ///     Base tint of the sprites.
+        ///
+        ///     Used for tint animation.
+        /// </summary>
+        public Color Tint { get; private set; }
+
+        /// <summary>
+        ///     The hit representing the press of this object.
+        /// </summary>
+        private DrawableReplayHit PressHit { get; set; }
+
+        /// <summary>
+        ///     The hit representing the release of this object.
+        /// </summary>
+        private DrawableReplayHit ReleaseHit { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -126,7 +142,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             var lane = info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)ruleset.Playfield;
+
             LongNoteSizeDifference = playfield.LongNoteSizeAdjustment[lane];
+
             InitializeSprites(ruleset, lane, playfield.ScrollDirections[lane]);
             InitializeObject(manager, info);
         }
@@ -185,6 +203,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = playfield.Stage.HitObjectContainer;
+
+            // Hits go above the hit object.
+            PressHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
+            ReleaseHit = new DrawableReplayHit(Ruleset, HitObjectManager, lane);
         }
 
         /// <summary>
@@ -198,10 +220,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitPosition = info.IsLongNote ? playfield.HoldHitPositionY[info.Lane - 1] : playfield.HitPositionY[info.Lane - 1];
             Info = info;
 
+            Tint = Color.White;
+            var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
+            tint.A = 255;
+
             // Update Hit Object State
             HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
-            HitObjectSprite.Tint = Color.White;
+            HitObjectSprite.Tint = tint;
             InitialTrackPosition = manager.GetPositionFromTime(Info.StartTime);
             CurrentlyBeingHeld = false;
             StopLongNoteAnimation();
@@ -219,8 +245,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             }
             else
             {
-                LongNoteBodySprite.Tint = Color.White;
-                LongNoteEndSprite.Tint = Color.White;
+                LongNoteBodySprite.Tint = tint;
+                LongNoteEndSprite.Tint = tint;
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
                 InitialLongNoteTrackPosition = manager.GetPositionFromTime(Info.EndTime);
@@ -228,8 +254,42 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 InitialLongNoteSize = CurrentLongNoteSize;
             }
 
+            InitializeHits();
+
             // Update Positions
             UpdateSpritePositions(manager.CurrentTrackPosition);
+        }
+
+        /// <summary>
+        ///     Initializes press and release hits with new data.
+        /// </summary>
+        private void InitializeHits()
+        {
+            PressHit.Visible = false;
+            ReleaseHit.Visible = false;
+
+            if (HitObjectManager.HitStats == null)
+                return;
+
+            if (!HitObjectManager.HitStats.ContainsKey(Info))
+                return;
+
+            var hitStats = HitObjectManager.HitStats[Info];
+
+            foreach (var hitStat in hitStats)
+            {
+                if (hitStat.KeyPressType == KeyPressType.Release ||
+                    hitStat.KeyPressType == KeyPressType.None && hitStat.Judgement == Judgement.Okay)
+                {
+                    ReleaseHit.InitializeWithHitStat(hitStat);
+                    ReleaseHit.Visible = true;
+                }
+                else
+                {
+                    PressHit.InitializeWithHitStat(hitStat);
+                    PressHit.Visible = true;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -240,6 +300,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             HitObjectSprite.Destroy();
             LongNoteBodySprite.Destroy();
             LongNoteEndSprite.Destroy();
+            PressHit.Destroy();
+            ReleaseHit.Destroy();
         }
 
         /// <summary>
@@ -299,6 +361,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Update HitBody
             HitObjectSprite.Y = SpritePosition;
 
+            PressHit.UpdateSpritePositions(offset);
+            ReleaseHit.UpdateSpritePositions(offset);
+
             // Disregard the rest if it isn't a long note.
             if (!Info.IsLongNote)
                 return;
@@ -356,12 +421,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         public void Kill()
         {
-            var deadNoteColor = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
-            HitObjectSprite.Tint = deadNoteColor;
+            Tint = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
+            var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
+            tint.A = 255;
+            HitObjectSprite.Tint = tint;
             if (Info.IsLongNote)
             {
-                LongNoteBodySprite.Tint = deadNoteColor;
-                LongNoteEndSprite.Tint = deadNoteColor;
+                LongNoteBodySprite.Tint = tint;
+                LongNoteEndSprite.Tint = tint;
             }
         }
 

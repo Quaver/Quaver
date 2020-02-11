@@ -80,7 +80,10 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             foreach (var item in Pool)
             {
                 if (item is CheckboxContainerItem i)
-                    i.Button.Visible = false;
+                {
+                    i.Checkbox.Visible = false;
+                    i.Checkbox.Button.Visible = false;
+                }
             }
         }
 

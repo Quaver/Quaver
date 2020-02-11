@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring.Data;
@@ -23,6 +24,8 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -61,7 +64,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// <summary>
         ///     Reference to the ruleset this HitObject manager is for.
         /// </summary>
-        public GameplayRulesetKeys Ruleset { get; private set; }
+        public GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Hit Object info used for object pool and gameplay
@@ -134,6 +137,69 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Current audio position with song and user offset values applied.
         /// </summary>
         public double CurrentAudioPosition { get; private set; }
+
+        /// <summary>
+        ///     A mapping from hit objects to the associated hit stats from a replay.
+        ///
+        ///     Set to null when not applicable (e.g. outside of a replay).
+        /// </summary>
+        public Dictionary<HitObjectInfo, List<HitStat>> HitStats { get; private set; }
+
+        /// <summary>
+        ///     Note alpha when showing hits.
+        /// </summary>
+        public const float SHOW_HITS_NOTE_ALPHA = 0.3f;
+
+        /// <summary>
+        ///     Whether hits are currently shown.
+        /// </summary>
+        private bool _showHits = false;
+        public bool ShowHits
+        {
+            get => _showHits;
+            set
+            {
+                if (HitStats == null)
+                    return;
+
+                _showHits = value;
+
+                foreach (GameplayHitObjectKeys hitObject in ActiveNoteLanes.Concat(DeadNoteLanes).Concat(HeldLongNoteLanes).Flatten())
+                {
+                    var tint = hitObject.Tint * (_showHits ? 1 : SHOW_HITS_NOTE_ALPHA);
+                    var newTint = hitObject.Tint * (_showHits ? SHOW_HITS_NOTE_ALPHA : 1);
+
+                    hitObject.HitObjectSprite.Tint = tint;
+                    hitObject.HitObjectSprite.ClearAnimations();
+                    hitObject.HitObjectSprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                    hitObject.LongNoteBodySprite.Tint = tint;
+                    hitObject.LongNoteBodySprite.ClearAnimations();
+                    hitObject.LongNoteBodySprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                    hitObject.LongNoteEndSprite.Tint = tint;
+                    hitObject.LongNoteEndSprite.ClearAnimations();
+                    hitObject.LongNoteEndSprite.FadeToColor(newTint, Easing.OutQuad, 250);
+                }
+
+                var playfield = (GameplayPlayfieldKeys) Ruleset.Playfield;
+
+                playfield.Stage.HitContainer.Children.ForEach(x =>
+                {
+                    if (!(x is Sprite sprite))
+                        return;
+
+                    if (_showHits)
+                    {
+                        sprite.Alpha = 0;
+                        sprite.FadeTo(1, Easing.OutQuad, 250);
+                    }
+                    else
+                    {
+                        sprite.Alpha = 1;
+                        sprite.FadeTo(0, Easing.OutQuad, 250);
+                    }
+                });
+            }
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -235,9 +301,36 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
 
+            InitializeHitStats();
+
             // Initialize Object Pool
             InitializeInfoPool(map);
             InitializeObjectPool();
+        }
+
+        /// <summary>
+        ///     Fills in the HitStats dictionary.
+        /// </summary>
+        private void InitializeHitStats()
+        {
+            // Don't show hit stats in the song select preview.
+            if (Ruleset.Screen.IsSongSelectPreview)
+                return;
+
+            var inputManager = ((KeysInputManager) Ruleset.InputManager).ReplayInputManager;
+
+            if (inputManager == null)
+                return;
+
+            HitStats = new Dictionary<HitObjectInfo, List<HitStat>>();
+
+            foreach (var hitStat in inputManager.VirtualPlayer.ScoreProcessor.Stats)
+            {
+                if (!HitStats.ContainsKey(hitStat.HitObject))
+                    HitStats.Add(hitStat.HitObject, new List<HitStat>());
+
+                HitStats[hitStat.HitObject].Add(hitStat);
+            }
         }
 
         /// <summary>

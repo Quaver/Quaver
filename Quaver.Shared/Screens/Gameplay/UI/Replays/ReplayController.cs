@@ -91,7 +91,15 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
 
         /// <summary>
         /// </summary>
+        private const int PANEL_PADDING = 14;
+
+        /// <summary>
+        /// </summary>
         private ReplayControllerSpeed SpeedSlider { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private ReplayControllerShowHits ShowHits { get; set; }
 
         /// <summary>
         /// </summary>
@@ -114,6 +122,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             //CreateToggleSvButton();
             CreateHidePrompt();
             CreateSpeedSlider();
+            CreateShowHitsButton();
         }
 
         /// <inheritdoc />
@@ -364,10 +373,23 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Replays
             SpeedSlider = new ReplayControllerSpeed(Screen, new ScalableVector2(264, 38))
             {
                 Parent = this,
-                Y = -14
+                Y = -PANEL_PADDING
             };
 
             SpeedSlider.Y -= SpeedSlider.Height;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateShowHitsButton()
+        {
+            ShowHits = new ReplayControllerShowHits(Screen, new ScalableVector2(264, 38))
+            {
+                Parent = this,
+                Y = SpeedSlider.Y - PANEL_PADDING,
+            };
+
+            ShowHits.Y -= ShowHits.Height;
         }
 
         /// <summary>

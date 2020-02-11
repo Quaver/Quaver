@@ -2,10 +2,6 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Buttons;
-using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Form.Checkboxes
 {
@@ -17,16 +13,9 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         public override int HEIGHT { get; } = 50;
 
         /// <summary>
+        ///     The checkbox itself.
         /// </summary>
-        public ImageButton Button { get; private set; }
-
-        /// <summary>
-        /// </summary>
-        private SpriteTextPlus Name { get; set; }
-
-        /// <summary>
-        /// </summary>
-        private Sprite Checkbox { get; set; }
+        public Checkbox Checkbox { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -40,8 +29,6 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             Size = new ScalableVector2(container.Width, HEIGHT);
             Alpha = 0;
 
-            CreateButton();
-            CreateName();
             CreateCheckbox();
 
             Item.IsSelected = Item.GetSelectedState();
@@ -53,7 +40,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Button.Alpha = Button.IsHovered ? 0.35f : 0;
+            Checkbox.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -70,53 +57,25 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
 
             ScheduleUpdate(() =>
             {
-                Name.Text = item.GetName();
-                Checkbox.Image = FontAwesome.Get(Item.IsSelected ? FontAwesomeIcon.fa_check : FontAwesomeIcon.fa_check_box_empty);
+                Checkbox.Name.Text = item.GetName();
+                Checkbox.Sprite.Image = FontAwesome.Get(Item.IsSelected ? FontAwesomeIcon.fa_check : FontAwesomeIcon.fa_check_box_empty);
             });
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateButton()
-        {
-            Button = new CheckboxItemButton(UserInterface.BlankBox, Container)
-            {
-                Parent = this,
-                Size = Size,
-                Alpha = 0,
-            };
-
-            Button.Clicked += (sender, args) =>
-            {
-                Item.IsSelected = !Item.IsSelected;
-                Item.OnToggle();
-                UpdateContent(Item, Index);
-            };
-        }
-
-        /// <summary>
-        /// </summary>
-        private void CreateName()
-        {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 21)
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = 14
-            };
         }
 
         /// <summary>
         /// </summary>
         private void CreateCheckbox()
         {
-            Checkbox = new Sprite()
+            Checkbox = new Checkbox(Size)
             {
                 Parent = this,
-                Alignment = Alignment.MidRight,
-                X = -Name.X,
-                Size = new ScalableVector2(Height * 0.40f, Height * 0.40f),
-                Image = FontAwesome.Get(FontAwesomeIcon.fa_check_sign_in_a_rounded_black_square)
+            };
+
+            Checkbox.Button.Clicked += (sender, args) =>
+            {
+                Item.IsSelected = !Item.IsSelected;
+                Item.OnToggle();
+                UpdateContent(Item, Index);
             };
         }
     }
