@@ -18,7 +18,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
 {
-    public class Hit
+    public class DrawableReplayHit
     {
         /// <summary>
         ///     The hit stat for this hit.
@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits
         /// <summary>
         ///     Creates a Hit and its sprites.
         /// </summary>
-        public Hit(GameplayRulesetKeys ruleset, HitObjectManagerKeys manager, int lane)
+        public DrawableReplayHit(GameplayRulesetKeys ruleset, HitObjectManagerKeys manager, int lane)
         {
             Manager = manager;
             JudgeColors = SkinManager.Skin.Keys[ruleset.Mode].JudgeColors;
