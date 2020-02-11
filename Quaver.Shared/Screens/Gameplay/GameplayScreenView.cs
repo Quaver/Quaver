@@ -268,7 +268,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 X = -10
             };
 
-            if (Screen.InReplayMode && Screen.SpectatorClient == null)
+            if (Screen.InReplayMode && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
             {
                 ReplayController = new ReplayController(Screen)
                 {
