@@ -470,7 +470,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                         KillPoolObject(hitObject);
 
                         if (im?.ReplayInputManager == null)
-                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                            Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss, true);
 
                         view.UpdateScoreAndAccuracyDisplays();
                         Ruleset.ScoreProcessor.Stats.Add(stat);
@@ -519,7 +519,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+                        Ruleset.ScoreProcessor.CalculateScore(missedJudgement, true);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
@@ -651,13 +651,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Kills a hold pool object.
         /// </summary>
         /// <param name="gameplayHitObject"></param>
-        public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject)
+        public void KillHoldPoolObject(GameplayHitObjectKeys gameplayHitObject, bool setTint = true)
         {
             // Change start time and LN size.
             gameplayHitObject.InitialTrackPosition = GetPositionFromTime(CurrentAudioPosition);
             gameplayHitObject.CurrentlyBeingHeld = false;
             gameplayHitObject.UpdateLongNoteSize(gameplayHitObject.InitialTrackPosition);
-            gameplayHitObject.Kill();
+
+            if (setTint)
+                gameplayHitObject.Kill();
 
             // Add to dead notes pool
             DeadNoteLanes[gameplayHitObject.Info.Lane - 1].Enqueue(gameplayHitObject);
