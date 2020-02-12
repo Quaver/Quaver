@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(Width, 72),
+                Size = new ScalableVector2(Width, 78),
                 Tint = ColorHelper.HexToColor("#181818")
             };
 

@@ -53,7 +53,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         public SelectableModifier(int width, IGameplayModifier mod)
         {
             Mod = mod;
-            Size = new ScalableVector2(width, 53);
+            Size = new ScalableVector2(width, 48);
             Depth = 1;
 
             const int paddingLeft = 10;
@@ -152,12 +152,19 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
         private Texture2D GetTexture()
         {
-            if (Mod.GetType() == typeof(ModSpeed))
-                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-1.1x.png");
-            if (Mod.GetType() == typeof(ModJudgementWindows))
-                return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-JW.png");
+            try
+            {
+                if (Mod.GetType() == typeof(ModSpeed))
+                    return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-1.1x.png");
+                if (Mod.GetType() == typeof(ModJudgementWindows) || Mod.GetType() == typeof(ModLongNoteAdjust))
+                    return TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-JW.png");
 
-            return ModManager.GetTexture(Mod.ModIdentifier, !ModManager.IsActivated(Mod.ModIdentifier));
+                return ModManager.GetTexture(Mod.ModIdentifier, !ModManager.IsActivated(Mod.ModIdentifier));
+            }
+            catch (Exception e)
+            {
+                return FontAwesome.Get(FontAwesomeIcon.fa_question_sign);
+            }
         }
 
         /// <summary>

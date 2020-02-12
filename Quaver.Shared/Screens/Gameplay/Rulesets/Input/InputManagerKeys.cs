@@ -195,7 +195,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // Handle early miss cases here.
                 case Judgement.Miss when gameplayHitObject.Info.IsLongNote:
                     // Add another miss when hit missing LNS
-                    ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss);
+                    ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(Judgement.Miss, true);
                     Ruleset.ScoreProcessor.Stats.Add(
                         new HitStat(
                             HitStatType.Miss,
@@ -241,7 +241,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             var lane = gameplayHitObject.Info.Lane - 1;
             var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
             var hitDifference = (int)(manager.HeldLongNoteLanes[lane].Peek().Info.EndTime - manager.CurrentAudioPosition);
-            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release, ReplayInputManager == null);
+
+            var judgement = ((ScoreProcessorKeys)Ruleset.ScoreProcessor).CalculateScore(hitDifference, KeyPressType.Release,
+                ReplayInputManager == null);
 
             // Update animations
             playfield.Stage.HitLightingObjects[lane].StopHolding();
@@ -283,7 +285,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                 // If the player recieved an early miss or "okay",
                 // show the player that they were inaccurate by killing the object instead of recycling it
                 if (judgement == Judgement.Miss || judgement == Judgement.Okay)
-                    manager.KillHoldPoolObject(gameplayHitObject);
+                    manager.KillHoldPoolObject(gameplayHitObject, judgement == Judgement.Miss);
                 else
                     manager.RecyclePoolObject(gameplayHitObject);
 
@@ -308,7 +310,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             ));
 
             if (ReplayInputManager == null)
-                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+                Ruleset.ScoreProcessor.CalculateScore(missedJudgement, true);
 
             // Update scoreboard
             view.UpdateScoreboardUsers();
