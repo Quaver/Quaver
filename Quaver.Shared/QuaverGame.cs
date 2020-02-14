@@ -74,6 +74,7 @@ using Quaver.Shared.Screens.Tests.ModifierSelectors;
 using Quaver.Shared.Screens.Tests.YesNoDialog;
 using Quaver.Shared.Screens.Tests.Footer;
 using Quaver.Shared.Screens.Tests.ListenerLists;
+using Quaver.Shared.Screens.Tests.Luas;
 using Quaver.Shared.Screens.Tests.MenuJukebox;
 using Quaver.Shared.Screens.Tests.Notifications;
 using Quaver.Shared.Screens.Tests.OnlineHubDownloads;
@@ -187,6 +188,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"LuaImGui", typeof(TestLuaScriptingScreen)},
             {"LocalProfileContainer", typeof(TestUserProfileContainerScreen)},
             {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
             {"DownloadingScreen", typeof(DownloadingScreen)},
