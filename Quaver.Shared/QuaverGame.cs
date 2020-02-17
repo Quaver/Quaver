@@ -42,6 +42,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Downloading;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -64,6 +65,7 @@ using Quaver.Shared.Screens.Tests.DrawableMapsets;
 using Quaver.Shared.Screens.Tests.DrawableMapsetsMultiple;
 using Quaver.Shared.Screens.Tests.DrawablePlaylists;
 using Quaver.Shared.Screens.Tests.Dropdowns;
+using Quaver.Shared.Screens.Tests.Editor;
 using Quaver.Shared.Screens.Tests.FilterPanel;
 using Quaver.Shared.Screens.Tests.Jukebox;
 using Quaver.Shared.Screens.Tests.Leaderboards;
@@ -188,6 +190,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"Editor", typeof(TestEditorScreen)},
             {"LuaImGui", typeof(TestLuaScriptingScreen)},
             {"LocalProfileContainer", typeof(TestUserProfileContainerScreen)},
             {"DifficultyGraph", typeof(TestDifficultyGraphScreen)},
