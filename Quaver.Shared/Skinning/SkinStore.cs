@@ -8,10 +8,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using IniFileParser;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework.Graphics;
+using MoreLinq.Extensions;
 using Quaver.API.Enums;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -31,6 +33,9 @@ namespace Quaver.Shared.Skinning
         {
             get
             {
+                if (ConfigManager.UseSteamWorkshopSkin == null)
+                    return "";
+
                 if (!ConfigManager.UseSteamWorkshopSkin.Value)
                     return $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
 
@@ -649,6 +654,58 @@ namespace Quaver.Shared.Skinning
 
             for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundComboAlert}-{i + 1}.wav"); i++)
                 SoundComboAlerts.Add(LoadSoundEffect($"{sfxFolder}/{soundComboAlert}-{i + 1}", soundComboAlert + "-" + i + 1, "Menu"));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var p in GetType().GetProperties())
+            {
+                if (p.PropertyType == typeof(Texture2D))
+                {
+                    var tex = (Texture2D) p.GetValue(this);
+
+                    if (!tex.IsDisposed)
+                        tex.Dispose();
+                }
+                else if (p.PropertyType == typeof(AudioSample))
+                {
+                    var sample = (AudioSample) p.GetValue(this);
+
+                    if (!sample.IsDisposed)
+                        sample.Dispose();
+                }
+                else if (p.PropertyType == typeof(Texture2D[]))
+                {
+                    var textureList = (Texture2D[]) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+                else if (p.PropertyType == typeof(List<Texture2D>))
+                {
+                    var textureList = (List<Texture2D>) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+                else if (p.PropertyType == typeof(List<AudioSample>))
+                {
+                    var textureList = (List<AudioSample>) p.GetValue(this);
+                    textureList.ForEach(x => x.Dispose());
+                }
+            }
+
+            foreach (var mode in Keys.Values)
+            {
+                foreach (var p in mode.GetType().GetProperties())
+                {
+                    if (p.PropertyType != typeof(Texture2D))
+                        continue;
+
+                    var tex = (Texture2D) p.GetValue(mode);
+
+                    if (!tex.IsDisposed)
+                        tex.Dispose();
+                }
+            }
         }
     }
 }
