@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Screens.Edit.UI.Footer.Time;
+using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using TagLib.Matroska;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -34,6 +36,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// </summary>
         private PausePlayButton PausePlayButton { get; set; }
 
+        /// <summary>
+        /// </summary>
+        public IconButton FastForwardButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public IconButton BackwardButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public IconButton RestartButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public IconButton SkipToEndButton { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private const int BUTTON_SPACING = 24;
+
+        /// <summary>
+        /// </summary>
+        private const int BUTTON_SIZE = 22;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -54,6 +80,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             CreateSeekBar();
             CreateTimeTexts();
             CreatePausePlayButton();
+            CreateFastForwardButton();
+            CreateBackwardButton();
+            CreateRestartButton();
+            CreateSkipToEndButton();
         }
 
         /// <summary>
@@ -99,7 +129,77 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(40, 40)
+                Size = new ScalableVector2(36, 36)
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateFastForwardButton()
+        {
+            FastForwardButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_forward_button))
+            {
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidRight,
+                Size = new ScalableVector2(BUTTON_SIZE, BUTTON_SIZE),
+                X = BUTTON_SIZE + BUTTON_SPACING
+            };
+
+            FastForwardButton.Clicked += (sender, args) =>
+            {
+                Track.Seek(MathHelper.Clamp((float) (Track.Time + 10000), 0, (float) Track.Length - 100));
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateBackwardButton()
+        {
+            BackwardButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_forward_button))
+            {
+                Parent = PausePlayButton,
+                SpriteEffect = SpriteEffects.FlipHorizontally,
+                Alignment = Alignment.MidLeft,
+                Size = FastForwardButton.Size,
+                X = -BUTTON_SIZE - BUTTON_SPACING
+            };
+
+            BackwardButton.Clicked += (sender, args) =>
+            {
+                Track.Seek(MathHelper.Clamp((float) (Track.Time - 10000), 0, (float) Track.Length - 100));
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateRestartButton()
+        {
+            RestartButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_backward))
+            {
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidLeft,
+                Size = FastForwardButton.Size,
+                X = BackwardButton.X - BackwardButton.Width - BUTTON_SPACING
+            };
+
+            RestartButton.Clicked += (sender, args) => Track.Seek(0);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSkipToEndButton()
+        {
+            SkipToEndButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_step_forward))
+            {
+                Parent = PausePlayButton,
+                Alignment = Alignment.MidRight,
+                Size = FastForwardButton.Size,
+                X = FastForwardButton.X + FastForwardButton.Width + BUTTON_SPACING
+            };
+
+            SkipToEndButton.Clicked += (sender, args) =>
+            {
+                Track.Seek(MathHelper.Clamp((float) Track.Length - 100, 0, (float) Track.Length - 100));
             };
         }
     }
