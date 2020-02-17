@@ -73,8 +73,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        public static void PlayObjectHitSounds(HitObjectInfo hitObject)
+        public static void PlayObjectHitSounds(HitObjectInfo hitObject, SkinStore skin = null)
         {
+            // Default to fallback skin if one wasn't provided
+            if (skin == null)
+                skin = SkinManager.Skin;
+
             var game = GameBase.Game as QuaverGame;
 
             // Disable hitsounds for left panel screens if the map preview isnt active
@@ -86,19 +90,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
 
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHit.CreateChannel().Play();
+                skin?.SoundHit?.CreateChannel().Play();
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitClap.CreateChannel().Play();
+                skin?.SoundHitClap?.CreateChannel().Play();
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitWhistle.CreateChannel().Play();
+                skin?.SoundHitWhistle?.CreateChannel().Play();
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitFinish.CreateChannel().Play();
+                skin?.SoundHitFinish?.CreateChannel().Play();
         }
 
         /// <summary>
