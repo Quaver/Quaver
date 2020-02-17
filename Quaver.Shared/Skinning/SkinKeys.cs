@@ -37,6 +37,10 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private GameMode Mode { get; }
 
+        /// <summary>
+        /// </summary>
+        private static string DefaultSkin => DefaultSkins.Arrow.ToString();
+
 #region SKIN.INI VALUES
 
         [FixedScale]
@@ -385,7 +389,7 @@ namespace Quaver.Shared.Skinning
 
             if (loadFromResources)
             {
-                using (var stream = new StreamReader(GameBase.Game.Resources.GetStream($"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value}/skin.ini")))
+                using (var stream = new StreamReader(GameBase.Game.Resources.GetStream($"Quaver.Resources/Textures/Skins/{DefaultSkin}/skin.ini")))
                     config = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadData(stream);
             }
             else
@@ -513,7 +517,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
                                $"/{GetResourcePath(element)}.png";
             }
 
@@ -540,7 +544,7 @@ namespace Quaver.Shared.Skinning
             }
             else
             {
-                resource = $"Quaver.Resources/Textures/Skins/{ConfigManager.DefaultSkin.Value.ToString()}/{Mode.ToString()}/{folder.ToString()}" +
+                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{Mode.ToString()}/{folder.ToString()}" +
                            $"/{GetResourcePath(element)}";
             }
 
