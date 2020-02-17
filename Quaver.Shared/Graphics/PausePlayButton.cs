@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Wobble.Audio.Tracks;
 
 namespace Quaver.Shared.Graphics
 {
@@ -15,20 +16,27 @@ namespace Quaver.Shared.Graphics
 
         private Texture2D PlayButton { get; }
 
-        public PausePlayButton(Texture2D pauseButton = null, Texture2D playButton = null) : base(pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
+        /// <summary>
+        /// </summary>
+        private IAudioTrack Track { get; }
+
+        public PausePlayButton(Texture2D pauseButton = null, Texture2D playButton = null, IAudioTrack track = null)
+            : base(pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol))
         {
+            Track = track ?? AudioEngine.Track;
+
             PauseButton = pauseButton ?? FontAwesome.Get(FontAwesomeIcon.fa_pause_symbol);
             PlayButton = playButton ?? FontAwesome.Get(FontAwesomeIcon.fa_play_button);
 
             Clicked += (sender, args) =>
             {
-                if (AudioEngine.Track == null)
+                if (Track == null || Track.IsDisposed)
                     return;
 
-                if (AudioEngine.Track.IsPlaying)
-                    AudioEngine.Track.Pause();
-                else if (AudioEngine.Track.IsPaused)
-                    AudioEngine.Track.Play();
+                if (Track.IsPlaying)
+                    Track.Pause();
+                else
+                    Track.Play();
             };
         }
 
@@ -38,16 +46,16 @@ namespace Quaver.Shared.Graphics
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (AudioEngine.Track != null)
+            if (Track != null)
             {
-                if (AudioEngine.Track.IsPlaying)
+                if (Track.IsPlaying)
                 {
                     var pause = PauseButton;
 
                     if (Image != pause)
                         Image = pause;
                 }
-                else if (AudioEngine.Track.IsStopped || AudioEngine.Track.IsPaused)
+                else if (Track.IsStopped || Track.IsPaused)
                 {
                     var play = PlayButton;
 
