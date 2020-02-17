@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// </summary>
         private void CreateSeekBar()
         {
-            SeekBar = new EditorFooterSeekBar(new BindableInt(0, 0, (int) Track.Length), new Vector2(Width, 6), Track)
+            SeekBar = new EditorFooterSeekBar(new BindableInt(0, 0, (int) Track.Length), new Vector2(Width, 4), Track)
             {
                 Parent = this,
             };
@@ -102,7 +102,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// </summary>
         private void CreateTimeTexts()
         {
-            const int posX = 18;
+            const int posX = 14;
 
             CurrentTime = new EditorFooterTime(EditorFooterTimeType.Current, FontManager.GetWobbleFont(Fonts.LatoBlack), Track)
             {
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
                 X = -posX,
             };
 
-            CurrentTime.Y -= CurrentTime.Height + 26;
+            CurrentTime.Y -= CurrentTime.Height + 22;
             TimeLeft.Y = CurrentTime.Y;
         }
 

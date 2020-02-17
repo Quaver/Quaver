@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Time
         /// <param name="type"></param>
         /// <param name="font"></param>
         /// <param name="track"></param>
-        public EditorFooterTime(EditorFooterTimeType type, WobbleFontStore font, IAudioTrack track) : base(font, "00:00.000", 26)
+        public EditorFooterTime(EditorFooterTimeType type, WobbleFontStore font, IAudioTrack track) : base(font, "00:00.000", 24)
         {
             Type = type;
             Track = track;

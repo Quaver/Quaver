@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         protected override bool IsMouseInClickArea()
         {
             // The RectY increase of the click area.
-            const int offset = 34;
+            const int offset = 36;
 
             DrawRectangle clickArea;
 
