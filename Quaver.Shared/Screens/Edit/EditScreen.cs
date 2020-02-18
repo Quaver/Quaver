@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.Server.Common.Enums;
@@ -48,6 +49,11 @@ namespace Quaver.Shared.Screens.Edit
         public IAudioTrack Track { get; private set; }
 
         /// <summary>
+        ///     The background used for visual testing
+        /// </summary>
+        public EditorVisualTestBackground BackgroundStore { get; }
+
+        /// <summary>
         ///     The cvrrently active skin
         /// </summary>
         public Bindable<SkinStore> Skin { get; private set; }
@@ -80,10 +86,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditScreen(Qua map, IAudioTrack track = null)
+        public EditScreen(Qua map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             OriginalMap = map;
             WorkingMap = ObjectHelper.DeepClone(OriginalMap);
+            BackgroundStore = visualTestBackground;
 
             SetAudioTrack(track);
             LoadSkin();
@@ -121,6 +128,7 @@ namespace Quaver.Shared.Screens.Edit
             Skin?.Dispose();
             UneditableMap?.Dispose();
             BeatSnap?.Dispose();
+            BackgroundStore?.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
