@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Footer;
+using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using TagLib.Matroska;
 using Wobble;
@@ -40,6 +41,10 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private EditorFooter Footer { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private EditorFileMenuBar MenuBar { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -49,6 +54,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
+            MenuBar = new EditorFileMenuBar();
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
         }
@@ -67,6 +73,8 @@ namespace Quaver.Shared.Screens.Edit
         {
             GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
             Container?.Draw(gameTime);
+            MenuBar.Draw(gameTime);
+
         }
 
         /// <inheritdoc />
@@ -75,6 +83,7 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             Container?.Destroy();
+            MenuBar.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
