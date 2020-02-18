@@ -93,7 +93,10 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreateBackground()
         {
-            Background = new BackgroundImage(UserInterface.Triangles, 0, false)
+            var tex = EditScreen.BackgroundStore.Texture ?? UserInterface.Triangles;
+            var dim = tex == UserInterface.Triangles ? 0 : 60;
+
+            Background = new BackgroundImage(tex, dim, false)
             {
                 Parent = Container
             };
