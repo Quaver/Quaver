@@ -36,12 +36,27 @@ namespace Quaver.Shared.Graphics.Graphs
 
         /// <summary>
         /// </summary>
-        private IAudioTrack Track => AudioEngine.Track ?? new AudioTrackVirtual(Map.Length);
+        private IAudioTrack Track { get; }
 
         /// <summary>
         ///     The maximum amount of bars that will be displayed on the graph
         /// </summary>
         private int MaxBars { get; }
+
+        /// <summary>
+        ///     The size/height of each bar
+        /// </summary>
+        private int BarSize { get; }
+
+        /// <summary>
+        ///     If the bars should be aligned from right to left instead of left to right
+        /// </summary>
+        private bool AlignRightToLeft { get; }
+
+        /// <summary>
+        ///     The scale of the bars in relation to the width
+        /// </summary>
+        private float BarWidthScale { get; }
 
         /// <summary>
         ///     The time for each sample in the graph
@@ -64,14 +79,25 @@ namespace Quaver.Shared.Graphics.Graphs
         /// <param name="mods"></param>
         /// <param name="size"></param>
         /// <param name="maxBars"></param>
-        public DifficultySeekBar(Qua map, ModIdentifier mods, ScalableVector2 size, int maxBars = 120) : base(UserInterface.BlankBox)
+        /// <param name="barSize"></param>
+        /// <param name="track"></param>
+        /// <param name="alignRightToLeft"></param>
+        /// <param name="barWidthScale"></param>
+        public DifficultySeekBar(Qua map, ModIdentifier mods, ScalableVector2 size, int maxBars = 120, int barSize = 3, IAudioTrack track = null,
+            bool alignRightToLeft = false, float barWidthScale = 1)
+            : base(UserInterface.BlankBox)
         {
             Map = map;
             Mods = mods;
             Size = size;
             MaxBars = maxBars;
+            BarSize = barSize;
+            AlignRightToLeft = alignRightToLeft;
+            BarWidthScale = barWidthScale;
 
             Processor = (DifficultyProcessorKeys) Map.SolveDifficulty(Mods);
+
+            Track = AudioEngine.Track ?? track ?? new AudioTrackVirtual(Map.Length + 5000);
 
             CreateBars();
             CreateProgressSeekBar();
@@ -91,7 +117,7 @@ namespace Quaver.Shared.Graphics.Graphs
                     var percentage = (MouseManager.CurrentState.Y - AbsolutePosition.Y) / AbsoluteSize.Y;
                     var targetPos = (1 - percentage) * Track.Length;
 
-                    if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= AudioEngine.Track.Length)
+                    if ((int) targetPos != (int) Track.Time && targetPos >= 0 && targetPos <= Track.Length)
                     {
                         if (Math.Abs(Track.Time - targetPos) < 500)
                             return;
@@ -103,7 +129,7 @@ namespace Quaver.Shared.Graphics.Graphs
             }
 
             if (SeekBarLine != null)
-                SeekBarLine.Y = Height - (float) (Track.Time  / AudioEngine.Track.Length) * Height;
+                SeekBarLine.Y = Height - (float) (Track.Time  / Track.Length) * Height;
 
             base.Update(gameTime);
         }
@@ -142,9 +168,11 @@ namespace Quaver.Shared.Graphics.Graphs
                 calculators.Add(diff);
             }
 
+            var highestDiff = calculators.Max(x => x.OverallDifficulty);
+
             foreach (var calculator in calculators)
             {
-                var width = MathHelper.Clamp(calculator.OverallDifficulty / Processor.OverallDifficulty * Width, 6, Width);
+                var width = MathHelper.Clamp(calculator.OverallDifficulty / highestDiff * Width, 6, Width);
 
                 if (calculator.StrainSolverData.Count == 0)
                     continue;
@@ -153,8 +181,8 @@ namespace Quaver.Shared.Graphics.Graphs
                 new Sprite
                 {
                     Parent = this,
-                    Alignment = Alignment.BotLeft,
-                    Size = new ScalableVector2((int) width, 3),
+                    Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
+                    Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
                     Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / (Track.Length / Track.Rate)) - 2,
                     Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
                 };
@@ -168,7 +196,7 @@ namespace Quaver.Shared.Graphics.Graphs
             Parent = this,
             Size = new ScalableVector2(Width, 4),
             Tint = Color.White,
-            Y = (float) (AudioEngine.Track.Time / AudioEngine.Track.Length) * Height
+            Y = (float) (Track.Time / Track.Length) * Height
         };
     }
 }
