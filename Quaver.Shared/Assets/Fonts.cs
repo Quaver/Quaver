@@ -6,6 +6,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using Wobble;
 using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites.Text;
@@ -114,13 +115,20 @@ namespace Quaver.Shared.Assets
                     {cjkString, notoCjkFont}
                 }));
 
+            var latoBlack = GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBlack}.ttf");
+
             // Lato-Black
-            FontManager.CacheWobbleFont(LatoBlack, new WobbleFontStore(20,
-                GameBase.Game.Resources.Get($"{folder}/Lato/{LatoBlack}.ttf"), new Dictionary<string, byte[]>
+            FontManager.CacheWobbleFont(LatoBlack, new WobbleFontStore(20, latoBlack, new Dictionary<string, byte[]>
                 {
                     {emojiString, emojiFont},
                     {cjkString, notoCjkFont}
                 }));
+
+            var dir = $"{WobbleGame.WorkingDirectory}/Fonts";
+            Directory.CreateDirectory(dir);
+
+            // Copy over
+            File.WriteAllBytes($"{dir}/lato-black.ttf", latoBlack);
         }
     }
 }
