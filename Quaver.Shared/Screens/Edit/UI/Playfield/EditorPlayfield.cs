@@ -7,6 +7,8 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Graphs;
+using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Skinning;
@@ -73,7 +75,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public int HitPositionY { get; } = 860;
+        public int HitPositionY { get; } = 820;
 
         /// <summary>
         ///     The speed at which the container scrolls at.
@@ -125,11 +127,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private DifficultySeekBar SeekBar { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="skin"></param>
         /// <param name="track"></param>
         /// <param name="beatSnap"></param>
         /// <param name="scrollSpeed"></param>
+        /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed,
             Bindable<bool> anchorHitObjectsAtMidpoint, bool isUneditable = false)
@@ -152,6 +159,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateTimeline();
             CreateHitObjects();
             CreateButton();
+            CreateSeekBar();
 
             InitializeHitObjectPool();
             Track.Seeked += OnTrackSeeked;
@@ -309,6 +317,41 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (IsUneditable)
                 Button.Alpha = 0.45f;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateSeekBar()
+        {
+            if (IsUneditable)
+                return;
+
+            SeekBar = new DifficultySeekBar(Map, ModIdentifier.None,
+                new ScalableVector2(60, WindowManager.Height - MenuBorder.HEIGHT - 4), 85, 5, Track,
+                true, 0.85f)
+            {
+                Parent = this,
+                Tint = ColorHelper.HexToColor("#181818"),
+            };
+
+            SeekBar.X -= SeekBar.Width + 26;
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = SeekBar,
+                Size = new ScalableVector2(2, SeekBar.Height),
+                Tint = ColorHelper.HexToColor("#808080")
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = SeekBar,
+                Alignment = Alignment.BotRight,
+                Size = new ScalableVector2(2, SeekBar.Height),
+                Tint = ColorHelper.HexToColor("#808080")
+            };
         }
 
         /// <summary>
