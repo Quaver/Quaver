@@ -58,7 +58,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
         /// <summary>
         /// </summary>
-        private const int BUTTON_SIZE = 22;
+        private const int BUTTON_SIZE = 20;
+
+        /// <summary>
+        /// </summary>
+        public static int HEIGHT { get; } = 50;
 
         /// <inheritdoc />
         /// <summary>
@@ -84,6 +88,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             CreateBackwardButton();
             CreateRestartButton();
             CreateSkipToEndButton();
+
+            Height = HEIGHT;
         }
 
         /// <summary>
@@ -129,7 +135,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(36, 36)
+                Size = new ScalableVector2(34, 34)
             };
         }
 

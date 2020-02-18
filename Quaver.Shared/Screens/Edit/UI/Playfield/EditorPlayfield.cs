@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -64,7 +65,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 switch (Map.Mode)
                 {
                     case GameMode.Keys4:
-                        return 80;
+                        return 74;
                     case GameMode.Keys7:
                         return 70;
                     default:
@@ -327,7 +328,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             SeekBar = new DifficultySeekBar(Map, ModIdentifier.None,
-                new ScalableVector2(60, WindowManager.Height - MenuBorder.HEIGHT - 4), 85, 5, Track,
+                new ScalableVector2(54, WindowManager.Height - EditorFooter.HEIGHT - 4), 85, 5, Track,
                 true, 0.85f)
             {
                 Parent = this,
