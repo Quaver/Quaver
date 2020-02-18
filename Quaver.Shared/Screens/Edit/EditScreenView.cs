@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreateFooter() => Footer = new EditorFooter(EditScreen.Track)
         {
             Parent = Container,
-            Alignment = Alignment.BotLeft
+            Alignment = Alignment.BotLeft,
         };
 
         /// <summary>
