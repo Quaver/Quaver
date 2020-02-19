@@ -82,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             BeatSnap.ValueChanged += OnBeatSnapChanged;
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
             Track.Seeked += OnTrackSeeked;
+            Track.RateChanged += OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
         }
 
@@ -109,6 +110,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             BeatSnap.ValueChanged -= OnBeatSnapChanged;
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
             Track.Seeked -= OnTrackSeeked;
+            Track.RateChanged -= OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
 
             base.Destroy();
@@ -406,6 +408,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => InitializeLinePool();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e) => InitializeLinePool();
 
         /// <summary>
         /// </summary>
