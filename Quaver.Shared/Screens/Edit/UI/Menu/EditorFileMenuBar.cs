@@ -6,6 +6,7 @@ using ImGuiNET;
 using Quaver.Shared.Graphics.Menu.Border;
 using Wobble;
 using Wobble.Audio.Samples;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
@@ -15,6 +16,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 {
     public class EditorFileMenuBar : SpriteImGui
     {
+        /// <summary>
+        /// </summary>
+        private IAudioTrack Track { get; }
+
         /// <summary>
         /// </summary>
         private BindableInt BackgroundBrightness { get; }
@@ -56,16 +61,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="track"></param>
         /// <param name="backgroundBrightness"></param>
         /// <param name="enableMetronome"></param>
         /// <param name="playMetronomeHalfBeats"></param>
         /// <param name="enableHitsounds"></param>
         /// <param name="hitsoundVolume"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
-        public EditorFileMenuBar(BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
+        public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
             Bindable<bool> enableHitsounds, BindableInt hitsoundVolume, Bindable<bool> scaleScrollSpeedWithRate)
             : base(DestroyContext, GetOptions())
         {
+            Track = track;
             BackgroundBrightness = backgroundBrightness;
             EnableMetronome = enableMetronome;
             PlayMetronomeHalfBeats = playMetronomeHalfBeats;
@@ -203,6 +210,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Audio"))
                 return;
+
+            if (ImGui.BeginMenu("Playback Speed"))
+            {
+                for (var i = 0; i < 4; i++)
+                {
+                    var value = (i + 1) * 0.25f;
+
+                    if (ImGui.MenuItem($"{value * 100}%", "", Math.Abs(Track.Rate - value) < 0.001))
+                        Track.Rate = value;
+                }
+
+                ImGui.EndMenu();
+            }
 
             if (ImGui.BeginMenu("Hitsounds"))
             {
