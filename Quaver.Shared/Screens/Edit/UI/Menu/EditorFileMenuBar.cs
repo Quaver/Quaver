@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using ImGuiNET;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Menu.Border;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -50,6 +51,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<EditorBeatSnapColor> BeatSnapColor { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -73,9 +78,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="hitsoundVolume"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
-        public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
-            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume, Bindable<bool> scaleScrollSpeedWithRate,
-            Bindable<bool> anchorHitObjectsAtMidpoint) : base(DestroyContext, GetOptions())
+        /// <param name="beatSnapColor"></param>
+        public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
+            Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
+            Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor)
+            : base(DestroyContext, GetOptions())
         {
             Track = track;
             BackgroundBrightness = backgroundBrightness;
@@ -85,6 +92,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             HitsoundVolume = hitsoundVolume;
             ScaleScrollSpeedWithRate = scaleScrollSpeedWithRate;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
+            BeatSnapColor = beatSnapColor;
         }
 
         /// <inheritdoc />
@@ -166,11 +174,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
+            if (ImGui.BeginMenu("Beat Snap Color"))
+            {
+                foreach (EditorBeatSnapColor type in Enum.GetValues(typeof(EditorBeatSnapColor)))
+                {
+                    if (ImGui.MenuItem($"{type}", "", BeatSnapColor.Value == type))
+                        BeatSnapColor.Value = type;
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Scale Scroll Speed w/ Audio Rate", "", ScaleScrollSpeedWithRate.Value))
                 ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
 
             ImGui.Separator();
-            
+
             if (ImGui.MenuItem("Anchor HitObjects At Midpoint", "", AnchorHitObjectsAtMidpoint.Value))
                 AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;
 
