@@ -481,6 +481,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorBackgroundBrightness { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static BindableInt EditorHitsoundVolume { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -814,6 +818,7 @@ namespace Quaver.Shared.Config
             DisplayNotificationsBottomToTop = ReadValue(@"DisplayNotificationsBottomTotop", false, data);
             SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
             EditorBackgroundBrightness = ReadInt(@"EditorBackgroundBrightness", 40, 0, 100, data);
+            EditorHitsoundVolume = ReadInt(@"EditorHitsoundVolume", -1, -1, 100, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -955,6 +960,7 @@ namespace Quaver.Shared.Config
                     DisplayNotificationsBottomToTop.ValueChanged += AutoSaveConfiguration;
                     SelectedProfileId.ValueChanged += AutoSaveConfiguration;
                     EditorBackgroundBrightness.ValueChanged += AutoSaveConfiguration;
+                    EditorHitsoundVolume.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

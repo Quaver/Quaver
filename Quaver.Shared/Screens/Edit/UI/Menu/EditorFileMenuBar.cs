@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Quaver.Shared.Graphics.Menu.Border;
 using Wobble;
+using Wobble.Audio.Samples;
 using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
@@ -32,6 +33,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private BindableInt HitsoundVolume { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -51,14 +56,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="enableMetronome"></param>
         /// <param name="playMetronomeHalfBeats"></param>
         /// <param name="enableHitsounds"></param>
+        /// <param name="hitsoundVolume"></param>
         public EditorFileMenuBar(BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
-            Bindable<bool> enableHitsounds)
+            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume)
             : base(DestroyContext, GetOptions())
         {
             BackgroundBrightness = backgroundBrightness;
             EnableMetronome = enableMetronome;
             PlayMetronomeHalfBeats = playMetronomeHalfBeats;
             EnableHitsounds = enableHitsounds;
+            HitsoundVolume = hitsoundVolume;
         }
 
         /// <inheritdoc />
@@ -190,6 +197,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 if (ImGui.MenuItem("Enable", "", EnableHitsounds.Value))
                     EnableHitsounds.Value = !EnableHitsounds.Value;
+
+                if (ImGui.BeginMenu("Volume"))
+                {
+                    if (ImGui.MenuItem($"Default ({(int) AudioSample.GlobalVolume}%)", "", HitsoundVolume.Value == -1))
+                        HitsoundVolume.Value = -1;
+
+                    for (var i = 0; i < 10; i++)
+                    {
+                        var val = (i + 1) * 10;
+
+                        if (ImGui.MenuItem($"{val}%", "", HitsoundVolume.Value == val))
+                            HitsoundVolume.Value = val;
+                    }
+
+                    ImGui.EndMenu();
+                }
 
                 ImGui.EndMenu();
             }
