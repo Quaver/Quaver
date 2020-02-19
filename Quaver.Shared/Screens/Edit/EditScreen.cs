@@ -99,6 +99,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> EnableHitsounds { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -116,6 +120,7 @@ namespace Quaver.Shared.Screens.Edit
             InitializeBackgroundBrightness();
             InitializeMetronomeEnable();
             InitializeMetronomePlayHalfBeats();
+            InitializeHitsoundsEnable();
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
@@ -132,7 +137,9 @@ namespace Quaver.Shared.Screens.Edit
             if (!Exiting)
             {
                 HandleInput();
-                PlayHitsounds();
+
+                if (EnableHitsounds.Value)
+                    PlayHitsounds();
 
                 if (EnableMetronome.Value)
                     Metronome?.Update(gameTime);
@@ -169,6 +176,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (MetronomePlayHalfBeats != ConfigManager.EditorMetronomePlayHalfBeats)
                 MetronomePlayHalfBeats.Dispose();
+
+            if (EnableHitsounds != ConfigManager.EditorEnableHitsounds)
+                EnableHitsounds.Dispose();
 
             base.Destroy();
         }
@@ -230,6 +240,11 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void InitializeMetronomePlayHalfBeats()
             => MetronomePlayHalfBeats = ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
+
+        /// <summary>
+        /// </summary>
+        private void InitializeHitsoundsEnable()
+            => EnableHitsounds = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>

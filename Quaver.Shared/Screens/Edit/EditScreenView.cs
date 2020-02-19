@@ -54,7 +54,9 @@ namespace Quaver.Shared.Screens.Edit
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
-            MenuBar = new EditorFileMenuBar(EditScreen.BackgroundBrightness, EditScreen.EnableMetronome, EditScreen.MetronomePlayHalfBeats);
+
+            MenuBar = new EditorFileMenuBar(EditScreen.BackgroundBrightness, EditScreen.EnableMetronome, EditScreen.MetronomePlayHalfBeats,
+                EditScreen.EnableHitsounds);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
