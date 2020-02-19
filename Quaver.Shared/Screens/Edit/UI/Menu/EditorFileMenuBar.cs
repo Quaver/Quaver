@@ -213,7 +213,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Playback Speed"))
             {
-                for (var i = 0; i < 4; i++)
+                for (var i = 0; i < 8; i++)
                 {
                     var value = (i + 1) * 0.25f;
 
@@ -251,7 +251,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             }
 
             ImGui.Separator();
-            
+
             if (ImGui.BeginMenu("Metronome"))
             {
                 if (ImGui.MenuItem($"Enable", "", EnableMetronome.Value))
