@@ -46,6 +46,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> AnchorHitObjectsAtMidpoint { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -68,9 +72,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="enableHitsounds"></param>
         /// <param name="hitsoundVolume"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
+        /// <param name="anchorHitObjectsAtMidpoint"></param>
         public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
-            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume, Bindable<bool> scaleScrollSpeedWithRate)
-            : base(DestroyContext, GetOptions())
+            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume, Bindable<bool> scaleScrollSpeedWithRate,
+            Bindable<bool> anchorHitObjectsAtMidpoint) : base(DestroyContext, GetOptions())
         {
             Track = track;
             BackgroundBrightness = backgroundBrightness;
@@ -79,6 +84,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             EnableHitsounds = enableHitsounds;
             HitsoundVolume = hitsoundVolume;
             ScaleScrollSpeedWithRate = scaleScrollSpeedWithRate;
+            AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
         }
 
         /// <inheritdoc />
@@ -162,6 +168,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Scale Scroll Speed w/ Audio Rate", "", ScaleScrollSpeedWithRate.Value))
                 ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
+
+            ImGui.Separator();
+            
+            if (ImGui.MenuItem("Anchor HitObjects At Midpoint", "", AnchorHitObjectsAtMidpoint.Value))
+                AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;
 
             ImGui.EndMenu();
         }
