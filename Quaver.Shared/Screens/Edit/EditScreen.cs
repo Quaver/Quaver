@@ -86,6 +86,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public BindableInt BackgroundBrightness { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Qua map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             OriginalMap = map;
@@ -96,6 +100,7 @@ namespace Quaver.Shared.Screens.Edit
             LoadSkin();
             InitializePlayfieldScrollSpeed();
             InitializeHitObjectMidpointAnchoring();
+            InitializeBackgroundBrightness();
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
 
@@ -135,6 +140,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (AnchorHitObjectsAtMidpoint != ConfigManager.EditorHitObjectsMidpointAnchored)
                 AnchorHitObjectsAtMidpoint.Dispose();
+
+            if (BackgroundBrightness != ConfigManager.EditorBackgroundBrightness)
+                BackgroundBrightness.Dispose();
 
             base.Destroy();
         }
@@ -181,6 +189,11 @@ namespace Quaver.Shared.Screens.Edit
                 Value = true
             };
         }
+
+        /// <summary>
+        /// </summary>
+        private void InitializeBackgroundBrightness()
+            => BackgroundBrightness = ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
 
         /// <summary>
         /// </summary>

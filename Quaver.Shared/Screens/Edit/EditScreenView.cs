@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private EditorFileMenuBar MenuBar { get; set; }
+        private EditorFileMenuBar MenuBar { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -54,9 +54,10 @@ namespace Quaver.Shared.Screens.Edit
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
-            MenuBar = new EditorFileMenuBar();
+            MenuBar = new EditorFileMenuBar(EditScreen.BackgroundBrightness);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
+            EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
         }
 
         /// <inheritdoc />
@@ -74,7 +75,6 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
             Container?.Draw(gameTime);
             MenuBar.Draw(gameTime);
-
         }
 
         /// <inheritdoc />
@@ -87,6 +87,7 @@ namespace Quaver.Shared.Screens.Edit
 
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
+            EditScreen.BackgroundBrightness.ValueChanged -= OnBackgroundBrightnessChanged;
         }
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreateBackground()
         {
             var tex = EditScreen.BackgroundStore.Texture ?? UserInterface.Triangles;
-            var dim = tex == UserInterface.Triangles ? 0 : 60;
+            var dim = tex == UserInterface.Triangles ? 0 : 100 - EditScreen.BackgroundBrightness.Value;
 
             Background = new BackgroundImage(tex, dim, false)
             {
@@ -157,6 +158,21 @@ namespace Quaver.Shared.Screens.Edit
 
             CreateOtherDifficultyPlayfield();
             PositionPlayfields();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundBrightnessChanged(object sender, BindableValueChangedEventArgs<int> e)
+        {
+            if (Background.Image == UserInterface.Triangles)
+            {
+                Background.Dim = 0;
+                return;
+            }
+
+            Background.Dim = 100 - e.Value;
         }
     }
 }

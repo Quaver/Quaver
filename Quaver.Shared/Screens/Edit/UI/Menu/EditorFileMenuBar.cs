@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Quaver.Shared.Graphics.Menu.Border;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Window;
@@ -13,6 +14,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 {
     public class EditorFileMenuBar : SpriteImGui
     {
+        /// <summary>
+        /// </summary>
+        private BindableInt BackgroundBrightness { get; }
+
         /// <summary>
         /// </summary>
         public float Height { get; private set; }
@@ -27,8 +32,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = false;
 #endif
 
-        public EditorFileMenuBar() : base(DestroyContext, GetOptions())
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="backgroundBrightness"></param>
+        public EditorFileMenuBar(BindableInt backgroundBrightness) : base(DestroyContext, GetOptions())
         {
+            BackgroundBrightness = backgroundBrightness;
         }
 
         /// <inheritdoc />
@@ -94,6 +104,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("View"))
                 return;
+
+            if (ImGui.BeginMenu("Background Brightness"))
+            {
+                for (var i = 0; i < 11; i++)
+                {
+                    var value = i * 10;
+
+                    if (ImGui.MenuItem($"{value}%", "", BackgroundBrightness.Value == value))
+                        BackgroundBrightness.Value = value;
+                }
+
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }
