@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        public static void PlayObjectHitSounds(HitObjectInfo hitObject, SkinStore skin = null)
+        public static void PlayObjectHitSounds(HitObjectInfo hitObject, SkinStore skin = null, int volume = -1)
         {
             // Default to fallback skin if one wasn't provided
             if (skin == null)
@@ -90,19 +90,47 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
 
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                skin?.SoundHit?.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHit?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                skin?.SoundHitClap?.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitClap?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                skin?.SoundHitWhistle?.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitWhistle?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+
+                chan?.Play();
+            }
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                skin?.SoundHitFinish?.CreateChannel().Play();
+            {
+                var chan = skin?.SoundHitFinish?.CreateChannel();
+
+                if (chan != null && volume != -1)
+                    chan.Volume = volume;
+                
+                chan?.Play();
+            }
         }
 
         /// <summary>

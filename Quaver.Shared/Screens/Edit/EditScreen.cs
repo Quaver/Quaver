@@ -103,6 +103,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public BindableInt HitsoundVolume { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -121,6 +125,7 @@ namespace Quaver.Shared.Screens.Edit
             InitializeMetronomeEnable();
             InitializeMetronomePlayHalfBeats();
             InitializeHitsoundsEnable();
+            InitializeHitsoundVolume();
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
@@ -179,6 +184,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (EnableHitsounds != ConfigManager.EditorEnableHitsounds)
                 EnableHitsounds.Dispose();
+
+            if (HitsoundVolume != ConfigManager.EditorHitsoundVolume)
+                HitsoundVolume.Dispose();
 
             base.Destroy();
         }
@@ -245,6 +253,11 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void InitializeHitsoundsEnable()
             => EnableHitsounds = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
+
+        /// <summary>
+        /// </summary>
+        private void InitializeHitsoundVolume()
+            => HitsoundVolume = ConfigManager.EditorHitsoundVolume ?? new BindableInt(-1, -1, 100);
 
         /// <summary>
         /// </summary>
@@ -363,7 +376,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (Track.Time >= obj.StartTime)
                 {
-                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value);
+                    HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }
                 else
