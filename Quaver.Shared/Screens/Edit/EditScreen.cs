@@ -10,6 +10,7 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble.Audio.Tracks;
@@ -90,6 +91,18 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> EnableMetronome { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public Bindable<bool> MetronomePlayHalfBeats { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        private Metronome Metronome { get; }
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Qua map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             OriginalMap = map;
@@ -101,8 +114,11 @@ namespace Quaver.Shared.Screens.Edit
             InitializePlayfieldScrollSpeed();
             InitializeHitObjectMidpointAnchoring();
             InitializeBackgroundBrightness();
+            InitializeMetronomeEnable();
+            InitializeMetronomePlayHalfBeats();
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
+            Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             View = new EditScreenView(this);
         }
@@ -117,6 +133,9 @@ namespace Quaver.Shared.Screens.Edit
             {
                 HandleInput();
                 PlayHitsounds();
+
+                if (EnableMetronome.Value)
+                    Metronome?.Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -134,6 +153,7 @@ namespace Quaver.Shared.Screens.Edit
             UneditableMap?.Dispose();
             BeatSnap?.Dispose();
             BackgroundStore?.Dispose();
+            Metronome?.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -143,6 +163,12 @@ namespace Quaver.Shared.Screens.Edit
 
             if (BackgroundBrightness != ConfigManager.EditorBackgroundBrightness)
                 BackgroundBrightness.Dispose();
+
+            if (EnableMetronome != ConfigManager.EditorPlayMetronome)
+                EnableMetronome.Dispose();
+
+            if (MetronomePlayHalfBeats != ConfigManager.EditorMetronomePlayHalfBeats)
+                MetronomePlayHalfBeats.Dispose();
 
             base.Destroy();
         }
@@ -194,6 +220,16 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void InitializeBackgroundBrightness()
             => BackgroundBrightness = ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
+
+        /// <summary>
+        /// </summary>
+        private void InitializeMetronomeEnable()
+            => EnableMetronome = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) {Value = true};
+
+        /// <summary>
+        /// </summary>
+        private void InitializeMetronomePlayHalfBeats()
+            => MetronomePlayHalfBeats = ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>

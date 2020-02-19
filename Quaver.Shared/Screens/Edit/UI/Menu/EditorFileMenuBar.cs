@@ -20,6 +20,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> EnableMetronome { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> PlayMetronomeHalfBeats { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -36,9 +44,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <summary>
         /// </summary>
         /// <param name="backgroundBrightness"></param>
-        public EditorFileMenuBar(BindableInt backgroundBrightness) : base(DestroyContext, GetOptions())
+        /// <param name="enableMetronome"></param>
+        /// <param name="playMetronomeHalfBeats"></param>
+        public EditorFileMenuBar(BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats)
+            : base(DestroyContext, GetOptions())
         {
             BackgroundBrightness = backgroundBrightness;
+            EnableMetronome = enableMetronome;
+            PlayMetronomeHalfBeats = playMetronomeHalfBeats;
         }
 
         /// <inheritdoc />
@@ -165,6 +178,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Audio"))
                 return;
+
+            if (ImGui.BeginMenu("Metronome"))
+            {
+                if (ImGui.MenuItem($"Enable", "", EnableMetronome.Value))
+                    EnableMetronome.Value = !EnableMetronome.Value;
+
+                if (ImGui.MenuItem("Play Half Beats", "", PlayMetronomeHalfBeats.Value))
+                    PlayMetronomeHalfBeats.Value = !PlayMetronomeHalfBeats.Value;
+
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }
