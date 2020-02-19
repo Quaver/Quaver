@@ -224,6 +224,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            ImGui.Separator();
+
             if (ImGui.BeginMenu("Hitsounds"))
             {
                 if (ImGui.MenuItem("Enable", "", EnableHitsounds.Value))
@@ -248,6 +250,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            ImGui.Separator();
+            
             if (ImGui.BeginMenu("Metronome"))
             {
                 if (ImGui.MenuItem($"Enable", "", EnableMetronome.Value))
