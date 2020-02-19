@@ -50,6 +50,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Bindable<bool> AnchorHitObjectsAtMidpoint { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<bool> ScaleScrollSpeedWithAudioRate { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -81,7 +85,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///     The speed at which the container scrolls at.
         /// </summary>
-        public float TrackSpeed => ScrollSpeed.Value / (20 * Track.Rate);
+        public float TrackSpeed => ScrollSpeed.Value / (ScaleScrollSpeedWithAudioRate.Value ? 20f * Track.Rate : 20f);
 
         /// <summary>
         ///     The current y positon of the playfield track
@@ -138,9 +142,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="beatSnap"></param>
         /// <param name="scrollSpeed"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
+        /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed,
-            Bindable<bool> anchorHitObjectsAtMidpoint, bool isUneditable = false)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate, bool isUneditable = false)
         {
             Map = map;
             Skin = skin;
@@ -149,6 +154,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             IsUneditable = isUneditable;
             ScrollSpeed = scrollSpeed;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
+            ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithRate;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -165,6 +171,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             InitializeHitObjectPool();
             Track.Seeked += OnTrackSeeked;
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
+            ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
         }
 
         /// <inheritdoc />
@@ -217,8 +224,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             HitObjects.ForEach(x => x.Destroy());
             Track.Seeked -= OnTrackSeeked;
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
+            ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
 
             base.Destroy();
         }
@@ -278,7 +286,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(Map, this, Track, BeatSnap, ScrollSpeed);
+        private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(Map, this, Track, BeatSnap, ScrollSpeed,
+            ScaleScrollSpeedWithAudioRate);
 
         /// <summary>
         /// </summary>
@@ -422,6 +431,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private void RefreshHitObjects() => ScheduleUpdate(() =>
+        {
+            foreach (var ho in HitObjects)
+            {
+                ho.SetPosition();
+
+                if (ho is EditorHitObjectLong ln)
+                    ln.ResizeLongNote();
+            }
+
+            InitializeHitObjectPool();
+        });
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => InitializeHitObjectPool();
@@ -430,20 +454,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
-        {
-            ScheduleUpdate(() =>
-            {
-                foreach (var ho in HitObjects)
-                {
-                    ho.SetPosition();
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => RefreshHitObjects();
 
-                    if (ho is EditorHitObjectLong ln)
-                        ln.ResizeLongNote();
-                }
-
-                InitializeHitObjectPool();
-            });
-        }
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScaleScrollSpeedWithRateChanged(object sender, BindableValueChangedEventArgs<bool> e) => RefreshHitObjects();
     }
 }

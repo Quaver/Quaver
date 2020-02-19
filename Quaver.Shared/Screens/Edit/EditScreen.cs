@@ -9,6 +9,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
@@ -107,6 +108,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> ScaleScrollSpeedWithRate { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -126,6 +131,7 @@ namespace Quaver.Shared.Screens.Edit
             InitializeMetronomePlayHalfBeats();
             InitializeHitsoundsEnable();
             InitializeHitsoundVolume();
+            InitializeScaleScrollSpeedWithRate();
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
@@ -187,6 +193,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (HitsoundVolume != ConfigManager.EditorHitsoundVolume)
                 HitsoundVolume.Dispose();
+
+            if (ScaleScrollSpeedWithRate != ConfigManager.EditorScaleSpeedWithRate)
+                ScaleScrollSpeedWithRate.Dispose();
 
             base.Destroy();
         }
@@ -261,6 +270,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private void InitializeScaleScrollSpeedWithRate()
+            => ScaleScrollSpeedWithRate = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
+
+        /// <summary>
+        /// </summary>
         private void HandleInput()
         {
             if (DialogManager.Dialogs.Count != 0)
@@ -272,13 +286,14 @@ namespace Quaver.Shared.Screens.Edit
 
             // To not conflict with the volume controller
             if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftAlt) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightAlt) &&
-                KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.Right))
+                KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
             {
                 HandleSeekingBackwards();
                 HandleSeekingForwards();
             }
 
             HandleBeatSnapChanges();
+            HandlePlaybackRateChanges();
         }
 
         /// <summary>
@@ -357,6 +372,20 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        /// </summary>
+        private void HandlePlaybackRateChanges()
+        {
+            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.RightControl))
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                ChangeAudioPlaybackRate(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                ChangeAudioPlaybackRate(Direction.Forward);
+        }
+
+        /// <summary>
         ///     Sets the hitsounds object index, so we know which object to play sounds for.
         ///     This is generally used when seeking through the map.
         /// </summary>
@@ -418,6 +447,34 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.PageDown))
                 PlayfieldScrollSpeed.Value--;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="direction"></param>
+        public void ChangeAudioPlaybackRate(Direction direction)
+        {
+            float targetRate;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    targetRate = Track.Rate + 0.25f;
+                    break;
+                case Direction.Backward:
+                    targetRate = Track.Rate - 0.25f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            if (targetRate <= 0 || targetRate > 2.0f)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot change the audio rate this way any further!");
+                return;
+            }
+
+            Track.Rate = targetRate;
         }
 
         /// <summary>

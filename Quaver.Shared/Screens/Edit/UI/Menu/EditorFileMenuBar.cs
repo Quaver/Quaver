@@ -37,6 +37,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ScaleScrollSpeedWithRate { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -57,8 +61,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="playMetronomeHalfBeats"></param>
         /// <param name="enableHitsounds"></param>
         /// <param name="hitsoundVolume"></param>
+        /// <param name="scaleScrollSpeedWithRate"></param>
         public EditorFileMenuBar(BindableInt backgroundBrightness, Bindable<bool> enableMetronome, Bindable<bool> playMetronomeHalfBeats,
-            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume)
+            Bindable<bool> enableHitsounds, BindableInt hitsoundVolume, Bindable<bool> scaleScrollSpeedWithRate)
             : base(DestroyContext, GetOptions())
         {
             BackgroundBrightness = backgroundBrightness;
@@ -66,6 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             PlayMetronomeHalfBeats = playMetronomeHalfBeats;
             EnableHitsounds = enableHitsounds;
             HitsoundVolume = hitsoundVolume;
+            ScaleScrollSpeedWithRate = scaleScrollSpeedWithRate;
         }
 
         /// <inheritdoc />
@@ -144,6 +150,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                 ImGui.EndMenu();
             }
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Scale Scroll Speed w/ Audio Rate", "", ScaleScrollSpeedWithRate.Value))
+                ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
 
             ImGui.EndMenu();
         }
