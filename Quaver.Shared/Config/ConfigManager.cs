@@ -485,6 +485,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt EditorHitsoundVolume { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorScaleSpeedWithRate { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -819,6 +823,7 @@ namespace Quaver.Shared.Config
             SelectedProfileId = ReadInt(@"SelectedProfileId", -1, -1, int.MaxValue, data);
             EditorBackgroundBrightness = ReadInt(@"EditorBackgroundBrightness", 40, 0, 100, data);
             EditorHitsoundVolume = ReadInt(@"EditorHitsoundVolume", -1, -1, 100, data);
+            EditorScaleSpeedWithRate = ReadValue(@"EditorScaleSpeedWithRate", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -961,6 +966,7 @@ namespace Quaver.Shared.Config
                     SelectedProfileId.ValueChanged += AutoSaveConfiguration;
                     EditorBackgroundBrightness.ValueChanged += AutoSaveConfiguration;
                     EditorHitsoundVolume.ValueChanged += AutoSaveConfiguration;
+                    EditorScaleSpeedWithRate.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

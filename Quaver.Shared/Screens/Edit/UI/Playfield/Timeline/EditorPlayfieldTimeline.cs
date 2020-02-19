@@ -38,6 +38,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ScaleScrollSpeedWithAudioRate { get; }
+
+        /// <summary>
+        /// </summary>
         public List<EditorPlayfieldTimelineTick> Lines { get; private set; }
 
         /// <summary>
@@ -62,19 +66,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="track"></param>
         /// <param name="beatSnap"></param>
         /// <param name="scrollSpeed"></param>
-        public EditorPlayfieldTimeline(Qua map, EditorPlayfield playfield, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed)
+        /// <param name="scaleScrollSpeedWithAudioRate"></param>
+        public EditorPlayfieldTimeline(Qua map, EditorPlayfield playfield, IAudioTrack track, BindableInt beatSnap,
+            BindableInt scrollSpeed, Bindable<bool> scaleScrollSpeedWithAudioRate)
         {
             Map = map;
             Playfield = playfield;
             Track = track;
             BeatSnap = beatSnap;
             ScrollSpeed = scrollSpeed;
+            ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithAudioRate;
 
             InitializeLines();
 
             BeatSnap.ValueChanged += OnBeatSnapChanged;
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
             Track.Seeked += OnTrackSeeked;
+            Track.RateChanged += OnTrackRateChanged;
+            ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
         }
 
         /// <inheritdoc />
@@ -101,6 +110,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             BeatSnap.ValueChanged -= OnBeatSnapChanged;
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
             Track.Seeked -= OnTrackSeeked;
+            Track.RateChanged -= OnTrackRateChanged;
+            ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
 
             base.Destroy();
         }
@@ -402,12 +413,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
+        private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e) => InitializeLinePool();
+
+        /// <summary>
+        /// </summary>
+        private void RefreshLines()
         {
             foreach (var line in Lines)
                 line.SetPosition();
 
             InitializeLinePool();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
+            => RefreshLines();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScaleScrollSpeedWithRateChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => RefreshLines();
     }
 }
