@@ -12,8 +12,11 @@ using Quaver.API.Maps;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Skinning;
+using TagLib.Matroska;
 using Wobble;
 using Wobble.Audio.Samples;
+using Wobble.Audio.Tracks;
+using Wobble.Bindables;
 using IDrawable = Wobble.Graphics.IDrawable;
 
 namespace Quaver.Shared.Screens.Editor.Timing
@@ -23,6 +26,18 @@ namespace Quaver.Shared.Screens.Editor.Timing
         /// <summary>
         /// </summary>
         private Qua Qua { get; }
+
+        /// <summary>
+        /// </summary>
+        private IAudioTrack Track { get; }
+
+        /// <summary>
+        /// </summary>
+        private BindableInt GlobalAudioOffset { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<bool> PlayHalfBeats { get; }
 
         /// <summary>
         /// </summary>
@@ -52,13 +67,19 @@ namespace Quaver.Shared.Screens.Editor.Timing
         /// </summary>
         private int LastTotalBeats { get; set; }
 
-
         /// <summary>
         /// </summary>
         /// <param name="qua"></param>
-        public Metronome(Qua qua)
+        /// <param name="track"></param>
+        /// <param name="audioOffset"></param>
+        /// <param name="playHalfBeats"></param>
+        public Metronome(Qua qua, IAudioTrack track = null, BindableInt audioOffset = null, Bindable<bool> playHalfBeats = null)
         {
             Qua = qua;
+            Track = track ?? AudioEngine.Track;
+            GlobalAudioOffset = audioOffset ?? ConfigManager.GlobalAudioOffset;
+            PlayHalfBeats = playHalfBeats ?? ConfigManager.EditorMetronomePlayHalfBeats;
+
             BeatTickSample = new AudioSample(GameBase.Game.Resources.Get($"Quaver.Resources/SFX/Editor/metronome-beat.wav"));
             MeasureTickSample = new AudioSample(GameBase.Game.Resources.Get($"Quaver.Resources/SFX/Editor/metronome-measure.wav"));
         }
@@ -68,10 +89,10 @@ namespace Quaver.Shared.Screens.Editor.Timing
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            if (!AudioEngine.Track.IsPlaying || Qua.TimingPoints.Count == 0)
+            if (!Track.IsPlaying || Qua.TimingPoints.Count == 0)
                 return;
 
-            var time = AudioEngine.Track.Time + ConfigManager.GlobalAudioOffset.Value;
+            var time = Track.Time + GlobalAudioOffset.Value;
 
             var point = Qua.GetTimingPointAt(time);
 
@@ -83,7 +104,7 @@ namespace Quaver.Shared.Screens.Editor.Timing
 
             // Get the total amount of beats that'll be played for the timing point.
             // This can depend on if the user wants 8 beats or 4.
-            var totalBeats = (time - point.StartTime) / (point.MillisecondsPerBeat / (ConfigManager.EditorMetronomePlayHalfBeats.Value ? 2 : 1));
+            var totalBeats = (time - point.StartTime) / (point.MillisecondsPerBeat / (PlayHalfBeats.Value ? 2 : 1));
 
             CurrentTotalBeats = (int) Math.Floor(totalBeats);
             CurrentBeat = (int) totalBeats % 4;
