@@ -112,6 +112,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<EditorBeatSnapColor> BeatSnapColor { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -132,6 +136,8 @@ namespace Quaver.Shared.Screens.Edit
             InitializeHitsoundsEnable();
             InitializeHitsoundVolume();
             InitializeScaleScrollSpeedWithRate();
+            InitializeBeatSnapColor();
+
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
@@ -197,6 +203,9 @@ namespace Quaver.Shared.Screens.Edit
             if (ScaleScrollSpeedWithRate != ConfigManager.EditorScaleSpeedWithRate)
                 ScaleScrollSpeedWithRate.Dispose();
 
+            if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
+                BeatSnapColor.Dispose();
+            
             base.Destroy();
         }
 
@@ -272,6 +281,10 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void InitializeScaleScrollSpeedWithRate()
             => ScaleScrollSpeedWithRate = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
+
+        /// <summary>
+        /// </summary>
+        private void InitializeBeatSnapColor() => BeatSnapColor = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
 
         /// <summary>
         /// </summary>

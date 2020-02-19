@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -52,6 +53,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> ScaleScrollSpeedWithAudioRate { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<EditorBeatSnapColor> BeatSnapColor { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -143,9 +148,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="scrollSpeed"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
+        /// <param name="beatSnapColor"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate, bool isUneditable = false)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate, Bindable<EditorBeatSnapColor> beatSnapColor,
+            bool isUneditable = false)
         {
             Map = map;
             Skin = skin;
@@ -155,6 +162,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ScrollSpeed = scrollSpeed;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithRate;
+            BeatSnapColor = beatSnapColor;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -289,7 +297,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(Map, this, Track, BeatSnap, ScrollSpeed,
-            ScaleScrollSpeedWithAudioRate);
+            ScaleScrollSpeedWithAudioRate, BeatSnapColor);
 
         /// <summary>
         /// </summary>

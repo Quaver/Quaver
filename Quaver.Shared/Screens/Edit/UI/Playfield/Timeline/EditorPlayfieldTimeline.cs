@@ -42,6 +42,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         /// <summary>
         /// </summary>
+        private Bindable<EditorBeatSnapColor> BeatSnapColor { get; }
+
+        /// <summary>
+        /// </summary>
         public List<EditorPlayfieldTimelineTick> Lines { get; private set; }
 
         /// <summary>
@@ -67,8 +71,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="beatSnap"></param>
         /// <param name="scrollSpeed"></param>
         /// <param name="scaleScrollSpeedWithAudioRate"></param>
+        /// <param name="beatSnapColor"></param>
         public EditorPlayfieldTimeline(Qua map, EditorPlayfield playfield, IAudioTrack track, BindableInt beatSnap,
-            BindableInt scrollSpeed, Bindable<bool> scaleScrollSpeedWithAudioRate)
+            BindableInt scrollSpeed, Bindable<bool> scaleScrollSpeedWithAudioRate, Bindable<EditorBeatSnapColor> beatSnapColor)
         {
             Map = map;
             Playfield = playfield;
@@ -76,6 +81,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             BeatSnap = beatSnap;
             ScrollSpeed = scrollSpeed;
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithAudioRate;
+            BeatSnapColor = beatSnapColor;
 
             InitializeLines();
 
@@ -248,6 +254,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             {
                 var line = LinePool[i];
                 line.SetPosition();
+                line.Tint = GetLineColor(line.Index % BeatSnap.Value, line.Index);
 
                 if (line.IsOnScreen())
                     line.Draw(gameTime);
@@ -262,9 +269,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <returns></returns>
         private Color GetLineColor(int val, int i)
         {
-            var snapColor = Playfield.IsUneditable ? EditorBeatSnapColor.Default : EditorBeatSnapColor.Legacy;
-
-            switch (snapColor)
+            switch (BeatSnapColor.Value)
             {
                 case EditorBeatSnapColor.Default:
                     return GetDefaultLineColor(val, i);
@@ -277,72 +282,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             }
         }
 
-       /// <summary>
-        /// </summary>
-        /// <param name="val"></param>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        private Color GetDefaultLineColor(int val, int i)
-        {
-            switch (BeatSnap.Value)
-            {
-                // 1/1th
-                case 1:
-                    return Color.White;
-                // 1/2nd
-                case 2:
-                    switch (val)
-                    {
-                        case 0:
-                            return Color.White;
-                        default:
-                            return ColorHelper.HexToColor("#4e94b7");
-                    }
-                // 1/4th
-                case 4:
-                    switch (val)
-                    {
-                        case 0:
-                        case 4:
-                            return Color.White;
-                        case 1:
-                        case 3:
-                            return ColorHelper.HexToColor("#af4fb8");
-                        default:
-                            return ColorHelper.HexToColor("#4e94b7");
-                    }
-                // 1/3rd, 1/6th, 1/12th,
-                case 3:
-                case 6:
-                case 12:
-                    if (val % 3 == 0)
-                        return Color.White;
-                    else if (val == 0)
-                        return Color.White;
-                    else
-                        return ColorHelper.HexToColor("#4e94b7");
-                // 1/8th, 1//16th
-                case 8:
-                case 16:
-                    if (val == 0)
-                        return Color.White;
-                    else if (( i - 1 ) % 2 == 0)
-                        return ColorHelper.HexToColor("#af4fb8");
-                    else if (i % 4 == 0)
-                        return ColorHelper.HexToColor("#4e94b7");
-                    else
-                        return Colors.MainAccent;
-                default:
-                    return Color.White;
-            }
-        }
-
         /// <summary>
         /// </summary>
         /// <param name="val"></param>
         /// <param name="i"></param>
         /// <returns></returns>
-        private Color GetLegacyLineColor(int val, int i)
+        private Color GetDefaultLineColor(int val, int i)
         {
             switch (BeatSnap.Value)
             {
@@ -392,6 +337,66 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                         return Color.Red;
                     else
                         return ColorHelper.HexToColor("#0085ff");
+                default:
+                    return Color.White;
+            }
+        }
+
+       /// <summary>
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Color GetLegacyLineColor(int val, int i)
+        {
+            switch (BeatSnap.Value)
+            {
+                // 1/1th
+                case 1:
+                    return Color.White;
+                // 1/2nd
+                case 2:
+                    switch (val)
+                    {
+                        case 0:
+                            return Color.White;
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/4th
+                case 4:
+                    switch (val)
+                    {
+                        case 0:
+                        case 4:
+                            return Color.White;
+                        case 1:
+                        case 3:
+                            return ColorHelper.HexToColor("#af4fb8");
+                        default:
+                            return ColorHelper.HexToColor("#4e94b7");
+                    }
+                // 1/3rd, 1/6th, 1/12th,
+                case 3:
+                case 6:
+                case 12:
+                    if (val % 3 == 0)
+                        return Color.White;
+                    else if (val == 0)
+                        return Color.White;
+                    else
+                        return ColorHelper.HexToColor("#4e94b7");
+                // 1/8th, 1//16th
+                case 8:
+                case 16:
+                    if (val == 0)
+                        return Color.White;
+                    else if (( i - 1 ) % 2 == 0)
+                        return ColorHelper.HexToColor("#af4fb8");
+                    else if (i % 4 == 0)
+                        return ColorHelper.HexToColor("#4e94b7");
+                    else
+                        return Colors.MainAccent;
                 default:
                     return Color.White;
             }
