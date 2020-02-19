@@ -170,6 +170,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             InitializeHitObjectPool();
             Track.Seeked += OnTrackSeeked;
+            Track.RateChanged += OnTrackRateChanged;
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
         }
@@ -223,6 +224,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             HitObjects.ForEach(x => x.Destroy());
             Track.Seeked -= OnTrackSeeked;
+            Track.RateChanged -= OnTrackRateChanged;
 
             // ReSharper disable twice DelegateSubtraction
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
@@ -427,20 +429,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public void ResetObjectPositions() => HitObjects.ForEach(x => x.SetPosition());
+        public void ResetObjectPositions() => HitObjects.ForEach(x =>
+        {
+            x.SetPosition();
+
+            if (x is EditorHitObjectLong ln)
+                ln.ResizeLongNote();
+        });
 
         /// <summary>
         /// </summary>
         private void RefreshHitObjects() => ScheduleUpdate(() =>
         {
-            foreach (var ho in HitObjects)
-            {
-                ho.SetPosition();
-
-                if (ho is EditorHitObjectLong ln)
-                    ln.ResizeLongNote();
-            }
-
+            ResetObjectPositions();
             InitializeHitObjectPool();
         });
 
@@ -461,5 +462,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScaleScrollSpeedWithRateChanged(object sender, BindableValueChangedEventArgs<bool> e) => RefreshHitObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e) => RefreshHitObjects();
     }
 }
