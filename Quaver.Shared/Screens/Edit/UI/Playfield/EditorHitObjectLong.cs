@@ -29,12 +29,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///     The texture for the long note's body
         /// </summary>
-        public Texture2D TextureBody { get; }
+        public Texture2D TextureBody { get; private set; }
 
         /// <summary>
         ///     The texture for the long note's end.
         /// </summary>
-        public Texture2D TextureTail { get; }
+        public Texture2D TextureTail { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -45,14 +45,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="skin"></param>
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
+        /// <param name="viewLayers"></param>
         public EditorHitObjectLong(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint) : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers)
+            : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint, viewLayers)
         {
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
 
             CreateLongNoteSprite();
             ResizeLongNote();
+
+            ViewLayers.ValueChanged += OnViewLayersChanged;
         }
 
         /// <inheritdoc />
@@ -73,6 +77,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             base.Destroy();
             Body?.Destroy();
             Tail?.Destroy();
+
+            // ReSharper disable once DelegateSubtraction
+            ViewLayers.ValueChanged -= OnViewLayersChanged;
         }
 
         /// <inheritdoc />
@@ -157,18 +164,42 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetBodyTexture() => SkinMode.NoteHoldBodies[Info.Lane - 1].First();
+        private Texture2D GetBodyTexture()
+        {
+            return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldBodies[Info.Lane - 1] : SkinMode.NoteHoldBodies[Info.Lane - 1].First();
+        }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetTailTexture() => SkinMode.NoteHoldEnds[Info.Lane - 1];
+        private Texture2D GetTailTexture()
+        {
+            return ViewLayers.Value ? SkinMode.EditorLayerNoteHoldEnds[Info.Lane - 1] : SkinMode.NoteHoldEnds[Info.Lane - 1];
+        }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override bool IsOnScreen() => base.IsOnScreen() || Track.Time >= Info.StartTime 
+        public override bool IsOnScreen() => base.IsOnScreen() || Track.Time >= Info.StartTime
                                                   && Track.Time <= Info.EndTime + 1000;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            TextureBody = GetBodyTexture();
+            TextureTail = GetTailTexture();
+
+            Body.Image = TextureBody;
+            Tail.Image = TextureTail;
+
+            Body.Tint = GetNoteTint();
+            Tail.Tint = GetNoteTint();
+
+            ResizeLongNote();
+        }
     }
 }

@@ -81,6 +81,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ViewLayers { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -113,7 +117,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
-            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap)
+            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers)
             : base(DestroyContext, GetOptions())
         {
             Map = map;
@@ -130,6 +134,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
             UneditableMap = uneditableMap;
+            ViewLayers = viewLayers;
         }
 
         /// <inheritdoc />
@@ -276,6 +281,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Center Objects", "", AnchorHitObjectsAtMidpoint.Value))
                 AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;
+
+            if (ImGui.MenuItem($"View Layers", "", ViewLayers.Value))
+                ViewLayers.Value = !ViewLayers.Value;
 
             ImGui.EndMenu();
         }

@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Edit
             MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
-                EditScreen.UneditableMap);
+                EditScreen.UneditableMap, EditScreen.ViewLayers);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
-            EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor) { Parent = Container};
+            EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers) { Parent = Container};
 
         /// <summary>
         ///
@@ -131,7 +131,7 @@ namespace Quaver.Shared.Screens.Edit
 
             UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.Skin, EditScreen.Track,
                 EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
-                EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, true)
+                EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, true)
             {
                 Parent = Container,
             };
