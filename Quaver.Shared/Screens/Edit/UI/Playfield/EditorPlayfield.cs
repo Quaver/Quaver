@@ -231,6 +231,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void Destroy()
         {
             HitObjects.ForEach(x => x.Destroy());
+            Timeline?.Destroy();
+
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
 
