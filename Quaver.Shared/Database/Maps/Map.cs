@@ -362,7 +362,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public Qua LoadQua(bool checkValidity = true)
+        public virtual Qua LoadQua(bool checkValidity = false)
         {
             // Reference to the parsed .qua file
             Qua qua;
