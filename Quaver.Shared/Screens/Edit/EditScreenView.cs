@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Edit
             MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
-                EditScreen.UneditableMap, EditScreen.ViewLayers);
+                EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.Plugins);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -78,6 +78,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
             Container?.Draw(gameTime);
+            DrawPlugins(gameTime);
             MenuBar.Draw(gameTime);
         }
 
@@ -191,6 +192,22 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             Background.Dim = 100 - e.Value;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void DrawPlugins(GameTime gameTime)
+        {
+            for (var i = 0; i < EditScreen.Plugins.Count; i++)
+            {
+                var plugin = EditScreen.Plugins[i];
+
+                if (!plugin.IsActive)
+                    continue;
+
+                plugin.Draw(gameTime);
+            }
         }
     }
 }
