@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Helpers;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -55,6 +56,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private BindableInt BeatSnap { get; }
+
+        /// <summary>
+        /// </summary>
+        private List<int> AvailableBeatSnaps { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -79,9 +88,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="beatSnapColor"></param>
+        /// <param name="beatSnap"></param>
+        /// <param name="availableBeatSnaps"></param>
         public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
-            Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor)
+            Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
+            BindableInt beatSnap, List<int> availableBeatSnaps)
             : base(DestroyContext, GetOptions())
         {
             Track = track;
@@ -93,6 +105,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             ScaleScrollSpeedWithRate = scaleScrollSpeedWithRate;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
             BeatSnapColor = beatSnapColor;
+            BeatSnap = beatSnap;
+            AvailableBeatSnaps = availableBeatSnaps;
         }
 
         /// <inheritdoc />
@@ -174,6 +188,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
+            if (ImGui.BeginMenu("Beat Snap Divisor"))
+            {
+                foreach (var snap in AvailableBeatSnaps)
+                {
+                    if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(snap)}", "", BeatSnap.Value == snap))
+                        BeatSnap.Value = snap;
+                }
+
+                ImGui.EndMenu();
+            }
+
             if (ImGui.BeginMenu("Beat Snap Color"))
             {
                 foreach (EditorBeatSnapColor type in Enum.GetValues(typeof(EditorBeatSnapColor)))
@@ -187,12 +212,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Scale Scroll Speed w/ Audio Rate", "", ScaleScrollSpeedWithRate.Value))
+            if (ImGui.MenuItem("Scale Scroll Speed", "", ScaleScrollSpeedWithRate.Value))
                 ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Anchor HitObjects At Midpoint", "", AnchorHitObjectsAtMidpoint.Value))
+            if (ImGui.MenuItem("Center Objects", "", AnchorHitObjectsAtMidpoint.Value))
                 AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;
 
             ImGui.EndMenu();
@@ -256,8 +281,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
-            ImGui.Separator();
-
             if (ImGui.BeginMenu("Hitsounds"))
             {
                 if (ImGui.MenuItem("Enable", "", EnableHitsounds.Value))
@@ -282,8 +305,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
-            ImGui.Separator();
-
             if (ImGui.BeginMenu("Metronome"))
             {
                 if (ImGui.MenuItem($"Enable", "", EnableMetronome.Value))
@@ -303,7 +324,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <returns></returns>
         private static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
         {
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf"),
+            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14),
         }, false);
     }
 }

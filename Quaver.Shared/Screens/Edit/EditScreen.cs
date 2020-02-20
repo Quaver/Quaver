@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Edit
 
             if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
                 BeatSnapColor.Dispose();
-            
+
             base.Destroy();
         }
 
