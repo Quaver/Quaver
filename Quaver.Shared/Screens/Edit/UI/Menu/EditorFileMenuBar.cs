@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -14,6 +16,8 @@ using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Window;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Quaver.Shared.Screens.Edit.UI.Menu
 {
@@ -21,7 +25,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
     {
         /// <summary>
         /// </summary>
-        private Qua Map { get; }
+        private Map Map { get; }
+
+        /// <summary>
+        /// </summary>
+        private Qua WorkingMap { get; }
 
         /// <summary>
         /// </summary>
@@ -69,6 +77,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private Bindable<Qua> UneditableMap { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -85,6 +97,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <summary>
         /// </summary>
         /// <param name="map"></param>
+        /// <param name="workingMap"></param>
         /// <param name="track"></param>
         /// <param name="backgroundBrightness"></param>
         /// <param name="enableMetronome"></param>
@@ -96,13 +109,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="beatSnapColor"></param>
         /// <param name="beatSnap"></param>
         /// <param name="availableBeatSnaps"></param>
-        public EditorFileMenuBar(Qua map, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
+        /// <param name="uneditableMap"></param>
+        public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
-            BindableInt beatSnap, List<int> availableBeatSnaps)
+            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap)
             : base(DestroyContext, GetOptions())
         {
             Map = map;
+            WorkingMap = workingMap;
             Track = track;
             BackgroundBrightness = backgroundBrightness;
             EnableMetronome = enableMetronome;
@@ -114,6 +129,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             BeatSnapColor = beatSnapColor;
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
+            UneditableMap = uneditableMap;
         }
 
         /// <inheritdoc />
@@ -179,6 +195,40 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("View"))
                 return;
+
+            if (ImGui.BeginMenu("Reference Difficulty"))
+            {
+                if (ImGui.MenuItem("None", "", UneditableMap.Value == null))
+                    UneditableMap.Value = null;
+
+                foreach (var map in Map.Mapset.Maps)
+                {
+                    var color = ColorHelper.DifficultyToColor((float) map.Difficulty10X);
+
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
+
+                    if (ImGui.MenuItem(map.DifficultyName, "",
+                        UneditableMap?.Value?.DifficultyName == map.DifficultyName))
+                    {
+                        ThreadScheduler.Run(() =>
+                        {
+                            if (UneditableMap.Value != null)
+                            {
+                                lock (UneditableMap.Value)
+                                    UneditableMap.Value = map.LoadQua();
+                            }
+                            else
+                                UneditableMap.Value = map.LoadQua();
+                        });
+                    }
+
+                    ImGui.PopStyleColor();
+                }
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.Separator();
 
             if (ImGui.BeginMenu("Background Brightness"))
             {
@@ -263,11 +313,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Web"))
                 return;
 
-            if (ImGui.MenuItem($"View Online Listing", Map.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Map.MapId}");
+            if (ImGui.MenuItem($"View Online Listing", WorkingMap.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{WorkingMap.MapId}");
 
-            if (ImGui.MenuItem("Modding Discussion", Map.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Map.MapId}/mods");
+            if (ImGui.MenuItem("Modding Discussion", WorkingMap.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{WorkingMap.MapId}/mods");
 
             ImGui.EndMenu();
         }

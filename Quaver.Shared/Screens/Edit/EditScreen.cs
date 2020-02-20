@@ -9,6 +9,7 @@ using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Editor.Timing;
@@ -30,9 +31,13 @@ namespace Quaver.Shared.Screens.Edit
         public override QuaverScreenType Type { get; } = QuaverScreenType.Editor;
 
         /// <summary>
+        /// </summary>
+        public Map Map { get; }
+
+        /// <summary>
         ///     A copy of the original and unedited map
         /// </summary>
-        public Qua OriginalMap { get; }
+        public Qua OriginalQua { get; }
 
         /// <summary>
         ///     The map that is being worked on by the user
@@ -120,10 +125,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditScreen(Qua map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
+        public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
-            OriginalMap = map;
-            WorkingMap = ObjectHelper.DeepClone(OriginalMap);
+            Map = map;
+            OriginalQua = map.LoadQua();
+            WorkingMap = ObjectHelper.DeepClone(OriginalQua);
             BackgroundStore = visualTestBackground;
 
             SetAudioTrack(track);

@@ -55,9 +55,10 @@ namespace Quaver.Shared.Screens.Edit
             CreatePlayfield();
             CreateFooter();
 
-            MenuBar = new EditorFileMenuBar(EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
+            MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
-                EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps);
+                EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
+                EditScreen.UneditableMap);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -125,6 +126,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreateOtherDifficultyPlayfield()
         {
+            if (EditScreen.UneditableMap.Value == null)
+                return;
+
             UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.Skin, EditScreen.Track,
                 EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
                 EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, true)
@@ -159,10 +163,19 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="e"></param>
         private void OnUneditableMapChanged(object sender, BindableValueChangedEventArgs<Qua> e)
         {
-            UnEditablePlayfield?.Destroy();
+            Container.ScheduleUpdate(() =>
+            {
+                UnEditablePlayfield?.Destroy();
 
-            CreateOtherDifficultyPlayfield();
-            PositionPlayfields();
+                if (e.Value == null)
+                {
+                    Playfield.X = 0;
+                    return;
+                }
+
+                CreateOtherDifficultyPlayfield();
+                PositionPlayfields();
+            });
         }
 
         /// <summary>
