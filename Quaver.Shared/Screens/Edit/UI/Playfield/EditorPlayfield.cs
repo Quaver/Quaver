@@ -59,6 +59,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Bindable<EditorBeatSnapColor> BeatSnapColor { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<bool> ViewLayers { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -149,10 +153,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="beatSnapColor"></param>
+        /// <param name="viewLayers"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed,
             Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate, Bindable<EditorBeatSnapColor> beatSnapColor,
-            bool isUneditable = false)
+            Bindable<bool> viewLayers, bool isUneditable = false)
         {
             Map = map;
             Skin = skin;
@@ -163,6 +168,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithRate;
             BeatSnapColor = beatSnapColor;
+            ViewLayers = viewLayers;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -314,8 +320,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="info"></param>
         private void CreateHitObject(HitObjectInfo info)
         {
-            var ho = info.IsLongNote ? new EditorHitObjectLong(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint)
-                                      : new EditorHitObject(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint);
+            var ho = info.IsLongNote ? new EditorHitObjectLong(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers)
+                                      : new EditorHitObject(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers);
 
             ho.SetSize();
             ho.SetPosition();
@@ -433,6 +439,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             for (var i = 0; i < HitObjectPool.Count; i++)
             {
                 HitObjectPool[i].SetPosition();
+
+                if (HitObjectPool[i] is EditorHitObjectLong ln)
+                    ln.ResizeLongNote();
+
                 HitObjectPool[i].Draw(gameTime);
             }
         }

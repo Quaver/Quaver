@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
@@ -121,6 +122,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> ViewLayers { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -143,6 +148,7 @@ namespace Quaver.Shared.Screens.Edit
             InitializeHitsoundVolume();
             InitializeScaleScrollSpeedWithRate();
             InitializeBeatSnapColor();
+            InitializeViewLayers();
 
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
@@ -211,6 +217,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (BeatSnapColor != ConfigManager.EditorBeatSnapColorType)
                 BeatSnapColor.Dispose();
+
+            if (ViewLayers != ConfigManager.EditorViewLayers)
+                ViewLayers.Dispose();
 
             base.Destroy();
         }
@@ -291,6 +300,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         private void InitializeBeatSnapColor() => BeatSnapColor = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
+
+        /// <summary>
+        /// </summary>
+        private void InitializeViewLayers() => ViewLayers = ConfigManager.EditorViewLayers ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
