@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,14 +15,17 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit
 {
@@ -130,6 +135,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public List<EditorPlugin> Plugins { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
@@ -153,6 +162,8 @@ namespace Quaver.Shared.Screens.Edit
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
+
+            LoadPlugins();
 
             View = new EditScreenView(this);
         }
@@ -507,6 +518,49 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             Track.Rate = targetRate;
+        }
+
+        /// <summary>
+        ///     Loads any plugins for the editor
+        /// </summary>
+        private void LoadPlugins()
+        {
+            Plugins = new List<EditorPlugin>();
+
+            var pluginDirectories = Directory.GetDirectories($"{WobbleGame.WorkingDirectory}/Plugins");
+
+            foreach (var directory in pluginDirectories)
+            {
+                var pluginPath = $"{directory}/plugin.lua";
+                var settingsPath = $"{directory}/settings.ini";
+
+                if (!File.Exists(pluginPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no plugin.lua file", LogType.Runtime);
+                    continue;
+                }
+
+                if (!File.Exists(settingsPath))
+                {
+                    Logger.Important($"Skipping load on plugin: {directory} because there is no settings.ini file", LogType.Runtime);
+                    continue;
+                }
+
+                try
+                {
+                    var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
+                        .ReadFile($"{directory}/settings.ini")["Settings"];
+
+                    var plugin = new EditorPlugin(data["Name"] ?? "", data["Author"] ?? "",
+                        data["Description"] ?? "", pluginPath);
+
+                    Plugins.Add(plugin);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -85,6 +86,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private List<EditorPlugin> Plugins { get; }
+
+        /// <summary>
+        /// </summary>
         public float Height { get; private set; }
 
         /// <summary>
@@ -114,10 +119,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="beatSnap"></param>
         /// <param name="availableBeatSnaps"></param>
         /// <param name="uneditableMap"></param>
+        /// <param name="viewLayers"></param>
         public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
-            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers)
+            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers,
+            List<EditorPlugin> plugins)
             : base(DestroyContext, GetOptions())
         {
             Map = map;
@@ -135,6 +142,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             AvailableBeatSnaps = availableBeatSnaps;
             UneditableMap = uneditableMap;
             ViewLayers = viewLayers;
+            Plugins = plugins;
         }
 
         /// <inheritdoc />
@@ -296,6 +304,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Plugins"))
                 return;
+
+            if (ImGui.BeginMenu($"Local Plugins"))
+            {
+                for (var i = 0; i < Plugins.Count; i++)
+                {
+                    var plugin = Plugins[i];
+
+                    if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
+                        plugin.IsActive = !plugin.IsActive;
+                }
+                
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }

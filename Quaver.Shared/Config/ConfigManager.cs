@@ -661,6 +661,8 @@ namespace Quaver.Shared.Config
             _songDirectory = _gameDirectory + "/Songs";
             Directory.CreateDirectory(_songDirectory);
 
+            Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Plugins");
+
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
             Logger.Important("Config file has been successfully read.", LogType.Runtime);
