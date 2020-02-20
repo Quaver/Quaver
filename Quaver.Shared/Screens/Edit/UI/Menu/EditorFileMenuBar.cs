@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using ImGuiNET;
+using Quaver.API.Maps;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
@@ -18,6 +19,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 {
     public class EditorFileMenuBar : SpriteImGui
     {
+        /// <summary>
+        /// </summary>
+        private Qua Map { get; }
+
         /// <summary>
         /// </summary>
         private IAudioTrack Track { get; }
@@ -79,6 +84,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="map"></param>
         /// <param name="track"></param>
         /// <param name="backgroundBrightness"></param>
         /// <param name="enableMetronome"></param>
@@ -90,12 +96,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="beatSnapColor"></param>
         /// <param name="beatSnap"></param>
         /// <param name="availableBeatSnaps"></param>
-        public EditorFileMenuBar(IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
+        public EditorFileMenuBar(Qua map, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
             BindableInt beatSnap, List<int> availableBeatSnaps)
             : base(DestroyContext, GetOptions())
         {
+            Map = map;
             Track = track;
             BackgroundBrightness = backgroundBrightness;
             EnableMetronome = enableMetronome;
@@ -255,6 +262,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Web"))
                 return;
+
+            if (ImGui.MenuItem($"View Online Listing", Map.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Map.MapId}");
+
+            if (ImGui.MenuItem("Modding Discussion", Map.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Map.MapId}/mods");
 
             ImGui.EndMenu();
         }
