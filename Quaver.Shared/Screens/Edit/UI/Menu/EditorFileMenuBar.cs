@@ -314,7 +314,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
                         plugin.IsActive = !plugin.IsActive;
                 }
-                
+
                 ImGui.EndMenu();
             }
 
