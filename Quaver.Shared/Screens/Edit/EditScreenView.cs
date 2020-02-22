@@ -1,3 +1,5 @@
+using System;
+using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -14,6 +16,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -45,6 +48,10 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
+        /// <summary>
+        /// </summary>
+        private bool IsImGuiHovered { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -68,7 +75,10 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime) => Container?.Update(gameTime);
+        public override void Update(GameTime gameTime)
+        {
+            Container?.Update(gameTime);
+        }
 
         /// <inheritdoc />
         ///  <summary>
@@ -76,10 +86,18 @@ namespace Quaver.Shared.Screens.Edit
         ///  <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#2F2F2F"));
+            GameBase.Game.GraphicsDevice.Clear(Color.Black);
             Container?.Draw(gameTime);
+
+            IsImGuiHovered = false;
+
             DrawPlugins(gameTime);
             MenuBar.Draw(gameTime);
+
+            if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
+                IsImGuiHovered = true;
+
+            Button.IsGloballyClickable = !IsImGuiHovered;
         }
 
         /// <inheritdoc />
@@ -207,6 +225,9 @@ namespace Quaver.Shared.Screens.Edit
                     continue;
 
                 plugin.Draw(gameTime);
+
+                if (ImGui.IsAnyItemHovered())
+                    IsImGuiHovered = true;
             }
         }
     }
