@@ -10,6 +10,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
@@ -107,11 +108,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public void SetPosition()
         {
-            X = Playfield.ScreenRectangle.X + Playfield.ColumnSize * (Info.Lane - 1) + Playfield.BorderLeft.Width;
-            Y = Playfield.HitPositionY - Info.StartTime * Playfield.TrackSpeed - Height;
+            var x = Playfield.ScreenRectangle.X + Playfield.ColumnSize * (Info.Lane - 1) + Playfield.BorderLeft.Width;
+            var y = Playfield.HitPositionY - Info.StartTime * Playfield.TrackSpeed - Height;
 
             if (AnchorHitObjectsAtMidpoint.Value)
-                Y += Height / 2f;
+                y += Height / 2f;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (X != x || Y != y)
+                Position = new ScalableVector2(x, y);
         }
 
         /// <summary>

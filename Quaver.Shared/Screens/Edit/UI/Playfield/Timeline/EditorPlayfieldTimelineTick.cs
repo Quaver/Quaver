@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
@@ -76,8 +77,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         public void SetPosition()
         {
-            X = Playfield.AbsolutePosition.X + 2;
-            Y = Playfield.HitPositionY - Time * Playfield.TrackSpeed - Height;
+            var x = Playfield.AbsolutePosition.X + 2;
+            var y = Playfield.HitPositionY - Time * Playfield.TrackSpeed - Height;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (X != x || Y != y)
+                Position = new ScalableVector2(x, y);
         }
     }
 }
