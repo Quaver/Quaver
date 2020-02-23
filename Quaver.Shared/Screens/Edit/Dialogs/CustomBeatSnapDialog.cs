@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Y = -44,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
-                AllowedCharacters = new Regex(@"^[1-9]$|^[0-9]$|^(48)$")
+                AllowedCharacters = new Regex(@"^([1-9]|[1-3][0-9]|4[0-8])$")
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
