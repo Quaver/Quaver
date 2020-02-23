@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -24,11 +25,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
         /// <summary>
         /// </summary>
+        private List<int> AvailableBeatSnaps { get; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="beatSnap"></param>
-        public BeatSnapRightClickOptions(BindableInt beatSnap) : base(GetOptions(), new ScalableVector2(200, 40),
+        /// <param name="availableBeatSnaps"></param>
+        public BeatSnapRightClickOptions(BindableInt beatSnap, List<int> availableBeatSnaps)
+            : base(GetOptions(availableBeatSnaps), new ScalableVector2(200, 40),
             22)
         {
             BeatSnap = beatSnap;
+            AvailableBeatSnaps = availableBeatSnaps;
 
             Items.ForEach(x =>
             {
@@ -56,7 +64,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             {
                 if (args.Text == "Custom")
                 {
-                    DialogManager.Show(new CustomBeatSnapDialog(beatSnap));
+                    DialogManager.Show(new CustomBeatSnapDialog(beatSnap, AvailableBeatSnaps));
                     return;
                 }
 
@@ -79,20 +87,48 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string, Color> GetOptions()
+        private static Dictionary<string, Color> GetOptions(List<int> availableSnaps)
         {
-            return new Dictionary<string, Color>()
+            var options = new Dictionary<string, Color>();
+
+            foreach (var snap in availableSnaps)
             {
-                {$"1/1st", Color.Crimson},
-                {$"1/2nd", Color.Blue},
-                {$"1/3rd", Color.Purple},
-                {$"1/4th", Color.Yellow},
-                {$"1/6th", Color.HotPink},
-                {$"1/8th", Color.Orange},
-                {$"1/12th", Color.SkyBlue},
-                {$"1/16th",  Color.Lime},
-                {$"Custom", Color.White}
-            };
+                var color = Color.White;
+
+                switch (snap)
+                {
+                    case 1:
+                        color = Color.Crimson;
+                        break;
+                    case 2:
+                        color = Color.Blue;
+                        break;
+                    case 3:
+                        color = Color.Purple;
+                        break;
+                    case 4:
+                        color = Color.Yellow;
+                        break;
+                    case 6:
+                        color = Color.HotPink;
+                        break;
+                    case 8:
+                        color = Color.Orange;
+                        break;
+                    case 12:
+                        color = Color.SkyBlue;
+                        break;
+                    case 16:
+                        color = Color.Lime;
+                        break;
+                }
+
+                options.Add($"1/{StringHelper.AddOrdinal(snap)}", color);
+            }
+
+            options.Add("Custom", Color.White);
+
+            return options;
         }
 
         /// <summary>

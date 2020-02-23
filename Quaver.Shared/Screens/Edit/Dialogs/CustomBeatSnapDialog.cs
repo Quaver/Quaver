@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
@@ -20,13 +22,18 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private BindableInt BeatSnap { get; }
 
+        /// <summary>
+        /// </summary>
+        private List<int> AvailableBeatSnaps { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public CustomBeatSnapDialog(BindableInt beatSnap) : base("CUSTOM BEAT SNAP",
+        public CustomBeatSnapDialog(BindableInt beatSnap, List<int> availableBeatSnaps) : base("CUSTOM BEAT SNAP",
             "Enter a value for the custom beat snap divisor (1/?)...")
         {
             BeatSnap = beatSnap;
+            AvailableBeatSnaps = availableBeatSnaps;
 
             YesButton.Visible = false;
             YesButton.IsClickable = false;
@@ -44,6 +51,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 20, "", "Enter a beat snap value (max 48)", s =>
                 {
                     BeatSnap.Value = int.Parse(s);
+
+                    if (!AvailableBeatSnaps.Contains(BeatSnap.Value))
+                    {
+                        AvailableBeatSnaps.Add(BeatSnap.Value);
+                        AvailableBeatSnaps.Sort();
+                    }
                 })
             {
                 Parent = Panel,

@@ -13,7 +13,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     {
         public IconTextButtonBeatSnap(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_sun),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Beat Snap",
-            (sender, args) => screen?.ActivateRightClickOptions(new BeatSnapRightClickOptions(screen.BeatSnap)))
+            (sender, args) => screen?.ActivateRightClickOptions(new BeatSnapRightClickOptions(screen.BeatSnap, screen.AvailableBeatSnaps)))
         {
         }
     }
