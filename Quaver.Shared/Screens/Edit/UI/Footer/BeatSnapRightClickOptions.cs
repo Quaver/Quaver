@@ -4,9 +4,11 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
@@ -54,6 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             {
                 if (args.Text == "Custom")
                 {
+                    DialogManager.Show(new CustomBeatSnapDialog(beatSnap));
                     return;
                 }
 

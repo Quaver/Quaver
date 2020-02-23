@@ -79,7 +79,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public BindableInt BeatSnap { get; } = new BindableInt(4, 1, 16);
+        public BindableInt BeatSnap { get; } = new BindableInt(4, 1, 48);
 
         /// <summary>
         ///     All of the available beat snaps to use in the editor.
