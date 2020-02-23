@@ -93,6 +93,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             CreateSkipToEndButton();
 
             Height = HEIGHT;
+            
+            LeftAlignedItems.ForEach(x => x.Parent = this);
+            RightAlignedItems.ForEach(x => x.Parent = this);
         }
 
         /// <summary>
