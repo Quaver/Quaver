@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <summary>
         /// </summary>
         public CustomBeatSnapDialog(BindableInt beatSnap) : base("CUSTOM BEAT SNAP",
-            "Enter a value for the custom beat snap divisor...")
+            "Enter a value for the custom beat snap divisor (1/?)...")
         {
             BeatSnap = beatSnap;
 
@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, BeatSnap.Value.ToString(), "Enter a value (max 1/48th)", s =>
+                20, "", "Enter a beat snap value (max 48)", s =>
                 {
                     BeatSnap.Value = int.Parse(s);
                 })
@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Y = -44,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
-                AllowedCharacters = new Regex(@"^[1-9][0-9]?$|^48$")
+                AllowedCharacters = new Regex(@"^[1-9][0-9]?$|^100$")
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
