@@ -338,7 +338,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                     else
                         return ColorHelper.HexToColor("#0085ff");
                 default:
-                    return Color.White;
+                    if (val == 0)
+                        return Color.White;
+
+                    return ColorHelper.HexToColor(i % 2 == 0 ? "#af4fb8" : "#4e94b7");
             }
         }
 
@@ -398,7 +401,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                     else
                         return Colors.MainAccent;
                 default:
-                    return Color.White;
+                    if (val == 0)
+                        return Color.White;
+
+                    return ColorHelper.HexToColor(i % 2 == 0 ? "#af4fb8" : "#4e94b7");
             }
         }
 
