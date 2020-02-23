@@ -107,7 +107,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
         /// <summary>
         /// </summary>
-        public void UpdateSize() => Size = new ScalableVector2(Icon.Width + Text.Width + Spacing, Icon.Height);
+        public void UpdateSize() => Size = new ScalableVector2(Icon.Width + Text.Width + Spacing, Parent?.Height ?? MenuBorder.HEIGHT);
 
         public override void DrawToSpriteBatch()
         {
