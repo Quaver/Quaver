@@ -68,6 +68,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="track"></param>
         public EditorFooter(EditScreen screen, IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
         {
@@ -76,7 +77,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         }, new List<Drawable>()
         {
             new IconTextButtonTestPlay(),
-            new IconTextButtonBeatSnap(screen)
+            new IconTextButtonBeatSnap(screen),
+            new IconTextButtonPlaybackSpeed(screen, track)
         })
         {
             Track = track;
