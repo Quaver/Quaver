@@ -9,6 +9,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
 {
     public class RightClickOptions : Dropdown
     {
+        /// <summary>
+        /// </summary>
+        protected Dictionary<string, Color> Options { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -17,6 +21,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns.RightClick
         /// <param name="fontSize"></param>
         public RightClickOptions(Dictionary<string, Color> options, ScalableVector2 size, int fontSize) : base(options.Keys.ToList(), size, fontSize, Color.White)
         {
+            Options = options;
+
             Chevron.Visible = false;
             SelectedText.Visible = false;
             DividerLine.Visible = false;

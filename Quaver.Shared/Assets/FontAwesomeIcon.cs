@@ -96,6 +96,7 @@ namespace Quaver.Shared.Assets
         fa_check_mark,
         fa_check_sign_in_a_rounded_black_square,
         fa_check,
+        fa_check_symbol,
         fa_checked_symbol,
         fa_checkered_raised_flag,
         fa_chevron_arrow_down,

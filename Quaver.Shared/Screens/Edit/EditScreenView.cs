@@ -133,9 +133,8 @@ namespace Quaver.Shared.Screens.Edit
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers) { Parent = Container};
 
         /// <summary>
-        ///
         /// </summary>
-        private void CreateFooter() => Footer = new EditorFooter(EditScreen.Track)
+        private void CreateFooter() => Footer = new EditorFooter(EditScreen, EditScreen.Track)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft,
