@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
 using Quaver.Shared.Screens.Edit.UI.Footer.Time;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using TagLib.Matroska;
@@ -68,12 +69,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         /// <summary>
         /// </summary>
         /// <param name="track"></param>
-        public EditorFooter(IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
+        public EditorFooter(EditScreen screen, IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
         {
-            new IconTextButtonExit()
+            new IconTextButtonExit(),
+            new IconTextButtonOptions()
         }, new List<Drawable>()
         {
-            new IconTextButtonTestPlay()
+            new IconTextButtonTestPlay(),
+            new IconTextButtonBeatSnap(screen)
         })
         {
             Track = track;
