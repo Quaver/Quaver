@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
+using Quaver.Shared.Screens.Edit.UI.Panels;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using TagLib.Matroska;
 using Wobble;
@@ -66,6 +67,12 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
                 EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.Plugins);
+
+            new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap, EditScreen.Track)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+            };
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;

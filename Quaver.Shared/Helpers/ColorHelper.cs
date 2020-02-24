@@ -105,5 +105,40 @@ namespace Quaver.Shared.Helpers
         /// <param name="color"></param>
         /// <returns></returns>
         public static Color ToXnaColor(System.Drawing.Color color) => new Color(color.R, color.G, color.B);
+
+        public static Color BeatSnapToColor(int snap)
+        {
+            var color = Color.White;
+
+            switch (snap)
+            {
+                case 1:
+                    color = Color.Crimson;
+                    break;
+                case 2:
+                    color = Color.Blue;
+                    break;
+                case 3:
+                    color = Color.Purple;
+                    break;
+                case 4:
+                    color = Color.Yellow;
+                    break;
+                case 6:
+                    color = Color.HotPink;
+                    break;
+                case 8:
+                    color = Color.Orange;
+                    break;
+                case 12:
+                    color = Color.SkyBlue;
+                    break;
+                case 16:
+                    color = Color.Lime;
+                    break;
+            }
+
+            return color;
+        }
     }
 }
