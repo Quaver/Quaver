@@ -18,6 +18,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -132,6 +133,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<EditorCompositionTool> CompositionTool { get; } = new Bindable<EditorCompositionTool>(EditorCompositionTool.Select);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -202,6 +207,7 @@ namespace Quaver.Shared.Screens.Edit
             BeatSnap?.Dispose();
             BackgroundStore?.Dispose();
             Metronome?.Dispose();
+            CompositionTool?.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -334,11 +340,41 @@ namespace Quaver.Shared.Screens.Edit
             {
                 HandleSeekingBackwards();
                 HandleSeekingForwards();
+                HandleKeyPressUp();
+                HandleKeyPressDown();
             }
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
         }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressUp()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                return;
+
+            var index = (int) CompositionTool.Value;
+
+            if (index - 1 >= 0)
+                CompositionTool.Value = (EditorCompositionTool) index - 1;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressDown()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                return;
+
+            var index = (int) CompositionTool.Value;
+
+            // - 1 because mines aren't implemented yet
+            if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
+                CompositionTool.Value = (EditorCompositionTool) index + 1;
+        }
+
 
         /// <summary>
         /// </summary>

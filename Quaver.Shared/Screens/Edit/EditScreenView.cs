@@ -51,6 +51,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorPanelCompositionTools CompositionTools { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace Quaver.Shared.Screens.Edit
             CreatePlayfield();
             CreateFooter();
             CreateDetailsPanel();
+            CreateCompositionTools();
 
             MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
@@ -144,6 +149,16 @@ namespace Quaver.Shared.Screens.Edit
         {
             Parent = Container,
             Alignment = Alignment.MidLeft,
+            Y = -100
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateCompositionTools() => CompositionTools = new EditorPanelCompositionTools(EditScreen.CompositionTool)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidLeft,
+            Y = 200
         };
 
         /// <summary>

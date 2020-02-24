@@ -215,5 +215,8 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorZoomIn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-zoom-in.png");
         public static Texture2D EditorZoomOut => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-zoom-out.png");
         public static Texture2D EditorPanelBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-panel-bg.png");
+        public static Texture2D EditorIconSelect => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-select.png");
+        public static Texture2D EditorIconNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-note.png");
+        public static Texture2D EditorIconLongNote => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-long-note.png");
     }
 }
