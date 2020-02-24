@@ -47,6 +47,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorPanelDetails Details { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
         /// <summary>
@@ -62,17 +66,12 @@ namespace Quaver.Shared.Screens.Edit
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
+            CreateDetailsPanel();
 
             MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
                 EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.Plugins);
-
-            new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap, EditScreen.Track)
-            {
-                Parent = Container,
-                Alignment = Alignment.MidLeft,
-            };
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -138,6 +137,14 @@ namespace Quaver.Shared.Screens.Edit
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers) { Parent = Container};
+
+        /// <summary>
+        /// </summary>
+        private void CreateDetailsPanel() => Details = new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap, EditScreen.Track)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidLeft,
+        };
 
         /// <summary>
         /// </summary>
