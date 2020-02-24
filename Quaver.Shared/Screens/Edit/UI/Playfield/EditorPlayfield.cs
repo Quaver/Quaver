@@ -13,6 +13,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -145,6 +146,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private EditorPlayfieldZoom Zoom { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="skin"></param>
         /// <param name="track"></param>
@@ -181,6 +186,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateHitObjects();
             CreateButton();
             CreateSeekBar();
+            CreateZoom();
 
             InitializeHitObjectPool();
             Track.Seeked += OnTrackSeeked;
@@ -380,6 +386,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 Size = new ScalableVector2(2, SeekBar.Height),
                 Tint = ColorHelper.HexToColor("#808080")
             };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="Zoom"/>. Not create if playfield is <see cref="IsUneditable"/>
+        /// </summary>
+        private void CreateZoom()
+        {
+            if (IsUneditable)
+                return;
+
+            Zoom = new EditorPlayfieldZoom(ScrollSpeed)
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                Y = 100
+            };
+
+            Zoom.X += Zoom.Width + 10;
         }
 
         /// <summary>
