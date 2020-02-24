@@ -340,11 +340,41 @@ namespace Quaver.Shared.Screens.Edit
             {
                 HandleSeekingBackwards();
                 HandleSeekingForwards();
+                HandleKeyPressUp();
+                HandleKeyPressDown();
             }
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
         }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressUp()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                return;
+
+            var index = (int) CompositionTool.Value;
+
+            if (index - 1 >= 0)
+                CompositionTool.Value = (EditorCompositionTool) index - 1;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressDown()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                return;
+
+            var index = (int) CompositionTool.Value;
+
+            // - 1 because mines aren't implemented yet
+            if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
+                CompositionTool.Value = (EditorCompositionTool) index + 1;
+        }
+
 
         /// <summary>
         /// </summary>
