@@ -92,39 +92,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             var options = new Dictionary<string, Color>();
 
             foreach (var snap in availableSnaps)
-            {
-                var color = Color.White;
-
-                switch (snap)
-                {
-                    case 1:
-                        color = Color.Crimson;
-                        break;
-                    case 2:
-                        color = Color.Blue;
-                        break;
-                    case 3:
-                        color = Color.Purple;
-                        break;
-                    case 4:
-                        color = Color.Yellow;
-                        break;
-                    case 6:
-                        color = Color.HotPink;
-                        break;
-                    case 8:
-                        color = Color.Orange;
-                        break;
-                    case 12:
-                        color = Color.SkyBlue;
-                        break;
-                    case 16:
-                        color = Color.Lime;
-                        break;
-                }
-
-                options.Add($"1/{StringHelper.AddOrdinal(snap)}", color);
-            }
+                options.Add($"1/{StringHelper.AddOrdinal(snap)}", ColorHelper.BeatSnapToColor(snap));
 
             options.Add("Custom", Color.White);
 

@@ -214,5 +214,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D ViewScoresButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/view-scores-button.png");
         public static Texture2D EditorZoomIn => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-zoom-in.png");
         public static Texture2D EditorZoomOut => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-zoom-out.png");
+        public static Texture2D EditorPanelBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-panel-bg.png");
     }
 }
