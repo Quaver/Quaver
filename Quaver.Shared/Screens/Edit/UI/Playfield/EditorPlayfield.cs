@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -11,6 +12,9 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
@@ -30,6 +34,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Qua Map { get; }
+
+        /// <summary>
+        /// </summary>
+        private EditorActionManager ActionManager { get; }
 
         /// <summary>
         /// </summary>
@@ -151,6 +159,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         /// <param name="map"></param>
+        /// <param name="manager"></param>
         /// <param name="skin"></param>
         /// <param name="track"></param>
         /// <param name="beatSnap"></param>
@@ -160,11 +169,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="beatSnapColor"></param>
         /// <param name="viewLayers"></param>
         /// <param name="isUneditable"></param>
-        public EditorPlayfield(Qua map, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap, BindableInt scrollSpeed,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate, Bindable<EditorBeatSnapColor> beatSnapColor,
-            Bindable<bool> viewLayers, bool isUneditable = false)
+        public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
+            BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
+            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, bool isUneditable = false)
         {
             Map = map;
+            ActionManager = manager;
             Skin = skin;
             Track = track;
             BeatSnap = beatSnap;
@@ -193,6 +203,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Track.RateChanged += OnTrackRateChanged;
             ScrollSpeed.ValueChanged += OnScrollSpeedChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
+
+            ActionManager.HitObjectPlaced += OnHitObjectPlaced;
         }
 
         /// <inheritdoc />
@@ -251,6 +263,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             // ReSharper disable twice DelegateSubtraction
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
+            ActionManager.HitObjectPlaced -= OnHitObjectPlaced;
 
             base.Destroy();
         }
@@ -318,13 +331,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void CreateHitObjects()
         {
             HitObjects = new List<EditorHitObject>();
-            Map.HitObjects.ForEach(CreateHitObject);
+            Map.HitObjects.ForEach(x => CreateHitObject(x));
         }
 
         /// <summary>
         /// </summary>
         /// <param name="info"></param>
-        private void CreateHitObject(HitObjectInfo info)
+        /// <param name="insertAtIndex"></param>
+        private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
             var ho = info.IsLongNote ? new EditorHitObjectLong(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers)
                                       : new EditorHitObject(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers);
@@ -335,7 +349,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (ho is EditorHitObjectLong longNote)
                 longNote.ResizeLongNote();
 
-            HitObjects.Add(ho);
+            if (insertAtIndex)
+            {
+                var index = HitObjects.FindLastIndex(x => x.Info.StartTime < info.StartTime);
+
+                if (index == -1)
+                    HitObjects.Add(ho);
+                else
+                    HitObjects.Insert(index + 1, ho);
+            }
+            else
+                HitObjects.Add(ho);
         }
 
         /// <summary>
@@ -512,5 +536,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e) => RefreshHitObjects();
+
+        /// <summary>
+        ///     Called when the user placed down a HitObject
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectPlaced(object sender, EditorHitObjectPlacedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            CreateHitObject(e.HitObject, true);
+            InitializeHitObjectPool();
+        }
     }
 }

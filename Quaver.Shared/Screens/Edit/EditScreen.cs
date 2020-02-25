@@ -16,6 +16,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -145,11 +146,16 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public EditorActionManager ActionManager { get; }
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+            ActionManager = new EditorActionManager(WorkingMap);
             BackgroundStore = visualTestBackground;
 
             SetAudioTrack(track);
@@ -208,6 +214,7 @@ namespace Quaver.Shared.Screens.Edit
             BackgroundStore?.Dispose();
             Metronome?.Dispose();
             CompositionTool?.Dispose();
+            ActionManager.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -346,6 +353,7 @@ namespace Quaver.Shared.Screens.Edit
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
+            HandleTemporaryHitObjectPlacement();
         }
 
         /// <summary>
@@ -465,6 +473,21 @@ namespace Quaver.Shared.Screens.Edit
                 ChangeAudioPlaybackRate(Direction.Forward);
         }
 
+        /// <summary>
+        /// </summary>
+        private void HandleTemporaryHitObjectPlacement()
+        {
+            // Clever way of handing key input with num keys since the enum values are 1 after each other.
+            for (var i = 0; i < WorkingMap.GetKeyCount(); i++)
+            {
+                if (!KeyboardManager.IsUniqueKeyPress(Keys.D1 + i))
+                    continue;
+
+                var time = (int) Math.Round(Track.Time, MidpointRounding.AwayFromZero);
+                ActionManager.PlaceHitObject(i + 1, time);
+            }
+        }
+        
         /// <summary>
         ///     Sets the hitsounds object index, so we know which object to play sounds for.
         ///     This is generally used when seeking through the map.
