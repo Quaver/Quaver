@@ -49,6 +49,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => ActionManager.Perform(new EditorActionPlaceHitObject(ActionManager, WorkingMap, HitObject));
+        public void Undo() => new EditorActionPlaceHitObject(ActionManager, WorkingMap, HitObject).Perform();
     }
 }

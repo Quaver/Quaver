@@ -1,5 +1,6 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Place
 {
@@ -48,8 +49,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Place
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo()
-        {
-        }
+        public void Undo() => new EditorActionRemoveHitObject(ActionManager, WorkingMap, HitObject).Perform();
     }
 }
