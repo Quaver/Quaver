@@ -353,6 +353,7 @@ namespace Quaver.Shared.Screens.Edit
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
+            HandleKeyPressUndoRedo();
             HandleTemporaryHitObjectPlacement();
         }
 
@@ -475,6 +476,21 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private void HandleKeyPressUndoRedo()
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Z))
+                ActionManager.Undo();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
+                ActionManager.Redo();
+        }
+
+        /// <summary>
+        /// </summary>
         private void HandleTemporaryHitObjectPlacement()
         {
             // Clever way of handing key input with num keys since the enum values are 1 after each other.
@@ -487,7 +503,7 @@ namespace Quaver.Shared.Screens.Edit
                 ActionManager.PlaceHitObject(i + 1, time);
             }
         }
-        
+
         /// <summary>
         ///     Sets the hitsounds object index, so we know which object to play sounds for.
         ///     This is generally used when seeking through the map.
