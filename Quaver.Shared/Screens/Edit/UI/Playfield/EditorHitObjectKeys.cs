@@ -14,7 +14,7 @@ using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
 {
-    public class EditorHitObjectLong : EditorHitObject
+    public class EditorHitObjectKeys : EditorHitObject
     {
         /// <summary>
         ///     The long note's body sprite
@@ -46,7 +46,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="viewLayers"></param>
-        public EditorHitObjectLong(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
+        public EditorHitObjectKeys(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
             Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers)
             : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint, viewLayers)
         {
@@ -89,8 +89,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             // Draw the body first, then the note. That'll make it so we can get that effect
             // where if the player is using an arrow skin, part of the body will be under the note.
-            Body.DrawToSpriteBatch();
-            Tail.DrawToSpriteBatch();
+            if (Info.IsLongNote)
+            {
+                Body.DrawToSpriteBatch();
+                Tail.DrawToSpriteBatch();
+            }
+
             base.DrawToSpriteBatch();
         }
 
@@ -126,6 +130,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public void ResizeLongNote()
         {
+            if (!Info.IsLongNote)
+                return;
+
             Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
@@ -136,6 +143,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         private float GetLongNoteHeight()
         {
+            if (!Info.IsLongNote)
+                return 0;
+
             var height = Math.Abs(Playfield.HitPositionY - Info.EndTime * Playfield.TrackSpeed -
                                   (float) Playfield.ColumnSize * TextureTail.Height / TextureTail.Width / 2 - Height / 2f - Y);
 
@@ -151,6 +161,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public override void SetSize()
         {
             base.SetSize();
+
+            if (!Info.IsLongNote)
+                return;
 
             Tail.Height = GetTailHeight();
             ResizeLongNote();
@@ -183,6 +196,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         public override bool IsOnScreen() => base.IsOnScreen() || Track.Time >= Info.StartTime
                                                   && Track.Time <= Info.EndTime + 1000;
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public override bool IsHovered(Vector2 mousePos)
+        {
+            var headHovered = ScreenRectangle.Contains(mousePos);
+
+            if (!Info.IsLongNote)
+                return headHovered;
+
+            return headHovered || Body.ScreenRectangle.Contains(mousePos) || Tail.ScreenRectangle.Contains(mousePos);
+        }
 
         /// <summary>
         /// </summary>

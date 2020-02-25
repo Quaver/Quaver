@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
@@ -19,6 +21,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
+using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -26,6 +29,8 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
@@ -71,6 +76,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         private Bindable<bool> ViewLayers { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<EditorCompositionTool> Tool { get; }
 
         /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
@@ -133,12 +142,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private List<EditorHitObject> HitObjects { get; set; }
+        private List<EditorHitObjectKeys> HitObjects { get; set; }
 
         /// <summary>
         ///     The objects that are currently visible and ready to be drawn to the screen
         /// </summary>
-        private List<EditorHitObject> HitObjectPool { get; set; }
+        private List<EditorHitObjectKeys> HitObjectPool { get; set; }
 
         /// <summary>
         ///     The index of the last object that was added to the pool
@@ -159,6 +168,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private EditorHitObjectKeys LongNoteInDrag { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="manager"></param>
         /// <param name="skin"></param>
@@ -172,7 +185,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
-            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, bool isUneditable = false)
+            Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
+            bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -185,6 +199,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithRate;
             BeatSnapColor = beatSnapColor;
             ViewLayers = viewLayers;
+            Tool = tool;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -217,8 +232,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             Button.Alignment = Alignment;
             Button.Position = new ScalableVector2(X + BorderLeft.Width / 2f, Y);
+            Button.Update(gameTime);
             UpdateHitObjectPool();
             Timeline.Update(gameTime);
+            HandleInput();
 
             base.Update(gameTime);
         }
@@ -258,6 +275,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             HitObjects.ForEach(x => x.Destroy());
             Timeline?.Destroy();
+            Button.Destroy();
 
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
@@ -333,7 +351,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private void CreateHitObjects()
         {
-            HitObjects = new List<EditorHitObject>();
+            HitObjects = new List<EditorHitObjectKeys>();
             Map.HitObjects.ForEach(x => CreateHitObject(x));
         }
 
@@ -343,14 +361,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="insertAtIndex"></param>
         private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
-            var ho = info.IsLongNote ? new EditorHitObjectLong(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers)
-                                      : new EditorHitObject(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers);
+            var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers);
 
             ho.SetSize();
             ho.SetPosition();
 
-            if (ho is EditorHitObjectLong longNote)
-                longNote.ResizeLongNote();
+            if (ho.Info.IsLongNote)
+                ho.ResizeLongNote();
 
             if (insertAtIndex)
             {
@@ -434,7 +451,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private void InitializeHitObjectPool()
         {
-            HitObjectPool = new List<EditorHitObject>();
+            HitObjectPool = new List<EditorHitObjectKeys>();
             LastPooledHitObjectIndex = -1;
 
             for (var i = 0; i < HitObjects.Count; i++)
@@ -485,12 +502,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             for (var i = 0; i < HitObjectPool.Count; i++)
             {
-                HitObjectPool[i].SetPosition();
+                var hitObject = HitObjectPool[i];
 
-                if (HitObjectPool[i] is EditorHitObjectLong ln)
-                    ln.ResizeLongNote();
-
-                HitObjectPool[i].Draw(gameTime);
+                hitObject.SetPosition();
+                hitObject.ResizeLongNote();
+                hitObject.Draw(gameTime);
             }
         }
 
@@ -499,10 +515,96 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public void ResetObjectPositions() => HitObjects.ForEach(x =>
         {
             x.SetPosition();
-
-            if (x is EditorHitObjectLong ln)
-                ln.ResizeLongNote();
+            x.ResizeLongNote();
         });
+
+        /// <summary>
+        ///     Gets the audio time from a y position.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public double GetTimeFromY(float y) => TrackPositionY + (HitPositionY - y);
+
+        /// <summary>
+        ///     Returns the nearest tick time from a time and beat snap
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="beatSnap"></param>
+        /// <returns></returns>
+        public int GetNearestTickFromTime(int time, int beatSnap)
+        {
+            var timingPoint = Map.GetTimingPointAt(time);
+
+            if (timingPoint == null)
+                return time;
+
+            var timeFwd = (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time);
+            var timeBwd = (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time);
+
+            var fwdDiff = Math.Abs(time - timeFwd);
+            var bwdDiff = Math.Abs(time - timeBwd);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (bwdDiff < fwdDiff)
+                time = timeBwd;
+            else if (fwdDiff < bwdDiff)
+                time = timeFwd;
+
+            return time;
+        }
+
+        /// <summary>
+        ///     Gets the lane the mouse is in based on the mouse's x position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public int GetLaneFromX(float x)
+        {
+            var totalX = Button.AbsolutePosition.X + Button.Width;
+            var lane = Map.GetKeyCount() - (int) Math.Round(totalX / x * 10 % 10, MidpointRounding.AwayFromZero);
+
+            return MathHelper.Clamp(lane, 0, Map.GetKeyCount());
+        }
+
+        /// <summary>
+        ///     Gets an object that is currently hovered
+        /// </summary>
+        /// <returns></returns>
+        public EditorHitObject GetHoveredHitObject()
+        {
+            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+            var relativeMousePos = new Vector2(MouseManager.CurrentState.X, relativeY);
+
+            foreach (var h in HitObjects)
+            {
+                if (h.IsHovered(relativeMousePos))
+                    return h;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns a hitobject at a given time and lane
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="lane"></param>
+        /// <returns></returns>
+        public HitObjectInfo GetHitObjectAtTimeAndLane(int time, int lane)
+        {
+            for (var i = 0; i < Map.HitObjects.Count; i++)
+            {
+                var ho = Map.HitObjects[i];
+
+                if (ho.Lane != lane)
+                    continue;
+
+                if (ho.StartTime == time)
+                    return ho;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// </summary>
@@ -569,6 +671,96 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             HitObjects.Remove(ho);
 
             InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleInput()
+        {
+            if (DialogManager.Dialogs.Count != 0 || IsUneditable)
+                return;
+
+            if (!Button.IsHeld)
+                LongNoteInDrag = null;
+
+            if (Button.IsHovered)
+            {
+                HandleLeftMouseClick();
+                HandleRightClick();
+            }
+
+            HandleLongNoteDragging();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleLeftMouseClick()
+        {
+            if (!MouseManager.IsUniquePress(MouseButton.Left))
+                return;
+
+            if (Tool.Value == EditorCompositionTool.Select)
+                return;
+
+            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
+            time = GetNearestTickFromTime(time, BeatSnap.Value);
+
+            var x = GetLaneFromX(MouseManager.CurrentState.X);
+
+            if (GetHitObjectAtTimeAndLane(time, x) != null)
+                return;
+
+            HitObjectInfo hitObject;
+
+            switch (Tool.Value)
+            {
+                case EditorCompositionTool.Note:
+                    ActionManager.PlaceHitObject(x, time);
+                    break;
+                case EditorCompositionTool.LongNote:
+                    hitObject = ActionManager.PlaceHitObject(x, time, 0);
+
+                    var ln = HitObjects.Find(y => y.Info == hitObject);
+                    LongNoteInDrag = ln;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleRightClick()
+        {
+            if (!MouseManager.IsUniquePress(MouseButton.Right))
+                return;
+
+            var ho = GetHoveredHitObject();
+
+            if (ho == null)
+                return;
+
+            ActionManager.RemoveHitObject(ho.Info);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleLongNoteDragging()
+        {
+            if (LongNoteInDrag == null || !Button.IsHeld)
+                return;
+
+            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
+            time = GetNearestTickFromTime(time, BeatSnap.Value);
+
+            // Change the object back to a normal note
+            if (time <= LongNoteInDrag.Info.StartTime)
+            {
+                LongNoteInDrag.Info.EndTime = 0;
+                return;
+            }
+
+            LongNoteInDrag.Info.EndTime = time;
         }
     }
 }
