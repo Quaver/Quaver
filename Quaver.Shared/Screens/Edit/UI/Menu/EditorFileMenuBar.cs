@@ -209,7 +209,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Redo", "CTRL + Y", false, ActionManager.RedoStack.Count != 0))
                 ActionManager.Redo();
-            
+
             ImGui.EndMenu();
         }
 

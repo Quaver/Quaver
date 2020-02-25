@@ -354,12 +354,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (insertAtIndex)
             {
-                var index = HitObjects.FindLastIndex(x => x.Info.StartTime < info.StartTime);
-
-                if (index == -1)
-                    HitObjects.Add(ho);
-                else
-                    HitObjects.Insert(index + 1, ho);
+                HitObjects.Add(ho);
+                HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
             }
             else
                 HitObjects.Add(ho);
