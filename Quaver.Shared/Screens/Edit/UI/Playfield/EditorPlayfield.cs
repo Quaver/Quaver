@@ -684,7 +684,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LongNoteInDrag = null;
 
             if (Button.IsHovered)
+            {
                 HandleLeftMouseClick();
+                HandleRightClick();
+            }
 
             HandleLongNoteDragging();
         }
@@ -723,6 +726,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleRightClick()
+        {
+            if (!MouseManager.IsUniquePress(MouseButton.Right))
+                return;
+
+            var ho = GetHoveredHitObject();
+
+            if (ho == null)
+                return;
+
+            ActionManager.RemoveHitObject(ho.Info);
         }
 
         /// <summary>

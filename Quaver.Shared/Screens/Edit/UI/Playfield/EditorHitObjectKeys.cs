@@ -204,11 +204,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         public override bool IsHovered(Vector2 mousePos)
         {
-            if (Info.IsLongNote)
-                return base.IsHovered();
+            var headHovered = ScreenRectangle.Contains(mousePos);
 
-            return base.IsHovered(mousePos) || Body.ScreenRectangle.Contains(mousePos) ||
-                   Tail.ScreenRectangle.Contains(mousePos);
+            if (!Info.IsLongNote)
+                return headHovered;
+
+            return headHovered || Body.ScreenRectangle.Contains(mousePos) || Tail.ScreenRectangle.Contains(mousePos);
         }
 
         /// <summary>
