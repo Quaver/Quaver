@@ -677,13 +677,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private void HandleInput()
         {
-            if (DialogManager.Dialogs.Count != 0 || !Button.IsHovered || IsUneditable)
+            if (DialogManager.Dialogs.Count != 0 || IsUneditable)
                 return;
 
             if (!Button.IsHeld)
                 LongNoteInDrag = null;
 
-            HandleLeftMouseClick();
+            if (Button.IsHovered)
+                HandleLeftMouseClick();
+
             HandleLongNoteDragging();
         }
 
