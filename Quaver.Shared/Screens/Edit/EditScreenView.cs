@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateDetailsPanel();
             CreateCompositionTools();
 
-            MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
+            MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.ActionManager, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
                 EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.Plugins);
@@ -139,7 +139,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.Skin,
+        private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers) { Parent = Container};
 
@@ -176,9 +176,10 @@ namespace Quaver.Shared.Screens.Edit
             if (EditScreen.UneditableMap.Value == null)
                 return;
 
-            UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.Skin, EditScreen.Track,
-                EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
-                EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, true)
+            UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.ActionManager, EditScreen.Skin,
+                EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
+                EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
+                EditScreen.BeatSnapColor, EditScreen.ViewLayers, true)
             {
                 Parent = Container,
             };

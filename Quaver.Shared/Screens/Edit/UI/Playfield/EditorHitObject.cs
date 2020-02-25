@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        protected HitObjectInfo Info { get; }
+        public HitObjectInfo Info { get; }
 
         /// <summary>
         /// </summary>

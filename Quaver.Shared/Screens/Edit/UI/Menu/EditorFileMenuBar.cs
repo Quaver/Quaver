@@ -9,6 +9,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -35,6 +36,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <summary>
         /// </summary>
         private IAudioTrack Track { get; }
+
+        /// <summary>
+        /// </summary>
+        private EditorActionManager ActionManager { get; }
 
         /// <summary>
         /// </summary>
@@ -108,6 +113,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="map"></param>
         /// <param name="workingMap"></param>
         /// <param name="track"></param>
+        /// <param name="actionManager"></param>
         /// <param name="backgroundBrightness"></param>
         /// <param name="enableMetronome"></param>
         /// <param name="playMetronomeHalfBeats"></param>
@@ -120,7 +126,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="availableBeatSnaps"></param>
         /// <param name="uneditableMap"></param>
         /// <param name="viewLayers"></param>
-        public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
+        public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, EditorActionManager actionManager, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
             BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers,
@@ -130,6 +136,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             Map = map;
             WorkingMap = workingMap;
             Track = track;
+            ActionManager = actionManager;
             BackgroundBrightness = backgroundBrightness;
             EnableMetronome = enableMetronome;
             PlayMetronomeHalfBeats = playMetronomeHalfBeats;
@@ -196,6 +203,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("Edit"))
                 return;
+
+            if (ImGui.MenuItem("Undo", "CTRL + Z", false, ActionManager.UndoStack.Count != 0))
+                ActionManager.Undo();
+
+            if (ImGui.MenuItem("Redo", "CTRL + Y", false, ActionManager.RedoStack.Count != 0))
+                ActionManager.Redo();
 
             ImGui.EndMenu();
         }
