@@ -156,5 +156,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var layer = Map.EditorLayers[Info.EditorLayer];
             return ColorHelper.ToXnaColor(layer.GetColor());
         }
+
+        /// <summary>
+        ///     Determines if the HitObject is hovered.
+        /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public virtual bool IsHovered(Vector2 mousePos) => ScreenRectangle.Contains(mousePos);
     }
 }
