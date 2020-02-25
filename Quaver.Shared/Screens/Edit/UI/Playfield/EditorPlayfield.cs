@@ -15,6 +15,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
@@ -205,6 +206,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
 
             ActionManager.HitObjectPlaced += OnHitObjectPlaced;
+            ActionManager.HitObjectRemoved += OnHitObjectRemoved;
         }
 
         /// <inheritdoc />
@@ -264,6 +266,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ScrollSpeed.ValueChanged -= OnScrollSpeedChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
             ActionManager.HitObjectPlaced -= OnHitObjectPlaced;
+            ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
 
             base.Destroy();
         }
@@ -548,6 +551,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             CreateHitObject(e.HitObject, true);
+            InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnHitObjectRemoved(object sender, EditorHitObjectRemovedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            var ho = HitObjects.Find(x => x.Info == e.HitObject);
+
+            if (ho == null)
+                return;
+
+            ho.Destroy();
+            HitObjects.Remove(ho);
+
             InitializeHitObjectPool();
         }
     }
