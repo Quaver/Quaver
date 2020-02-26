@@ -214,6 +214,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        /// <param name="mousePos"></param>
+        /// <returns></returns>
+        public bool IsTailHovered(Vector2 mousePos)
+        {
+            if (!Info.IsLongNote)
+                return false;
+
+            return Tail.ScreenRectangle.Contains(mousePos);
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)

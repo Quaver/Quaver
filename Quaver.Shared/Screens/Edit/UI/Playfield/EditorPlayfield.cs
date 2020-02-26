@@ -167,8 +167,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private EditorPlayfieldZoom Zoom { get; set; }
 
         /// <summary>
+        ///     The long note that is currently being dragged
         /// </summary>
         private EditorHitObjectKeys LongNoteInDrag { get; set; }
+
+        /// <summary>
+        ///     The start time of <see cref="LongNoteInDrag"/> when
+        ///     it is initially being resized. This is used to compare
+        ///     the end times, so an action can be made to store the resize change
+        /// </summary>
+        private int LongNoteResizeOriginalEndTime { get; set; } = -1;
 
         /// <summary>
         /// </summary>
@@ -570,14 +578,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         ///     Gets an object that is currently hovered
         /// </summary>
         /// <returns></returns>
-        public EditorHitObject GetHoveredHitObject()
+        public EditorHitObjectKeys GetHoveredHitObject()
         {
-            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
-            var relativeMousePos = new Vector2(MouseManager.CurrentState.X, relativeY);
-
             foreach (var h in HitObjects)
             {
-                if (h.IsHovered(relativeMousePos))
+                if (h.IsHovered(GetRelativeMousePosition()))
                     return h;
             }
 
@@ -599,7 +604,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (ho.Lane != lane)
                     continue;
 
-                if (ho.StartTime == time)
+                if (!ho.IsLongNote && ho.StartTime == time)
+                    return ho;
+
+                if (ho.IsLongNote && time >= ho.StartTime && time <= ho.EndTime)
                     return ho;
             }
 
@@ -681,7 +689,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             if (!Button.IsHeld)
+            {
+                if (LongNoteInDrag != null && LongNoteResizeOriginalEndTime != LongNoteInDrag.Info.EndTime)
+                    ActionManager.ResizeLongNote(LongNoteInDrag.Info, LongNoteResizeOriginalEndTime, LongNoteInDrag.Info.EndTime);
+
                 LongNoteInDrag = null;
+                LongNoteResizeOriginalEndTime = -1;
+            }
+
 
             if (Button.IsHovered)
             {
@@ -700,8 +715,33 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             if (Tool.Value == EditorCompositionTool.Select)
+            {
+                HandleHitObjectSelectTool();
                 return;
+            }
 
+            HandleHitObjectPlacement();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleHitObjectSelectTool()
+        {
+            var hitObject = GetHoveredHitObject();
+
+            if (hitObject != null && hitObject.Info.IsLongNote && hitObject.IsTailHovered(GetRelativeMousePosition()))
+            {
+                LongNoteInDrag = hitObject;
+                LongNoteResizeOriginalEndTime = hitObject.Info.EndTime;
+                return;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void HandleHitObjectPlacement()
+        {
             var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
@@ -761,6 +801,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
 
             LongNoteInDrag.Info.EndTime = time;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private Vector2 GetRelativeMousePosition()
+        {
+            var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+
+            return new Vector2(MouseManager.CurrentState.X, relativeY);
         }
     }
 }

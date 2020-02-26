@@ -5,6 +5,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -43,6 +44,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a HitObject has been removed
         /// </summary>
         public event EventHandler<EditorHitObjectRemovedEventArgs> HitObjectRemoved;
+
+        /// <summary>
+        ///     Event invoked when a long note has been resized
+        /// </summary>
+        public event EventHandler<EditorLongNoteResizedEventArgs> LongNoteResized;
 
         /// <summary>
         /// </summary>
@@ -115,6 +121,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void RemoveHitObject(HitObjectInfo h) => Perform(new EditorActionRemoveHitObject(this, WorkingMap, h));
 
         /// <summary>
+        ///     Resizes a hitobject/long note to a given time
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="time"></param>
+        public void ResizeLongNote(HitObjectInfo h, int originalTime, int time)
+            => Perform(new EditorActionResizeLongNote(this, WorkingMap, h, originalTime, time));
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -129,6 +143,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveHitObject:
                     HitObjectRemoved?.Invoke(this, (EditorHitObjectRemovedEventArgs) args);
                     break;
+                case EditorActionType.ResizeLongNote:
+                    LongNoteResized?.Invoke(this, (EditorLongNoteResizedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -141,6 +158,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         {
             HitObjectPlaced = null;
             HitObjectRemoved = null;
+            LongNoteResized = null;
         }
     }
 }
