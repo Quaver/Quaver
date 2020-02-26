@@ -138,6 +138,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public BindableInt LongNoteOpacity { get; } = ConfigManager.EditorLongNoteOpacity ?? new BindableInt(100, 30, 100);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -245,6 +249,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (ViewLayers != ConfigManager.EditorViewLayers)
                 ViewLayers.Dispose();
+
+            if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
+                LongNoteOpacity.Dispose();
 
             base.Destroy();
         }

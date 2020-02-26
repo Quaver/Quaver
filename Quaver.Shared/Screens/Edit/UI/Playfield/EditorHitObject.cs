@@ -47,6 +47,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        protected BindableInt LongNoteOpacity { get; }
+
+        /// <summary>
+        /// </summary>
         protected SkinKeys SkinMode => Skin.Value.Keys[Map.Mode];
 
         /// <summary>
@@ -58,8 +62,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="viewLayers"></param>
+        /// <param name="longNoteOpacity"></param>
         public EditorHitObject(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity)
         {
             Map = map;
             Playfield = playfield;
@@ -68,6 +73,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Track = track;
             AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
             ViewLayers = viewLayers;
+            LongNoteOpacity = longNoteOpacity;
 
             Image = GetHitObjectTexture();
 
