@@ -729,7 +729,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         {
             var hitObject = GetHoveredHitObject();
 
-            if (hitObject.Info.IsLongNote && hitObject.IsTailHovered(GetRelativeMousePosition()))
+            if (hitObject != null && hitObject.Info.IsLongNote && hitObject.IsTailHovered(GetRelativeMousePosition()))
             {
                 LongNoteInDrag = hitObject;
                 LongNoteResizeOriginalEndTime = hitObject.Info.EndTime;
