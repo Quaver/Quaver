@@ -57,8 +57,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize
         public void Perform()
         {
             HitObject.EndTime = NewTime;
-            Console.WriteLine(NewTime);
-
             ActionManager.TriggerEvent(Type, new EditorLongNoteResizedEventArgs(HitObject, OriginalTime, NewTime));
         }
 
