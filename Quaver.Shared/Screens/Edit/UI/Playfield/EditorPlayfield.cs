@@ -599,7 +599,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (ho.Lane != lane)
                     continue;
 
-                if (ho.StartTime == time)
+                if (!ho.IsLongNote && ho.StartTime == time)
+                    return ho;
+
+                if (ho.IsLongNote && time >= ho.StartTime && time <= ho.EndTime)
                     return ho;
             }
 
