@@ -46,15 +46,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="track"></param>
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="viewLayers"></param>
+        /// <param name="longNoteOpacity"></param>
         public EditorHitObjectKeys(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers)
-            : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint, viewLayers)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity)
+            : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint, viewLayers, longNoteOpacity)
         {
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
 
             CreateLongNoteSprite();
-            ResizeLongNote();
+            UpdateLongNoteSizeAndAlpha();
 
             ViewLayers.ValueChanged += OnViewLayersChanged;
         }
@@ -125,10 +126,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         }
 
         /// <summary>
-        ///     Resizes the long note to the correct height.
-        ///     Usually used for when the zoom/playback rate has changed.
+        ///     Resizes the long note to the correct height and opacity
         /// </summary>
-        public void ResizeLongNote()
+        public void UpdateLongNoteSizeAndAlpha()
         {
             if (!Info.IsLongNote)
                 return;
@@ -136,6 +136,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
+
+            Tail.Alpha = LongNoteOpacity.Value / 100f;
+            Body.Alpha = LongNoteOpacity.Value / 100f;
         }
 
         /// <summary>
@@ -166,7 +169,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             Tail.Height = GetTailHeight();
-            ResizeLongNote();
+            UpdateLongNoteSizeAndAlpha();
         }
 
         /// <summary>
@@ -239,7 +242,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body.Tint = GetNoteTint();
             Tail.Tint = GetNoteTint();
 
-            ResizeLongNote();
+            UpdateLongNoteSizeAndAlpha();
         }
     }
 }

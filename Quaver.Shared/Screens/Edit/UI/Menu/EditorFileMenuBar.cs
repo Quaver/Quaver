@@ -91,6 +91,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private BindableInt LongNoteOpacity { get; }
+
+        /// <summary>
+        /// </summary>
         private List<EditorPlugin> Plugins { get; }
 
         /// <summary>
@@ -126,11 +130,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <param name="availableBeatSnaps"></param>
         /// <param name="uneditableMap"></param>
         /// <param name="viewLayers"></param>
+        /// <param name="longNoteOpacity"></param>
+        /// <param name="plugins"></param>
         public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, EditorActionManager actionManager, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
             Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
             Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
             BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers,
-            List<EditorPlugin> plugins)
+            BindableInt longNoteOpacity, List<EditorPlugin> plugins)
             : base(DestroyContext, GetOptions())
         {
             Map = map;
@@ -149,6 +155,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             AvailableBeatSnaps = availableBeatSnaps;
             UneditableMap = uneditableMap;
             ViewLayers = viewLayers;
+            LongNoteOpacity = longNoteOpacity;
             Plugins = plugins;
         }
 
@@ -299,6 +306,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
 
             ImGui.Separator();
+
+            if (ImGui.BeginMenu("Long Note Opacity"))
+            {
+                for (var i = 2; i < 10; i++)
+                {
+                    var val = (i + 1) * 10;
+
+                    if (ImGui.MenuItem($"{val}%", "", LongNoteOpacity.Value == val))
+                        LongNoteOpacity.Value = val;
+                }
+
+                ImGui.EndMenu();
+            }
 
             if (ImGui.MenuItem("Center Objects", "", AnchorHitObjectsAtMidpoint.Value))
                 AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;

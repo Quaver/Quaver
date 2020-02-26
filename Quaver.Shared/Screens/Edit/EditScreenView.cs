@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Edit
             MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.ActionManager, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
                 EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
-                EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.Plugins);
+                EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.LongNoteOpacity, EditScreen.Plugins);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -141,7 +141,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
-            EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool) { Parent = Container};
+            EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
+            EditScreen.LongNoteOpacity) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -179,7 +180,7 @@ namespace Quaver.Shared.Screens.Edit
             UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.ActionManager, EditScreen.Skin,
                 EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
-                EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, true)
+                EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity, true)
             {
                 Parent = Container,
             };

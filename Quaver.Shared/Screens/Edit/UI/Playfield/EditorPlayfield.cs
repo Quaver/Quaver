@@ -82,6 +82,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Bindable<EditorCompositionTool> Tool { get; }
 
         /// <summary>
+        /// </summary>
+        private BindableInt LongNoteOpacity { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -190,11 +194,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="beatSnapColor"></param>
         /// <param name="viewLayers"></param>
+        /// <param name="longNoteOpacity"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
-            bool isUneditable = false)
+            BindableInt longNoteOpacity, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -208,6 +213,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BeatSnapColor = beatSnapColor;
             ViewLayers = viewLayers;
             Tool = tool;
+            LongNoteOpacity = longNoteOpacity;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -369,13 +375,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="insertAtIndex"></param>
         private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
-            var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers);
+            var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers,
+                LongNoteOpacity);
 
             ho.SetSize();
             ho.SetPosition();
 
             if (ho.Info.IsLongNote)
-                ho.ResizeLongNote();
+                ho.UpdateLongNoteSizeAndAlpha();
 
             if (insertAtIndex)
             {
@@ -513,7 +520,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 var hitObject = HitObjectPool[i];
 
                 hitObject.SetPosition();
-                hitObject.ResizeLongNote();
+                hitObject.UpdateLongNoteSizeAndAlpha();
                 hitObject.Draw(gameTime);
             }
         }
@@ -523,7 +530,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public void ResetObjectPositions() => HitObjects.ForEach(x =>
         {
             x.SetPosition();
-            x.ResizeLongNote();
+            x.UpdateLongNoteSizeAndAlpha();
         });
 
         /// <summary>
