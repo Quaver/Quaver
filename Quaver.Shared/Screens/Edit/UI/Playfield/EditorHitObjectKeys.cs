@@ -66,9 +66,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             UpdateLongNoteSizeAndAlpha();
             CreateSelectionSprite();
 
-            AddBorder(Color.White, 2);
-            Border.Visible = false;
-
             ViewLayers.ValueChanged += OnViewLayersChanged;
             SelectedHitObjects.ItemAdded += OnSelectedHitObject;
             SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
