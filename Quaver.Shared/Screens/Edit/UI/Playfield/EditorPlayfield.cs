@@ -575,10 +575,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         public int GetLaneFromX(float x)
         {
-            var totalX = Button.AbsolutePosition.X + Button.Width;
-            var lane = Map.GetKeyCount() - (int) Math.Round(totalX / x * 10 % 10, MidpointRounding.AwayFromZero);
+            var percentage = (x - AbsolutePosition.X) / AbsoluteSize.X;
+            var lane = Map.GetKeyCount() * percentage + 1;
 
-            return MathHelper.Clamp(lane, 0, Map.GetKeyCount());
+            return (int) MathHelper.Clamp(lane, 0, Map.GetKeyCount());
         }
 
         /// <summary>
