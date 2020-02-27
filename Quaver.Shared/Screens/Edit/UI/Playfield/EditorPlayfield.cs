@@ -697,7 +697,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (!Button.IsHeld)
             {
-                if (LongNoteInDrag != null && LongNoteResizeOriginalEndTime != LongNoteInDrag.Info.EndTime)
+                if (LongNoteInDrag != null && LongNoteResizeOriginalEndTime != LongNoteInDrag.Info.EndTime && LongNoteResizeOriginalEndTime != -1)
                     ActionManager.ResizeLongNote(LongNoteInDrag.Info, LongNoteResizeOriginalEndTime, LongNoteInDrag.Info.EndTime);
 
                 LongNoteInDrag = null;
