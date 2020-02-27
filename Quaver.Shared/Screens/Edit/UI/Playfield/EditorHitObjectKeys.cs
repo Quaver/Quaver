@@ -6,6 +6,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Skinning;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -36,6 +37,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public Texture2D TextureTail { get; private set; }
 
+        /// <summary>
+        ///     Displays when the object is selected
+        /// </summary>
+        private Sprite SelectionSprite { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -47,17 +53,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="anchorHitObjectsAtMidpoint"></param>
         /// <param name="viewLayers"></param>
         /// <param name="longNoteOpacity"></param>
+        /// <param name="selectedHitObjects"></param>
         public EditorHitObjectKeys(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
-            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity)
-            : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint, viewLayers, longNoteOpacity)
+            Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity,
+            BindableList<HitObjectInfo> selectedHitObjects) : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint,
+            viewLayers, longNoteOpacity, selectedHitObjects)
         {
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
 
             CreateLongNoteSprite();
             UpdateLongNoteSizeAndAlpha();
+            CreateSelectionSprite();
+
+            AddBorder(Color.White, 2);
+            Border.Visible = false;
 
             ViewLayers.ValueChanged += OnViewLayersChanged;
+            SelectedHitObjects.ItemAdded += OnSelectedHitObject;
+            SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
+            SelectedHitObjects.ListCleared += OnAllObjectsDeselected;
         }
 
         /// <inheritdoc />
@@ -79,8 +94,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body?.Destroy();
             Tail?.Destroy();
 
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             ViewLayers.ValueChanged -= OnViewLayersChanged;
+
+            SelectedHitObjects.ItemAdded -= OnSelectedHitObject;
+            SelectedHitObjects.ItemRemoved -= OnDeselectedHitObject;
+            SelectedHitObjects.ListCleared -= OnAllObjectsDeselected;
         }
 
         /// <inheritdoc />
@@ -97,6 +116,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
 
             base.DrawToSpriteBatch();
+
+            if (SelectionSprite.Visible)
+            {
+                SelectionSprite.Height = GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20;
+                SelectionSprite.DrawToSpriteBatch();
+            }
         }
 
         /// <summary>
@@ -122,6 +147,23 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 Image = TextureTail,
                 Size = new ScalableVector2(Width, GetTailHeight()),
                 Y = -Body.Height,
+            };
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SelectionSprite"/>
+        /// </summary>
+        private void CreateSelectionSprite()
+        {
+            SelectionSprite = new Sprite()
+            {
+                Parent = Body,
+                Alignment = Alignment.MidLeft,
+                Size = new ScalableVector2(Width, 0),
+                Image = UserInterface.BlankBox,
+                Tint = Colors.MainAccent,
+                Alpha = 0.70f,
+                Visible = false
             };
         }
 
@@ -243,6 +285,40 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Tail.Tint = GetNoteTint();
 
             UpdateLongNoteSizeAndAlpha();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSelectedHitObject(object sender, BindableListItemAddedEventArgs<HitObjectInfo> e)
+        {
+            if (e.Item != Info)
+                return;
+
+            SelectionSprite.Visible = true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDeselectedHitObject(object sender, BindableListItemRemovedEventArgs<HitObjectInfo> e)
+        {
+            if (e.Item != Info)
+                return;
+
+            SelectionSprite.Visible = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAllObjectsDeselected(object sender, BindableListClearedEventArgs e)
+        {
+            SelectionSprite.Visible = false;
         }
     }
 }
