@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private ImageButton Button { get; set; }
+        public ImageButton Button { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -407,7 +407,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             {
                 Size = new ScalableVector2(Width - BorderLeft.Width * 4, Height),
                 Tint = Color.Black,
-                Alpha = 0
+                Alpha = 0,
+                Depth = 2
             };
 
             if (IsUneditable)
