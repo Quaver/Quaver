@@ -11,6 +11,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Editor;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -27,75 +28,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
     {
         /// <summary>
         /// </summary>
-        private Map Map { get; }
-
-        /// <summary>
-        /// </summary>
-        private Qua WorkingMap { get; }
-
-        /// <summary>
-        /// </summary>
-        private IAudioTrack Track { get; }
-
-        /// <summary>
-        /// </summary>
-        private EditorActionManager ActionManager { get; }
-
-        /// <summary>
-        /// </summary>
-        private BindableInt BackgroundBrightness { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> EnableMetronome { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> PlayMetronomeHalfBeats { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> EnableHitsounds { get; }
-
-        /// <summary>
-        /// </summary>
-        private BindableInt HitsoundVolume { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> ScaleScrollSpeedWithRate { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> AnchorHitObjectsAtMidpoint { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<EditorBeatSnapColor> BeatSnapColor { get; }
-
-        /// <summary>
-        /// </summary>
-        private BindableInt BeatSnap { get; }
-
-        /// <summary>
-        /// </summary>
-        private List<int> AvailableBeatSnaps { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<Qua> UneditableMap { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> ViewLayers { get; }
-
-        /// <summary>
-        /// </summary>
-        private BindableInt LongNoteOpacity { get; }
-
-        /// <summary>
-        /// </summary>
-        private List<EditorPlugin> Plugins { get; }
+        private EditScreen Screen { get; }
 
         /// <summary>
         /// </summary>
@@ -111,53 +44,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = false;
 #endif
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="workingMap"></param>
-        /// <param name="track"></param>
-        /// <param name="actionManager"></param>
-        /// <param name="backgroundBrightness"></param>
-        /// <param name="enableMetronome"></param>
-        /// <param name="playMetronomeHalfBeats"></param>
-        /// <param name="enableHitsounds"></param>
-        /// <param name="hitsoundVolume"></param>
-        /// <param name="scaleScrollSpeedWithRate"></param>
-        /// <param name="anchorHitObjectsAtMidpoint"></param>
-        /// <param name="beatSnapColor"></param>
-        /// <param name="beatSnap"></param>
-        /// <param name="availableBeatSnaps"></param>
-        /// <param name="uneditableMap"></param>
-        /// <param name="viewLayers"></param>
-        /// <param name="longNoteOpacity"></param>
-        /// <param name="plugins"></param>
-        public EditorFileMenuBar(Map map, Qua workingMap, IAudioTrack track, EditorActionManager actionManager, BindableInt backgroundBrightness, Bindable<bool> enableMetronome,
-            Bindable<bool> playMetronomeHalfBeats, Bindable<bool> enableHitsounds, BindableInt hitsoundVolume,
-            Bindable<bool> scaleScrollSpeedWithRate, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<EditorBeatSnapColor> beatSnapColor,
-            BindableInt beatSnap, List<int> availableBeatSnaps, Bindable<Qua> uneditableMap, Bindable<bool> viewLayers,
-            BindableInt longNoteOpacity, List<EditorPlugin> plugins)
-            : base(DestroyContext, GetOptions())
-        {
-            Map = map;
-            WorkingMap = workingMap;
-            Track = track;
-            ActionManager = actionManager;
-            BackgroundBrightness = backgroundBrightness;
-            EnableMetronome = enableMetronome;
-            PlayMetronomeHalfBeats = playMetronomeHalfBeats;
-            EnableHitsounds = enableHitsounds;
-            HitsoundVolume = hitsoundVolume;
-            ScaleScrollSpeedWithRate = scaleScrollSpeedWithRate;
-            AnchorHitObjectsAtMidpoint = anchorHitObjectsAtMidpoint;
-            BeatSnapColor = beatSnapColor;
-            BeatSnap = beatSnap;
-            AvailableBeatSnaps = availableBeatSnaps;
-            UneditableMap = uneditableMap;
-            ViewLayers = viewLayers;
-            LongNoteOpacity = longNoteOpacity;
-            Plugins = plugins;
-        }
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
 
         /// <inheritdoc />
         /// <summary>
@@ -211,11 +98,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Edit"))
                 return;
 
-            if (ImGui.MenuItem("Undo", "CTRL + Z", false, ActionManager.UndoStack.Count != 0))
-                ActionManager.Undo();
+            if (ImGui.MenuItem("Undo", "CTRL + Z", false, Screen.ActionManager.UndoStack.Count != 0))
+                Screen.ActionManager.Undo();
 
-            if (ImGui.MenuItem("Redo", "CTRL + Y", false, ActionManager.RedoStack.Count != 0))
-                ActionManager.Redo();
+            if (ImGui.MenuItem("Redo", "CTRL + Y", false, Screen.ActionManager.RedoStack.Count != 0))
+                Screen.ActionManager.Redo();
 
             ImGui.EndMenu();
         }
@@ -231,27 +118,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Reference Difficulty"))
             {
-                if (ImGui.MenuItem("None", "", UneditableMap.Value == null))
-                    UneditableMap.Value = null;
+                if (ImGui.MenuItem("None", "", Screen.UneditableMap.Value == null))
+                    Screen.UneditableMap.Value = null;
 
-                foreach (var map in Map.Mapset.Maps)
+                foreach (var map in Screen.Map.Mapset.Maps)
                 {
                     var color = ColorHelper.DifficultyToColor((float) map.Difficulty10X);
 
                     ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, 1));
 
                     if (ImGui.MenuItem(map.DifficultyName, "",
-                        UneditableMap?.Value?.DifficultyName == map.DifficultyName))
+                        Screen.UneditableMap?.Value?.DifficultyName == map.DifficultyName))
                     {
                         ThreadScheduler.Run(() =>
                         {
-                            if (UneditableMap.Value != null)
+                            if (Screen.UneditableMap.Value != null)
                             {
-                                lock (UneditableMap.Value)
-                                    UneditableMap.Value = map.LoadQua();
+                                lock (Screen.UneditableMap.Value)
+                                    Screen.UneditableMap.Value = map.LoadQua();
                             }
                             else
-                                UneditableMap.Value = map.LoadQua();
+                                Screen.UneditableMap.Value = map.LoadQua();
                         });
                     }
 
@@ -269,8 +156,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 {
                     var value = i * 10;
 
-                    if (ImGui.MenuItem($"{value}%", "", BackgroundBrightness.Value == value))
-                        BackgroundBrightness.Value = value;
+                    if (ImGui.MenuItem($"{value}%", "", Screen.BackgroundBrightness.Value == value))
+                        Screen.BackgroundBrightness.Value = value;
                 }
 
                 ImGui.EndMenu();
@@ -280,10 +167,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Beat Snap Divisor"))
             {
-                foreach (var snap in AvailableBeatSnaps)
+                foreach (var snap in Screen.AvailableBeatSnaps)
                 {
-                    if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(snap)}", "", BeatSnap.Value == snap))
-                        BeatSnap.Value = snap;
+                    if (ImGui.MenuItem($"1/{StringHelper.AddOrdinal(snap)}", "", Screen.BeatSnap.Value == snap))
+                        Screen.BeatSnap.Value = snap;
                 }
 
                 ImGui.EndMenu();
@@ -293,8 +180,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             {
                 foreach (EditorBeatSnapColor type in Enum.GetValues(typeof(EditorBeatSnapColor)))
                 {
-                    if (ImGui.MenuItem($"{type}", "", BeatSnapColor.Value == type))
-                        BeatSnapColor.Value = type;
+                    if (ImGui.MenuItem($"{type}", "", Screen.BeatSnapColor.Value == type))
+                        Screen.BeatSnapColor.Value = type;
                 }
 
                 ImGui.EndMenu();
@@ -302,8 +189,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Scale Scroll Speed", "", ScaleScrollSpeedWithRate.Value))
-                ScaleScrollSpeedWithRate.Value = !ScaleScrollSpeedWithRate.Value;
+            if (ImGui.MenuItem("Scale Scroll Speed", "", Screen.ScaleScrollSpeedWithRate.Value))
+                Screen.ScaleScrollSpeedWithRate.Value = !Screen.ScaleScrollSpeedWithRate.Value;
 
             ImGui.Separator();
 
@@ -313,18 +200,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 {
                     var val = (i + 1) * 10;
 
-                    if (ImGui.MenuItem($"{val}%", "", LongNoteOpacity.Value == val))
-                        LongNoteOpacity.Value = val;
+                    if (ImGui.MenuItem($"{val}%", "", Screen.LongNoteOpacity.Value == val))
+                        Screen.LongNoteOpacity.Value = val;
                 }
 
                 ImGui.EndMenu();
             }
 
-            if (ImGui.MenuItem("Center Objects", "", AnchorHitObjectsAtMidpoint.Value))
-                AnchorHitObjectsAtMidpoint.Value = !AnchorHitObjectsAtMidpoint.Value;
+            if (ImGui.MenuItem("Center Objects", "", Screen.AnchorHitObjectsAtMidpoint.Value))
+                Screen.AnchorHitObjectsAtMidpoint.Value = !Screen.AnchorHitObjectsAtMidpoint.Value;
 
-            if (ImGui.MenuItem($"View Layers", "", ViewLayers.Value))
-                ViewLayers.Value = !ViewLayers.Value;
+            if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
+                Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
 
             ImGui.EndMenu();
         }
@@ -340,9 +227,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu($"Local Plugins"))
             {
-                for (var i = 0; i < Plugins.Count; i++)
+                for (var i = 0; i < Screen.Plugins.Count; i++)
                 {
-                    var plugin = Plugins[i];
+                    var plugin = Screen.Plugins[i];
 
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
                         plugin.IsActive = !plugin.IsActive;
@@ -375,11 +262,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("Web"))
                 return;
 
-            if (ImGui.MenuItem($"View Online Listing", WorkingMap.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{WorkingMap.MapId}");
+            if (ImGui.MenuItem($"View Online Listing", Screen.WorkingMap.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Screen.WorkingMap.MapId}");
 
-            if (ImGui.MenuItem("Modding Discussion", WorkingMap.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{WorkingMap.MapId}/mods");
+            if (ImGui.MenuItem("Modding Discussion", Screen.WorkingMap.MapId != -1))
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Screen.WorkingMap.MapId}/mods");
 
             ImGui.EndMenu();
         }
@@ -399,8 +286,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 {
                     var value = (i + 1) * 0.25f;
 
-                    if (ImGui.MenuItem($"{value * 100}%", "", Math.Abs(Track.Rate - value) < 0.001))
-                        Track.Rate = value;
+                    if (ImGui.MenuItem($"{value * 100}%", "", Math.Abs(Screen.Track.Rate - value) < 0.001))
+                        Screen.Track.Rate = value;
                 }
 
                 ImGui.EndMenu();
@@ -408,20 +295,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Hitsounds"))
             {
-                if (ImGui.MenuItem("Enable", "", EnableHitsounds.Value))
-                    EnableHitsounds.Value = !EnableHitsounds.Value;
+                if (ImGui.MenuItem("Enable", "", Screen.EnableHitsounds.Value))
+                    Screen.EnableHitsounds.Value = !Screen.EnableHitsounds.Value;
 
                 if (ImGui.BeginMenu("Volume"))
                 {
-                    if (ImGui.MenuItem($"Default ({(int) AudioSample.GlobalVolume}%)", "", HitsoundVolume.Value == -1))
-                        HitsoundVolume.Value = -1;
+                    if (ImGui.MenuItem($"Default ({(int) AudioSample.GlobalVolume}%)", "", Screen.HitsoundVolume.Value == -1))
+                        Screen.HitsoundVolume.Value = -1;
 
                     for (var i = 0; i < 10; i++)
                     {
                         var val = (i + 1) * 10;
 
-                        if (ImGui.MenuItem($"{val}%", "", HitsoundVolume.Value == val))
-                            HitsoundVolume.Value = val;
+                        if (ImGui.MenuItem($"{val}%", "", Screen.HitsoundVolume.Value == val))
+                            Screen.HitsoundVolume.Value = val;
                     }
 
                     ImGui.EndMenu();
@@ -432,11 +319,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu("Metronome"))
             {
-                if (ImGui.MenuItem($"Enable", "", EnableMetronome.Value))
-                    EnableMetronome.Value = !EnableMetronome.Value;
+                if (ImGui.MenuItem($"Enable", "", Screen.EnableMetronome.Value))
+                    Screen.EnableMetronome.Value = !Screen.EnableMetronome.Value;
 
-                if (ImGui.MenuItem("Play Half Beats", "", PlayMetronomeHalfBeats.Value))
-                    PlayMetronomeHalfBeats.Value = !PlayMetronomeHalfBeats.Value;
+                if (ImGui.MenuItem("Play Half Beats", "", Screen.MetronomePlayHalfBeats.Value))
+                    Screen.MetronomePlayHalfBeats.Value = !Screen.MetronomePlayHalfBeats.Value;
 
                 ImGui.EndMenu();
             }

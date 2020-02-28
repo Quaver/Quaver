@@ -79,10 +79,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateDetailsPanel();
             CreateCompositionTools();
 
-            MenuBar = new EditorFileMenuBar(EditScreen.Map, EditScreen.WorkingMap, EditScreen.Track, EditScreen.ActionManager, EditScreen.BackgroundBrightness, EditScreen.EnableMetronome,
-                EditScreen.MetronomePlayHalfBeats, EditScreen.EnableHitsounds, EditScreen.HitsoundVolume, EditScreen.ScaleScrollSpeedWithRate,
-                EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.BeatSnapColor, EditScreen.BeatSnap, EditScreen.AvailableBeatSnaps,
-                EditScreen.UneditableMap, EditScreen.ViewLayers, EditScreen.LongNoteOpacity, EditScreen.Plugins);
+            MenuBar = new EditorFileMenuBar(EditScreen);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
