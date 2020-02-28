@@ -104,6 +104,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Redo", "CTRL + Y", false, Screen.ActionManager.RedoStack.Count != 0))
                 Screen.ActionManager.Redo();
 
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Copy", "CTRL + C", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.CopySelectedObjects();
+
+            if (ImGui.MenuItem("Cut", "CTRL + X", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.CutSelectedObjects();
+
+            if (ImGui.MenuItem("Paste", "CTRL + V", false, Screen.Clipboard.Count > 0))
+                Screen.PasteCopiedObjects();
+
+            if (ImGui.MenuItem("Delete", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.DeleteSelectedObjects();
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Select All", "CTRL + A", false))
+                Screen.SelectAllObjects();
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.FlipSelectedObjects();
+
             ImGui.EndMenu();
         }
 

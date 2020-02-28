@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///    Returns the texture for the hitobject
         /// </summary>
-        private Texture2D GetHitObjectTexture()
+        public Texture2D GetHitObjectTexture()
         {
             var index = SkinMode.ColorObjectsBySnapDistance ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
             return ViewLayers.Value ? SkinMode.EditorLayerNoteHitObjects[Info.Lane - 1] : SkinMode.NoteHoldHitObjects[Info.Lane - 1][index];

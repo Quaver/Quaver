@@ -17,6 +17,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -29,6 +32,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit
 {
@@ -155,6 +159,11 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public BindableList<HitObjectInfo> SelectedHitObjects { get; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+
+        /// <summary>
+        ///     Objects that are currently copied
+        /// </summary>
+        public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
 
         /// <summary>
         /// </summary>
@@ -365,8 +374,9 @@ namespace Quaver.Shared.Screens.Edit
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
-            HandleKeyPressUndoRedo();
+            HandleCtrlInput();
             HandleTemporaryHitObjectPlacement();
+            HandleKeyPressDelete();
         }
 
         /// <summary>
@@ -488,7 +498,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressUndoRedo()
+        private void HandleCtrlInput()
         {
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
@@ -499,6 +509,31 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
                 ActionManager.Redo();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.C))
+                CopySelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.V))
+                PasteCopiedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.X))
+                CutSelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.A))
+                SelectAllObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.H))
+                FlipSelectedObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressDelete()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete))
+                return;
+
+            DeleteSelectedObjects();
         }
 
         /// <summary>
@@ -649,6 +684,110 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Copies any objects that are currently selected to the clipboard
+        /// </summary>
+        public void CopySelectedObjects()
+        {
+            var cb = Wobble.Platform.Clipboard.NativeClipboard;
+
+            // If no objects are selected, just select the time in the track instead
+            if (SelectedHitObjects.Value.Count == 0)
+            {
+                cb.SetText($"{(int) Math.Round(Track.Time, MidpointRounding.AwayFromZero)}");
+                return;
+            }
+
+            var copyString = "";
+
+            Clipboard.Clear();
+
+            foreach (var h in SelectedHitObjects.Value.OrderBy(x => x.StartTime))
+            {
+                copyString += $"{h.StartTime}|{h.Lane},";
+                Clipboard.Add(h);
+            }
+
+            copyString = copyString.TrimEnd(',');
+
+            cb.SetText(copyString);
+        }
+
+        /// <summary>
+        ///     Pastes any objects that are currently selected
+        /// </summary>
+        public void PasteCopiedObjects()
+        {
+            if (Clipboard.Count == 0)
+                return;
+
+            var clonedObjects = new List<HitObjectInfo>();
+
+            var difference = (int) Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+
+            foreach (var h in Clipboard)
+            {
+                var hitObject = new HitObjectInfo()
+                {
+                    StartTime = h.StartTime + difference,
+                    EditorLayer = h.EditorLayer,
+                    HitSound = h.HitSound,
+                    Lane = h.Lane
+                };
+
+                if (h.IsLongNote)
+                    hitObject.EndTime = h.EndTime + difference;
+
+                clonedObjects.Add(hitObject);
+            }
+
+            ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
+        }
+
+        /// <summary>
+        ///     Performs a cut operation on the selected objects
+        /// </summary>
+        public void CutSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            CopySelectedObjects();
+            DeleteSelectedObjects();
+        }
+
+        /// <summary>
+        ///     Deletes any objects that are currently selected
+        /// </summary>
+        public void DeleteSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+            SelectedHitObjects.Clear();
+        }
+
+        /// <summary>
+        ///     Selects every single object in the map
+        /// </summary>
+        public void SelectAllObjects()
+        {
+            SelectedHitObjects.Value.Clear();
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects);
+        }
+
+        /// <summary>
+        ///     Flips all objects that are currently selected
+        /// </summary>
+        public void FlipSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
         }
 
         /// <summary>

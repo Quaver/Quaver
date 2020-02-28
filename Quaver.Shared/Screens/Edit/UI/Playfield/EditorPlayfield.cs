@@ -16,8 +16,11 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
@@ -242,6 +245,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             ActionManager.HitObjectPlaced += OnHitObjectPlaced;
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
+            ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
+            ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
+            ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
         }
 
         /// <inheritdoc />
@@ -305,6 +311,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
             ActionManager.HitObjectPlaced -= OnHitObjectPlaced;
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
+            ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
+            ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
+            ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
 
             base.Destroy();
         }
@@ -693,6 +702,69 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             HitObjects.Remove(ho);
 
             InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectBatchRemoved(object sender, EditorHitObjectBatchRemovedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            foreach (var obj in e.HitObjects)
+            {
+                var drawable = HitObjects.Find(x => x.Info == obj);
+
+                if (drawable == null)
+                    continue;
+
+                drawable.Destroy();
+                HitObjects.Remove(drawable);
+            }
+
+            InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnHitObjectBatchPlaced(object sender, EditorHitObjectBatchPlacedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            foreach (var obj in e.HitObjects)
+                CreateHitObject(obj);
+
+            // Make sure to sort, because we're adding multiple at one time, and we don't want to sort
+            // on every iteration of CreateHitObject.
+            HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
+
+            InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e)
+        {
+            foreach (var obj in e.HitObjects)
+            {
+                var drawable = HitObjects.Find(x => x.Info == obj);
+
+                if (drawable == null)
+                    continue;
+
+                drawable.UpdateTextures();
+                drawable.SetPosition();
+                drawable.SetSize();
+                drawable.UpdateLongNoteSizeAndAlpha();
+            }
         }
 
         /// <summary>
