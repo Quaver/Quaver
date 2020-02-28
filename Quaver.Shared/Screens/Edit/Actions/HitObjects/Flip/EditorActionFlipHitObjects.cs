@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 
-namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
+namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip
 {
-    public class EditorActionPlaceHitObjectBatch : IEditorAction
+    public class EditorActionFlipHitObjects : IEditorAction
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorActionType Type { get; } = EditorActionType.PlaceHitObjectBatch;
+        public EditorActionType Type { get; } = EditorActionType.FlipHitObjects;
 
         /// <summary>
         /// </summary>
@@ -29,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="hitObjects"></param>
-        public EditorActionPlaceHitObjectBatch(EditorActionManager actionManager, Qua workingMap, List<HitObjectInfo> hitObjects)
+        public EditorActionFlipHitObjects(EditorActionManager actionManager, Qua workingMap, List<HitObjectInfo> hitObjects)
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
@@ -41,15 +40,15 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch
         /// </summary>
         public void Perform()
         {
-            HitObjects.ForEach(x => WorkingMap.HitObjects.Add(x));
-            WorkingMap.Sort();
+            foreach (var h in HitObjects)
+                h.Lane = WorkingMap.GetKeyCount() - h.Lane + 1;
 
-            ActionManager.TriggerEvent(EditorActionType.PlaceHitObjectBatch, new EditorHitObjectBatchPlacedEventArgs(HitObjects));
+            ActionManager.TriggerEvent(EditorActionType.FlipHitObjects, new EditorHitObjectsFlippedEventArgs(HitObjects));
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Undo() => new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, HitObjects)?.Perform();
+        public void Undo() => Perform();
     }
 }

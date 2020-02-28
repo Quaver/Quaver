@@ -6,6 +6,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         RemoveHitObject,
         ResizeLongNote,
         RemoveHitObjectBatch,
-        PlaceHitObjectBatch
+        PlaceHitObjectBatch,
+        FlipHitObjects
     }
 }

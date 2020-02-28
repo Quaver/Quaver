@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
@@ -246,6 +247,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
+            ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
         }
 
         /// <inheritdoc />
@@ -311,6 +313,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
+            ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
 
             base.Destroy();
         }
@@ -742,6 +745,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
 
             InitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e)
+        {
+            foreach (var obj in e.HitObjects)
+            {
+                var drawable = HitObjects.Find(x => x.Info == obj);
+
+                if (drawable == null)
+                    continue;
+
+                drawable.UpdateTextures();
+                drawable.SetPosition();
+                drawable.SetSize();
+                drawable.UpdateLongNoteSizeAndAlpha();
+            }
         }
 
         /// <summary>

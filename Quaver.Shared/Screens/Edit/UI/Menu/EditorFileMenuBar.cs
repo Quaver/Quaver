@@ -123,6 +123,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Select All", "CTRL + A", false))
                 Screen.SelectAllObjects();
 
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.FlipSelectedObjects();
+
             ImGui.EndMenu();
         }
 

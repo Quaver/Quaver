@@ -269,16 +269,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         }
 
         /// <summary>
+        ///     Updates all textures for the object
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        public void UpdateTextures()
         {
+            Image = GetHitObjectTexture();
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
 
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            UpdateTextures();
 
             Body.Tint = GetNoteTint();
             Tail.Tint = GetNoteTint();

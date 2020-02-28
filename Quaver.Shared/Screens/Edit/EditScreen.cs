@@ -17,6 +17,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Plugins;
@@ -520,6 +521,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
                 SelectAllObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.H))
+                FlipSelectedObjects();
         }
 
         /// <summary>
@@ -773,6 +777,17 @@ namespace Quaver.Shared.Screens.Edit
         {
             SelectedHitObjects.Value.Clear();
             SelectedHitObjects.AddRange(WorkingMap.HitObjects);
+        }
+
+        /// <summary>
+        ///     Flips all objects that are currently selected
+        /// </summary>
+        public void FlipSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
         }
 
         /// <summary>
