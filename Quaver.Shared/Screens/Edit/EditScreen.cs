@@ -517,6 +517,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.X))
                 CutSelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.A))
+                SelectAllObjects();
         }
 
         /// <summary>
@@ -761,6 +764,15 @@ namespace Quaver.Shared.Screens.Edit
 
             ActionManager.Perform(new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
             SelectedHitObjects.Clear();
+        }
+
+        /// <summary>
+        ///     Selects every single object in the map
+        /// </summary>
+        public void SelectAllObjects()
+        {
+            SelectedHitObjects.Value.Clear();
+            SelectedHitObjects.AddRange(WorkingMap.HitObjects);
         }
 
         /// <summary>

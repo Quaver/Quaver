@@ -115,8 +115,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Paste", "CTRL + V", false, Screen.Clipboard.Count > 0))
                 Screen.PasteCopiedObjects();
 
-            if (ImGui.MenuItem("Delete Selected Objects", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
+            if (ImGui.MenuItem("Delete", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.DeleteSelectedObjects();
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Select All", "CTRL + A", false))
+                Screen.SelectAllObjects();
 
             ImGui.EndMenu();
         }
