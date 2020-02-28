@@ -154,6 +154,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private List<EditorHitObjectKeys> HitObjectPool { get; set; }
 
         /// <summary>
+        /// </summary>
+        private BindableList<HitObjectInfo> SelectedHitObjects { get; set; }
+
+        /// <summary>
         ///     The index of the last object that was added to the pool
         /// </summary>
         private int LastPooledHitObjectIndex { get; set; } = -1;
@@ -195,11 +199,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="beatSnapColor"></param>
         /// <param name="viewLayers"></param>
         /// <param name="longNoteOpacity"></param>
+        /// <param name="selectedHitObjects"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
-            BindableInt longNoteOpacity, bool isUneditable = false)
+            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -214,6 +219,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ViewLayers = viewLayers;
             Tool = tool;
             LongNoteOpacity = longNoteOpacity;
+            SelectedHitObjects = selectedHitObjects;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -376,7 +382,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
             var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers,
-                LongNoteOpacity);
+                LongNoteOpacity, SelectedHitObjects);
 
             ho.SetSize();
             ho.SetPosition();
@@ -704,7 +710,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LongNoteResizeOriginalEndTime = -1;
             }
 
-
             if (Button.IsHovered)
             {
                 HandleLeftMouseClick();
@@ -721,9 +726,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (!MouseManager.IsUniquePress(MouseButton.Left))
                 return;
 
+            var hitObject = GetHoveredHitObject();
+
+            if (hitObject == null)
+                SelectedHitObjects.Clear();
+
             if (Tool.Value == EditorCompositionTool.Select)
             {
-                HandleHitObjectSelectTool();
+                HandleHitObjectSelectTool(hitObject);
                 return;
             }
 
@@ -732,16 +742,33 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void HandleHitObjectSelectTool()
+        private void HandleHitObjectSelectTool(EditorHitObjectKeys hoveredObject)
         {
-            var hitObject = GetHoveredHitObject();
+            if (hoveredObject == null)
+                return;
 
-            if (hitObject != null && hitObject.Info.IsLongNote && hitObject.IsTailHovered(GetRelativeMousePosition()))
+            // Begin dragging the long note
+            if (hoveredObject.Info.IsLongNote && hoveredObject.IsTailHovered(GetRelativeMousePosition()))
             {
-                LongNoteInDrag = hitObject;
-                LongNoteResizeOriginalEndTime = hitObject.Info.EndTime;
+                LongNoteInDrag = hoveredObject;
+                LongNoteResizeOriginalEndTime = hoveredObject.Info.EndTime;
                 return;
             }
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            {
+                if (SelectedHitObjects.Value.Contains(hoveredObject.Info))
+                    SelectedHitObjects.Remove(hoveredObject.Info);
+                else
+                    SelectedHitObjects.Add(hoveredObject.Info);
+
+                return;
+            }
+
+            if (!SelectedHitObjects.Value.Contains(hoveredObject.Info))
+                SelectedHitObjects.Clear();
+
+            SelectedHitObjects.Add(hoveredObject.Info);
         }
 
         /// <summary>

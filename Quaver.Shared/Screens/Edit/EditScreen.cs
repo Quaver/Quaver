@@ -154,6 +154,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public BindableList<HitObjectInfo> SelectedHitObjects { get; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
@@ -219,6 +223,7 @@ namespace Quaver.Shared.Screens.Edit
             Metronome?.Dispose();
             CompositionTool?.Dispose();
             ActionManager.Dispose();
+            SelectedHitObjects.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();

@@ -142,7 +142,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
-            EditScreen.LongNoteOpacity) { Parent = Container};
+            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -180,7 +180,8 @@ namespace Quaver.Shared.Screens.Edit
             UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.ActionManager, EditScreen.Skin,
                 EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
-                EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity, true)
+                EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
+                EditScreen.SelectedHitObjects, true)
             {
                 Parent = Container,
             };
