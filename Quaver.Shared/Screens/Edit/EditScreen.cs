@@ -514,6 +514,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.V))
                 PasteCopiedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.X))
+                CutSelectedObjects();
         }
 
         /// <summary>
@@ -734,6 +737,18 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
+        }
+
+        /// <summary>
+        ///     Performs a cut operation on the selected objects
+        /// </summary>
+        public void CutSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            CopySelectedObjects();
+            DeleteSelectedObjects();
         }
 
         /// <summary>

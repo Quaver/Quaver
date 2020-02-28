@@ -109,6 +109,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Copy", "CTRL + C", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.CopySelectedObjects();
 
+            if (ImGui.MenuItem("Cut", "CTRL + X", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.CutSelectedObjects();
+
             if (ImGui.MenuItem("Paste", "CTRL + V", false, Screen.Clipboard.Count > 0))
                 Screen.PasteCopiedObjects();
 
