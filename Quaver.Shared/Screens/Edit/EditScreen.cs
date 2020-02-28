@@ -30,6 +30,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit
 {
@@ -156,6 +157,11 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         public BindableList<HitObjectInfo> SelectedHitObjects { get; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
+
+        /// <summary>
+        ///     Objects that are currently copied
+        /// </summary>
+        private List<HitObjectInfo> Clipboard = new List<HitObjectInfo>();
 
         /// <summary>
         /// </summary>
@@ -501,6 +507,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
                 ActionManager.Redo();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.C))
+                CopySelectedObjects();
         }
 
         /// <summary>
@@ -661,6 +670,35 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Copies any objects that are currently selected to the clipboard
+        /// </summary>
+        public void CopySelectedObjects()
+        {
+            var cb = Wobble.Platform.Clipboard.NativeClipboard;
+
+            // If no objects are selected, just select the time in the track instead
+            if (SelectedHitObjects.Value.Count == 0)
+            {
+                cb.SetText($"{(int) Math.Round(Track.Time, MidpointRounding.AwayFromZero)}");
+                return;
+            }
+
+            var copyString = "";
+
+            Clipboard.Clear();
+
+            foreach (var h in SelectedHitObjects.Value.OrderBy(x => x.StartTime))
+            {
+                copyString += $"{h.StartTime}|{h.Lane},";
+                Clipboard.Add(h);
+            }
+
+            copyString = copyString.TrimEnd(',');
+
+            cb.SetText(copyString);
         }
 
         /// <summary>
