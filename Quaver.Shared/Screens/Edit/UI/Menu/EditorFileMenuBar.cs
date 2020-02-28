@@ -104,6 +104,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Redo", "CTRL + Y", false, Screen.ActionManager.RedoStack.Count != 0))
                 Screen.ActionManager.Redo();
 
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Delete Selected Objects", "DEL", false, Screen.SelectedHitObjects.Value.Count > 0))
+                Screen.DeleteSelectedObjects();
+
             ImGui.EndMenu();
         }
 

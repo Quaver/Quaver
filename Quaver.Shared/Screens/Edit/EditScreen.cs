@@ -666,7 +666,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     Deletes any objects that are currently selected
         /// </summary>
-        private void DeleteSelectedObjects()
+        public void DeleteSelectedObjects()
         {
             if (SelectedHitObjects.Value.Count == 0)
                 return;
