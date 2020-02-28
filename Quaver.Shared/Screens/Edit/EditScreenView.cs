@@ -11,6 +11,7 @@ using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Panels;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Selection;
 using TagLib.Matroska;
 using Wobble;
 using Wobble.Bindables;
@@ -59,6 +60,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorRectangleSelector Selector { get; set; }
+
+        /// <summary>
+        /// </summary>
         private bool IsImGuiHovered { get; set; }
 
         /// <inheritdoc />
@@ -70,6 +75,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateBackground();
             CreatePlayfield();
             CreateFooter();
+            CreateSelector();
             CreateDetailsPanel();
             CreateCompositionTools();
 
@@ -80,6 +86,8 @@ namespace Quaver.Shared.Screens.Edit
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
+
+            Footer.Parent = Container;
         }
 
         /// <inheritdoc />
@@ -103,7 +111,7 @@ namespace Quaver.Shared.Screens.Edit
             IsImGuiHovered = false;
 
             DrawPlugins(gameTime);
-            MenuBar.Draw(gameTime);
+            MenuBar?.Draw(gameTime);
 
             if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
                 IsImGuiHovered = true;
@@ -117,7 +125,7 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             Container?.Destroy();
-            MenuBar.Destroy();
+            MenuBar?.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
@@ -169,6 +177,17 @@ namespace Quaver.Shared.Screens.Edit
             Parent = Container,
             Alignment = Alignment.BotLeft,
         };
+
+        /// <summary>
+        /// </summary>
+        private void CreateSelector()
+        {
+            Selector = new EditorRectangleSelector(EditScreen.WorkingMap, EditScreen.CompositionTool, Playfield, Footer,
+                EditScreen.Track, EditScreen.SelectedHitObjects)
+            {
+                Parent = Container
+            };
+        }
 
         /// <summary>
         /// </summary>
