@@ -17,6 +17,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
@@ -161,7 +162,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         ///     Objects that are currently copied
         /// </summary>
-        private List<HitObjectInfo> Clipboard = new List<HitObjectInfo>();
+        public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
 
         /// <summary>
         /// </summary>
@@ -510,6 +511,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.C))
                 CopySelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.V))
+                PasteCopiedObjects();
         }
 
         /// <summary>
@@ -699,6 +703,37 @@ namespace Quaver.Shared.Screens.Edit
             copyString = copyString.TrimEnd(',');
 
             cb.SetText(copyString);
+        }
+
+        /// <summary>
+        ///     Pastes any objects that are currently selected
+        /// </summary>
+        public void PasteCopiedObjects()
+        {
+            if (Clipboard.Count == 0)
+                return;
+
+            var clonedObjects = new List<HitObjectInfo>();
+
+            var difference = (int) Math.Round(Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+
+            foreach (var h in Clipboard)
+            {
+                var hitObject = new HitObjectInfo()
+                {
+                    StartTime = h.StartTime + difference,
+                    EditorLayer = h.EditorLayer,
+                    HitSound = h.HitSound,
+                    Lane = h.Lane
+                };
+
+                if (h.IsLongNote)
+                    hitObject.EndTime = h.EndTime + difference;
+
+                clonedObjects.Add(hitObject);
+            }
+
+            ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
         }
 
         /// <summary>
