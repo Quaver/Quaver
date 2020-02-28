@@ -17,6 +17,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -365,8 +366,9 @@ namespace Quaver.Shared.Screens.Edit
 
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
-            HandleKeyPressUndoRedo();
+            HandleCtrlInput();
             HandleTemporaryHitObjectPlacement();
+            HandleKeyPressDelete();
         }
 
         /// <summary>
@@ -488,7 +490,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressUndoRedo()
+        private void HandleCtrlInput()
         {
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
@@ -499,6 +501,16 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Y))
                 ActionManager.Redo();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressDelete()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Delete))
+                return;
+
+            DeleteSelectedObjects();
         }
 
         /// <summary>
@@ -649,6 +661,18 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Deletes any objects that are currently selected
+        /// </summary>
+        private void DeleteSelectedObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0)
+                return;
+
+            ActionManager.Perform(new EditorActionRemoveHitObjectBatch(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+            SelectedHitObjects.Clear();
         }
 
         /// <summary>
