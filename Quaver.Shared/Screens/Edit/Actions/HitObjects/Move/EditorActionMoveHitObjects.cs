@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 
@@ -31,11 +32,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
         private int LaneOffset { get; }
 
         /// <summary>
-        ///     The start time of the very first selected object
-        /// </summary>
-        private int StartTime { get; }
-
-        /// <summary>
         ///     The offset at which the objects have been dragged
         /// </summary>
         private int DragOffset { get; }
@@ -52,17 +48,15 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
         /// <param name="workingMap"></param>
         /// <param name="hitObjects"></param>
         /// <param name="laneOffset"></param>
-        /// <param name="startTime"></param>
         /// <param name="dragOffset"></param>
         /// <param name="shouldPerform"></param>
         public EditorActionMoveHitObjects(EditorActionManager actionManager, Qua workingMap,
-            List<HitObjectInfo> hitObjects, int laneOffset, int startTime, int dragOffset, bool shouldPerform = true)
+            List<HitObjectInfo> hitObjects, int laneOffset, int dragOffset, bool shouldPerform = true)
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
             HitObjects = hitObjects;
             LaneOffset = laneOffset;
-            StartTime = startTime;
             DragOffset = dragOffset;
             ShouldPerform = shouldPerform;
         }
@@ -80,6 +74,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
 
                     if (h.IsLongNote)
                         h.EndTime += DragOffset;
+
+                    h.Lane += LaneOffset;
                 }
             }
 
@@ -91,8 +87,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
         /// </summary>
         public void Undo()
         {
-            new EditorActionMoveHitObjects(ActionManager, WorkingMap, HitObjects, LaneOffset,
-                StartTime, -DragOffset).Perform();
+            new EditorActionMoveHitObjects(ActionManager, WorkingMap, HitObjects, -LaneOffset, -DragOffset).Perform();
         }
     }
 }
