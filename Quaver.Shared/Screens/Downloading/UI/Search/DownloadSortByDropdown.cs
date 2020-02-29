@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
             "Artist",
             "Title",
             "Creator",
-            "Bpm",
+            "BPM",
             "Length",
             "Min Difficulty",
             "Max Difficulty",
