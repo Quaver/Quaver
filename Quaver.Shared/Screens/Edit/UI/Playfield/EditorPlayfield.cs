@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private BindableList<HitObjectInfo> SelectedHitObjects { get; set; }
+        private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
         /// <summary>
         ///     The index of the last object that was added to the pool
@@ -210,7 +210,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         ///     The offset of the object dragging in the previous frame. Used to calculate the final
         ///     time of the notes between drags
         /// </summary>
-        public int PreviousDragOffset { get; set; }
+        public int PreviousDragOffset { get; private set; }
+
+        /// <summary>
+        ///     The offset of the lane the user was dragging in the previous frame. This is used to calculate
+        ///     which lanes the notes should be dragged to
+        /// </summary>
+        public int PreviousLaneDragOffset { get; private set; }
+
+        /// <summary>
+        ///     The offset of the columns moved in the current drag
+        /// </summary>
+        public int ColumnOffset { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -619,7 +630,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var percentage = (x - AbsolutePosition.X) / AbsoluteSize.X;
             var lane = Map.GetKeyCount() * percentage + 1;
 
-            return (int) MathHelper.Clamp(lane, 0, Map.GetKeyCount());
+            return (int) MathHelper.Clamp(lane, 1, Map.GetKeyCount());
         }
 
         /// <summary>
@@ -776,13 +787,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => RefreshHitObjectBatch(e.HitObjects);
+        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjectBatch(e.HitObjects);
+        }
 
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => RefreshHitObjectBatch(e.HitObjects);
+        private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjectBatch(e.HitObjects);
+        }
 
         /// <summary>
         /// </summary>
@@ -801,10 +824,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LongNoteResizeOriginalEndTime = -1;
 
                 // Create an action for the the user dragging/moving the notes
-                if (NoteMoveInitialMousePosition != null && HitObjectInDrag != null && PreviousDragOffset != 0)
+                if ((NoteMoveInitialMousePosition != null && PreviousLaneDragOffset != 0)
+                    || (HitObjectInDrag != null && PreviousDragOffset != 0))
                 {
                     var action = new EditorActionMoveHitObjects(ActionManager, Map, new List<HitObjectInfo>(SelectedHitObjects.Value),
-                        0, TimeDragStart, PreviousDragOffset, false);
+                        ColumnOffset, PreviousDragOffset, false);
 
                     ActionManager.Perform(action);
                 }
@@ -813,6 +837,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 HitObjectInDrag = null;
                 TimeDragStart = 0;
                 PreviousDragOffset = 0;
+                PreviousLaneDragOffset = 0;
+                ColumnOffset = 0;
             }
 
             if (Button.IsHovered)
@@ -963,6 +989,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 HitObjectInDrag = hoveredObject;
                 TimeDragStart = hoveredObject.Info.StartTime;
                 PreviousDragOffset = 0;
+                PreviousLaneDragOffset = 0;
+                ColumnOffset = 0;
             }
 
             // Prevent snapping the notes if the user hasn't moved the mouse yet
@@ -970,32 +998,74 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             // Start dragging all objects to the given y position
-            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
-            time = GetNearestTickFromTime(time, BeatSnap.Value);
+            var time = GetNearestTickFromTime((int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed,
+                MidpointRounding.AwayFromZero), BeatSnap.Value);
 
             var offset = (int) Math.Round((float) (time - TimeDragStart), MidpointRounding.AwayFromZero);
 
+            // ReSharper disable once PossibleInvalidOperationException
+            var laneOffset = GetLaneFromX(MouseManager.CurrentState.X) - GetLaneFromX(NoteMoveInitialMousePosition.Value.X);
+
             // Prevent dragging if there is no need to
-            if (PreviousDragOffset == offset || LongNoteInDrag != null || time < 0)
+            if (LongNoteInDrag != null || time < 0)
                 return;
 
-            // Begin dragging the objects
+            var dragXAllowed = true;
+
+            // Check to see if the user is allowed to drag the notes between lanes.
+            // If the user has 2+ objects selected with objects in the side lanes (1, 4/7), disallow the drag,
+            // so the pattern does not change
+            if (SelectedHitObjects.Value.Count > 1 && PreviousLaneDragOffset != laneOffset)
+            {
+                var columnOffset = laneOffset - PreviousLaneDragOffset;
+
+                var leftColumn = int.MaxValue;
+                var rightColumn = 0;
+
+                foreach (var obj in SelectedHitObjects.Value)
+                {
+                    leftColumn = Math.Min(obj.Lane, leftColumn);
+                    rightColumn = Math.Max(obj.Lane, rightColumn);
+                }
+
+                if (laneOffset > PreviousLaneDragOffset)
+                    dragXAllowed = rightColumn + columnOffset <= Map.GetKeyCount();
+                else if (laneOffset < PreviousLaneDragOffset)
+                    dragXAllowed = leftColumn + columnOffset >= 1;
+            }
+
+            // Handle drag
             for (var i = 0; i < SelectedHitObjects.Value.Count; i++)
             {
                 var ho = SelectedHitObjects.Value[i];
 
-                var startTime = ho.StartTime + (offset - PreviousDragOffset);
-                ho.StartTime = MathHelper.Clamp(startTime, 0, (int) Track.Length);
+                if (PreviousDragOffset != offset)
+                {
+                    var startTime = ho.StartTime + (offset - PreviousDragOffset);
+                    ho.StartTime = MathHelper.Clamp(startTime, 0, (int) Track.Length);
 
-                // Only change the end time of long notes if the user drags it 0 or above.
-                // Notes should never begin before the maps actually start. This handles the case
-                // of the end time being automatically clamped to zero if the user tries to drag
-                // before the start of the map
-                if (ho.IsLongNote && startTime >= 0)
-                    ho.EndTime = MathHelper.Clamp(ho.EndTime + (offset - PreviousDragOffset), 0, (int) Track.Length);
+                    // Only change the end time of long notes if the user drags it 0 or above.
+                    // Notes should never begin before the maps actually start. This handles the case
+                    // of the end time being automatically clamped to zero if the user tries to drag
+                    // before the start of the map
+                    if (ho.IsLongNote && startTime >= 0)
+                        ho.EndTime = MathHelper.Clamp(ho.EndTime + (offset - PreviousDragOffset), 0, (int) Track.Length);
+                }
+
+                // Move the x position of the note
+                if (PreviousLaneDragOffset == laneOffset || !dragXAllowed)
+                    continue;
+
+                var column = ho.Lane;
+                ho.Lane = MathHelper.Clamp(ho.Lane + (laneOffset - PreviousLaneDragOffset), 1, Map.GetKeyCount());
+
+                // Only update the column offset on the first iteration
+                if (i == 0)
+                    ColumnOffset += ho.Lane - column;
             }
 
             PreviousDragOffset = offset;
+            PreviousLaneDragOffset = laneOffset;
         }
 
         /// <summary>
