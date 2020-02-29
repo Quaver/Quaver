@@ -4,6 +4,7 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
@@ -64,8 +65,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorHitObjectBatchPlacedEventArgs> HitObjectBatchPlaced;
 
         /// <summary>
+        ///     Event invoked when a batch of hitobjects have been flipped
         /// </summary>
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
+
+        /// <summary>
+        ///     Event invoked when a batch of hitobjects have been moved
+        /// </summary>
+        public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
 
         /// <summary>
         /// </summary>
@@ -172,6 +179,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.FlipHitObjects:
                     HitObjectsFlipped?.Invoke(this, (EditorHitObjectsFlippedEventArgs) args);
                     break;
+                case EditorActionType.MoveHitObjects:
+                    HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -188,6 +198,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitObjectBatchRemoved = null;
             HitObjectBatchPlaced = null;
             HitObjectsFlipped = null;
+            HitObjectsMoved = null;
         }
     }
 }

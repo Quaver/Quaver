@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MoreLinq;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -17,6 +18,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
@@ -190,6 +192,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private int LongNoteResizeOriginalEndTime { get; set; } = -1;
 
         /// <summary>
+        ///     The initial position of the mouse when the user begins to drag notes
+        /// </summary>
+        private Vector2? NoteMoveInitialMousePosition { get; set; }
+
+        /// <summary>
+        ///     The hitobject that is currently being dragged to move the selected objects
+        /// </summary>
+        private EditorHitObjectKeys HitObjectInDrag { get; set; }
+
+        /// <summary>
+        ///     The time at which the user began dragging the notes
+        /// </summary>
+        private int TimeDragStart { get; set; }
+
+        /// <summary>
+        ///     The offset of the object dragging in the previous frame. Used to calculate the final
+        ///     time of the notes between drags
+        /// </summary>
+        public int PreviousDragOffset { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="map"></param>
         /// <param name="manager"></param>
@@ -248,6 +271,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.HitObjectsMoved += OnHitObjectsMoved;
         }
 
         /// <inheritdoc />
@@ -314,6 +338,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
 
             base.Destroy();
         }
@@ -751,21 +776,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e)
-        {
-            foreach (var obj in e.HitObjects)
-            {
-                var drawable = HitObjects.Find(x => x.Info == obj);
+        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => RefreshHitObjectBatch(e.HitObjects);
 
-                if (drawable == null)
-                    continue;
-
-                drawable.UpdateTextures();
-                drawable.SetPosition();
-                drawable.SetSize();
-                drawable.UpdateLongNoteSizeAndAlpha();
-            }
-        }
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => RefreshHitObjectBatch(e.HitObjects);
 
         /// <summary>
         /// </summary>
@@ -776,11 +793,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (!Button.IsHeld)
             {
+                // Create an action for the long note resizing when the user lets go
                 if (LongNoteInDrag != null && LongNoteResizeOriginalEndTime != LongNoteInDrag.Info.EndTime && LongNoteResizeOriginalEndTime != -1)
                     ActionManager.ResizeLongNote(LongNoteInDrag.Info, LongNoteResizeOriginalEndTime, LongNoteInDrag.Info.EndTime);
 
                 LongNoteInDrag = null;
                 LongNoteResizeOriginalEndTime = -1;
+
+                // Create an action for the the user dragging/moving the notes
+                if (NoteMoveInitialMousePosition != null && HitObjectInDrag != null && PreviousDragOffset != 0)
+                {
+                    var action = new EditorActionMoveHitObjects(ActionManager, Map, new List<HitObjectInfo>(SelectedHitObjects.Value),
+                        0, TimeDragStart, PreviousDragOffset, false);
+
+                    ActionManager.Perform(action);
+                }
+
+                NoteMoveInitialMousePosition = null;
+                HitObjectInDrag = null;
+                TimeDragStart = 0;
+                PreviousDragOffset = 0;
             }
 
             if (Button.IsHovered)
@@ -790,6 +822,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             }
 
             HandleLongNoteDragging();
+            HandleMovingObjects();
         }
 
         /// <summary>
@@ -841,7 +874,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (!SelectedHitObjects.Value.Contains(hoveredObject.Info))
                 SelectedHitObjects.Clear();
 
-            SelectedHitObjects.Add(hoveredObject.Info);
+            if (!SelectedHitObjects.Value.Contains(hoveredObject.Info))
+                SelectedHitObjects.Add(hoveredObject.Info);
         }
 
         /// <summary>
@@ -912,12 +946,84 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private void HandleMovingObjects()
+        {
+            if (SelectedHitObjects.Value.Count == 0 || !Button.IsHeld)
+                return;
+
+            // First time clicking to drag, so initialize the properties to handle the drag
+            if (NoteMoveInitialMousePosition == null && HitObjectInDrag == null)
+            {
+                var hoveredObject = GetHoveredHitObject();
+
+                if (hoveredObject == null)
+                    return;
+
+                NoteMoveInitialMousePosition = MouseManager.CurrentState.Position;
+                HitObjectInDrag = hoveredObject;
+                TimeDragStart = hoveredObject.Info.StartTime;
+                PreviousDragOffset = 0;
+            }
+
+            // Prevent snapping the notes if the user hasn't moved the mouse yet
+            if (NoteMoveInitialMousePosition - MouseManager.CurrentState.Position == Vector2.Zero)
+                return;
+
+            // Start dragging all objects to the given y position
+            var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
+            time = GetNearestTickFromTime(time, BeatSnap.Value);
+
+            var offset = (int) Math.Round((float) (time - TimeDragStart), MidpointRounding.AwayFromZero);
+
+            // Prevent dragging if there is no need to
+            if (PreviousDragOffset == offset || LongNoteInDrag != null || time < 0)
+                return;
+
+            // Begin dragging the objects
+            for (var i = 0; i < SelectedHitObjects.Value.Count; i++)
+            {
+                var ho = SelectedHitObjects.Value[i];
+
+                var startTime = ho.StartTime + (offset - PreviousDragOffset);
+                ho.StartTime = MathHelper.Clamp(startTime, 0, (int) Track.Length);
+
+                // Only change the end time of long notes if the user drags it 0 or above.
+                // Notes should never begin before the maps actually start. This handles the case
+                // of the end time being automatically clamped to zero if the user tries to drag
+                // before the start of the map
+                if (ho.IsLongNote && startTime >= 0)
+                    ho.EndTime = MathHelper.Clamp(ho.EndTime + (offset - PreviousDragOffset), 0, (int) Track.Length);
+            }
+
+            PreviousDragOffset = offset;
+        }
+
+        /// <summary>
+        /// </summary>
         /// <returns></returns>
         private Vector2 GetRelativeMousePosition()
         {
             var relativeY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
-
             return new Vector2(MouseManager.CurrentState.X, relativeY);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="hitobjects"></param>
+        private void RefreshHitObjectBatch(List<HitObjectInfo> hitobjects)
+        {
+            foreach (var obj in hitobjects)
+            {
+                var drawable = HitObjects.Find(x => x.Info == obj);
+
+                if (drawable == null)
+                    continue;
+
+                drawable.UpdateTextures();
+                drawable.SetPosition();
+                drawable.SetSize();
+                drawable.UpdateLongNoteSizeAndAlpha();
+            }
         }
     }
 }
