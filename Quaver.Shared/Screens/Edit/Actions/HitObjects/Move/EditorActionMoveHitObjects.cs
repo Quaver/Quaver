@@ -40,7 +40,7 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
         ///     If true, <see cref="Perform"/> will do any moving of the objects.
         ///     If false, only the event will be called
         /// </summary>
-        private bool ShouldPerform { get; }
+        private bool ShouldPerform { get; set; }
 
         /// <summary>
         /// </summary>
@@ -88,6 +88,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Move
         public void Undo()
         {
             new EditorActionMoveHitObjects(ActionManager, WorkingMap, HitObjects, -LaneOffset, -DragOffset).Perform();
+
+            // Set ShouldPerform back to true, because the action should be called if the user uses the "redo" function
+            ShouldPerform = true;
         }
     }
 }
