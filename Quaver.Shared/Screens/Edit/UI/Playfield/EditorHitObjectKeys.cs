@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (SelectionSprite.Visible)
             {
                 SelectionSprite.Height = GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20;
-                SelectionSprite.DrawToSpriteBatch();
+                SelectionSprite.Draw(new GameTime());
             }
         }
 
@@ -160,8 +160,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(Width, 0),
                 Image = UserInterface.BlankBox,
-                Tint = Colors.MainAccent,
-                Alpha = 0.70f,
+                Tint = Color.White,
+                Alpha = 0.50f,
                 Visible = false
             };
         }
