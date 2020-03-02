@@ -1,14 +1,24 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Move;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
+using Wobble.Scheduling;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels
 {
@@ -25,6 +35,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <summary>
         /// </summary>
         private IAudioTrack Track { get; }
+
+        /// <summary>
+        /// </summary>
+        private EditorActionManager ActionManager { get; }
 
         /// <summary>
         /// </summary>
@@ -48,6 +62,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         /// <summary>
         /// </summary>
+        private TaskHandler<int, int> DifficultyCalculatorTask { get; set; }
+
+        /// <summary>
+        /// </summary>
         private const int SpacingY = 14;
 
         /// <summary>
@@ -55,19 +73,32 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="workingMap"></param>
         /// <param name="beatSnap"></param>
         /// <param name="track"></param>
-        public EditorPanelDetails(Qua workingMap, BindableInt beatSnap, IAudioTrack track) : base("Details")
+        /// <param name="actionManager"></param>
+        public EditorPanelDetails(Qua workingMap, BindableInt beatSnap, IAudioTrack track, EditorActionManager actionManager)
+            : base("Details")
         {
             WorkingMap = workingMap;
             BeatSnap = beatSnap;
             Track = track;
+            ActionManager = actionManager;
 
             CreateObjectCount();
             CreatePlaybackSpeed();
             CreateBpm();
             CreateBeatSnapText();
             CreateDifficultyRating();
+
+            DifficultyCalculatorTask = new TaskHandler<int, int>(RecalculateDifficulty);
+
             BeatSnap.ValueChanged += OnBeatSnapValueChanged;
             Track.RateChanged += OnTrackRateChanged;
+            ActionManager.HitObjectPlaced += OnHitObjectPlaced;
+            ActionManager.HitObjectRemoved += OnHitObjectRemoved;
+            ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
+            ActionManager.HitObjectBatchRemoved += OnHitObjectBatchRemoved;
+            ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
+            ActionManager.HitObjectsMoved += OnHitObjectsMoved;
+            ActionManager.LongNoteResized += OnLongNoteResized;
         }
 
         /// <inheritdoc />
@@ -78,6 +109,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             // ReSharper disable once DelegateSubtraction
             BeatSnap.ValueChanged -= OnBeatSnapValueChanged;
             Track.RateChanged -= OnTrackRateChanged;
+            DifficultyCalculatorTask?.Dispose();
+
+            ActionManager.HitObjectPlaced -= OnHitObjectPlaced;
+            ActionManager.HitObjectRemoved -= OnHitObjectRemoved;
+            ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
+            ActionManager.HitObjectBatchRemoved -= OnHitObjectBatchRemoved;
+            ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
+            ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
+            ActionManager.LongNoteResized -= OnLongNoteResized;
 
             base.Destroy();
         }
@@ -172,6 +212,40 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         /// <summary>
         /// </summary>
+        private void UpdateObjects()
+        {
+            UpdateObjectCount();
+            StartRecalculateDifficultyTask();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateObjectCount() => AddScheduledUpdate(() => ObjectCount.Value.Text = $"{WorkingMap.HitObjects.Count:n0}");
+
+        /// <summary>
+        /// </summary>
+        private void StartRecalculateDifficultyTask() => DifficultyCalculatorTask.Run(0);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private int RecalculateDifficulty(int arg, CancellationToken token)
+        {
+            var rating = WorkingMap.SolveDifficulty().OverallDifficulty;
+
+            AddScheduledUpdate(() =>
+            {
+                DifficultyRating.Value.Text = StringHelper.RatingToString(rating);
+                DifficultyRating.Value.Tint = ColorHelper.DifficultyToColor(rating);
+            });
+
+            return 0;
+        }
+
+        /// <summary>
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnBeatSnapValueChanged(object sender, BindableValueChangedEventArgs<int> e)
@@ -186,6 +260,49 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="e"></param>
         private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e)
             => PlaybackSpeed.Value.Text = $"{(int) (Track.Rate * 100)}%";
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectPlaced(object sender, EditorHitObjectPlacedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectRemoved(object sender, EditorHitObjectRemovedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectBatchPlaced(object sender, EditorHitObjectBatchPlacedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectBatchRemoved(object sender, EditorHitObjectBatchRemovedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnHitObjectsFlipped(object sender, EditorHitObjectsFlippedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHitObjectsMoved(object sender, EditorHitObjectsMovedEventArgs e) => UpdateObjects();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLongNoteResized(object sender, EditorLongNoteResizedEventArgs e) => UpdateObjects();
     }
 
     public class EditorDetailsPanelKeyValue : Container
