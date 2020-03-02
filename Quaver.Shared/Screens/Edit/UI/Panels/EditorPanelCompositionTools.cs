@@ -77,6 +77,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private SpriteTextPlus Name { get; }
 
+        /// <summary>
+        /// </summary>
+        private Sprite BorderLine { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -115,6 +119,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             if (icon == UserInterface.EditorIconSelect)
                 Name.X += 4;
 
+            // ReSharper disable once ObjectCreationAsStatement
+            BorderLine = new Sprite
+            {
+                Parent = this,
+                Size = new ScalableVector2(4, 0)
+            };
+
             Clicked += (sender, args) => SelectedTool.Value = Tool;
         }
 
@@ -128,20 +139,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
             {
                 Alpha = 1;
                 Tint = ColorHelper.HexToColor("#45D6F5");
+                BorderLine.Alpha = 1;
             }
             else if (IsHovered)
             {
                 Alpha = 0.45f;
                 Tint = Color.White;
+                BorderLine.Alpha = Alpha;
             }
             else
             {
                 Tint = Color.White;
                 Alpha = 0;
+                BorderLine.Alpha = Alpha;
             }
 
             Name.Tint = Tint;
             Icon.Tint = Tint;
+
+            BorderLine.Height = Height;
+            BorderLine.Tint = Tint;
 
             base.Update(gameTime);
         }
