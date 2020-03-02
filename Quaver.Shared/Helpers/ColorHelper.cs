@@ -113,28 +113,28 @@ namespace Quaver.Shared.Helpers
             switch (snap)
             {
                 case 1:
-                    color = Color.Crimson;
+                    color = Color.White;
                     break;
                 case 2:
-                    color = Color.Blue;
+                    color = HexToColor("#E10B01");
                     break;
                 case 3:
-                    color = Color.Purple;
+                    color = HexToColor("#9B51E0");
                     break;
                 case 4:
-                    color = Color.Yellow;
+                    color = HexToColor("#0587E5");
                     break;
                 case 6:
-                    color = Color.HotPink;
+                    color = HexToColor("#BB6BD9");
                     break;
                 case 8:
-                    color = Color.Orange;
+                    color = HexToColor("#E9B736");
                     break;
                 case 12:
-                    color = Color.SkyBlue;
+                    color = HexToColor("#D34B8C");
                     break;
                 case 16:
-                    color = Color.Lime;
+                    color = HexToColor("#FFE76B");
                     break;
             }
 
