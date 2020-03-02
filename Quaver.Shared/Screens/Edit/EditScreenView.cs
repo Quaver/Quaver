@@ -84,7 +84,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateHitsoundsPanel();
 
-            //MenuBar = new EditorFileMenuBar(EditScreen);
+            MenuBar = new EditorFileMenuBar(EditScreen);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -115,8 +115,8 @@ namespace Quaver.Shared.Screens.Edit
             DrawPlugins(gameTime);
             MenuBar?.Draw(gameTime);
 
-            //if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
-            //    IsImGuiHovered = true;
+            if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
+                IsImGuiHovered = true;
 
             Button.IsGloballyClickable = !IsImGuiHovered;
         }
