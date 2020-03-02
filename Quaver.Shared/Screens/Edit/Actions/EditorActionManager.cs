@@ -10,6 +10,8 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
+using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -73,6 +75,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a batch of hitobjects have been moved
         /// </summary>
         public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
+
+        /// <summary>
+        ///     Event invoked when a hitsound has been added to a group of objects
+        /// </summary>
+        public event EventHandler<EditorHitsoundAddedEventArgs> HitsoundAdded;
+
+        /// <summary>
+        ///     Event invoked when a hitsound has been removed from a group of objects
+        /// </summary>
+        public event EventHandler<EditorHitSoundRemovedEventArgs> HitsoundRemoved;
 
         /// <summary>
         /// </summary>
@@ -182,6 +194,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.MoveHitObjects:
                     HitObjectsMoved?.Invoke(this, (EditorHitObjectsMovedEventArgs) args);
                     break;
+                case EditorActionType.AddHitsound:
+                    HitsoundAdded?.Invoke(this, (EditorHitsoundAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveHitsound:
+                    HitsoundRemoved?.Invoke(this, (EditorHitSoundRemovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -199,6 +217,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitObjectBatchPlaced = null;
             HitObjectsFlipped = null;
             HitObjectsMoved = null;
+            HitsoundAdded = null;
+            HitsoundRemoved = null;
         }
     }
 }

@@ -56,6 +56,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorPanelHitsounds Hitsounds { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
         /// <summary>
@@ -78,8 +82,9 @@ namespace Quaver.Shared.Screens.Edit
             CreateSelector();
             CreateDetailsPanel();
             CreateCompositionTools();
+            CreateHitsoundsPanel();
 
-            MenuBar = new EditorFileMenuBar(EditScreen);
+            //MenuBar = new EditorFileMenuBar(EditScreen);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
@@ -110,8 +115,8 @@ namespace Quaver.Shared.Screens.Edit
             DrawPlugins(gameTime);
             MenuBar?.Draw(gameTime);
 
-            if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
-                IsImGuiHovered = true;
+            //if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
+            //    IsImGuiHovered = true;
 
             Button.IsGloballyClickable = !IsImGuiHovered;
         }
@@ -166,6 +171,14 @@ namespace Quaver.Shared.Screens.Edit
             Parent = Container,
             Alignment = Alignment.MidLeft,
             Y = 200
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateHitsoundsPanel() => Hitsounds = new EditorPanelHitsounds(EditScreen.SelectedHitObjects, EditScreen.ActionManager)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidRight
         };
 
         /// <summary>
