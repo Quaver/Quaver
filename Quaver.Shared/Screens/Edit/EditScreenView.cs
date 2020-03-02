@@ -151,7 +151,8 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private void CreateDetailsPanel() => Details = new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap, EditScreen.Track)
+        private void CreateDetailsPanel() => Details = new EditorPanelDetails(EditScreen.WorkingMap, EditScreen.BeatSnap,
+            EditScreen.Track, EditScreen.ActionManager)
         {
             Parent = Container,
             Alignment = Alignment.MidLeft,
