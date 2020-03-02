@@ -56,6 +56,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorPanelHitsounds Hitsounds { get; set; }
+
+        /// <summary>
+        /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
         /// <summary>
@@ -78,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateSelector();
             CreateDetailsPanel();
             CreateCompositionTools();
+            CreateHitsoundsPanel();
 
             MenuBar = new EditorFileMenuBar(EditScreen);
 
@@ -166,6 +171,14 @@ namespace Quaver.Shared.Screens.Edit
             Parent = Container,
             Alignment = Alignment.MidLeft,
             Y = 200
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateHitsoundsPanel() => Hitsounds = new EditorPanelHitsounds(EditScreen.SelectedHitObjects, EditScreen.ActionManager)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidRight
         };
 
         /// <summary>
