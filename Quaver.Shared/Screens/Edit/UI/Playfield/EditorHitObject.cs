@@ -12,6 +12,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield
 {
@@ -83,8 +84,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedHitObjects = selectedHitObjects;
 
             Image = GetHitObjectTexture();
-
             SetPosition();
+            Tint = GetNoteTint();
 
             ViewLayers.ValueChanged += OnViewLayersChanged;
         }
@@ -166,8 +167,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (!ViewLayers.Value || Info.EditorLayer >= Map.EditorLayers.Count)
                 return Color.White;
 
-            var layer = Map.EditorLayers[Info.EditorLayer];
-            return ColorHelper.ToXnaColor(layer.GetColor());
+            if (Info.EditorLayer == 0)
+                return Color.White;
+
+            try
+            {
+                var layer = Map.EditorLayers[Info.EditorLayer - 1];
+                return ColorHelper.ToXnaColor(layer.GetColor());
+            }
+            catch (Exception)
+            {
+                return Color.White;
+            }
         }
 
         /// <summary>
