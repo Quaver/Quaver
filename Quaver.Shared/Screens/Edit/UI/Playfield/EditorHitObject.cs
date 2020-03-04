@@ -164,7 +164,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         protected Color GetNoteTint()
         {
-            if (!ViewLayers.Value || Info.EditorLayer >= Map.EditorLayers.Count)
+            if (!ViewLayers.Value)
                 return Color.White;
 
             if (Info.EditorLayer == 0)

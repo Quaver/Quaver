@@ -161,6 +161,10 @@ namespace Quaver.Shared.Screens.Edit
         public BindableList<HitObjectInfo> SelectedHitObjects { get; } = new BindableList<HitObjectInfo>(new List<HitObjectInfo>());
 
         /// <summary>
+        /// </summary>
+        public Bindable<EditorLayerInfo> SelectedLayer { get; } = new Bindable<EditorLayerInfo>(null);
+
+        /// <summary>
         ///     Objects that are currently copied
         /// </summary>
         public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
@@ -233,6 +237,7 @@ namespace Quaver.Shared.Screens.Edit
             CompositionTool?.Dispose();
             ActionManager.Dispose();
             SelectedHitObjects.Dispose();
+            SelectedLayer.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -438,7 +443,7 @@ namespace Quaver.Shared.Screens.Edit
                 && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
                 return;
 
-            if (Track == null || Track.IsDisposed)
+            if (Track == null || Track.IsDisposed || !CanSeek())
                 return;
 
             var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Backward, BeatSnap.Value, Track.Time);
@@ -457,7 +462,7 @@ namespace Quaver.Shared.Screens.Edit
                 && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
                 return;
 
-            if (Track == null || Track.IsDisposed)
+            if (Track == null || Track.IsDisposed || !CanSeek())
                 return;
 
             var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Forward, BeatSnap.Value, Track.Time);
@@ -801,5 +806,16 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         /// <returns></returns>
         public override UserClientStatus GetClientStatus() => null;
+
+        /// <summary>
+        ///     Returns if the user is able to seek through the track
+        ///     If the user is hovering over a scroll container, it prevents them from seeking.
+        /// </summary>
+        /// <returns></returns>
+        private bool CanSeek()
+        {
+            var view = (EditScreenView) View;
+            return !view.Layers.IsHovered();
+        }
     }
 }

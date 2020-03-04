@@ -136,13 +136,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="lane"></param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0)
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0)
         {
             var hitObject = new HitObjectInfo
             {
                 Lane = lane,
                 StartTime = startTime,
-                EndTime = endTime
+                EndTime = endTime,
+                EditorLayer = layer
             };
 
             Perform(new EditorActionPlaceHitObject(this, WorkingMap, hitObject));
