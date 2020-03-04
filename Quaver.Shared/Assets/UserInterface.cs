@@ -221,5 +221,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorIconWhistle => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-whistle.png");
         public static Texture2D EditorIconFinish => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-finish.png");
         public static Texture2D EditorIconClap => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/icon-clap.png");
+        public static Texture2D EditorCreateLayer => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-create-layer.png");
+        public static Texture2D EditorDeleteLayer => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-delete-layer.png");
     }
 }
