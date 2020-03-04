@@ -525,7 +525,12 @@ namespace Quaver.Shared.Screens.Edit
                 CutSelectedObjects();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
-                SelectAllObjects();
+            {
+                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
+                    SelectAllObjectsInLayer();
+                else
+                    SelectAllObjects();
+            }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.H))
                 FlipSelectedObjects();
@@ -782,6 +787,20 @@ namespace Quaver.Shared.Screens.Edit
         {
             SelectedHitObjects.Value.Clear();
             SelectedHitObjects.AddRange(WorkingMap.HitObjects);
+        }
+
+        /// <summary>
+        ///     Selects all objects in the currently selected layer
+        /// </summary>
+        public void SelectAllObjectsInLayer()
+        {
+            var layer = 0;
+
+            if (SelectedLayer.Value != null)
+                layer = WorkingMap.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
+
+            var objects = WorkingMap.HitObjects.FindAll(x => x.EditorLayer == layer && !SelectedHitObjects.Value.Contains(x));
+            SelectedHitObjects.AddRange(objects);
         }
 
         /// <summary>
