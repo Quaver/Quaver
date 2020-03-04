@@ -611,8 +611,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
 
+            if (Math.Abs(bwdDiff - fwdDiff) <= 2)
+                return time;
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (bwdDiff < fwdDiff)
+            else if (bwdDiff < fwdDiff)
                 time = timeBwd;
             else if (fwdDiff < bwdDiff)
                 time = timeFwd;
@@ -1090,10 +1092,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (drawable == null)
                     continue;
 
-                drawable.UpdateTextures();
-                drawable.SetPosition();
-                drawable.SetSize();
-                drawable.UpdateLongNoteSizeAndAlpha();
+                drawable.Refresh();
             }
         }
     }
