@@ -108,6 +108,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public override void DrawToSpriteBatch()
         {
+            Body.Tint = Tint;
+            Tail.Tint = Tint;
+
             // Draw the body first, then the note. That'll make it so we can get that effect
             // where if the player is using an arrow skin, part of the body will be under the note.
             if (Info.IsLongNote)
