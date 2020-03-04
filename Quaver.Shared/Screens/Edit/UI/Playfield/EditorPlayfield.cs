@@ -163,6 +163,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<EditorLayerInfo> SelectedLayer { get; }
+
+        /// <summary>
         ///     The index of the last object that was added to the pool
         /// </summary>
         private int LastPooledHitObjectIndex { get; set; } = -1;
@@ -235,13 +239,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="scaleScrollSpeedWithRate"></param>
         /// <param name="beatSnapColor"></param>
         /// <param name="viewLayers"></param>
+        /// <param name="tool"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
-            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, bool isUneditable = false)
+            BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
+            bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -257,6 +263,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Tool = tool;
             LongNoteOpacity = longNoteOpacity;
             SelectedHitObjects = selectedHitObjects;
+            SelectedLayer = selectedLayer;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -919,13 +926,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             HitObjectInfo hitObject;
 
+            var layer = 0;
+
+            if (SelectedLayer.Value != null)
+                layer = Map.EditorLayers.IndexOf(SelectedLayer.Value) + 1;
+
             switch (Tool.Value)
             {
                 case EditorCompositionTool.Note:
-                    ActionManager.PlaceHitObject(x, time);
+                    ActionManager.PlaceHitObject(x, time, 0, layer);
                     break;
                 case EditorCompositionTool.LongNote:
-                    hitObject = ActionManager.PlaceHitObject(x, time, 0);
+                    hitObject = ActionManager.PlaceHitObject(x, time, 0, layer);
 
                     var ln = HitObjects.Find(y => y.Info == hitObject);
                     LongNoteInDrag = ln;

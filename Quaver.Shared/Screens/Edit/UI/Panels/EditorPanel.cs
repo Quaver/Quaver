@@ -18,7 +18,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus HeaderText { get; set; }
+        protected SpriteTextPlus HeaderText { get; private set; }
 
         /// <summary>
         /// </summary>

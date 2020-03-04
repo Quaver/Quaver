@@ -10,6 +10,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Quaver.Shared.Screens.Edit.UI.Panels;
+using Quaver.Shared.Screens.Edit.UI.Panels.Layers;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Selection;
 using TagLib.Matroska;
@@ -60,6 +61,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public EditorPanelLayers Layers { get; private set; }
+
+        /// <summary>
+        /// </summary>
         private EditorFileMenuBar MenuBar { get; }
 
         /// <summary>
@@ -83,6 +88,7 @@ namespace Quaver.Shared.Screens.Edit
             CreateDetailsPanel();
             CreateCompositionTools();
             CreateHitsoundsPanel();
+            CreateLayersPanel();
 
             MenuBar = new EditorFileMenuBar(EditScreen);
 
@@ -152,7 +158,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
-            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects) { Parent = Container};
+            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -161,7 +167,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             Parent = Container,
             Alignment = Alignment.MidLeft,
-            Y = -100
+            Y = -200
         };
 
         /// <summary>
@@ -178,7 +184,15 @@ namespace Quaver.Shared.Screens.Edit
         private void CreateHitsoundsPanel() => Hitsounds = new EditorPanelHitsounds(EditScreen.SelectedHitObjects, EditScreen.ActionManager)
         {
             Parent = Container,
-            Alignment = Alignment.MidRight
+            Alignment = Alignment.MidRight,
+            Y = 200
+        };
+
+        private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.WorkingMap, EditScreen.SelectedLayer)
+        {
+            Parent = Container,
+            Alignment = Alignment.MidRight,
+            Y = -200
         };
 
         /// <summary>
@@ -211,7 +225,7 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
-                EditScreen.SelectedHitObjects, true)
+                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, true)
             {
                 Parent = Container,
             };
