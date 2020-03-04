@@ -48,6 +48,9 @@ namespace Quaver.Shared.Database.Maps.Etterna
                     if (step.StepFileName.EndsWith(".ssc"))
                         continue;
 
+                    if (!songDictionary.ContainsKey(step.StepFileName))
+                        continue;
+
                     var song = songDictionary[step.StepFileName];
                     var etternaDirectory = ConfigManager.EtternaDbPath.Value.Split("Etterna")[0] + "Etterna";
 
