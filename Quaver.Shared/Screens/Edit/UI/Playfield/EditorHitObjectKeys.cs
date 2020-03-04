@@ -66,6 +66,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             UpdateLongNoteSizeAndAlpha();
             CreateSelectionSprite();
 
+            Refresh();
+
             ViewLayers.ValueChanged += OnViewLayersChanged;
             SelectedHitObjects.ItemAdded += OnSelectedHitObject;
             SelectedHitObjects.ItemRemoved += OnDeselectedHitObject;
@@ -118,7 +120,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (SelectionSprite.Visible)
             {
-                SelectionSprite.Height = GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20;
+                if (Info.IsLongNote)
+                    SelectionSprite.Height = GetLongNoteHeight() + Height / 2f + Tail.Height / 2f + 20;
+                else
+                    SelectionSprite.Height = Height / 2f + Tail.Height / 2f + 20;
+
                 SelectionSprite.Draw(new GameTime());
             }
         }
@@ -279,6 +285,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
+        }
+
+        /// <summary>
+        ///     Refreshes the object to make it appear as it should be (positions/sizes/textures)
+        /// </summary>
+        public void Refresh()
+        {
+            UpdateTextures();
+            SetPosition();
+            SetSize();
+            UpdateLongNoteSizeAndAlpha();
         }
 
         /// <summary>

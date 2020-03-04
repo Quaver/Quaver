@@ -1090,10 +1090,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (drawable == null)
                     continue;
 
-                drawable.UpdateTextures();
-                drawable.SetPosition();
-                drawable.SetSize();
-                drawable.UpdateLongNoteSizeAndAlpha();
+                drawable.Refresh();
             }
         }
     }
