@@ -170,6 +170,16 @@ namespace Quaver.Shared.Screens.Edit
         public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
 
         /// <summary>
+        ///     The default/top layer that objects are placed in
+        /// </summary>
+        public EditorLayerInfo DefaultLayer { get; } = new EditorLayerInfo
+        {
+            Name = "Default Layer",
+            Hidden = false,
+            ColorRgb = "255,255,255"
+        };
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {

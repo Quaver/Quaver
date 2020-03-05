@@ -58,6 +58,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         protected SkinKeys SkinMode => Skin.Value.Keys[Map.Mode];
 
+        protected EditorLayerInfo DefaultLayer { get; }
+
+        private Color HiddenLayerColor { get; } = new Color(40, 40, 40);
+
         /// <summary>
         /// </summary>
         /// <param name="map"></param>
@@ -69,9 +73,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="viewLayers"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
+        /// <param name="defaultLayer"></param>
         public EditorHitObject(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
             Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity,
-            BindableList<HitObjectInfo> selectedHitObjects)
+            BindableList<HitObjectInfo> selectedHitObjects, EditorLayerInfo defaultLayer)
         {
             Map = map;
             Playfield = playfield;
@@ -82,6 +87,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ViewLayers = viewLayers;
             LongNoteOpacity = longNoteOpacity;
             SelectedHitObjects = selectedHitObjects;
+            DefaultLayer = defaultLayer;
 
             Image = GetHitObjectTexture();
             SetPosition();
@@ -164,15 +170,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         protected Color GetNoteTint()
         {
-            if (!ViewLayers.Value)
-                return Color.White;
-
             if (Info.EditorLayer == 0)
-                return Color.White;
+                return DefaultLayer.Hidden ? HiddenLayerColor : Color.White;
 
             try
             {
                 var layer = Map.EditorLayers[Info.EditorLayer - 1];
+
+                if (layer.Hidden)
+                    return HiddenLayerColor;
+
+                if (!ViewLayers.Value)
+                    return Color.White;
+
                 return ColorHelper.ToXnaColor(layer.GetColor());
             }
             catch (Exception)

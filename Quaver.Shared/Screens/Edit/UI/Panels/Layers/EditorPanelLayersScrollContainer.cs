@@ -19,17 +19,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private Bindable<EditorLayerInfo> SelectedLayer { get; }
 
+        private EditorLayerInfo DefaultLayer { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="workingMap"></param>
         /// <param name="selectedLayer"></param>
+        /// <param name="defaultLayer"></param>
         /// <param name="size"></param>
-        public EditorPanelLayersScrollContainer(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer, ScalableVector2 size)
+        public EditorPanelLayersScrollContainer(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer, EditorLayerInfo defaultLayer,
+            ScalableVector2 size)
             : base(new List<EditorLayerInfo>(), int.MaxValue, 0, size, size)
         {
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
+            DefaultLayer = defaultLayer;
 
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 3;
@@ -63,16 +68,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateLayersList()
         {
-            var items = new List<EditorLayerInfo>()
-            {
-                new EditorLayerInfo()
-                {
-                    Name = "Default Layer",
-                    Hidden = false,
-                    ColorRgb = "255,255,255"
-                }
-            };
-
+            var items = new List<EditorLayerInfo> { DefaultLayer };
             items.AddRange(WorkingMap.EditorLayers);
             AvailableItems = items;
         }

@@ -151,6 +151,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 UsePreviousSpriteBatchOptions = true,
                 Tint = GetColor()
             };
+
+            Visibility.BindedValue.ValueChanged += (sender, args) => Item.Hidden = !Item.Hidden;
         }
 
         /// <summary>

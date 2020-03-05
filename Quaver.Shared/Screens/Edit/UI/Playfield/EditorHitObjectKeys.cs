@@ -54,10 +54,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="viewLayers"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
+        /// <param name="defaultLayer"></param>
         public EditorHitObjectKeys(Qua map, EditorPlayfield playfield, HitObjectInfo info, Bindable<SkinStore> skin, IAudioTrack track,
             Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> viewLayers, BindableInt longNoteOpacity,
-            BindableList<HitObjectInfo> selectedHitObjects) : base(map, playfield, info, skin, track, anchorHitObjectsAtMidpoint,
-            viewLayers, longNoteOpacity, selectedHitObjects)
+            BindableList<HitObjectInfo> selectedHitObjects, EditorLayerInfo defaultLayer) : base(map, playfield, info,
+            skin, track, anchorHitObjectsAtMidpoint, viewLayers, longNoteOpacity, selectedHitObjects, defaultLayer)
         {
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
@@ -108,6 +109,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public override void DrawToSpriteBatch()
         {
+            Tint = GetNoteTint();
             Body.Tint = Tint;
             Tail.Tint = Tint;
 
