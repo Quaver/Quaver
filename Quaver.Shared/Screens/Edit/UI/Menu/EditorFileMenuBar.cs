@@ -4,12 +4,14 @@ using System.Linq;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -130,6 +132,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Flip Objects", "CTRL + H", false, Screen.SelectedHitObjects.Value.Count > 0))
                 Screen.FlipSelectedObjects();
+
+            if (ImGui.BeginMenu($"Move Objects To Layer", Screen.SelectedHitObjects.Value.Count > 0))
+            {
+                if (ImGui.MenuItem("Default Layer", ""))
+                {
+                    Screen.ActionManager.Perform(new EditorActionMoveObjectsToLayer(Screen.ActionManager, Screen.WorkingMap, null,
+                        new List<HitObjectInfo>(Screen.SelectedHitObjects.Value)));
+                }
+
+                for (var i = 0; i < Screen.WorkingMap.EditorLayers.Count; i++)
+                {
+                    var layer = Screen.WorkingMap.EditorLayers[i];
+
+                    if (ImGui.MenuItem(layer.Name))
+                    {
+                        Screen.ActionManager.Perform(new EditorActionMoveObjectsToLayer(Screen.ActionManager, Screen.WorkingMap, layer,
+                            new List<HitObjectInfo>(Screen.SelectedHitObjects.Value)));
+                    }
+                }
+
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }
