@@ -19,13 +19,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 {
     public class EditorPanelLayersScrollContainer : PoolableScrollContainer<EditorLayerInfo>
     {
-        private Qua WorkingMap { get; }
+        public Qua WorkingMap { get; }
 
         private Bindable<EditorLayerInfo> SelectedLayer { get; }
 
         private EditorLayerInfo DefaultLayer { get; }
 
-        private EditorActionManager ActionManager { get; }
+        public EditorActionManager ActionManager { get; }
 
         /// <inheritdoc />
         /// <summary>
