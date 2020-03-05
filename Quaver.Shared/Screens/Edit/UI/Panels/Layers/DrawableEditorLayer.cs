@@ -6,13 +6,17 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Checkboxes;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 using Checkbox = Wobble.Graphics.UI.Form.Checkbox;
 
@@ -48,6 +52,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private SpriteTextPlus Name { get; set; }
 
+        private EditorPanelLayersScrollContainer LayerContainer => (EditorPanelLayersScrollContainer) Container;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -69,6 +75,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             CreateVisibilityCheckbox();
             CreateEditButton();
             CreateName();
+
+            LayerContainer.ActionManager.LayerRenamed += OnLayerRenamed;
         }
 
         /// <summary>
@@ -86,6 +94,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             BorderLine.Alpha = Button.Alpha;
 
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            LayerContainer.ActionManager.LayerRenamed -= OnLayerRenamed;
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -173,6 +187,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Tint = GetColor(),
                 UsePreviousSpriteBatchOptions = true
             };
+
+            EditButton.Clicked += (sender, args) =>
+            {
+                if (Item == Container.AvailableItems.First())
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                    return;
+                }
+
+                DialogManager.Show(new DialogRenameLayer(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
+            };
         }
 
         /// <summary>
@@ -206,5 +231,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             return SelectedLayer.Value == Item;
         }
+
+        private void OnLayerRenamed(object sender, EditorLayerRenamedEventArgs e) => UpdateContent(Item, Index);
     }
 }
