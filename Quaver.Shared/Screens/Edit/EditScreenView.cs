@@ -189,7 +189,7 @@ namespace Quaver.Shared.Screens.Edit
         };
 
         private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.ActionManager, EditScreen.WorkingMap,
-            EditScreen.SelectedLayer, EditScreen.DefaultLayer)
+            EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.SelectedHitObjects)
         {
             Parent = Container,
             Alignment = Alignment.MidRight,

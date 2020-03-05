@@ -27,16 +27,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private EditorActionManager ActionManager { get; }
 
+        private BindableList<HitObjectInfo> SelectedHitObjects { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public EditorPanelLayers(EditorActionManager actionManager, Qua workingMap, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer) : base("Layers")
+            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects) : base("Layers")
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
+            SelectedHitObjects = selectedHitObjects;
 
             Depth = 1;
 
@@ -66,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     return;
                 }
 
-                ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedLayer.Value));
+                ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, SelectedLayer.Value));
             };
         }
 
@@ -91,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     ColorRgb = "255,255,255"
                 };
 
-                ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, layer));
+                ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer));
             };
         }
 

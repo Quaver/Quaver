@@ -1,6 +1,7 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
 {
@@ -14,11 +15,15 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
 
         private EditorLayerInfo Layer { get; }
 
-        public EditorActionCreateLayer(Qua workingMap, EditorActionManager actionManager, EditorLayerInfo layer)
+        private BindableList<HitObjectInfo> SelectedHitObjects { get; }
+
+        public EditorActionCreateLayer(Qua workingMap, EditorActionManager actionManager, BindableList<HitObjectInfo> selectedHitObjects,
+            EditorLayerInfo layer)
         {
             WorkingMap = workingMap;
             ActionManager = actionManager;
             Layer = layer;
+            SelectedHitObjects = selectedHitObjects;
         }
 
         public void Perform()
@@ -29,6 +34,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
             ActionManager.TriggerEvent(EditorActionType.CreateLayer, new EditorLayerCreatedEventArgs(Layer));
         }
 
-        public void Undo() => new EditorActionRemoveLayer(ActionManager, WorkingMap, Layer).Perform();
+        public void Undo() => new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects, Layer).Perform();
     }
 }
