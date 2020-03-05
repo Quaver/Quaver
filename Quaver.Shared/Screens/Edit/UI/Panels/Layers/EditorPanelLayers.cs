@@ -9,33 +9,28 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 {
     public class EditorPanelLayers : EditorPanel
     {
-        /// <summary>
-        /// </summary>
         private Qua WorkingMap { get; }
 
-        /// <summary>
-        /// </summary>
         private Bindable<EditorLayerInfo> SelectedLayer { get; }
 
-        /// <summary>
-        /// </summary>
         private IconButton DeleteLayer { get; set; }
 
-        /// <summary>
-        /// </summary>
         private IconButton CreateLayer { get; set; }
 
-        /// <summary>
-        /// </summary>
         private EditorPanelLayersScrollContainer ScrollContainer { get; set; }
+
+        private EditorLayerInfo DefaultLayer { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorPanelLayers(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer) : base("Layers")
+        public EditorPanelLayers(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer, EditorLayerInfo defaultLayer)
+            : base("Layers")
         {
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
+            DefaultLayer = defaultLayer;
+
             Depth = 1;
 
             CreateDeleteButton();
@@ -76,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateScrollContainer()
         {
-            ScrollContainer = new EditorPanelLayersScrollContainer(WorkingMap, SelectedLayer,
+            ScrollContainer = new EditorPanelLayersScrollContainer(WorkingMap, SelectedLayer, DefaultLayer,
                 new ScalableVector2(Content.Width - 7, Content.Height - 8))
             {
                 Parent = Content,

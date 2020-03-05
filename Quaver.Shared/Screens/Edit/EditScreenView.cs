@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Edit
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
-            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer) { Parent = Container};
+            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -188,7 +188,8 @@ namespace Quaver.Shared.Screens.Edit
             Y = 200
         };
 
-        private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.WorkingMap, EditScreen.SelectedLayer)
+        private void CreateLayersPanel() => Layers = new EditorPanelLayers(EditScreen.WorkingMap, EditScreen.SelectedLayer,
+            EditScreen.DefaultLayer)
         {
             Parent = Container,
             Alignment = Alignment.MidRight,
@@ -225,7 +226,7 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
-                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, true)
+                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, true)
             {
                 Parent = Container,
             };

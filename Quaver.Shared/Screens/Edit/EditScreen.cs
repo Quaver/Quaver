@@ -170,6 +170,16 @@ namespace Quaver.Shared.Screens.Edit
         public List<HitObjectInfo> Clipboard { get; } = new List<HitObjectInfo>();
 
         /// <summary>
+        ///     The default/top layer that objects are placed in
+        /// </summary>
+        public EditorLayerInfo DefaultLayer { get; } = new EditorLayerInfo
+        {
+            Name = "Default Layer",
+            Hidden = false,
+            ColorRgb = "255,255,255"
+        };
+
+        /// <summary>
         /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
@@ -581,6 +591,24 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (Track.Time >= obj.StartTime)
                 {
+                    if (ViewLayers.Value)
+                    {
+                        if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                            continue;
+
+                        try
+                        {
+                            var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
+
+                            if (layer.Hidden)
+                                continue;
+                        }
+                        catch (Exception)
+                        {
+                            // ignore and play
+                        }
+                    }
+
                     HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
                     HitsoundObjectIndex = i + 1;
                 }

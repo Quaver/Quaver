@@ -167,6 +167,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Bindable<EditorLayerInfo> SelectedLayer { get; }
 
         /// <summary>
+        /// </summary>
+        private EditorLayerInfo DefaultLayer { get; }
+
+        /// <summary>
         ///     The index of the last object that was added to the pool
         /// </summary>
         private int LastPooledHitObjectIndex { get; set; } = -1;
@@ -242,12 +246,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="tool"></param>
         /// <param name="longNoteOpacity"></param>
         /// <param name="selectedHitObjects"></param>
+        /// <param name="selectedLayer"></param>
+        /// <param name="defaultLayer"></param>
         /// <param name="isUneditable"></param>
         public EditorPlayfield(Qua map, EditorActionManager manager, Bindable<SkinStore> skin, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            bool isUneditable = false)
+            EditorLayerInfo defaultLayer, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -264,6 +270,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             LongNoteOpacity = longNoteOpacity;
             SelectedHitObjects = selectedHitObjects;
             SelectedLayer = selectedLayer;
+            DefaultLayer = defaultLayer;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -434,7 +441,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void CreateHitObject(HitObjectInfo info, bool insertAtIndex = false)
         {
             var ho = new EditorHitObjectKeys(Map, this, info, Skin, Track, AnchorHitObjectsAtMidpoint, ViewLayers,
-                LongNoteOpacity, SelectedHitObjects);
+                LongNoteOpacity, SelectedHitObjects, DefaultLayer);
 
             ho.SetSize();
             ho.SetPosition();
