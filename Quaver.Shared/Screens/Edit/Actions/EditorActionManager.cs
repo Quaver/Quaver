@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -91,6 +92,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a layer has been created
         /// </summary>
         public event EventHandler<EditorLayerCreatedEventArgs> LayerCreated;
+
+        /// <summary>
+        ///     Event invoked when a layer has been deleted
+        /// </summary>
+        public event EventHandler<EditorLayerRemovedEventArgs> LayerDeleted;
 
         /// <summary>
         /// </summary>
@@ -209,6 +215,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.CreateLayer:
                     LayerCreated?.Invoke(this, (EditorLayerCreatedEventArgs) args);
                     break;
+                case EditorActionType.RemoveLayer:
+                    LayerDeleted?.Invoke(this, (EditorLayerRemovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -229,6 +238,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             HitsoundAdded = null;
             HitsoundRemoved = null;
             LayerCreated = null;
+            LayerDeleted = null;
         }
     }
 }

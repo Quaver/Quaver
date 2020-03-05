@@ -1,8 +1,10 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -54,6 +56,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(20, 20),
                 X = -HeaderText.X
+            };
+
+            DeleteLayer.Clicked += (sender, args) =>
+            {
+                if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
+                    return;
+                }
+
+                ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedLayer.Value));
             };
         }
 

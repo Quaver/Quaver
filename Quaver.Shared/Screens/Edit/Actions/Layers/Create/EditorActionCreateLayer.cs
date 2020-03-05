@@ -1,5 +1,6 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
 {
@@ -28,8 +29,6 @@ namespace Quaver.Shared.Screens.Edit.Actions.Layers.Create
             ActionManager.TriggerEvent(EditorActionType.CreateLayer, new EditorLayerCreatedEventArgs(Layer));
         }
 
-        public void Undo()
-        {
-        }
+        public void Undo() => new EditorActionRemoveLayer(ActionManager, WorkingMap, Layer).Perform();
     }
 }

@@ -8,6 +8,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -55,6 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             CreatePool();
 
             ActionManager.LayerCreated += OnLayerCreated;
+            ActionManager.LayerDeleted += OnLayerDeleted;
         }
 
         /// <inheritdoc />
@@ -108,6 +110,38 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             var item = Pool.Last() as DrawableEditorLayer;
             SelectedLayer.Value = item?.Item;
+        }
+
+        private void OnLayerDeleted(object sender, EditorLayerRemovedEventArgs e)
+        {
+            var index = AvailableItems.IndexOf(e.Layer);
+            AvailableItems.Remove(e.Layer);
+
+            var item = Pool.Find(x => x.Item == e.Layer) as DrawableEditorLayer;
+
+            AddScheduledUpdate(() =>
+            {
+                // Remove the item if it exists in the pool.
+                if (item != null)
+                {
+                    item.Destroy();
+                    RemoveContainedDrawable(item);
+                    Pool.Remove(item);
+                }
+
+                RecalculateContainerHeight();
+
+                // Reset the pool item index
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+                    Pool[i].Y = (PoolStartingIndex + i) * Pool[i].HEIGHT;
+                    Pool[i].UpdateContent(Pool[i].Item, i);
+                }
+
+                if (index - 1 >= 0)
+                    SelectedLayer.Value = AvailableItems[index - 1];
+            });
         }
     }
 }
