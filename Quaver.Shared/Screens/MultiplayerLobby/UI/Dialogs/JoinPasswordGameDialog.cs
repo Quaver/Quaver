@@ -52,7 +52,8 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
                 Alignment = Alignment.BotCenter,
                 Y = -44,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
-                AlwaysFocused = true
+                AlwaysFocused = true,
+                MaxCharacters = 15
             };
 
             Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
