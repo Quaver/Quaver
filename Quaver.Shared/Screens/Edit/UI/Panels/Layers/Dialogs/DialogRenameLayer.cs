@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         /// <summary>
         /// </summary>
         public DialogRenameLayer(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap) : base("RENAME LAYER",
-            "Enter a new name for your layer")
+            "Enter a new name for your layer...")
         {
             ActionManager = manager;
             Layer = layer;
