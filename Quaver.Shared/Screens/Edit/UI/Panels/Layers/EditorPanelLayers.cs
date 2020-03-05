@@ -1,6 +1,8 @@
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -21,12 +23,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private EditorLayerInfo DefaultLayer { get; }
 
+        private EditorActionManager ActionManager { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorPanelLayers(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer, EditorLayerInfo defaultLayer)
-            : base("Layers")
+        public EditorPanelLayers(EditorActionManager actionManager, Qua workingMap, Bindable<EditorLayerInfo> selectedLayer,
+            EditorLayerInfo defaultLayer) : base("Layers")
         {
+            ActionManager = actionManager;
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
@@ -64,6 +69,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Size = DeleteLayer.Size,
                 X = DeleteLayer.X - DeleteLayer.Width + DeleteLayer.X
             };
+
+            CreateLayer.Clicked += (sender, args) =>
+            {
+                var layer = new EditorLayerInfo
+                {
+                    Name = $"Layer {WorkingMap.EditorLayers.Count + 1}",
+                    ColorRgb = "255,255,255"
+                };
+
+                ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, layer));
+            };
         }
 
         /// <summary>
@@ -71,7 +87,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateScrollContainer()
         {
-            ScrollContainer = new EditorPanelLayersScrollContainer(WorkingMap, SelectedLayer, DefaultLayer,
+            ScrollContainer = new EditorPanelLayersScrollContainer(ActionManager, WorkingMap, SelectedLayer, DefaultLayer,
                 new ScalableVector2(Content.Width - 7, Content.Height - 8))
             {
                 Parent = Content,
