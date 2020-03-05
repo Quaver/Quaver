@@ -95,6 +95,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// <param name="index"></param>
         public override void UpdateContent(EditorLayerInfo item, int index)
         {
+            Item = item;
+            Index = index;
+
+            AddScheduledUpdate(() => Name.Text = Item.Name);
         }
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Item.Name, 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

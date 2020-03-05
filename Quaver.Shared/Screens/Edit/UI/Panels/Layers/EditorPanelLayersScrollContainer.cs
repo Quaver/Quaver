@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -21,32 +25,38 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private EditorLayerInfo DefaultLayer { get; }
 
+        private EditorActionManager ActionManager { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="actionManager"></param>
         /// <param name="workingMap"></param>
         /// <param name="selectedLayer"></param>
         /// <param name="defaultLayer"></param>
         /// <param name="size"></param>
-        public EditorPanelLayersScrollContainer(Qua workingMap, Bindable<EditorLayerInfo> selectedLayer, EditorLayerInfo defaultLayer,
-            ScalableVector2 size)
+        public EditorPanelLayersScrollContainer(EditorActionManager actionManager, Qua workingMap,
+            Bindable<EditorLayerInfo> selectedLayer, EditorLayerInfo defaultLayer, ScalableVector2 size)
             : base(new List<EditorLayerInfo>(), int.MaxValue, 0, size, size)
         {
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
+            ActionManager = actionManager;
 
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 3;
             Alpha = 0;
 
             EasingType = Easing.OutQuint;
-            TimeToCompleteScroll = 400;
+            TimeToCompleteScroll = 800;
             ScrollSpeed = 320;
 
             CreateLayersList();
-
             CreatePool();
+
+            ActionManager.LayerCreated += OnLayerCreated;
+            ActionManager.LayerDeleted += OnLayerDeleted;
         }
 
         /// <inheritdoc />
@@ -61,6 +71,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
 
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            ActionManager.LayerCreated -= OnLayerCreated;
+            base.Destroy();
         }
 
         /// <summary>
@@ -81,5 +97,51 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// <returns></returns>
         protected override PoolableSprite<EditorLayerInfo> CreateObject(EditorLayerInfo item, int index)
             => new DrawableEditorLayer(this, item, index, SelectedLayer);
+
+        private void OnLayerCreated(object sender, EditorLayerCreatedEventArgs e)
+        {
+            if (AvailableItems.Contains(e.Layer))
+                return;
+
+            if (Pool.Any(x => x.Item == e.Layer))
+                return;
+
+            AddObjectToBottom(e.Layer, true);
+
+            var item = Pool.Last() as DrawableEditorLayer;
+            SelectedLayer.Value = item?.Item;
+        }
+
+        private void OnLayerDeleted(object sender, EditorLayerRemovedEventArgs e)
+        {
+            var index = AvailableItems.IndexOf(e.Layer);
+            AvailableItems.Remove(e.Layer);
+
+            var item = Pool.Find(x => x.Item == e.Layer) as DrawableEditorLayer;
+
+            AddScheduledUpdate(() =>
+            {
+                // Remove the item if it exists in the pool.
+                if (item != null)
+                {
+                    item.Destroy();
+                    RemoveContainedDrawable(item);
+                    Pool.Remove(item);
+                }
+
+                RecalculateContainerHeight();
+
+                // Reset the pool item index
+                for (var i = 0; i < Pool.Count; i++)
+                {
+                    Pool[i].Index = i;
+                    Pool[i].Y = (PoolStartingIndex + i) * Pool[i].HEIGHT;
+                    Pool[i].UpdateContent(Pool[i].Item, i);
+                }
+
+                if (index - 1 >= 0)
+                    SelectedLayer.Value = AvailableItems[index - 1];
+            });
+        }
     }
 }
