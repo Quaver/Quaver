@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
@@ -26,6 +27,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         private EditorLayerInfo DefaultLayer { get; }
 
         public EditorActionManager ActionManager { get; }
+
+        /// <summary>
+        ///     The currently active right click options for the screen
+        /// </summary>
+        public RightClickOptions ActiveRightClickOptions { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -50,7 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 800;
-            ScrollSpeed = 320;
+            ScrollSpeed = 150;
 
             CreateLayersList();
             CreatePool();
@@ -87,6 +93,35 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             var items = new List<EditorLayerInfo> { DefaultLayer };
             items.AddRange(WorkingMap.EditorLayers);
             AvailableItems = items;
+        }
+
+
+        /// <summary>
+        /// </summary>
+        /// <param name="rco"></param>
+        public void ActivateRightClickOptions(RightClickOptions rco)
+        {
+            if (ActiveRightClickOptions != null)
+            {
+                ActiveRightClickOptions.Visible = false;
+                ActiveRightClickOptions.Parent = null;
+                ActiveRightClickOptions.Destroy();
+            }
+
+            ActiveRightClickOptions = rco;
+            ActiveRightClickOptions.Parent = this;
+
+            ActiveRightClickOptions.ItemContainer.Height = 0;
+            ActiveRightClickOptions.Visible = true;
+
+            var x = MathHelper.Clamp(MouseManager.CurrentState.X - ActiveRightClickOptions.Width - AbsolutePosition.X, 0,
+                Width - ActiveRightClickOptions.Width);
+
+            var y = MathHelper.Clamp(MouseManager.CurrentState.Y - AbsolutePosition.Y, 0,
+                Height - ActiveRightClickOptions.Items.Count * ActiveRightClickOptions.Items.First().Height);
+
+            ActiveRightClickOptions.Position = new ScalableVector2(x, y);
+            ActiveRightClickOptions.Open(350);
         }
 
         /// <inheritdoc />

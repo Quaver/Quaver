@@ -12,6 +12,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Add;
 using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
@@ -103,6 +104,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Event invoked when a layer has been renamed
         /// </summary>
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
+
+        /// <summary>
+        ///     Event invoked when a layer's color has been changed
+        /// </summary>
+        public event EventHandler<EditorLayerColorChangedEventArgs> LayerColorChanged;
 
         /// <summary>
         /// </summary>
@@ -227,6 +233,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RenameLayer:
                     LayerRenamed?.Invoke(this, (EditorLayerRenamedEventArgs) args);
                     break;
+                case EditorActionType.ColorLayer:
+                    LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -249,6 +258,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             LayerCreated = null;
             LayerDeleted = null;
             LayerRenamed = null;
+            LayerColorChanged = null;
         }
     }
 }

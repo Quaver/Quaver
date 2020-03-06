@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Notifications;
-using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -19,6 +20,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 using Checkbox = Wobble.Graphics.UI.Form.Checkbox;
+using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 {
@@ -77,6 +79,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             CreateName();
 
             LayerContainer.ActionManager.LayerRenamed += OnLayerRenamed;
+            LayerContainer.ActionManager.LayerColorChanged += OnLayerColorChanged;
         }
 
         /// <summary>
@@ -99,6 +102,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         public override void Destroy()
         {
             LayerContainer.ActionManager.LayerRenamed -= OnLayerRenamed;
+            LayerContainer.ActionManager.LayerColorChanged -= OnLayerColorChanged;
+
             base.Destroy();
         }
 
@@ -112,7 +117,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             Item = item;
             Index = index;
 
-            AddScheduledUpdate(() => Name.Text = Item.Name);
+            AddScheduledUpdate(() =>
+            {
+                Name.Text = Item.Name;
+                Name.Tint = GetColor();
+
+                Visibility.Tint = Name.Tint;
+                EditButton.Tint = Name.Tint;
+            });
         }
 
         /// <summary>
@@ -139,6 +151,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
                 SelectedLayer.Value = Item;
             };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                if (Item == Container.AvailableItems.First())
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                    return;
+                }
+
+                LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item,
+                    LayerContainer.ActionManager,
+                    LayerContainer.WorkingMap));
+            };
         }
 
         /// <summary>
@@ -159,7 +184,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateVisibilityCheckbox()
         {
-            Visibility = new Checkbox(new Bindable<bool>(!Item.Hidden), new Vector2(20, 20),
+            Visibility = new ContainedCheckbox(LayerContainer, new Bindable<bool>(!Item.Hidden), new Vector2(20, 20),
                 FontAwesome.Get(FontAwesomeIcon.fa_check),
                 FontAwesome.Get(FontAwesomeIcon.fa_check_box_empty), true)
             {
@@ -178,7 +203,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateEditButton()
         {
-            EditButton = new IconButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil))
+            EditButton = new ContainedIconButton(LayerContainer, FontAwesome.Get(FontAwesomeIcon.fa_pencil))
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
@@ -196,7 +221,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     return;
                 }
 
-                DialogManager.Show(new DialogRenameLayer(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
+                LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item, LayerContainer.ActionManager,
+                    LayerContainer.WorkingMap));
             };
         }
 
@@ -233,5 +259,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         }
 
         private void OnLayerRenamed(object sender, EditorLayerRenamedEventArgs e) => UpdateContent(Item, Index);
+        private void OnLayerColorChanged(object sender, EditorLayerColorChangedEventArgs e) => UpdateContent(Item, Index);
     }
 }
