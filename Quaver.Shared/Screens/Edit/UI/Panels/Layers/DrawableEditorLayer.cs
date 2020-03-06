@@ -8,6 +8,7 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Form.Checkboxes;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -77,6 +78,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             CreateName();
 
             LayerContainer.ActionManager.LayerRenamed += OnLayerRenamed;
+            LayerContainer.ActionManager.LayerColorChanged += OnLayerColorChanged;
         }
 
         /// <summary>
@@ -99,6 +101,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         public override void Destroy()
         {
             LayerContainer.ActionManager.LayerRenamed -= OnLayerRenamed;
+            LayerContainer.ActionManager.LayerColorChanged -= OnLayerColorChanged;
+
             base.Destroy();
         }
 
@@ -112,7 +116,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             Item = item;
             Index = index;
 
-            AddScheduledUpdate(() => Name.Text = Item.Name);
+            AddScheduledUpdate(() =>
+            {
+                Name.Text = Item.Name;
+                Name.Tint = GetColor();
+
+                Visibility.Tint = Name.Tint;
+                EditButton.Tint = Name.Tint;
+            });
         }
 
         /// <summary>
@@ -196,7 +207,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     return;
                 }
 
-                DialogManager.Show(new DialogRenameLayer(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
+                // DialogManager.Show(new DialogRenameLayer(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
+                DialogManager.Show(new DialogChangeLayerColor(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
             };
         }
 
@@ -233,5 +245,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         }
 
         private void OnLayerRenamed(object sender, EditorLayerRenamedEventArgs e) => UpdateContent(Item, Index);
+        private void OnLayerColorChanged(object sender, EditorLayerColorChangedEventArgs e) => UpdateContent(Item, Index);
     }
 }

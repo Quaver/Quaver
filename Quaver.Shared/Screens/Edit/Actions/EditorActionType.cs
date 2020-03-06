@@ -15,6 +15,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         CreateLayer,
         RemoveLayer,
         RenameLayer,
-        MoveToLayer
+        MoveToLayer,
+        ColorLayer
     }
 }
