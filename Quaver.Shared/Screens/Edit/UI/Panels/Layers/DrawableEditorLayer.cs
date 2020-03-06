@@ -151,6 +151,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
                 SelectedLayer.Value = Item;
             };
+
+            Button.RightClicked += (sender, args) =>
+            {
+                if (Item == Container.AvailableItems.First())
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                    return;
+                }
+
+                LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item,
+                    LayerContainer.ActionManager,
+                    LayerContainer.WorkingMap));
+            };
         }
 
         /// <summary>
@@ -208,8 +221,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                     return;
                 }
 
-                // DialogManager.Show(new DialogRenameLayer(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
-                DialogManager.Show(new DialogChangeLayerColor(Item, LayerContainer.ActionManager, LayerContainer.WorkingMap));
+                LayerContainer.ActivateRightClickOptions(new DrawableEditorLayerRightClickOptions(Item, LayerContainer.ActionManager,
+                    LayerContainer.WorkingMap));
             };
         }
 
