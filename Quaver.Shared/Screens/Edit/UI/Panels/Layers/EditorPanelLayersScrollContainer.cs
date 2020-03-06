@@ -56,7 +56,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 800;
-            ScrollSpeed = 320;
+            ScrollSpeed = 150;
 
             CreateLayersList();
             CreatePool();
