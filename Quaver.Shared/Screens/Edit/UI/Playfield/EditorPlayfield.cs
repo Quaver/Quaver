@@ -24,6 +24,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -181,6 +182,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private EditorPlayfieldLineContainer LineContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
         private DifficultySeekBar SeekBar { get; set; }
 
         /// <summary>
@@ -280,6 +285,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             CreateDividerLines();
             CreateHitPositionLine();
             CreateTimeline();
+            CreateLineContainer();
             CreateHitObjects();
             CreateButton();
             CreateSeekBar();
@@ -310,6 +316,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Button.Update(gameTime);
             UpdateHitObjectPool();
             Timeline.Update(gameTime);
+            LineContainer.Update(gameTime);
             HandleInput();
 
             base.Update(gameTime);
@@ -336,6 +343,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
             Timeline.Draw(gameTime);
+            LineContainer.Draw(gameTime);
             DrawHitObjects(gameTime);
             GameBase.Game.SpriteBatch.End();
 
@@ -425,6 +433,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(Map, this, Track, BeatSnap, ScrollSpeed,
             ScaleScrollSpeedWithAudioRate, BeatSnapColor);
+
+        /// <summary>
+        /// </summary>
+        private void CreateLineContainer() => LineContainer = new EditorPlayfieldLineContainer(this, Map, Track);
 
         /// <summary>
         /// </summary>
