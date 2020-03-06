@@ -5,6 +5,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -37,7 +38,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         private static Dictionary<string, Color> GetOptions() => new Dictionary<string, Color>()
         {
             {EditName, ColorHelper.HexToColor("#0787E3")},
-            {ChangeColor, ColorHelper.HexToColor("#27B06E")}
+            {ChangeColor, ColorHelper.HexToColor("#27B06E")},
         };
     }
 }

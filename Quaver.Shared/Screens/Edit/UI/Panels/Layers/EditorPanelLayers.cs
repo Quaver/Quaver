@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -8,6 +9,7 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Form;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 {
@@ -21,6 +23,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private IconButton CreateLayer { get; set; }
 
+        private Checkbox ToggleLayers { get; set; }
+
         private EditorPanelLayersScrollContainer ScrollContainer { get; set; }
 
         private EditorLayerInfo DefaultLayer { get; }
@@ -29,22 +33,26 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 
         private BindableList<HitObjectInfo> SelectedHitObjects { get; }
 
+        private Bindable<bool> ViewLayers { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public EditorPanelLayers(EditorActionManager actionManager, Qua workingMap, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects) : base("Layers")
+            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects, Bindable<bool> viewLayers) : base("Layers")
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
             SelectedHitObjects = selectedHitObjects;
+            ViewLayers = viewLayers;
 
             Depth = 1;
 
             CreateDeleteButton();
             CreateAddButton();
+            CreateToggleLayersCheckbox();
             CreateScrollContainer();
         }
 
@@ -95,6 +103,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 };
 
                 ActionManager.Perform(new EditorActionCreateLayer(WorkingMap, ActionManager, SelectedHitObjects, layer));
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateToggleLayersCheckbox()
+        {
+            ToggleLayers = new Checkbox(ViewLayers, new Vector2(DeleteLayer.Width, DeleteLayer.Height),
+                FontAwesome.Get(FontAwesomeIcon.fa_eye_open),
+                FontAwesome.Get(FontAwesomeIcon.fa_eye_with_a_diagonal_line_interface_symbol_for_invisibility),
+                false)
+            {
+                Parent = Header,
+                Alignment = Alignment.MidRight,
+                X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
             };
         }
 
