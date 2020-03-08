@@ -233,6 +233,11 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemExportSkin(containerRect, "Export Skin"),
                         new OptionsItemUploadSkinToWorkshop(containerRect, "Upload Skin To Steam Workshop")
+                    }),
+                    new OptionsSubcategory("Configuration", new List<OptionsItem>()
+                    {
+                        new OptionsSlider(containerRect, "Note & Receptor Size Scale", ConfigManager.GameplayNoteScale, i => $"{i / 100f:0.00}x")
+                            { Tags = new List<string>() {  "mini" }}
                     })
                 }),
                 new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>
