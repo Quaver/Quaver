@@ -19,5 +19,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public override string GetValue() => "";
 
         public override int GetTime() => (int) Math.Round(ScrollVelocity.StartTime, MidpointRounding.AwayFromZero);
+
+        public override void SetSize()
+        {
+            var multiplier = Math.Abs(ScrollVelocity.Multiplier);
+            var size = MathHelper.Clamp(DefaultSize.X.Value * multiplier, 10, 150);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (Width != size)
+                Width = size;
+        }
     }
 }
