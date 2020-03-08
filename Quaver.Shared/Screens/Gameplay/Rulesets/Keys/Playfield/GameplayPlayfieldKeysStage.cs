@@ -348,13 +348,19 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             // Go through and create the receptors and column lighting objects.
             for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
+                var scale = ConfigManager.GameplayNoteScale.Value / 100f;
+
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (scale != 1)
+                    posX += (Playfield.LaneSize - Playfield.LaneSize * scale) / 2f;
 
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Size = new ScalableVector2(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
+                    Size = new ScalableVector2(Playfield.LaneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
