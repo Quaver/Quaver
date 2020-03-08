@@ -11,7 +11,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
     {
         public DrawableModifier(ModIdentifier mod)
         {
-            if (mod == ModIdentifier.LongNoteAdjust)
+            if (mod == ModIdentifier.HeatlthAdjust)
             {
                 Image = TextureManager.Load($@"Quaver.Resources/Textures/UI/Mods/N-JW.png");
                 return;
