@@ -8,10 +8,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
     {
         protected EditorPlayfield Playfield { get; }
 
+        protected static ScalableVector2 DefaultSize { get; } = new ScalableVector2(40, 2);
+
         public DrawableEditorLine(EditorPlayfield playfield)
         {
             Playfield = playfield;
-            Size = new ScalableVector2(40, 2);
+            Size = DefaultSize;
 
             // ReSharper disable once VirtualMemberCallInConstructor
             Tint = GetColor();
@@ -54,5 +56,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// </summary>
         /// <returns></returns>
         public abstract int GetTime();
+
+        /// <summary>
+        ///     Sets the size of the line
+        /// </summary>
+        public virtual void SetSize()
+        {
+        }
     }
 }

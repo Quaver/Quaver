@@ -69,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                     continue;
 
                 line.SetPosition();
+                line.SetSize();
                 line.Draw(gameTime);
             }
 
@@ -94,11 +95,39 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         {
             Lines = new List<DrawableEditorLine>();
 
-            foreach (var timingPoint in Map.TimingPoints)
-                Lines.Add(new DrawableEditorLineTimingPoint(Playfield, timingPoint));
+            var timingPointIndex = 0;
+            var svIndex = 0;
 
-            foreach (var sv in Map.SliderVelocities)
-                Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, sv));
+            // SV & Timing points are guaranteed to already be sorted, so there's no need to resort.
+            while (Lines.Count != Map.TimingPoints.Count + Map.SliderVelocities.Count)
+            {
+                var pointExists = timingPointIndex < Map.TimingPoints.Count;
+                var svExists = svIndex < Map.SliderVelocities.Count;
+
+                if (pointExists && svExists)
+                {
+                    if (Map.TimingPoints[timingPointIndex].StartTime < Map.SliderVelocities[svIndex].StartTime)
+                    {
+                        Lines.Add(new DrawableEditorLineTimingPoint(Playfield, Map.TimingPoints[timingPointIndex]));
+                        timingPointIndex++;
+                    }
+                    else
+                    {
+                        Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, Map.SliderVelocities[svIndex]));
+                        svIndex++;
+                    }
+                }
+                else if (pointExists)
+                {
+                    Lines.Add(new DrawableEditorLineTimingPoint(Playfield, Map.TimingPoints[timingPointIndex]));
+                    timingPointIndex++;
+                }
+                else if (svExists)
+                {
+                    Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, Map.SliderVelocities[svIndex]));
+                    svIndex++;
+                }
+            }
 
             InitializeLinePool();
         }
