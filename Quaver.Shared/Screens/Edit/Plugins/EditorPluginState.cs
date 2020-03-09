@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Scripting;
 using Wobble.Graphics.ImGUI;
 
@@ -13,8 +15,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The current time in the song
         /// </summary>
-        public double SongTime { get; set; }
+        public int SongTime
+        {
+            get;
+            [MoonSharpVisible(false)] set;
+        }
 
+        /// <summary>
+        ///     The slider velocities present in the map
+        /// </summary>
+        public List<SliderVelocityInfo> ScrollVelocities
+        {
+            get;
+            [MoonSharpVisible(false)] set;
+        }
+
+        /// <summary>
+        ///     ImGui options used to set styles/fonts for the window
+        /// </summary>
         [MoonSharpVisible((false))]
         private ImGuiOptions Options { get; }
 
@@ -24,9 +42,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     Pushes all styles to the current imgui context
         /// </summary>
-        public void PushImguiStyle()
-        {
-            ImGui.PushFont(Options.Fonts.First().Context);
-        }
+        public void PushImguiStyle() => ImGui.PushFont(Options.Fonts.First().Context);
     }
 }

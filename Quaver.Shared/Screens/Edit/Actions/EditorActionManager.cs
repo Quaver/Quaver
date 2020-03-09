@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MoonSharp.Interpreter;
+using MoonSharp.Interpreter.Interop;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
@@ -19,6 +22,7 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
+    [MoonSharpUserData]
     public class EditorActionManager : IDisposable
     {
         /// <summary>
@@ -28,97 +32,116 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <summary>
         ///     Stores a LIFO structure of actions to undo.
         /// </summary>
+        [MoonSharpVisible(false)]
         public Stack<IEditorAction> UndoStack { get; } = new Stack<IEditorAction>();
 
         /// <summary>
         ///     Stores a LIFO structure of actions to redo.
         /// </summary>
+        [MoonSharpVisible(false)]
         public Stack<IEditorAction> RedoStack { get; } = new Stack<IEditorAction>();
 
         /// <summary>
         ///     The last action the user performed before saving
         /// </summary>
+        [MoonSharpVisible(false)]
         public IEditorAction LastSaveAction { get; set; }
 
         /// <summary>
         ///    Detects if the user has made changes to the map before saving.
         /// </summary>
+        [MoonSharpVisible(false)]
         public bool HasUnsavedChanges => UndoStack.Count != 0  && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
 
         /// <summary>
         ///     Event invoked when a HitObject has been placed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectPlacedEventArgs> HitObjectPlaced;
 
         /// <summary>
         ///     Event invoked when a HitObject has been removed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectRemovedEventArgs> HitObjectRemoved;
 
         /// <summary>
         ///     Event invoked when a long note has been resized
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorLongNoteResizedEventArgs> LongNoteResized;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been removed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectBatchRemovedEventArgs> HitObjectBatchRemoved;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been placed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectBatchPlacedEventArgs> HitObjectBatchPlaced;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been flipped
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectsFlippedEventArgs> HitObjectsFlipped;
 
         /// <summary>
         ///     Event invoked when a batch of hitobjects have been moved
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitObjectsMovedEventArgs> HitObjectsMoved;
 
         /// <summary>
         ///     Event invoked when a hitsound has been added to a group of objects
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitsoundAddedEventArgs> HitsoundAdded;
 
         /// <summary>
         ///     Event invoked when a hitsound has been removed from a group of objects
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorHitSoundRemovedEventArgs> HitsoundRemoved;
 
         /// <summary>
         ///     Event invoked when a layer has been created
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorLayerCreatedEventArgs> LayerCreated;
 
         /// <summary>
         ///     Event invoked when a layer has been deleted
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorLayerRemovedEventArgs> LayerDeleted;
 
         /// <summary>
         ///     Event invoked when a layer has been renamed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorLayerRenamedEventArgs> LayerRenamed;
 
         /// <summary>
         ///     Event invoked when a layer's color has been changed
         /// </summary>
+        [MoonSharpVisible(false)]
         public event EventHandler<EditorLayerColorChangedEventArgs> LayerColorChanged;
 
         /// <summary>
         /// </summary>
         /// <param name="workingMap"></param>
+        [MoonSharpVisible(false)]
         public EditorActionManager(Qua workingMap) => WorkingMap = workingMap;
 
         /// <summary>
         ///     Performs a given action for the editor to take.
         /// </summary>
         /// <param name="action"></param>
+        [MoonSharpVisible(false)]
         public void Perform(IEditorAction action)
         {
             action.Perform();
@@ -159,14 +182,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="lane"></param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
-        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0)
+        /// <param name="layer"></param>
+        /// <param name="hitsounds"></param>
+        public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0)
         {
             var hitObject = new HitObjectInfo
             {
                 Lane = lane,
                 StartTime = startTime,
                 EndTime = endTime,
-                EditorLayer = layer
+                EditorLayer = layer,
+                HitSound = hitsounds
             };
 
             Perform(new EditorActionPlaceHitObject(this, WorkingMap, hitObject));
@@ -193,6 +219,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="type"></param>
         /// <param name="args"></param>
+        [MoonSharpVisible(false)]
         public void TriggerEvent(EditorActionType type, EventArgs args)
         {
             switch (type)
