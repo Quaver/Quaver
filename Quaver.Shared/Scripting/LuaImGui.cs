@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using MoonSharp.Interpreter;
+using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Logging;
@@ -41,7 +42,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public LuaImGui(string filePath, bool isResource = false)
+        public LuaImGui(string filePath, bool isResource = false) : base(true, EditorFileMenuBar.GetOptions())
         {
             FilePath = filePath;
             IsResource = isResource;
@@ -88,6 +89,7 @@ namespace Quaver.Shared.Scripting
             {
                 SetFrameState();
                 WorkingScript.Call(WorkingScript.Globals["draw"]);
+                AfterRender();
             }
             catch (Exception e)
             {
@@ -104,9 +106,14 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Sets the state of the plugin for this frame
         /// </summary>
-        public virtual void SetFrameState()
+        public virtual void SetFrameState() => State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
+
+        /// <summary>
+        ///     After the plugin has been render, this will be called.
+        ///     Should be used to pop any styles
+        /// </summary>
+        public virtual void AfterRender()
         {
-            State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
         }
 
         /// <summary>
