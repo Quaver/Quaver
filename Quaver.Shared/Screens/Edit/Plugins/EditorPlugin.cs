@@ -54,8 +54,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             WorkingScript.Globals["actions"] = Editor.ActionManager;
 
             var state = (EditorPluginState) State;
+
             state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
+            state.HitObjects = Editor.WorkingMap.HitObjects;
 
             base.SetFrameState();
 

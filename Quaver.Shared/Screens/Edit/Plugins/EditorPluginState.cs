@@ -31,6 +31,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         }
 
         /// <summary>
+        ///     The HitObjects that are currently in the map
+        /// </summary>
+        public List<HitObjectInfo> HitObjects
+        {
+            get;
+            [MoonSharpVisible(false)] set;
+        }
+
+        /// <summary>
         ///     ImGui options used to set styles/fonts for the window
         /// </summary>
         [MoonSharpVisible((false))]
