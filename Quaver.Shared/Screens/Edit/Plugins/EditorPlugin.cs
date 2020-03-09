@@ -1,3 +1,5 @@
+using System.Numerics;
+using ImGuiNET;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -50,12 +52,32 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.SongTime = Editor.Track.Time;
 
             base.SetFrameState();
+
+            state.PushImguiStyle();
+            PushDefaultStyles();
+        }
+
+        /// <summary>
+        ///     Called after rendering the plugin to pop the default style vars
+        /// </summary>
+        public override void AfterRender()
+        {
+            ImGui.PopStyleVar();
+            base.AfterRender();
+        }
+
+        /// <summary>
+        ///     To push any default styling for plugin windows
+        /// </summary>
+        private void PushDefaultStyles()
+        {
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(12, 4));
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override LuaPluginState GetStateObject() => new EditorPluginState();
+        public override LuaPluginState GetStateObject() => new EditorPluginState(Options);
     }
 }

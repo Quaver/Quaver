@@ -385,7 +385,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
+        public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
         {
             new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 14),
         }, false);
