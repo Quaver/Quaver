@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using Quaver.Shared.Scripting;
@@ -48,8 +50,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public override void SetFrameState()
         {
+            WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
+            WorkingScript.Globals["actions"] = Editor.ActionManager;
+
             var state = (EditorPluginState) State;
-            state.SongTime = Editor.Track.Time;
+
+            state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
+            state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
+            state.HitObjects = Editor.WorkingMap.HitObjects;
 
             base.SetFrameState();
 

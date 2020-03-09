@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using MoonSharp.Interpreter;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.UI.Menu;
 using Wobble;
 using Wobble.Graphics.ImGUI;
@@ -15,7 +16,7 @@ namespace Quaver.Shared.Scripting
     {
         /// <summary>
         /// </summary>
-        private Script WorkingScript { get; set; }
+        protected Script WorkingScript { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -51,8 +52,9 @@ namespace Quaver.Shared.Scripting
             State = GetStateObject();
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
-            RegisterAllVectors();
+            UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
 
+            RegisterAllVectors();
             LoadScript();
 
             if (IsResource)
@@ -159,8 +161,8 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Handles registering the Vector types for the script
         /// </summary>
-        private void RegisterAllVectors() {
-
+        private void RegisterAllVectors()
+        {
             // Vector 2
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
                 dynVal => {

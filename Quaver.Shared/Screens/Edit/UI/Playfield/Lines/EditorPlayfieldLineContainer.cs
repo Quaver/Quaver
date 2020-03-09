@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -18,6 +22,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private Qua Map { get; }
 
         private IAudioTrack Track { get; }
+
+        private EditorActionManager ActionManager { get; }
 
         private List<DrawableEditorLine> Lines { get; set; }
 
@@ -36,14 +42,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         /// <param name="playfield"></param>
         /// <param name="map"></param>
         /// <param name="track"></param>
-        public EditorPlayfieldLineContainer(EditorPlayfield playfield, Qua map, IAudioTrack track)
+        /// <param name="actionManager"></param>
+        public EditorPlayfieldLineContainer(EditorPlayfield playfield, Qua map, IAudioTrack track, EditorActionManager actionManager)
         {
             Playfield = playfield;
             Map = map;
             Track = track;
+            ActionManager = actionManager;
 
             InitializeTicks();
             Track.Seeked += OnTrackSeeked;
+            ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
+            ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
         }
 
         /// <summary>
@@ -85,6 +95,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 line.Destroy();
 
             Track.Seeked -= OnTrackSeeked;
+            ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
+            ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
             base.Destroy();
         }
 
@@ -179,8 +191,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             }
         }
 
-        private void OnTrackSeeked(object sender, TrackSeekedEventArgs e)
+        private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => InitializeLinePool();
+
+        private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e)
         {
+            Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        private void OnScrollVelocityRemoved(object sender, EditorScrollVelocityRemovedEventArgs e)
+        {
+            Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity);
             InitializeLinePool();
         }
     }
