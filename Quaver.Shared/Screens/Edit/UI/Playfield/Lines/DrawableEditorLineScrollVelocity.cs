@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
     public class DrawableEditorLineScrollVelocity : DrawableEditorLine
     {
-        private SliderVelocityInfo ScrollVelocity { get; }
+        public SliderVelocityInfo ScrollVelocity { get; }
 
         public DrawableEditorLineScrollVelocity(EditorPlayfield playfield, SliderVelocityInfo sv) : base(playfield)
         {

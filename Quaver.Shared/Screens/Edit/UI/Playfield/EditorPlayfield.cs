@@ -436,7 +436,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateLineContainer() => LineContainer = new EditorPlayfieldLineContainer(this, Map, Track);
+        private void CreateLineContainer() => LineContainer = new EditorPlayfieldLineContainer(this, Map, Track, ActionManager);
 
         /// <summary>
         /// </summary>

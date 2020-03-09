@@ -19,6 +19,8 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -132,6 +134,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorLayerColorChangedEventArgs> LayerColorChanged;
 
         /// <summary>
+        ///     Event invoked when a scroll velocity has been added to the map
+        /// </summary>
+        [MoonSharpVisible(false)]
+        public event EventHandler<EditorScrollVelocityAddedEventArgs> ScrollVelocityAdded;
+
+        /// <summary>
+        ///     Event invoked when a scroll velocity has been removed from the map
+        /// </summary>
+        [MoonSharpVisible(false)]
+        public event EventHandler<EditorScrollVelocityRemovedEventArgs> ScrollVelocityRemoved;
+
+        /// <summary>
         /// </summary>
         /// <param name="workingMap"></param>
         [MoonSharpVisible(false)]
@@ -215,6 +229,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
             => Perform(new EditorActionResizeLongNote(this, WorkingMap, h, originalTime, time));
 
         /// <summary>
+        ///     Places an sv down in the map
+        /// </summary>
+        /// <param name="sv"></param>
+        public void PlaceScrollVelocity(SliderVelocityInfo sv) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv));
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -263,6 +283,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ColorLayer:
                     LayerColorChanged?.Invoke(this, (EditorLayerColorChangedEventArgs) args);
                     break;
+                case EditorActionType.AddScrollVelocity:
+                    ScrollVelocityAdded?.Invoke(this, (EditorScrollVelocityAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveScrollVelocity:
+                    ScrollVelocityRemoved?.Invoke(this, (EditorScrollVelocityRemovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -286,6 +312,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             LayerDeleted = null;
             LayerRenamed = null;
             LayerColorChanged = null;
+            ScrollVelocityAdded = null;
+            ScrollVelocityRemoved = null;
         }
     }
 }
