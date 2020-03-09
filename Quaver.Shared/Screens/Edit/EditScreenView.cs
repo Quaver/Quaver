@@ -302,7 +302,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 plugin.Draw(gameTime);
 
-                if (ImGui.IsAnyItemHovered())
+                if (ImGui.IsAnyItemHovered() || plugin.State.IsWindowHovered)
                     IsImGuiHovered = true;
             }
         }

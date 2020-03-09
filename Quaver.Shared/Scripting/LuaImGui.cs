@@ -34,7 +34,7 @@ namespace Quaver.Shared.Scripting
 
         /// <summary>
         /// </summary>
-        private LuaPluginState State { get; } = new LuaPluginState();
+        public LuaPluginState State { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -45,6 +45,9 @@ namespace Quaver.Shared.Scripting
         {
             FilePath = filePath;
             IsResource = isResource;
+
+            // ReSharper disable once VirtualMemberCallInConstructor
+            State = GetStateObject();
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             RegisterAllVectors();
@@ -83,13 +86,27 @@ namespace Quaver.Shared.Scripting
         {
             try
             {
-                State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
+                SetFrameState();
                 WorkingScript.Call(WorkingScript.Globals["draw"]);
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Returns an object with the state the plugin has
+        /// </summary>
+        /// <returns></returns>
+        public virtual LuaPluginState GetStateObject() => new LuaPluginState();
+
+        /// <summary>
+        ///     Sets the state of the plugin for this frame
+        /// </summary>
+        public virtual void SetFrameState()
+        {
+            State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
         }
 
         /// <summary>

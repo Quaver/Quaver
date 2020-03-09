@@ -6,6 +6,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
     {
         /// <summary>
         /// </summary>
+        private EditScreen Editor { get; }
+
+        /// <summary>
+        /// </summary>
         public bool IsActive { get; set; }
 
         /// <summary>
@@ -23,16 +27,35 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="editScreen"></param>
         /// <param name="name"></param>
         /// <param name="author"></param>
         /// <param name="description"></param>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public EditorPlugin(string name, string author, string description, string filePath, bool isResource = false) : base(filePath, isResource)
+        public EditorPlugin(EditScreen editScreen, string name, string author, string description, string filePath, bool isResource = false) : base(filePath, isResource)
         {
+            Editor = editScreen;
             Name = name;
             Author = author;
             Description = description;
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void SetFrameState()
+        {
+            var state = (EditorPluginState) State;
+            state.SongTime = Editor.Track.Time;
+
+            base.SetFrameState();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public override LuaPluginState GetStateObject() => new EditorPluginState();
     }
 }
