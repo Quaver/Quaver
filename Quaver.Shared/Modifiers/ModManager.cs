@@ -131,7 +131,7 @@ namespace Quaver.Shared.Modifiers
                 case ModIdentifier.Coop:
                     gameplayModifier = new ModCoop();
                     break;
-                case ModIdentifier.LongNoteAdjust:
+                case ModIdentifier.HeatlthAdjust:
                     gameplayModifier = new ModLongNoteAdjust();
                     break;
                 default:

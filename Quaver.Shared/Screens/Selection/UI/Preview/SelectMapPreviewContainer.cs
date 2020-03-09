@@ -167,20 +167,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             map.Qua = qua;
             map.Qua.ApplyMods(ModManager.Mods);
 
-            lock (map.Qua)
-            {
-                var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
+            var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
-                var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
-                    false, null, null, true);
+            var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
+                false, null, null, true);
 
-                gameplay.HandleReplaySeeking();
+            gameplay.HandleReplaySeeking();
 
-                if (token.IsCancellationRequested)
-                    gameplay.Destroy();
+            if (token.IsCancellationRequested)
+                gameplay.Destroy();
 
-                return gameplay;
-            }
+            return gameplay;
         }
 
         /// <summary>
@@ -192,8 +189,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (MapManager.Selected.Value != e.Input)
                 return;
 
-            lock (e.Input.Qua = e.Result.Map)
-                e.Input.Qua = e.Result.Map;
+            e.Input.Qua = e.Result.Map;
 
             LoadedGameplayScreen = e.Result;
 
@@ -246,18 +242,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 ShowTestPlayPrompt();
 
-                ThreadScheduler.Run(() =>
-                {
-                    if (SeekBar != null)
-                    {
-                        lock (SeekBar)
-                            CreateSeekBar(e.Input.Qua, playfield);
-
-                        return;
-                    }
-
-                    CreateSeekBar(e.Input.Qua, playfield);
-                });
+                ThreadScheduler.Run(() => CreateSeekBar(e.Input.Qua, playfield));
             });
         }
 
@@ -431,6 +416,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     hitobjectManager.HandleSkip();
                 }
             };
+
+            if (qua != MapManager.Selected.Value.Qua)
+            {
+                SeekBar.Destroy();
+                return;
+            }
 
             AddScheduledUpdate(() =>
             {

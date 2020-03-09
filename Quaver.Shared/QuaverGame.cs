@@ -254,7 +254,6 @@ namespace Quaver.Shared
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
-            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Window.IsBorderless = ConfigManager.WindowBorderless.Value;
 
             // Apply all graphics changes
