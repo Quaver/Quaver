@@ -712,7 +712,7 @@ namespace Quaver.Shared.Screens.Edit
                     var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser())
                         .ReadFile($"{directory}/settings.ini")["Settings"];
 
-                    var plugin = new EditorPlugin(data["Name"] ?? "", data["Author"] ?? "",
+                    var plugin = new EditorPlugin(this, data["Name"] ?? "", data["Author"] ?? "",
                         data["Description"] ?? "", pluginPath);
 
                     Plugins.Add(plugin);

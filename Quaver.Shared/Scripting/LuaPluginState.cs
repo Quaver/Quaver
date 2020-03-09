@@ -7,8 +7,15 @@ namespace Quaver.Shared.Scripting
     public class LuaPluginState
     {
         /// <summary>
+        ///     The time elapsed between the previous and current frame
         /// </summary>
         public double DeltaTime { get; set; }
+
+        /// <summary>
+        ///     If the plugin window is currently hovered.
+        ///     This has to be set by the plugin itself
+        /// </summary>
+        public bool IsWindowHovered { get; set; }
 
         /// <summary>
         ///     Any state that the user wants to store for their plugin

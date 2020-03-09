@@ -121,6 +121,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (IsSelecting || !MouseManager.IsUniquePress(MouseButton.Left))
                 return;
 
+            if (!Button.IsGloballyClickable)
+                return;
+
             if (Playfield.GetHoveredHitObject() != null)
                 return;
 
