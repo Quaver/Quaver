@@ -7,7 +7,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
     public class DrawableEditorLineTimingPoint : DrawableEditorLine
     {
-        private TimingPointInfo TimingPoint { get; }
+        public TimingPointInfo TimingPoint { get; }
 
         public DrawableEditorLineTimingPoint(EditorPlayfield playfield, TimingPointInfo timingPoint) : base(playfield)
         {

@@ -20,6 +20,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         AddScrollVelocity,
         RemoveScrollVelocity,
         AddScrollVelocityBatch,
-        RemoveScrollVelocityBatch
+        RemoveScrollVelocityBatch,
+        AddTimingPoint,
+        RemoveTimingPoint
     }
 }

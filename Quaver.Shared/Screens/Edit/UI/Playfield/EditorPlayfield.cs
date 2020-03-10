@@ -431,8 +431,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(Map, this, Track, BeatSnap, ScrollSpeed,
-            ScaleScrollSpeedWithAudioRate, BeatSnapColor);
+        private void CreateTimeline() => Timeline = new EditorPlayfieldTimeline(ActionManager, Map, this, Track,
+            BeatSnap, ScrollSpeed, ScaleScrollSpeedWithAudioRate, BeatSnapColor);
 
         /// <summary>
         /// </summary>

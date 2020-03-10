@@ -8,6 +8,8 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -16,6 +18,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 {
     public class EditorPlayfieldTimeline : Container
     {
+        /// <summary>
+        /// </summary>
+        private EditorActionManager ActionManager { get; }
+
         /// <summary>
         /// </summary>
         private Qua Map { get; }
@@ -65,6 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         /// <summary>
         /// </summary>
+        /// <param name="manager"></param>
         /// <param name="map"></param>
         /// <param name="playfield"></param>
         /// <param name="track"></param>
@@ -72,7 +79,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="scrollSpeed"></param>
         /// <param name="scaleScrollSpeedWithAudioRate"></param>
         /// <param name="beatSnapColor"></param>
-        public EditorPlayfieldTimeline(Qua map, EditorPlayfield playfield, IAudioTrack track, BindableInt beatSnap,
+        public EditorPlayfieldTimeline(EditorActionManager manager, Qua map, EditorPlayfield playfield, IAudioTrack track, BindableInt beatSnap,
             BindableInt scrollSpeed, Bindable<bool> scaleScrollSpeedWithAudioRate, Bindable<EditorBeatSnapColor> beatSnapColor)
         {
             Map = map;
@@ -82,6 +89,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ScrollSpeed = scrollSpeed;
             ScaleScrollSpeedWithAudioRate = scaleScrollSpeedWithAudioRate;
             BeatSnapColor = beatSnapColor;
+            ActionManager = manager;
 
             InitializeLines();
 
@@ -90,6 +98,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             Track.Seeked += OnTrackSeeked;
             Track.RateChanged += OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
+            ActionManager.TimingPointAdded += OnTimingPointAdded;
+            ActionManager.TimingPointRemoved += OnTimingPointRemoved;
         }
 
         /// <inheritdoc />
@@ -118,6 +128,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
+            ActionManager.TimingPointAdded -= OnTimingPointAdded;
 
             base.Destroy();
         }
@@ -408,6 +419,30 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             }
         }
 
+       /// <summary>
+       ///     Completely reinitializes the lines
+       /// </summary>
+       private void ReInitialize()
+       {
+           foreach (var lines in CachedLines)
+               lines.Value.ForEach(x => x.Destroy());
+
+           Lines.Clear();
+           CachedLines.Clear();
+
+           InitializeLines();
+       }
+
+       /// <summary>
+       /// </summary>
+       private void RefreshLines()
+       {
+           foreach (var line in Lines)
+               line.SetPosition();
+
+           InitializeLinePool();
+       }
+
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
@@ -428,16 +463,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
         /// <summary>
         /// </summary>
-        private void RefreshLines()
-        {
-            foreach (var line in Lines)
-                line.SetPosition();
-
-            InitializeLinePool();
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e)
@@ -449,5 +474,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="e"></param>
         private void OnScaleScrollSpeedWithRateChanged(object sender, BindableValueChangedEventArgs<bool> e)
             => RefreshLines();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e) => ReInitialize();
     }
 }

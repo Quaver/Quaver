@@ -59,5 +59,15 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="svs"></param>
         public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        public void PlaceTimingPoint(TimingPointInfo tp) => ActionManager.PlaceTimingPoint(tp);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        public void RemoveTimingPoint(TimingPointInfo tp) => ActionManager.RemoveTimingPoint(tp);
     }
 }
