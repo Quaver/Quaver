@@ -3,6 +3,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using ImGuiNET;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -53,6 +54,18 @@ namespace Quaver.Shared.Scripting
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+            UserData.RegisterType<ImGuiInputTextFlags>();
+            UserData.RegisterType<ImGuiDataType>();
+            UserData.RegisterType<ImGuiTreeNodeFlags>();
+            UserData.RegisterType<ImGuiSelectableFlags>();
+            UserData.RegisterType<ImGuiMouseCursor>();
+            UserData.RegisterType<ImGuiCond>();
+            UserData.RegisterType<ImGuiWindowFlags>();
+            UserData.RegisterType<ImGuiDir>();
+            UserData.RegisterType<ImGuiDragDropFlags>();
+            UserData.RegisterType<ImGuiTabBarFlags>();
+            UserData.RegisterType<ImGuiTabItemFlags>();
+            UserData.RegisterType<ImGuiColorEditFlags>();
 
             RegisterAllVectors();
             LoadScript();
@@ -108,7 +121,22 @@ namespace Quaver.Shared.Scripting
         /// <summary>
         ///     Sets the state of the plugin for this frame
         /// </summary>
-        public virtual void SetFrameState() => State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
+        public virtual void SetFrameState()
+        {
+            State.DeltaTime = GameBase.Game.TimeSinceLastFrame;
+            WorkingScript.Globals["imgui_input_text_flags"] = typeof(ImGuiInputTextFlags);
+            WorkingScript.Globals["imgui_data_type"] = typeof(ImGuiDataType);
+            WorkingScript.Globals["imgui_tree_node_flags"] = typeof(ImGuiTreeNodeFlags);
+            WorkingScript.Globals["imgui_selectable_flags"] = typeof(ImGuiSelectableFlags);
+            WorkingScript.Globals["imgui_mouse_cursor"] = typeof(ImGuiMouseCursor);
+            WorkingScript.Globals["imgui_cond"] = typeof(ImGuiCond);
+            WorkingScript.Globals["imgui_window_flags"] = typeof(ImGuiWindowFlags);
+            WorkingScript.Globals["imgui_dir"] = typeof(ImGuiDir);
+            WorkingScript.Globals["imgui_drag_drop_flags"] = typeof(ImGuiDragDropFlags);
+            WorkingScript.Globals["imgui_tab_bar_flags"] = typeof(ImGuiTabBarFlags);
+            WorkingScript.Globals["imgui_tab_item_flags"] = typeof(ImGuiTabItemFlags);
+            WorkingScript.Globals["imgui_color_edit_flags"] = typeof(ImGuiColorEditFlags);
+        }
 
         /// <summary>
         ///     After the plugin has been render, this will be called.
