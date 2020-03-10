@@ -15,38 +15,27 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The current time in the song
         /// </summary>
-        public int SongTime
-        {
-            get;
-            [MoonSharpVisible(false)] set;
-        }
+        public int SongTime { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The slider velocities present in the map
         /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities
-        {
-            get;
-            [MoonSharpVisible(false)] set;
-        }
+        public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The HitObjects that are currently in the map
         /// </summary>
-        public List<HitObjectInfo> HitObjects
-        {
-            get;
-            [MoonSharpVisible(false)] set;
-        }
+        public List<HitObjectInfo> HitObjects { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The timing points that are currently in the map
         /// </summary>
-        public List<TimingPointInfo> TimingPoints
-        {
-            get;
-            [MoonSharpVisible(false)] set;
-        }
+        public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
+        ///     The objects that are currently selected by the user
+        /// </summary>
+        public List<HitObjectInfo> SelectedHitObjects { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     ImGui options used to set styles/fonts for the window

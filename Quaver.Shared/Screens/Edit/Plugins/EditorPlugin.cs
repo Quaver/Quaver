@@ -59,6 +59,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
             state.HitObjects = Editor.WorkingMap.HitObjects;
             state.TimingPoints = Editor.WorkingMap.TimingPoints;
+            state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
 
             base.SetFrameState();
 
