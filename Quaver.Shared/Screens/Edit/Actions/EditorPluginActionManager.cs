@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Enums;
@@ -32,6 +33,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public HitObjectInfo PlaceHitObject(int lane, int startTime, int endTime = 0, int layer = 0, HitSounds hitsounds = 0)
             => ActionManager.PlaceHitObject(lane, startTime, endTime, layer, hitsounds);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => ActionManager.PlaceHitObjectBatch(hitObjects);
+        
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
