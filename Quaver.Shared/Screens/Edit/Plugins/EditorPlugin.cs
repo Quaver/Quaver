@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Numerics;
 using ImGuiNET;
+using MoonSharp.Interpreter;
+using Quaver.API.Enums;
 using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -43,6 +45,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Name = name;
             Author = author;
             Description = description;
+
+            UserData.RegisterType<GameMode>();
+            UserData.RegisterType<HitSounds>();
+            UserData.RegisterType<TimeSignature>();
         }
 
         /// <inheritdoc />
@@ -51,6 +57,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void SetFrameState()
         {
             WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
+            WorkingScript.Globals["game_mode"] = typeof(GameMode);
+            WorkingScript.Globals["hitsounds"] = typeof(HitSounds);
+            WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
             WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
 
             var state = (EditorPluginState) State;
