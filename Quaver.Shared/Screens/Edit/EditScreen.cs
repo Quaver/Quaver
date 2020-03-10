@@ -447,6 +447,28 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        /// <param name="direction"></param>
+        private void HandleSeeking(Direction direction)
+        {
+            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, BeatSnap.Value, Track.Time);
+
+            if (Track.IsPlaying)
+            {
+                for (var i = 0; i < 3; i++)
+                    time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, direction, BeatSnap.Value, time);
+            }
+
+            if (time < 0)
+                time = 0;
+
+            if (time > Track.Length)
+                time = Track.Length - 100;
+
+            Track.Seek(time);
+        }
+        
+        /// <summary>
+        /// </summary>
         private void HandleSeekingBackwards()
         {
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Left)
@@ -456,12 +478,7 @@ namespace Quaver.Shared.Screens.Edit
             if (Track == null || Track.IsDisposed || !CanSeek())
                 return;
 
-            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Backward, BeatSnap.Value, Track.Time);
-
-            if (time < 0)
-                return;
-
-            Track.Seek(time);
+            HandleSeeking(Direction.Backward);
         }
 
         /// <summary>
@@ -475,12 +492,7 @@ namespace Quaver.Shared.Screens.Edit
             if (Track == null || Track.IsDisposed || !CanSeek())
                 return;
 
-            var time = AudioEngine.GetNearestSnapTimeFromTime(WorkingMap, Direction.Forward, BeatSnap.Value, Track.Time);
-
-            if (time > Track.Length)
-                return;
-
-            Track.Seek(time);
+            HandleSeeking(Direction.Forward);
         }
 
         /// <summary>
