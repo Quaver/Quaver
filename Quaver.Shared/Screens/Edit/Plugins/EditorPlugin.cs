@@ -51,7 +51,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void SetFrameState()
         {
             WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
-            WorkingScript.Globals["actions"] = Editor.ActionManager;
+            WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
 
             var state = (EditorPluginState) State;
 
