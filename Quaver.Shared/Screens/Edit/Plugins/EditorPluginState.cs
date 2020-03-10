@@ -40,6 +40,15 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         }
 
         /// <summary>
+        ///     The timing points that are currently in the map
+        /// </summary>
+        public List<TimingPointInfo> TimingPoints
+        {
+            get;
+            [MoonSharpVisible(false)] set;
+        }
+
+        /// <summary>
         ///     ImGui options used to set styles/fonts for the window
         /// </summary>
         [MoonSharpVisible((false))]

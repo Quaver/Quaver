@@ -8,6 +8,7 @@ using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -58,8 +59,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
+            ActionManager.TimingPointAdded += OnTimingPointAdded;
+            ActionManager.TimingPointRemoved += OnTimingPointRemoved;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
@@ -103,6 +107,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded -= OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
+            ActionManager.TimingPointAdded -= OnTimingPointAdded;
+            ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
 
             base.Destroy();
         }
@@ -243,6 +249,27 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             foreach (var sv in e.ScrollVelocities)
                 Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == sv);
 
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e)
+        {
+            Lines.Add(new DrawableEditorLineTimingPoint(Playfield, e.TimingPoint));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+        
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e)
+        {
+            Lines.RemoveAll(x => x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint);
             InitializeLinePool();
         }
     }

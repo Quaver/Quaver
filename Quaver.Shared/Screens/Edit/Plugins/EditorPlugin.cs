@@ -58,6 +58,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
             state.HitObjects = Editor.WorkingMap.HitObjects;
+            state.TimingPoints = Editor.WorkingMap.TimingPoints;
 
             base.SetFrameState();
 
