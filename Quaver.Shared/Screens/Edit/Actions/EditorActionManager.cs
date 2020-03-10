@@ -20,7 +20,9 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -131,6 +133,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorScrollVelocityRemovedEventArgs> ScrollVelocityRemoved;
 
         /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been added to the map
+        /// </summary>
+        public event EventHandler<EditorScrollVelocityBatchAddedEventArgs> ScrollVelocityBatchAdded;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorScrollVelocityBatchRemovedEventArgs> ScrollVelocityBatchRemoved;
+
+        /// <summary>
         /// </summary>
         /// <param name="workingMap"></param>
         public EditorActionManager(Qua workingMap)
@@ -227,6 +239,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void PlaceScrollVelocity(SliderVelocityInfo sv) => Perform(new EditorActionAddScrollVelocity(this, WorkingMap, sv));
 
         /// <summary>
+        ///     Places a batch of scroll velocities into the map
+        /// </summary>
+        /// <param name="svs"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs));
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -280,6 +298,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveScrollVelocity:
                     ScrollVelocityRemoved?.Invoke(this, (EditorScrollVelocityRemovedEventArgs) args);
                     break;
+                case EditorActionType.AddScrollVelocityBatch:
+                    ScrollVelocityBatchAdded?.Invoke(this, (EditorScrollVelocityBatchAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveScrollVelocityBatch:
+                    ScrollVelocityBatchRemoved?.Invoke(this, (EditorScrollVelocityBatchRemovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -305,6 +329,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             LayerColorChanged = null;
             ScrollVelocityAdded = null;
             ScrollVelocityRemoved = null;
+            ScrollVelocityBatchAdded = null;
+            ScrollVelocityBatchRemoved = null;
         }
     }
 }

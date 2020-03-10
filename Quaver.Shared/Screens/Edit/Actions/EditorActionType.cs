@@ -18,6 +18,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
         MoveToLayer,
         ColorLayer,
         AddScrollVelocity,
-        RemoveScrollVelocity
+        RemoveScrollVelocity,
+        AddScrollVelocityBatch,
+        RemoveScrollVelocityBatch
     }
 }

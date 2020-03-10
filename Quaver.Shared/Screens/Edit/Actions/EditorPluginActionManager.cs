@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="hitObjects"></param>
         public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => ActionManager.PlaceHitObjectBatch(hitObjects);
-        
+
         /// <summary>
         /// </summary>
         /// <param name="h"></param>
@@ -54,5 +54,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="sv"></param>
         public void PlaceScrollVelocity(SliderVelocityInfo sv) => ActionManager.PlaceScrollVelocity(sv);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="svs"></param>
+        public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs);
     }
 }

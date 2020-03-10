@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
+using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -54,6 +56,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Track.Seeked += OnTrackSeeked;
             ActionManager.ScrollVelocityAdded += OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
+            ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
+            ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
         }
 
         /// <summary>
@@ -97,6 +101,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Track.Seeked -= OnTrackSeeked;
             ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
+            ActionManager.ScrollVelocityBatchAdded -= OnScrollVelocityBatchAdded;
+            ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
+
             base.Destroy();
         }
 
@@ -193,6 +200,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => InitializeLinePool();
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnScrollVelocityAdded(object sender, EditorScrollVelocityAddedEventArgs e)
         {
             Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, e.ScrollVelocity));
@@ -200,9 +211,38 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             InitializeLinePool();
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollVelocityBatchAdded(object sender, EditorScrollVelocityBatchAddedEventArgs e)
+        {
+            foreach (var sv in e.ScrollVelocities)
+                Lines.Add(new DrawableEditorLineScrollVelocity(Playfield, sv));
+
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnScrollVelocityRemoved(object sender, EditorScrollVelocityRemovedEventArgs e)
         {
             Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == e.ScrollVelocity);
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollVelocityBatchRemoved(object sender, EditorScrollVelocityBatchRemovedEventArgs e)
+        {
+            foreach (var sv in e.ScrollVelocities)
+                Lines.RemoveAll(x => x is DrawableEditorLineScrollVelocity line && line.ScrollVelocity == sv);
+
             InitializeLinePool();
         }
     }
