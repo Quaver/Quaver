@@ -69,5 +69,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="tp"></param>
         public void RemoveTimingPoint(TimingPointInfo tp) => ActionManager.RemoveTimingPoint(tp);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tps"></param>
+        public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.PlaceTimingPointBatch(tps);
     }
 }
