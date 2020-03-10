@@ -24,7 +24,9 @@ using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
+using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -155,6 +157,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorTimingPointAddedEventArgs> TimingPointRemoved;
 
         /// <summary>
+        ///     Event invoked when a batch of timing points has been added to the map
+        /// </summary>
+        public event EventHandler<EditorTimingPointBatchAddedEventArgs> TimingPointBatchAdded;
+
+        /// <summary>
+        ///     Event invoked when a batch of timing points has been removed from the map
+        /// </summary>
+        public event EventHandler<EditorTimingPointBatchRemovedEventArgs> TimingPointBatchRemoved;
+
+        /// <summary>
         /// </summary>
         /// <param name="workingMap"></param>
         public EditorActionManager(Qua workingMap)
@@ -269,6 +281,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void RemoveTimingPoint(TimingPointInfo tp) => Perform(new EditorActionRemoveTimingPoint(this, WorkingMap, tp));
 
         /// <summary>
+        ///     Places a batch of timing points to the map
+        /// </summary>
+        /// <param name="tps"></param>
+        public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionAddTimingPointBatch(this, WorkingMap, tps));
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -334,6 +352,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveTimingPoint:
                     TimingPointRemoved?.Invoke(this, (EditorTimingPointRemovedEventArgs) args);
                     break;
+                case EditorActionType.AddTimingPointBatch:
+                    TimingPointBatchAdded?.Invoke(this, (EditorTimingPointBatchAddedEventArgs) args);
+                    break;
+                case EditorActionType.RemoveTimingPointBatch:
+                    TimingPointBatchRemoved?.Invoke(this, (EditorTimingPointBatchRemovedEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -363,6 +387,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             ScrollVelocityBatchRemoved = null;
             TimingPointAdded = null;
             TimingPointRemoved = null;
+            TimingPointBatchAdded = null;
+            TimingPointBatchRemoved = null;
         }
     }
 }

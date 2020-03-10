@@ -10,6 +10,8 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -100,6 +102,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ScaleScrollSpeedWithAudioRate.ValueChanged += OnScaleScrollSpeedWithRateChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
+            ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
         }
 
         /// <inheritdoc />
@@ -129,6 +133,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             Track.RateChanged -= OnTrackRateChanged;
             ScaleScrollSpeedWithAudioRate.ValueChanged -= OnScaleScrollSpeedWithRateChanged;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
+            ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
 
             base.Destroy();
         }
@@ -486,5 +492,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e) => ReInitialize();
     }
 }

@@ -9,6 +9,8 @@ using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
 using Wobble.Graphics;
@@ -61,6 +63,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
+            ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
         }
 
         /// <inheritdoc />
@@ -109,6 +113,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
+            ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
 
             base.Destroy();
         }
@@ -262,7 +268,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="sender"></param>
@@ -270,6 +276,31 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e)
         {
             Lines.RemoveAll(x => x is DrawableEditorLineTimingPoint line && line.TimingPoint == e.TimingPoint);
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e)
+        {
+            foreach (var sv in e.TimingPoints)
+                Lines.Add(new DrawableEditorLineTimingPoint(Playfield, sv));
+
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e)
+        {
+            foreach (var tp in e.TimingPoints)
+                Lines.RemoveAll(x => x is DrawableEditorLineTimingPoint line && line.TimingPoint == tp);
+
             InitializeLinePool();
         }
     }
