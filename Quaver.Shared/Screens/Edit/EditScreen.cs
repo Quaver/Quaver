@@ -466,7 +466,7 @@ namespace Quaver.Shared.Screens.Edit
 
             Track.Seek(time);
         }
-        
+
         /// <summary>
         /// </summary>
         private void HandleSeekingBackwards()

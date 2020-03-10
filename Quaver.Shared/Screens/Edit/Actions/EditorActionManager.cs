@@ -202,6 +202,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        public void PlaceHitObjectBatch(List<HitObjectInfo> hitObjects) => Perform(new EditorActionPlaceHitObjectBatch(this, WorkingMap, hitObjects));
+
+        /// <summary>
         ///     Removes a HitObject from the map
         /// </summary>
         /// <param name="h"></param>
