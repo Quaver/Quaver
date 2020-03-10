@@ -67,6 +67,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public GameplayRulesetKeys Ruleset { get; }
 
         /// <summary>
+        ///     Qua with normalized SVs.
+        /// </summary>
+        private Qua Map;
+
+        /// <summary>
         ///     Hit Object info used for object pool and gameplay
         ///     Every hit object in the pool is split by the hit object's lane
         /// </summary>
@@ -89,11 +94,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     Every hit object in the pool is split by the hit object's lane
         /// </summary>
         public List<Queue<GameplayHitObjectKeys>> HeldLongNoteLanes { get; private set; }
-
-        /// <summary>
-        ///     List of slider velocities used for the current map
-        /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities { get; set; } = new List<SliderVelocityInfo>();
 
         /// <summary>
         ///     List of added hit object positions calculated from SV. Used for optimization
@@ -294,10 +294,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public HitObjectManagerKeys(GameplayRulesetKeys ruleset, Qua map) : base(map)
         {
             Ruleset = ruleset;
+            Map = map.WithNormalizedSVs();
 
             // Initialize SV
             UpdatePoolingPositions();
-            InitializeScrollVelocities(map);
             InitializePositionMarkers();
             UpdateCurrentTrackPosition();
 
@@ -665,114 +665,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             DeadNoteLanes[gameplayHitObject.Info.Lane - 1].Enqueue(gameplayHitObject);
         }
 
-        /// <summary>
-        ///     Generate Scroll Velocity points.
-        /// </summary>
-        /// <param name="qua"></param>
-        private void InitializeScrollVelocities(Qua qua)
-        {
-            // Find average bpm
-            var commonBpm = qua.GetCommonBpm();
-
-            // Create SV multiplier timing points
-            var index = 0;
-            for (var i = 0; i < qua.TimingPoints.Count; i++)
-            {
-                var svFound = false;
-
-                // SV starts after the last timing point
-                if (i == qua.TimingPoints.Count - 1)
-                {
-                    for (var j = index; j < qua.SliderVelocities.Count; j++)
-                    {
-                        var sv = new SliderVelocityInfo()
-                        {
-                            StartTime = qua.SliderVelocities[j].StartTime,
-                            Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
-                        };
-                        ScrollVelocities.Add(sv);
-
-                        // Toggle SvFound if inheriting point is overlapping timing point
-                        if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
-                            svFound = true;
-                    }
-                }
-
-                // SV does not start after the last timing point
-                else
-                {
-                    int j;
-                    for (j = index; j < qua.SliderVelocities.Count; j++)
-                    {
-                        // SV starts before the first timing point
-                        if (qua.SliderVelocities[j].StartTime < qua.TimingPoints[0].StartTime)
-                        {
-                            var sv = new SliderVelocityInfo()
-                            {
-                                StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[0].Bpm / commonBpm)
-                            };
-                            ScrollVelocities.Add(sv);
-
-                            // Toggle SvFound if inheriting point is overlapping timing point
-                            if (Math.Abs(sv.StartTime - qua.TimingPoints[0].StartTime) < 1)
-                                svFound = true;
-                        }
-
-                        // SV start is in between two timing points
-                        else if (qua.SliderVelocities[j].StartTime >= qua.TimingPoints[i].StartTime
-                            && qua.SliderVelocities[j].StartTime < qua.TimingPoints[i + 1].StartTime)
-                        {
-                            var sv = new SliderVelocityInfo()
-                            {
-                                StartTime = qua.SliderVelocities[j].StartTime,
-                                Multiplier = qua.SliderVelocities[j].Multiplier * (qua.TimingPoints[i].Bpm / commonBpm)
-                            };
-                            ScrollVelocities.Add(sv);
-
-                            // Toggle SvFound if inheriting point is overlapping timing point
-                            if (Math.Abs(sv.StartTime - qua.TimingPoints[i].StartTime) < 1)
-                                svFound = true;
-                        }
-
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    // Update the current index.
-                    index = j;
-                }
-
-                // Create BPM SV if no inheriting point is overlapping the current timing point
-                if (!svFound)
-                {
-                    var sv = new SliderVelocityInfo()
-                    {
-                        StartTime = qua.TimingPoints[i].StartTime,
-                        Multiplier = qua.TimingPoints[i].Bpm / commonBpm
-                    };
-                    ScrollVelocities.Add(sv);
-                }
-            }
-
-            // Sort SV points by start time
-            ScrollVelocities = ScrollVelocities.OrderBy(o => o.StartTime).ToList();
-        }
 
         /// <summary>
         ///     Create SV-position points for computation optimization
         /// </summary>
         private void InitializePositionMarkers()
         {
+            if (Map.SliderVelocities.Count == 0)
+                return;
+
             // Compute for Change Points
-            var position = (long)(ScrollVelocities[0].StartTime * ScrollVelocities[0].Multiplier * TrackRounding);
+            var position = (long)(Map.SliderVelocities[0].StartTime * Map.InitialScrollVelocity * TrackRounding);
             VelocityPositionMarkers.Add(position);
 
-            for (var i = 1; i < ScrollVelocities.Count; i++)
+            for (var i = 1; i < Map.SliderVelocities.Count; i++)
             {
-                position += (long)((ScrollVelocities[i].StartTime - ScrollVelocities[i - 1].StartTime) * TrackRounding * ScrollVelocities[i - 1].Multiplier);
+                position += (long)((Map.SliderVelocities[i].StartTime - Map.SliderVelocities[i - 1].StartTime)
+                                   * Map.SliderVelocities[i - 1].Multiplier * TrackRounding);
                 VelocityPositionMarkers.Add(position);
             }
         }
@@ -786,20 +695,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             long curPos = 0;
 
-            if (time < ScrollVelocities[0].StartTime)
+            if (Map.SliderVelocities.Count == 0 || time < Map.SliderVelocities[0].StartTime)
             {
                 curPos = GetPositionFromTime(time, 0);
             }
-            else if (time >= ScrollVelocities[ScrollVelocities.Count - 1].StartTime)
+            else if (time >= Map.SliderVelocities[Map.SliderVelocities.Count - 1].StartTime)
             {
-                curPos = GetPositionFromTime(time, ScrollVelocities.Count);
+                curPos = GetPositionFromTime(time, Map.SliderVelocities.Count);
             }
             else
             {
                 // Get index
-                for (var i = 0; i < ScrollVelocities.Count; i++)
+                for (var i = 0; i < Map.SliderVelocities.Count; i++)
                 {
-                    if (time < ScrollVelocities[i].StartTime)
+                    if (time < Map.SliderVelocities[i].StartTime)
                     {
                         curPos = GetPositionFromTime(time, i);
                         break;
@@ -828,7 +737,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             // Time starts before the first SV point
             if (index == 0)
-                curPos = (long)(time * ScrollVelocities[0].Multiplier * TrackRounding);
+                curPos = (long)(time * Map.InitialScrollVelocity * TrackRounding);
 
             // Time starts after the first SV point and before the last SV point
             else if (index < VelocityPositionMarkers.Count)
@@ -838,7 +747,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 // Get position
                 curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
+                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
             }
 
             // Time starts after the last SV point
@@ -853,7 +762,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
                 // Get position
                 curPos = VelocityPositionMarkers[index];
-                curPos += (long)((time - ScrollVelocities[index].StartTime) * ScrollVelocities[index].Multiplier * TrackRounding);
+                curPos += (long)((time - Map.SliderVelocities[index].StartTime) * Map.SliderVelocities[index].Multiplier * TrackRounding);
             }
 
             return curPos;
@@ -869,7 +778,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate - MapManager.Selected.Value.LocalOffset;
 
             // Update SV index if necessary. Afterwards update Position.
-            while (CurrentSvIndex < ScrollVelocities.Count && CurrentAudioPosition >= ScrollVelocities[CurrentSvIndex].StartTime)
+            while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentAudioPosition >= Map.SliderVelocities[CurrentSvIndex].StartTime)
             {
                 CurrentSvIndex++;
             }
