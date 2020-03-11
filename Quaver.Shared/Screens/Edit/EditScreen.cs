@@ -155,6 +155,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Dictionary<EditorBuiltInPlugin, EditorPlugin> BuiltInPlugins { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public EditorActionManager ActionManager { get; }
 
         /// <summary>
@@ -739,6 +743,24 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+
+            LoadBuiltInPlugins();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void LoadBuiltInPlugins()
+        {
+            var dir = $"Quaver.Resources/Scripts/Lua/Editor";
+
+            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
+            {
+                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "", "",
+                    $"{dir}/GoToObjects/plugin.lua", true)}
+            };
+
+            foreach (var plugin in BuiltInPlugins)
+                Plugins.Add(plugin.Value);
         }
 
         /// <summary>

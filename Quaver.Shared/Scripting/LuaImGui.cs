@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -54,6 +55,8 @@ namespace Quaver.Shared.Scripting
 
             UserData.RegisterAssembly(Assembly.GetCallingAssembly());
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
+
+            // ImGui
             UserData.RegisterType<ImGuiInputTextFlags>();
             UserData.RegisterType<ImGuiDataType>();
             UserData.RegisterType<ImGuiTreeNodeFlags>();
@@ -66,6 +69,10 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiTabBarFlags>();
             UserData.RegisterType<ImGuiTabItemFlags>();
             UserData.RegisterType<ImGuiColorEditFlags>();
+            UserData.RegisterType<ImGuiKey>();
+
+            // MonoGame
+            UserData.RegisterType<Keys>();
 
             RegisterAllVectors();
             LoadScript();
@@ -136,6 +143,9 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_tab_bar_flags"] = typeof(ImGuiTabBarFlags);
             WorkingScript.Globals["imgui_tab_item_flags"] = typeof(ImGuiTabItemFlags);
             WorkingScript.Globals["imgui_color_edit_flags"] = typeof(ImGuiColorEditFlags);
+            WorkingScript.Globals["imgui_key"] = typeof(ImGuiKey);
+
+            WorkingScript.Globals["keys"] = typeof(Keys);
         }
 
         /// <summary>

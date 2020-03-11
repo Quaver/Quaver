@@ -264,6 +264,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
                 Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
 
+            ImGui.Separator();
+
+            var goToObjects = Screen.BuiltInPlugins[EditorBuiltInPlugin.GoToObjects];
+
+            if (ImGui.MenuItem("Go To Objects", "", goToObjects.IsActive))
+                goToObjects.IsActive = !goToObjects.IsActive;
+
             ImGui.EndMenu();
         }
 
@@ -281,6 +288,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 for (var i = 0; i < Screen.Plugins.Count; i++)
                 {
                     var plugin = Screen.Plugins[i];
+
+                    if (plugin.IsBuiltIn)
+                        continue;
 
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
                         plugin.IsActive = !plugin.IsActive;

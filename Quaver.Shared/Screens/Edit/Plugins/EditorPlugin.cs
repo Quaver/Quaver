@@ -30,6 +30,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public string Description { get; }
 
+        /// <summary>
+        ///     If the plugin is built into the editor
+        /// </summary>
+        public bool IsBuiltIn { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -45,6 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Name = name;
             Author = author;
             Description = description;
+            IsBuiltIn = isResource;
 
             UserData.RegisterType<GameMode>();
             UserData.RegisterType<HitSounds>();
