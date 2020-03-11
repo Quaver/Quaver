@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ImGuiNET;
 using IniFileParser;
 using Microsoft.Xna.Framework;
@@ -420,7 +421,6 @@ namespace Quaver.Shared.Screens.Edit
             if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
                 CompositionTool.Value = (EditorCompositionTool) index + 1;
         }
-
 
         /// <summary>
         /// </summary>
@@ -852,6 +852,63 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+        }
+
+        /// <summary>
+        ///     Highlights notes and goes to a specific timestamp.
+        ///     Acceptable inputs:
+        ///         - `1234|1,1255|3,1300|4` (selects notes and goes to the first timestamp)
+        ///         - `12540` (goes to that timestamp)
+        /// </summary>
+        /// <param name="input"></param>
+        public void GoToObjects(string input)
+        {
+            // Only timestamp was given
+            if (Regex.IsMatch(input, @"^\d+$"))
+            {
+                var value = int.Parse(input);
+
+                if (value > 0 && value < Track.Length)
+                    Track.Seek(value);
+
+                return;
+            }
+
+            SelectedHitObjects.Clear();
+            var foundObjects = new List<HitObjectInfo>();
+
+            try
+            {
+                var split = input.Split(",");
+
+                foreach (var obj in split)
+                {
+                    var splitObj = obj.Split("|");
+
+                    if (splitObj.Length == 1)
+                        continue;
+
+                    var time = int.Parse(splitObj[0]);
+                    var lane = int.Parse(splitObj[1]);
+
+                    var found = WorkingMap.HitObjects.Find(x => x.StartTime == time && x.Lane == lane);
+
+                    if (found == null)
+                        continue;
+
+                    foundObjects.Add(found);
+                }
+
+                if (foundObjects.Count == 0)
+                    return;
+
+                SelectedHitObjects.AddRange(foundObjects);
+                Track.Seek(foundObjects.First().StartTime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
