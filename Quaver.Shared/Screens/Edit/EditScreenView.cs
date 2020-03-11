@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        private bool IsImGuiHovered { get; set; }
+        public bool IsImGuiHovered { get; private set; }
 
         /// <inheritdoc />
         /// <summary>

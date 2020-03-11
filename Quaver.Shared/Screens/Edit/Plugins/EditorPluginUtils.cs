@@ -1,7 +1,9 @@
+using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using osu_database_reader.Components.HitObjects;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
@@ -62,5 +64,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             return tp;
         }
+
+        public static bool IsKeyPressed(Keys k) => KeyboardManager.IsUniqueKeyPress(k);
+
+        public static bool IsKeyReleased(Keys k) => KeyboardManager.IsUniqueKeyRelease(k);
+
+        public static bool IsKeyDown(Keys k) => KeyboardManager.CurrentState.IsKeyDown(k);
+
+        public static bool IsKeyUp(Keys k) => KeyboardManager.CurrentState.IsKeyUp(k);
     }
 }

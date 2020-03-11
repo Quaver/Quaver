@@ -374,6 +374,11 @@ namespace Quaver.Shared.Screens.Edit
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
+            var view = (EditScreenView) View;
+
+            if (view.IsImGuiHovered)
+                return;
+
             HandleKeyPressSpace();
             HandleKeyPressPageUp();
             HandleKeyPressPageDown();
