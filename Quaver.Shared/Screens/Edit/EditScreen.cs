@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Edit
             Map = map;
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
-            ActionManager = new EditorActionManager(WorkingMap);
+            ActionManager = new EditorActionManager(this, WorkingMap);
             BackgroundStore = visualTestBackground;
 
             SetAudioTrack(track);
@@ -863,6 +863,8 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="input"></param>
         public void GoToObjects(string input)
         {
+            SelectedHitObjects.Clear();
+
             // Only timestamp was given
             if (Regex.IsMatch(input, @"^\d+$"))
             {
@@ -874,7 +876,6 @@ namespace Quaver.Shared.Screens.Edit
                 return;
             }
 
-            SelectedHitObjects.Clear();
             var foundObjects = new List<HitObjectInfo>();
 
             try
