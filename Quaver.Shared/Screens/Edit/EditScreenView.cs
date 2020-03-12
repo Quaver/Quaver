@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
@@ -120,6 +121,7 @@ namespace Quaver.Shared.Screens.Edit
 
             DrawPlugins(gameTime);
             MenuBar?.Draw(gameTime);
+            GameBase.Game.SpriteBatch.End();
 
             if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
                 IsImGuiHovered = true;
@@ -133,7 +135,6 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             Container?.Destroy();
-            MenuBar?.Destroy();
 
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
@@ -144,7 +145,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void CreateBackground()
         {
-            var tex = EditScreen.BackgroundStore.Texture ?? UserInterface.Triangles;
+            var tex = EditScreen.BackgroundStore?.Texture ?? BackgroundHelper.RawTexture ?? UserInterface.Triangles;
             var dim = tex == UserInterface.Triangles ? 0 : 100 - EditScreen.BackgroundBrightness.Value;
 
             Background = new BackgroundImage(tex, dim, false)

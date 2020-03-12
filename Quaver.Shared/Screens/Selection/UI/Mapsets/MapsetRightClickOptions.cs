@@ -29,6 +29,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         private const string Edit = "Edit";
 
+        private const string Editorv2 = "Editor v2";
+
         private const string ViewOnlineListing = "Online Listing";
 
         private const string AddToPlaylist = "Add To Playlist";
@@ -45,6 +47,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         {
             {Play, Color.White},
             {Edit, ColorHelper.HexToColor("#F2994A")},
+            {Editorv2, ColorHelper.HexToColor("#F2994A")},
             {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
             {Delete, ColorHelper.HexToColor($"#FF6868")},
             {Export, ColorHelper.HexToColor("#0787E3")},
@@ -74,6 +77,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                     case Edit:
                         SelectMap(DrawableMapset, Mapset.Maps.First(), Mapset);
                         selectScreen?.ExitToEditor();
+                        break;
+                    case Editorv2:
+                        SelectMap(DrawableMapset, Mapset.Maps.First(), Mapset);
+                        selectScreen?.ExitToEditor(true);
                         break;
                     case ViewOnlineListing:
                         MapManager.ViewOnlineListing(Mapset.Maps.First());

@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 #if VISUAL_TESTS
         private static bool DestroyContext { get; } = false;
 #else
-        private static bool DestroyContext { get; } = false;
+        private static bool DestroyContext { get; } = true;
 #endif
 
         public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
