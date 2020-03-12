@@ -494,14 +494,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             SeekBar = new DifficultySeekBar(Map, ModIdentifier.None,
-                new ScalableVector2(54, WindowManager.Height - EditorFooter.HEIGHT - 4), 85, 5, Track,
+                new ScalableVector2(54, WindowManager.Height - EditorFooter.HEIGHT - 4), 70, 5, Track,
                 true, 0.85f)
             {
                 Parent = this,
                 Tint = ColorHelper.HexToColor("#181818"),
             };
 
-            SeekBar.X -= SeekBar.Width + 26;
+            SeekBar.X -= SeekBar.Width + 42;
 
             // ReSharper disable once ObjectCreationAsStatement
             new Sprite

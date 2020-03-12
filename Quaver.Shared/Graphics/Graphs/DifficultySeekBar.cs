@@ -97,7 +97,7 @@ namespace Quaver.Shared.Graphics.Graphs
 
             Processor = (DifficultyProcessorKeys) Map.SolveDifficulty(Mods);
 
-            Track = AudioEngine.Track ?? track ?? new AudioTrackVirtual(Map.Length + 5000);
+            Track = track ?? AudioEngine.Track ?? new AudioTrackVirtual(Map.Length + 5000);
 
             CreateBars();
             CreateProgressSeekBar();

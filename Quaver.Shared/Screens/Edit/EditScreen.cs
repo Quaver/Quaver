@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -213,6 +214,9 @@ namespace Quaver.Shared.Screens.Edit
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadPlugins();
+
+            GameBase.Game.IsMouseVisible = true;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
             View = new EditScreenView(this);
         }
@@ -403,6 +407,19 @@ namespace Quaver.Shared.Screens.Edit
             HandleCtrlInput();
             HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
+            HandleKeyPressEscape();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEscape()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+
+            GameBase.Game.IsMouseVisible = false;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            Exit(() => new SelectionScreen());
         }
 
         /// <summary>
