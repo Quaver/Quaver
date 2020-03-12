@@ -69,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateViewSection();
             CreateAudioSection();
             CreateWebSection();
+            CreateToolsSection();
             CreatePluginsSection();
             CreateHelpSection();
 
@@ -264,12 +265,23 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
                 Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
 
-            ImGui.Separator();
+            ImGui.EndMenu();
+        }
 
-            var goToObjects = Screen.BuiltInPlugins[EditorBuiltInPlugin.GoToObjects];
+        /// <summary>
+        /// </summary>
+        private void CreateToolsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
 
-            if (ImGui.MenuItem("Go To Objects", "", goToObjects.IsActive))
-                goToObjects.IsActive = !goToObjects.IsActive;
+            if (!ImGui.BeginMenu("Tools"))
+                return;
+
+            foreach (var plugin in Screen.BuiltInPlugins)
+            {
+                if (ImGui.MenuItem(plugin.Value.Name, "", plugin.Value.IsActive))
+                    plugin.Value.IsActive = !plugin.Value.IsActive;
+            }
 
             ImGui.EndMenu();
         }

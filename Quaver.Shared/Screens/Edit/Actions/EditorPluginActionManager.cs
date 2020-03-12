@@ -6,6 +6,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
+using Quaver.Shared.Screens.Edit.Components;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -79,5 +80,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="input"></param>
         public void GoToObjects(string input) => ActionManager.GoToObjects(input);
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public EditorBpmDetector DetectBpm() => ActionManager.DetectBpm();
     }
 }

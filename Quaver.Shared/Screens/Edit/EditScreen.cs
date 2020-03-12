@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -755,7 +756,9 @@ namespace Quaver.Shared.Screens.Edit
 
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
             {
-                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "", "",
+                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                    $"{dir}/BpmDetector/plugin.lua", true)},
+                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
                     $"{dir}/GoToObjects/plugin.lua", true)}
             };
 
