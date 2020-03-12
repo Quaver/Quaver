@@ -27,6 +27,7 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Components;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
@@ -296,6 +297,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="input"></param>
         public void GoToObjects(string input) => EditScreen.GoToObjects(input);
+
+        /// <summary>
+        ///     Detects the BPM of the map and returns the object instance
+        /// </summary>
+        /// <returns></returns>
+        public EditorBpmDetector DetectBpm() => new EditorBpmDetector(EditScreen.Track);
 
         /// <summary>
         ///     Triggers an event of a specific action type

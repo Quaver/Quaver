@@ -26,9 +26,29 @@ namespace Quaver.Shared.Screens.Edit.Components
         public Dictionary<int, int> Bpms { get; } = new Dictionary<int, int>();
 
         /// <summary>
+        ///     The BPM with the highest value of confidence
+        /// </summary>
+        public int HighestConfidenceBpm { get; private set; }
+
+        /// <summary>
+        ///     The percentage of the BPM with the highest confidence
+        /// </summary>
+        public int HighestConfidenceBpmPercentage { get; private set; }
+
+        /// <summary>
+        ///     The amount of detected BPMs there were
+        /// </summary>
+        public int TotalBpmDetectionIntervals => Bpms.Values.ToList().Sum();
+
+        /// <summary>
         ///     The suggested offset for the user to use
         /// </summary>
         public int SuggestedOffset { get; private set; }
+
+        /// <summary>
+        ///     If the detection has completed
+        /// </summary>
+        public bool Done { get; private set; }
 
         /// <summary>
         ///     An action to be performed once completed
@@ -87,6 +107,7 @@ namespace Quaver.Shared.Screens.Edit.Components
                 }
                 finally
                 {
+                    Done = true;
                     Bass.StreamFree(stream);
                 }
             });
@@ -127,6 +148,9 @@ namespace Quaver.Shared.Screens.Edit.Components
                 Logger.Important($"BPM: {item.Key} | Occurrences: {item.Value} " +
                                  $"| Confidence: {item.Value / (float) totalIntervals * 100f}%", LogType.Runtime);
             }
+
+            HighestConfidenceBpm = Bpms.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+            HighestConfidenceBpmPercentage = (int) Math.Round(Bpms[HighestConfidenceBpm] / (float) totalIntervals * 100f, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
