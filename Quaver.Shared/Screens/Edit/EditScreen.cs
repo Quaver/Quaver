@@ -1062,10 +1062,16 @@ namespace Quaver.Shared.Screens.Edit
 
             Exit(() =>
             {
-                Save();
+                if (ActionManager.HasUnsavedChanges)
+                {
+                    Save(true);
+                    NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                }
 
-                WorkingMap.ApplyMods(ModManager.Mods);
-                return new GameplayScreen(WorkingMap, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+                var map = ObjectHelper.DeepClone(WorkingMap);
+                map.ApplyMods(ModManager.Mods);
+
+                return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
             });
         }
 
