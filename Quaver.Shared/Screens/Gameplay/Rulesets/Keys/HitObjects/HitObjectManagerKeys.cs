@@ -509,17 +509,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     var hitObject = lane.Dequeue();
 
                     // The judgement that is given when a user completely fails to release.
-                    const Judgement missedJudgement = Judgement.Okay;
+                    var missedReleaseJudgement = Judgement.Okay;
+
+                    // Missing a release results in a good with HealthAdjust rather than an okay
+                    if (Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.HeatlthAdjust))
+                        missedReleaseJudgement = Judgement.Good;
 
                     // Add new hit stat data and update score
-                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, Judgement.Okay,
+                    var stat = new HitStat(HitStatType.Miss, KeyPressType.None, hitObject.Info, hitObject.Info.EndTime, missedReleaseJudgement,
                                                 int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+
                     Ruleset.ScoreProcessor.Stats.Add(stat);
 
                     var im = Ruleset.InputManager as KeysInputManager;
 
                     if (im?.ReplayInputManager == null)
-                        Ruleset.ScoreProcessor.CalculateScore(missedJudgement, true);
+                        Ruleset.ScoreProcessor.CalculateScore(missedReleaseJudgement, true);
 
                     // Update scoreboard for simulated plays
                     var screenView = (GameplayScreenView)Ruleset.Screen.View;
@@ -532,7 +537,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     if (im?.ReplayInputManager == null)
                     {
                         stage.ComboDisplay.MakeVisible();
-                        stage.JudgementHitBurst.PerformJudgementAnimation(missedJudgement);
+                        stage.JudgementHitBurst.PerformJudgementAnimation(missedReleaseJudgement);
                     }
 
                     stage.HitLightingObjects[hitObject.Info.Lane - 1].StopHolding();

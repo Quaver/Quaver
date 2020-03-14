@@ -589,10 +589,8 @@ namespace Quaver.Shared.Skinning
             // So you can't have 1/48, but not have 1/3, etc.
             var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
-
             // If it can find the appropriate files, load them.
             objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
-
             hitObjects.Insert(index, objectsList);
         }
 
@@ -625,10 +623,19 @@ namespace Quaver.Shared.Skinning
                 }
                 else
                 {
-                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, 8, 1);
+                    const int snapCount = 9;
+
+                    var objects = LoadSpritesheet(SkinKeysFolder.HitObjects, "note-hitobject-sheet", false, snapCount, 1);
 
                     NoteHitObjects.Add(objects);
                     NoteHoldHitObjects.Add(objects);
+
+
+                    for (var j = 0; j < snapCount - NoteHitObjects[i].Count; j++)
+                        NoteHitObjects[i].Add(NoteHitObjects[i].Last());
+
+                    for (var j = 0; j < snapCount - NoteHoldHitObjects[i].Count; j++)
+                        NoteHoldHitObjects[i].Add(NoteHoldHitObjects[i].Last());
                 }
 
                 // LNS
