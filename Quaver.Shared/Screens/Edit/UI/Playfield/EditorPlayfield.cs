@@ -500,11 +500,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             SeekBar = new DifficultySeekBar(Map, ModIdentifier.None,
-                new ScalableVector2(54, WindowManager.Height - EditorFooter.HEIGHT - 4), 70, 5, Track,
+                new ScalableVector2(56, WindowManager.Height - EditorFooter.HEIGHT - 38), 200, 3, Track,
                 true, 0.85f)
             {
                 Parent = this,
                 Tint = ColorHelper.HexToColor("#181818"),
+                Y = 34
             };
 
             SeekBar.X -= SeekBar.Width + 42;
