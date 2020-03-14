@@ -704,7 +704,11 @@ namespace Quaver.Shared.Screens.Gameplay
                         AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
                     }
 
-                    Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+                    if (Screen.IsTestPlayingInNewEditor)
+                        Screen.ExitToNewEditor();
+                    else
+                        Screen.Exit(() => new EditorScreen(Screen.OriginalEditorMap));
+
                     ResultsScreenLoadInitiated = true;
                     return;
                 }

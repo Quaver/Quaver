@@ -15,8 +15,10 @@ using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
@@ -27,6 +29,7 @@ using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
+using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
@@ -215,7 +218,7 @@ namespace Quaver.Shared.Screens.Edit
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
             LoadPlugins();
-            
+
             View = new EditScreenView(this);
         }
 
@@ -1031,8 +1034,45 @@ namespace Quaver.Shared.Screens.Edit
         {
             GameBase.Game.IsMouseVisible = false;
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
-            
+
+            ModManager.RemoveAllMods();
             Exit(() => new SelectionScreen());
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExitToTestPlay()
+        {
+            if (Exiting)
+                return;
+
+            GameBase.Game.IsMouseVisible = false;
+
+            if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "There aren't any hitobjects to play past this point!");
+                return;
+            }
+
+            if (DialogManager.Dialogs.Count != 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before test playing!");
+                return;
+            }
+
+            Exit(() =>
+            {
+                if (ActionManager.HasUnsavedChanges)
+                {
+                    Save(true);
+                    NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                }
+
+                var map = ObjectHelper.DeepClone(WorkingMap);
+                map.ApplyMods(ModManager.Mods);
+
+                return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+            });
         }
 
         /// <summary>

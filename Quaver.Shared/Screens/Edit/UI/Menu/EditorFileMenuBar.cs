@@ -12,6 +12,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -20,6 +21,7 @@ using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Window;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -270,6 +272,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem($"View Layers", "", Screen.ViewLayers.Value))
                 Screen.ViewLayers.Value = !Screen.ViewLayers.Value;
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Test Play Modifiers", ""))
+                DialogManager.Show(new EditorModifierMenuDialog());
 
             ImGui.EndMenu();
         }
