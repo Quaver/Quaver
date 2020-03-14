@@ -196,7 +196,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
         /// </summary>
         private void HandleButtonReleased()
         {
-            if (IsSelecting)
+            if (IsSelecting && StartingPoint -  new Vector2(MouseManager.CurrentState.X, MouseManager.CurrentState.Y) != Vector2.Zero)
             {
                 var timeDragEnd = Playfield.GetTimeFromY(MouseManager.CurrentState.Y) / Playfield.TrackSpeed;
 

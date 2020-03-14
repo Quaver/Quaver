@@ -211,6 +211,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private Vector2? NoteMoveInitialMousePosition { get; set; }
 
         /// <summary>
+        ///     The grab offset of the hitobject being dragged. Makes it so that the note does not snap to the cursor
+        /// </summary>
+        private float NoteMoveGrabOffset { get; set; }
+
+        /// <summary>
         ///     The hitobject that is currently being dragged to move the selected objects
         /// </summary>
         private EditorHitObjectKeys HitObjectInDrag { get; set; }
@@ -644,6 +649,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
 
+            if (Math.Abs(fwdDiff - bwdDiff) <= 2)
+                return time;
+
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
                 time = timeBwd;
@@ -872,6 +880,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 PreviousDragOffset = 0;
                 PreviousLaneDragOffset = 0;
                 ColumnOffset = 0;
+                NoteMoveGrabOffset = 0;
             }
 
             if (Button.IsHovered)
@@ -1024,8 +1033,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (hoveredObject == null)
                     return;
 
-                NoteMoveInitialMousePosition = MouseManager.CurrentState.Position;
                 HitObjectInDrag = hoveredObject;
+                NoteMoveInitialMousePosition = MouseManager.CurrentState.Position;
+
+                // Long notes being dragged from inside the LN body should have its drag position
+                // offsetted.
+                if (HitObjectInDrag.Info.IsLongNote)
+                {
+                    var relativeMouseY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
+                    NoteMoveGrabOffset = relativeMouseY - HitObjectInDrag.Y;
+                }
+
+                NoteMoveGrabOffset = 0;
                 TimeDragStart = hoveredObject.Info.StartTime;
                 PreviousDragOffset = 0;
                 PreviousLaneDragOffset = 0;
@@ -1037,7 +1056,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             // Start dragging all objects to the given y position
-            var time = GetNearestTickFromTime((int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed,
+            var time = GetNearestTickFromTime((int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y - NoteMoveGrabOffset) / TrackSpeed,
                 MidpointRounding.AwayFromZero), BeatSnap.Value);
 
             var offset = (int) Math.Round((float) (time - TimeDragStart), MidpointRounding.AwayFromZero);
