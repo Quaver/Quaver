@@ -18,6 +18,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
@@ -1061,6 +1062,8 @@ namespace Quaver.Shared.Screens.Edit
             Exit(() =>
             {
                 Save();
+
+                WorkingMap.ApplyMods(ModManager.Mods);
                 return new GameplayScreen(WorkingMap, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
             });
         }

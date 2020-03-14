@@ -14,6 +14,8 @@ using Quaver.Shared.Screens.Edit.UI.Panels;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Selection;
+using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Modifiers;
 using TagLib.Matroska;
 using Wobble;
 using Wobble.Bindables;
@@ -90,7 +92,6 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateHitsoundsPanel();
             CreateLayersPanel();
-
             MenuBar = new EditorFileMenuBar(EditScreen);
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;

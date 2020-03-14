@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
@@ -15,6 +16,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         public IconTextButtonTestPlay(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
             FontManager.GetWobbleFont(Fonts.LatoBlack),"Test Play", (sender, args) => screen.ExitToTestPlay())
         {
+            RightClicked += (sender, args) => DialogManager.Show(new EditorModifierMenuDialog());
         }
     }
 }

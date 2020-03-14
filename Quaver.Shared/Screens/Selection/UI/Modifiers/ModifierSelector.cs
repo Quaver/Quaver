@@ -141,6 +141,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
                 switch (game?.CurrentScreen?.Type)
                 {
+                    case QuaverScreenType.Editor:
                     case QuaverScreenType.Select:
                         ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
                         break;

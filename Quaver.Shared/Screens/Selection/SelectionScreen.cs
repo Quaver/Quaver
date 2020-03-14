@@ -643,6 +643,7 @@ namespace Quaver.Shared.Screens.Selection
                         track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
                     }
 
+                    ModManager.RemoveAllMods();
                     Exit(() => new EditScreen(MapManager.Selected.Value, track));
                 }
                 else

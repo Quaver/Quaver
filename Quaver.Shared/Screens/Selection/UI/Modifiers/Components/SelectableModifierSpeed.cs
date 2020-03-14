@@ -78,6 +78,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
         /// <param name="width"></param>
         public SelectableModifierSpeed(int width) : base(width, new ModSpeed(ModIdentifier.Speed11X))
         {
+            var game = GameBase.Game as QuaverGame;
+            var depth = game?.CurrentScreen?.Type == QuaverScreenType.Editor ? -1 : 0;
+
             RateChanger = new HorizontalSelector(GetSpeeds(), new ScalableVector2(100, 32), Fonts.Exo2SemiBold, 16,
                 FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
                 FontAwesome.Get(FontAwesomeIcon.fa_right_chevron), new ScalableVector2(20, 20), 0, OnSelected, GetSelectedIndex())
@@ -87,8 +90,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 X = -30,
                 UsePreviousSpriteBatchOptions = true,
                 Alpha = 0,
-                ButtonSelectLeft = {UsePreviousSpriteBatchOptions = true,},
-                ButtonSelectRight = {UsePreviousSpriteBatchOptions = true},
+                ButtonSelectLeft =
+                {
+                    UsePreviousSpriteBatchOptions = true,
+                    Depth = depth,
+                },
+                ButtonSelectRight =
+                {
+                    UsePreviousSpriteBatchOptions = true,
+                    Depth = depth
+                },
                 SelectedItemText =
                 {
                     UsePreviousSpriteBatchOptions = true,
@@ -107,8 +118,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
             UnrankedAlert.Hovered += (sender, args) =>
             {
-                var game = GameBase.Game as QuaverGame;
-
                 var tooltip =new Tooltip("This speed is only available on the new UI and cannot\n" +
                                          "be used for ranked or multiplayer plays just yet!", Color.Crimson);
 
@@ -117,7 +126,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
 
             UnrankedAlert.LeftHover += (sender, args) =>
             {
-                var game = GameBase.Game as QuaverGame;
                 game?.CurrentScreen?.DeactivateTooltip();
             };
 
