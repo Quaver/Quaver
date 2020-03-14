@@ -15,6 +15,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
@@ -356,9 +357,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public override void Destroy()
         {
-            HitObjects.ForEach(x => x.Destroy());
-            Timeline?.Destroy();
             Button.Destroy();
+
+            ThreadScheduler.Run(() =>
+            {
+                HitObjects.ForEach(x => x.Destroy());
+                Timeline?.Destroy();
+                LineContainer?.Destroy();
+            });
 
             Track.Seeked -= OnTrackSeeked;
             Track.RateChanged -= OnTrackRateChanged;
