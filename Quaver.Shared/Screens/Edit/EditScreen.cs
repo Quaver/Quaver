@@ -1035,6 +1035,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.IsMouseVisible = false;
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
+            ModManager.RemoveAllMods();
             Exit(() => new SelectionScreen());
         }
 
