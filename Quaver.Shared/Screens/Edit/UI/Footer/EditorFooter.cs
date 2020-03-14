@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             new IconTextButtonOptions()
         }, new List<Drawable>()
         {
-            new IconTextButtonTestPlay(),
+            new IconTextButtonTestPlay(screen),
             new IconTextButtonBeatSnap(screen),
             new IconTextButtonPlaybackSpeed(screen, track)
         })

@@ -12,10 +12,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 {
     public class IconTextButtonTestPlay : IconTextButton
     {
-        public IconTextButtonTestPlay() : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-            FontManager.GetWobbleFont(Fonts.LatoBlack),"Test Play", (sender, args) =>
-            {
-            })
+        public IconTextButtonTestPlay(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
+            FontManager.GetWobbleFont(Fonts.LatoBlack),"Test Play", (sender, args) => screen.ExitToTestPlay())
         {
         }
     }

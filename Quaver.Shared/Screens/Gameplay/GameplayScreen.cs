@@ -33,6 +33,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Gameplay.Replays;
@@ -119,6 +120,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     If we're currently in play test mode.
         /// </summary>
         public bool IsPlayTesting { get; }
+
+        /// <summary>
+        ///     If the user is test playing in the new editor
+        /// </summary>
+        public bool IsTestPlayingInNewEditor { get; }
 
         /// <summary>
         ///     The time in the audio the play test began.
@@ -327,8 +333,11 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="isCalibratingOffset"></param>
         /// <param name="spectatorClient"></param>
         /// <param name="options"></param>
+        /// <param name="isSongSelectPreview"></param>
+        /// <param name="isTestPlayingInNewEditor"></param>
         public GameplayScreen(Qua map, string md5, List<Score> scores, Replay replay = null, bool isPlayTesting = false, double playTestTime = 0,
-            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview= false)
+            bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
+            bool isTestPlayingInNewEditor = false)
         {
             TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             UpdateMapInDatabase();
@@ -349,6 +358,7 @@ namespace Quaver.Shared.Screens.Gameplay
             MapHash = md5;
             LoadedReplay = replay;
             IsPlayTesting = isPlayTesting;
+            IsTestPlayingInNewEditor = isTestPlayingInNewEditor;
             PlayTestAudioTime = playTestTime;
             IsCalibratingOffset = isCalibratingOffset;
             IsMultiplayerGame = OnlineManager.CurrentGame != null;
@@ -565,7 +575,12 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (AudioEngine.Track.IsPlaying)
                         AudioEngine.Track.Pause();
 
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+                    if (IsTestPlayingInNewEditor)
+                        ExitToNewEditor(true);
+                    else
+                    {
+                        Exit(() => new EditorScreen(OriginalEditorMap));
+                    }
                 }
 
                 if (!IsSongSelectPreview)
@@ -631,7 +646,11 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
 
                     CustomAudioSampleCache.StopAll();
-                    Exit(() => new EditorScreen(OriginalEditorMap));
+
+                    if (IsTestPlayingInNewEditor)
+                        ExitToNewEditor();
+                    else
+                        Exit(() => new EditorScreen(OriginalEditorMap));
                 }
                 // Exit the offset calibration.
                 else if (IsCalibratingOffset)
@@ -956,7 +975,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             // Use ChangeScreen here to give instant feedback. Can't be threaded
             if (IsPlayTesting)
-                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime));
+                QuaverScreenManager.ChangeScreen(new GameplayScreen(OriginalEditorMap, MapHash, LocalScores, null, true, PlayTestAudioTime, false, null, null, false, IsTestPlayingInNewEditor));
             else if (InReplayMode)
                 QuaverScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
             else
@@ -1350,7 +1369,35 @@ namespace Quaver.Shared.Screens.Gameplay
             DontPlayNextComboBreak = true;
         }
 
-                /// <summary>
+        /// <summary>
+        /// </summary>
+        public void ExitToNewEditor(bool seekToTime = false)
+        {
+            IAudioTrack track;
+
+            try
+            {
+                track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
+            }
+            catch (Exception)
+            {
+                track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
+            }
+
+            try
+            {
+                if (seekToTime)
+                    track.Seek(AudioEngine.Track.Time);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            Exit(() => new EditScreen(MapManager.Selected.Value, track));
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
         public void HandleAutoplayTabInput(GameTime gameTime)
