@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 #if VISUAL_TESTS
         private static bool DestroyContext { get; } = false;
 #else
-        private static bool DestroyContext { get; } = false;
+        private static bool DestroyContext { get; } = true;
 #endif
 
         public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, GetOptions()) => Screen = screen;
@@ -69,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateViewSection();
             CreateAudioSection();
             CreateWebSection();
+            CreateToolsSection();
             CreatePluginsSection();
             CreateHelpSection();
 
@@ -269,6 +270,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
         /// <summary>
         /// </summary>
+        private void CreateToolsSection()
+        {
+            ImGui.PushFont(Options.Fonts.First().Context);
+
+            if (!ImGui.BeginMenu("Tools"))
+                return;
+
+            foreach (var plugin in Screen.BuiltInPlugins)
+            {
+                if (ImGui.MenuItem(plugin.Value.Name, "", plugin.Value.IsActive))
+                    plugin.Value.IsActive = !plugin.Value.IsActive;
+            }
+
+            ImGui.EndMenu();
+        }
+
+        /// <summary>
+        /// </summary>
         private void CreatePluginsSection()
         {
             ImGui.PushFont(Options.Fonts.First().Context);
@@ -281,6 +300,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 for (var i = 0; i < Screen.Plugins.Count; i++)
                 {
                     var plugin = Screen.Plugins[i];
+
+                    if (plugin.IsBuiltIn)
+                        continue;
 
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
                         plugin.IsActive = !plugin.IsActive;

@@ -7,6 +7,8 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Skinning;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -290,6 +292,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             Body.Image = TextureBody;
             Tail.Image = TextureTail;
+
+            if (SkinMode.UseAndRotateHitObjectSheet)
+                Rotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);
         }
 
         /// <summary>

@@ -27,11 +27,16 @@ using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Components;
 
 namespace Quaver.Shared.Screens.Edit.Actions
 {
     public class EditorActionManager : IDisposable
     {
+        /// <summary>
+        /// </summary>
+        private EditScreen EditScreen { get; }
+
         /// <summary>
         /// </summary>
         private Qua WorkingMap { get; }
@@ -168,9 +173,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="workingMap"></param>
-        public EditorActionManager(Qua workingMap)
+        public EditorActionManager(EditScreen screen, Qua workingMap)
         {
+            EditScreen = screen;
             WorkingMap = workingMap;
             PluginActionManager = new EditorPluginActionManager(this);
         }
@@ -285,6 +292,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="tps"></param>
         public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionAddTimingPointBatch(this, WorkingMap, tps));
+
+        /// <summary>
+        /// </summary>
+        /// <param name="input"></param>
+        public void GoToObjects(string input) => EditScreen.GoToObjects(input);
+
+        /// <summary>
+        ///     Detects the BPM of the map and returns the object instance
+        /// </summary>
+        /// <returns></returns>
+        public EditorBpmDetector DetectBpm() => new EditorBpmDetector(EditScreen.Track);
 
         /// <summary>
         ///     Triggers an event of a specific action type

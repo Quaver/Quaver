@@ -20,6 +20,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Download;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Importing;
@@ -35,6 +36,7 @@ using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
 using Quaver.Shared.Screens.Tournament;
 using Wobble;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -609,7 +611,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Exits the current screen and goes to the editor
         /// </summary>
-        public void ExitToEditor()
+        public void ExitToEditor(bool newEditor = false)
         {
             if (MapManager.Selected.Value == null)
                 return;
@@ -626,7 +628,35 @@ namespace Quaver.Shared.Screens.Selection
             if (OnlineManager.IsSpectatingSomeone)
                 OnlineManager.Client?.StopSpectating();
 
-            Exit(() => new EditorScreen(MapManager.Selected.Value.LoadQua()));
+            try
+            {
+                if (newEditor)
+                {
+                    IAudioTrack track;
+
+                    try
+                    {
+                        track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
+                    }
+                    catch (Exception)
+                    {
+                        track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
+                    }
+
+                    Exit(() => new EditScreen(MapManager.Selected.Value, track));
+                }
+                else
+                {
+                    var qua = MapManager.Selected.Value.LoadQua();
+                    Exit(() => new EditorScreen(qua));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Failed to load the editor with this map!");
+            }
         }
 
         /// <summary>

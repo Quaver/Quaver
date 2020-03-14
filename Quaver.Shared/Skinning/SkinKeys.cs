@@ -39,9 +39,9 @@ namespace Quaver.Shared.Skinning
 
         /// <summary>
         /// </summary>
-        private static string DefaultSkin => DefaultSkins.Arrow.ToString();
+        private string DefaultSkin { get; }
 
-#region SKIN.INI VALUES
+        #region SKIN.INI VALUES
 
         [FixedScale]
         internal float StageReceptorPadding { get; private set; }
@@ -350,6 +350,7 @@ namespace Quaver.Shared.Skinning
         {
             Store = store;
             Mode = mode;
+            DefaultSkin = ConfigManager.DefaultSkin?.Value.ToString() ?? DefaultSkins.Arrow.ToString();
 
             // Set the generic config variables, and THEN try to read from
             // skin.ini.

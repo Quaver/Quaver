@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ImGuiNET;
 using IniFileParser;
 using Microsoft.Xna.Framework;
@@ -20,10 +21,12 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -154,6 +157,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Dictionary<EditorBuiltInPlugin, EditorPlugin> BuiltInPlugins { get; private set; }
+
+        /// <summary>
+        /// </summary>
         public EditorActionManager ActionManager { get; }
 
         /// <summary>
@@ -186,7 +193,7 @@ namespace Quaver.Shared.Screens.Edit
             Map = map;
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
-            ActionManager = new EditorActionManager(WorkingMap);
+            ActionManager = new EditorActionManager(this, WorkingMap);
             BackgroundStore = visualTestBackground;
 
             SetAudioTrack(track);
@@ -207,6 +214,9 @@ namespace Quaver.Shared.Screens.Edit
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             LoadPlugins();
+
+            GameBase.Game.IsMouseVisible = true;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
             View = new EditScreenView(this);
         }
@@ -373,6 +383,11 @@ namespace Quaver.Shared.Screens.Edit
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
+            var view = (EditScreenView) View;
+
+            if (view.IsImGuiHovered)
+                return;
+
             HandleKeyPressSpace();
             HandleKeyPressPageUp();
             HandleKeyPressPageDown();
@@ -392,6 +407,19 @@ namespace Quaver.Shared.Screens.Edit
             HandleCtrlInput();
             HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
+            HandleKeyPressEscape();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEscape()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+
+            GameBase.Game.IsMouseVisible = false;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            Exit(() => new SelectionScreen());
         }
 
         /// <summary>
@@ -420,7 +448,6 @@ namespace Quaver.Shared.Screens.Edit
             if (index + 1 < Enum.GetNames(typeof(EditorCompositionTool)).Length - 1)
                 CompositionTool.Value = (EditorCompositionTool) index + 1;
         }
-
 
         /// <summary>
         /// </summary>
@@ -734,6 +761,26 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                 }
             }
+
+            LoadBuiltInPlugins();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void LoadBuiltInPlugins()
+        {
+            var dir = $"Quaver.Resources/Scripts/Lua/Editor";
+
+            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
+            {
+                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                    $"{dir}/BpmDetector/plugin.lua", true)},
+                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                    $"{dir}/GoToObjects/plugin.lua", true)}
+            };
+
+            foreach (var plugin in BuiltInPlugins)
+                Plugins.Add(plugin.Value);
         }
 
         /// <summary>
@@ -852,6 +899,64 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             ActionManager.Perform(new EditorActionFlipHitObjects(ActionManager, WorkingMap, new List<HitObjectInfo>(SelectedHitObjects.Value)));
+        }
+
+        /// <summary>
+        ///     Highlights notes and goes to a specific timestamp.
+        ///     Acceptable inputs:
+        ///         - `1234|1,1255|3,1300|4` (selects notes and goes to the first timestamp)
+        ///         - `12540` (goes to that timestamp)
+        /// </summary>
+        /// <param name="input"></param>
+        public void GoToObjects(string input)
+        {
+            SelectedHitObjects.Clear();
+
+            // Only timestamp was given
+            if (Regex.IsMatch(input, @"^\d+$"))
+            {
+                var value = int.Parse(input);
+
+                if (value > 0 && value < Track.Length)
+                    Track.Seek(value);
+
+                return;
+            }
+
+            var foundObjects = new List<HitObjectInfo>();
+
+            try
+            {
+                var split = input.Split(",");
+
+                foreach (var obj in split)
+                {
+                    var splitObj = obj.Split("|");
+
+                    if (splitObj.Length == 1)
+                        continue;
+
+                    var time = int.Parse(splitObj[0]);
+                    var lane = int.Parse(splitObj[1]);
+
+                    var found = WorkingMap.HitObjects.Find(x => x.StartTime == time && x.Lane == lane);
+
+                    if (found == null)
+                        continue;
+
+                    foundObjects.Add(found);
+                }
+
+                if (foundObjects.Count == 0)
+                    return;
+
+                SelectedHitObjects.AddRange(foundObjects);
+                Track.Seek(foundObjects.First().StartTime);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
