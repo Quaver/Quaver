@@ -223,6 +223,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="h"></param>
+        public void PlaceHitObject(HitObjectInfo h) => Perform(new EditorActionPlaceHitObject(this, WorkingMap, h));
+
+        /// <summary>
+        /// </summary>
         /// <param name="lane"></param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
