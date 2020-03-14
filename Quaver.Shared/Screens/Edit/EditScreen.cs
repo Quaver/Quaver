@@ -23,6 +23,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Components;
+using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -213,13 +214,20 @@ namespace Quaver.Shared.Screens.Edit
             SetHitSoundObjectIndex();
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
-
             LoadPlugins();
+            
+            View = new EditScreenView(this);
+        }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
             GameBase.Game.IsMouseVisible = true;
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
-            View = new EditScreenView(this);
+            base.OnFirstUpdate();
         }
 
         /// <inheritdoc />
@@ -418,9 +426,7 @@ namespace Quaver.Shared.Screens.Edit
             if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 return;
 
-            GameBase.Game.IsMouseVisible = false;
-            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
-            Exit(() => new SelectionScreen());
+            LeaveEditor();
         }
 
         /// <summary>
@@ -964,6 +970,7 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Saves the map either synchronously or in a separate threaad.
         /// </summary>
         /// <param name="synchronous"></param>
         public void Save(bool synchronous = false)
@@ -1002,6 +1009,30 @@ namespace Quaver.Shared.Screens.Edit
                 Logger.Error(e, LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Error, "There was an issue while saving your map!");
             }
+        }
+
+        /// <summary>
+        ///     Exits the enditor and returns to song select
+        /// </summary>
+        public void LeaveEditor()
+        {
+            if (ActionManager.HasUnsavedChanges)
+            {
+                DialogManager.Show(new SaveAndExitDialog(this));
+                return;
+            }
+
+            ExitToSongSelect();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExitToSongSelect()
+        {
+            GameBase.Game.IsMouseVisible = false;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            
+            Exit(() => new SelectionScreen());
         }
 
         /// <summary>
