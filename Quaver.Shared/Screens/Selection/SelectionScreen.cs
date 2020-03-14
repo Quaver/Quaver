@@ -808,6 +808,7 @@ namespace Quaver.Shared.Screens.Selection
             DiscordHelper.Presence.State = "In the menus";
             DiscordHelper.Presence.PartySize = 0;
             DiscordHelper.Presence.PartyMax = 0;
+            DiscordHelper.Presence.StartTimestamp = 0;
             DiscordHelper.Presence.EndTimestamp = 0;
             DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
             DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();

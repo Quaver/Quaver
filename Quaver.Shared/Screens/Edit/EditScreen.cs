@@ -8,17 +8,21 @@ using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
@@ -219,6 +223,7 @@ namespace Quaver.Shared.Screens.Edit
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
             LoadPlugins();
 
+            InitializeDiscordRichPresence();
             View = new EditScreenView(this);
         }
 
@@ -1036,6 +1041,7 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             ModManager.RemoveAllMods();
+
             Exit(() => new SelectionScreen());
         }
 
@@ -1096,6 +1102,27 @@ namespace Quaver.Shared.Screens.Edit
         {
             var view = (EditScreenView) View;
             return !view.Layers.IsHovered();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void InitializeDiscordRichPresence()
+        {
+            try
+            {
+                DiscordHelper.Presence.Details = WorkingMap.ToString();
+                DiscordHelper.Presence.State = "Editing";
+                DiscordHelper.Presence.StartTimestamp = (long) (TimeHelper.GetUnixTimestampMilliseconds() / 1000);
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(WorkingMap.Mode).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(WorkingMap.Mode);
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
     }
 }
