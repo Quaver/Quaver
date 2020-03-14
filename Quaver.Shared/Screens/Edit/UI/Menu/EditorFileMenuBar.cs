@@ -89,6 +89,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("File"))
                 return;
 
+            if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
+                Screen.Save();
+
             ImGui.EndMenu();
         }
 

@@ -17,6 +17,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Flip;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
@@ -583,6 +584,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.H))
                 FlipSelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.S))
+                Save();
         }
 
         /// <summary>
@@ -956,6 +960,47 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="synchronous"></param>
+        public void Save(bool synchronous = false)
+        {
+            if (!ActionManager.HasUnsavedChanges)
+                return;
+
+            if (Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot save a map loaded from another game!");
+                return;
+            }
+
+            try
+            {
+                var path = $"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}";
+
+                if (synchronous)
+                    WorkingMap.Save(path);
+                else
+                {
+                    ThreadScheduler.Run(() =>
+                    {
+                        WorkingMap.Save(path);
+                        NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                    });
+                }
+
+                ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
+
+                if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
+                    MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while saving your map!");
             }
         }
 
