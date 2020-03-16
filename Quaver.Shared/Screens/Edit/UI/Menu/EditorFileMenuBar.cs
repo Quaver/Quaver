@@ -310,6 +310,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.BeginMenu($"Local Plugins"))
             {
+                var totalPlugins = 0;
+
                 for (var i = 0; i < Screen.Plugins.Count; i++)
                 {
                     var plugin = Screen.Plugins[i];
@@ -319,6 +321,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
                         plugin.IsActive = !plugin.IsActive;
+
+                    totalPlugins++;
+                }
+
+                if (totalPlugins == 0)
+                {
+                    if (ImGui.MenuItem("No Plugins Installed", "", false, false))
+                    {
+                    }
                 }
 
                 ImGui.EndMenu();
