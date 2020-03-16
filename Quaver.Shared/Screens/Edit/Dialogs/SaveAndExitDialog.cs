@@ -24,7 +24,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             YesButton.Size = new ScalableVector2(YesButton.Width * scale, YesButton.Height * scale);
             NoButton.Size = new ScalableVector2(NoButton.Width * scale, NoButton.Height * scale);
 
-            YellowNoButton = new IconButton(UserInterface.NoYellowButton, (sender, args) => screen.ExitToSongSelect())
+            YellowNoButton = new IconButton(UserInterface.NoYellowButton, (sender, args) =>
+            {
+                screen.ExitToSongSelect();
+                Close();
+            })
             {
                 Parent = Panel,
                 Size = YesButton.Size,
