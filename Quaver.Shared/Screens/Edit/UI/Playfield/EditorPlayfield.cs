@@ -309,6 +309,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
+            Skin.ValueChanged += OnSkinChanged;
         }
 
         /// <inheritdoc />
@@ -383,6 +384,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
+            Skin.ValueChanged -= OnSkinChanged;
 
             base.Destroy();
         }
@@ -1149,6 +1151,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
                 drawable.Refresh();
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSkinChanged(object sender, BindableValueChangedEventArgs<SkinStore> e)
+        {
+            foreach (var ho in HitObjects)
+                ho.Refresh();
         }
     }
 }
