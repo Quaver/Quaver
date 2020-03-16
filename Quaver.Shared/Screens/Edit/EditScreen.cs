@@ -642,6 +642,9 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void PlayHitsounds()
         {
+            if (!Track.IsPlaying)
+                return;
+
             for (var i = HitsoundObjectIndex; i < WorkingMap.HitObjects.Count; i++)
             {
                 var obj = WorkingMap.HitObjects[i];
