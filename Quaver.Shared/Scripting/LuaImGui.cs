@@ -115,7 +115,7 @@ namespace Quaver.Shared.Scripting
             }
             catch (Exception e)
             {
-                Logger.Error(e, LogType.Runtime);
+                Logger.Error(e, LogType.Runtime, false);
             }
         }
 
