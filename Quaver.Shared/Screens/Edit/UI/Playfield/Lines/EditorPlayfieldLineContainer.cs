@@ -180,6 +180,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 LinePool.Add(line);
                 LastPooledLineIndex = i;
             }
+
+            if (LastPooledLineIndex == -1)
+                LastPooledLineIndex = Lines.FindLastIndex(x => x.GetTime() < Track.Time);
         }
 
         /// <summary>
