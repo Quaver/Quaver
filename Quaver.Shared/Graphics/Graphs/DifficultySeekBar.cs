@@ -36,7 +36,7 @@ namespace Quaver.Shared.Graphics.Graphs
 
         /// <summary>
         /// </summary>
-        private IAudioTrack Track { get; }
+        public IAudioTrack Track { get; set; }
 
         /// <summary>
         ///     The maximum amount of bars that will be displayed on the graph

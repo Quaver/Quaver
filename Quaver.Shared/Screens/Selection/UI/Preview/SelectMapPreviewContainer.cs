@@ -279,7 +279,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             {
                 // Handle seeking when the track reloads
                 if (AudioEngine.Track != TrackInPreviousFrame)
+                {
+                    if (SeekBar != null)
+                        SeekBar.Track = AudioEngine.Track;
+
                     LoadedGameplayScreen?.HandleReplaySeeking();
+                }
 
                 if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
                     LoadedGameplayScreen?.HandleAutoplayTabInput(gameTime);
