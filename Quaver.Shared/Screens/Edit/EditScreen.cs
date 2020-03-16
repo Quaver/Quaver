@@ -223,6 +223,9 @@ namespace Quaver.Shared.Screens.Edit
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
             LoadPlugins();
 
+            if (ConfigManager.Pitched != null)
+                ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
+
             InitializeDiscordRichPresence();
             View = new EditScreenView(this);
         }
@@ -309,6 +312,9 @@ namespace Quaver.Shared.Screens.Edit
             if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
                 LongNoteOpacity.Dispose();
 
+            if (ConfigManager.Pitched != null)
+                ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
+
             base.Destroy();
         }
 
@@ -323,7 +329,10 @@ namespace Quaver.Shared.Screens.Edit
                 Track = AudioEngine.Track;
             }
             else
+            {
                 Track = track;
+                Track.ApplyRate(ConfigManager.Pitched?.Value ?? true);
+            }
 
             Track.Seeked += OnTrackSeeked;
         }
@@ -1129,6 +1138,18 @@ namespace Quaver.Shared.Screens.Edit
             {
                 Logger.Error(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPitchedChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (Track == AudioEngine.Track)
+                return;
+
+            Track.ApplyRate(e.Value);
         }
     }
 }
