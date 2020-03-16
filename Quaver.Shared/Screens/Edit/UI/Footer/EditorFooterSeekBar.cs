@@ -50,6 +50,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             BindedValue.Value = (int) Track.Time;
             base.Update(gameTime);
+            ActiveColor.Width += 5;
         }
 
         /// <inheritdoc />
