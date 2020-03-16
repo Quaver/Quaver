@@ -654,13 +654,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
 
+            if (Math.Abs(fwdDiff - bwdDiff) <= 2)
+                return time;
+            
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
                 time = timeBwd;
             else if (fwdDiff < bwdDiff)
                 time = timeFwd;
-            if (Math.Abs(fwdDiff - bwdDiff) <= 2)
-                return time;
+
             return time;
         }
 
