@@ -315,6 +315,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
         {
             UpdateTextures();
+            SetSize();
 
             Body.Tint = GetNoteTint();
             Tail.Tint = GetNoteTint();
