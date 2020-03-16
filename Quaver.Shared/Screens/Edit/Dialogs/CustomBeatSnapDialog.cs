@@ -35,12 +35,13 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
 
-            YesButton.Visible = false;
-            YesButton.IsClickable = false;
-            NoButton.Visible = false;
-            NoButton.IsClickable = false;
-
             CreateTextbox();
+
+            Panel.Height += 50;
+            YesButton.Y = -30;
+            NoButton.Y = YesButton.Y;
+
+            YesButton.Clicked += (sender, args) => OnSubmit(Textbox.RawText);
         }
 
         /// <summary>
@@ -48,20 +49,11 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, "", "Enter a beat snap value (max 48)", s =>
-                {
-                    BeatSnap.Value = int.Parse(s);
-
-                    if (!AvailableBeatSnaps.Contains(BeatSnap.Value))
-                    {
-                        AvailableBeatSnaps.Add(BeatSnap.Value);
-                        AvailableBeatSnaps.Sort();
-                    }
-                })
+                20, "", "Enter a beat snap value (max 48)", s => OnSubmit(s))
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
-                Y = -44,
+                Y = -100,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
                 AllowedCharacters = new Regex(@"^([1-9]|[1-3][0-9]|4[0-8])$")
@@ -77,6 +69,17 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         {
             Textbox.Visible = false;
             base.Close();
+        }
+
+        private void OnSubmit(string s)
+        {
+            BeatSnap.Value = int.Parse(s);
+
+            if (!AvailableBeatSnaps.Contains(BeatSnap.Value))
+            {
+                AvailableBeatSnaps.Add(BeatSnap.Value);
+                AvailableBeatSnaps.Sort();
+            }
         }
     }
 }
