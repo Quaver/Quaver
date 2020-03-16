@@ -541,13 +541,16 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleBeatSnapChanges()
         {
-            if (KeyboardManager.CurrentState.IsKeyUp(Keys.LeftControl) && KeyboardManager.CurrentState.IsKeyUp(Keys.Right))
-                return;
+            var ctrlPressed = KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                              KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl);
 
-            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue || KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            var scrolledForward = MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue;
+            var scrolledBackward = MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue;
+
+            if (ctrlPressed && (scrolledForward || KeyboardManager.IsUniqueKeyPress(Keys.Down)))
                 ChangeBeatSnap(Direction.Forward);
 
-            if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue || KeyboardManager.IsUniqueKeyPress(Keys.Down))
+            if (ctrlPressed && (scrolledBackward || KeyboardManager.IsUniqueKeyPress(Keys.Up)))
                 ChangeBeatSnap(Direction.Backward);
         }
 
