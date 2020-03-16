@@ -35,12 +35,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
             Layer = layer;
             WorkingMap = workingMap;
 
-            YesButton.Visible = false;
-            YesButton.IsClickable = false;
-            NoButton.Visible = false;
-            NoButton.IsClickable = false;
-
             CreateTextbox();
+
+            Panel.Height += 50;
+            YesButton.Y = -30;
+            NoButton.Y = YesButton.Y;
+
+            YesButton.Clicked += (sender, args) => OnSubmit(Textbox.RawText);
         }
 
         /// <summary>
@@ -48,17 +49,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, Layer.Name, "Enter name...", s =>
-                {
-                    if (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s))
-                        return;
-
-                    ActionManager.Perform(new EditorActionRenameLayer(ActionManager, WorkingMap, Layer, s));
-                })
+                20, Layer.Name, "Enter name...", s => OnSubmit(s))
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
-                Y = -44,
+                Y = -100,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
                 MaxCharacters = 15
@@ -74,6 +69,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         {
             Textbox.Visible = false;
             base.Close();
+        }
+
+        private void OnSubmit(string s)
+        {
+            if (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s))
+                return;
+
+            ActionManager.Perform(new EditorActionRenameLayer(ActionManager, WorkingMap, Layer, s));
         }
     }
 }

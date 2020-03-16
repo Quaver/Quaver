@@ -46,16 +46,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
             Layer = layer;
             WorkingMap = workingMap;
 
-            YesButton.Visible = false;
-            YesButton.IsClickable = false;
-            NoButton.Visible = false;
-            NoButton.IsClickable = false;
-
             NewColor = ColorHelper.ToXnaColor(Layer.GetColor());
 
             CreateTextbox();
             CreateColorBox();
             CreateRandomButton();
+
+            Panel.Height += 50;
+            YesButton.Y = -30;
+            NoButton.Y = YesButton.Y;
+
+            YesButton.Clicked += (sender, args) => OnSubmit(Textbox.RawText);
         }
 
         /// <summary>
@@ -66,19 +67,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
             var val = $"{color.R},{color.G},{color.B}";
 
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.LatoBlack),
-                20, val, "Enter RGB color (ex: 255,255,255)...", s =>
-                {
-                    var newColor = ParseColor(s);
-
-                    if (newColor == null)
-                        return;
-
-                    ActionManager.Perform(new EditorActionChangeLayerColor(ActionManager, WorkingMap, Layer, newColor.Value));
-                })
+                20, val, "Enter RGB color (ex: 255,255,255)...", OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotLeft,
-                Y = -44,
+                Y = -100,
                 X = 24,
                 Tint = ColorHelper.HexToColor("#2F2F2F"),
                 AlwaysFocused = true,
@@ -146,7 +139,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         {
             Textbox.Visible = false;
             ColorBox.Visible = false;
-            
+
             base.Close();
         }
 
@@ -162,6 +155,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
             {
                 return null;
             }
+        }
+
+        private void OnSubmit(string s)
+        {
+            var newColor = ParseColor(s);
+
+            if (newColor == null)
+                return;
+
+            ActionManager.Perform(new EditorActionChangeLayerColor(ActionManager, WorkingMap, Layer, newColor.Value));
         }
     }
 }
