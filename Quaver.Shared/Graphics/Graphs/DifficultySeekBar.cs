@@ -147,6 +147,9 @@ namespace Quaver.Shared.Graphics.Graphs
         /// </summary>
         private void CreateBars()
         {
+            if (Map.HitObjects.Count == 0)
+                return;
+
             var groupedSamples = Map.HitObjects.GroupBy(u => u.StartTime / SampleTime)
                 .Select(grp => grp.ToList())
                 .ToList();
@@ -167,6 +170,9 @@ namespace Quaver.Shared.Graphics.Graphs
 
                 calculators.Add(diff);
             }
+
+            if (calculators.Count == 0)
+                return;
 
             var highestDiff = calculators.Max(x => x.OverallDifficulty);
 
