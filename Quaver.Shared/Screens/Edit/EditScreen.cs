@@ -226,6 +226,7 @@ namespace Quaver.Shared.Screens.Edit
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
 
+            SkinManager.SkinLoaded += OnSkinLoaded;
             InitializeDiscordRichPresence();
             View = new EditScreenView(this);
         }
@@ -314,6 +315,8 @@ namespace Quaver.Shared.Screens.Edit
 
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
+
+            SkinManager.SkinLoaded -= OnSkinLoaded;
 
             base.Destroy();
         }
@@ -1151,5 +1154,12 @@ namespace Quaver.Shared.Screens.Edit
 
             Track.ApplyRate(e.Value);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => Skin.Value = SkinManager.Skin;
     }
 }
