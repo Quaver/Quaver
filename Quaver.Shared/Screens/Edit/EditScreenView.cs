@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Edit
             MenuBar?.Draw(gameTime);
             GameBase.Game.SpriteBatch.End();
 
-            if (ImGui.IsAnyItemHovered() || ImGui.IsMouseDragging())
+            if (ImGui.IsAnyItemHovered())
                 IsImGuiHovered = true;
 
             Button.IsGloballyClickable = !IsImGuiHovered;
