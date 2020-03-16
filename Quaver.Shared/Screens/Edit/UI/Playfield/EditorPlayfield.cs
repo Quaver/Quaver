@@ -571,6 +571,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 HitObjectPool.Add(hitObject);
                 LastPooledHitObjectIndex = i;
             }
+
+            if (LastPooledHitObjectIndex == -1)
+                LastPooledHitObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime < Track.Time);
         }
 
         /// <summary>
@@ -651,15 +654,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
 
-            if (Math.Abs(fwdDiff - bwdDiff) <= 2)
-                return time;
-
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
                 time = timeBwd;
             else if (fwdDiff < bwdDiff)
                 time = timeFwd;
-
+            if (Math.Abs(fwdDiff - bwdDiff) <= 2)
+                return time;
             return time;
         }
 
