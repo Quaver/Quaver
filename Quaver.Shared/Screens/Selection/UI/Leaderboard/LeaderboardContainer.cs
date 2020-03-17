@@ -349,9 +349,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
             {
                 e.OldValue?.ClearScores();
                 e.Value?.ClearScores();
-
-                FetchScores();
             });
+
+            FetchScores();
         }
 
         /// <summary>
