@@ -926,10 +926,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (hitObject == null)
                 SelectedHitObjects.Clear();
 
-            if (Tool.Value == EditorCompositionTool.Select)
+            if (Tool.Value == EditorCompositionTool.Select || Tool.Value == EditorCompositionTool.LongNote)
             {
                 HandleHitObjectSelectTool(hitObject);
-                return;
+
+                if (Tool.Value == EditorCompositionTool.Select)
+                    return;
             }
 
             HandleHitObjectPlacement();
@@ -949,6 +951,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 LongNoteResizeOriginalEndTime = hoveredObject.Info.EndTime;
                 return;
             }
+
+            if (Tool.Value != EditorCompositionTool.Select)
+                return;
 
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
             {
