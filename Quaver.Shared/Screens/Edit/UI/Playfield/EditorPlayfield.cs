@@ -1091,8 +1091,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                     var relativeMouseY = HitPositionY - (int) GetTimeFromY(MouseManager.CurrentState.Y);
                     NoteMoveGrabOffset = relativeMouseY - HitObjectInDrag.Y;
                 }
+                else
+                    NoteMoveGrabOffset = 0;
 
-                NoteMoveGrabOffset = 0;
                 TimeDragStart = hoveredObject.Info.StartTime;
                 PreviousDragOffset = 0;
                 PreviousLaneDragOffset = 0;
