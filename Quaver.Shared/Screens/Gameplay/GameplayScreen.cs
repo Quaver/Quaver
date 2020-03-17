@@ -1386,8 +1386,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                if (seekToTime)
-                    track.Seek(AudioEngine.Track.Time);
+                track.Seek(seekToTime ? AudioEngine.Track.Time : PlayTestAudioTime);
             }
             catch (Exception e)
             {
