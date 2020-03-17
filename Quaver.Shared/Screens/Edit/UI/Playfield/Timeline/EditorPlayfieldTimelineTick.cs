@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 {
@@ -37,6 +40,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// </summary>
         private BindableInt BeatSnap { get; }
 
+        private SpriteTextPlus Measure { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -58,13 +63,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 return;
 
             Y = -2;
+
+            Measure = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), measureCount.ToString(), 24, false)
+            {
+                Parent = this,
+                Alignment = Alignment.MidLeft,
+            };
+
+            Measure.X = -Measure.Width - 12;
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public override void Draw(GameTime gameTime) => DrawToSpriteBatch();
+        public override void Draw(GameTime gameTime)
+        {
+            DrawToSpriteBatch();
+            Measure?.Draw(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            Measure?.Destroy();
+            base.Destroy();
+        }
 
         /// <summary>
         ///     Checks if the timing line is on-screen.
