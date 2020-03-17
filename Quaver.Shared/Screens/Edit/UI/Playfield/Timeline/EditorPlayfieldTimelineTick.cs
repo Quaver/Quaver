@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 Alignment = Alignment.MidLeft,
             };
 
-            Measure.X = -Measure.Width - 12;
+            Measure.X = -Measure.Width - 16;
         }
 
         /// <inheritdoc />
