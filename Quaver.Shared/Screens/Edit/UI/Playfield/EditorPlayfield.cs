@@ -1032,9 +1032,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 if (time == LongNoteInDrag.Info.StartTime && !IsDraggingLongNoteBackwards)
                 {
                     LongNoteInDrag.Info.EndTime = 0;
+                    LongNoteInDrag.Refresh();
                     return;
                 }
 
+                LongNoteInDrag.Refresh();
                 return;
             }
 
@@ -1049,6 +1051,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (!IsDraggingLongNoteBackwards)
                 LongNoteInDrag.Info.EndTime = time;
+
+            LongNoteInDrag.Refresh();
         }
 
         /// <summary>
