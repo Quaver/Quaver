@@ -519,7 +519,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 Y = 34
             };
 
-            SeekBar.X -= SeekBar.Width + 42;
+            SeekBar.X -= SeekBar.Width + 60;
 
             // ReSharper disable once ObjectCreationAsStatement
             new Sprite
