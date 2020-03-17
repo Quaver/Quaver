@@ -658,8 +658,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var fwdDiff = Math.Abs(time - timeFwd);
             var bwdDiff = Math.Abs(time - timeBwd);
 
+            // When the forward and backwards differences are around the same (the user places directly on a line or in the middle)
+            // always go to the nearest backwards tick
             if (Math.Abs(fwdDiff - bwdDiff) <= 2)
-                return time;
+            {
+                // Get the current timing point
+                var point = Map.GetTimingPointAt(time);
+
+                if (point == null)
+                    return time;
+
+                var snapTimePerBeat = 60000f / point.Bpm / beatSnap;
+                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+            }
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
