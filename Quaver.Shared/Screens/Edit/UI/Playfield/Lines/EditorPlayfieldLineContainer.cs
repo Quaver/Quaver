@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
+using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
@@ -38,6 +39,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private List<DrawableEditorLine> LinePool { get; set; }
 
         /// <summary>
+        /// </summary>
+        private DrawableEditorLinePreview PreviewLine { get; set; }
+
+        /// <summary>
         ///     The index of the last object that was added to the pool
         /// </summary>
         private int LastPooledLineIndex { get; set; } = -1;
@@ -65,6 +70,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.PreviewTimeChanged += OnPreviewTimeChanged;
         }
 
         /// <inheritdoc />
@@ -95,6 +101,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 line.Draw(gameTime);
             }
 
+            if (PreviewLine.IsOnScreen())
+            {
+                PreviewLine.SetPosition();
+                PreviewLine.SetSize();
+                PreviewLine.Draw(gameTime);
+            }
+
             base.Draw(gameTime);
         }
 
@@ -106,6 +119,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             foreach (var line in Lines)
                 line.Destroy();
 
+            PreviewLine?.Destroy();
+
             Track.Seeked -= OnTrackSeeked;
             ActionManager.ScrollVelocityAdded -= OnScrollVelocityAdded;
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
@@ -115,6 +130,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.PreviewTimeChanged -= OnPreviewTimeChanged;
 
             base.Destroy();
         }
@@ -160,6 +176,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 }
             }
 
+            PreviewLine = new DrawableEditorLinePreview(Playfield, Map.SongPreviewTime);
             InitializeLinePool();
         }
 
@@ -306,5 +323,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
             InitializeLinePool();
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPreviewTimeChanged(object sender, EditorChangedPreviewTimeEventArgs e) => PreviewLine.Time = e.Time;
     }
 }
