@@ -206,6 +206,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private int LongNoteResizeOriginalEndTime { get; set; } = -1;
 
         /// <summary>
+        /// </summary>
+        private bool IsDraggingLongNoteBackwards { get; set; }
+
+        /// <summary>
         ///     The initial position of the mouse when the user begins to drag notes
         /// </summary>
         private Vector2? NoteMoveInitialMousePosition { get; set; }
@@ -656,7 +660,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (Math.Abs(fwdDiff - bwdDiff) <= 2)
                 return time;
-            
+
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
                 time = timeBwd;
@@ -868,6 +872,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
                 LongNoteInDrag = null;
                 LongNoteResizeOriginalEndTime = -1;
+                IsDraggingLongNoteBackwards = false;
 
                 // Create an action for the the user dragging/moving the notes
                 if ((NoteMoveInitialMousePosition != null && PreviousLaneDragOffset != 0)
@@ -1013,14 +1018,37 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             var time = (int) Math.Round(GetTimeFromY(MouseManager.CurrentState.Y) / TrackSpeed, MidpointRounding.AwayFromZero);
             time = GetNearestTickFromTime(time, BeatSnap.Value);
 
-            // Change the object back to a normal note
             if (time <= LongNoteInDrag.Info.StartTime)
             {
-                LongNoteInDrag.Info.EndTime = 0;
+                if (!IsDraggingLongNoteBackwards && time < LongNoteInDrag.Info.StartTime)
+                {
+                    LongNoteInDrag.Info.EndTime = LongNoteInDrag.Info.StartTime;
+                    IsDraggingLongNoteBackwards = true;
+                }
+
+                LongNoteInDrag.Info.StartTime = time;
+
+                // Change the object back to a normal note
+                if (time == LongNoteInDrag.Info.StartTime && !IsDraggingLongNoteBackwards)
+                {
+                    LongNoteInDrag.Info.EndTime = 0;
+                    return;
+                }
+
                 return;
             }
 
-            LongNoteInDrag.Info.EndTime = time;
+            if (IsDraggingLongNoteBackwards && time > LongNoteInDrag.Info.StartTime)
+                LongNoteInDrag.Info.StartTime = time;
+
+            if (LongNoteInDrag.Info.StartTime == LongNoteInDrag.Info.EndTime)
+            {
+                LongNoteInDrag.Info.EndTime = 0;
+                IsDraggingLongNoteBackwards = false;
+            }
+
+            if (!IsDraggingLongNoteBackwards)
+                LongNoteInDrag.Info.EndTime = time;
         }
 
         /// <summary>
