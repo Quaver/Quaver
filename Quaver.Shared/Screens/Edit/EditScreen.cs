@@ -525,11 +525,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleSeekingBackwards()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Left)
-                && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
+            var leftPressed = KeyboardManager.IsUniqueKeyPress(Keys.Left);
+
+            if (!leftPressed && MouseManager.CurrentState.ScrollWheelValue <= MouseManager.PreviousState.ScrollWheelValue)
                 return;
 
-            if (Track == null || Track.IsDisposed || !CanSeek())
+            if (Track == null || Track.IsDisposed || (!CanSeek() && !leftPressed))
                 return;
 
             HandleSeeking(Direction.Backward);
@@ -539,11 +540,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void HandleSeekingForwards()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Right)
-                && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
+            var rightPressed = KeyboardManager.IsUniqueKeyPress(Keys.Right);
+
+            if (!rightPressed && MouseManager.CurrentState.ScrollWheelValue >= MouseManager.PreviousState.ScrollWheelValue)
                 return;
 
-            if (Track == null || Track.IsDisposed || !CanSeek())
+            if (Track == null || Track.IsDisposed || (!CanSeek() && !rightPressed))
                 return;
 
             HandleSeeking(Direction.Forward);
