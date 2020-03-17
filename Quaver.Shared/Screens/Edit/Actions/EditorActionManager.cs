@@ -19,6 +19,7 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
+using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
@@ -172,6 +173,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorTimingPointBatchRemovedEventArgs> TimingPointBatchRemoved;
 
         /// <summary>
+        ///     Event invoked when the preview time of the map has changed
+        /// </summary>
+        public event EventHandler<EditorChangedPreviewTimeEventArgs> PreviewTimeChanged;
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="workingMap"></param>
@@ -310,6 +316,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public EditorBpmDetector DetectBpm() => new EditorBpmDetector(EditScreen.Track);
 
         /// <summary>
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetPreviewTime(int time) => Perform(new EditorActionChangePreviewTime(this, WorkingMap, time));
+
+        /// <summary>
         ///     Triggers an event of a specific action type
         /// </summary>
         /// <param name="type"></param>
@@ -381,6 +392,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.RemoveTimingPointBatch:
                     TimingPointBatchRemoved?.Invoke(this, (EditorTimingPointBatchRemovedEventArgs) args);
                     break;
+                case EditorActionType.ChangePreviewTime:
+                    PreviewTimeChanged?.Invoke(this, (EditorChangedPreviewTimeEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -412,6 +426,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointRemoved = null;
             TimingPointBatchAdded = null;
             TimingPointBatchRemoved = null;
+            PreviewTimeChanged = null;
         }
     }
 }

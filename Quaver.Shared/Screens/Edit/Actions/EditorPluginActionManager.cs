@@ -90,5 +90,10 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <returns></returns>
         public EditorBpmDetector DetectBpm() => ActionManager.DetectBpm();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="time"></param>
+        public void SetPreviewTime(int time) => ActionManager.SetPreviewTime(time);
     }
 }

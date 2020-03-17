@@ -164,6 +164,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 ImGui.EndMenu();
             }
 
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Set Song Select Preview Time"))
+                Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+
             ImGui.EndMenu();
         }
 

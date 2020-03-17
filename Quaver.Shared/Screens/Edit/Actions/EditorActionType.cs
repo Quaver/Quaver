@@ -24,6 +24,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         AddTimingPoint,
         RemoveTimingPoint,
         AddTimingPointBatch,
-        RemoveTimingPointBatch
+        RemoveTimingPointBatch,
+        ChangePreviewTime
     }
 }
