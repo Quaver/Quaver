@@ -20,6 +20,7 @@ using TagLib.Matroska;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
@@ -96,6 +97,7 @@ namespace Quaver.Shared.Screens.Edit
 
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
+            BackgroundHelper.Loaded += OnBackgroundLoaded;
 
             Footer.Parent = Container;
         }
@@ -120,12 +122,15 @@ namespace Quaver.Shared.Screens.Edit
 
             IsImGuiHovered = false;
 
-            DrawPlugins(gameTime);
-            MenuBar?.Draw(gameTime);
-            GameBase.Game.SpriteBatch.End();
+            if (MenuBar != null)
+            {
+                DrawPlugins(gameTime);
+                MenuBar?.Draw(gameTime);
+                GameBase.Game.SpriteBatch.End();
 
-            if (ImGui.IsAnyItemHovered())
-                IsImGuiHovered = true;
+                if (ImGui.IsAnyItemHovered())
+                    IsImGuiHovered = true;
+            }
 
             Button.IsGloballyClickable = !IsImGuiHovered;
         }
@@ -140,6 +145,7 @@ namespace Quaver.Shared.Screens.Edit
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged -= OnBackgroundBrightnessChanged;
+            BackgroundHelper.Loaded -= OnBackgroundLoaded;
         }
 
         /// <summary>
@@ -260,7 +266,7 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="e"></param>
         private void OnUneditableMapChanged(object sender, BindableValueChangedEventArgs<Qua> e)
         {
-            Container.ScheduleUpdate(() =>
+            Container.AddScheduledUpdate(() =>
             {
                 UnEditablePlayfield?.Destroy();
 
@@ -307,6 +313,22 @@ namespace Quaver.Shared.Screens.Edit
                 if (ImGui.IsAnyItemHovered() || plugin.State.IsWindowHovered)
                     IsImGuiHovered = true;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            Background.BrightnessSprite.ClearAnimations();
+
+            Container.AddScheduledUpdate(() =>
+            {
+                Background.BrightnessSprite.Alpha = 1;
+                Background.Image = e.Texture;
+                Background.BrightnessSprite.FadeTo(Background.Dim / 100f, Easing.Linear, 250);
+            });
         }
     }
 }
