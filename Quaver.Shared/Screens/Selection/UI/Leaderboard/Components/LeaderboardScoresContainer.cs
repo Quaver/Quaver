@@ -165,23 +165,36 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         public void StartLoading()
         {
-            LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
-            LoadingWheel.FadeTo(1, Easing.Linear, 250);
-            FadeStatusTextOut();
+            ScheduleUpdate(() =>
+            {
+                LoadingWheel.Animations.RemoveAll(x => x.Properties != AnimationProperty.Rotation);
+                LoadingWheel.FadeTo(1, Easing.Linear, 250);
+                FadeStatusTextOut();
 
-            Pool?.ForEach(x => x.Destroy());
-            Pool?.Clear();
-            ContentContainer.Height = Height;
+                try
+                {
+                    foreach (var x in new List<Drawable>(Pool))
+                        x.Destroy();
 
-            SnapToTop();
+                    Pool?.Clear();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
 
-            AvailableItems?.Clear();
-            ScrollbarBackground.Visible = false;
-            FinishedLoading = false;
+                ContentContainer.Height = Height;
 
-            UpdateButton.ClearAnimations();
-            UpdateButton.IsClickable = false;
-            UpdateButton.FadeTo(0, Easing.Linear, 250);
+                SnapToTop();
+
+                AvailableItems?.Clear();
+                ScrollbarBackground.Visible = false;
+                FinishedLoading = false;
+
+                UpdateButton.ClearAnimations();
+                UpdateButton.IsClickable = false;
+                UpdateButton.FadeTo(0, Easing.Linear, 250);
+            });
         }
 
         /// <summary>
@@ -357,30 +370,50 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="e"></param>
         private void OnScoresRetrieved(object sender, TaskCompleteEventArgs<Map, FetchedScoreStore> e)
         {
-            Pool?.ForEach(x => x.Destroy());
-            Pool?.Clear();
-
-            SnapToTop();
-
-            AvailableItems = e.Result.Scores;
-
-            if (AvailableItems == null)
-                return;
-
-            const int MAX_SHOWN_ITEMS = 10;
-
-            // We don't have enough scores in the leaderboard, so fill it with empty scores, so the leaderboard
-            // still preserves the table look
-            if (AvailableItems.Count < MAX_SHOWN_ITEMS && AvailableItems.Count != 0)
+            ScheduleUpdate(() =>
             {
-                var count = MAX_SHOWN_ITEMS - AvailableItems.Count;
+                try
+                {
+                    foreach (var x in new List<Drawable>(Pool))
+                        x.Destroy();
 
-                for (var i = 0; i < count; i++)
-                    AvailableItems.Add(new Score { IsEmptyScore = true});
-            }
+                    Pool?.Clear();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
 
-            CreatePool(false);
-            FinishedLoading = true;
+                SnapToTop();
+
+                AvailableItems = e.Result.Scores;
+
+                if (AvailableItems == null)
+                    return;
+
+                const int MAX_SHOWN_ITEMS = 10;
+
+                // We don't have enough scores in the leaderboard, so fill it with empty scores, so the leaderboard
+                // still preserves the table look
+                if (AvailableItems.Count < MAX_SHOWN_ITEMS && AvailableItems.Count != 0)
+                {
+                    var count = MAX_SHOWN_ITEMS - AvailableItems.Count;
+
+                    for (var i = 0; i < count; i++)
+                        AvailableItems.Add(new Score { IsEmptyScore = true});
+                }
+
+                try
+                {
+                    CreatePool(false);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+                FinishedLoading = true;
+            });
         }
 
         /// <summary>
