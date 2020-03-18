@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ImGuiNET;
+using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
@@ -22,7 +24,9 @@ using Wobble.Bindables;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Logging;
 using Wobble.Window;
+using Utils = Wobble.Platform.Utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
@@ -93,6 +97,48 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
                 Screen.Save();
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Export", "", false))
+            {
+                NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
+
+                ThreadScheduler.Run(() =>
+                {
+                    Screen.Map.Mapset.ExportToZip();
+                    NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
+                });
+            }
+
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Open Song Folder", "", false, Screen.Map.Game == MapGame.Quaver))
+            {
+                try
+                {
+                    Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}");
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            if (ImGui.MenuItem("Open .qua File", "", false, Screen.Map.Game == MapGame.Quaver))
+            {
+                try
+                {
+                    Utils.NativeUtils.OpenNatively($"{ConfigManager.SongDirectory.Value}/{Screen.Map.Directory}/{Screen.Map.Path}");
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            ImGui.Separator();
 
             if (ImGui.MenuItem("Exit", "ESC", false))
                 Screen.LeaveEditor();
