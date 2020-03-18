@@ -19,6 +19,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
@@ -227,6 +228,8 @@ namespace Quaver.Shared.Screens.Edit
                 ConfigManager.Pitched.ValueChanged += OnPitchedChanged;
 
             SkinManager.SkinLoaded += OnSkinLoaded;
+            GameBase.Game.Window.FileDropped += OnFileDropped;
+
             InitializeDiscordRichPresence();
             View = new EditScreenView(this);
         }
@@ -268,6 +271,7 @@ namespace Quaver.Shared.Screens.Edit
         public override void Destroy()
         {
             Track.Seeked -= OnTrackSeeked;
+            GameBase.Game.Window.FileDropped -= OnFileDropped;
             Track?.Dispose();
             Skin?.Value?.Dispose();
             Skin?.Dispose();
@@ -1001,9 +1005,10 @@ namespace Quaver.Shared.Screens.Edit
         ///     Saves the map either synchronously or in a separate threaad.
         /// </summary>
         /// <param name="synchronous"></param>
-        public void Save(bool synchronous = false)
+        /// <param name="forceSave"></param>
+        public void Save(bool synchronous = false, bool forceSave = false)
         {
-            if (!ActionManager.HasUnsavedChanges)
+            if (!ActionManager.HasUnsavedChanges && !forceSave)
                 return;
 
             if (Map.Game != MapGame.Quaver)
@@ -1027,7 +1032,8 @@ namespace Quaver.Shared.Screens.Edit
                     });
                 }
 
-                ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
+                if (ActionManager.UndoStack.Count != 0)
+                    ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                     MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
@@ -1163,5 +1169,29 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnSkinLoaded(object sender, SkinReloadedEventArgs e) => Skin.Value = SkinManager.Skin;
+
+        /// <summary>
+        ///     Dragging backgrounds into the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnFileDropped(object sender, string e)
+        {
+            var file = e.ToLower();
+
+            if (!file.EndsWith(".jpg") && !file.EndsWith(".jpeg") && !file.EndsWith(".png"))
+                return;
+
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
+            if (Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You cannot set a new background for a map loaded from another game.");
+                return;
+            }
+
+            DialogManager.Show(new EditorChangeBackgroundDialog(this, file));
+        }
     }
 }
