@@ -92,6 +92,9 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public override void OnFirstUpdate()
         {
+            if (OnlineManager.IsSpectatingSomeone)
+                OnlineManager.Client?.StopSpectating();
+
             MapLoadingScreen.AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
             base.OnFirstUpdate();
         }
