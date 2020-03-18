@@ -390,31 +390,37 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
 
         /// <summary>
         /// </summary>
-        public void StartLoading() => Children.ForEach(x =>
+        public void StartLoading()
         {
-            if (x is ILoadable loadable)
-                loadable.StartLoading();
+            foreach (var x in new List<Drawable>(Children))
+            {
+                if (x is ILoadable loadable)
+                    loadable.StartLoading();
 
-            ScoresContainer.StartLoading();
+                ScoresContainer.StartLoading();
 
-            const int animTime = 20;
+                const int animTime = 20;
 
-            PersonalBestTrophy.ClearAnimations();
-            PersonalBestTrophy.FadeTo(0, Easing.Linear, animTime);
+                PersonalBestTrophy.ClearAnimations();
+                PersonalBestTrophy.FadeTo(0, Easing.Linear, animTime);
 
-            PersonalBestRank.ClearAnimations();
-            PersonalBestRank.FadeTo(0, Easing.Linear, animTime);
-        });
+                PersonalBestRank.ClearAnimations();
+                PersonalBestRank.FadeTo(0, Easing.Linear, animTime);
+            }
+        }
 
         /// <summary>
         /// </summary>
-        public void StopLoading() => Children.ForEach(x =>
+        public void StopLoading()
         {
-            if (x is ILoadable loadable)
-                loadable.StopLoading();
+            foreach (var x in new List<Drawable>(Children))
+            {
+                if (x is ILoadable loadable)
+                    loadable.StopLoading();
 
-            ScoresContainer.StopLoading();
-        });
+                ScoresContainer.StopLoading();
+            }
+        }
 
         /// <summary>
         ///     Whenever the user connects to the server in song select, it will automatically

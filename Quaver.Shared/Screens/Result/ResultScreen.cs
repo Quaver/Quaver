@@ -124,24 +124,18 @@ namespace Quaver.Shared.Screens.Result
 
         /// <summary>
         /// </summary>
-        private MultiplayerScreen MultiplayerScreen { get; }
-
-        /// <summary>
-        /// </summary>
         public Dictionary<ScoreboardUser, ResultScoreContainer> CachedScoreContainers { get; set; }
 
         /// <summary>
         /// </summary>
         /// <param name="gameplay"></param>
         /// <param name="multiplayerScores"></param>
-        /// <param name="multiplayerScreen"></param>
-        public ResultScreen(GameplayScreen gameplay, List<ScoreboardUser> multiplayerScores = null, MultiplayerScreen multiplayerScreen = null)
+        public ResultScreen(GameplayScreen gameplay, List<ScoreboardUser> multiplayerScores = null)
         {
             Gameplay = gameplay;
             ResultsType = ResultScreenType.Gameplay;
             ScoreProcessor = Gameplay.Ruleset.ScoreProcessor;
             MultiplayerScores = multiplayerScores;
-            MultiplayerScreen = multiplayerScreen;
 
             InitializeIfGameplayType();
             ChangeDiscordPresence();

@@ -171,7 +171,7 @@ namespace Quaver.Shared.Screens.Loading
                     return;
                 }
 
-                BackgroundHelper.Load(MapManager.Selected.Value);
+                //Helper.Load(MapManager.Selected.Value);
                 MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
             }
 
