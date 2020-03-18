@@ -24,6 +24,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
 using Wobble.Window;
 
@@ -124,7 +125,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (MenuBar != null)
             {
-                DrawPlugins(gameTime);
+                if (DialogManager.Dialogs.Count == 0)
+                    DrawPlugins(gameTime);
+                
                 MenuBar?.Draw(gameTime);
                 GameBase.Game.SpriteBatch.End();
 
