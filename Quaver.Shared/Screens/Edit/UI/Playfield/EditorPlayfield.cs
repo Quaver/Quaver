@@ -26,6 +26,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
+using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Zoom;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -510,7 +511,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            SeekBar = new DifficultySeekBar(Map, ModIdentifier.None,
+            SeekBar = new EditorDifficultySeekBar(ActionManager, Map, ModIdentifier.None,
                 new ScalableVector2(56, WindowManager.Height - EditorFooter.HEIGHT - 38), 200, 3, Track,
                 true, 0.85f)
             {

@@ -8,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys.Structures;
+using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Helpers;
@@ -71,6 +72,11 @@ namespace Quaver.Shared.Graphics.Graphs
         ///     Event invoked when the audio has seeked
         /// </summary>
         public event EventHandler<SeekBarAudioSeekedEventArgs> AudioSeeked;
+
+        /// <summary>
+        ///     The acive bars with their appropriate sample time
+        /// </summary>
+        protected List<Sprite> Bars { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -145,8 +151,11 @@ namespace Quaver.Shared.Graphics.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateBars()
+        protected void CreateBars()
         {
+            Bars?.ForEach(x => x.Destroy());
+            Bars = new List<Sprite>();
+
             if (Map.HitObjects.Count == 0)
                 return;
 
@@ -176,23 +185,30 @@ namespace Quaver.Shared.Graphics.Graphs
 
             var highestDiff = calculators.Max(x => x.OverallDifficulty);
 
-            foreach (var calculator in calculators)
+            AddScheduledUpdate(() =>
             {
-                var width = MathHelper.Clamp(calculator.OverallDifficulty / highestDiff * Width, 6, Width);
-
-                if (calculator.StrainSolverData.Count == 0)
-                    continue;
-
-                // ReSharper disable once ObjectCreationAsStatement
-                new Sprite
+                foreach (var calculator in calculators)
                 {
-                    Parent = this,
-                    Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
-                    Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
-                    Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / (Track.Length / Track.Rate)) - 2,
-                    Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
-                };
-            }
+                    var width = MathHelper.Clamp(calculator.OverallDifficulty / highestDiff * Width, 6, Width);
+
+                    if (calculator.StrainSolverData.Count == 0)
+                        continue;
+
+                    // ReSharper disable once ObjectCreationAsStatement
+                    var bar = new Sprite
+                    {
+                        Parent = this,
+                        Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
+                        Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
+                        Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / (Track.Length / Track.Rate)) - 2,
+                        Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
+                    };
+
+                    Bars.Add(bar);
+                }
+
+                SeekBarLine.Parent = this;
+            });
         }
 
         /// <summary>
