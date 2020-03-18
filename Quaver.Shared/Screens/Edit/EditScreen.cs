@@ -1117,7 +1117,8 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => null;
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.Editing, Map.MapId, "",
+            (byte) WorkingMap.Mode, $"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", 0);
 
         /// <summary>
         ///     Returns if the user is able to seek through the track
