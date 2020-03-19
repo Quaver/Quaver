@@ -45,7 +45,7 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isResource"></param>
-        public LuaImGui(string filePath, bool isResource = false) : base(true, EditorFileMenuBar.GetOptions())
+        public LuaImGui(string filePath, bool isResource = false) : base(false, EditorFileMenuBar.GetOptions())
         {
             FilePath = filePath;
             IsResource = isResource;

@@ -111,43 +111,43 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public BindableInt PlayfieldScrollSpeed { get; private set; }
+        public BindableInt PlayfieldScrollSpeed { get; } = ConfigManager.EditorScrollSpeedKeys ?? new BindableInt(20, 1, 40);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> AnchorHitObjectsAtMidpoint { get; private set; }
+        public Bindable<bool> AnchorHitObjectsAtMidpoint { get; } = ConfigManager.EditorHitObjectsMidpointAnchored ?? new Bindable<bool>(true);
 
         /// <summary>
         /// </summary>
-        public BindableInt BackgroundBrightness { get; private set; }
+        public BindableInt BackgroundBrightness { get; } = ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableMetronome { get; private set; }
+        public Bindable<bool> EnableMetronome { get; } = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> MetronomePlayHalfBeats { get; private set; }
+        public Bindable<bool> MetronomePlayHalfBeats { get; } = ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> EnableHitsounds { get; private set; }
+        public Bindable<bool> EnableHitsounds { get; } = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
-        public BindableInt HitsoundVolume { get; private set; }
+        public BindableInt HitsoundVolume { get; } = ConfigManager.EditorHitsoundVolume ?? new BindableInt(-1, -1, 100);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ScaleScrollSpeedWithRate { get; private set; }
+        public Bindable<bool> ScaleScrollSpeedWithRate { get; } = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
 
         /// <summary>
         /// </summary>
-        public Bindable<EditorBeatSnapColor> BeatSnapColor { get; private set; }
+        public Bindable<EditorBeatSnapColor> BeatSnapColor { get; } = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
 
         /// <summary>
         /// </summary>
-        public Bindable<bool> ViewLayers { get; private set; }
+        public Bindable<bool> ViewLayers { get; } = ConfigManager.EditorViewLayers ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
@@ -201,27 +201,17 @@ namespace Quaver.Shared.Screens.Edit
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
+            BackgroundStore = visualTestBackground;
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+
             ActionManager = new EditorActionManager(this, WorkingMap);
-            BackgroundStore = visualTestBackground;
+            UneditableMap = new Bindable<Qua>(null);
+            Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
             SetAudioTrack(track);
             LoadSkin();
-            InitializePlayfieldScrollSpeed();
-            InitializeHitObjectMidpointAnchoring();
-            InitializeBackgroundBrightness();
-            InitializeMetronomeEnable();
-            InitializeMetronomePlayHalfBeats();
-            InitializeHitsoundsEnable();
-            InitializeHitsoundVolume();
-            InitializeScaleScrollSpeedWithRate();
-            InitializeBeatSnapColor();
-            InitializeViewLayers();
-
             SetHitSoundObjectIndex();
-            UneditableMap = new Bindable<Qua>(null);
-            Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
             LoadPlugins();
 
             if (ConfigManager.Pitched != null)
@@ -322,6 +312,8 @@ namespace Quaver.Shared.Screens.Edit
 
             SkinManager.SkinLoaded -= OnSkinLoaded;
 
+            Plugins.ForEach(x => x.Destroy());
+
             base.Destroy();
         }
 
@@ -355,59 +347,6 @@ namespace Quaver.Shared.Screens.Edit
 
             Skin.Value = new SkinStore();
         }
-
-        /// <summary>
-        /// </summary>
-        private void InitializePlayfieldScrollSpeed()
-            => PlayfieldScrollSpeed = ConfigManager.EditorScrollSpeedKeys ?? new BindableInt(20, 1, 40);
-
-        /// <summary>
-        /// </summary>
-        private void InitializeHitObjectMidpointAnchoring()
-        {
-            AnchorHitObjectsAtMidpoint = ConfigManager.EditorHitObjectsMidpointAnchored ?? new Bindable<bool>(true)
-            {
-                Value = true
-            };
-        }
-
-        /// <summary>
-        /// </summary>
-        private void InitializeBackgroundBrightness()
-            => BackgroundBrightness = ConfigManager.EditorBackgroundBrightness ?? new BindableInt(40, 1, 100);
-
-        /// <summary>
-        /// </summary>
-        private void InitializeMetronomeEnable()
-            => EnableMetronome = ConfigManager.EditorPlayMetronome ?? new Bindable<bool>(true) {Value = true};
-
-        /// <summary>
-        /// </summary>
-        private void InitializeMetronomePlayHalfBeats()
-            => MetronomePlayHalfBeats = ConfigManager.EditorMetronomePlayHalfBeats ?? new Bindable<bool>(false);
-
-        /// <summary>
-        /// </summary>
-        private void InitializeHitsoundsEnable()
-            => EnableHitsounds = ConfigManager.EditorEnableHitsounds ?? new Bindable<bool>(true) {Value = true};
-
-        /// <summary>
-        /// </summary>
-        private void InitializeHitsoundVolume()
-            => HitsoundVolume = ConfigManager.EditorHitsoundVolume ?? new BindableInt(-1, -1, 100);
-
-        /// <summary>
-        /// </summary>
-        private void InitializeScaleScrollSpeedWithRate()
-            => ScaleScrollSpeedWithRate = ConfigManager.EditorScaleSpeedWithRate ?? new Bindable<bool>(true) {Value = true};
-
-        /// <summary>
-        /// </summary>
-        private void InitializeBeatSnapColor() => BeatSnapColor = ConfigManager.EditorBeatSnapColorType ?? new Bindable<EditorBeatSnapColor>(EditorBeatSnapColor.Default);
-
-        /// <summary>
-        /// </summary>
-        private void InitializeViewLayers() => ViewLayers = ConfigManager.EditorViewLayers ?? new Bindable<bool>(false);
 
         /// <summary>
         /// </summary>
