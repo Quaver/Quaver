@@ -1047,6 +1047,75 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Creates a brand new map and reloads the editor
+        /// </summary>
+        /// <param name="copyCurrent"></param>
+        /// <param name="force"></param>
+        public void CreateNewDifficulty(bool copyCurrent = true, bool force = false)
+        {
+            if (Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You cannot create new difficulties for maps from other games. Create a new set!");
+
+                return;
+            }
+
+            if (ActionManager.HasUnsavedChanges && !force)
+            {
+                DialogManager.Show(new UnsavedChangesNewMapDialog(this, copyCurrent));
+                return;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var qua = ObjectHelper.DeepClone(WorkingMap);
+                    qua.DifficultyName = "";
+                    qua.MapId = -1;
+                    qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
+
+                    if (!copyCurrent)
+                        qua.HitObjects.Clear();
+
+                    var dir = $"{ConfigManager.SongDirectory.Value}/{Map.Directory}";
+                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                    qua.Save(path);
+
+                    // Add the new map to the db.
+                    var map = Map.FromQua(qua, path);
+                    map.DateAdded = DateTime.Now;
+                    map.Id = MapDatabaseCache.InsertMap(map, path);
+                    map.Mapset = Map.Mapset;
+                    Map.Mapset.Maps.Add(map);
+                    MapManager.Selected.Value = map;
+
+                    if (!MapDatabaseCache.MapsToUpdate.Contains(map))
+                        MapDatabaseCache.MapsToUpdate.Add(map);
+
+                    IAudioTrack track;
+
+                    try
+                    {
+                        track = new AudioTrack(MapManager.GetAudioPath(map), false, false);
+                    }
+                    catch (Exception)
+                    {
+                        track = new AudioTrackVirtual(map.SongLength + 5000);
+                    }
+
+                    Exit(() => new EditScreen(map, track));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new difficulty.");
+                }
+            });
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
