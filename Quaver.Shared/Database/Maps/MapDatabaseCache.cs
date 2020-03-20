@@ -274,7 +274,7 @@ namespace Quaver.Shared.Database.Maps
 
         /// <summary>
         /// </summary>
-        public static void ForceUpdateMaps()
+        public static void ForceUpdateMaps(bool createNewMaps = true)
         {
             for (var i = 0; i < MapsToUpdate.Count; i++)
             {
@@ -285,7 +285,13 @@ namespace Quaver.Shared.Database.Maps
                     if (!File.Exists(path))
                         continue;
 
-                    var map = Map.FromQua(Qua.Parse(path, false), path);
+                    Map map;
+
+                    if (createNewMaps)
+                        map = Map.FromQua(Qua.Parse(path, false), path);
+                    else
+                        map = MapsToUpdate[i];
+
                     map.CalculateDifficulties();
                     map.Id = MapsToUpdate[i].Id;
                     map.Directory = MapsToUpdate[i].Directory;
@@ -302,7 +308,9 @@ namespace Quaver.Shared.Database.Maps
                     }
 
                     MapsToUpdate[i] = map;
-                    MapManager.Selected.Value = map;
+
+                    if (createNewMaps)
+                        MapManager.Selected.Value = map;
                 }
                 catch (Exception e)
                 {
@@ -311,11 +319,15 @@ namespace Quaver.Shared.Database.Maps
             }
 
             MapsToUpdate.Clear();
-            OrderAndSetMapsets();
-            PlaylistManager.Load();
 
-            var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == MapManager.Selected.Value.Md5Checksum));
-            MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum);
+            if (createNewMaps)
+            {
+                OrderAndSetMapsets();
+                PlaylistManager.Load();
+
+                var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == MapManager.Selected.Value.Md5Checksum));
+                MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum);
+            }
         }
     }
 }
