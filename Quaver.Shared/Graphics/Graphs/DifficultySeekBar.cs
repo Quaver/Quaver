@@ -78,6 +78,11 @@ namespace Quaver.Shared.Graphics.Graphs
         /// </summary>
         protected List<Sprite> Bars { get; set; }
 
+        /// <summary>
+        ///     If true, the graph will have its positions scaled for rates
+        /// </summary>
+        protected bool ScaleForRates { get; set; } = true;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -195,12 +200,17 @@ namespace Quaver.Shared.Graphics.Graphs
                         continue;
 
                     // ReSharper disable once ObjectCreationAsStatement
+                    var length = Track.Length;
+
+                    if (ScaleForRates)
+                        length /= Track.Rate;
+
                     var bar = new Sprite
                     {
                         Parent = this,
                         Alignment = AlignRightToLeft ? Alignment.BotRight : Alignment.BotLeft,
                         Size = new ScalableVector2((int) (width * BarWidthScale), BarSize),
-                        Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / (Track.Length / Track.Rate)) - 2,
+                        Y = -Height * (float) (calculator.StrainSolverData.First().StartTime / SampleTime * SampleTime / length) - 2,
                         Tint = ColorHelper.DifficultyToColor(calculator.OverallDifficulty)
                     };
 

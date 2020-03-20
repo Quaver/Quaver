@@ -24,8 +24,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Seek
             int maxBars = 120, int barSize = 3, IAudioTrack track = null, bool alignRightToLeft = false, float barWidthScale = 1)
             : base(map, mods, size, maxBars, barSize, track, alignRightToLeft, barWidthScale)
         {
-            ActionManager = actionManager;
+            ScaleForRates = false;
 
+            ActionManager = actionManager;
             ActionManager.HitObjectPlaced += OnHitObjectPlaced;
             ActionManager.HitObjectRemoved += OnHitObjectRemoved;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
