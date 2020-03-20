@@ -8,6 +8,7 @@ using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -21,6 +22,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -32,6 +34,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
@@ -42,6 +45,7 @@ using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -205,11 +209,12 @@ namespace Quaver.Shared.Screens.Edit
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
 
+            SetAudioTrack(track);
+
             ActionManager = new EditorActionManager(this, WorkingMap);
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
-            SetAudioTrack(track);
             LoadSkin();
             SetHitSoundObjectIndex();
             LoadPlugins();
@@ -561,6 +566,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.S))
                 Save();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.N))
+                DialogManager.Show(new EditorNewSongDialog());
         }
 
         /// <summary>
@@ -1043,6 +1051,139 @@ namespace Quaver.Shared.Screens.Edit
                 map.ApplyMods(ModManager.Mods);
 
                 return new GameplayScreen(map, "", new List<Score>(), null, true, Track.Time, false, null, null, false, true);
+            });
+        }
+
+        /// <summary>
+        ///     Creates a new mapset from an audio file
+        /// </summary>
+        /// <param name="audioFile"></param>
+        public static void CreateNewMapset(string audioFile)
+        {
+            try
+            {
+                var game = GameBase.Game as QuaverGame;
+                var tagFile = TagLib.File.Create(audioFile);
+
+                // Create a fresh .qua with the available metadata from the file
+                var qua = new Qua()
+                {
+                    AudioFile = Path.GetFileName(audioFile),
+                    Artist = tagFile.Tag.FirstPerformer ?? "",
+                    Title = tagFile.Tag.Title ?? "",
+                    Source = tagFile.Tag.Album ?? "",
+                    Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Creator = ConfigManager.Username.Value,
+                    DifficultyName = "",
+                    Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
+                    BackgroundFile = "",
+                    Mode = GameMode.Keys4
+                };
+
+                // Create a new directory to house the map.
+                var dir = $"{ConfigManager.SongDirectory.Value}/{TimeHelper.GetUnixTimestampMilliseconds()}";
+                Directory.CreateDirectory(dir);
+
+                // Copy over the audio file into the directory
+                File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
+
+                // Save the new .qua file into the directory
+                var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                qua.Save(path);
+
+                // Create a new database map
+                var map = Map.FromQua(qua, path);
+                map.Id = MapDatabaseCache.InsertMap(map, path);
+                map.NewlyCreated = true;
+
+                // Create a new mapset from the map
+                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> {map}).First();
+                map.Mapset = mapset;
+
+                // Make sure the mapset is loaded
+                MapManager.Mapsets.Add(mapset);
+
+                // Update the cache the next time the user goes to song select
+                if (!MapDatabaseCache.MapsToUpdate.Contains(map))
+                    MapDatabaseCache.MapsToUpdate.Add(map);
+
+                var track = AudioEngine.LoadMapAudioTrack(map);
+
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Pause();
+
+                BackgroundHelper.Load(map);
+
+                game?.CurrentScreen.Exit(() =>
+                {
+                    MapManager.Selected.Value = map;
+                    return new EditScreen(map, track);
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+            }
+        }
+
+        /// <summary>
+        ///     Creates a brand new map and reloads the editor
+        /// </summary>
+        /// <param name="copyCurrent"></param>
+        /// <param name="force"></param>
+        public void CreateNewDifficulty(bool copyCurrent = true, bool force = false)
+        {
+            if (Map.Game != MapGame.Quaver)
+            {
+                NotificationManager.Show(NotificationLevel.Warning,
+                    "You cannot create new difficulties for maps from other games. Create a new set!");
+
+                return;
+            }
+
+            if (ActionManager.HasUnsavedChanges && !force)
+            {
+                DialogManager.Show(new UnsavedChangesNewMapDialog(this, copyCurrent));
+                return;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var qua = ObjectHelper.DeepClone(WorkingMap);
+                    qua.DifficultyName = "";
+                    qua.MapId = -1;
+                    qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
+
+                    if (!copyCurrent)
+                        qua.HitObjects.Clear();
+
+                    var dir = $"{ConfigManager.SongDirectory.Value}/{Map.Directory}";
+                    var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                    qua.Save(path);
+
+                    // Add the new map to the db.
+                    var map = Map.FromQua(qua, path);
+                    map.DateAdded = DateTime.Now;
+                    map.Id = MapDatabaseCache.InsertMap(map, path);
+                    map.Mapset = Map.Mapset;
+                    Map.Mapset.Maps.Add(map);
+                    MapManager.Selected.Value = map;
+
+                    if (!MapDatabaseCache.MapsToUpdate.Contains(map))
+                        MapDatabaseCache.MapsToUpdate.Add(map);
+
+                    var track = AudioEngine.LoadMapAudioTrack(map);
+
+                    Exit(() => new EditScreen(map, track));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new difficulty.");
+                }
             });
         }
 

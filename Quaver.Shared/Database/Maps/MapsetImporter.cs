@@ -20,6 +20,7 @@ using Quaver.Shared.Converters.StepMania;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Multi;
@@ -200,11 +201,14 @@ namespace Quaver.Shared.Database.Maps
             {
                 switch (screen.Type)
                 {
+                    case QuaverScreenType.Menu:
                     case QuaverScreenType.Select:
-                        EditorScreen.HandleNewMapsetCreation(path);
+                        EditScreen.CreateNewMapset(path);
+                        break;
+                    case QuaverScreenType.Editor:
                         break;
                     default:
-                        NotificationManager.Show(NotificationLevel.Error, "Go to the song select screen first to create a new mapset!");
+                        NotificationManager.Show(NotificationLevel.Error, "Please finish what you are doing before creating a new mapset!");
                         return;
                 }
             }
