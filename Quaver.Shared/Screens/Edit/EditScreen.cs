@@ -8,6 +8,7 @@ using IniFileParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
@@ -21,6 +22,7 @@ using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -32,6 +34,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
@@ -42,6 +45,7 @@ using Wobble;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -1047,6 +1051,77 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Creates a new mapset from an audio file
+        /// </summary>
+        /// <param name="audioFile"></param>
+        public static void CreateNewMapset(string audioFile)
+        {
+            try
+            {
+                var game = GameBase.Game as QuaverGame;
+                var tagFile = TagLib.File.Create(audioFile);
+
+                // Create a fresh .qua with the available metadata from the file
+                var qua = new Qua()
+                {
+                    AudioFile = Path.GetFileName(audioFile),
+                    Artist = tagFile.Tag.FirstPerformer ?? "",
+                    Title = tagFile.Tag.Title ?? "",
+                    Source = tagFile.Tag.Album ?? "",
+                    Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
+                    Creator = ConfigManager.Username.Value,
+                    DifficultyName = "",
+                    Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
+                    BackgroundFile = "",
+                    Mode = GameMode.Keys4
+                };
+
+                // Create a new directory to house the map.
+                var dir = $"{ConfigManager.SongDirectory.Value}/{TimeHelper.GetUnixTimestampMilliseconds()}";
+                Directory.CreateDirectory(dir);
+
+                // Copy over the audio file into the directory
+                File.Copy(audioFile, $"{dir}/{Path.GetFileName(audioFile)}");
+
+                // Save the new .qua file into the directory
+                var path = $"{dir}/{StringHelper.FileNameSafeString($"{qua.Artist} - {qua.Title} [{qua.DifficultyName}] - {TimeHelper.GetUnixTimestampMilliseconds()}")}.qua";
+                qua.Save(path);
+
+                // Create a new database map
+                var map = Map.FromQua(qua, path);
+                map.Id = MapDatabaseCache.InsertMap(map, path);
+                map.NewlyCreated = true;
+
+                // Create a new mapset from the map
+                var mapset = MapsetHelper.ConvertMapsToMapsets(new List<Map> {map}).First();
+                map.Mapset = mapset;
+
+                // Make sure the mapset is loaded
+                MapManager.Mapsets.Add(mapset);
+
+                // Update the cache the next time the user goes to song select
+                if (!MapDatabaseCache.MapsToUpdate.Contains(map))
+                    MapDatabaseCache.MapsToUpdate.Add(map);
+
+                var track = AudioEngine.LoadMapAudioTrack(map);
+
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Pause();
+
+                game?.CurrentScreen.Exit(() =>
+                {
+                    MapManager.Selected.Value = map;
+                    return new EditScreen(map, track);
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+            }
+        }
+
+        /// <summary>
         ///     Creates a brand new map and reloads the editor
         /// </summary>
         /// <param name="copyCurrent"></param>
@@ -1094,16 +1169,7 @@ namespace Quaver.Shared.Screens.Edit
                     if (!MapDatabaseCache.MapsToUpdate.Contains(map))
                         MapDatabaseCache.MapsToUpdate.Add(map);
 
-                    IAudioTrack track;
-
-                    try
-                    {
-                        track = new AudioTrack(MapManager.GetAudioPath(map), false, false);
-                    }
-                    catch (Exception)
-                    {
-                        track = new AudioTrackVirtual(map.SongLength + 5000);
-                    }
+                    var track = AudioEngine.LoadMapAudioTrack(map);
 
                     Exit(() => new EditScreen(map, track));
                 }

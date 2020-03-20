@@ -181,5 +181,21 @@ namespace Quaver.Shared.Audio
 
             return (Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) - 1) * snapTimePerBeat + point.StartTime;
         }
+
+        public static IAudioTrack LoadMapAudioTrack(Map map)
+        {
+            IAudioTrack track;
+
+            try
+            {
+                track = new AudioTrack(MapManager.GetAudioPath(map), false, false);
+            }
+            catch (Exception)
+            {
+                track = new AudioTrackVirtual(map.SongLength + 5000);
+            }
+
+            return track;
+        }
     }
 }
