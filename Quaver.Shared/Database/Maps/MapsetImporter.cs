@@ -205,6 +205,8 @@ namespace Quaver.Shared.Database.Maps
                     case QuaverScreenType.Select:
                         EditScreen.CreateNewMapset(path);
                         break;
+                    case QuaverScreenType.Editor:
+                        break;
                     default:
                         NotificationManager.Show(NotificationLevel.Error, "Please finish what you are doing before creating a new mapset!");
                         return;

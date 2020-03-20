@@ -566,6 +566,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.S))
                 Save();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.N))
+                DialogManager.Show(new EditorNewSongDialog());
         }
 
         /// <summary>
@@ -1108,6 +1111,8 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Pause();
+
+                BackgroundHelper.Load(map);
 
                 game?.CurrentScreen.Exit(() =>
                 {
