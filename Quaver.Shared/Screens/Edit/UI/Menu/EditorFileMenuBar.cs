@@ -11,6 +11,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
@@ -113,6 +114,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 Screen.Save();
 
             ImGui.Separator();
+
+            if (ImGui.MenuItem("Upload", "", false, Screen.Map.Game == MapGame.Quaver))
+            {
+                if (!OnlineManager.Connected)
+                    NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
+                else
+                    DialogManager.Show(new EditorUploadConfirmationDialog(Screen));
+            }
 
             if (ImGui.MenuItem("Export", "", false))
             {
