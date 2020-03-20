@@ -62,95 +62,92 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
                 var folderPath = $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}";
 
-                switch (response.Code)
+                // Successful upload
+                if (response.Code == MapsetSubmissionStatusCode.SuccessUpdated || response.Code == MapsetSubmissionStatusCode.SuccessUploaded)
                 {
-                    case MapsetSubmissionStatusCode.SuccessUpdated:
-                    case MapsetSubmissionStatusCode.SuccessUploaded:
-                        var newMaps = new List<Map>();
-                        Map sameDifficultyMap = null;
+                    var newMaps = new List<Map>();
+                    Map sameDifficultyMap = null;
 
-                        foreach (var map in response.Maps)
+                    foreach (var map in response.Maps)
+                    {
+                        if (map == null)
+                            continue;
+
+                        var filePath = $"{folderPath}/{map.Id}.qua";
+
+                        try
                         {
-                            if (map == null)
-                                continue;
+                            Logger.Important($"Commencing download for map: {map.Id}", LogType.Network);
+                            OnlineManager.Client.DownloadMap(filePath, map.Id);
+                            Logger.Important($"Successfully downloaded map: {map.Id}", LogType.Network);
 
-                            var filePath = $"{folderPath}/{map.Id}.qua";
+                            var databaseMap = Map.FromQua(Qua.Parse(filePath, false), filePath);
+                            newMaps.Add(databaseMap);
 
-                            try
-                            {
-                                Logger.Important($"Commencing download for map: {map.Id}", LogType.Network);
-                                OnlineManager.Client.DownloadMap(filePath, map.Id);
-                                Logger.Important($"Successfully downloaded map: {map.Id}", LogType.Network);
+                            // Make sure map gets added to the db upon the next time going to select
+                            if (!MapDatabaseCache.MapsToUpdate.Contains(databaseMap))
+                                MapDatabaseCache.MapsToUpdate.Add(databaseMap);
 
-                                var databaseMap = Map.FromQua(Qua.Parse(filePath, false), filePath);
-                                newMaps.Add(databaseMap);
-
-                                // Make sure map gets added to the db upon the next time going to select
-                                if (!MapDatabaseCache.MapsToUpdate.Contains(databaseMap))
-                                    MapDatabaseCache.MapsToUpdate.Add(databaseMap);
-
-                                // The map the editor will be reloaded with
-                                if (databaseMap.DifficultyName == screen.WorkingMap.DifficultyName)
-                                    sameDifficultyMap = databaseMap;
-                            }
-                            catch (Exception e)
-                            {
-                                Logger.Error(e, LogType.Network);
-                            }
+                            // The map the editor will be reloaded with
+                            if (databaseMap.DifficultyName == screen.WorkingMap.DifficultyName)
+                                sameDifficultyMap = databaseMap;
                         }
-
-                        var mapset = screen.Map.Mapset;
-
-                        // Remove all of the current mapsets inside of the DB/Mapset
-                        foreach (var map in mapset.Maps)
-                            MapDatabaseCache.RemoveMap(map);
-
-                        mapset.Maps.Clear();
-
-                        // Make sure the new mapset is set for the maps
-                        foreach (var map in newMaps)
+                        catch (Exception e)
                         {
-                            mapset.Maps.Add(map);
-                            map.Mapset = mapset;
+                            Logger.Error(e, LogType.Network);
                         }
+                    }
 
-                        MapDatabaseCache.ForceUpdateMaps(false);
+                    var mapset = screen.Map.Mapset;
 
-                        mapset.Maps = mapset.Maps.OrderBy(x => x.Difficulty10X).ToList();
-                        
-                        // Delete old .qua files
-                        foreach (var file in Directory.GetFiles(folderPath, "*.qua"))
-                        {
-                            var name = Path.GetFileNameWithoutExtension(file);
+                    // Remove all of the current mapsets inside of the DB/Mapset
+                    foreach (var map in mapset.Maps)
+                        MapDatabaseCache.RemoveMap(map);
 
-                            // .qua files will always be the id of the file
-                            if (!int.TryParse(name, out _))
-                                File.Delete(file);
-                        }
+                    mapset.Maps.Clear();
 
-                        var uploadStr = response.Code == MapsetSubmissionStatusCode.SuccessUploaded ? "uploaded" : "updated";
-                        NotificationManager.Show(NotificationLevel.Success, $"Your mapset has been successfully {uploadStr}!");
+                    // Make sure the new mapset is set for the maps
+                    foreach (var map in newMaps)
+                    {
+                        mapset.Maps.Add(map);
+                        map.Mapset = mapset;
+                    }
 
-                        // If for some reason the map with the same difficulty
-                        if (sameDifficultyMap == null)
-                            sameDifficultyMap = mapset.Maps.First();
+                    MapDatabaseCache.ForceUpdateMaps(false);
 
-                        var track = AudioEngine.LoadMapAudioTrack(sameDifficultyMap);
+                    mapset.Maps = mapset.Maps.OrderBy(x => x.Difficulty10X).ToList();
 
-                        // Reload the editor
-                        screen.Exit(() =>
-                        {
-                            MapManager.Selected.Value = sameDifficultyMap;
-                            return new EditScreen(sameDifficultyMap, track);
-                        });
-                        break;
-                    default:
-                        Logger.Important($"Error uploading mapset: {response.Code} | {response.Status} | " +
-                                         $"{StatusCodeMessages[response.Code]}", LogType.Network);
+                    // Delete old .qua files
+                    foreach (var file in Directory.GetFiles(folderPath, "*.qua"))
+                    {
+                        var name = Path.GetFileNameWithoutExtension(file);
 
-                        NotificationManager.Show(NotificationLevel.Error, StatusCodeMessages[response.Code]);
-                        break;
+                        // .qua files will always be the id of the file
+                        if (!int.TryParse(name, out _))
+                            File.Delete(file);
+                    }
+
+                    var uploadStr = response.Code == MapsetSubmissionStatusCode.SuccessUploaded ? "uploaded" : "updated";
+                    NotificationManager.Show(NotificationLevel.Success, $"Your mapset has been successfully {uploadStr}!");
+
+                    // If for some reason the map with the same difficulty
+                    if (sameDifficultyMap == null)
+                        sameDifficultyMap = mapset.Maps.First();
+
+                    var track = AudioEngine.LoadMapAudioTrack(sameDifficultyMap);
+
+                    // Reload the editor
+                    screen.Exit(() =>
+                    {
+                        MapManager.Selected.Value = sameDifficultyMap;
+                        return new EditScreen(sameDifficultyMap, track);
+                    });
+
+                    return;
                 }
+
+                Logger.Important($"Error uploading mapset: {response.Code} | {response.Status} | {StatusCodeMessages[response.Code]}", LogType.Network);
+                NotificationManager.Show(NotificationLevel.Error, StatusCodeMessages[response.Code]);
             }
             catch (Exception e)
             {
