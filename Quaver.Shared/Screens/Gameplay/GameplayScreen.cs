@@ -217,7 +217,17 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     If the user is eligible to skip to the next object.
         /// </summary>
-        public bool EligibleToSkip => Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >= GameplayAudioTiming.StartDelay + 5000;
+        public bool EligibleToSkip
+        {
+            get
+            {
+                if (Map.HitObjects.Count == 0)
+                    return false;
+
+                return Map.HitObjects.First().StartTime - Ruleset.Screen.Timing.Time >=
+                       GameplayAudioTiming.StartDelay + 5000;
+            }
+        }
 
         /// <summary>
         ///     The amount of times the user has paused.
