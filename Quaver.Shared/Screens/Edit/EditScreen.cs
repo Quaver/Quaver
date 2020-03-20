@@ -209,11 +209,12 @@ namespace Quaver.Shared.Screens.Edit
             OriginalQua = map.LoadQua();
             WorkingMap = ObjectHelper.DeepClone(OriginalQua);
 
+            SetAudioTrack(track);
+
             ActionManager = new EditorActionManager(this, WorkingMap);
             UneditableMap = new Bindable<Qua>(null);
             Metronome = new Metronome(WorkingMap, Track,  ConfigManager.GlobalAudioOffset ?? new BindableInt(0, -500, 500), MetronomePlayHalfBeats);
 
-            SetAudioTrack(track);
             LoadSkin();
             SetHitSoundObjectIndex();
             LoadPlugins();
