@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 if (ImGui.MenuItem("New Map"))
                     Screen.CreateNewDifficulty(false);
 
-                if (ImGui.MenuItem("From Current Map"))
+                if (ImGui.MenuItem("Copy Current Map"))
                     Screen.CreateNewDifficulty();
 
                 ImGui.EndMenu();
