@@ -95,6 +95,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("File"))
                 return;
 
+            if (ImGui.BeginMenu("Create New Difficulty", Screen.Map.Game == MapGame.Quaver))
+            {
+                if (ImGui.MenuItem("New Map"))
+                    Screen.CreateNewDifficulty(false);
+
+                if (ImGui.MenuItem("From Current Map"))
+                    Screen.CreateNewDifficulty();
+
+                ImGui.EndMenu();
+            }
+
             if (ImGui.MenuItem("Save", "CTRL + S", false, Screen.ActionManager.HasUnsavedChanges))
                 Screen.Save();
 
