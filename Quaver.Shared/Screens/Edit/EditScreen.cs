@@ -40,6 +40,7 @@ using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -53,7 +54,7 @@ using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit
 {
-    public sealed class EditScreen : QuaverScreen
+    public sealed class EditScreen : QuaverScreen, IHasLeftPanel
     {
         /// <inheritdoc />
         /// <summary>
@@ -163,6 +164,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> DisplayGameplayPreview { get; } = ConfigManager.EditorDisplayGameplayPreview ?? new Bindable<bool>(false);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -202,6 +207,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<SelectContainerPanel> ActiveLeftPanel { get; set; } = new Bindable<SelectContainerPanel>(SelectContainerPanel.MapPreview);
+
+        /// <summary>
+        /// </summary>
         public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
         {
             Map = map;
@@ -234,8 +243,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void OnFirstUpdate()
         {
-            GameBase.Game.IsMouseVisible = true;
-            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            //GameBase.Game.IsMouseVisible = true;
+            //GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
             base.OnFirstUpdate();
         }
@@ -278,6 +287,7 @@ namespace Quaver.Shared.Screens.Edit
             ActionManager.Dispose();
             SelectedHitObjects.Dispose();
             SelectedLayer.Dispose();
+            ActiveLeftPanel.Dispose();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -336,6 +346,8 @@ namespace Quaver.Shared.Screens.Edit
             {
                 Track = track;
                 Track.ApplyRate(ConfigManager.Pitched?.Value ?? true);
+                AudioEngine.Track = Track;
+                AudioEngine.Map = Map;
             }
 
             Track.Seeked += OnTrackSeeked;

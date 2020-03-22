@@ -24,6 +24,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.Place;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
+using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
@@ -881,6 +882,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 // Create an action for the long note resizing when the user lets go
                 if (LongNoteInDrag != null && LongNoteResizeOriginalEndTime != LongNoteInDrag.Info.EndTime && LongNoteResizeOriginalEndTime != -1)
                     ActionManager.ResizeLongNote(LongNoteInDrag.Info, LongNoteResizeOriginalEndTime, LongNoteInDrag.Info.EndTime);
+                else if (LongNoteInDrag != null)
+                {
+                    // Only invoke the event when the user lets go of the long note. We don't want to perform an action here.
+                    // This handles the case when the user finally lets go of the long note while initially placing it.
+                    // Mostly used for the refreshing the map preview.
+                    ActionManager.TriggerEvent(EditorActionType.ResizeLongNote, new EditorLongNoteResizedEventArgs(LongNoteInDrag.Info,
+                        LongNoteInDrag.Info.EndTime, LongNoteInDrag.Info.EndTime));
+                }
 
                 LongNoteInDrag = null;
                 LongNoteResizeOriginalEndTime = -1;
