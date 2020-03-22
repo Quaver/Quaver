@@ -24,8 +24,10 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
+using Wobble.Audio.Tracks;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -306,6 +308,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Initialize Object Pool
             InitializeInfoPool(map);
             InitializeObjectPool();
+
+            AudioEngine.Track.RateChanged += OnRateChanged;
+        }
+
+        public override void Destroy()
+        {
+            AudioEngine.Track.RateChanged -= OnRateChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -839,5 +849,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     lane.Dequeue().Destroy();
             }
         }
+
+        private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();
     }
 }
