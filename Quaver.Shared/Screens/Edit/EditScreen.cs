@@ -215,8 +215,20 @@ namespace Quaver.Shared.Screens.Edit
         {
             Map = map;
             BackgroundStore = visualTestBackground;
-            OriginalQua = map.LoadQua();
-            WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+
+            try
+            {
+                OriginalQua = map.LoadQua();
+                WorkingMap = ObjectHelper.DeepClone(OriginalQua);
+            }
+            catch (Exception e)
+            {
+                Exit(() => new SelectionScreen());
+
+                Logger.Error(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while loading this map in the editor.");
+                return;
+            }
 
             SetAudioTrack(track);
 
