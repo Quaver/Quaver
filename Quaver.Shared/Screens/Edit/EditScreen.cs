@@ -243,8 +243,8 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public override void OnFirstUpdate()
         {
-            //GameBase.Game.IsMouseVisible = true;
-            //GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
+            GameBase.Game.IsMouseVisible = true;
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
             base.OnFirstUpdate();
         }
