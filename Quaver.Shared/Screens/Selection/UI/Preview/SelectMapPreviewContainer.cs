@@ -27,6 +27,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Scheduling;
 using Wobble.Window;
@@ -195,21 +196,29 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <returns></returns>
         private GameplayScreen HandleLoadGameplayScreen(Map map, CancellationToken token)
         {
-            var qua = Qua ?? map.LoadQua();
-            map.Qua = qua;
-            map.Qua.ApplyMods(ModManager.Mods);
+            try
+            {
+                var qua = Qua ?? map.LoadQua();
+                map.Qua = qua;
+                map.Qua.ApplyMods(ModManager.Mods);
 
-            var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
+                var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
-            var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
-                false, null, null, true);
+                var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
+                    false, null, null, true);
 
-            gameplay.HandleReplaySeeking();
+                gameplay.HandleReplaySeeking();
 
-            if (token.IsCancellationRequested)
-                gameplay.Destroy();
+                if (token.IsCancellationRequested)
+                    gameplay.Destroy();
 
-            return gameplay;
+                return gameplay;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+                return null;
+            }
         }
 
         /// <summary>
@@ -218,6 +227,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         private void OnLoadedGameplayScreen(object sender, TaskCompleteEventArgs<Map, GameplayScreen> e)
         {
+            if (e.Result == null)
+                return;
+
             if (MapManager.Selected.Value != e.Input)
                 return;
 
