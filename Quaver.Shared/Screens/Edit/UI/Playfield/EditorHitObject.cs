@@ -92,8 +92,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Image = GetHitObjectTexture();
             SetPosition();
             Tint = GetNoteTint();
-
-            ViewLayers.ValueChanged += OnViewLayersChanged;
         }
 
         /// <inheritdoc />
@@ -104,15 +102,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime) => DrawToSpriteBatch();
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-            // ReSharper disable once DelegateSubtraction
-            ViewLayers.ValueChanged -= OnViewLayersChanged;
-            base.Destroy();
-        }
 
         /// <summary>
         ///     Sets the size of the object
@@ -161,16 +150,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         public virtual bool IsOnScreen() => Info.StartTime * Playfield.TrackSpeed >= Playfield.TrackPositionY - Playfield.Height &&
                                                  Info.StartTime * Playfield.TrackSpeed <= Playfield.TrackPositionY + Playfield.Height;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnViewLayersChanged(object sender, BindableValueChangedEventArgs<bool> e)
-        {
-            Image = GetHitObjectTexture();
-            Tint = GetNoteTint();
-        }
 
         /// <summary>
         /// </summary>
