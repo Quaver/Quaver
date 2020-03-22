@@ -31,7 +31,7 @@ namespace Quaver.Shared.Audio
         /// <summary>
         ///     The map the loaded AudioTrack is for.
         /// </summary>
-        public static Map Map { get; private set; }
+        public static Map Map { get; set; }
 
         /// <summary>
         ///     Cancellation token to prevent multiple audio tracks playing at once

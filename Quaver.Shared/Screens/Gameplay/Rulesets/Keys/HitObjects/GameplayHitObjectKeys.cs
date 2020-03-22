@@ -5,6 +5,7 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -418,10 +419,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             if (skin.ColorObjectsBySnapDistance)
             {
-                var snap = HitObjectManager.SnapIndices[Info];
                 var objects = Info.IsLongNote ? skin.NoteHoldHitObjects[lane] : skin.NoteHitObjects[lane];
 
-                return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
+                if (HitObjectManager.SnapIndices.ContainsKey(Info))
+                {
+                    var snap = HitObjectManager.SnapIndices[Info];
+                    return snap < objects.Count ? objects[snap] : objects[objects.Count - 1];
+                }
+
+                return objects.First();
             }
 
             return Info.IsLongNote ? skin.NoteHoldHitObjects[lane].First() : skin.NoteHitObjects[lane].First();

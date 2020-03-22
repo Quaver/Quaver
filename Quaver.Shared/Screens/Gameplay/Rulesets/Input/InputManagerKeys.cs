@@ -17,6 +17,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Tournament.Gameplay;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Input;
 
@@ -144,10 +145,15 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         private void HandleKeyPress(HitObjectManagerKeys manager, GameplayHitObjectKeys gameplayHitObject)
         {
             // Play the HitSounds of closest hit object.
-            if (ConfigManager.EnableHitsounds.Value)
-                HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
-            if (ConfigManager.EnableKeysounds.Value)
-                HitObjectManager.PlayObjectKeySounds(gameplayHitObject.Info);
+            var game = GameBase.Game as QuaverGame;
+
+            if (game?.CurrentScreen?.Type != QuaverScreenType.Editor)
+            {
+                if (ConfigManager.EnableHitsounds.Value)
+                    HitObjectManager.PlayObjectHitSounds(gameplayHitObject.Info);
+                if (ConfigManager.EnableKeysounds.Value)
+                    HitObjectManager.PlayObjectKeySounds(gameplayHitObject.Info);
+            }
 
             // Get Judgement and references
             var time = (int)manager.CurrentAudioPosition;

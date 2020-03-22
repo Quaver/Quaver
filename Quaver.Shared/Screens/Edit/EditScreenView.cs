@@ -14,8 +14,10 @@ using Quaver.Shared.Screens.Edit.UI.Panels;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Selection;
+using Quaver.Shared.Screens.Edit.UI.Preview;
 using Quaver.Shared.Screens.Selection.UI;
 using Quaver.Shared.Screens.Selection.UI.Modifiers;
+using Quaver.Shared.Screens.Selection.UI.Preview;
 using TagLib.Matroska;
 using Wobble;
 using Wobble.Bindables;
@@ -78,6 +80,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private EditorMapPreview MapPreview { get; set; }
+
+        /// <summary>
+        /// </summary>
         public bool IsImGuiHovered { get; private set; }
 
         /// <inheritdoc />
@@ -94,12 +100,16 @@ namespace Quaver.Shared.Screens.Edit
             CreateCompositionTools();
             CreateHitsoundsPanel();
             CreateLayersPanel();
+
+            if (EditScreen.DisplayGameplayPreview.Value)
+                CreateGameplayPreview();
+
             MenuBar = new EditorFileMenuBar(EditScreen);
 
+            EditScreen.DisplayGameplayPreview.ValueChanged += OnDisplayGameplayPreviewChanged;
             EditScreen.UneditableMap.ValueChanged += OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged += OnBackgroundBrightnessChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
-
             Footer.Parent = Container;
         }
 
@@ -127,7 +137,7 @@ namespace Quaver.Shared.Screens.Edit
             {
                 if (DialogManager.Dialogs.Count == 0)
                     DrawPlugins(gameTime);
-                
+
                 MenuBar?.Draw(gameTime);
                 GameBase.Game.SpriteBatch.End();
 
@@ -148,6 +158,8 @@ namespace Quaver.Shared.Screens.Edit
             // ReSharper disable twice DelegateSubtraction
             EditScreen.UneditableMap.ValueChanged -= OnUneditableMapChanged;
             EditScreen.BackgroundBrightness.ValueChanged -= OnBackgroundBrightnessChanged;
+            EditScreen.DisplayGameplayPreview.ValueChanged -= OnDisplayGameplayPreviewChanged;
+
             BackgroundHelper.Loaded -= OnBackgroundLoaded;
         }
 
@@ -233,13 +245,15 @@ namespace Quaver.Shared.Screens.Edit
             if (EditScreen.UneditableMap.Value == null)
                 return;
 
-            UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.ActionManager, EditScreen.Skin,
-                EditScreen.Track,EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
+            UnEditablePlayfield = new EditorPlayfield(EditScreen.UneditableMap.Value, EditScreen.ActionManager,
+                EditScreen.Skin,
+                EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
                 EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, true)
             {
                 Parent = Container,
+                Alignment = Alignment.TopCenter
             };
 
             // Reset the parent of the footer, so it draws over this playfield.
@@ -253,7 +267,7 @@ namespace Quaver.Shared.Screens.Edit
             if (UnEditablePlayfield == null)
                 return;
 
-            const int spacing = 60;
+            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
 
             Playfield.X = -Playfield.Width / 2 - spacing;
             UnEditablePlayfield.X = Playfield.Width / 2 + spacing;
@@ -271,6 +285,17 @@ namespace Quaver.Shared.Screens.Edit
         {
             Container.AddScheduledUpdate(() =>
             {
+                if (e.Value != null)
+                {
+                    if (MapPreview != null)
+                    {
+                        MapPreview.Destroy();
+                        MapPreview = null;
+                    }
+
+                    EditScreen.DisplayGameplayPreview.Value = false;
+                }
+
                 UnEditablePlayfield?.Destroy();
 
                 if (e.Value == null)
@@ -332,6 +357,50 @@ namespace Quaver.Shared.Screens.Edit
                 Background.Image = e.Texture;
                 Background.BrightnessSprite.FadeTo(Background.Dim / 100f, Easing.Linear, 250);
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateGameplayPreview()
+        {
+            if (MapPreview != null)
+                return;
+
+            MapPreview = new EditorMapPreview(EditScreen.ActionManager, new Bindable<bool>(false), EditScreen.ActiveLeftPanel,
+                (int) WindowManager.Height - MenuBorder.HEIGHT - 34, EditScreen.Track, EditScreen.WorkingMap)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = 34,
+            };
+
+            var spacing = EditScreen.WorkingMap.Mode == GameMode.Keys4 ? 120 : 60;
+
+            Playfield.X = -Playfield.Width / 2 - spacing;
+            MapPreview.X = Playfield.Width / 2 + spacing;
+
+            Footer.Parent = Container;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisplayGameplayPreviewChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            if (e.Value)
+            {
+                UnEditablePlayfield?.Destroy();
+
+                if (MapPreview == null)
+                    CreateGameplayPreview();
+
+                return;
+            }
+
+            MapPreview?.Destroy();
+            MapPreview = null;
+            Playfield.X = 0;
         }
     }
 }

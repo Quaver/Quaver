@@ -497,6 +497,10 @@ namespace Quaver.Shared.Config
         internal static BindableInt GameplayNoteScale { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EditorDisplayGameplayPreview { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -836,6 +840,7 @@ namespace Quaver.Shared.Config
             EditorScaleSpeedWithRate = ReadValue(@"EditorScaleSpeedWithRate", true, data);
             EditorLongNoteOpacity = ReadInt(@"EditorLongNoteOpacity", 100, 30, 100, data);
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
+            EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -981,6 +986,7 @@ namespace Quaver.Shared.Config
                     EditorScaleSpeedWithRate.ValueChanged += AutoSaveConfiguration;
                     EditorLongNoteOpacity.ValueChanged += AutoSaveConfiguration;
                     GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
+                    EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

@@ -361,8 +361,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // Skip objects that aren't a second within range
                 if (skipObjects)
                 {
-                    if (info.StartTime < CurrentAudioPosition)
-                        continue;
+                    if (!info.IsLongNote)
+                    {
+                        if (info.StartTime < CurrentAudioPosition)
+                            continue;
+                    }
+                    else
+                    {
+                        if (info.StartTime < CurrentAudioPosition && info.EndTime < CurrentAudioPosition)
+                            continue;
+                    }
                 }
 
                 HitObjectQueueLanes[info.Lane - 1].Enqueue(info);
