@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <summary>
         ///     The gameplay screen instance that is currently loaded.
         /// </summary>
-        private GameplayScreen LoadedGameplayScreen { get; set; }
+        protected GameplayScreen LoadedGameplayScreen { get; private set; }
 
         /// <summary>
         ///     Tells the user to press tab to toggle autoplay
@@ -72,15 +72,38 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private IAudioTrack TrackInPreviousFrame { get; set; }
 
         /// <summary>
+        ///     The custom audio track for this container
+        /// </summary>
+        private IAudioTrack Track { get; }
+
+        /// <summary>
+        ///     The Qua that'll be used if one is passed in through the constructor
+        /// </summary>
+        protected Qua Qua { get; }
+
+        /// <summary>
         /// </summary>
         private DifficultySeekBar SeekBar { get; set; }
 
         /// <summary>
+        ///     If true, a difficulty seek bar will be created and displayed
         /// </summary>
-        public SelectMapPreviewContainer(Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, int height)
+        protected bool HasSeekBar { get; set; } = true;
+
+        /// <summary>
+        ///     The amount of delay before the task will run
+        /// </summary>
+        protected int DelayTime { get; set; } = 350;
+
+        /// <summary>
+        /// </summary>
+        public SelectMapPreviewContainer(Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, int height,
+            IAudioTrack track = null, Qua qua = null)
         {
             IsPlayTesting = isPlayTesting;
             ActiveLeftPanel = activeLeftPanel;
+            Qua = qua;
+            Track = track;
             Size = new ScalableVector2(564, height);
             Alpha = 0f;
 
@@ -95,7 +118,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             MapManager.Selected.ValueChanged += OnMapChanged;
             ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
             SkinManager.SkinLoaded += OnSkinLoaded;
-            ModManager.ModsChanged += OnModsChanged;
+
+            if (Qua == null)
+                ModManager.ModsChanged += OnModsChanged;
+
+            if (Track != null)
+                Track.Seeked += OnTrackSeeked;
         }
 
         /// <inheritdoc />
@@ -106,7 +134,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         {
             UpdateGameplayScreen(gameTime);
 
-            TrackInPreviousFrame = AudioEngine.Track;
+            TrackInPreviousFrame = Track ?? AudioEngine.Track;
             base.Update(gameTime);
         }
 
@@ -119,12 +147,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             MapManager.Selected.ValueChanged -= OnMapChanged;
             ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
             SkinManager.SkinLoaded -= OnSkinLoaded;
-            ModManager.ModsChanged -= OnModsChanged;
+
+            if (Qua == null)
+                ModManager.ModsChanged -= OnModsChanged;
+
+            if (Track != null)
+                Track.Seeked -= OnTrackSeeked;
 
             LoadGameplayScreenTask?.Dispose();
             LoadedGameplayScreen?.Destroy();
             TestPlayPrompt?.Destroy();
-
 
             base.Destroy();
         }
@@ -163,7 +195,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <returns></returns>
         private GameplayScreen HandleLoadGameplayScreen(Map map, CancellationToken token)
         {
-            var qua = map.LoadQua();
+            var qua = Qua ?? map.LoadQua();
             map.Qua = qua;
             map.Qua.ApplyMods(ModManager.Mods);
 
@@ -293,7 +325,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 IsPlayTesting.Value = !LoadedGameplayScreen?.InReplayMode ?? false;
 
                 if (LoadedGameplayScreen != null)
-                    LoadedGameplayScreen.IsPaused = AudioEngine.Track.IsPaused;
+                {
+                    var track = Track ?? AudioEngine.Track;
+                    LoadedGameplayScreen.IsPaused = track.IsPaused || track.IsStopped;
+                }
             }
             catch (Exception)
             {
@@ -315,12 +350,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
         /// <summary>
         /// </summary>
-        private void RunLoadTask()
+        protected void RunLoadTask()
         {
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
 
-            LoadGameplayScreenTask.Run(MapManager.Selected.Value, 350);
+            LoadGameplayScreenTask.Run(MapManager.Selected.Value, DelayTime);
         }
 
         /// <summary>
@@ -372,6 +407,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         private void CreateSeekBar(Qua qua, GameplayPlayfieldKeys playfield, bool animate = true)
         {
+            if (!HasSeekBar)
+                return;
+
             SeekBar?.Destroy();
 
             if (playfield == null || qua == null)
@@ -408,20 +446,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Tint = ColorHelper.HexToColor("#808080")
             };
 
-            SeekBar.AudioSeeked += (o, args) =>
-            {
-                if (LoadedGameplayScreen == null)
-                    return;
-
-                if (LoadedGameplayScreen.InReplayMode)
-                    LoadedGameplayScreen.HandleReplaySeeking();
-                else
-                {
-                    var hitobjectManager = (HitObjectManagerKeys) LoadedGameplayScreen.Ruleset.HitObjectManager;
-                    hitobjectManager.HandleSkip();
-                }
-            };
-
+            SeekBar.AudioSeeked += (o, args) => RefreshScreen();
             if (qua != MapManager.Selected.Value.Qua)
             {
                 SeekBar.Destroy();
@@ -468,5 +493,27 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 ShownTestPlayPrompt = true;
             }
         }
+
+        /// <summary>
+        /// </summary>
+        protected void RefreshScreen()
+        {
+            if (LoadedGameplayScreen == null)
+                return;
+
+            if (LoadedGameplayScreen.InReplayMode)
+                LoadedGameplayScreen.HandleReplaySeeking();
+            else
+            {
+                var hitobjectManager = (HitObjectManagerKeys) LoadedGameplayScreen.Ruleset.HitObjectManager;
+                hitobjectManager.HandleSkip();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTrackSeeked(object sender, TrackSeekedEventArgs e) => RefreshScreen();
     }
 }
