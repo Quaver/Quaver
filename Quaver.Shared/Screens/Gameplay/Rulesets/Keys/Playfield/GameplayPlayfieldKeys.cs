@@ -14,6 +14,7 @@ using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
 using Quaver.Shared.Screens.Gameplay.UI;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -73,7 +74,18 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The width of the entire playfield for song select previews
         /// </summary>
-        public static float PREVIEW_PLAYFIELD_WIDTH { get; }= 420f;
+        public static float PREVIEW_PLAYFIELD_WIDTH
+        {
+            get
+            {
+                var game = GameBase.Game as QuaverGame;
+
+                if (game?.CurrentScreen?.Type == QuaverScreenType.Editor)
+                    return 400;
+
+                return 420;
+            }
+        }
 
         /// <summary>
         ///     The size of the each ane.

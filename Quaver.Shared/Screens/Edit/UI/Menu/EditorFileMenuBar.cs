@@ -250,6 +250,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (!ImGui.BeginMenu("View"))
                 return;
 
+            if (ImGui.MenuItem("Display Gameplay Preview", "", Screen.DisplayGameplayPreview.Value))
+                Screen.DisplayGameplayPreview.Value = !Screen.DisplayGameplayPreview.Value;
+
             if (ImGui.BeginMenu("Reference Difficulty"))
             {
                 if (ImGui.MenuItem("None", "", Screen.UneditableMap.Value == null))

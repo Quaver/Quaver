@@ -431,7 +431,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (IsCalibratingOffset)
                 Metronome = new Metronome(map);
 
-            if (InReplayMode && SpectatorClient == null)
+            if (InReplayMode && SpectatorClient == null && !IsSongSelectPreview)
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
             View = new GameplayScreenView(this);
