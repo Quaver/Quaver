@@ -120,8 +120,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             ActiveLeftPanel.ValueChanged += OnLeftPanelChanged;
             SkinManager.SkinLoaded += OnSkinLoaded;
 
-            if (Qua == null)
-                ModManager.ModsChanged += OnModsChanged;
+            ModManager.ModsChanged += OnModsChanged;
 
             if (Track != null)
                 Track.Seeked += OnTrackSeeked;
@@ -149,8 +148,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             ActiveLeftPanel.ValueChanged -= OnLeftPanelChanged;
             SkinManager.SkinLoaded -= OnSkinLoaded;
 
-            if (Qua == null)
-                ModManager.ModsChanged -= OnModsChanged;
+            ModManager.ModsChanged -= OnModsChanged;
 
             if (Track != null)
                 Track.Seeked -= OnTrackSeeked;
@@ -199,6 +197,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             try
             {
                 var qua = Qua ?? map.LoadQua();
+
+                if (qua == Qua)
+                    qua = ObjectHelper.DeepClone(qua);
+
                 map.Qua = qua;
                 map.Qua.ApplyMods(ModManager.Mods);
 
@@ -410,6 +412,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys) LoadedGameplayScreen?.Ruleset?.Playfield, false);
                 return;
             }
+
             // Reload the entire
             RunLoadTask();
         }

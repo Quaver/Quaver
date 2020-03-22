@@ -70,6 +70,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects
         /// <param name="gameTime"></param>
         public abstract void Update(GameTime gameTime);
 
+        public virtual void Destroy()
+        {
+        }
+
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
