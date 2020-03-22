@@ -127,7 +127,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Destroy() => Playfield.Destroy();
+        public void Destroy()
+        {
+            Playfield.Destroy();
+            HitObjectManager.Destroy();
+        }
 
         /// <summary>
         ///     Polls <see cref="ScoreProcessor"/> and updates <see cref="StandardizedReplayPlayer"/>

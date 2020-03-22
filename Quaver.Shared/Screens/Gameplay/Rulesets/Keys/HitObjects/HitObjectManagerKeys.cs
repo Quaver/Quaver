@@ -24,8 +24,11 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Selection;
 using Wobble;
+using Wobble.Audio.Tracks;
+using Wobble.Bindables;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
+using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -306,6 +309,21 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             // Initialize Object Pool
             InitializeInfoPool(map);
             InitializeObjectPool();
+
+            AudioEngine.Track.RateChanged += OnRateChanged;
+            ConfigManager.ScrollSpeed4K.ValueChanged += On4KScrollSpeedChanged;
+            ConfigManager.ScrollSpeed7K.ValueChanged += On7KScrollSpeedChanged;
+        }
+
+        public override void Destroy()
+        {
+            AudioEngine.Track.RateChanged -= OnRateChanged;
+
+            // ReSharper disable twice DelegateSubtraction
+            ConfigManager.ScrollSpeed4K.ValueChanged -= On4KScrollSpeedChanged;
+            ConfigManager.ScrollSpeed7K.ValueChanged -= On7KScrollSpeedChanged;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -839,5 +857,11 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     lane.Dequeue().Destroy();
             }
         }
+
+        private void OnRateChanged(object sender, TrackRateChangedEventArgs e) => ForceUpdateLNSize();
+
+        private void On7KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
+
+        private void On4KScrollSpeedChanged(object sender, BindableValueChangedEventArgs<int> e) => ForceUpdateLNSize();
     }
 }
