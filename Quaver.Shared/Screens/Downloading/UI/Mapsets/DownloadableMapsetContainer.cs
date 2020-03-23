@@ -191,7 +191,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 if (args.Value.Error == null)
                 {
                     NotificationManager.Show(NotificationLevel.Success,
-                        $"Finished dowwnloading: {e.Download.Artist} - {e.Download.Title}!");
+                        $"Finished downloading: {e.Download.Artist} - {e.Download.Title}!");
                 }
 
                 var index = AvailableMapsets.Value.FindIndex(x => x.Id == e.Download.MapsetId);
