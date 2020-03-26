@@ -11,6 +11,8 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -104,6 +106,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
         }
 
         /// <inheritdoc />
@@ -135,6 +139,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
 
             base.Destroy();
         }
@@ -504,5 +510,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => ReInitialize();
     }
 }

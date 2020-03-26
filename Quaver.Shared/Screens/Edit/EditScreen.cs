@@ -406,7 +406,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
             HandleCtrlInput();
-            HandleTemporaryHitObjectPlacement();
+            //HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
         }
@@ -786,6 +786,8 @@ namespace Quaver.Shared.Screens.Edit
 
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
             {
+                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                    $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
                     $"{dir}/BpmDetector/plugin.lua", true)},
                 {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
