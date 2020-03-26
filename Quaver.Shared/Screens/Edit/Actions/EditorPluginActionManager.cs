@@ -83,6 +83,23 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="offset"></param>
+        public void ChangeTimingPointOffset(TimingPointInfo tp, float offset) => ActionManager.ChangeTimingPointOffset(tp, offset);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        /// <param name="bpm"></param>
+        public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => ActionManager.ChangeTimingPointBpm(tp, bpm);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tp"></param>
+        public void ResetTimingPoint(TimingPointInfo tp) => ActionManager.ResetTimingPoint(tp);
+
+        /// <summary>
+        /// </summary>
         /// <param name="input"></param>
         public void GoToObjects(string input) => ActionManager.GoToObjects(input);
 
