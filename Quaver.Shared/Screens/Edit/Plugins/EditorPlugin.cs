@@ -71,10 +71,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             var state = (EditorPluginState) State;
 
             state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
+            state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
             state.HitObjects = Editor.WorkingMap.HitObjects;
             state.TimingPoints = Editor.WorkingMap.TimingPoints;
             state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
+            state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
 
             base.SetFrameState();
 

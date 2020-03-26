@@ -38,6 +38,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public List<HitObjectInfo> SelectedHitObjects { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
+        ///     The current timing point in the map
+        /// </summary>
+        public TimingPointInfo CurrentTimingPoint { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
         ///     ImGui options used to set styles/fonts for the window
         /// </summary>
         [MoonSharpVisible((false))]
