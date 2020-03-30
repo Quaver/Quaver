@@ -1021,6 +1021,9 @@ namespace Quaver.Shared.Screens.Edit
                 if (ActionManager.UndoStack.Count != 0)
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
+                Map.DifficultyProcessorVersion = "Needs Update";
+                MapDatabaseCache.UpdateMap(Map);
+
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                     MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
             }

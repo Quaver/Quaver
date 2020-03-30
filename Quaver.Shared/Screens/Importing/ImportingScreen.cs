@@ -79,8 +79,6 @@ namespace Quaver.Shared.Screens.Importing
 
             ThreadScheduler.Run(() =>
             {
-                MapsetImporter.ImportMapsetsInQueue();
-
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
                     MapDatabaseCache.ForceUpdateMaps();
 
@@ -91,6 +89,7 @@ namespace Quaver.Shared.Screens.Importing
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
                 }
 
+                MapsetImporter.ImportMapsetsInQueue();
                 OnImportCompletion();
             });
 
