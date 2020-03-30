@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class ApplyModifiersToMapDialog : YesNoDialog
     {
-        public ApplyModifiersToMapDialog(EditScreen screen, ModIdentifier mod) : base("APPLY TEST PLAY MODIFIER",
+        public ApplyModifiersToMapDialog(EditScreen screen, ModIdentifier mod) : base("APPLY MODIFIER",
             $"Would like to apply the modifier: \"{mod}\" to your map?\n\n" +
             "This action is NOT reversible! Choose wisely.", () =>
             {
