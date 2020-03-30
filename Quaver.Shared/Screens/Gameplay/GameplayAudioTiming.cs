@@ -14,6 +14,7 @@ using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
 using Wobble.Logging;
+using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace Quaver.Shared.Screens.Gameplay
 {
@@ -57,7 +58,15 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (Screen.IsPlayTesting)
                 {
-                    AudioEngine.Track.Seek(Screen.PlayTestAudioTime);
+                    const int delay = 500;
+
+                    if (Screen.PlayTestAudioTime < StartDelay)
+                    {
+                        Time = -delay;
+                        return;
+                    }
+
+                    AudioEngine.Track.Seek(MathHelper.Clamp((int) Screen.PlayTestAudioTime - delay, 0, (int) AudioEngine.Track.Length));
                     Time = AudioEngine.Track.Time;
                     return;
                 }
