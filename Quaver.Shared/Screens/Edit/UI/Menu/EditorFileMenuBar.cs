@@ -16,6 +16,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -234,6 +235,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             }
 
             ImGui.Separator();
+
+            if (ImGui.MenuItem("Edit Metadata", "F1"))
+                DialogManager.Show(new EditorMetadataDialog(Screen));
 
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
