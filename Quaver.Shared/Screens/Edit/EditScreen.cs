@@ -653,22 +653,19 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (Track.Time >= obj.StartTime)
                 {
-                    if (ViewLayers.Value)
+                    if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                        continue;
+
+                    try
                     {
-                        if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                        var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
+
+                        if (layer.Hidden)
                             continue;
-
-                        try
-                        {
-                            var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
-
-                            if (layer.Hidden)
-                                continue;
-                        }
-                        catch (Exception)
-                        {
-                            // ignore and play
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore and play
                     }
 
                     HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
