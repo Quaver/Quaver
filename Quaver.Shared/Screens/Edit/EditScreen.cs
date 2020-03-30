@@ -259,6 +259,12 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.IsMouseVisible = true;
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
+            if (Map.NewlyCreated)
+            {
+                DialogManager.Show(new EditorMetadataDialog(this));
+                Map.NewlyCreated = false;
+            }
+
             base.OnFirstUpdate();
         }
 
@@ -1202,6 +1208,7 @@ namespace Quaver.Shared.Screens.Edit
                     map.DateAdded = DateTime.Now;
                     map.Id = MapDatabaseCache.InsertMap(map, path);
                     map.Mapset = Map.Mapset;
+                    map.NewlyCreated = true;
                     Map.Mapset.Maps.Add(map);
                     MapManager.Selected.Value = map;
 
