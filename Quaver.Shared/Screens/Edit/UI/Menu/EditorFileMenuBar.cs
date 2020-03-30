@@ -4,6 +4,7 @@ using System.Linq;
 using ImGuiNET;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
@@ -241,6 +242,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+
+            ImGui.Separator();
+
+            if (ImGui.BeginMenu($"Apply Modifier To Map", Screen.Map.Game == MapGame.Quaver))
+            {
+                if (ImGui.MenuItem("Mirror"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.Mirror));
+
+                if (ImGui.MenuItem("No Long Notes"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.NoLongNotes));
+
+                if (ImGui.MenuItem("Full Long Notes"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.FullLN));
+
+                if (ImGui.MenuItem("Inverse"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.Inverse));
+
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }
