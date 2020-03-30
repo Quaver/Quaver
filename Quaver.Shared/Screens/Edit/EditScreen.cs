@@ -33,6 +33,7 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
@@ -409,6 +410,7 @@ namespace Quaver.Shared.Screens.Edit
             //HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
+            HandleKeyPressF1();
         }
 
         /// <summary>
@@ -419,6 +421,14 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             LeaveEditor();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF1()
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                DialogManager.Show(new EditorMetadataDialog(this));
         }
 
         /// <summary>
