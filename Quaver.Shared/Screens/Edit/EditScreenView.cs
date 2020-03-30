@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Edit
 
             IsImGuiHovered = false;
 
-            if (MenuBar != null)
+            if (MenuBar != null && !EditScreen.Exiting)
             {
                 if (DialogManager.Dialogs.Count == 0)
                     DrawPlugins(gameTime);
