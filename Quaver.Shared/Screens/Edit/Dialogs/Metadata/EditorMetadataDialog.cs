@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private const int TextboxLabelSpacing = 12;
 
-        private const int Spacing = 26;
+        private const int Spacing = 31;
 
         public EditorMetadataDialog(EditScreen screen) : base("EDIT METADATA", "Edit the values to change the metadata...")
         {
@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Parent = this,
             };
 
-            YesButton.Y += 16;
+            YesButton.Y += 32;
             NoButton.Y = YesButton.Y;
 
             YesAction = OnClickedYes;
