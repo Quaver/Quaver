@@ -717,8 +717,8 @@ namespace Quaver.Shared.Config
             DevicePeriod = ReadInt(@"DevicePeriod", Bass.GetConfig(Configuration.DevicePeriod), 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", Bass.GetConfig(Configuration.DeviceBufferLength) / DevicePeriod.Value, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
-            WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
-            WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
+            WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
+            WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);

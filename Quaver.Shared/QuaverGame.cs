@@ -43,6 +43,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
+using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -85,7 +86,9 @@ using Quaver.Shared.Screens.Tests.Options;
 using Quaver.Shared.Screens.Tests.Profiles;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Screens.Tests.Volume;
+using Quaver.Shared.Screens.Theater;
 using Quaver.Shared.Skinning;
+using Quaver.Shared.Window;
 using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -249,8 +252,7 @@ namespace Quaver.Shared
         {
             PerformGameSetup();
 
-            WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            ChangeResolution();
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
@@ -268,7 +270,7 @@ namespace Quaver.Shared
             base.Initialize();
         }
 
-         /// <inheritdoc />
+        /// <inheritdoc />
         /// <summary>
         ///     LoadContent will be called once per game and is the place to load
         ///     all of your content.
@@ -430,7 +432,7 @@ namespace Quaver.Shared
                 if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     AudioEngine.Track.ApplyRate(e.Value);
             };
-            
+
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
             ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
@@ -802,6 +804,60 @@ namespace Quaver.Shared
             dialog?.Close();
 
             return true;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ChangeResolution()
+        {
+            if (!QuaverWindowManager.CanChangeResolutionOnScene)
+                return;
+
+            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+
+            switch (QuaverWindowManager.Ratio)
+            {
+                case AspectRatio.Widescreen:
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
+                    break;
+                case AspectRatio.Ultrawide:
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(2560, 1080));
+                    break;
+                case AspectRatio.SixteenByTen:
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
+                    break;
+                default:
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
+                    break;
+            }
+
+            if (CurrentScreen == null)
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Menu:
+                    CurrentScreen?.Exit(() => new MainMenuScreen());
+                    break;
+                case QuaverScreenType.Select:
+                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    break;
+                case QuaverScreenType.Download:
+                    CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
+                    break;
+                case QuaverScreenType.Lobby:
+                    CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
+                    break;
+                case QuaverScreenType.Multiplayer:
+                    CurrentScreen?.Exit(() => new MultiplayerGameScreen());
+                    break;
+                case QuaverScreenType.Music:
+                    CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                    break;
+                case QuaverScreenType.Theatre:
+                    CurrentScreen?.Exit(() => new TheaterScreen());
+                    break;
+            }
         }
 
 #if VISUAL_TESTS
