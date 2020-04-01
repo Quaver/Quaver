@@ -27,7 +27,9 @@ using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Reset;
@@ -191,6 +193,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorTimingPointBpmChangedEventArgs> TimingPointBpmChanged;
 
         /// <summary>
+        ///     Event invoked when a batch of timing points have had their BPM changed
+        /// </summary>
+        public event EventHandler<EditorChangedTimingPointBpmBatchEventArgs> TimingPointBpmBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when batch of timing points have had their offset changed
+        /// </summary>
+        public event EventHandler<EditorChangedTimingPointOffsetBatchEventArgs> TimingPointOffsetBatchChanged;
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="workingMap"></param>
@@ -318,6 +330,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void PlaceTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionAddTimingPointBatch(this, WorkingMap, tps));
 
         /// <summary>
+        ///     Removes a batch of timing points from the map
+        /// </summary>
+        /// <param name="tps"></param>
+        public void RemoveTimingPointBatch(List<TimingPointInfo> tps) => Perform(new EditorActionRemoveTimingPointBatch(this, WorkingMap, tps));
+
+        /// <summary>
         ///     Changes the offset of a timing point
         /// </summary>
         /// <param name="tp"></param>
@@ -330,6 +348,20 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => Perform(new EditorActionChangeTimingPointBpm(this, WorkingMap, tp, bpm));
+
+        /// <summary>
+        ///     Changes a batch of timing points to a new BPM
+        /// </summary>
+        /// <param name="tps"></param>
+        /// <param name="bpm"></param>
+        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => Perform(new EditorActionChangeTimingPointBpmBatch(this, WorkingMap, tps, bpm));
+
+        /// <summary>
+        ///     Moves a batch of timing points' offsets by a given value
+        /// </summary>
+        /// <param name="tps"></param>
+        /// <param name="offset"></param>
+        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => Perform(new EditorActionChangeTimingPointOffsetBatch(this, WorkingMap, tps, offset));
 
         /// <summary>
         /// Resets a timing point back to zero
@@ -434,6 +466,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeTimingPointBpm:
                     TimingPointBpmChanged?.Invoke(this, (EditorTimingPointBpmChangedEventArgs) args);
                     break;
+                case EditorActionType.ChangeTimingPointBpmBatch:
+                    TimingPointBpmBatchChanged?.Invoke(this, (EditorChangedTimingPointBpmBatchEventArgs) args);
+                    break;
+                case EditorActionType.ChangeTimingPointOffsetBatch:
+                    TimingPointOffsetBatchChanged?.Invoke(this, (EditorChangedTimingPointOffsetBatchEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -468,6 +506,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             PreviewTimeChanged = null;
             TimingPointOffsetChanged = null;
             TimingPointBpmChanged = null;
+            TimingPointBpmBatchChanged = null;
+            TimingPointOffsetBatchChanged = null;
         }
     }
 }

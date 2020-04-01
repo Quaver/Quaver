@@ -8,7 +8,7 @@ using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
-    public class EditorPlugin : LuaImGui
+    public class EditorPlugin : LuaImGui, IEditorPlugin
     {
         /// <summary>
         /// </summary>
@@ -20,20 +20,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         /// <summary>
         /// </summary>
-        public string Name { get; }
+        public bool IsWindowHovered { get; set; }
 
         /// <summary>
         /// </summary>
-        public string Author { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// </summary>
-        public string Description { get; }
+        public string Author { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         ///     If the plugin is built into the editor
         /// </summary>
-        public bool IsBuiltIn { get; }
+        public bool IsBuiltIn { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -55,6 +59,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             UserData.RegisterType<GameMode>();
             UserData.RegisterType<HitSounds>();
             UserData.RegisterType<TimeSignature>();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public void Initialize()
+        {
         }
 
         /// <inheritdoc />
@@ -90,6 +101,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void AfterRender()
         {
             ImGui.PopStyleVar();
+            IsWindowHovered = State.IsWindowHovered;
+
             base.AfterRender();
         }
 
