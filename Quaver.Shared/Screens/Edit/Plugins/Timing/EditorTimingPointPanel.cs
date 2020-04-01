@@ -5,6 +5,7 @@ using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using TagLib.Matroska;
 using TagLib.Riff;
 using Wobble;
@@ -50,6 +51,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         private List<TimingPointInfo> SelectedTimingPoints { get; } = new List<TimingPointInfo>();
+
+        /// <summary>
+        /// </summary>
+        private List<TimingPointInfo> Clipboard { get; } = new List<TimingPointInfo>();
 
         /// <summary>
         ///     If the panel has to scroll to the correct position
@@ -337,6 +342,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.EndChild();
         }
 
+        /// <summary>
+        /// </summary>
         private void HandleInput()
         {
             if (!IsWindowHovered)
@@ -360,6 +367,59 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     SelectedTimingPoints.Clear();
                 }
             }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.X))
+                CutClipboard();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.C))
+                CopyToClipboard();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.V))
+                PasteClipboard();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CutClipboard()
+        {
+            Clipboard.Clear();
+            Clipboard.AddRange(SelectedTimingPoints);
+            Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
+            SelectedTimingPoints.Clear();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CopyToClipboard()
+        {
+            Clipboard.Clear();
+
+            if (SelectedTimingPoints.Count != 0)
+                Clipboard.AddRange(SelectedTimingPoints);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void PasteClipboard()
+        {
+            var clonedObjects = new List<TimingPointInfo>();
+
+            var difference = (int) Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
+
+            foreach (var obj in Clipboard)
+            {
+                var point = new TimingPointInfo()
+                {
+                    StartTime = obj.StartTime + difference,
+                    Bpm = obj.Bpm
+                };
+
+                clonedObjects.Add(point);
+            }
+
+            Screen.ActionManager.PlaceTimingPointBatch(clonedObjects);
+            SelectedTimingPoints.AddRange(clonedObjects);
+            NeedsToScroll = true;
         }
 
         /// <summary>
