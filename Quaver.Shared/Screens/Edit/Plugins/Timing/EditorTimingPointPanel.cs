@@ -88,9 +88,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         protected override void RenderImguiLayout()
         {
-            //ImGui.SetNextWindowSize(new Vector2(400, 295));
+            ImGui.SetNextWindowSize(new Vector2(356, 480));
             ImGui.PushFont(Options.Fonts.First().Context);
-            ImGui.Begin(Name);
+            ImGui.Begin(Name, ImGuiWindowFlags.NoResize);
 
             DrawHeaderText();
 
@@ -162,17 +162,23 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
                 var lastPoint = SelectedTimingPoints.Last();
 
-                Screen.ActionManager.RemoveTimingPointBatch(SelectedTimingPoints);
+                Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
 
                 var newPoint = Screen.WorkingMap.TimingPoints.FindLast(x => x.StartTime <= lastPoint.StartTime);
 
                 SelectedTimingPoints.Clear();
 
                 if (newPoint != null)
-                    SelectedTimingPoints.Add(newPoint);
+                {
+                    if (!SelectedTimingPoints.Contains(newPoint))
+                        SelectedTimingPoints.Add(newPoint);
+                }
                 else if (Screen.WorkingMap.TimingPoints.Count > 0)
                 {
-                    SelectedTimingPoints.Add(Screen.WorkingMap.TimingPoints.First());
+                    var point = Screen.WorkingMap.TimingPoints.First();
+
+                    if (!SelectedTimingPoints.Contains(point))
+                        SelectedTimingPoints.Add(point);
                 }
 
                 NeedsToScroll = true;
@@ -184,7 +190,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawTimeTextbox()
         {
             var time = 0f;
-            var format = "-";
+            var format = "";
 
             if (SelectedTimingPoints.Count == 1)
             {
@@ -229,7 +235,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 format = $"{bpm:0.00}";
             }
             // All points are the same bpm
-            else if (SelectedTimingPoints.All(x => x.Bpm == SelectedTimingPoints.First().Bpm))
+            else if (SelectedTimingPoints.Count > 1 && SelectedTimingPoints.All(x => x.Bpm == SelectedTimingPoints.First().Bpm))
             {
                 bpm = SelectedTimingPoints.First().Bpm;
                 format = $"{bpm:0.00}";
@@ -303,7 +309,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                         if (isSelected)
                             SelectedTimingPoints.Remove(point);
                         else
-                            SelectedTimingPoints.Add(point);
+                        {
+                            if (!SelectedTimingPoints.Contains(point))
+                                SelectedTimingPoints.Add(point);
+                        }
                     }
                     else
                     {
@@ -324,7 +333,33 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
 
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
+            HandleInput();
             ImGui.EndChild();
+        }
+
+        private void HandleInput()
+        {
+            if (!IsWindowHovered)
+                return;
+
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            {
+                if (KeyboardManager.IsUniqueKeyPress(Keys.A))
+                {
+                    SelectedTimingPoints.Clear();
+                    SelectedTimingPoints.AddRange(Screen.WorkingMap.TimingPoints);
+                }
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Delete))
+            {
+                if (SelectedTimingPoints.Count != 0)
+                {
+                    Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
+                    SelectedTimingPoints.Clear();
+                }
+            }
         }
 
         /// <summary>
