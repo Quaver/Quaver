@@ -12,7 +12,9 @@ using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -108,6 +110,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
             ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
         }
 
         /// <inheritdoc />
@@ -141,6 +145,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
             ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
             ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
 
             base.Destroy();
         }
@@ -522,5 +528,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => ReInitialize();
     }
 }

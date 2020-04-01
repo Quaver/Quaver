@@ -35,6 +35,7 @@ using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -173,11 +174,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public List<EditorPlugin> Plugins { get; private set; }
+        public List<IEditorPlugin> Plugins { get; private set; }
 
         /// <summary>
         /// </summary>
-        public Dictionary<EditorBuiltInPlugin, EditorPlugin> BuiltInPlugins { get; private set; }
+        public Dictionary<EditorBuiltInPlugin, IEditorPlugin> BuiltInPlugins { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -417,6 +418,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
+            HandleKeyPressF5();
         }
 
         /// <summary>
@@ -435,6 +437,20 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new EditorMetadataDialog(this));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF5()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            var plugin = BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+            plugin.IsActive = !plugin.IsActive;
+
+            if (plugin.IsActive)
+                plugin.Initialize();
         }
 
         /// <summary>
@@ -751,7 +767,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void LoadPlugins()
         {
-            Plugins = new List<EditorPlugin>();
+            Plugins = new List<IEditorPlugin>();
 
             var pluginDirectories = Directory.GetDirectories($"{WobbleGame.WorkingDirectory}/Plugins");
 
@@ -797,8 +813,9 @@ namespace Quaver.Shared.Screens.Edit
         {
             var dir = $"Quaver.Resources/Scripts/Lua/Editor";
 
-            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
+            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
+                {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
                 {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
                     $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",

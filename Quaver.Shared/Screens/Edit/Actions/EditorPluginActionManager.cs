@@ -83,6 +83,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="tps"></param>
+        public void RemoveTimingPointBatch(List<TimingPointInfo> tps) => ActionManager.RemoveTimingPointBatch(tps);
+
+        /// <summary>
+        /// </summary>
         /// <param name="tp"></param>
         /// <param name="offset"></param>
         public void ChangeTimingPointOffset(TimingPointInfo tp, float offset) => ActionManager.ChangeTimingPointOffset(tp, offset);
@@ -92,6 +97,18 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="tp"></param>
         /// <param name="bpm"></param>
         public void ChangeTimingPointBpm(TimingPointInfo tp, float bpm) => ActionManager.ChangeTimingPointBpm(tp, bpm);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tps"></param>
+        /// <param name="bpm"></param>
+        public void ChangeTimingPointBpmBatch(List<TimingPointInfo> tps, float bpm) => ActionManager.ChangeTimingPointBpmBatch(tps, bpm);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tps"></param>
+        /// <param name="offset"></param>
+        public void ChangeTimingPointOffsetBatch(List<TimingPointInfo> tps, float offset) => ActionManager.ChangeTimingPointOffsetBatch(tps, offset);
 
         /// <summary>
         /// </summary>
