@@ -110,6 +110,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Dummy(new Vector2(0, 10));
             DrawBpmTextbox();
 
+            IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
+
             ImGui.Dummy(new Vector2(0, 10));
             DrawTable();
 
@@ -320,6 +322,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 ImGui.NextColumn();
             }
 
+            IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
             ImGui.EndChild();
         }
 
