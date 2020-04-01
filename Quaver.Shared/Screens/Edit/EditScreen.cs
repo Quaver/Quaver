@@ -418,6 +418,7 @@ namespace Quaver.Shared.Screens.Edit
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
+            HandleKeyPressF5();
         }
 
         /// <summary>
@@ -436,6 +437,20 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new EditorMetadataDialog(this));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF5()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            var plugin = BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+            plugin.IsActive = !plugin.IsActive;
+
+            if (plugin.IsActive)
+                plugin.Initialize();
         }
 
         /// <summary>

@@ -240,6 +240,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Edit Metadata", "F1"))
                 DialogManager.Show(new EditorMetadataDialog(Screen));
 
+            var timingPointPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+
+            if (ImGui.MenuItem("Edit Timing Points", "F5", timingPointPlugin.IsActive))
+            {
+                timingPointPlugin.IsActive = !timingPointPlugin.IsActive;
+
+                if (timingPointPlugin.IsActive)
+                    timingPointPlugin.Initialize();
+            }
+
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
 
