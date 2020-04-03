@@ -41,8 +41,13 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         public static bool FirstMenuLoad { get; private set; }
 
-        private bool originalAutoLoadOsuBeatmapsValue;
-        private bool flaggedForOsuImport;
+        /// <summary>
+        ///	</summary>
+        private bool originalAutoLoadOsuBeatmapsValue { get; set; }
+
+        /// <summary>
+        ///	</summary>
+        private bool flaggedForOsuImport { get; set; }
 
         /// <summary>
         /// </summary>
