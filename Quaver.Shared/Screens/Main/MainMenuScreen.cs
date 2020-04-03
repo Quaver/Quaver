@@ -25,6 +25,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Main
 {
@@ -42,6 +43,16 @@ namespace Quaver.Shared.Screens.Main
         public static bool FirstMenuLoad { get; private set; }
 
         /// <summary>
+        ///	</summary>
+        private bool OriginalAutoLoadOsuBeatmapsValue { get; }
+
+        /// <summary>
+        ///     If true, the user will be taken to the import screen where all of their maps from other games
+        ///     will be loaded. This is to allow users with 0 maps installed to load all of them without restarting
+        ///	</summary>
+        private bool FlaggedForOsuImport { get; set; }
+
+        /// <summary>
         /// </summary>
         public MainMenuScreen()
         {
@@ -50,7 +61,16 @@ namespace Quaver.Shared.Screens.Main
 #endif
             ModManager.RemoveSpeedMods();
 
+            OriginalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
             View = new MainMenuScreenView(this);
+        }
+
+        public override void Destroy()
+        {
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+            base.Destroy();
         }
 
         public override void OnFirstUpdate()
@@ -93,7 +113,7 @@ namespace Quaver.Shared.Screens.Main
         public void ExitToSinglePlayer()
         {
             // We have maps in the queue, so we need to go to the import screen first
-            if (MapsetImporter.Queue.Count != 0)
+            if (MapsetImporter.Queue.Count != 0 || FlaggedForOsuImport)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -207,5 +227,12 @@ namespace Quaver.Shared.Screens.Main
         public override UserClientStatus GetClientStatus()
             => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte) ConfigManager.SelectedGameMode.Value,
                 "", (long) ModManager.Mods);
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => FlaggedForOsuImport = e.Value != OriginalAutoLoadOsuBeatmapsValue;
     }
 }

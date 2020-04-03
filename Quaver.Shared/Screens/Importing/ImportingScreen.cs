@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
@@ -135,7 +136,10 @@ namespace Quaver.Shared.Screens.Importing
             }
             else
             {
-                Exit(() => new SelectionScreen());
+                if (MapManager.Mapsets.Count == 0)
+                    Exit(() => new MainMenuScreen());
+                else
+                    Exit(() => new SelectionScreen());
             }
         }
     }
