@@ -250,6 +250,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     timingPointPlugin.Initialize();
             }
 
+            var scrollVelocityPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
+
+            if (ImGui.MenuItem("Edit Scroll Velocities", "F6", scrollVelocityPlugin.IsActive))
+            {
+                scrollVelocityPlugin.IsActive = !scrollVelocityPlugin.IsActive;
+
+                if (scrollVelocityPlugin.IsActive)
+                    scrollVelocityPlugin.Initialize();
+            }
+
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
 
