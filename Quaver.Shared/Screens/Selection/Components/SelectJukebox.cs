@@ -73,8 +73,8 @@ namespace Quaver.Shared.Screens.Selection.Components
             {
                 MapManager.Selected.ValueChanged += OnMapChanged;
 
-                if (AudioEngine.Map != MapManager.Selected.Value || AudioEngine.Track.IsStopped)
-                    LoadTrackTask.Run(0);
+                /*if (AudioEngine.Map != MapManager.Selected.Value || AudioEngine.Track.IsStopped)
+                    LoadTrackTask.Run(0);*/
             }
         }
 
@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning)
                 LoadTrackTask.Run(0);
 
-            AudioTrackStoppedInLastFrame = AudioEngine.Track.HasPlayed && AudioEngine.Track.IsDisposed;
+            AudioTrackStoppedInLastFrame = AudioEngine.Track.IsDisposed;
         }
 
         /// <summary>
