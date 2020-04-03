@@ -414,11 +414,11 @@ namespace Quaver.Shared.Screens.Edit
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
             HandleCtrlInput();
-            //HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
             HandleKeyPressF1();
             HandleKeyPressF5();
+            HandleKeyPressF6();
         }
 
         /// <summary>
@@ -447,6 +447,20 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             var plugin = BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+            plugin.IsActive = !plugin.IsActive;
+
+            if (plugin.IsActive)
+                plugin.Initialize();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF6()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F6))
+                return;
+
+            var plugin = BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
             plugin.IsActive = !plugin.IsActive;
 
             if (plugin.IsActive)
@@ -805,6 +819,10 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             LoadBuiltInPlugins();
+
+            // If the user has no timing points in their map, auto-open the bpm calculator
+            if (WorkingMap.TimingPoints.Count == 0)
+                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
         }
 
         /// <summary>
@@ -816,6 +834,7 @@ namespace Quaver.Shared.Screens.Edit
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
                 {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
+                {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
                 {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
                     $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",

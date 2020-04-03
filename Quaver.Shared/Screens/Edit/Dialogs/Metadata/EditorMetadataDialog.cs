@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         private void CreateBpmAffectsSvCheckbox()
         {
             BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 20,
-                new QuaverCheckbox(new Bindable<bool>(false)) { DisposeBindableOnDestroy = true})
+                new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true})
             {
                 Parent = Panel,
                 Y = GameMode.Y + 6,
