@@ -819,6 +819,10 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             LoadBuiltInPlugins();
+
+            // If the user has no timing points in their map, auto-open the bpm calculator
+            if (WorkingMap.TimingPoints.Count == 0)
+                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
         }
 
         /// <summary>
