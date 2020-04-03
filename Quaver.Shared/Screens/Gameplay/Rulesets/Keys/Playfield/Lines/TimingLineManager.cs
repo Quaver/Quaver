@@ -5,7 +5,10 @@
  * Copyright (c) Swan & The Quaver Team <support@quavergame.com>.
 */
 
+using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -80,30 +83,50 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines
         ///     Generate Timing Line Information for the map
         /// </summary>
         /// <param name="map"></param>
-        private void GenerateTimingLineInfo(Qua map)
+        public void GenerateTimingLineInfo(Qua map)
         {
             Info = new Queue<TimingLineInfo>();
+
             for (var i = 0; i < map.TimingPoints.Count; i++)
             {
                 // Get target position and increment
                 // Target position has tolerance of 1ms so timing points dont overlap by chance
                 var target = i + 1 < map.TimingPoints.Count ? map.TimingPoints[i + 1].StartTime - 1 : map.Length;
-                var increment = (int) map.TimingPoints[i].Signature * map.TimingPoints[i].MillisecondsPerBeat;
+
+                var signature = TimeSignature.Quadruple;
+
+                if (Enum.IsDefined(typeof(TimeSignature), map.TimingPoints[i].Signature))
+                    signature = map.TimingPoints[i].Signature;
+
+                // Max possible sane value for timing lines
+                const float maxBpm = 9999f;
+
+                var msPerBeat = 60000 / Math.Min(Math.Abs(map.TimingPoints[i].Bpm), maxBpm);
+                var increment = (int) signature * msPerBeat;
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (increment <= 0)
+                    continue;
 
                 // Initialize timing lines between current timing point and target position
                 for (var songPos = map.TimingPoints[i].StartTime; songPos < target; songPos += increment)
-                {
                     Info.Enqueue(new TimingLineInfo(songPos, HitObjectManager.GetPositionFromTime(songPos)));
-                }
             }
         }
 
         /// <summary>
         ///     Initialize the Timing Line Object Pool
         /// </summary>
-        private void InitializeObjectPool()
+        public void InitializeObjectPool()
         {
+            if (Pool != null)
+            {
+                while (Pool.Count > 0)
+                    Pool.Dequeue().Destroy();
+            }
+
             Pool = new Queue<TimingLine>();
+
             while (Info.Count > 0)
             {
                 if (HitObjectManager.CurrentTrackPosition - Info.Peek().TrackOffset > HitObjectManager.CreateObjectPosition)
