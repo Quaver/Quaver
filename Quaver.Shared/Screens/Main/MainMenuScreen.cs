@@ -43,11 +43,13 @@ namespace Quaver.Shared.Screens.Main
 
         /// <summary>
         ///	</summary>
-        private bool originalAutoLoadOsuBeatmapsValue { get; set; }
+        private bool OriginalAutoLoadOsuBeatmapsValue { get; }
 
         /// <summary>
+        ///     If true, the user will be taken to the import screen where all of their maps from other games
+        ///     will be loaded. This is to allow users with 0 maps installed to load all of them without restarting
         ///	</summary>
-        private bool flaggedForOsuImport { get; set; }
+        private bool FlaggedForOsuImport { get; set; }
 
         /// <summary>
         /// </summary>
@@ -58,7 +60,7 @@ namespace Quaver.Shared.Screens.Main
 #endif
             ModManager.RemoveSpeedMods();
 
-            originalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
+            OriginalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
             View = new MainMenuScreenView(this);
@@ -110,7 +112,7 @@ namespace Quaver.Shared.Screens.Main
         public void ExitToSinglePlayer()
         {
             // We have maps in the queue, so we need to go to the import screen first
-            if (MapsetImporter.Queue.Count != 0 || flaggedForOsuImport)
+            if (MapsetImporter.Queue.Count != 0 || FlaggedForOsuImport)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -230,6 +232,6 @@ namespace Quaver.Shared.Screens.Main
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
-            => flaggedForOsuImport = e.Value != originalAutoLoadOsuBeatmapsValue;
+            => FlaggedForOsuImport = e.Value != OriginalAutoLoadOsuBeatmapsValue;
     }
 }
