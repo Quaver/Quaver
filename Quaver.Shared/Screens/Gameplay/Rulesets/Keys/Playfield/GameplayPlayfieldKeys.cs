@@ -14,6 +14,7 @@ using Quaver.Shared.Skinning;
 using System;
 using System.Linq;
 using Quaver.Shared.Screens.Gameplay.UI;
+using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Window;
