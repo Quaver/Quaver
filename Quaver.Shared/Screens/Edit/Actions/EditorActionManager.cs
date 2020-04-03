@@ -22,6 +22,8 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
@@ -203,6 +205,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public event EventHandler<EditorChangedTimingPointOffsetBatchEventArgs> TimingPointOffsetBatchChanged;
 
         /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their offset changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollVelocityOffsetBatchEventArgs> ScrollVelocityOffsetBatchChanged;
+
+        /// <summary>
+        ///     Event invoked when a batch of scroll velocities have had their multipliers changed
+        /// </summary>
+        public event EventHandler<EditorChangedScrollVelocityMultiplierBatchEventArgs> ScrollVelocityMultiplierBatchChanged;
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="workingMap"></param>
@@ -310,6 +322,27 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="svs"></param>
         public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => Perform(new EditorActionAddScrollVelocityBatch(this, WorkingMap, svs));
+
+        /// <summary>
+        ///     Removes a batch of scroll velocities from the map
+        /// </summary>
+        /// <param name="svs"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => Perform(new EditorActionRemoveScrollVelocityBatch(this, WorkingMap, svs));
+
+        /// <summary>
+        ///     Changes the offset of a batch of scroll velocities
+        /// </summary>
+        /// <param name="svs"></param>
+        /// <param name="offset"></param>
+        public void ChangeScrollVelocityOffsetBatch(List<SliderVelocityInfo> svs, float offset) => Perform(new EditorActionChangeScrollVelocityOffsetBatch(this, WorkingMap, svs, offset));
+
+
+        /// <summary>
+        ///     Changes the multiplier of a batch of scroll velocities
+        /// </summary>
+        /// <param name="svs"></param>
+        /// <param name="multiplier"></param>
+        public void ChangeScrollVelocityMultiplierBatch(List<SliderVelocityInfo> svs, float multiplier) => Perform(new EditorActionChangeScrollVelocityMultiplierBatch(this, WorkingMap, svs, multiplier));
 
         /// <summary>
         ///     Adds a timing point to the map
@@ -472,6 +505,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 case EditorActionType.ChangeTimingPointOffsetBatch:
                     TimingPointOffsetBatchChanged?.Invoke(this, (EditorChangedTimingPointOffsetBatchEventArgs) args);
                     break;
+                case EditorActionType.ChangeScrollVelocityOffsetBatch:
+                    ScrollVelocityOffsetBatchChanged?.Invoke(this, (EditorChangedScrollVelocityOffsetBatchEventArgs) args);
+                    break;
+                case EditorActionType.ChangeScrollVelocityMultiplierBatch:
+                    ScrollVelocityMultiplierBatchChanged?.Invoke(this, (EditorChangedScrollVelocityMultiplierBatchEventArgs) args);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -508,6 +547,8 @@ namespace Quaver.Shared.Screens.Edit.Actions
             TimingPointBpmChanged = null;
             TimingPointBpmBatchChanged = null;
             TimingPointOffsetBatchChanged = null;
+            ScrollVelocityOffsetBatchChanged = null;
+            ScrollVelocityMultiplierBatchChanged = null;
         }
     }
 }
