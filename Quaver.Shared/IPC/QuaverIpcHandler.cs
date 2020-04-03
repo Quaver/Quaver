@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.UI.Dialogs.GoTo;
 using WebSocketSharp;
@@ -50,8 +51,8 @@ namespace Quaver.Shared.IPC
 
                 var game = GameBase.Game as QuaverGame;
 
-                if (game?.CurrentScreen is EditorScreen)
-                    EditorGoToObjectsPanel.HighlightObjects(message);
+                if (game?.CurrentScreen is EditScreen screen)
+                    screen.GoToObjects(message);
                 else
                     NotificationManager.Show(NotificationLevel.Warning, "You must be in the editor to use this function!");
             }
