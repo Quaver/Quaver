@@ -24,6 +24,7 @@ using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Bindables;
 
 namespace Quaver.Shared.Screens.Main
 {
@@ -40,6 +41,9 @@ namespace Quaver.Shared.Screens.Main
         /// </summary>
         public static bool FirstMenuLoad { get; private set; }
 
+        private bool originalAutoLoadOsuBeatmapsValue;
+        private bool flaggedForOsuImport;
+
         /// <summary>
         /// </summary>
         public MainMenuScreen()
@@ -49,7 +53,16 @@ namespace Quaver.Shared.Screens.Main
 #endif
             ModManager.RemoveSpeedMods();
 
+            originalAutoLoadOsuBeatmapsValue = ConfigManager.AutoLoadOsuBeatmaps.Value;
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
+
             View = new MainMenuScreenView(this);
+        }
+
+        public override void Destroy()
+        {
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+            base.Destroy();
         }
 
         public override void OnFirstUpdate()
@@ -92,7 +105,7 @@ namespace Quaver.Shared.Screens.Main
         public void ExitToSinglePlayer()
         {
             // We have maps in the queue, so we need to go to the import screen first
-            if (MapsetImporter.Queue.Count != 0)
+            if (MapsetImporter.Queue.Count != 0 || flaggedForOsuImport)
             {
                 Exit(() => new ImportingScreen());
                 return;
@@ -206,5 +219,12 @@ namespace Quaver.Shared.Screens.Main
         public override UserClientStatus GetClientStatus()
             => new UserClientStatus(ClientStatus.InMenus, -1, "", (byte) ConfigManager.SelectedGameMode.Value,
                 "", (long) ModManager.Mods);
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => flaggedForOsuImport = e.Value != originalAutoLoadOsuBeatmapsValue;
     }
 }
