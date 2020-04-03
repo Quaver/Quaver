@@ -611,7 +611,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Exits the current screen and goes to the editor
         /// </summary>
-        public void ExitToEditor(bool newEditor = false)
+        public void ExitToEditor()
         {
             if (MapManager.Selected.Value == null)
                 return;
@@ -630,28 +630,19 @@ namespace Quaver.Shared.Screens.Selection
 
             try
             {
-                if (newEditor)
+                IAudioTrack track;
+
+                try
                 {
-                    IAudioTrack track;
-
-                    try
-                    {
-                        track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
-                    }
-                    catch (Exception)
-                    {
-                        track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
-                    }
-
-                    ModManager.RemoveAllMods();
-                    Exit(() => new EditScreen(MapManager.Selected.Value, track));
+                    track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
                 }
-                else
+                catch (Exception)
                 {
-                    var qua = MapManager.Selected.Value.LoadQua();
-                    Exit(() => new EditorScreen(qua));
+                    track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
                 }
 
+                ModManager.RemoveAllMods();
+                Exit(() => new EditScreen(MapManager.Selected.Value, track));
             }
             catch (Exception e)
             {

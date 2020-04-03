@@ -14,6 +14,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Download;
 using Quaver.Shared.Screens.Downloading;
+using Quaver.Shared.Screens.Edit;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main.UI;
@@ -169,7 +170,7 @@ namespace Quaver.Shared.Screens.Main
 
                 try
                 {
-                    return new EditorScreen(MapManager.Selected.Value.LoadQua(false));
+                    return new EditScreen(MapManager.Selected.Value, AudioEngine.LoadMapAudioTrack(MapManager.Selected.Value));
                 }
                 catch (Exception ex)
                 {
