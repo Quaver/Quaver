@@ -5,16 +5,13 @@ using System.Numerics;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Structures;
-using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
-using TagLib.Matroska;
-using TagLib.Riff;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 {
-    public class EditorTimingPointPanel : SpriteImGui, IEditorPlugin
+    public class EditorScrollVelocityPanel : SpriteImGui, IEditorPlugin
     {
         /// <summary>
         /// </summary>
@@ -23,12 +20,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public string Name { get; } = "Timing Point Editor";
+        public string Name { get; } = "Scroll Velocity Editor";
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public string Author { get; } = "The Quaver Team";
+        public string Author { get; } = "Swan";
 
         /// <inheritdoc />
         /// <summary>
@@ -40,50 +37,52 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         public bool IsBuiltIn { get; set; } = true;
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public bool IsActive { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public bool IsWindowHovered { get; set; }
+        public bool IsWindowHovered { get; private set; }
 
         /// <summary>
-        /// </summary>
-        private List<TimingPointInfo> SelectedTimingPoints { get; } = new List<TimingPointInfo>();
-
-        /// <summary>
-        /// </summary>
-        private List<TimingPointInfo> Clipboard { get; } = new List<TimingPointInfo>();
-
-        /// <summary>
-        ///     If the panel has to scroll to the correct position
         /// </summary>
         private bool NeedsToScroll { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private List<SliderVelocityInfo> SelectedScrollVelocities { get; } = new List<SliderVelocityInfo>();
+
+        /// <summary>
+        /// </summary>
+        private List<SliderVelocityInfo> Clipboard { get; } = new List<SliderVelocityInfo>();
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingPointPanel(EditScreen screen) : base(false, GetOptions())
+        public EditorScrollVelocityPanel(EditScreen screen) : base(false, GetOptions())
         {
             Screen = screen;
             Initialize();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Initialize()
         {
-            SelectedTimingPoints.Clear();
+            SelectedScrollVelocities.Clear();
 
-            var point = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
+            var point = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
 
             if (point != null)
             {
-                SelectedTimingPoints.Add(point);
+                SelectedScrollVelocities.Add(point);
 
-                if (point != Screen.WorkingMap.TimingPoints.First())
+                if (point != Screen.WorkingMap.SliderVelocities.First())
                     NeedsToScroll = true;
             }
         }
@@ -98,7 +97,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Begin(Name, ImGuiWindowFlags.NoResize);
 
             DrawHeaderText();
-
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawAddButton();
@@ -107,20 +105,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.Dummy(new Vector2(0, 10));
 
-            if (SelectedTimingPoints.Count <= 1)
+            if (SelectedScrollVelocities.Count <= 1)
                 DrawTimeTextbox();
             else
                 DrawMoveOffsetByTextbox();
 
             ImGui.Dummy(new Vector2(0, 10));
-            DrawBpmTextbox();
-
-            var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
+            DrawMultiplierTextbox();
 
             ImGui.Dummy(new Vector2(0, 10));
+
             DrawTable();
 
-            IsWindowHovered = IsWindowHovered || isHovered;
             ImGui.End();
         }
 
@@ -128,9 +124,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextWrapped("Timing Points are individual BPM sections within your map. This will allow you to place objects at the correct times in the song.");
-            ImGui.Dummy(new Vector2(0, 5));
-            ImGui.TextWrapped("You can click on an individual Timing Point to edit it or double-click to go to its position in time.");
+            ImGui.TextWrapped("Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.");
+            ImGui.Dummy(new Vector2(0, 10));
+            ImGui.TextWrapped("You can click on an individual SV point to edit it and double-click to go to its position in time.");
         }
 
         /// <summary>
@@ -139,19 +135,19 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (ImGui.Button("Add"))
             {
-                var currentPoint = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
-                var bpm = currentPoint?.Bpm ?? 0;
+                var currentPoint = Screen.WorkingMap.GetScrollVelocityAt(Screen.Track.Time);
+                var multiplier = currentPoint?.Multiplier ?? 1;
 
-                SelectedTimingPoints.Clear();
+                SelectedScrollVelocities.Clear();
 
-                var point = new TimingPointInfo
+                var sv = new SliderVelocityInfo()
                 {
                     StartTime = (float) Screen.Track.Time,
-                    Bpm = bpm
+                    Multiplier = multiplier
                 };
 
-                Screen.ActionManager.PlaceTimingPoint(point);
-                SelectedTimingPoints.Add(point);
+                Screen.ActionManager.PlaceScrollVelocity(sv);
+                SelectedScrollVelocities.Add(sv);
                 NeedsToScroll = true;
             }
         }
@@ -162,28 +158,28 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (ImGui.Button("Remove"))
             {
-                if (SelectedTimingPoints.Count == 0)
+                if (SelectedScrollVelocities.Count == 0)
                     return;
 
-                var lastPoint = SelectedTimingPoints.Last();
+                var lastPoint = SelectedScrollVelocities.Last();
 
-                Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
+                Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
 
-                var newPoint = Screen.WorkingMap.TimingPoints.FindLast(x => x.StartTime <= lastPoint.StartTime);
+                var newPoint = Screen.WorkingMap.SliderVelocities.FindLast(x => x.StartTime <= lastPoint.StartTime);
 
-                SelectedTimingPoints.Clear();
+                SelectedScrollVelocities.Clear();
 
                 if (newPoint != null)
                 {
-                    if (!SelectedTimingPoints.Contains(newPoint))
-                        SelectedTimingPoints.Add(newPoint);
+                    if (!SelectedScrollVelocities.Contains(newPoint))
+                        SelectedScrollVelocities.Add(newPoint);
                 }
-                else if (Screen.WorkingMap.TimingPoints.Count > 0)
+                else if (Screen.WorkingMap.SliderVelocities.Count > 0)
                 {
-                    var point = Screen.WorkingMap.TimingPoints.First();
+                    var point = Screen.WorkingMap.SliderVelocities.First();
 
-                    if (!SelectedTimingPoints.Contains(point))
-                        SelectedTimingPoints.Add(point);
+                    if (!SelectedScrollVelocities.Contains(point))
+                        SelectedScrollVelocities.Add(point);
                 }
 
                 NeedsToScroll = true;
@@ -197,9 +193,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
-            if (SelectedTimingPoints.Count == 1)
+            if (SelectedScrollVelocities.Count == 1)
             {
-                var point = SelectedTimingPoints.First();
+                var point = SelectedScrollVelocities.First();
 
                 time = point.StartTime;
                 format = $"{time}";
@@ -209,11 +205,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             if (ImGui.InputFloat("", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
             {
-                if (SelectedTimingPoints.Count == 1)
-                    Screen.ActionManager.ChangeTimingPointOffset(SelectedTimingPoints.First(), time);
+                if (SelectedScrollVelocities.Count == 1)
+                {
+                    var sv = SelectedScrollVelocities.First();
+
+                    Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> {sv},
+                        time - sv.StartTime);
+                }
             }
         }
 
+        /// <summary>
+        /// </summary>
         private void DrawMoveOffsetByTextbox()
         {
             var time = 0f;
@@ -222,39 +225,34 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped("Move Times By");
 
             if (ImGui.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
-                Screen.ActionManager.ChangeTimingPointOffsetBatch(SelectedTimingPoints, time);
+                Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
         }
 
         /// <summary>
         /// </summary>
-        private void DrawBpmTextbox()
+        private void DrawMultiplierTextbox()
         {
-            var bpm = 0f;
+            var multiplier = 0f;
             var format = "";
 
-            if (SelectedTimingPoints.Count == 1)
+            if (SelectedScrollVelocities.Count == 1)
             {
-                var point = SelectedTimingPoints.First();
+                var point = SelectedScrollVelocities.First();
 
-                bpm = point.Bpm;
-                format = $"{bpm:0.00}";
+                multiplier = point.Multiplier;
+                format = $"{multiplier:0.00}";
             }
             // All points are the same bpm
-            else if (SelectedTimingPoints.Count > 1 && SelectedTimingPoints.All(x => x.Bpm == SelectedTimingPoints.First().Bpm))
+            else if (SelectedScrollVelocities.Count > 1 && SelectedScrollVelocities.All(x => x.Multiplier == SelectedScrollVelocities.First().Multiplier))
             {
-                bpm = SelectedTimingPoints.First().Bpm;
-                format = $"{bpm:0.00}";
+                multiplier = SelectedScrollVelocities.First().Multiplier;
+                format = $"{multiplier:0.00}";
             }
 
-            ImGui.TextWrapped("BPM");
+            ImGui.TextWrapped("Multiplier");
 
-            if (ImGui.InputFloat(" ", ref bpm, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
-            {
-                if (SelectedTimingPoints.Count == 1)
-                    Screen.ActionManager.ChangeTimingPointBpm(SelectedTimingPoints.First(), bpm);
-                else
-                    Screen.ActionManager.ChangeTimingPointBpmBatch(SelectedTimingPoints, bpm);
-            }
+            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+                Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
         }
 
         /// <summary>
@@ -273,7 +271,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.SetColumnWidth(0, 160);
             ImGui.TextWrapped("Time");
             ImGui.NextColumn();
-            ImGui.TextWrapped("BPM");
+            ImGui.TextWrapped("Multiplier");
             ImGui.Columns();
             ImGui.Separator();
         }
@@ -282,50 +280,49 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawTableColumns()
         {
-            ImGui.BeginChild("Timing Point Area");
-
+            ImGui.BeginChild("Scroll Velocity Area");
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 160);
 
-            if (NeedsToScroll && SelectedTimingPoints.Count != 0  && Screen.WorkingMap.TimingPoints.Count == 0)
+            if (NeedsToScroll && SelectedScrollVelocities.Count != 0  && Screen.WorkingMap.TimingPoints.Count == 0)
             {
                 ImGui.SetScrollHereY(-0.05f);
                 NeedsToScroll = false;
             }
 
-            foreach (var point in Screen.WorkingMap.TimingPoints)
+            foreach (var sv in Screen.WorkingMap.SliderVelocities)
             {
-                var isSelected = SelectedTimingPoints.Contains(point);
+                var isSelected = SelectedScrollVelocities.Contains(sv);
 
                 if (!isSelected)
                     ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
 
-                if (NeedsToScroll && SelectedTimingPoints.Count != 0 && SelectedTimingPoints.First() == point)
+                if (NeedsToScroll && SelectedScrollVelocities.Count != 0 && SelectedScrollVelocities.First() == sv)
                 {
                     ImGui.SetScrollHereY(-0.05f);
                     NeedsToScroll = false;
                 }
 
-                if (ImGui.Button($"{TimeSpan.FromMilliseconds(point.StartTime):mm\\:ss\\.fff}"))
+                if (ImGui.Button($"{TimeSpan.FromMilliseconds(sv.StartTime):mm\\:ss\\.fff}"))
                 {
                     // User holds down control, so add/remove it from the currently list of selected points
                     if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                     {
                         if (isSelected)
-                            SelectedTimingPoints.Remove(point);
+                            SelectedScrollVelocities.Remove(sv);
                         else
                         {
-                            if (!SelectedTimingPoints.Contains(point))
-                                SelectedTimingPoints.Add(point);
+                            if (!SelectedScrollVelocities.Contains(sv))
+                                SelectedScrollVelocities.Add(sv);
                         }
                     }
                     else
                     {
                         if (isSelected)
-                            Screen.Track.Seek(point.StartTime);
+                            Screen.Track.Seek(sv.StartTime);
 
-                        SelectedTimingPoints.Clear();
-                        SelectedTimingPoints.Add(point);
+                        SelectedScrollVelocities.Clear();
+                        SelectedScrollVelocities.Add(sv);
                     }
                 }
 
@@ -333,7 +330,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                     ImGui.PopStyleColor();
 
                 ImGui.NextColumn();
-                ImGui.TextWrapped($"{point.Bpm:0.00}");
+                ImGui.TextWrapped($"{sv.Multiplier:0.00}x");
                 ImGui.NextColumn();
             }
 
@@ -342,8 +339,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.EndChild();
         }
 
-        /// <summary>
-        /// </summary>
         private void HandleInput()
         {
             if (!IsWindowHovered)
@@ -354,17 +349,17 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 if (KeyboardManager.IsUniqueKeyPress(Keys.A))
                 {
-                    SelectedTimingPoints.Clear();
-                    SelectedTimingPoints.AddRange(Screen.WorkingMap.TimingPoints);
+                    SelectedScrollVelocities.Clear();
+                    SelectedScrollVelocities.AddRange(Screen.WorkingMap.SliderVelocities);
                 }
             }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Delete))
             {
-                if (SelectedTimingPoints.Count != 0)
+                if (SelectedScrollVelocities.Count != 0)
                 {
-                    Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
-                    SelectedTimingPoints.Clear();
+                    Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
+                    SelectedScrollVelocities.Clear();
                 }
             }
 
@@ -383,9 +378,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void CutClipboard()
         {
             Clipboard.Clear();
-            Clipboard.AddRange(SelectedTimingPoints);
-            Screen.ActionManager.RemoveTimingPointBatch(new List<TimingPointInfo>(SelectedTimingPoints));
-            SelectedTimingPoints.Clear();
+            Clipboard.AddRange(SelectedScrollVelocities);
+            Screen.ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo>(SelectedScrollVelocities));
+            SelectedScrollVelocities.Clear();
         }
 
         /// <summary>
@@ -394,24 +389,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             Clipboard.Clear();
 
-            if (SelectedTimingPoints.Count != 0)
-                Clipboard.AddRange(SelectedTimingPoints);
+            if (SelectedScrollVelocities.Count != 0)
+                Clipboard.AddRange(SelectedScrollVelocities);
         }
 
         /// <summary>
         /// </summary>
         private void PasteClipboard()
         {
-            var clonedObjects = new List<TimingPointInfo>();
+            var clonedObjects = new List<SliderVelocityInfo>();
 
             var difference = (int) Math.Round(Screen.Track.Time - Clipboard.First().StartTime, MidpointRounding.AwayFromZero);
 
             foreach (var obj in Clipboard)
             {
-                var point = new TimingPointInfo()
+                var point = new SliderVelocityInfo()
                 {
                     StartTime = obj.StartTime + difference,
-                    Bpm = obj.Bpm
+                    Multiplier = obj.Multiplier
                 };
 
                 clonedObjects.Add(point);
@@ -419,9 +414,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             clonedObjects = clonedObjects.OrderBy(x => x.StartTime).ToList();
 
-            Screen.ActionManager.PlaceTimingPointBatch(clonedObjects);
-            SelectedTimingPoints.Clear();
-            SelectedTimingPoints.AddRange(clonedObjects);
+            Screen.ActionManager.PlaceScrollVelocityBatch(clonedObjects);
+            SelectedScrollVelocities.Clear();
+            SelectedScrollVelocities.AddRange(clonedObjects);
             NeedsToScroll = true;
         }
 
