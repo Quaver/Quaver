@@ -912,11 +912,13 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                // Audio should be pitched when failing to provide a smooth sound.
-                AudioEngine.Track.ApplyRate(true);
-
-                AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
-                AudioEngine.Track.Fade(0, FailFadeTime);
+                if (!IsPaused && HasStarted)
+                {
+                    // Audio should be pitched when failing to provide a smooth sound.
+                    AudioEngine.Track.ApplyRate(true);
+                    AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
+                    AudioEngine.Track.Fade(0, FailFadeTime);
+                }
             }
             // No need to handle this exception.
             catch (Exception)
