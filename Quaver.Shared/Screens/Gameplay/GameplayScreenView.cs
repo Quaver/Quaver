@@ -683,13 +683,8 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen.Exiting && Screen.Failed)
             {
-                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime && AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track?.Stop();
-
-                    if (!Screen.HasQuit)
-                        SkinManager.Skin.SoundFailure.CreateChannel().Play();
-                }
+                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime)
+                    AudioEngine.Track?.Dispose();
 
                 return;
             }
@@ -700,6 +695,7 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 Transitioner.FadeTo(1, Easing.Linear, Screen.FailFadeTime);
                 ScreenChangedToRedOnFailure = true;
+                SkinManager.Skin.SoundFailure.CreateChannel().Play();
             }
 
             if (!ResultsScreenLoadInitiated)
