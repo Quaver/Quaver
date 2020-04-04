@@ -287,8 +287,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 }
 
                 ShowTestPlayPrompt();
-
-                ThreadScheduler.Run(() => CreateSeekBar(e.Input.Qua, playfield));
+                CreateSeekBar(e.Input.Qua, playfield);
             });
         }
 
@@ -409,7 +408,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             if (isSpeedMod)
             {
-                CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys) LoadedGameplayScreen?.Ruleset?.Playfield, false);
+                ScheduleUpdate(() =>
+                {
+                    CreateSeekBar(LoadedGameplayScreen?.Map, (GameplayPlayfieldKeys) LoadedGameplayScreen?.Ruleset?.Playfield, false);
+                });
                 return;
             }
 
@@ -425,10 +427,13 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if (!HasSeekBar)
                 return;
 
-            SeekBar?.Destroy();
+            var oldSeekBar = SeekBar;
 
             if (playfield == null || qua == null)
+            {
+                oldSeekBar?.Destroy();
                 return;
+            }
 
             var stageRightWidth = (int) MathHelper.Clamp(playfield.Stage.StageRight.Width, 0, 8);
 
@@ -462,14 +467,17 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             };
 
             SeekBar.AudioSeeked += (o, args) => RefreshScreen();
+
             if (qua != MapManager.Selected.Value.Qua)
             {
+                oldSeekBar?.Destroy();
                 SeekBar.Destroy();
                 return;
             }
 
             AddScheduledUpdate(() =>
             {
+                oldSeekBar?.Destroy();
                 SeekBar.Parent = playfield.Container;
 
                 if (animate)
