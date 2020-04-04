@@ -118,13 +118,23 @@ namespace Quaver.Shared.Screens.Loading
             if (MapManager.Selected.Value == null)
                 throw new Exception("No selected map, we should not be on this screen!");
 
+            // Make sure the absolutely correct map is selected in multiplayer
+            if (OnlineManager.CurrentGame != null)
+            {
+                MultiplayerGameScreen.SelectMultiplayerMap();
+                AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
+
+                if (MapManager.Selected.Value == null)
+                {
+                    Exit(() => new MultiplayerGameScreen());
+                    return;
+                }
+            }
+
             MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
 
             if (Replay != null)
                 AddModsFromIdentifiers(Replay.Mods);
-
-            if (OnlineManager.CurrentGame != null)
-                AddModsFromIdentifiers(OnlineManager.GetSelfActivatedMods());
 
             MapManager.Selected.Value.Qua.ApplyMods(ModManager.Mods);
 
@@ -160,21 +170,6 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         private void LoadGameplayScreen()
         {
-            // Make sure the absolutely correct map is selected
-            if (OnlineManager.CurrentGame != null)
-            {
-                MultiplayerGameScreen.SelectMultiplayerMap();
-
-                if (MapManager.Selected.Value == null)
-                {
-                    Exit(() => new MultiplayerGameScreen());
-                    return;
-                }
-
-                //Helper.Load(MapManager.Selected.Value);
-                MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
-            }
-
             // Stop the current audio and load it again before moving onto the next state.
             try
             {
