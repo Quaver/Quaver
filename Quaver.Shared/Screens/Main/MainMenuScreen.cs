@@ -100,7 +100,7 @@ namespace Quaver.Shared.Screens.Main
                 return;
 
             HandleKeyPressEscape();
-            HandleKeyPressControlF5();
+            HandleKeyPressF5();
         }
 
         /// <summary>
@@ -117,9 +117,9 @@ namespace Quaver.Shared.Screens.Main
         /// <summary>
         ///		Sets the flag to begin a force refresh of mapsets when entering singleplayer.
         ///	</summary>
-        private void HandleKeyPressControlF5()
+        private void HandleKeyPressF5()
         {
-            if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
 
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
