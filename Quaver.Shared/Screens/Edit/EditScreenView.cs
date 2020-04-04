@@ -306,6 +306,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 CreateOtherDifficultyPlayfield();
                 PositionPlayfields();
+                ResetPanelParents();
             });
         }
 
@@ -379,7 +380,7 @@ namespace Quaver.Shared.Screens.Edit
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;
 
-            Footer.Parent = Container;
+            ResetPanelParents();
         }
 
         /// <summary>
@@ -401,6 +402,18 @@ namespace Quaver.Shared.Screens.Edit
             MapPreview?.Destroy();
             MapPreview = null;
             Playfield.X = 0;
+        }
+
+        /// <summary>
+        ///     To make sure that the panels are always displayed on top
+        /// </summary>
+        private void ResetPanelParents()
+        {
+            Layers.Parent = Container;
+            Details.Parent = Container;
+            CompositionTools.Parent = Container;
+            Hitsounds.Parent = Container;
+            Footer.Parent = Container;
         }
     }
 }
