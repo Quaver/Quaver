@@ -114,6 +114,9 @@ namespace Quaver.Shared.Screens.Main
             DialogManager.Show(new QuitDialog());
         }
 
+        /// <summary>
+        ///		Sets the flag to begin a force refresh of mapsets when entering singleplayer.
+        ///	</summary>
         private void HandleKeyPressControlF5()
         {
             if (!(KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl)))

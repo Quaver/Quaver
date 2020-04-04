@@ -355,6 +355,9 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveLeftPanel.Value = SelectContainerPanel.UserProfile;
         }
 
+        /// <summary>
+        ///		Prompts the user to begin a force refresh for mapsets.
+        ///	</summary>
         private void HandleKeyPressF5()
         {
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
