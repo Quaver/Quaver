@@ -905,6 +905,12 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
+
+            Clipboard.Clear();
+            Clipboard.AddRange(clonedObjects);
+
+            SelectedHitObjects.Clear();
+            SelectedHitObjects.AddRange(clonedObjects);
         }
 
         /// <summary>
