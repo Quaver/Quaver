@@ -450,7 +450,7 @@ namespace Quaver.Shared.Screens.Gameplay
             var game = (QuaverGame) GameBase.Game;
             game.InitializeFpsLimiting();
 
-            if (IsMultiplayerGame)
+            if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
             if (OnlineManager.IsBeingSpectated && !InReplayMode)
