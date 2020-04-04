@@ -54,6 +54,12 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private bool ComingFromSelect { get; set; }
 
+        /// <summary>
+        ///		Used to determine if the importing is a full sync of mapset.
+        ///		Usually performed from F5 in select screen.
+        ///	</summary>
+        private bool FullSync { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -62,9 +68,10 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false)
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false, bool fullSync = false)
         {
             ComingFromSelect = fromSelect;
+            FullSync = fullSync;
             MultiplayerScreen = multiplayerScreen;
 
             PreviouslySelectedMap = MapManager.Selected.Value;
@@ -82,6 +89,9 @@ namespace Quaver.Shared.Screens.Importing
             {
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
                     MapDatabaseCache.ForceUpdateMaps();
+
+                if (FullSync)
+                    MapDatabaseCache.Load(true);
 
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {

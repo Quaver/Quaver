@@ -43,8 +43,11 @@ namespace Quaver.Shared.Database.Maps
             var quaFiles = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories).ToList();
             Logger.Important($"Found {quaFiles.Count} .qua files inside the song directory", LogType.Runtime);
 
-            //SyncMissingOrUpdatedFiles(quaFiles);
-            //AddNonCachedFiles(quaFiles);
+            if (fullSync)
+            {
+                SyncMissingOrUpdatedFiles(quaFiles);
+                AddNonCachedFiles(quaFiles);
+            }
 
             OrderAndSetMapsets();
         }
