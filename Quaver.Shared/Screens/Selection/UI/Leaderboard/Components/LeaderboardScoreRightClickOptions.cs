@@ -40,6 +40,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
         private const string PlayerProfile = "Player Profile";
 
+        private const string SteamProfile = "Steam Profile";
+
         private const string Delete = "Delete";
 
         /// <summary>
@@ -133,6 +135,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                     case PlayerProfile:
                         BrowserHelper.OpenURL($"https://quavergame.com/profile/{Score.Name}");
                         break;
+                    case SteamProfile:
+                        BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{Score.SteamId}");
+                        break;
                 }
             };
         }
@@ -155,6 +160,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             {
                 options.Add(DownloadReplay, ColorHelper.HexToColor("#0FBAE5"));
                 options.Add(PlayerProfile, ColorHelper.HexToColor("#27B06E"));
+                options.Add(SteamProfile, ColorHelper.HexToColor("#0787E3"));
                 return options;
             }
 
