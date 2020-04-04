@@ -470,6 +470,8 @@ namespace Quaver.Shared
 
                 MapManager.RecentlyPlayed.Add(args.Value);
             };
+            
+            InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
         }
 
         /// <summary>
