@@ -53,12 +53,6 @@ namespace Quaver.Shared.Screens.Main
         private bool FlaggedForOsuImport { get; set; }
 
         /// <summary>
-        ///		If true, the user will be taken to the import screen where all of their maps will be synced.
-        ///		This involves removing any deleted maps, updating any out of date maps, and adding non-cached maps.
-        ///	</summary>
-        private bool FlaggedForForceRefresh { get; set; }
-
-        /// <summary>
         /// </summary>
         public MainMenuScreen()
         {
@@ -125,11 +119,7 @@ namespace Quaver.Shared.Screens.Main
             if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
                 return;
 
-            if (!FlaggedForForceRefresh)
-            {
-                FlaggedForForceRefresh = true;
-                NotificationManager.Show(NotificationLevel.Default, "Mapsets will be force refreshed next time you enter singleplayer.");
-            }
+            DialogManager.Show(new RefreshDialog());
         }
 
         /// <summary>
@@ -141,12 +131,6 @@ namespace Quaver.Shared.Screens.Main
             if (MapsetImporter.Queue.Count != 0 || FlaggedForOsuImport)
             {
                 Exit(() => new ImportingScreen());
-                return;
-            }
-
-            if (FlaggedForForceRefresh)
-            {
-                Exit(() => new ImportingScreen(null, true, true));
                 return;
             }
 
