@@ -683,8 +683,11 @@ namespace Quaver.Shared.Screens.Gameplay
 
             if (Screen.Exiting && Screen.Failed)
             {
-                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime)
+                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime && !AudioEngine.Track.IsDisposed)
+                {
                     AudioEngine.Track?.Dispose();
+                    Screen.IsPaused = true;
+                }
 
                 return;
             }
@@ -693,7 +696,9 @@ namespace Quaver.Shared.Screens.Gameplay
             // a red screen.
             if (Screen.Failed && !ScreenChangedToRedOnFailure)
             {
-                Transitioner.FadeTo(1, Easing.Linear, Screen.FailFadeTime);
+                var tint = Screen.HasQuit ? Color.Black : Color.Red;
+                Transitioner.FadeTo(Screen.HasQuit ? 1 : 0.75f, Easing.Linear, Screen.FailFadeTime);
+                Transitioner.Tint = tint;
                 ScreenChangedToRedOnFailure = true;
                 SkinManager.Skin.SoundFailure.CreateChannel().Play();
             }
