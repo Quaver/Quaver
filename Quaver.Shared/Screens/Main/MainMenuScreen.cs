@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -94,6 +95,7 @@ namespace Quaver.Shared.Screens.Main
                 return;
 
             HandleKeyPressEscape();
+            HandleKeyPressF5();
         }
 
         /// <summary>
@@ -105,6 +107,20 @@ namespace Quaver.Shared.Screens.Main
                 return;
 
             DialogManager.Show(new QuitDialog());
+        }
+
+        /// <summary>
+        ///		Sets the flag to begin a force refresh of mapsets when entering singleplayer.
+        ///	</summary>
+        private void HandleKeyPressF5()
+        {
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            DialogManager.Show(new RefreshDialog());
         }
 
         /// <summary>

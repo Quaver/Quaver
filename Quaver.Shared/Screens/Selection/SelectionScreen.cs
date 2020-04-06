@@ -31,6 +31,7 @@ using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -251,6 +252,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF2();
             HandleKeyPressF3();
             HandleKeyPressF4();
+            HandleKeyPressF5();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
@@ -352,6 +354,20 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
             else
                 ActiveLeftPanel.Value = SelectContainerPanel.UserProfile;
+        }
+
+        /// <summary>
+        ///		Prompts the user to begin a force refresh for mapsets.
+        ///	</summary>
+        private void HandleKeyPressF5()
+        {
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            DialogManager.Show(new RefreshDialog());
         }
 
         /// <summary>
