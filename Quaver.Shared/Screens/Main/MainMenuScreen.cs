@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
