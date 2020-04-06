@@ -333,7 +333,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
         /// <summary>
         /// </summary>
-        private const int FAILURE_FADE_TIME = 1500;
+        private const int FAILURE_FADE_TIME = 1700;
 
         /// <summary>
         /// </summary>
