@@ -41,6 +41,9 @@ namespace Quaver.Shared.Screens.Selection.Components
 
             LoadTrackTask = new TaskHandler<int, int>((i, token) =>
             {
+                if (screen != null && screen.Exiting)
+                    return 0;
+
                 LogLoadingTrack();
 
                 if (PlayFromBeginning)
