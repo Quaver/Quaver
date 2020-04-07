@@ -470,7 +470,7 @@ namespace Quaver.Shared
 
                 MapManager.RecentlyPlayed.Add(args.Value);
             };
-            
+
             InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
         }
 
@@ -572,6 +572,37 @@ namespace Quaver.Shared
             HandleKeyPressCtrlS();
             HandleKeyPressAltEnter();
             HandleKeyPressScreenshot();
+            HandleKeyPressCtrlP();
+        }
+
+        private void HandleKeyPressCtrlP()
+        {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl))
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Theatre:
+                    break;
+                default:
+                    // Pause/Unpause music
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    {
+                        if (AudioEngine.Track.IsPaused)
+                        {
+                            AudioEngine.Track.Play();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
+                        }
+                        else if (AudioEngine.Track.IsPlaying)
+                        {
+                            AudioEngine.Track.Pause();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Paused");
+                        }
+                    }
+                    break;
+            }
         }
 
         /// <summary>
