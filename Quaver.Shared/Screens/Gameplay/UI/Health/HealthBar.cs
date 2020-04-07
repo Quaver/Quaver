@@ -36,7 +36,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
         /// <summary>
         ///     Reference to the current score processor.
         /// </summary>
-        private ScoreProcessor Processor { get; }
+        private ScoreProcessor Processor { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -113,6 +113,12 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
             SetHealthBarProgress(gameTime);
             base.Update(gameTime);
         }
+
+        /// <summary>
+        ///     Changes the health bar's processor
+        /// </summary>
+        /// <param name="processor"></param>
+        public void UpdateProcessor(ScoreProcessor processor) => Processor = processor;
 
         /// <summary>
         ///        Moves the shader rect's position/size back and forth based on the user's health.
