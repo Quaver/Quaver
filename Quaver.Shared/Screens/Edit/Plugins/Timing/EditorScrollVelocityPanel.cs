@@ -113,9 +113,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.Dummy(new Vector2(0, 10));
             DrawMultiplierTextbox();
 
+            var isHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
+
             ImGui.Dummy(new Vector2(0, 10));
 
             DrawTable();
+
+            IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
         }
