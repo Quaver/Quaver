@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay
         public void Update(GameTime gameTime)
         {
             // Don't bother updating if the game is paused or the user failed.
-            if (Screen.IsPaused || Screen.Failed)
+            if (Screen.IsPaused)
                 return;
 
             if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted)

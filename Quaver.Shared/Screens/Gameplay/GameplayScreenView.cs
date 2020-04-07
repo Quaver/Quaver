@@ -27,6 +27,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Gameplay.UI;
 using Quaver.Shared.Screens.Gameplay.UI.Counter;
@@ -675,19 +676,31 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <param name="gameTime"></param>
         private void HandlePlayCompletion(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.Exiting || Screen.IsSongSelectPreview)
+            if (!Screen.Failed && !Screen.IsPlayComplete || Screen.IsSongSelectPreview)
                 return;
 
             Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (Screen.Exiting && Screen.Failed)
+            {
+                if (Screen.TimeSincePlayEnded >= Screen.FailFadeTime && !AudioEngine.Track.IsDisposed)
+                {
+                    AudioEngine.Track?.Dispose();
+                    Screen.IsPaused = true;
+                }
+
+                return;
+            }
 
             // If the play was a failure, we want to immediately show
             // a red screen.
             if (Screen.Failed && !ScreenChangedToRedOnFailure)
             {
-                Transitioner.Tint = Color.Red;
-                Transitioner.Alpha = 0.65f;
-
+                var tint = Screen.HasQuit ? Color.Black : Color.Red;
+                Transitioner.FadeTo(Screen.HasQuit ? 1 : 0.75f, Easing.Linear, Screen.FailFadeTime);
+                Transitioner.Tint = tint;
                 ScreenChangedToRedOnFailure = true;
+                SkinManager.Skin.SoundFailure.CreateChannel().Play();
             }
 
             if (!ResultsScreenLoadInitiated)
@@ -755,7 +768,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
 
                     return new ResultScreen(Screen);
-                }, 500);
+                }, Screen.Failed ? Screen.FailFadeTime : 500);
 
                 ResultsScreenLoadInitiated = true;
             }

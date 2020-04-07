@@ -332,6 +332,18 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool IsDisposed { get; private set; }
 
         /// <summary>
+        /// </summary>
+        private const int FAILURE_FADE_TIME = 1700;
+
+        /// <summary>
+        /// </summary>
+        private const int QUIT_FADE_TIME = 800;
+
+        /// <summary>
+        /// </summary>
+        public int FailFadeTime => HasQuit ? QUIT_FADE_TIME : FAILURE_FADE_TIME;
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -900,8 +912,13 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                // Pause the audio if applicable.
-                AudioEngine.Track.Pause();
+                if (!IsPaused && HasStarted)
+                {
+                    // Audio should be pitched when failing to provide a smooth sound.
+                    AudioEngine.Track.ApplyRate(true);
+                    AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
+                    AudioEngine.Track.Fade(0, FailFadeTime);
+                }
             }
             // No need to handle this exception.
             catch (Exception)
@@ -910,9 +927,6 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             CustomAudioSampleCache.StopAll();
-
-            // Play failure sound.
-            SkinManager.Skin.SoundFailure.CreateChannel().Play();
 
             FailureHandled = true;
         }

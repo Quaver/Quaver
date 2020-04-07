@@ -265,7 +265,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (!Screen.IsPaused)
                 return;
 
-            Screen.IsPaused = false;
+            Visible = false;
             Screen.ForceFail = true;
             Screen.HasQuit = true;
 
