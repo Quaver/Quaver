@@ -260,10 +260,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     scrollVelocityPlugin.Initialize();
             }
 
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
 
             ImGui.Separator();
+
+            if (ImGui.MenuItem("Apply Offset To Map"))
+                DialogManager.Show(new EditorApplyOffsetDialog(Screen));
 
             if (ImGui.BeginMenu($"Apply Modifier To Map", Screen.Map.Game == MapGame.Quaver))
             {
