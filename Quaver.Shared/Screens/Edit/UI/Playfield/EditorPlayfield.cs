@@ -102,6 +102,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private BindableInt LongNoteOpacity { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<bool> PlaceObjectsOnNearestTick { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -277,7 +281,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, bool isUneditable = false)
+            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -295,6 +299,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedHitObjects = selectedHitObjects;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
+            PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -690,8 +695,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                     return time;
 
                 var snapTimePerBeat = 60000f / point.Bpm / beatSnap;
-                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+
+                if (PlaceObjectsOnNearestTick.Value)
+                    return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+
+                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time - snapTimePerBeat);
             }
+
+            if (!PlaceObjectsOnNearestTick.Value)
+                return timeBwd;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
