@@ -437,21 +437,6 @@ namespace Quaver.Shared.Screens.Selection
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
 
-            // Pause/Unpause music
-            if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
-            {
-                if (AudioEngine.Track.IsPaused)
-                {
-                    AudioEngine.Track.Play();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
-                }
-                else if (AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track.Pause();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Paused");
-                }
-            }
-
             ChangeScrollSpeed();
         }
 
