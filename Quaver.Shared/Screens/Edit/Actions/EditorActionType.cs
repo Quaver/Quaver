@@ -32,6 +32,7 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ChangeTimingPointBpmBatch,
         ChangeTimingPointOffsetBatch,
         ChangeScrollVelocityOffsetBatch,
-        ChangeScrollVelocityMultiplierBatch
+        ChangeScrollVelocityMultiplierBatch,
+        ApplyOffset
     }
 }
