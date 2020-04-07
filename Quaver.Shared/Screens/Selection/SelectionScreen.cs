@@ -632,7 +632,7 @@ namespace Quaver.Shared.Screens.Selection
             if (MapManager.Selected.Value == null)
                 return;
 
-            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+            if (AudioEngine.Track != null && !AudioEngine.Track.IsStopped)
                 AudioEngine.Track.Stop();
 
             if (OnlineManager.CurrentGame != null)

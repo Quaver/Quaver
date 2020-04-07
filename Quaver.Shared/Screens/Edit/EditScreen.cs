@@ -373,8 +373,15 @@ namespace Quaver.Shared.Screens.Edit
             {
                 Track = track;
                 Track.ApplyRate(ConfigManager.Pitched?.Value ?? true);
-                AudioEngine.Track = Track;
-                AudioEngine.Map = Map;
+
+                lock (AudioEngine.Track)
+                {
+                    if (!AudioEngine.Track.IsDisposed)
+                        AudioEngine.Track.Dispose();
+
+                    AudioEngine.Track = Track;
+                    AudioEngine.Map = Map;
+                }
             }
 
             Track.Seeked += OnTrackSeeked;
