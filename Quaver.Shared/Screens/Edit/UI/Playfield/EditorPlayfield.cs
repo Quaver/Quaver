@@ -1060,7 +1060,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var hitObject = GetHoveredHitObject();
 
-            if (hitObject == null)
+            if (hitObject == null && !KeyboardManager.IsCtrlDown())
                 SelectedHitObjects.Clear();
 
             if (Tool.Value == EditorCompositionTool.Select || Tool.Value == EditorCompositionTool.LongNote)
