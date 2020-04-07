@@ -583,14 +583,10 @@ namespace Quaver.Shared
 
             switch (CurrentScreen?.Type)
             {
-                case QuaverScreenType.Menu:
-                case QuaverScreenType.Results:
-                case QuaverScreenType.Select:
-                case QuaverScreenType.Importing:
-                case QuaverScreenType.Download:
-                case QuaverScreenType.Lobby:
-                case QuaverScreenType.Multiplayer:
-                case QuaverScreenType.Music:
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Theatre:
+                    break;
+                default:
                     // Pause/Unpause music
                     if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
                     {
@@ -605,8 +601,6 @@ namespace Quaver.Shared
                             NotificationManager.Show(NotificationLevel.Info, "Music Paused");
                         }
                     }
-                    break;
-                default:
                     break;
             }
         }
