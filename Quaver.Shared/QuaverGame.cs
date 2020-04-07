@@ -577,6 +577,10 @@ namespace Quaver.Shared
 
         private void HandleKeyPressCtrlP()
         {
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
+                !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl))
+                return;
+
             switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Menu:
