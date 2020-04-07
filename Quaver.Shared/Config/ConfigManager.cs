@@ -490,6 +490,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorPlaceObjectsOnNearestTick { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static BindableInt EditorLongNoteOpacity { get; private set; }
 
         /// <summary>
@@ -841,6 +845,7 @@ namespace Quaver.Shared.Config
             EditorLongNoteOpacity = ReadInt(@"EditorLongNoteOpacity", 100, 30, 100, data);
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
+            EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -987,6 +992,7 @@ namespace Quaver.Shared.Config
                     EditorLongNoteOpacity.ValueChanged += AutoSaveConfiguration;
                     GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
                     EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
+                    EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

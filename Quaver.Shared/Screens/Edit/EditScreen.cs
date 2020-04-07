@@ -170,6 +170,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> PlaceObjectsOnNearestTick { get; } = ConfigManager.EditorPlaceObjectsOnNearestTick ?? new Bindable<bool>(true);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
@@ -341,6 +345,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
                 LongNoteOpacity.Dispose();
+
+            if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
+                PlaceObjectsOnNearestTick.Dispose();
 
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
