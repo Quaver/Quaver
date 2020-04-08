@@ -530,22 +530,24 @@ namespace Quaver.Shared.Screens.Selection
 
             var changed = false;
 
+            var speedIncrease = KeyboardManager.IsShiftDown() ? 1 : 10;
+
             // Change scroll speed down
             if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
             {
-                scrollSpeed.Value--;
+                scrollSpeed.Value -= speedIncrease;
                 changed = true;
             }
             else if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
             {
-                scrollSpeed.Value++;
+                scrollSpeed.Value += speedIncrease;
                 changed = true;
             }
 
             if (changed)
             {
                 NotificationManager.Show(NotificationLevel.Info, $"Your {ModeHelper.ToShortHand(MapManager.Selected.Value.Mode)} " +
-                                                                 $"scroll speed has been changed to: {scrollSpeed.Value}");
+                                                                 $"scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
             }
         }
 

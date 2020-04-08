@@ -339,39 +339,32 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (Ruleset.Screen.IsSongSelectPreview || Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip && !(Ruleset.Screen is TournamentGameplayScreen) && !Ruleset.Screen.InReplayMode)
                 return;
 
-            // Decrease
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-            {
-                switch (Ruleset.Screen.Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        ConfigManager.ScrollSpeed4K.Value--;
-                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
-                        break;
-                    case GameMode.Keys7:
-                        ConfigManager.ScrollSpeed7K.Value--;
-                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
-                        break;
-                }
+            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value) &&
+                !KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                return;
 
-                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
-            }
-            // Increase
-            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+            var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
+            BindableInt scrollSpeed;
+
+            switch (Ruleset.Screen.Map.Mode)
             {
-                switch (Ruleset.Screen.Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        ConfigManager.ScrollSpeed4K.Value++;
-                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
-                        break;
-                    case GameMode.Keys7:
-                        ConfigManager.ScrollSpeed7K.Value++;
-                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
-                        break;
-                }
-                ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
+                case GameMode.Keys4:
+                    scrollSpeed = ConfigManager.ScrollSpeed4K;
+                    break;
+                case GameMode.Keys7:
+                    scrollSpeed = ConfigManager.ScrollSpeed7K;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
+            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+                scrollSpeed.Value += speedIncrease;
+            else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+                scrollSpeed.Value -= speedIncrease;
+
+            NotificationManager.Show(NotificationLevel.Info, $"Scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
+            ((HitObjectManagerKeys)Ruleset.HitObjectManager).ForceUpdateLNSize();
         }
 
         /// <summary>
