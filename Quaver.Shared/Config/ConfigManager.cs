@@ -850,7 +850,7 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
-            VisualOffset = ReadInt(@"VisualOffset", 0, -200, 200, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
