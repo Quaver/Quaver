@@ -29,6 +29,7 @@ using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Menu;
+using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -139,6 +140,10 @@ namespace Quaver.Shared
         /// <summary>
         /// </summary>
         public OnlineChat OnlineChat { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public FpsCounter Fps { get; private set; }
 
         /// <summary>
         ///     The current activated screen.
@@ -368,6 +373,7 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            UpdateFpsCounterPosition();
         }
 
         /// <inheritdoc />
@@ -501,18 +507,17 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
-                X = -5,
-                Y = -36,
+                X = -14,
                 Visible = false
             };
 
-            ShowFpsCounter(fpsCounter);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(fpsCounter);
+            ShowFpsCounter(Fps);
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(Fps);
         }
 
         /// <summary>
@@ -806,6 +811,16 @@ namespace Quaver.Shared
             }
 
             WindowActiveInPreviousFrame = IsActive;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void UpdateFpsCounterPosition()
+        {
+            Fps.Y = -MenuBorder.HEIGHT - 10;
+
+            if (CurrentScreen?.Type == QuaverScreenType.Gameplay)
+                Fps.Y = -10;
         }
 
         /// <summary>
