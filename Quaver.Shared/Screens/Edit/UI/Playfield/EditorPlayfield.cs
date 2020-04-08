@@ -1158,8 +1158,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void HandleRightClick()
         {
             if (!MouseManager.IsUniquePress(MouseButton.Right))
-                return;
+            {
+                if (MouseManager.CurrentState.RightButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
+                    RemoveHoveredHitObject();
 
+                return;
+            }
+
+            RemoveHoveredHitObject();
+        }
+
+        /// <summary>
+        ///     Removes the object that is currently hovered by the mouse
+        /// </summary>
+        private void RemoveHoveredHitObject()
+        {
             var ho = GetHoveredHitObject();
 
             if (ho == null)
