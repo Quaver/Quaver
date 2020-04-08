@@ -367,7 +367,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = ObjectHelper.DeepClone(map);
-                testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+                testingQua.HitObjects.RemoveAll(x => x.StartTime + 2 < playTestTime);
                 Qua.RestoreDefaultValues(testingQua);
 
                 Map = testingQua;
