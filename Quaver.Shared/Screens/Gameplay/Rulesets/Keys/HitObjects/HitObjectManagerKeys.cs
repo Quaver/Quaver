@@ -848,6 +848,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
+            Update(new GameTime());
         }
 
         /// <summary>
