@@ -1056,7 +1056,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void HandleLeftMouseClick()
         {
             if (!MouseManager.IsUniquePress(MouseButton.Left))
+            {
+                if (MouseManager.CurrentState.LeftButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
+                {
+                    if (Tool.Value == EditorCompositionTool.Note)
+                        HandleHitObjectPlacement();
+                }
+
                 return;
+            }
 
             var hitObject = GetHoveredHitObject();
 
