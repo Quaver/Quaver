@@ -259,7 +259,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTrackRateChanged(object sender, TrackRateChangedEventArgs e)
-            => PlaybackSpeed.Value.Text = $"{(int) (Track.Rate * 100)}%";
+            => ScheduleUpdate(() => PlaybackSpeed.Value.Text = $"{(int) (Track.Rate * 100)}%");
 
         /// <summary>
         /// </summary>
