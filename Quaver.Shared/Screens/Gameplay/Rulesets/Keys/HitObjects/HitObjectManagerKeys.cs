@@ -833,7 +833,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition + ConfigManager.VisualOffset.Value, CurrentSvIndex);
         }
 
         /// <summary>

@@ -139,7 +139,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
-                        new OptionsItemSliderGlobalOffset(containerRect, "Global Offset", ConfigManager.GlobalAudioOffset),
+                        new OptionsItemSliderGlobalOffset(containerRect, "Global Audio Offset", ConfigManager.GlobalAudioOffset),
+                        new OptionsSlider(containerRect, "Visual Offset", ConfigManager.VisualOffset, i => $"{i} ms"),
                         new OptionsItemCalibrateOffset(containerRect, "Calibrate Offset")
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
