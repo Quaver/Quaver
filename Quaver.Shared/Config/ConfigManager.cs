@@ -505,6 +505,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EditorDisplayGameplayPreview { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static BindableInt VisualOffset { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -846,6 +850,7 @@ namespace Quaver.Shared.Config
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -200, 200, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -993,6 +998,7 @@ namespace Quaver.Shared.Config
                     GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
                     EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
                     EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
+                    VisualOffset.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

@@ -1491,17 +1491,33 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Handle offset +
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                 {
-                    MapManager.Selected.Value.LocalOffset += change;
-                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value += change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset += change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    }
                 }
 
                 // Handle offset -
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                 {
-                    MapManager.Selected.Value.LocalOffset -= change;
-                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value -= change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset -= change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    }
                 }
             }
         }
