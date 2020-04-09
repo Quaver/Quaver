@@ -700,7 +700,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 Transitioner.FadeTo(Screen.HasQuit ? 1 : 0.75f, Easing.Linear, Screen.FailFadeTime);
                 Transitioner.Tint = tint;
                 ScreenChangedToRedOnFailure = true;
-                SkinManager.Skin.SoundFailure.CreateChannel().Play();
+
+                if (!Screen.HasQuit)
+                    SkinManager.Skin.SoundFailure.CreateChannel().Play();
             }
 
             if (!ResultsScreenLoadInitiated)
