@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
@@ -538,8 +539,16 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 var hl = new HitLighting()
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Visible = false
+                    Visible = false,
+                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight),
+                    Position = new ScalableVector2(Skin.HitLightingX, Skin.HitLightingY)
                 };
+
+                var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
+                    Receptors[i].ScreenRectangle);
+
+                hl.X = pos.X - Playfield.ForegroundContainer.ScreenRectangle.X;
+                hl.Y = pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y;
 
                 // Set the spritebatch options for the hitlighting in this case
                 // if it's the first object.
@@ -548,18 +557,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // Use the previous object's spritebatch options so all of them use the same batch.
                 else
                     hl.UsePreviousSpriteBatchOptions = true;
-
-                // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
-                // otherwise we'll use the one from their skin config.
-                hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
-
-                var hitlightingY = Skin.HitLightingY;
-
-                if (Screen.IsSongSelectPreview)
-                    hitlightingY = Screen.Map.GetKeyCount() * (GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount());
-
-                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f - hl.Width / 2f + Skin.HitLightingX,
-                    HitPositionOverlay.Y - hl.Width / 2f + hitlightingY);
 
                 HitLightingObjects.Add(hl);
             }
