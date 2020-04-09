@@ -915,10 +915,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 if (!IsPaused && HasStarted)
                 {
                     if (HasQuit && AudioEngine.Track.IsPlaying)
-                    {
-                        IsPaused = true;
                         AudioEngine.Track.Fade(0, FailFadeTime);
-                    }
                     else
                     {
                         // Audio should be pitched when failing to provide a smooth sound.
