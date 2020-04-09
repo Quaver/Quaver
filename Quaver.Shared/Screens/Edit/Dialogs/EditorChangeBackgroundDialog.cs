@@ -22,7 +22,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     if (ConfigManager.SongDirectory == null)
                         throw new InvalidOperationException("Song directory is null. Visual testing?");
 
-                    File.Copy(file, $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}/{name}", true);
+                    try
+                    {
+                        File.Copy(file, $"{ConfigManager.SongDirectory.Value}/{screen.Map.Directory}/{name}", true);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
 
                     screen.WorkingMap.BackgroundFile = name;
                     screen.Map.BackgroundPath = name;
