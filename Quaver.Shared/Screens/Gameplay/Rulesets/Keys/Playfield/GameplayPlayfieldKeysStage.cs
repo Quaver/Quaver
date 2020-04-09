@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Quaver.API.Enums;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
@@ -537,13 +538,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 var hl = new HitLighting()
                 {
-                    Parent = Receptors[i],
-                    Alignment = Alignment.MidCenter,
+                    Parent = Playfield.ForegroundContainer,
                     Visible = false,
-                    Y = Skin.HitLightingY,
-                    X = Skin.HitLightingX,
-                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight)
+                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight),
+                    Position = new ScalableVector2(Skin.HitLightingX, Skin.HitLightingY)
                 };
+
+                var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
+                    Receptors[i].ScreenRectangle);
+
+                hl.X = pos.X - Playfield.ForegroundContainer.ScreenRectangle.X;
+                hl.Y = pos.Y - Playfield.ForegroundContainer.ScreenRectangle.Y;
 
                 // Set the spritebatch options for the hitlighting in this case
                 // if it's the first object.
