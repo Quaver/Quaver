@@ -1505,7 +1505,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     {
                         MapManager.Selected.Value.LocalOffset += change;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
 
@@ -1521,7 +1521,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     {
                         MapManager.Selected.Value.LocalOffset -= change;
                         NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                        MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
                     }
                 }
             }
