@@ -169,6 +169,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
             foreach (var tp in Map.TimingPoints)
             {
+                if (tp.StartTime > Track.Length)
+                    continue;
+
                 var pointLength = Map.GetTimingPointLength(tp);
                 var startTime = tp.StartTime;
                 var numBeatsOffsetted = 0;
