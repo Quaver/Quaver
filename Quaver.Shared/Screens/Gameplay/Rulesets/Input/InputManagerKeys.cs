@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
                     break;
                 // Handle non-miss cases. Perform Hit Lighting Animation and Handle Object pooling.
                 default:
-                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(gameplayHitObject.Info.IsLongNote);
+                    playfield.Stage.HitLightingObjects[lane].PerformHitAnimation(gameplayHitObject.Info.IsLongNote, judgement);
                     if (gameplayHitObject.Info.IsLongNote)
                     {
                         manager.ChangePoolObjectStatusToHeld(gameplayHitObject);

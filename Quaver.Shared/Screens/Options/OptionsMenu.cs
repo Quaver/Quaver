@@ -243,7 +243,8 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Configuration", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Note & Receptor Size Scale", ConfigManager.GameplayNoteScale, i => $"{i / 100f:0.00}x")
-                            { Tags = new List<string>() {  "mini" }}
+                            { Tags = new List<string>() {  "mini" }},
+                        new OptionsItemCheckbox(containerRect, "Tint Hitlighitng Based On Judgement Color", ConfigManager.TintHitLightingBasedOnJudgementColor)
                     })
                 }),
                 new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>

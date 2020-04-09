@@ -215,6 +215,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
+        ///     If true, the hitlighting will be tinted to the judgement color in the skin
+        /// </summary>
+        internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
+
+        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
@@ -851,6 +856,7 @@ namespace Quaver.Shared.Config
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
             EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -999,6 +1005,7 @@ namespace Quaver.Shared.Config
                     EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
                     EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
                     VisualOffset.ValueChanged += AutoSaveConfiguration;
+                    TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
