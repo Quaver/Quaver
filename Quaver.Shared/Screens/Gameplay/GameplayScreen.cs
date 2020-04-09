@@ -917,7 +917,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     if (HasQuit && AudioEngine.Track.IsPlaying)
                     {
                         IsPaused = true;
-                        AudioEngine.Track.Pause();
+                        AudioEngine.Track.Fade(0, FailFadeTime);
                     }
                     else
                     {
