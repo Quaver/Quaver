@@ -24,6 +24,10 @@ namespace Quaver.Shared.Screens.Options
     {
         /// <summary>
         /// </summary>
+        public static string LastOpenedSection { get; set; } = "Video";
+
+        /// <summary>
+        /// </summary>
         private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = ""};
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace Quaver.Shared.Screens.Options
             CreateContentContainers();
             CreateHeader();
 
+            SelectedSection.Value = Sections.Find(x => x.Name == LastOpenedSection) ?? Sections.First();
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
             CurrentSearchQuery.ValueChanged += OnSearchChanged;
