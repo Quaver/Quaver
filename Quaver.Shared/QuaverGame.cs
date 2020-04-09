@@ -819,8 +819,8 @@ namespace Quaver.Shared
         {
             Fps.Y = -MenuBorder.HEIGHT - 10;
 
-            if (CurrentScreen?.Type == QuaverScreenType.Gameplay)
-                Fps.Y = -10;
+            if (CurrentScreen?.Type == QuaverScreenType.Editor)
+                Fps.Y = -MenuBorder.HEIGHT - 50;
         }
 
         /// <summary>
