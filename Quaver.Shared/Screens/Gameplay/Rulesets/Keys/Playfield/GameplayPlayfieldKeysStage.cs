@@ -537,8 +537,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             {
                 var hl = new HitLighting()
                 {
-                    Parent = Playfield.ForegroundContainer,
-                    Visible = false
+                    Parent = Receptors[i],
+                    Alignment = Alignment.MidCenter,
+                    Visible = false,
+                    Y = Skin.HitLightingY,
+                    X = Skin.HitLightingX,
+                    Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight)
                 };
 
                 // Set the spritebatch options for the hitlighting in this case
@@ -548,18 +552,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 // Use the previous object's spritebatch options so all of them use the same batch.
                 else
                     hl.UsePreviousSpriteBatchOptions = true;
-
-                // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
-                // otherwise we'll use the one from their skin config.
-                hl.Size = new ScalableVector2(Skin.HitLightingWidth, Skin.HitLightingHeight);
-
-                var hitlightingY = Skin.HitLightingY;
-
-                if (Screen.IsSongSelectPreview)
-                    hitlightingY = Screen.Map.GetKeyCount() * (GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount());
-
-                hl.Position = new ScalableVector2(Receptors[i].X + Receptors[i].Width / 2f - hl.Width / 2f + Skin.HitLightingX,
-                    HitPositionOverlay.Y - hl.Width / 2f + hitlightingY);
 
                 HitLightingObjects.Add(hl);
             }
