@@ -337,7 +337,7 @@ namespace Quaver.Shared.Screens.Gameplay
 
         /// <summary>
         /// </summary>
-        private const int QUIT_FADE_TIME = 800;
+        private const int QUIT_FADE_TIME = 400;
 
         /// <summary>
         /// </summary>
@@ -914,10 +914,18 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 if (!IsPaused && HasStarted)
                 {
-                    // Audio should be pitched when failing to provide a smooth sound.
-                    AudioEngine.Track.ApplyRate(true);
-                    AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
-                    AudioEngine.Track.Fade(0, FailFadeTime);
+                    if (HasQuit && AudioEngine.Track.IsPlaying)
+                    {
+                        IsPaused = true;
+                        AudioEngine.Track.Pause();
+                    }
+                    else
+                    {
+                        // Audio should be pitched when failing to provide a smooth sound.
+                        AudioEngine.Track.ApplyRate(true);
+                        AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
+                        AudioEngine.Track.Fade(0, FailFadeTime);
+                    }
                 }
             }
             // No need to handle this exception.
