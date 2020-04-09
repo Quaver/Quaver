@@ -172,6 +172,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                 if (tp.StartTime > Track.Length)
                     continue;
 
+                if (float.IsInfinity(tp.Bpm))
+                    continue;
+
                 var pointLength = Map.GetTimingPointLength(tp);
                 var startTime = tp.StartTime;
                 var numBeatsOffsetted = 0;
