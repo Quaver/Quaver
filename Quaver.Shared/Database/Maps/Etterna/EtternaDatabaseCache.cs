@@ -12,6 +12,8 @@ namespace Quaver.Shared.Database.Maps.Etterna
 {
     public class EtternaDatabaseCache
     {
+        private static readonly string cacheDatabaseRegularExpression = @"[\\/]Cache[\\/]cache\.db$";
+
         public static List<OtherGameMap> Load()
         {
             if (string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
@@ -52,7 +54,10 @@ namespace Quaver.Shared.Database.Maps.Etterna
                         continue;
 
                     var song = songDictionary[step.StepFileName];
-                    var etternaDirectory = ConfigManager.EtternaDbPath.Value.Split("Etterna")[0] + "Etterna";
+
+                    // Trim the cache.db off the end using a regular expression.
+                    // The path to the DB file should be constant.
+                    var etternaDirectory = Regex.Replace(ConfigManager.EtternaDbPath.Value, cacheDatabaseRegularExpression, "");
 
                     var map = new OtherGameMap()
                     {
