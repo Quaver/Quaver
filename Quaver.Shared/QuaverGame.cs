@@ -582,8 +582,7 @@ namespace Quaver.Shared
 
         private void HandleKeyPressCtrlP()
         {
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
-                !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl))
+            if (!KeyboardManager.IsCtrlDown())
                 return;
 
             switch (CurrentScreen?.Type)
