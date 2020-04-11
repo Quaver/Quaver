@@ -62,6 +62,11 @@ namespace Quaver.Shared.Screens.Result.UI
         private Sprite Grade { get; set; }
 
         /// <summary>
+        ///     Displays the ruleset/keymode of the map.
+        /// </summary>
+        private SpriteTextBitmap Keymode { get; set; }
+
+        /// <summary>
         ///     Quick reference to the selected map.
         /// </summary>
         private static Map Map => MapManager.Selected.Value;
@@ -81,6 +86,7 @@ namespace Quaver.Shared.Screens.Result.UI
             CreateMapCreator();
             CreatePlayerName();
             CreateGrade();
+            CreateKeymode();
 
             BackgroundHelper.Loaded += OnBackgroundLoaded;
         }
@@ -111,6 +117,16 @@ namespace Quaver.Shared.Screens.Result.UI
             Thumbnail.AddBorder(ColorHelper.HexToColor("#236f9c"));
             UpdateThumbnailImage();
         }
+
+        private void CreateKeymode() => Keymode = new SpriteTextBitmap(FontsBitmap.GothamRegular, Screen.ScoreProcessor.Map.GetKeyCount().ToString() + "K")
+        {
+            Parent = this,
+            Alignment = Alignment.MidLeft,
+            X = 25,
+            Y = 40,
+            FontSize = 40,
+            Size = new ScalableVector2(222, 110)
+        };
 
         /// <summary>
         ///     Updates the thumbnail whenever we've received a new one.

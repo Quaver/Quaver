@@ -25,7 +25,7 @@ namespace Quaver.Shared.Helpers
         /// </summary>
         /// <param name="rating"></param>
         /// <returns></returns>
-        internal static string RatingToString(double rating) => rating.ToString("00.00");
+        internal static string RatingToString(double rating) => rating.ToString("0.00");
 
         /// <summary>
         ///     Converts an accuracy percentage into a string.

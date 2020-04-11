@@ -131,6 +131,7 @@ namespace Quaver.Shared.Screens.Result
         /// <param name="e"></param>
         private void OnBackgroundBlurred(object sender, BackgroundBlurredEventArgs e)
         {
+            
             HandleBackgroundChange();
         }
 
@@ -180,7 +181,6 @@ namespace Quaver.Shared.Screens.Result
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
             };
-
             MapInformation.Y = -MapInformation.Height;
             MapInformation.MoveToY(46 + 20, Easing.OutQuint, 800);
         }
