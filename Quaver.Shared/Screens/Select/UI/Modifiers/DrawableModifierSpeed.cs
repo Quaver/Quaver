@@ -18,6 +18,7 @@ using Quaver.Shared.Online;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
+using Quaver.Shared.Graphics.Notifications;
 
 namespace Quaver.Shared.Screens.Select.UI.Modifiers
 {
@@ -140,8 +141,7 @@ namespace Quaver.Shared.Screens.Select.UI.Modifiers
         /// <param name="val"></param>
         /// <param name="index"></param>
         private static void OnSelected(string val, int index)
-        {
-
+        {  
             if (val == "1.0x")
             {
                 ModManager.RemoveSpeedMods();
