@@ -863,7 +863,10 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
-            if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
+            var timeSincePlay = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - TimePlayed;
+            var lastRecCom = (timeSincePlay < 10000) ? 1 : 20;
+
+            if ((LastRecordedCombo >= lastRecCom) && Ruleset.ScoreProcessor.Combo == 0)
                 SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
