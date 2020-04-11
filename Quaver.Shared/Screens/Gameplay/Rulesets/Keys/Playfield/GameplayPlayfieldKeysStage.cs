@@ -587,8 +587,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     HealthBar.Y = -10;
                     break;
                 case HealthBarKeysAlignment.TopLeft:
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    HealthBar.Parent = Playfield.Container;
+                    HealthBar.Alignment = Alignment.TopLeft;
+                    break;
             }
 
             HealthBar.X += Skin.HealthBarPosOffsetX;
