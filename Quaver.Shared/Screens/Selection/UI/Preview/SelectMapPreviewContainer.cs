@@ -127,6 +127,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 Track.Seeked += OnTrackSeeked;
         }
 
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
