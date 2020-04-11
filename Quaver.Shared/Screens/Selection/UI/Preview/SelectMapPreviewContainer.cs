@@ -397,9 +397,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// <param name="e"></param>
         ///
 
-
-        private ModIdentifier previousMods = ModIdentifier.None;
-
         private bool IsSpeedMod(ModsChangedEventArgs e)
         {
             var isSpeedMod = e.ChangedMods == ModIdentifier.Speed05X || e.ChangedMods == ModIdentifier.Speed055X ||
@@ -407,7 +404,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                              e.ChangedMods == ModIdentifier.Speed07X || e.ChangedMods == ModIdentifier.Speed075X ||
                              e.ChangedMods == ModIdentifier.Speed08X || e.ChangedMods == ModIdentifier.Speed085X ||
                              e.ChangedMods == ModIdentifier.Speed09X || e.ChangedMods == ModIdentifier.Speed095X ||
-                             e.ChangedMods == ModIdentifier.None || e.ChangedMods == ModIdentifier.Speed105X ||
+                             e.Type.HasFlag(ModChangeType.RemoveSpeed) || e.ChangedMods == ModIdentifier.Speed105X ||
                              e.ChangedMods == ModIdentifier.Speed11X || e.ChangedMods == ModIdentifier.Speed115X ||
                              e.ChangedMods == ModIdentifier.Speed12X || e.ChangedMods == ModIdentifier.Speed125X ||
                              e.ChangedMods == ModIdentifier.Speed13X || e.ChangedMods == ModIdentifier.Speed135X ||
@@ -425,10 +422,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
-            
-            if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
-                || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
+            if ((e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
+                || e.ChangedMods.HasFlag(ModIdentifier.Randomize)) && !e.ChangedMods.HasFlag(ModIdentifier.None))
             {
+                NotificationManager.Show(NotificationLevel.Info, e.ChangedMods.ToString());
                 return;
             }
             else
@@ -438,7 +435,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             var isSpeedMod = IsSpeedMod(e);
 
-            NotificationManager.Show(NotificationLevel.Info, (e.ChangedMods == ModIdentifier.None).ToString());
+            NotificationManager.Show(NotificationLevel.Info, e.ChangedMods.ToString());
 
             if (isSpeedMod)
             {
@@ -451,7 +448,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             // Reload the entire
             RunLoadTask();
-            previousMods = e.Mods;
         }
 
         /// <summary>

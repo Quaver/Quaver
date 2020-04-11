@@ -18,7 +18,7 @@ using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Wobble.Logging;
 using Wobble.Managers;
-using Quaver.Shared.Graphics.Notifications;
+//using Quaver.Shared.Graphics.Notifications;
 
 namespace Quaver.Shared.Modifiers
 {
@@ -166,7 +166,6 @@ namespace Quaver.Shared.Modifiers
         /// </summary>
         public static void RemoveMod(ModIdentifier modIdentifier, bool updateMultiplayerMods = false)
         {
-            NotificationManager.Show(NotificationLevel.Info, "ModRemoved");
             try
             {
                 // Try to find the removed gameplayModifier in the list
@@ -217,6 +216,7 @@ namespace Quaver.Shared.Modifiers
         /// <param name="rate"></param>
         public static void AddSpeedMods(float rate)
         {
+            Console.WriteLine("AddSpeedMods called");
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (rate == 1.0f)
             {
@@ -252,6 +252,8 @@ namespace Quaver.Shared.Modifiers
 
                 ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(ModChangeType.RemoveSpeed, Mods,
                     ModIdentifier.None));
+
+                
 
                 Logger.Debug("Removed all speed modifiers", LogType.Runtime, false);
             }

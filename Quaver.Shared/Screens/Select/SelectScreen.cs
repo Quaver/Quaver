@@ -328,6 +328,7 @@ namespace Quaver.Shared.Screens.Select
         /// <returns></returns>
         private static float GetNextRate(bool faster)
         {
+            NotificationManager.Show(NotificationLevel.Info, "RateChange");
             var current = ModHelper.GetRateFromMods(ModManager.Mods);
             var adjustment = 0.1f;
 
@@ -344,6 +345,7 @@ namespace Quaver.Shared.Screens.Select
         /// </summary>
         public static void HandleKeyPressControlRateChange()
         {
+            NotificationManager.Show(NotificationLevel.Info, "cntrl");
             if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) &&
                 !KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
                 return;
