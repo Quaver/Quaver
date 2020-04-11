@@ -424,7 +424,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
             if ((e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
-                || e.ChangedMods.HasFlag(ModIdentifier.Randomize)) && !e.ChangedMods.HasFlag(ModIdentifier.None))
+                || e.ChangedMods.HasFlag(ModIdentifier.Randomize)) &&
+                !e.ChangedMods.HasFlag(ModIdentifier.None))
             {
                 return;
             }
