@@ -425,7 +425,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             if ((e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
                 || e.ChangedMods.HasFlag(ModIdentifier.Randomize)) && !e.ChangedMods.HasFlag(ModIdentifier.None))
             {
-                NotificationManager.Show(NotificationLevel.Info, e.ChangedMods.ToString());
                 return;
             }
             else
@@ -434,8 +433,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
             }
 
             var isSpeedMod = IsSpeedMod(e);
-
-            NotificationManager.Show(NotificationLevel.Info, e.ChangedMods.ToString());
 
             if (isSpeedMod)
             {

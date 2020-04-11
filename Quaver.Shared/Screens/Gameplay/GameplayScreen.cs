@@ -870,7 +870,6 @@ namespace Quaver.Shared.Screens.Gameplay
             var FirstMiss = Ruleset.ScoreProcessor.CurrentJudgements[Judgement.Miss] == 1 && !hasCBIntro;
 
             if ((LastRecordedCombo > 20 || FirstMiss) && Ruleset.ScoreProcessor.Combo == 0 && !IsPlayComplete)
-                NotificationManager.Show(NotificationLevel.Info, "cb");
                 SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
 
             if (FirstMiss)
