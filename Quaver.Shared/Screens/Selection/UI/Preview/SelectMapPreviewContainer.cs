@@ -11,6 +11,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
@@ -394,17 +395,50 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        ///
+
+
+        private ModIdentifier previousMods = ModIdentifier.None;
+
+        private bool IsSpeedMod(ModsChangedEventArgs e)
+        {
+            var isSpeedMod = e.ChangedMods == ModIdentifier.Speed05X || e.ChangedMods == ModIdentifier.Speed055X ||
+                             e.ChangedMods == ModIdentifier.Speed06X || e.ChangedMods == ModIdentifier.Speed065X ||
+                             e.ChangedMods == ModIdentifier.Speed07X || e.ChangedMods == ModIdentifier.Speed075X ||
+                             e.ChangedMods == ModIdentifier.Speed08X || e.ChangedMods == ModIdentifier.Speed085X ||
+                             e.ChangedMods == ModIdentifier.Speed09X || e.ChangedMods == ModIdentifier.Speed095X ||
+                             e.ChangedMods == ModIdentifier.None || e.ChangedMods == ModIdentifier.Speed105X ||
+                             e.ChangedMods == ModIdentifier.Speed11X || e.ChangedMods == ModIdentifier.Speed115X ||
+                             e.ChangedMods == ModIdentifier.Speed12X || e.ChangedMods == ModIdentifier.Speed125X ||
+                             e.ChangedMods == ModIdentifier.Speed13X || e.ChangedMods == ModIdentifier.Speed135X ||
+                             e.ChangedMods == ModIdentifier.Speed14X || e.ChangedMods == ModIdentifier.Speed145X ||
+                             e.ChangedMods == ModIdentifier.Speed15X || e.ChangedMods == ModIdentifier.Speed155X ||
+                             e.ChangedMods == ModIdentifier.Speed16X || e.ChangedMods == ModIdentifier.Speed165X ||
+                             e.ChangedMods == ModIdentifier.Speed17X || e.ChangedMods == ModIdentifier.Speed175X ||
+                             e.ChangedMods == ModIdentifier.Speed18X || e.ChangedMods == ModIdentifier.Speed185X ||
+                             e.ChangedMods == ModIdentifier.Speed19X || e.ChangedMods == ModIdentifier.Speed195X ||
+                             e.ChangedMods == ModIdentifier.Speed20X;
+            // whew
+
+            return isSpeedMod;
+        }
+
         private void OnModsChanged(object sender, ModsChangedEventArgs e)
         {
+            
             if (e.ChangedMods.HasFlag(ModIdentifier.Autoplay) || e.ChangedMods.HasFlag(ModIdentifier.Coop)
                 || e.ChangedMods.HasFlag(ModIdentifier.Randomize))
             {
                 return;
             }
+            else
+            {
+                
+            }
 
-            var isSpeedMod = e.ChangedMods >= ModIdentifier.Speed05X && e.ChangedMods <= ModIdentifier.Speed20X ||
-                             e.ChangedMods >= ModIdentifier.Speed055X && e.ChangedMods <= ModIdentifier.Speed095X ||
-                             e.ChangedMods >= ModIdentifier.Speed105X && e.ChangedMods <= ModIdentifier.Speed195X;
+            var isSpeedMod = IsSpeedMod(e);
+
+            NotificationManager.Show(NotificationLevel.Info, (e.ChangedMods == ModIdentifier.None).ToString());
 
             if (isSpeedMod)
             {
@@ -417,6 +451,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             // Reload the entire
             RunLoadTask();
+            previousMods = e.Mods;
         }
 
         /// <summary>
