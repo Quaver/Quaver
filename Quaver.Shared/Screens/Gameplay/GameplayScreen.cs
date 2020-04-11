@@ -852,6 +852,10 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         ///     Plays a combo break sound if we've
         /// </summary>
+        ///
+
+        private bool hasCBIntro = false;
+
         private void PlayComboBreakSound()
         {
             if (IsSongSelectPreview)
@@ -863,11 +867,16 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
-            var timeSincePlay = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - TimePlayed;
-            var lastRecCom = (timeSincePlay < 10000) ? 1 : 20;
+            var FirstMiss = Ruleset.ScoreProcessor.CurrentJudgements[Judgement.Miss] == 1 && !hasCBIntro;
 
-            if ((LastRecordedCombo >= lastRecCom) && Ruleset.ScoreProcessor.Combo == 0)
+            if ((LastRecordedCombo > 20 || FirstMiss) && Ruleset.ScoreProcessor.Combo == 0)
+                NotificationManager.Show(NotificationLevel.Info, "cb");
                 SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
+
+            if (FirstMiss)
+            {
+                hasCBIntro = true;
+            }
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
         }
