@@ -133,11 +133,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Scrolls the container to the selected position
         /// </summary>
-        public virtual void ScrollToSelected()
+        public virtual void ScrollToSelected(int time = 1800)
         {
             // Scroll the the place where the map is.
             var targetScroll = GetSelectedPosition();
-            ScrollTo(targetScroll, 1800);
+            ScrollTo(targetScroll, time);
         }
 
         /// <summary>
