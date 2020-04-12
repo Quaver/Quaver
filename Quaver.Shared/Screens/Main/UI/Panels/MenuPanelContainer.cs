@@ -19,6 +19,10 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
         /// </summary>
         public MenuPanelContainer(MainMenuScreen menuScreen)
         {
+            Size = new ScalableVector2(1296, MenuPanel.PanelSize.Y.Value);
+            Alpha = 0;
+            AutoScaleHeight = true;
+
             Panels = new List<MenuPanel>
             {
                 new MenuPanel(this, UserInterface.MenuBackgroundClear,
@@ -48,9 +52,9 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
                 }
             };
 
-            Size = new ScalableVector2(1296, MenuPanel.PanelSize.Y.Value);
-            Alpha = 0;
             Initialize();
+
+            Console.WriteLine(Size);
         }
 
         /// <inheritdoc />
