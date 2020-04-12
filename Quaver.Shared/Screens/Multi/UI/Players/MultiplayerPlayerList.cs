@@ -19,6 +19,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Multi.UI.Players
 {
@@ -52,6 +53,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Game = game;
             Size = ContainerSize;
             Alpha = 0f;
+            AutoScaleHeight = true;
 
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 800;
@@ -190,7 +192,11 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
         /// <summary>
         ///     Recalculates the content height of the container
         /// </summary>
-        private void RecalculateContainerHeight() => ContentContainer.Height = (Players.First().Height + 20) * 8 - 20;
+        private void RecalculateContainerHeight()
+        {
+            var height = (Players.First().Height + 20) * 8 - 20;
+            ContentContainer.Height = height > Height ? height : Height;
+        }
 
         /// <summary>
         ///     Sorts players in team play
@@ -257,7 +263,10 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             if (referee != null)
                 sorted.Add(referee);
 
-            var neededEmptySlots = SLOT_COUNT - sorted.Count;
+            var neededEmptySlots = (int) (SLOT_COUNT * WindowManager.BaseToVirtualRatio) - sorted.Count;
+
+            if ((neededEmptySlots + sorted.Count) % 2 != 0)
+                neededEmptySlots--;
 
             // Add empty slots
             for (var i = 0; i < neededEmptySlots; i++)
