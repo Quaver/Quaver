@@ -53,8 +53,6 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             };
 
             Initialize();
-
-            Console.WriteLine(Size);
         }
 
         /// <inheritdoc />
