@@ -68,13 +68,10 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             foreach (DisplayMode mode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
             {
-                if (mode.AspectRatio >= 1.5 && mode.AspectRatio <= 2.4)
-                {
-                    var option = $"{mode.Width}x{mode.Height}";
+                var option = $"{mode.Width}x{mode.Height}";
 
-                    if (!options.Contains(option))
-                        options.Add(option);
-                }
+                if (!options.Contains(option))
+                    options.Add(option);
             }
 
             options = options.OrderBy(x => int.Parse(x.Split("x")[0])).ToList();
