@@ -59,6 +59,14 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
 
             if (IsMultiplayer && players != null && players.Item.Selector != null)
                 players.Item.Selector.Parent = this;
+
+            for (var i = 0; i < Pool.Count; i++)
+            {
+                var item = Pool[i];
+
+                item.Size = new ScalableVector2(Width, Height / Pool.Count);
+                item.Y = item.Height * i;
+            }
         }
 
         /// <inheritdoc />
