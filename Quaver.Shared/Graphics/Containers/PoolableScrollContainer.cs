@@ -163,7 +163,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     Handles the shifting of the object pool when the user scrolls up or down.
         /// </summary>
-        private void HandlePoolShifting()
+        protected void HandlePoolShifting()
         {
             if (AvailableItems == null || Pool.Count != PoolSize)
                 return;
