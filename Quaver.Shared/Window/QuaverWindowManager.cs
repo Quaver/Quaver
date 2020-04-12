@@ -33,7 +33,8 @@ namespace Quaver.Shared.Window
                 {
                     widescreen,
                     ultrawide,
-                    sixteenBy10
+                    sixteenBy10,
+                    standard
                 };
 
                 var closestRatio = vals.Min();
@@ -48,7 +49,7 @@ namespace Quaver.Shared.Window
                 if (closestRatio == standard)
                     return AspectRatio.Standard;
 
-                return AspectRatio.Widescreen;
+                return AspectRatio.Standard;
             }
         }
 

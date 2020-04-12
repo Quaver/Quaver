@@ -255,8 +255,8 @@ namespace Quaver.Shared
         /// </summary>
         protected override void Initialize()
         {
+            WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
             PerformGameSetup();
-
             ChangeResolution();
 
             // Full-screen
@@ -870,11 +870,9 @@ namespace Quaver.Shared
                 case AspectRatio.Ultrawide:
                     WindowManager.ChangeVirtualScreenSize(new Vector2(2560, 1080));
                     break;
-                case AspectRatio.SixteenByTen:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-                    break;
                 default:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
+                    var ratio = (float) Graphics.PreferredBackBufferWidth / Graphics.PreferredBackBufferHeight;
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
                     break;
             }
 
