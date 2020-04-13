@@ -64,6 +64,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
             Alignment = Alignment.TopLeft;
 
+            Width = WindowManager.Width;
+
             switch (game.CurrentScreen.Type)
             {
                 case QuaverScreenType.Editor:

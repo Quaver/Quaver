@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Handlers;
@@ -59,6 +60,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers
 
             // Reset the filter panel's parent so the contained dropdown draws on top of the user container.
             FilterPanel.Parent = Container;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            UserContainer.Height = Container.Height - FilterPanel.Height;
+            UserContainer.RecalculateContainerHeight();
+
+            base.Update(gameTime);
         }
 
         /// <summary>
