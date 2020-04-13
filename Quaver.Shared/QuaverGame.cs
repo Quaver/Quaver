@@ -365,7 +365,7 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
-            VolumeController.Update(gameTime);
+            VolumeController?.Update(gameTime);
             Transitioner.Update(gameTime);
 
 #if VISUAL_TESTS
@@ -394,7 +394,7 @@ namespace Quaver.Shared
             DialogManager.Draw(gameTime);
 
             NotificationManager.Draw(gameTime);
-            VolumeController.Draw(gameTime);
+            VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
@@ -891,7 +891,6 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
-                    
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:
@@ -901,6 +900,9 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new TheaterScreen());
                     break;
             }
+
+            VolumeController?.Destroy();
+            VolumeController = new VolumeControl();
         }
 
         private void OnClientSizeChanged(object sender, EventArgs e)
