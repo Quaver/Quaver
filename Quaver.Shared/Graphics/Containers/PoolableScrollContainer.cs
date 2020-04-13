@@ -128,7 +128,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Makes sure that the content container's height is up to date
         /// </summary>
-        public void RecalculateContainerHeight(bool usePoolCount = false)
+        public virtual void RecalculateContainerHeight(bool usePoolCount = false)
         {
             var count = usePoolCount ? Pool.Count : AvailableItems.Count;
 
