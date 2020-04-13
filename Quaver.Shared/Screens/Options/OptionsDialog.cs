@@ -20,6 +20,12 @@ namespace Quaver.Shared.Screens.Options
             FadeTo(0.75f, Easing.Linear, 200);
             CreateContent();
 
+            Clicked += (sender, args) =>
+            {
+                if (!Menu.IsHovered())
+                    Close();
+            };
+            
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
         }
 
