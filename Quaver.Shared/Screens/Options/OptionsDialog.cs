@@ -7,6 +7,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Options
 {
@@ -18,6 +19,8 @@ namespace Quaver.Shared.Screens.Options
         {
             FadeTo(0.75f, Easing.Linear, 200);
             CreateContent();
+
+            WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
         }
 
         /// <inheritdoc />
@@ -44,6 +47,12 @@ namespace Quaver.Shared.Screens.Options
                 Close();
         }
 
+        public override void Destroy()
+        {
+            WindowManager.VirtualScreenSizeChanged -= OnVirtualScreenSizeChanged;
+            base.Destroy();
+        }
+
         /// <summary>
         /// </summary>
         private void Close()
@@ -55,6 +64,16 @@ namespace Quaver.Shared.Screens.Options
             DialogManager.Dismiss(this);
             Destroy();
             ButtonManager.Remove(this);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnVirtualScreenSizeChanged(object sender, WindowVirtualScreenSizeChangedEventArgs e)
+        {
+            Menu.Destroy();
+            CreateContent();
         }
     }
 }
