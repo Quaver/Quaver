@@ -863,11 +863,8 @@ namespace Quaver.Shared
             if (!QuaverWindowManager.CanChangeResolutionOnScene)
                 return;
 
-            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value &&
-                Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
-            {
+            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
                 WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
-            }
 
             var ratio = (float) Graphics.PreferredBackBufferWidth / Graphics.PreferredBackBufferHeight;
 
@@ -894,6 +891,7 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
                     break;
                 case QuaverScreenType.Multiplayer:
+                    
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:
@@ -910,7 +908,6 @@ namespace Quaver.Shared
             ConfigManager.WindowWidth.Value = Graphics.PreferredBackBufferWidth;
             ConfigManager.WindowHeight.Value = Graphics.PreferredBackBufferHeight;
 
-            Console.WriteLine(Graphics.PreferredBackBufferWidth + " " + Graphics.PreferredBackBufferHeight);
             ChangeResolution();
         }
 
