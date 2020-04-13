@@ -15,6 +15,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Wobble.Graphics;
 using Wobble.Logging;
+using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Notifications
 {
@@ -50,6 +51,9 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="gameTime"></param>
         public static void Update(GameTime gameTime)
         {
+            Container.Width = WindowManager.Width;
+            Container.Height = WindowManager.Height;
+
             FlushNotificationQueue();
             PerformAnimations(gameTime);
             Container.Update(gameTime);
@@ -123,7 +127,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
                     if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
                         targetY = -targetY;
-                    
+
                     notification.Y = MathHelper.Lerp(notification.Y, targetY, (float) Math.Min(dt / 60, 1));
                 }
 

@@ -44,6 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
 
             Size = new ScalableVector2(564, 838);
             Alpha = 0f;
+            AutoScaleHeight = true;
 
             CreateHeaderText();
             CreateSubHeaderText();

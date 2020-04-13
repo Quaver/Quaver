@@ -24,6 +24,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Managers;
 using Wobble.Scheduling;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
@@ -68,6 +69,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             Container = container;
             Alpha = 0;
 
+            if (PoolSize != int.MaxValue)
+                PoolSize = (int) (PoolSize * WindowManager.BaseToVirtualRatio) + 2;
+
             InputEnabled = true;
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
@@ -88,7 +92,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ScrollbarBackground.Visible = Pool?.Count > 10;
+            if (Pool != null)
+                ScrollbarBackground.Visible = Pool.Count > 10 && !Pool.Last().Item.IsEmptyScore;
+            else
+                ScrollbarBackground.Visible = false;
 
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
                            && DialogManager.Dialogs.Count == 0
@@ -292,6 +299,18 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             }
         }
 
+        public override void RecalculateContainerHeight(bool usePoolCount = false)
+        {
+            base.RecalculateContainerHeight(usePoolCount);
+
+            if (Pool == null)
+                return;
+
+            // If the last score is empty, cut off the content container so it doesn't scroll.
+            if (Pool.Last().Item.IsEmptyScore)
+                ContentContainer.Height = Height;
+        }
+
         /// <summary>
         ///     If the leaderboard requires the user to be online
         /// </summary>
@@ -391,7 +410,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (AvailableItems == null)
                     return;
 
-                const int MAX_SHOWN_ITEMS = 10;
+                var MAX_SHOWN_ITEMS = Height / DrawableLeaderboardScore.ScoreHeight;
 
                 // We don't have enough scores in the leaderboard, so fill it with empty scores, so the leaderboard
                 // still preserves the table look

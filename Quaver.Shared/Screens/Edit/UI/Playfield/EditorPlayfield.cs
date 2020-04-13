@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public int HitPositionY { get; } = 820;
+        public int HitPositionY { get; } = (int) (820 * WindowManager.BaseToVirtualRatio);
 
         /// <summary>
         ///     The speed at which the container scrolls at.

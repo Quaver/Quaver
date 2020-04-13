@@ -139,6 +139,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
         /// </summary>
         private void HandleResizing()
         {
+            Width = WindowManager.Width - OnlineHub.WIDTH;
+            MessageContainer.Width = Width - ChannelList.Width;
+
             if (!ChannelList.HeaderBackground.IsHeld && !MessageContainer.TopicHeader.IsHeld)
             {
                 IsResizing = false;

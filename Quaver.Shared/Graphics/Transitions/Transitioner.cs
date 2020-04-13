@@ -37,7 +37,13 @@ namespace Quaver.Shared.Graphics.Transitions
             WindowManager.ResolutionChanged += OnResolutionChanged;
         }
 
-        public static void Update(GameTime gameTime) => Blackness.Update(gameTime);
+        public static void Update(GameTime gameTime)
+        {
+            Blackness.Width = WindowManager.Width;
+            Blackness.Height = WindowManager.Height;
+            Blackness.Update(gameTime);
+        }
+
         public static void Draw(GameTime gameTime) => Blackness.Draw(gameTime);
 
         /// <summary>

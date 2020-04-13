@@ -57,13 +57,17 @@ namespace Quaver.Shared.Screens.Main.UI.Panels
             : base(PanelSize, PanelSize)
         {
             Container = container;
+            Height = Container.Height;
+            ContentContainer.Height = Height;
 
             Background = new Sprite
             {
                 Image = image,
                 Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
-                UsePreviousSpriteBatchOptions = true
+                Size = new ScalableVector2(1920, 1080),
+                UsePreviousSpriteBatchOptions = true,
+                AutoScaleHeight = true,
+                AutoScaleWidth = true
             };
 
             AddContainedDrawable(Background);
