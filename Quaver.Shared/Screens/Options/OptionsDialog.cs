@@ -18,6 +18,12 @@ namespace Quaver.Shared.Screens.Options
         {
             FadeTo(0.75f, Easing.Linear, 200);
             CreateContent();
+
+            Clicked += (sender, args) =>
+            {
+                if (!Menu.IsHovered())
+                    Close();
+            };
         }
 
         /// <inheritdoc />
@@ -40,8 +46,7 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || MouseManager.IsUniqueClick(MouseButton.Left) &&
-                        !GraphicsHelper.RectangleContains(Menu.ScreenRectangle, MouseManager.CurrentState.Position))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
                 Close();
         }
 
