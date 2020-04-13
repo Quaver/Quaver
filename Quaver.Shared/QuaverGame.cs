@@ -866,7 +866,7 @@ namespace Quaver.Shared
             if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
                 WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
-            var ratio = (float) Graphics.PreferredBackBufferWidth / Graphics.PreferredBackBufferHeight;
+            var ratio = (float) ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
 
             if (ratio >= 16 / 9f)
                 WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
@@ -907,8 +907,8 @@ namespace Quaver.Shared
 
         private void OnClientSizeChanged(object sender, EventArgs e)
         {
-            ConfigManager.WindowWidth.Value = Graphics.PreferredBackBufferWidth;
-            ConfigManager.WindowHeight.Value = Graphics.PreferredBackBufferHeight;
+            ConfigManager.WindowWidth.Value = Window.ClientBounds.Width;
+            ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
 
             ChangeResolution();
         }
