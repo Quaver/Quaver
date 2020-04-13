@@ -63,6 +63,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            TopicHeader.Width = Width;
+            TextboxContainer.Width = Width;
+
             // Make sure the correct channel is displayed
             foreach (var container in MessageScrollContainers.Values)
             {
@@ -70,6 +73,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
                     container.Parent = this;
                 else if (ActiveChannel.Value != container.Channel && container.Parent != null)
                     container.Parent = null;
+
+                container.Width = Width;
+                container.ContentContainer.Width = Width;
             }
 
             base.Update(gameTime);

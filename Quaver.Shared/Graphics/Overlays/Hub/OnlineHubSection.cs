@@ -60,8 +60,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
+            Container.Height = Hub.Height - Hub.IconContainer.Height - Hub.IconContainer.Y;
             AnimateIcon();
         }
 

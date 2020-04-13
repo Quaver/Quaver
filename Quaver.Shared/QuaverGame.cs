@@ -255,8 +255,8 @@ namespace Quaver.Shared
         /// </summary>
         protected override void Initialize()
         {
+            WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
             PerformGameSetup();
-
             ChangeResolution();
 
             // Full-screen
@@ -268,6 +268,7 @@ namespace Quaver.Shared
 
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
+            Window.ClientSizeChanged += OnClientSizeChanged;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -364,7 +365,7 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
-            VolumeController.Update(gameTime);
+            VolumeController?.Update(gameTime);
             Transitioner.Update(gameTime);
 
 #if VISUAL_TESTS
@@ -374,6 +375,8 @@ namespace Quaver.Shared
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
             UpdateFpsCounterPosition();
+
+            Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
 
         /// <inheritdoc />
@@ -391,7 +394,7 @@ namespace Quaver.Shared
             DialogManager.Draw(gameTime);
 
             NotificationManager.Draw(gameTime);
-            VolumeController.Draw(gameTime);
+            VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
@@ -860,23 +863,15 @@ namespace Quaver.Shared
             if (!QuaverWindowManager.CanChangeResolutionOnScene)
                 return;
 
-            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
+                WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
-            switch (QuaverWindowManager.Ratio)
-            {
-                case AspectRatio.Widescreen:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-                    break;
-                case AspectRatio.Ultrawide:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(2560, 1080));
-                    break;
-                case AspectRatio.SixteenByTen:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-                    break;
-                default:
-                    WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-                    break;
-            }
+            var ratio = (float) Graphics.PreferredBackBufferWidth / Graphics.PreferredBackBufferHeight;
+
+            if (ratio >= 16 / 9f)
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+            else
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
 
             if (CurrentScreen == null)
                 return;
@@ -905,6 +900,17 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new TheaterScreen());
                     break;
             }
+
+            VolumeController?.Destroy();
+            VolumeController = new VolumeControl();
+        }
+
+        private void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            ConfigManager.WindowWidth.Value = Graphics.PreferredBackBufferWidth;
+            ConfigManager.WindowHeight.Value = Graphics.PreferredBackBufferHeight;
+
+            ChangeResolution();
         }
 
 #if VISUAL_TESTS

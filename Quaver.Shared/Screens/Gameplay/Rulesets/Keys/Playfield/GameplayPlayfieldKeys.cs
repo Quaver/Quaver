@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 if (Screen.IsSongSelectPreview)
                     return PREVIEW_PLAYFIELD_WIDTH / Screen.Map.GetKeyCount();
 
-                return SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize;
+                return SkinManager.Skin.Keys[Screen.Map.Mode].ColumnSize * WindowManager.BaseToVirtualRatio;;
             }
         }
 
@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Parent = Container,
                 Size = new ScalableVector2(Width, WindowManager.Height),
                 Alignment = Alignment.TopCenter,
-                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment
+                X = SkinManager.Skin.Keys[Screen.Map.Mode].ColumnAlignment,
             };
 
             // Create the foreground container.
@@ -265,6 +265,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 if (Ruleset.Screen.IsSongSelectPreview)
                     skin.HitPosOffsetY = PREVIEW_PLAYFIELD_WIDTH / Ruleset.Map.GetKeyCount();
+                else
+                    skin.HitPosOffsetY *= WindowManager.BaseToVirtualRatio;
 
                 switch (ScrollDirections[i])
                 {

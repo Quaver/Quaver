@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
@@ -35,18 +36,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
             Tint = ColorHelper.HexToColor("#292929");
 
             CreateTextbox();
-            CreateEmojiButton();
+            //CreateEmojiButton();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ChatTextbox.Width = Width * 0.96f;
+            base.Update(gameTime);
         }
 
         /// <summary>
         /// </summary>
         private void CreateTextbox()
         {
-            ChatTextbox = new OnlineChatTextbox(ActiveChannel, new ScalableVector2(Width * 0.93f, Height * 0.62f))
+            ChatTextbox = new OnlineChatTextbox(ActiveChannel, new ScalableVector2(Width * 0.96f, Height * 0.62f))
             {
                 Parent = this,
-                Alignment = Alignment.MidLeft,
-                X = 16
+                Alignment = Alignment.MidCenter,
             };
         }
 

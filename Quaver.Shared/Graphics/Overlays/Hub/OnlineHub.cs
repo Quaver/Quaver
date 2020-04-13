@@ -78,6 +78,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            Height = WindowManager.Height - MenuBorder.HEIGHT;
+
             foreach (var section in Sections)
                 section.Value.Update(gameTime);
 
