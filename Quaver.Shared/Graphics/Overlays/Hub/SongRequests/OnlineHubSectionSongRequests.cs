@@ -101,8 +101,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests
                     Y = 1
                 }
             };
-
-            ClearButton.Y += ClearButton.Height + 6;
         }
     }
 }

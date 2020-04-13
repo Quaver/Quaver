@@ -56,8 +56,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
                     Y = 1
                 }
             };
-
-            ClearButton.Y += ClearButton.Height + 6;
         }
 
         public override void Update(GameTime gameTime)
