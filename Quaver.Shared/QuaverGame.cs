@@ -256,7 +256,8 @@ namespace Quaver.Shared
         protected override void Initialize()
         {
             WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
-            PerformGameSetup();
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            ConfigManager.Initialize();
             ChangeResolution();
 
             // Full-screen
@@ -285,7 +286,7 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            PerformGameSetup();
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
@@ -467,10 +468,6 @@ namespace Quaver.Shared
             DiscordHelper.Presence.State = "Visual Testing";
 #endif
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
-
-            // Create bindable for selected map.
-            if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
 
             MapManager.Selected.ValueChanged += (sender, args) =>
             {
