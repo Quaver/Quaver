@@ -25,6 +25,13 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Remove;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
+using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
+using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Lines;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Seek;
@@ -95,6 +102,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private BindableInt LongNoteOpacity { get; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<bool> PlaceObjectsOnNearestTick { get; }
+
+        /// <summary>
         ///     If true, this playfield is unable to be edited/interacted with. This is purely for viewing
         /// </summary>
         public bool IsUneditable { get; }
@@ -121,7 +132,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public int HitPositionY { get; } = 820;
+        public int HitPositionY { get; } = (int) (820 * WindowManager.BaseToVirtualRatio);
 
         /// <summary>
         ///     The speed at which the container scrolls at.
@@ -270,7 +281,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt scrollSpeed, Bindable<bool> anchorHitObjectsAtMidpoint, Bindable<bool> scaleScrollSpeedWithRate,
             Bindable<EditorBeatSnapColor> beatSnapColor, Bindable<bool> viewLayers, Bindable<EditorCompositionTool> tool,
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, bool isUneditable = false)
+            EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, bool isUneditable = false)
         {
             Map = map;
             ActionManager = manager;
@@ -288,6 +299,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedHitObjects = selectedHitObjects;
             SelectedLayer = selectedLayer;
             DefaultLayer = defaultLayer;
+            PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
 
             Alignment = Alignment.TopCenter;
             Tint = ColorHelper.HexToColor("#181818");
@@ -315,6 +327,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced += OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped += OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
+            ActionManager.TimingPointAdded += OnTimingPointAdded;
+            ActionManager.TimingPointRemoved += OnTimingPointRemoved;
+            ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
             Skin.ValueChanged += OnSkinChanged;
         }
 
@@ -390,6 +410,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectBatchPlaced -= OnHitObjectBatchPlaced;
             ActionManager.HitObjectsFlipped -= OnHitObjectsFlipped;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
+            ActionManager.TimingPointAdded -= OnTimingPointAdded;
+            ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
+            ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
+            ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
             Skin.ValueChanged -= OnSkinChanged;
 
             base.Destroy();
@@ -628,11 +656,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        public void ResetObjectPositions() => HitObjects.ForEach(x =>
-        {
-            x.SetPosition();
-            x.UpdateLongNoteSizeAndAlpha();
-        });
+        public void ResetObjectPositions() => HitObjects.ForEach(x => x.Refresh());
 
         /// <summary>
         ///     Gets the audio time from a y position.
@@ -671,8 +695,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                     return time;
 
                 var snapTimePerBeat = 60000f / point.Bpm / beatSnap;
-                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+
+                if (PlaceObjectsOnNearestTick.Value)
+                    return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Backward, beatSnap, time + snapTimePerBeat);
+
+                return (int) AudioEngine.GetNearestSnapTimeFromTime(Map, Direction.Forward, beatSnap, time - snapTimePerBeat);
             }
+
+            if (!PlaceObjectsOnNearestTick.Value)
+                return timeBwd;
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (bwdDiff < fwdDiff)
@@ -872,6 +903,102 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchRemoved(object sender, EditorTimingPointBatchRemovedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            RefreshHitObjects();
+        }
+
+        /// <summary>
+        /// </summary>
         private void HandleInput()
         {
             if (DialogManager.Dialogs.Count != 0 || IsUneditable)
@@ -929,11 +1056,19 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void HandleLeftMouseClick()
         {
             if (!MouseManager.IsUniquePress(MouseButton.Left))
+            {
+                if (MouseManager.CurrentState.LeftButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
+                {
+                    if (Tool.Value == EditorCompositionTool.Note)
+                        HandleHitObjectPlacement();
+                }
+
                 return;
+            }
 
             var hitObject = GetHoveredHitObject();
 
-            if (hitObject == null)
+            if (hitObject == null && !KeyboardManager.IsCtrlDown())
                 SelectedHitObjects.Clear();
 
             if (Tool.Value == EditorCompositionTool.Select || Tool.Value == EditorCompositionTool.LongNote)
@@ -1023,8 +1158,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         private void HandleRightClick()
         {
             if (!MouseManager.IsUniquePress(MouseButton.Right))
-                return;
+            {
+                if (MouseManager.CurrentState.RightButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
+                    RemoveHoveredHitObject();
 
+                return;
+            }
+
+            RemoveHoveredHitObject();
+        }
+
+        /// <summary>
+        ///     Removes the object that is currently hovered by the mouse
+        /// </summary>
+        private void RemoveHoveredHitObject()
+        {
             var ho = GetHoveredHitObject();
 
             if (ho == null)

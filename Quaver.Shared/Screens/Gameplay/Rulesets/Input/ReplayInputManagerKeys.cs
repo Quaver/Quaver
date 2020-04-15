@@ -15,6 +15,7 @@ using Quaver.API.Replays.Virtual;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Logging;
@@ -228,6 +229,13 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Create a fresh scrore processor, so the score can be recalculated
             Screen.Ruleset.ScoreProcessor = new ScoreProcessorKeys(Screen.Map, ModManager.Mods, Windows);
+
+            // Update the processor for the health bar, so it doesn't get stuck
+            if (Screen.Ruleset is GameplayRulesetKeys ruleset)
+            {
+                var playfield = (GameplayPlayfieldKeys) ruleset.Playfield;
+                playfield.Stage.HealthBar.UpdateProcessor(Screen.Ruleset.ScoreProcessor);
+            }
         }
     }
 }

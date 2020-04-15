@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
@@ -53,6 +54,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests
             CreateClearButton();
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            RequestContainer.Height = Container.Height - Header.Height;
+            RequestContainer.RecalculateContainerHeight();
+
+            base.Update(gameTime);
+        }
+
         /// <summary>
         /// </summary>
         private void CreateHeader()
@@ -92,8 +101,6 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests
                     Y = 1
                 }
             };
-
-            ClearButton.Y += ClearButton.Height + 6;
         }
     }
 }

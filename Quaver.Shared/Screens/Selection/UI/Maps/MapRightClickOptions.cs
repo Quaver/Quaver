@@ -50,8 +50,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
         private const string Edit = "Edit";
 
-        private const string EditorV2 = "Editor v2";
-
         private const string ViewOnlineListing = "Online Listing";
 
         private const string AddToPlaylist = "Add To Playlist";
@@ -132,14 +130,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
                         selectScreen?.ExitToEditor();
                         break;
-                    case EditorV2:
-                        if (MapsetHelper.IsSingleDifficultySorted())
-                            MapsetRightClickOptions.SelectMap(DrawableMapset, Map, Mapset);
-                        else
-                            SelectMap(Map);
-
-                        selectScreen?.ExitToEditor(true);
-                        break;
                     case ViewOnlineListing:
                         MapManager.ViewOnlineListing(Map);
                         break;
@@ -192,7 +182,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         {
             {Play, Color.White},
             {Edit, ColorHelper.HexToColor("#F2994A")},
-            {EditorV2, ColorHelper.HexToColor("#F2994A")},
             {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
             {Delete, ColorHelper.HexToColor($"#FF6868")},
             {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},

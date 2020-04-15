@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using osu_database_reader.Components.HitObjects;
@@ -64,6 +65,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
             return tp;
         }
+
+        /// <summary>
+        ///     Converts milliseconds to the appropriate mm:ss:ms time
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static string MillisecondsToTime(float time) => TimeSpan.FromMilliseconds(time).ToString(@"mm\:ss\.fff");
 
         public static bool IsKeyPressed(Keys k) => KeyboardManager.IsUniqueKeyPress(k);
 

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Overlays.Hub.Downloads.Scrolling;
@@ -39,6 +40,13 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Downloads
             {
                 Parent = Container
             };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            ScrollContainer.Height = Container.Height;
+            ScrollContainer.RecalculateContainerHeight();
+            base.Update(gameTime);
         }
     }
 }

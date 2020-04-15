@@ -29,6 +29,7 @@ using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Menu;
+using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -43,6 +44,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Alpha;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Edit;
+using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Menu;
 using Quaver.Shared.Screens.Menu.UI.Navigation.User;
@@ -85,7 +87,9 @@ using Quaver.Shared.Screens.Tests.Options;
 using Quaver.Shared.Screens.Tests.Profiles;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Screens.Tests.Volume;
+using Quaver.Shared.Screens.Theater;
 using Quaver.Shared.Skinning;
+using Quaver.Shared.Window;
 using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
@@ -136,6 +140,10 @@ namespace Quaver.Shared
         /// <summary>
         /// </summary>
         public OnlineChat OnlineChat { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        public FpsCounter Fps { get; private set; }
 
         /// <summary>
         ///     The current activated screen.
@@ -247,10 +255,10 @@ namespace Quaver.Shared
         /// </summary>
         protected override void Initialize()
         {
-            PerformGameSetup();
-
-            WindowManager.ChangeVirtualScreenSize(new Vector2(1920, 1080));
-            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            WindowManager.ChangeBaseResolution(new Vector2(1920, 1080));
+            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            ConfigManager.Initialize();
+            ChangeResolution();
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
@@ -261,6 +269,7 @@ namespace Quaver.Shared
 
             // Handle file dropped event.
             Window.FileDropped += MapsetImporter.OnFileDropped;
+            Window.ClientSizeChanged += OnClientSizeChanged;
 
             DevicePeriod = ConfigManager.DevicePeriod.Value;
             DeviceBufferLength = DevicePeriod * ConfigManager.DeviceBufferLengthMultiplier.Value;
@@ -268,7 +277,7 @@ namespace Quaver.Shared
             base.Initialize();
         }
 
-         /// <inheritdoc />
+        /// <inheritdoc />
         /// <summary>
         ///     LoadContent will be called once per game and is the place to load
         ///     all of your content.
@@ -277,7 +286,7 @@ namespace Quaver.Shared
         {
             base.LoadContent();
 
-            Resources.AddStore(new DllResourceStore("Quaver.Resources.dll"));
+            PerformGameSetup();
             SteamManager.SendAvatarRetrievalRequest(SteamUser.GetSteamID().m_SteamID);
 
             // Load all game assets.
@@ -357,7 +366,7 @@ namespace Quaver.Shared
 
             QuaverScreenManager.Update(gameTime);
             NotificationManager.Update(gameTime);
-            VolumeController.Update(gameTime);
+            VolumeController?.Update(gameTime);
             Transitioner.Update(gameTime);
 
 #if VISUAL_TESTS
@@ -366,6 +375,9 @@ namespace Quaver.Shared
 
             SkinManager.HandleSkinReloading();
             LimitFpsOnInactiveWindow();
+            UpdateFpsCounterPosition();
+
+            Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
         }
 
         /// <inheritdoc />
@@ -383,7 +395,7 @@ namespace Quaver.Shared
             DialogManager.Draw(gameTime);
 
             NotificationManager.Draw(gameTime);
-            VolumeController.Draw(gameTime);
+            VolumeController?.Draw(gameTime);
             GlobalUserInterface.Draw(gameTime);
 
             Transitioner.Draw(gameTime);
@@ -430,7 +442,7 @@ namespace Quaver.Shared
                 if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     AudioEngine.Track.ApplyRate(e.Value);
             };
-            
+
             ConfigManager.FpsLimiterType.ValueChanged += (sender, e) => InitializeFpsLimiting();
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) => Graphics.IsFullScreen = e.Value;
             ConfigManager.WindowBorderless.ValueChanged += (sender, e) => Window.IsBorderless = e.Value;
@@ -457,10 +469,6 @@ namespace Quaver.Shared
 #endif
             DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
 
-            // Create bindable for selected map.
-            if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
-
             MapManager.Selected.ValueChanged += (sender, args) =>
             {
                 if (MapManager.RecentlyPlayed.Contains(args.Value))
@@ -468,6 +476,8 @@ namespace Quaver.Shared
 
                 MapManager.RecentlyPlayed.Add(args.Value);
             };
+
+            InactiveSleepTime = ConfigManager.LowerFpsOnWindowInactive.Value ? TimeSpan.FromSeconds(1d / 30) : TimeSpan.Zero;
         }
 
         /// <summary>
@@ -497,18 +507,17 @@ namespace Quaver.Shared
         /// </summary>
         private void CreateFpsCounter()
         {
-            var fpsCounter = new FpsCounter(FontsBitmap.GothamRegular, 18)
+            Fps = new FpsCounter(FontsBitmap.GothamRegular, 18)
             {
                 Parent = GlobalUserInterface,
                 Alignment = Alignment.BotRight,
                 Size = new ScalableVector2(70, 30),
-                X = -5,
-                Y = -36,
+                X = -14,
                 Visible = false
             };
 
-            ShowFpsCounter(fpsCounter);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(fpsCounter);
+            ShowFpsCounter(Fps);
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(Fps);
         }
 
         /// <summary>
@@ -568,6 +577,36 @@ namespace Quaver.Shared
             HandleKeyPressCtrlS();
             HandleKeyPressAltEnter();
             HandleKeyPressScreenshot();
+            HandleKeyPressCtrlP();
+        }
+
+        private void HandleKeyPressCtrlP()
+        {
+            if (!KeyboardManager.IsCtrlDown())
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Gameplay:
+                case QuaverScreenType.Theatre:
+                    break;
+                default:
+                    // Pause/Unpause music
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
+                    {
+                        if (AudioEngine.Track.IsPaused)
+                        {
+                            AudioEngine.Track.Play();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
+                        }
+                        else if (AudioEngine.Track.IsPlaying)
+                        {
+                            AudioEngine.Track.Pause();
+                            NotificationManager.Show(NotificationLevel.Info, "Music Paused");
+                        }
+                    }
+                    break;
+            }
         }
 
         /// <summary>
@@ -774,6 +813,16 @@ namespace Quaver.Shared
         }
 
         /// <summary>
+        /// </summary>
+        private void UpdateFpsCounterPosition()
+        {
+            Fps.Y = -MenuBorder.HEIGHT - 10;
+
+            if (CurrentScreen?.Type == QuaverScreenType.Editor)
+                Fps.Y = -MenuBorder.HEIGHT - 50;
+        }
+
+        /// <summary>
         ///     Handles input when opening the online hub
         /// </summary>
         private void HandleOnlineHubInput()
@@ -802,6 +851,63 @@ namespace Quaver.Shared
             dialog?.Close();
 
             return true;
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ChangeResolution()
+        {
+            if (!QuaverWindowManager.CanChangeResolutionOnScene)
+                return;
+
+            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
+                WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+
+            var ratio = (float) ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+
+            if (ratio >= 16 / 9f)
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+            else
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+
+            if (CurrentScreen == null)
+                return;
+
+            switch (CurrentScreen?.Type)
+            {
+                case QuaverScreenType.Menu:
+                    CurrentScreen?.Exit(() => new MainMenuScreen());
+                    break;
+                case QuaverScreenType.Select:
+                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    break;
+                case QuaverScreenType.Download:
+                    CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
+                    break;
+                case QuaverScreenType.Lobby:
+                    CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
+                    break;
+                case QuaverScreenType.Multiplayer:
+                    CurrentScreen?.Exit(() => new MultiplayerGameScreen());
+                    break;
+                case QuaverScreenType.Music:
+                    CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                    break;
+                case QuaverScreenType.Theatre:
+                    CurrentScreen?.Exit(() => new TheaterScreen());
+                    break;
+            }
+
+            VolumeController?.Destroy();
+            VolumeController = new VolumeControl();
+        }
+
+        private void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            ConfigManager.WindowWidth.Value = Window.ClientBounds.Width;
+            ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
+
+            ChangeResolution();
         }
 
 #if VISUAL_TESTS

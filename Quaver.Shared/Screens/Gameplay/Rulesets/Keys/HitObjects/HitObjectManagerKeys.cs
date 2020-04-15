@@ -29,6 +29,7 @@ using Wobble.Bindables;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 {
@@ -58,7 +59,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 if (game?.CurrentScreen is IHasLeftPanel)
                     scalingFactor = (1920f - GameplayPlayfieldKeys.PREVIEW_PLAYFIELD_WIDTH) / 1366f;
 
-                var scrollSpeed = speed.Value / (20f * AudioEngine.Track.Rate) * scalingFactor;
+                var scrollSpeed = (speed.Value / 10f) / (20f * AudioEngine.Track.Rate) * scalingFactor * WindowManager.BaseToVirtualRatio;
 
                 return scrollSpeed;
             }
@@ -455,6 +456,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 }
             }
 
+            ScoreActiveObjects();
+
+            // Update active objects.
+            foreach (var lane in ActiveNoteLanes)
+            {
+                foreach (var hitObject in lane)
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ScoreActiveObjects()
+        {
+            if (Ruleset.Screen.Failed)
+                return;
+
             // Check to see if the player missed any active notes
             foreach (var lane in ActiveNoteLanes)
             {
@@ -509,13 +527,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     }
                 }
             }
-
-            // Update active objects.
-            foreach (var lane in ActiveNoteLanes)
-            {
-                foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
-            }
         }
 
         /// <summary>
@@ -523,6 +534,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         /// </summary>
         private void UpdateAndScoreHeldObjects()
         {
+            ScoreHeldObjects();
+
+            // Update the currently held long notes.
+            foreach (var lane in HeldLongNoteLanes)
+            {
+                foreach (var hitObject in lane)
+                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ScoreHeldObjects()
+        {
+            if (Ruleset.Screen.Failed)
+                return;
+
             // The release window. (Window * Multiplier)
             var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
 
@@ -571,13 +599,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                     // Update Pooling
                     KillHoldPoolObject(hitObject);
                 }
-            }
-
-            // Update the currently held long notes.
-            foreach (var lane in HeldLongNoteLanes)
-            {
-                foreach (var hitObject in lane)
-                    hitObject.UpdateSpritePositions(CurrentTrackPosition);
             }
         }
 
@@ -813,7 +834,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             {
                 CurrentSvIndex++;
             }
-            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition, CurrentSvIndex);
+            CurrentTrackPosition = GetPositionFromTime(CurrentAudioPosition + ConfigManager.VisualOffset.Value, CurrentSvIndex);
         }
 
         /// <summary>
@@ -828,6 +849,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
 
             InitializeInfoPool(Ruleset.Map, true);
             InitializeObjectPool();
+            Update(new GameTime());
         }
 
         /// <summary>

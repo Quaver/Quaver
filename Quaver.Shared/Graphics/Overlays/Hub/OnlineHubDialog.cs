@@ -48,6 +48,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnGameStarted += OnMultiplayerGameStarted;
 
+            AutoResizeForResolutions = false;
+
             // ReSharper disable once VirtualMemberCallInConstructor
             CreateContent();
         }
@@ -63,6 +65,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             Hub.Alignment = Alignment.TopRight;
 
             Alignment = Alignment.TopLeft;
+
+            Width = WindowManager.Width;
 
             switch (game.CurrentScreen.Type)
             {

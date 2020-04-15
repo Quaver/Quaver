@@ -11,10 +11,16 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.Resize;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeMultiplierBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Selection.UI;
@@ -57,10 +63,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
+            ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityOffsetBatchChanged;
+            ActionManager.ScrollVelocityMultiplierBatchChanged += OnScrollVelocityMultiplierBatchChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
         }
 
         /// <inheritdoc />
@@ -79,10 +91,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded -= OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
+            ActionManager.ScrollVelocityOffsetBatchChanged -= OnScrollVelocityOffsetBatchChanged;
+            ActionManager.ScrollVelocityMultiplierBatchChanged -= OnScrollVelocityMultiplierBatchChanged;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
+
             base.Destroy();
         }
 
@@ -126,5 +145,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         private void OnTimingPointRemoved(object sender, EditorTimingPointAddedEventArgs e) => Refresh();
 
         private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e) => Refresh();
+
+        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e) => Refresh();
+
+        private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e) => Refresh();
+
+        private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => Refresh();
+
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => Refresh();
+
+        private void OnScrollVelocityOffsetBatchChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e) => Refresh();
+
+        private void OnScrollVelocityMultiplierBatchChanged(object sender, EditorChangedScrollVelocityMultiplierBatchEventArgs e) => Refresh();
     }
 }

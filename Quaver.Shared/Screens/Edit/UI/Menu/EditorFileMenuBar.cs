@@ -4,6 +4,7 @@ using System.Linq;
 using ImGuiNET;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Config;
@@ -16,6 +17,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Editor;
 using Wobble;
@@ -235,8 +237,55 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
+            if (ImGui.MenuItem("Edit Metadata", "F1"))
+                DialogManager.Show(new EditorMetadataDialog(Screen));
+
+            var timingPointPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+
+            if (ImGui.MenuItem("Edit Timing Points", "F5", timingPointPlugin.IsActive))
+            {
+                timingPointPlugin.IsActive = !timingPointPlugin.IsActive;
+
+                if (timingPointPlugin.IsActive)
+                    timingPointPlugin.Initialize();
+            }
+
+            var scrollVelocityPlugin = Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
+
+            if (ImGui.MenuItem("Edit Scroll Velocities", "F6", scrollVelocityPlugin.IsActive))
+            {
+                scrollVelocityPlugin.IsActive = !scrollVelocityPlugin.IsActive;
+
+                if (scrollVelocityPlugin.IsActive)
+                    scrollVelocityPlugin.Initialize();
+            }
+
+            ImGui.Separator();
+
             if (ImGui.MenuItem("Set Song Select Preview Time"))
                 Screen.ActionManager.SetPreviewTime((int) Screen.Track.Time);
+
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Apply Offset To Map"))
+                DialogManager.Show(new EditorApplyOffsetDialog(Screen));
+
+            if (ImGui.BeginMenu($"Apply Modifier To Map", Screen.Map.Game == MapGame.Quaver))
+            {
+                if (ImGui.MenuItem("Mirror"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.Mirror));
+
+                if (ImGui.MenuItem("No Long Notes"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.NoLongNotes));
+
+                if (ImGui.MenuItem("Full Long Notes"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.FullLN));
+
+                if (ImGui.MenuItem("Inverse"))
+                    DialogManager.Show(new ApplyModifiersToMapDialog(Screen, ModIdentifier.Inverse));
+
+                ImGui.EndMenu();
+            }
 
             ImGui.EndMenu();
         }
@@ -329,6 +378,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             if (ImGui.MenuItem("Scale Scroll Speed", "", Screen.ScaleScrollSpeedWithRate.Value))
                 Screen.ScaleScrollSpeedWithRate.Value = !Screen.ScaleScrollSpeedWithRate.Value;
 
+            if (ImGui.MenuItem("Place Objects On Nearest Tick", "", Screen.PlaceObjectsOnNearestTick.Value))
+                Screen.PlaceObjectsOnNearestTick.Value = !Screen.PlaceObjectsOnNearestTick.Value;
+
             ImGui.Separator();
 
             if (ImGui.BeginMenu("Long Note Opacity"))
@@ -370,7 +422,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             foreach (var plugin in Screen.BuiltInPlugins)
             {
                 if (ImGui.MenuItem(plugin.Value.Name, "", plugin.Value.IsActive))
+                {
                     plugin.Value.IsActive = !plugin.Value.IsActive;
+
+                    if (plugin.Value.IsActive)
+                        plugin.Value.Initialize();
+                }
             }
 
             ImGui.EndMenu();
@@ -397,7 +454,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                         continue;
 
                     if (ImGui.MenuItem(plugin.Name, plugin.Author, plugin.IsActive))
+                    {
                         plugin.IsActive = !plugin.IsActive;
+
+                        if (plugin.IsActive)
+                            plugin.Initialize();
+                    }
 
                     totalPlugins++;
                 }

@@ -67,6 +67,7 @@ namespace Quaver.Shared.Screens.Options.Sidebar
                     return;
 
                 SelectedSection.Value = Section;
+                OptionsMenu.LastOpenedSection = Section.Name;
             };
         }
 

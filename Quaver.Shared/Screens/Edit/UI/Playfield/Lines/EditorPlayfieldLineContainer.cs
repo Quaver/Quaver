@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MoreLinq.Extensions;
 using Quaver.API.Maps;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Preview;
 using Quaver.Shared.Screens.Edit.Actions.SV.Add;
 using Quaver.Shared.Screens.Edit.Actions.SV.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.SV.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.SV.Remove;
 using Quaver.Shared.Screens.Edit.Actions.SV.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Quaver.Shared.Screens.Edit.UI.Playfield.Timeline;
 using Wobble.Audio.Tracks;
@@ -66,11 +70,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityRemoved += OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded += OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved += OnScrollVelocityBatchRemoved;
+            ActionManager.ScrollVelocityOffsetBatchChanged += OnScrollVelocityBatchOffsetChanged;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
             ActionManager.PreviewTimeChanged += OnPreviewTimeChanged;
+            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
         }
 
         /// <inheritdoc />
@@ -126,11 +133,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             ActionManager.ScrollVelocityRemoved -= OnScrollVelocityRemoved;
             ActionManager.ScrollVelocityBatchAdded -= OnScrollVelocityBatchAdded;
             ActionManager.ScrollVelocityBatchRemoved -= OnScrollVelocityBatchRemoved;
+            ActionManager.ScrollVelocityOffsetBatchChanged -= OnScrollVelocityBatchOffsetChanged;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
             ActionManager.PreviewTimeChanged -= OnPreviewTimeChanged;
+            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
 
             base.Destroy();
         }
@@ -285,6 +295,36 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private void OnTimingPointAdded(object sender, EditorTimingPointAddedEventArgs e)
         {
             Lines.Add(new DrawableEditorLineTimingPoint(Playfield, e.TimingPoint));
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e)
+        {
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e)
+        {
+            Lines = Lines.OrderBy(x => x.GetTime()).ToList();
+            InitializeLinePool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScrollVelocityBatchOffsetChanged(object sender, EditorChangedScrollVelocityOffsetBatchEventArgs e)
+        {
             Lines = Lines.OrderBy(x => x.GetTime()).ToList();
             InitializeLinePool();
         }

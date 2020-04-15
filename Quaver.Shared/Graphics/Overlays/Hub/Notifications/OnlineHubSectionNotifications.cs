@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Menu.Border.Components;
@@ -55,8 +56,14 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
                     Y = 1
                 }
             };
+        }
 
-            ClearButton.Y += ClearButton.Height + 6;
+        public override void Update(GameTime gameTime)
+        {
+            ScrollContainer.Height = Container.Height;
+            ScrollContainer.RecalculateContainerHeight();
+
+            base.Update(gameTime);
         }
     }
 }

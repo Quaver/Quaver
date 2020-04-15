@@ -70,6 +70,7 @@ namespace Quaver.Shared.Scripting
             UserData.RegisterType<ImGuiTabItemFlags>();
             UserData.RegisterType<ImGuiColorEditFlags>();
             UserData.RegisterType<ImGuiKey>();
+            UserData.RegisterType<ImGuiCol>();
 
             // MonoGame
             UserData.RegisterType<Keys>();
@@ -144,6 +145,7 @@ namespace Quaver.Shared.Scripting
             WorkingScript.Globals["imgui_tab_item_flags"] = typeof(ImGuiTabItemFlags);
             WorkingScript.Globals["imgui_color_edit_flags"] = typeof(ImGuiColorEditFlags);
             WorkingScript.Globals["imgui_key"] = typeof(ImGuiKey);
+            WorkingScript.Globals["imgui_col"] = typeof(ImGuiCol);
 
             WorkingScript.Globals["keys"] = typeof(Keys);
         }
@@ -237,6 +239,29 @@ namespace Quaver.Shared.Scripting
                     var y = DynValue.NewNumber(vector.Y);
                     var z = DynValue.NewNumber(vector.Z);
                     var dynVal = DynValue.NewTable(script, x, y, z);
+                    return dynVal;
+                }
+            );
+
+            // Vector4
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector4),
+                dynVal => {
+                    var table = dynVal.Table;
+                    var w = (float)((double)table[1]);
+                    var x = (float)((double)table[2]);
+                    var y = (float)((double)table[3]);
+                    var z = (float)((double)table[4]);
+                    return new Vector4(w, x, y, z);
+                }
+            );
+
+            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector4>(
+                (script, vector) => {
+                    var w = DynValue.NewNumber(vector.W);
+                    var x = DynValue.NewNumber(vector.X);
+                    var y = DynValue.NewNumber(vector.Y);
+                    var z = DynValue.NewNumber(vector.Z);
+                    var dynVal = DynValue.NewTable(script, w, x, y, z);
                     return dynVal;
                 }
             );

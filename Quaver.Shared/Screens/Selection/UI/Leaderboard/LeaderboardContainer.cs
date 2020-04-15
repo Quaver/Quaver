@@ -81,6 +81,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
         {
             Size = new ScalableVector2(564, 838);
             Alpha = 0f;
+            AutoScaleHeight = true;
 
             FetchScoreTask = new TaskHandler<Map, FetchedScoreStore>(FetchScores);
             FetchScoreTask.OnCompleted += OnFetchedScores;
@@ -179,13 +180,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard
                 Alignment = Alignment.TopLeft,
                 Y = Header.Y + Header.Height + 8,
                 Size = new ScalableVector2(Width,664),
-                Image = UserInterface.LeaderboardScoresPanel
+                Image = UserInterface.LeaderboardScoresPanel,
+                AutoScaleHeight = true
             };
 
             ScoresContainer = new LeaderboardScoresContainer(this)
             {
                 Parent = ScoresContainerBackground,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
             };
         }
 

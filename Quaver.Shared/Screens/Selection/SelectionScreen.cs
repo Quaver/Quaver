@@ -31,6 +31,7 @@ using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Selection.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.Search;
 using Quaver.Shared.Screens.Selection.UI.Maps;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
@@ -251,6 +252,7 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF2();
             HandleKeyPressF3();
             HandleKeyPressF4();
+            HandleKeyPressF5();
             HandleKeyPressEnter();
             HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
@@ -355,6 +357,20 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
+        ///		Prompts the user to begin a force refresh for mapsets.
+        ///	</summary>
+        private void HandleKeyPressF5()
+        {
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                return;
+
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            DialogManager.Show(new RefreshDialog());
+        }
+
+        /// <summary>
         ///     Handles when the user presses the enter key
         /// </summary>
         private void HandleKeyPressEnter()
@@ -420,21 +436,6 @@ namespace Quaver.Shared.Screens.Selection
             // Change from pitched to non-pitched
             if (KeyboardManager.IsUniqueKeyPress(Keys.D0))
                 ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-
-            // Pause/Unpause music
-            if (KeyboardManager.IsUniqueKeyPress(Keys.P) && !AudioEngine.Track.IsDisposed)
-            {
-                if (AudioEngine.Track.IsPaused)
-                {
-                    AudioEngine.Track.Play();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Unpaused");
-                }
-                else if (AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track.Pause();
-                    NotificationManager.Show(NotificationLevel.Info, "Music Paused");
-                }
-            }
 
             ChangeScrollSpeed();
         }
@@ -529,22 +530,24 @@ namespace Quaver.Shared.Screens.Selection
 
             var changed = false;
 
+            var speedIncrease = KeyboardManager.IsShiftDown() ? 1 : 10;
+
             // Change scroll speed down
             if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
             {
-                scrollSpeed.Value--;
+                scrollSpeed.Value -= speedIncrease;
                 changed = true;
             }
             else if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
             {
-                scrollSpeed.Value++;
+                scrollSpeed.Value += speedIncrease;
                 changed = true;
             }
 
             if (changed)
             {
                 NotificationManager.Show(NotificationLevel.Info, $"Your {ModeHelper.ToShortHand(MapManager.Selected.Value.Mode)} " +
-                                                                 $"scroll speed has been changed to: {scrollSpeed.Value}");
+                                                                 $"scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
             }
         }
 
@@ -611,12 +614,12 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///     Exits the current screen and goes to the editor
         /// </summary>
-        public void ExitToEditor(bool newEditor = false)
+        public void ExitToEditor()
         {
             if (MapManager.Selected.Value == null)
                 return;
 
-            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+            if (AudioEngine.Track != null && !AudioEngine.Track.IsStopped)
                 AudioEngine.Track.Stop();
 
             if (OnlineManager.CurrentGame != null)
@@ -630,28 +633,19 @@ namespace Quaver.Shared.Screens.Selection
 
             try
             {
-                if (newEditor)
+                IAudioTrack track;
+
+                try
                 {
-                    IAudioTrack track;
-
-                    try
-                    {
-                        track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
-                    }
-                    catch (Exception)
-                    {
-                        track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
-                    }
-
-                    ModManager.RemoveAllMods();
-                    Exit(() => new EditScreen(MapManager.Selected.Value, track));
+                    track = new AudioTrack(MapManager.GetAudioPath(MapManager.Selected.Value), false, false);
                 }
-                else
+                catch (Exception)
                 {
-                    var qua = MapManager.Selected.Value.LoadQua();
-                    Exit(() => new EditorScreen(qua));
+                    track = new AudioTrackVirtual(MapManager.Selected.Value.SongLength + 5000);
                 }
 
+                ModManager.RemoveAllMods();
+                Exit(() => new EditScreen(MapManager.Selected.Value, track));
             }
             catch (Exception e)
             {

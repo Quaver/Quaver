@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Graphics.Containers;
@@ -10,6 +11,7 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
@@ -50,6 +52,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         public SongSelectContainer(List<T> availableItems, int poolSize) : base(availableItems, poolSize, 0,
             new ScalableVector2(DrawableMapset.WIDTH, HEIGHT), new ScalableVector2(DrawableMapset.WIDTH,0))
         {
+            AutoScaleHeight = true;
+
+            if (PoolSize != int.MaxValue)
+                PoolSize = (int) (poolSize * WindowManager.BaseToVirtualRatio);
+
             PaddingBottom = 10;
 
             InputEnabled = true;
@@ -67,6 +74,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                 Alignment = Alignment.MidRight,
                 Width = Width,
                 Height = HEIGHT,
+                AutoScaleHeight = true
             };
 
             SelectedIndex = new BindableInt(-1, 0, int.MaxValue);
@@ -75,9 +83,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             SetSelectedIndex();
 
             PoolStartingIndex = DesiredPoolStartingIndex(SelectedIndex.Value);
-            SnapToSelected();
             CreatePool();
             PositionAndContainPoolObjects();
+            SnapToSelected();
         }
 
         /// <inheritdoc />
@@ -133,11 +141,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         ///     Scrolls the container to the selected position
         /// </summary>
-        public virtual void ScrollToSelected()
+        public virtual void ScrollToSelected(int time = 1800)
         {
             // Scroll the the place where the map is.
             var targetScroll = GetSelectedPosition();
-            ScrollTo(targetScroll, 1800);
+            ScrollTo(targetScroll, time);
         }
 
         /// <summary>
@@ -151,6 +159,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             PreviousContentContainerY = ContentContainer.Y;
             TargetY = PreviousContentContainerY;
             PreviousTargetY = PreviousContentContainerY;
+            HandlePoolShifting();
         }
 
         /// <summary>

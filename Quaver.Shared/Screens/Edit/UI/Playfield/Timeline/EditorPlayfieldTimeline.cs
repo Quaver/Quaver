@@ -11,6 +11,10 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Timing.Add;
 using Quaver.Shared.Screens.Edit.Actions.Timing.AddBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpm;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeBpmBatch;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffset;
+using Quaver.Shared.Screens.Edit.Actions.Timing.ChangeOffsetBatch;
 using Quaver.Shared.Screens.Edit.Actions.Timing.RemoveBatch;
 using Wobble.Audio.Tracks;
 using Wobble.Bindables;
@@ -104,6 +108,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved += OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged += OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged += OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged += OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged += OnTimingPointOffsetBatchChanged;
         }
 
         /// <inheritdoc />
@@ -135,6 +143,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
             ActionManager.TimingPointBatchRemoved -= OnTimingPointBatchRemoved;
+            ActionManager.TimingPointOffsetChanged -= OnTimingPointOffsetChanged;
+            ActionManager.TimingPointBpmChanged -= OnTimingPointBpmChanged;
+            ActionManager.TimingPointBpmBatchChanged -= OnTimingPointBpmBatchChanged;
+            ActionManager.TimingPointOffsetBatchChanged -= OnTimingPointOffsetBatchChanged;
 
             base.Destroy();
         }
@@ -157,6 +169,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
 
             foreach (var tp in Map.TimingPoints)
             {
+                if (tp.StartTime > Track.Length)
+                    continue;
+
+                if (float.IsInfinity(tp.Bpm))
+                    continue;
+
                 var pointLength = Map.GetTimingPointLength(tp);
                 var startTime = tp.StartTime;
                 var numBeatsOffsetted = 0;
@@ -504,5 +522,29 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTimingPointBatchAdded(object sender, EditorTimingPointBatchAddedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetChanged(object sender, EditorTimingPointOffsetChangedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmChanged(object sender, EditorTimingPointBpmChangedEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointBpmBatchChanged(object sender, EditorChangedTimingPointBpmBatchEventArgs e) => ReInitialize();
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimingPointOffsetBatchChanged(object sender, EditorChangedTimingPointOffsetBatchEventArgs e) => ReInitialize();
     }
 }

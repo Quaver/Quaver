@@ -33,7 +33,9 @@ using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.RemoveBatch;
 using Quaver.Shared.Screens.Edit.Components;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Editor;
 using Quaver.Shared.Screens.Editor.Timing;
 using Quaver.Shared.Screens.Editor.UI.Rulesets.Keys;
@@ -168,15 +170,19 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> PlaceObjectsOnNearestTick { get; } = ConfigManager.EditorPlaceObjectsOnNearestTick ?? new Bindable<bool>(true);
+
+        /// <summary>
+        /// </summary>
         private Metronome Metronome { get; }
 
         /// <summary>
         /// </summary>
-        public List<EditorPlugin> Plugins { get; private set; }
+        public List<IEditorPlugin> Plugins { get; private set; }
 
         /// <summary>
         /// </summary>
-        public Dictionary<EditorBuiltInPlugin, EditorPlugin> BuiltInPlugins { get; private set; }
+        public Dictionary<EditorBuiltInPlugin, IEditorPlugin> BuiltInPlugins { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -258,6 +264,12 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.IsMouseVisible = true;
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 0;
 
+            if (Map.NewlyCreated)
+            {
+                DialogManager.Show(new EditorMetadataDialog(this));
+                Map.NewlyCreated = false;
+            }
+
             base.OnFirstUpdate();
         }
 
@@ -334,6 +346,9 @@ namespace Quaver.Shared.Screens.Edit
             if (LongNoteOpacity != ConfigManager.EditorLongNoteOpacity)
                 LongNoteOpacity.Dispose();
 
+            if (PlaceObjectsOnNearestTick != ConfigManager.EditorPlaceObjectsOnNearestTick)
+                PlaceObjectsOnNearestTick.Dispose();
+
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;
 
@@ -358,8 +373,15 @@ namespace Quaver.Shared.Screens.Edit
             {
                 Track = track;
                 Track.ApplyRate(ConfigManager.Pitched?.Value ?? true);
-                AudioEngine.Track = Track;
-                AudioEngine.Map = Map;
+
+                lock (AudioEngine.Track)
+                {
+                    if (!AudioEngine.Track.IsDisposed)
+                        AudioEngine.Track.Dispose();
+
+                    AudioEngine.Track = Track;
+                    AudioEngine.Map = Map;
+                }
             }
 
             Track.Seeked += OnTrackSeeked;
@@ -406,9 +428,11 @@ namespace Quaver.Shared.Screens.Edit
             HandleBeatSnapChanges();
             HandlePlaybackRateChanges();
             HandleCtrlInput();
-            HandleTemporaryHitObjectPlacement();
             HandleKeyPressDelete();
             HandleKeyPressEscape();
+            HandleKeyPressF1();
+            HandleKeyPressF5();
+            HandleKeyPressF6();
         }
 
         /// <summary>
@@ -419,6 +443,42 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             LeaveEditor();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF1()
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                DialogManager.Show(new EditorMetadataDialog(this));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF5()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
+                return;
+
+            var plugin = BuiltInPlugins[EditorBuiltInPlugin.TimingPointEditor];
+            plugin.IsActive = !plugin.IsActive;
+
+            if (plugin.IsActive)
+                plugin.Initialize();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressF6()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.F6))
+                return;
+
+            var plugin = BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
+            plugin.IsActive = !plugin.IsActive;
+
+            if (plugin.IsActive)
+                plugin.Initialize();
         }
 
         /// <summary>
@@ -643,22 +703,19 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (Track.Time >= obj.StartTime)
                 {
-                    if (ViewLayers.Value)
+                    if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                        continue;
+
+                    try
                     {
-                        if (obj.EditorLayer == 0 && DefaultLayer.Hidden)
+                        var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
+
+                        if (layer.Hidden)
                             continue;
-
-                        try
-                        {
-                            var layer = WorkingMap.EditorLayers[obj.EditorLayer - 1];
-
-                            if (layer.Hidden)
-                                continue;
-                        }
-                        catch (Exception)
-                        {
-                            // ignore and play
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore and play
                     }
 
                     HitObjectManager.PlayObjectHitSounds(obj, Skin.Value, HitsoundVolume.Value);
@@ -738,7 +795,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void LoadPlugins()
         {
-            Plugins = new List<EditorPlugin>();
+            Plugins = new List<IEditorPlugin>();
 
             var pluginDirectories = Directory.GetDirectories($"{WobbleGame.WorkingDirectory}/Plugins");
 
@@ -776,6 +833,10 @@ namespace Quaver.Shared.Screens.Edit
             }
 
             LoadBuiltInPlugins();
+
+            // If the user has no timing points in their map, auto-open the bpm calculator
+            if (WorkingMap.TimingPoints.Count == 0)
+                BuiltInPlugins[EditorBuiltInPlugin.BpmCalculator].IsActive = true;
         }
 
         /// <summary>
@@ -784,8 +845,12 @@ namespace Quaver.Shared.Screens.Edit
         {
             var dir = $"Quaver.Resources/Scripts/Lua/Editor";
 
-            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, EditorPlugin>()
+            BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
+                {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
+                {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
+                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                    $"{dir}/BpmCalculator/plugin.lua", true)},
                 {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
                     $"{dir}/BpmDetector/plugin.lua", true)},
                 {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
@@ -850,10 +915,17 @@ namespace Quaver.Shared.Screens.Edit
                 if (h.IsLongNote)
                     hitObject.EndTime = h.EndTime + difference;
 
+                // Don't paste notes past the end
+                if (hitObject.StartTime > Track.Length || hitObject.EndTime > Track.Length)
+                    continue;
+
                 clonedObjects.Add(hitObject);
             }
 
             ActionManager.Perform(new EditorActionPlaceHitObjectBatch(ActionManager, WorkingMap, clonedObjects));
+
+            SelectedHitObjects.Clear();
+            SelectedHitObjects.AddRange(clonedObjects);
         }
 
         /// <summary>
@@ -1005,6 +1077,9 @@ namespace Quaver.Shared.Screens.Edit
 
                 if (ActionManager.UndoStack.Count != 0)
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
+
+                Map.DifficultyProcessorVersion = "Needs Update";
+                MapDatabaseCache.UpdateMap(Map);
 
                 if (!MapDatabaseCache.MapsToUpdate.Contains(MapManager.Selected.Value))
                     MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
@@ -1193,6 +1268,7 @@ namespace Quaver.Shared.Screens.Edit
                     map.DateAdded = DateTime.Now;
                     map.Id = MapDatabaseCache.InsertMap(map, path);
                     map.Mapset = Map.Mapset;
+                    map.NewlyCreated = true;
                     Map.Mapset.Maps.Add(map);
                     MapManager.Selected.Value = map;
 

@@ -60,6 +60,12 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public MultiplayerGameScreen()
         {
+            if (OnlineManager.CurrentGame == null)
+            {
+                Exit(() => new MultiplayerLobbyScreen());
+                return;
+            }
+
             CreateGameBindable();
             InitializeActiveLeftPanelBindable();
             InitializeTestPlayingBindable();

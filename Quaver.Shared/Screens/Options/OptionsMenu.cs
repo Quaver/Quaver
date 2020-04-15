@@ -24,6 +24,10 @@ namespace Quaver.Shared.Screens.Options
     {
         /// <summary>
         /// </summary>
+        public static string LastOpenedSection { get; set; } = "Video";
+
+        /// <summary>
+        /// </summary>
         private Bindable<string> CurrentSearchQuery { get; } = new Bindable<string>("") { Value = ""};
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace Quaver.Shared.Screens.Options
             CreateContentContainers();
             CreateHeader();
 
+            SelectedSection.Value = Sections.Find(x => x.Name == LastOpenedSection) ?? Sections.First();
             SetActiveContentContainer();
             SelectedSection.ValueChanged += OnSectionChanged;
             CurrentSearchQuery.ValueChanged += OnSearchChanged;
@@ -139,7 +144,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Offset", new List<OptionsItem>()
                     {
-                        new OptionsItemSliderGlobalOffset(containerRect, "Global Offset", ConfigManager.GlobalAudioOffset),
+                        new OptionsItemSliderGlobalOffset(containerRect, "Global Audio Offset", ConfigManager.GlobalAudioOffset),
+                        new OptionsSlider(containerRect, "Visual Offset", ConfigManager.VisualOffset, i => $"{i} ms"),
                         new OptionsItemCalibrateOffset(containerRect, "Calibrate Offset")
                     }),
                     new OptionsSubcategory("Effects", new List<OptionsItem>()
@@ -168,8 +174,8 @@ namespace Quaver.Shared.Screens.Options
                     {
                         new OptionsItemScrollDirection(containerRect, "4K Scroll Direction", ConfigManager.ScrollDirection4K),
                         new OptionsItemScrollDirection(containerRect, "7K Scroll Direction", ConfigManager.ScrollDirection7K),
-                        new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i}"),
-                        new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i}"),
+                        new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i / 10f:0.0}"),
+                        new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i / 10f:0.0}"),
                     }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
@@ -237,7 +243,8 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Configuration", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Note & Receptor Size Scale", ConfigManager.GameplayNoteScale, i => $"{i / 100f:0.00}x")
-                            { Tags = new List<string>() {  "mini" }}
+                            { Tags = new List<string>() {  "mini" }},
+                        new OptionsItemCheckbox(containerRect, "Tint Hitlighting Based On Judgement Color", ConfigManager.TintHitLightingBasedOnJudgementColor)
                     })
                 }),
                 new OptionsSection("Input", UserInterface.OptionsInput, new List<OptionsSubcategory>

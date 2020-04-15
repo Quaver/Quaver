@@ -12,7 +12,7 @@ namespace Quaver.Shared.Scripting
 
         public static Vector3 CreateVector3(int x, int y, int z) => new Vector3(x, y, z);
 
-        public static Vector4 CreateVector4(int w, int x, int y, int z) => new Vector4(w, x, y, z);
+        public static Vector4 CreateVector4(float w, float x, float y, float z) => new Vector4(w, x, y, z);
 
         public static bool SliderFloat4(string label, ref Vector4 v, float v_min, float v_max, string format, float power) => ImGui.SliderFloat4(label, ref v, v_min, v_max, format, power);
 

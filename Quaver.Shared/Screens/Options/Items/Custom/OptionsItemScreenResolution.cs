@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Window;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Window;
@@ -29,6 +32,15 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Dropdown.ItemSelected += (sender, args) =>
             {
+                if (!QuaverWindowManager.CanChangeResolutionOnScene)
+                {
+                    Dropdown.SelectedIndex = GetSelectedIndex();
+                    Dropdown.SelectedText.Text = Dropdown.Items[Dropdown.SelectedIndex].Text.Text;
+
+                    NotificationManager.Show(NotificationLevel.Warning, "You cannot change resolutions while on this screen!");
+                    return;
+                }
+
                 var split = args.Item.Text.Text.Split("x");
 
                 if (ConfigManager.WindowWidth != null)
@@ -37,7 +49,8 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
                     ConfigManager.WindowHeight.Value = int.Parse(split[1]);
                 }
 
-                WindowManager.ChangeScreenResolution(new Point(int.Parse(split[0]), int.Parse(split[1])));
+                var game = GameBase.Game as QuaverGame;
+                game?.ChangeResolution();
             };
         }
 
@@ -48,21 +61,20 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         {
             var options = new List<string>
             {
+                "640x360",
                 "1024x576",
                 "1152x648"
             };
 
             foreach (DisplayMode mode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
             {
-                if (mode.AspectRatio >= 1.7 && mode.AspectRatio <= 1.8)
-                {
-                    var option = $"{mode.Width}x{mode.Height}";
+                var option = $"{mode.Width}x{mode.Height}";
 
-                    if (!options.Contains(option))
-                        options.Add(option);
-                }
+                if (!options.Contains(option))
+                    options.Add(option);
             }
 
+            options = options.OrderBy(x => int.Parse(x.Split("x")[0])).ToList();
             return options;
         }
 

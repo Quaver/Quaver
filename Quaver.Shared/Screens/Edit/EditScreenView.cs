@@ -133,7 +133,7 @@ namespace Quaver.Shared.Screens.Edit
 
             IsImGuiHovered = false;
 
-            if (MenuBar != null)
+            if (MenuBar != null && !EditScreen.Exiting)
             {
                 if (DialogManager.Dialogs.Count == 0)
                     DrawPlugins(gameTime);
@@ -181,7 +181,8 @@ namespace Quaver.Shared.Screens.Edit
         private void CreatePlayfield() => Playfield = new EditorPlayfield(EditScreen.WorkingMap, EditScreen.ActionManager, EditScreen.Skin,
             EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed, EditScreen.AnchorHitObjectsAtMidpoint,
             EditScreen.ScaleScrollSpeedWithRate, EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool,
-            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer) { Parent = Container};
+            EditScreen.LongNoteOpacity, EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer,
+            EditScreen.PlaceObjectsOnNearestTick) { Parent = Container};
 
         /// <summary>
         /// </summary>
@@ -250,7 +251,8 @@ namespace Quaver.Shared.Screens.Edit
                 EditScreen.Track, EditScreen.BeatSnap, EditScreen.PlayfieldScrollSpeed,
                 EditScreen.AnchorHitObjectsAtMidpoint, EditScreen.ScaleScrollSpeedWithRate,
                 EditScreen.BeatSnapColor, EditScreen.ViewLayers, EditScreen.CompositionTool, EditScreen.LongNoteOpacity,
-                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, true)
+                EditScreen.SelectedHitObjects, EditScreen.SelectedLayer, EditScreen.DefaultLayer, EditScreen.PlaceObjectsOnNearestTick,
+                true)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter
@@ -306,6 +308,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 CreateOtherDifficultyPlayfield();
                 PositionPlayfields();
+                ResetPanelParents();
             });
         }
 
@@ -338,7 +341,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 plugin.Draw(gameTime);
 
-                if (ImGui.IsAnyItemHovered() || plugin.State.IsWindowHovered)
+                if (ImGui.IsAnyItemHovered() || plugin.IsWindowHovered)
                     IsImGuiHovered = true;
             }
         }
@@ -379,7 +382,7 @@ namespace Quaver.Shared.Screens.Edit
             Playfield.X = -Playfield.Width / 2 - spacing;
             MapPreview.X = Playfield.Width / 2 + spacing;
 
-            Footer.Parent = Container;
+            ResetPanelParents();
         }
 
         /// <summary>
@@ -401,6 +404,18 @@ namespace Quaver.Shared.Screens.Edit
             MapPreview?.Destroy();
             MapPreview = null;
             Playfield.X = 0;
+        }
+
+        /// <summary>
+        ///     To make sure that the panels are always displayed on top
+        /// </summary>
+        private void ResetPanelParents()
+        {
+            Layers.Parent = Container;
+            Details.Parent = Container;
+            CompositionTools.Parent = Container;
+            Hitsounds.Parent = Container;
+            Footer.Parent = Container;
         }
     }
 }

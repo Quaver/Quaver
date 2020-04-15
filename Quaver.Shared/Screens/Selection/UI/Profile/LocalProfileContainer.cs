@@ -62,6 +62,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
             Profile = profile;
             Size = new ScalableVector2(564, 838);
             Alpha = 0;
+            AutoScaleHeight = true;
 
             LoadProfileTask = new TaskHandler<int, int>(LoadProfile);
             CreateHeaderText();

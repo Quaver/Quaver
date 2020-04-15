@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
@@ -53,6 +54,12 @@ namespace Quaver.Shared.Screens.Importing
         /// </summary>
         private bool ComingFromSelect { get; set; }
 
+        /// <summary>
+        ///		Used to determine if the importing is a full sync of mapset.
+        ///		Usually performed from F5 in select screen.
+        ///	</summary>
+        private bool FullSync { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -61,9 +68,10 @@ namespace Quaver.Shared.Screens.Importing
 
         /// <summary>
         /// </summary>
-        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false)
+        public ImportingScreen(MultiplayerScreen multiplayerScreen = null, bool fromSelect = false, bool fullSync = false)
         {
             ComingFromSelect = fromSelect;
+            FullSync = fullSync;
             MultiplayerScreen = multiplayerScreen;
 
             PreviouslySelectedMap = MapManager.Selected.Value;
@@ -79,10 +87,11 @@ namespace Quaver.Shared.Screens.Importing
 
             ThreadScheduler.Run(() =>
             {
-                MapsetImporter.ImportMapsetsInQueue();
-
                 if (MapDatabaseCache.MapsToUpdate.Count != 0)
                     MapDatabaseCache.ForceUpdateMaps();
+
+                if (FullSync)
+                    MapDatabaseCache.Load(true);
 
                 if (QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0)
                 {
@@ -91,6 +100,7 @@ namespace Quaver.Shared.Screens.Importing
                     QuaverSettingsDatabaseCache.RecalculateDifficultiesForOutdatedMaps();
                 }
 
+                MapsetImporter.ImportMapsetsInQueue();
                 OnImportCompletion();
             });
 
@@ -136,7 +146,10 @@ namespace Quaver.Shared.Screens.Importing
             }
             else
             {
-                Exit(() => new SelectionScreen());
+                if (MapManager.Mapsets.Count == 0)
+                    Exit(() => new MainMenuScreen());
+                else
+                    Exit(() => new SelectionScreen());
             }
         }
     }

@@ -282,7 +282,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         private void OnRandomMapsetSelected(object sender, RandomMapsetSelectedEventArgs e)
         {
             SelectedIndex.Value = e.Index;
-            ScrollToSelected();
+            ScrollToSelected(800);
         }
 
         /// <summary>

@@ -41,6 +41,9 @@ namespace Quaver.Shared.Screens.Selection.Components
 
             LoadTrackTask = new TaskHandler<int, int>((i, token) =>
             {
+                if (screen != null && screen.Exiting)
+                    return 0;
+
                 LogLoadingTrack();
 
                 if (PlayFromBeginning)
@@ -73,8 +76,8 @@ namespace Quaver.Shared.Screens.Selection.Components
             {
                 MapManager.Selected.ValueChanged += OnMapChanged;
 
-                if (AudioEngine.Map != MapManager.Selected.Value || AudioEngine.Track.IsStopped)
-                    LoadTrackTask.Run(0);
+                /*if (AudioEngine.Map != MapManager.Selected.Value || AudioEngine.Track.IsStopped)
+                    LoadTrackTask.Run(0);*/
             }
         }
 
@@ -113,10 +116,10 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (AudioEngine.Track == null)
                 return;
 
-            if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning)
+            if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning || MapManager.GetAudioPath(AudioEngine.Map) != MapManager.GetAudioPath(MapManager.Selected.Value))
                 LoadTrackTask.Run(0);
 
-            AudioTrackStoppedInLastFrame = AudioEngine.Track.HasPlayed && AudioEngine.Track.IsDisposed;
+            AudioTrackStoppedInLastFrame = AudioEngine.Track.IsDisposed;
         }
 
         /// <summary>

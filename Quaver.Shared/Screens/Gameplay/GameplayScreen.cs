@@ -332,6 +332,18 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool IsDisposed { get; private set; }
 
         /// <summary>
+        /// </summary>
+        private const int FAILURE_FADE_TIME = 1700;
+
+        /// <summary>
+        /// </summary>
+        private const int QUIT_FADE_TIME = 400;
+
+        /// <summary>
+        /// </summary>
+        public int FailFadeTime => HasQuit ? QUIT_FADE_TIME : FAILURE_FADE_TIME;
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -355,7 +367,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = ObjectHelper.DeepClone(map);
-                testingQua.HitObjects.RemoveAll(x => x.StartTime < playTestTime);
+                testingQua.HitObjects.RemoveAll(x => x.StartTime + 2 < playTestTime);
                 Qua.RestoreDefaultValues(testingQua);
 
                 Map = testingQua;
@@ -450,7 +462,7 @@ namespace Quaver.Shared.Screens.Gameplay
             var game = (QuaverGame) GameBase.Game;
             game.InitializeFpsLimiting();
 
-            if (IsMultiplayerGame)
+            if (IsMultiplayerGame && !IsSongSelectPreview)
                 OnlineManager.Client?.MultiplayerGameScreenLoaded();
 
             if (OnlineManager.IsBeingSpectated && !InReplayMode)
@@ -900,8 +912,18 @@ namespace Quaver.Shared.Screens.Gameplay
 
             try
             {
-                // Pause the audio if applicable.
-                AudioEngine.Track.Pause();
+                if (!IsPaused && HasStarted)
+                {
+                    if (HasQuit && AudioEngine.Track.IsPlaying)
+                        AudioEngine.Track.Fade(0, FailFadeTime);
+                    else
+                    {
+                        // Audio should be pitched when failing to provide a smooth sound.
+                        AudioEngine.Track.ApplyRate(true);
+                        AudioEngine.Track.FadeSpeed(0f, FailFadeTime);
+                        AudioEngine.Track.Fade(0, FailFadeTime);
+                    }
+                }
             }
             // No need to handle this exception.
             catch (Exception)
@@ -910,9 +932,6 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             CustomAudioSampleCache.StopAll();
-
-            // Play failure sound.
-            SkinManager.Skin.SoundFailure.CreateChannel().Play();
 
             FailureHandled = true;
         }
@@ -1477,17 +1496,33 @@ namespace Quaver.Shared.Screens.Gameplay
                 // Handle offset +
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
                 {
-                    MapManager.Selected.Value.LocalOffset += change;
-                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value += change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset += change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
+                    }
                 }
 
                 // Handle offset -
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
                 {
-                    MapManager.Selected.Value.LocalOffset -= change;
-                    NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset} ms");
-                    MapDatabaseCache.UpdateMap(MapManager.Selected.Value);
+                    if (KeyboardManager.IsAltDown())
+                    {
+                        ConfigManager.VisualOffset.Value -= change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms");
+                    }
+                    else
+                    {
+                        MapManager.Selected.Value.LocalOffset -= change;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms");
+                        ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
+                    }
                 }
             }
         }

@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             if (!file.EndsWith(".mp3") && !file.EndsWith(".ogg"))
                 return;
 
-            EditScreen.CreateNewMapset(file);
+            EditScreen.CreateNewMapset(e);
             DialogManager.Dismiss(this);
         }
     }

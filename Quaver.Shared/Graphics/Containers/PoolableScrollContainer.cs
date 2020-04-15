@@ -128,7 +128,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///    Makes sure that the content container's height is up to date
         /// </summary>
-        protected void RecalculateContainerHeight(bool usePoolCount = false)
+        public virtual void RecalculateContainerHeight(bool usePoolCount = false)
         {
             var count = usePoolCount ? Pool.Count : AvailableItems.Count;
 
@@ -163,7 +163,7 @@ namespace Quaver.Shared.Graphics.Containers
         /// <summary>
         ///     Handles the shifting of the object pool when the user scrolls up or down.
         /// </summary>
-        private void HandlePoolShifting()
+        protected void HandlePoolShifting()
         {
             if (AvailableItems == null || Pool.Count != PoolSize)
                 return;

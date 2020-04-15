@@ -8,7 +8,7 @@ using Quaver.Shared.Scripting;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
-    public class EditorPlugin : LuaImGui
+    public class EditorPlugin : LuaImGui, IEditorPlugin
     {
         /// <summary>
         /// </summary>
@@ -20,20 +20,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
 
         /// <summary>
         /// </summary>
-        public string Name { get; }
+        public bool IsWindowHovered { get; set; }
 
         /// <summary>
         /// </summary>
-        public string Author { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// </summary>
-        public string Description { get; }
+        public string Author { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         ///     If the plugin is built into the editor
         /// </summary>
-        public bool IsBuiltIn { get; }
+        public bool IsBuiltIn { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -60,6 +64,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        public void Initialize()
+        {
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void SetFrameState()
         {
             WorkingScript.Globals["utils"] = typeof(EditorPluginUtils);
@@ -71,10 +82,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             var state = (EditorPluginState) State;
 
             state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
+            state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
             state.HitObjects = Editor.WorkingMap.HitObjects;
             state.TimingPoints = Editor.WorkingMap.TimingPoints;
             state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
+            state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
 
             base.SetFrameState();
 
@@ -88,6 +101,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public override void AfterRender()
         {
             ImGui.PopStyleVar();
+            IsWindowHovered = State.IsWindowHovered;
+
             base.AfterRender();
         }
 

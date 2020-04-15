@@ -46,7 +46,9 @@ using Quaver.Shared.Screens.Result.UI;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
+using Quaver.Shared.Skinning;
 using Wobble;
+using Wobble.Audio.Samples;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
@@ -127,6 +129,11 @@ namespace Quaver.Shared.Screens.Result
         public Dictionary<ScoreboardUser, ResultScoreContainer> CachedScoreContainers { get; set; }
 
         /// <summary>
+        ///		An audio Channel that holds the applause sound effect, that is played when the user passes a map.
+        ///	</summary>
+        private AudioSampleChannel ApplauseSoundEffect { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="gameplay"></param>
         /// <param name="multiplayerScores"></param>
@@ -139,6 +146,12 @@ namespace Quaver.Shared.Screens.Result
 
             InitializeIfGameplayType();
             ChangeDiscordPresence();
+
+            if(!gameplay.Failed)
+            {
+                ApplauseSoundEffect = SkinManager.Skin.SoundApplause.CreateChannel();
+                ApplauseSoundEffect.Play();
+            }
 
             if (MultiplayerScores != null)
             {
@@ -235,6 +248,7 @@ namespace Quaver.Shared.Screens.Result
                     container.Value.Destroy();
             }
 
+            ApplauseSoundEffect?.Stop();
             base.Destroy();
         }
 

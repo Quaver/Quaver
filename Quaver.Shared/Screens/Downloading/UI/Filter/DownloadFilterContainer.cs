@@ -140,6 +140,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
             Alpha = 0f;
             Size = new ScalableVector2(564, 838);
+            AutoScaleHeight = true;
 
             CreateHeader();
             CreateContainer();

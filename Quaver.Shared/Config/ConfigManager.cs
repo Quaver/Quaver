@@ -215,6 +215,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> ScoreboardVisible { get; private set; }
 
         /// <summary>
+        ///     If true, the hitlighting will be tinted to the judgement color in the skin
+        /// </summary>
+        internal static Bindable<bool> TintHitLightingBasedOnJudgementColor { get; private set; }
+
+        /// <summary>
         ///     Dictates how to order the mapsets during song select.
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
@@ -490,6 +495,10 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        internal static Bindable<bool> EditorPlaceObjectsOnNearestTick { get; private set; }
+
+        /// <summary>
+        /// </summary>
         internal static BindableInt EditorLongNoteOpacity { get; private set; }
 
         /// <summary>
@@ -499,6 +508,10 @@ namespace Quaver.Shared.Config
         /// <summary>
         /// </summary>
         internal static Bindable<bool> EditorDisplayGameplayPreview { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static BindableInt VisualOffset { get; private set; }
 
         /// <summary>
         ///     Keybinding for leftward navigation.
@@ -717,16 +730,16 @@ namespace Quaver.Shared.Config
             DevicePeriod = ReadInt(@"DevicePeriod", Bass.GetConfig(Configuration.DevicePeriod), 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", Bass.GetConfig(Configuration.DeviceBufferLength) / DevicePeriod.Value, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
-            WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
-            WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
+            WindowHeight = ReadInt(@"WindowHeight", 768, 360, short.MaxValue, data);
+            WindowWidth = ReadInt(@"WindowWidth", 1366, 640, short.MaxValue, data);
             WindowBorderless = ReadValue(@"WindowBorderless", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             FpsCounter = ReadValue(@"FpsCounter", false, data);
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, int.MaxValue, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 5, 100, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 5, 100, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 150, 50, 1000, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 150, 50, 1000, data);
             ScrollDirection4K = ReadValue(@"ScrollDirection4K", ScrollDirection.Down, data);
             ScrollDirection7K = ReadValue(@"ScrollDirection7K", ScrollDirection.Down, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -300, 300, data);
@@ -841,6 +854,9 @@ namespace Quaver.Shared.Config
             EditorLongNoteOpacity = ReadInt(@"EditorLongNoteOpacity", 100, 30, 100, data);
             GameplayNoteScale = ReadInt(@"GameplayNoteScale", 100, 25, 100, data);
             EditorDisplayGameplayPreview = ReadValue(@"EditorDisplayGameplayPreview", false, data);
+            EditorPlaceObjectsOnNearestTick = ReadValue(@"EditorPlaceObjectsOnNearestTick", true, data);
+            VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
+            TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -987,6 +1003,9 @@ namespace Quaver.Shared.Config
                     EditorLongNoteOpacity.ValueChanged += AutoSaveConfiguration;
                     GameplayNoteScale.ValueChanged += AutoSaveConfiguration;
                     EditorDisplayGameplayPreview.ValueChanged += AutoSaveConfiguration;
+                    EditorPlaceObjectsOnNearestTick.ValueChanged += AutoSaveConfiguration;
+                    VisualOffset.ValueChanged += AutoSaveConfiguration;
+                    TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

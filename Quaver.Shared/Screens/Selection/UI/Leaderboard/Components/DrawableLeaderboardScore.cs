@@ -15,10 +15,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 {
     public class DrawableLeaderboardScore : PoolableSprite<Score>
     {
+        public static int ScoreHeight => 66;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override int HEIGHT { get; } = 66;
+        public override int HEIGHT { get; } = ScoreHeight;
 
         /// <summary>
         ///     If the score is a personal best score

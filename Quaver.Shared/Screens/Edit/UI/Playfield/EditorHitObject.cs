@@ -156,9 +156,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <returns></returns>
         protected Color GetNoteTint()
         {
-            if (!ViewLayers.Value)
-                return Color.White;
-
             if (Info.EditorLayer == 0)
                 return DefaultLayer.Hidden ? HiddenLayerColor : Color.White;
 
@@ -168,6 +165,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
                 if (layer.Hidden)
                     return HiddenLayerColor;
+
+                if (!ViewLayers.Value)
+                    return Color.White;
 
                 return ColorHelper.ToXnaColor(layer.GetColor());
             }

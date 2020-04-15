@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            if (!Screen.Failed && !Screen.IsPaused)
+            if (!Screen.IsPaused)
                 HitObjectManager.Update(gameTime);
 
             Playfield.Update(gameTime);
