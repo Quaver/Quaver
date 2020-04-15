@@ -247,6 +247,9 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             {
                 SelectNextTrack(Direction.Forward);
             }
+
+            if (AudioEngine.Track != null && !AudioEngine.Track.HasPlayed)
+                AudioEngine.Track.Play();
         }
 
         /// <summary>
