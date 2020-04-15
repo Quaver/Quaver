@@ -17,6 +17,7 @@ using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Graphics.Notifications;
 using SharpCompress.Archives;
 using SharpCompress.Common;
@@ -101,12 +102,14 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var fileHashSet = files.ToHashSet();
+
             foreach (var map in maps)
             {
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
 
                 // Check if the file actually exists.
-                if (files.Any(x => BackslashToForward(x) == filePath))
+                if (fileHashSet.Contains(BackslashToForward(filePath)))
                 {
                     // Check if the file was updated. In this case, we check if the last write times are different
                     // BEFORE checking Md5 checksum of the file since it's faster to check if we even need to
@@ -157,18 +160,22 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var hashset = new HashSet<string>();
+            maps.ForEach(x => hashset.Add(BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")));
+
             foreach (var file in files)
             {
-                if (maps.Any(x => BackslashToForward(file) == BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")))
+                if (hashset.Contains(BackslashToForward(file)))
                     continue;
 
                 // Found map that isn't cached in the database yet.
                 try
                 {
                     var map = Map.FromQua(Qua.Parse(file, false), file);
-                    map.CalculateDifficulties();
-                    map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     InsertMap(map, file);
+
+                    if (!QuaverSettingsDatabaseCache.OutdatedMaps.Contains(map))
+                        QuaverSettingsDatabaseCache.OutdatedMaps.Add(map);
                 }
                 catch (Exception e)
                 {
