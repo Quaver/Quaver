@@ -14,9 +14,13 @@ using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
+using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Playlists;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Graphics.Notifications;
+using SharpCompress.Archives;
+using SharpCompress.Common;
 using SQLite;
 using Wobble;
 using Wobble.Logging;
@@ -30,6 +34,24 @@ namespace Quaver.Shared.Database.Maps
         ///     List of maps to force update after editing them.
         /// </summary>
         public static List<Map> MapsToUpdate { get; } = new List<Map>();
+
+        /// <summary>
+        ///     The names of the .qp files in the resources
+        /// </summary>
+        private static List<string> DefaultMapsetFiles { get; } = new List<string>()
+        {
+            "HyuN - CrossOver",
+            "HyuN - Princess Of Winter",
+            "Rabbit House - Have A Party Time!",
+            "zetoban - Csikos Post",
+            "zetoban - Umami Packed Mountaineering"
+        };
+
+        /// <summary>
+        ///     The default map that will be chosen if <see cref="ImportDefaultMapsets"/> is called
+        ///     (HyuN - Princess of Winter [Beginner])
+        /// </summary>
+        private static string DefaultMapChecksum { get; } = "5004c3553cd29ccd3191e5c266f2f282";
 
         /// <summary>
         ///     Loads all of the maps in the database and groups them into mapsets to use
@@ -50,6 +72,9 @@ namespace Quaver.Shared.Database.Maps
             }
 
             OrderAndSetMapsets();
+
+            if (MapManager.Mapsets.Count == 0)
+                ImportDefaultMapsets();
         }
 
         /// <summary>
@@ -77,12 +102,14 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var fileHashSet = files.ToHashSet();
+
             foreach (var map in maps)
             {
                 var filePath = BackslashToForward($"{ConfigManager.SongDirectory.Value}/{map.Directory}/{map.Path}");
 
                 // Check if the file actually exists.
-                if (files.Any(x => BackslashToForward(x) == filePath))
+                if (fileHashSet.Contains(BackslashToForward(filePath)))
                 {
                     // Check if the file was updated. In this case, we check if the last write times are different
                     // BEFORE checking Md5 checksum of the file since it's faster to check if we even need to
@@ -133,18 +160,22 @@ namespace Quaver.Shared.Database.Maps
         {
             var maps = FetchAll();
 
+            var hashset = new HashSet<string>();
+            maps.ForEach(x => hashset.Add(BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")));
+
             foreach (var file in files)
             {
-                if (maps.Any(x => BackslashToForward(file) == BackslashToForward($"{ConfigManager.SongDirectory.Value}/{x.Directory}/{x.Path}")))
+                if (hashset.Contains(BackslashToForward(file)))
                     continue;
 
                 // Found map that isn't cached in the database yet.
                 try
                 {
                     var map = Map.FromQua(Qua.Parse(file, false), file);
-                    map.CalculateDifficulties();
-                    map.DifficultyProcessorVersion = DifficultyProcessorKeys.Version;
                     InsertMap(map, file);
+
+                    if (!QuaverSettingsDatabaseCache.OutdatedMaps.Contains(map))
+                        QuaverSettingsDatabaseCache.OutdatedMaps.Add(map);
                 }
                 catch (Exception e)
                 {
@@ -330,6 +361,55 @@ namespace Quaver.Shared.Database.Maps
 
                 var selectedMapset = MapManager.Mapsets.Find(x => x.Maps.Any(y => y.Md5Checksum == MapManager.Selected.Value.Md5Checksum));
                 MapManager.Selected.Value = selectedMapset.Maps.Find(x => x.Md5Checksum == MapManager.Selected.Value.Md5Checksum);
+            }
+        }
+
+        /// <summary>
+        ///     Extracts the .qp files of the default maps and imports them into the game
+        /// </summary>
+        private static void ImportDefaultMapsets()
+        {
+            foreach (var map in DefaultMapsetFiles)
+            {
+                var directory = $"{ConfigManager.SongDirectory.Value}/{map}";
+
+                if (Directory.Exists(directory))
+                    continue;
+
+                Directory.CreateDirectory(directory);
+
+                try
+                {
+                    var stream = GameBase.Game.Resources.GetStream($"Quaver.Resources/DefaultMaps/{map}.qp");
+
+                    using (var archive = ArchiveFactory.Open(stream))
+                    {
+                        foreach (var entry in archive.Entries)
+                        {
+                            if (!entry.IsDirectory)
+                                entry.WriteToDirectory(directory, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                        }
+                    }
+
+                    Logger.Important($"Successfully imported default map: {map}", LogType.Runtime);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Failed to import default map: {map}", LogType.Runtime);
+                    Logger.Error(e, LogType.Runtime);
+                }
+            }
+
+            // Perform a full sync so that everything can be imported
+            Load(true);
+
+            var defaultMap = MapManager.FindMapFromMd5(DefaultMapChecksum);
+
+            // Select the default map and track (HyuN - Princess of Winter)
+            if (defaultMap != null)
+            {
+                MapManager.Selected.Value = defaultMap;
+                AudioEngine.LoadCurrentTrack();
             }
         }
     }

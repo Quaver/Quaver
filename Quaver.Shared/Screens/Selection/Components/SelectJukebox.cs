@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (AudioEngine.Track == null)
                 return;
 
-            if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning || AudioEngine.Map != MapManager.Selected.Value)
+            if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning || MapManager.GetAudioPath(AudioEngine.Map) != MapManager.GetAudioPath(MapManager.Selected.Value))
                 LoadTrackTask.Run(0);
 
             AudioTrackStoppedInLastFrame = AudioEngine.Track.IsDisposed;
