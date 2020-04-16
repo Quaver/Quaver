@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
@@ -97,6 +98,50 @@ namespace Quaver.Shared.Screens.Tournament
         ///     Sets the positions of each playfield
         /// </summary>
         private void SetPlayfieldPositions()
+        {
+            if (TournamentScreen.GameplayScreens.Count == 2)
+                Set1V1PlayfieldPositions();
+            else
+                SetFreeForAllPlayfieldPositions();
+        }
+
+        /// <summary>
+        ///     Sets the playfield positions for a 1v1 match
+        /// </summary>
+        private void Set1V1PlayfieldPositions()
+        {
+            for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)
+            {
+                var screen = TournamentScreen.GameplayScreens[i];
+                var playfield = (GameplayPlayfieldKeys) screen.Ruleset.Playfield;
+
+                playfield.Container.Width = playfield.Width + playfield.Stage.HealthBar.Width;
+
+                var padingLeft = 92;
+
+                if (i + 1 <= TournamentScreen.GameplayScreens.Count / 2f)
+                {
+                    playfield.Container.Alignment = Alignment.TopLeft;
+                    playfield.Container.X = padingLeft;
+
+                    var healthBar = playfield.Stage.HealthBar;
+                    healthBar.Parent = playfield.Stage.StageLeft;
+                    healthBar.X = -healthBar.Width;
+                    healthBar.SpriteEffect = SpriteEffects.FlipHorizontally;
+                    healthBar.ForegroundBar.SpriteEffect = SpriteEffects.FlipHorizontally;
+                }
+                else
+                {
+                    playfield.Container.Alignment = Alignment.TopRight;
+                    playfield.Container.X = -padingLeft;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Sets the playfield positions for a FFA match
+        /// </summary>
+        private void SetFreeForAllPlayfieldPositions()
         {
             var widthSum = TournamentScreen.GameplayScreens.Sum(x =>
             {
@@ -240,7 +285,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="gameTime"></param>
         private void UpdateProgressBar(GameTime gameTime)
         {
-            if (TournamentScreen.MainGameplayScreen.Type != TournamentScreenType.Coop)
+            if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
             var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
@@ -252,7 +297,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="gameTime"></param>
         private void DrawProgressBar(GameTime gameTime)
         {
-            if (TournamentScreen.MainGameplayScreen.Type != TournamentScreenType.Coop)
+            if (!ConfigManager.DisplaySongTimeProgress.Value)
                 return;
 
             var view = (GameplayScreenView) TournamentScreen.MainGameplayScreen.View;
