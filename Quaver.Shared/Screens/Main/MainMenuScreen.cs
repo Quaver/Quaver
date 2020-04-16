@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.Main
         ///     Dictates if this is the first ever menu screen load.
         ///     Used to determine if we should auto-connect to the server
         /// </summary>
-        public static bool FirstMenuLoad { get; private set; }
+        public static bool FirstLoadHandled { get; private set; }
 
         /// <summary>
         ///	</summary>
@@ -68,14 +68,16 @@ namespace Quaver.Shared.Screens.Main
             View = new MainMenuScreenView(this);
         }
 
-        public override void Destroy()
-        {
-            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
-            base.Destroy();
-        }
-
         public override void OnFirstUpdate()
         {
+            if (!FirstLoadHandled)
+            {
+                if (ConfigManager.AutoLoginToServer.Value)
+                    OnlineManager.Login();
+
+                FirstLoadHandled = true;
+            }
+
             base.OnFirstUpdate();
         }
 
@@ -83,6 +85,12 @@ namespace Quaver.Shared.Screens.Main
         {
             HandleInput(gameTime);
             base.Update(gameTime);
+        }
+
+        public override void Destroy()
+        {
+            ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
+            base.Destroy();
         }
 
         /// <summary>
