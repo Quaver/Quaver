@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Health
         ///     The bar displayed in the foreground. This one dictates the amount
         ///     of health the user currently has.
         /// </summary>
-        protected AnimatableSprite ForegroundBar { get; set; }
+        public AnimatableSprite ForegroundBar { get; set; }
 
         /// <summary>
         ///     Reference to the current score processor.

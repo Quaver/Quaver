@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Retry.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
             Quit.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
 
-            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null)
+            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
             {
                 HandleKeyPressDown();
                 HandleKeyPressUp();

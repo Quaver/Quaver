@@ -32,6 +32,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
 using Quaver.Shared.Graphics.Overlays.Chatting;
@@ -314,7 +315,7 @@ namespace Quaver.Shared.Online
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnChooseUsername(object sender, ChooseAUsernameEventArgs e) => DialogManager.Show(new UsernameSelectionDialog(0.75f));
+        private static void OnChooseUsername(object sender, ChooseAUsernameEventArgs e) => DialogManager.Show(new CreateUsernameDialog());
 
         /// <summary>
         ///     Called when the client receives a response after selecting a username.
@@ -328,13 +329,14 @@ namespace Quaver.Shared.Online
             if (e.Status != 200)
             {
                 // If it wasn't successful, have them pick another username.
-                DialogManager.Show(new UsernameSelectionDialog(0.75f));
+                DialogManager.Show(new CreateUsernameDialog());
             }
 
             switch (e.Status)
             {
                 // Success
                 case 200:
+                    NotificationManager.Show(NotificationLevel.Success, "Account successfully created. You are now being logged in!");
                     break;
                 // Unauthorized
                 case 401:
