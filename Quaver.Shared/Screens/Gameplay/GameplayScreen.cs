@@ -47,6 +47,7 @@ using Quaver.Shared.Screens.MultiplayerLobby;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.Tournament;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Quaver.Shared.Skinning;
 using TagLib.Riff;
@@ -279,6 +280,11 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     We'll be in a state where we're waiting for all players.
         /// </summary>
         public bool IsMultiplayerGameStarted { get; private set; }
+
+        /// <summary>
+        ///     If true, the multiplayer game was marked as ended
+        /// </summary>
+        public bool MultiplayerMatchEndedPrematurely { get; set; }
 
         /// <summary>
         ///     Whether or not we have requested to skip the song in multiplayer
@@ -526,6 +532,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 OnlineManager.Client.OnAllPlayersSkipped -= OnAllPlayersSkipped;
             }
 
+            if (OnlineManager.IsBeingSpectated && !InReplayMode)
+                OnlineManager.Client?.SendReplaySpectatorFrames(SpectatorClientStatus.SelectingSong, 0, new List<ReplayFrame>());
+
             Metronome?.Dispose();
             IsDisposed = true;
             base.Destroy();
@@ -735,7 +744,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
 
                 // Exit right away if playing a replay.
-                if (InReplayMode || this is TournamentGameplayScreen)
+                if (InReplayMode || this is TournamentGameplayScreen tournScreen && tournScreen.Type != TournamentScreenType.Spectator)
                 {
                     CustomAudioSampleCache.StopAll();
 
@@ -1201,6 +1210,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (TimeSinceLastJudgementsSentToServer < 400 || OnlineManager.CurrentGame == null)
                 return;
 
+            if (OnlineManager.IsSpectatingSomeone)
+                return;
+
             TimeSinceLastJudgementsSentToServer = 0;
 
             if (Ruleset.StandardizedReplayPlayer.ScoreProcessor.Stats.Count == 0)
@@ -1224,7 +1236,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         private void HandleSpectatorSkipping()
         {
-            if (SpectatorClient.Replay.Frames.Count == 0)
+            if (SpectatorClient.Replay.Frames.Count == 0 || this is TournamentGameplayScreen)
                 return;
 
             // User can only be two seconds out of sync with the user
@@ -1292,6 +1304,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 status = SpectatorClientStatus.Paused;
             else
                 status = SpectatorClientStatus.Playing;
+
+            if (status == SpectatorClientStatus.Playing && frames.Count == 0)
+                return;
 
             ThreadScheduler.Run(() => OnlineManager.Client?.SendReplaySpectatorFrames(status, AudioEngine.Track.Time, frames));
         }
