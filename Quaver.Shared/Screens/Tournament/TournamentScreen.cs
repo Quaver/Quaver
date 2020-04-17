@@ -231,10 +231,10 @@ namespace Quaver.Shared.Screens.Tournament
                 screen.Update(gameTime);
 
             HandleSpectator();
-            HandlePlayCxompletion();
+            HandlePlayCompletion();
         }
 
-        private void HandlePlayCxompletion()
+        private void HandlePlayCompletion()
         {
             if (TournamentType == TournamentScreenType.Spectator)
                 return;
