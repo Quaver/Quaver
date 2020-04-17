@@ -54,6 +54,7 @@ using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
 using Quaver.Shared.Screens.Music;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Select.UI.Leaderboard;
+using Quaver.Shared.Screens.Tournament;
 using Steamworks;
 using UniversalThreadManagement;
 using Wobble;
@@ -256,6 +257,11 @@ namespace Quaver.Shared.Online
             Client.OnUserStats += OnUserStats;
             Client.OnUserJoinedGame += OnUserJoinedGame;
             Client.OnUserLeftGame += OnUserLeftGame;
+            Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
+            Client.OnStoppedSpectatingPlayer += OnStoppedSpectatingPlayer;
+            Client.OnSpectatorJoined += OnSpectatorJoined;
+            Client.OnSpectatorLeft += OnSpectatorLeft;
+            Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
             Client.OnGameEnded += OnGameEnded;
             Client.OnGameStarted += OnGameStarted;
             Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
@@ -274,11 +280,6 @@ namespace Quaver.Shared.Online
             Client.OnListeningPartyUserMissingSong += OnListeningPartyUserMissingSong;
             Client.OnListeningPartyUserHasSong += OnListeningPartyUserHasSong;
             Client.OnUserFriendsListReceived += OnUserFriendsListReceieved;
-            Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
-            Client.OnStoppedSpectatingPlayer += OnStoppedSpectatingPlayer;
-            Client.OnSpectatorJoined += OnSpectatorJoined;
-            Client.OnSpectatorLeft += OnSpectatorLeft;
-            Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
             Client.OnSongRequestReceived += OnSongRequestReceived;
             Client.OnTwitchConnectionReceived += OnTwitchConnectionReceived;
             Client.OnGameMapsetShared += OnGameMapsetShared;
@@ -1165,19 +1166,23 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            // User is a referee, so don't start for them
-            if (CurrentGame.RefereeUserId == Self.OnlineUser.Id)
-            {
-                NotificationManager.Show(NotificationLevel.Info, "Match started. Click to watch the match live on the web as a referee. ",
-                    (o, args) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{CurrentGame.GameId}"));
-
-                return;
-            }
-
             var game = (QuaverGame) GameBase.Game;
 
             if (game.CurrentScreen is MultiplayerGameScreen screen)
                 screen.DontLeaveGameUponScreenSwitch = true;
+
+            if (CurrentGame.IsSpectating || CurrentGame.RefereeUserId == Self.OnlineUser.Id)
+            {
+                if (!game.CurrentScreen.Exiting)
+                {
+                    foreach (var spect in SpectatorClients.Values)
+                        spect.WatchUserImmediately();
+
+                    game.CurrentScreen.Exit(() => new TournamentScreen(CurrentGame, SpectatorClients.Values.ToList()));
+                }
+
+                return;
+            }
 
             game.CurrentScreen.Exit(() => new MapLoadingScreen(GetScoresFromMultiplayerUsers()));
         }
@@ -1296,7 +1301,7 @@ namespace Quaver.Shared.Online
             if (!SpectatorClients[e.UserId].Player.HasUserInfo)
                 Client?.RequestUserInfo(new List<int>() { e.UserId });
 
-            if (SpectatorClients.Count == 1)
+            if (SpectatorClients.Count == 1 && CurrentGame == null)
                 NotificationManager.Show(NotificationLevel.Info, $"You are now spectating {SpectatorClients[e.UserId].Player.OnlineUser.Username}!");
 
             Logger.Important($"Starting spectating player: {e.UserId}", LogType.Network);
@@ -1316,7 +1321,14 @@ namespace Quaver.Shared.Online
             if (game.CurrentScreen.Type == QuaverScreenType.Gameplay && SpectatorClients.Count == 0)
             {
                 if (!game.CurrentScreen.Exiting)
-                    game.CurrentScreen.Exit(() => new MainMenuScreen());
+                {
+                    if (game.CurrentScreen is TournamentScreen)
+                        game.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+                    else
+                    {
+                        game.CurrentScreen.Exit(() => new MainMenuScreen());
+                    }
+                }
             }
 
             Logger.Important($"Stopped spectating player: {e.UserId}", LogType.Network);

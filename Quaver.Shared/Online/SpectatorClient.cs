@@ -35,7 +35,7 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The user's current replay that is being received.
         /// </summary>
-        public Replay Replay { get; private set; }
+        public Replay Replay { get; set; }
 
         /// <summary>
         ///     The map that the user is currently playing
@@ -84,6 +84,10 @@ namespace Quaver.Shared.Online
                         Replay.Frames.Add(frame);
                 }
             }
+
+            // This is handled elsewhere
+            if (OnlineManager.CurrentGame != null)
+                return;
 
             // Try to find the new map from the player
             Map = MapManager.FindMapFromMd5(Player.CurrentStatus.MapMd5);
@@ -140,12 +144,12 @@ namespace Quaver.Shared.Online
             if (e.Status == SpectatorClientStatus.NewSong)
                 HasNotifiedForThisMap = false;
 
-            if (e.Status == SpectatorClientStatus.NewSong || Replay == null)
+            if (OnlineManager.CurrentGame == null && e.Status == SpectatorClientStatus.NewSong || Replay == null)
                 PlayNewMap(e.Frames);
 
             // A second null check is required in this case
             // because PlayNewMap() may not create a new replay instance depending on what the player is doing.
-            if (Replay == null || MapManager.Selected.Value.Md5Checksum != Player.CurrentStatus.MapMd5)
+            if (Replay == null || (MapManager.Selected.Value.Md5Checksum != Player.CurrentStatus.MapMd5 && OnlineManager.CurrentGame == null))
                 return;
 
             lock (Replay.Frames)
