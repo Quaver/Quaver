@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
@@ -90,7 +91,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Screen.IsPaused)
                 return;
 
-            if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted)
+            var isTournanent = Screen is TournamentGameplayScreen;
+
+            if (Screen.IsMultiplayerGame && !Screen.IsMultiplayerGameStarted && !isTournanent)
                 return;
 
             // If they audio hasn't begun yet, start counting down until the beginning of the map.
