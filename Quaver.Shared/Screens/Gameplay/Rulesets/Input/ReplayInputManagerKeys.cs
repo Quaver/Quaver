@@ -18,6 +18,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
+using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
@@ -80,7 +81,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             Windows = Screen.SpectatorClient != null ? JudgementWindowsDatabaseCache.Standard : JudgementWindowsDatabaseCache.Selected.Value;
             VirtualPlayer = new VirtualReplayPlayer(Replay, Screen.Map, Windows, Screen.SpectatorClient != null);
 
-            VirtualPlayer.PlayAllFrames();
+            try
+            {
+                VirtualPlayer.PlayAllFrames();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
 
             // Populate unique key presses/releases.
             for (var i = 0; i < screen.Map.GetKeyCount(); i++)
@@ -144,7 +152,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             if (Screen.SpectatorClient == null)
                 return;
 
-            if (CurrentFrame >= Replay.Frames.Count)
+            var isTournament = Screen is TournamentGameplayScreen;
+
+            if (CurrentFrame >= Replay.Frames.Count && !isTournament)
             {
                 if (AudioEngine.Track.IsPlaying)
                     AudioEngine.Track.Pause();
@@ -156,10 +166,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             VirtualPlayer.PlayAllFrames();
 
-            if (Screen.IsPaused)
+            if (Screen.IsPaused && !isTournament)
                 Screen.IsPaused = false;
 
-            if (AudioEngine.Track.IsPaused)
+            if (AudioEngine.Track.IsPaused && !isTournament)
                 AudioEngine.Track.Play();
         }
 
