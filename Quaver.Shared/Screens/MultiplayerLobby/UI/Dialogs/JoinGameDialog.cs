@@ -20,10 +20,11 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         /// <param name="game"></param>
         /// <param name="password"></param>
         /// <param name="isCreating"></param>
-        public JoinGameDialog(MultiplayerGame game, string password = null, bool isCreating = false) : base("JOINING GAME",
-            "Connecting to multiplayer game. Please wait...", Load(game, password, isCreating))
+        public JoinGameDialog(MultiplayerGame game, string password = null, bool isCreating = false, bool isSpectating = false) : base("JOINING GAME",
+            "Connecting to multiplayer game. Please wait...", Load(game, password, isCreating, isSpectating))
         {
             OnlineManager.Client.OnJoinedMultiplayerGame += OnJoinedMultiplayerGame;
+            OnlineManager.Client.OnSpectateMultiplayerGame += OnSpectateMultiplayerGame;
             OnlineManager.Client.OnJoinGameFailed += OnJoinGameFailed;
         }
 
@@ -34,6 +35,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         {
             OnlineManager.Client.OnJoinedMultiplayerGame -= OnJoinedMultiplayerGame;
             OnlineManager.Client.OnJoinGameFailed -= OnJoinGameFailed;
+            OnlineManager.Client.OnSpectateMultiplayerGame -= OnSpectateMultiplayerGame;
             WaitingOnResponse = false;
 
             base.Destroy();
@@ -44,15 +46,21 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         /// <param name="game"></param>
         /// <param name="password"></param>
         /// <param name="isCreating"></param>
+        /// <param name="isSpectating"></param>
         /// <returns></returns>
-        private static Action Load(MultiplayerGame game, string password, bool isCreating) => () =>
+        private static Action Load(MultiplayerGame game, string password, bool isCreating, bool isSpectating) => () =>
         {
             WaitingOnResponse = true;
 
             Thread.Sleep(200);
 
             if (!isCreating)
-                OnlineManager.Client?.JoinGame(game, password);
+            {
+                if (isSpectating)
+                    OnlineManager.Client?.SpectateGame(game, password);
+                else
+                    OnlineManager.Client?.JoinGame(game, password);
+            }
 
             while (WaitingOnResponse)
                 Thread.Sleep(50);
@@ -73,6 +81,16 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnJoinedMultiplayerGame(object sender, JoinedGameEventArgs e)
+        {
+            WaitingOnResponse = false;
+            Close();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSpectateMultiplayerGame(object sender, SpectateMultiplayerGameEventArgs e)
         {
             WaitingOnResponse = false;
             Close();

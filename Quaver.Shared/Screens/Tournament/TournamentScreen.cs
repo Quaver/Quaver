@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Tournament
 
                 if (replay.Frames.Count > 0)
                 {
-                    if (inputManager.ReplayInputManager.CurrentFrame >= replay.Frames.Count)
+                    if (replay.Frames[replay.Frames.Count - 1].Time < track.Time)
                     {
                         hasNoFrames = true;
 
@@ -276,6 +276,12 @@ namespace Quaver.Shared.Screens.Tournament
 
                         break;
                     }
+                }
+
+                if (replay.Frames.Count == 0)
+                {
+                    hasNoFrames = true;
+                    break;
                 }
             }
 
