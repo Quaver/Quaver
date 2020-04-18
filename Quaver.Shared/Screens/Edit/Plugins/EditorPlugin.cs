@@ -82,6 +82,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             var state = (EditorPluginState) State;
 
             state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
+            state.GameMode = Editor.WorkingMap.Mode;
             state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
             state.HitObjects = Editor.WorkingMap.HitObjects;
