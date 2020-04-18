@@ -492,7 +492,7 @@ namespace Quaver.Shared.Screens.Gameplay
             // This needs to be above any checks for IsPlayComplete, because that
             // relies on the object pool being empty.
             // If skipping ahead, the pool gets recreated
-            if (InReplayMode && OnlineManager.IsSpectatingSomeone)
+            if (InReplayMode && !IsSongSelectPreview && OnlineManager.IsSpectatingSomeone)
             {
                 HandleSpectatorSkipping();
 

@@ -36,6 +36,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
 
         private const string Spectate = "Spectate";
 
+        private const string StopSpectating = "Stop Spectating";
+
         private const string Kick = "Kick Player";
 
         private const string SwitchTeams = "Switch Team";
@@ -74,6 +76,9 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                         break;
                     case Spectate:
                         HandleSpectating(user);
+                        break;
+                    case StopSpectating:
+                        OnlineManager.Client?.StopSpectating();
                         break;
                     case Kick:
                         OnlineManager.Client?.KickMultiplayerGamePlayer(user.OnlineUser.Id);
@@ -137,8 +142,11 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             // Chat
             options.Add(Chat, ColorHelper.HexToColor("#b48bff"));
 
-            if (OnlineManager.SpectatorClients != null && !OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id))
-                options.Add(Spectate, ColorHelper.HexToColor("#0FBAE5"));
+            if (OnlineManager.SpectatorClients != null)
+            {
+                var color = ColorHelper.HexToColor("#0FBAE5");
+                options.Add(OnlineManager.SpectatorClients.ContainsKey(user.OnlineUser.Id) ? StopSpectating : Spectate, color);
+            }
 
             // Host of the multiplayer game so add more options
             if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.HostId == OnlineManager.Self?.OnlineUser?.Id
@@ -247,9 +255,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 case QuaverScreenType.Importing:
                 case QuaverScreenType.Alpha:
                 case QuaverScreenType.Download:
-                    if (OnlineManager.Spectators.Count != 0)
-                        OnlineManager.Client?.StopSpectating();
-
+                    OnlineManager.Client?.StopSpectating();
                     OnlineManager.Client?.SpectatePlayer(user.OnlineUser.Id);
                     break;
                 default:
