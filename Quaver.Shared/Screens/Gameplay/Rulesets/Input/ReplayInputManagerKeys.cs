@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         internal void HandleInput(bool forceInput = false)
         {
-            if (Screen.SpectatorClient != null)
+            if (Screen.SpectatorClient != null && !Screen.IsSongSelectPreview)
                 VirtualPlayer.PlayAllFrames();
 
             HandleScoring();
@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>
         public void HandleSpectating()
         {
-            if (Screen.SpectatorClient == null)
+            if (Screen.SpectatorClient == null || Screen.IsSongSelectPreview)
                 return;
 
             var isTournament = Screen is TournamentGameplayScreen;

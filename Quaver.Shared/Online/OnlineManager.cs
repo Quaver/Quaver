@@ -257,8 +257,8 @@ namespace Quaver.Shared.Online
             Client.OnUserStats += OnUserStats;
             Client.OnUserJoinedGame += OnUserJoinedGame;
             Client.OnUserLeftGame += OnUserLeftGame;
-            Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
             Client.OnStoppedSpectatingPlayer += OnStoppedSpectatingPlayer;
+            Client.OnStartedSpectatingPlayer += OnStartedSpectatingPlayer;
             Client.OnSpectatorJoined += OnSpectatorJoined;
             Client.OnSpectatorLeft += OnSpectatorLeft;
             Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
