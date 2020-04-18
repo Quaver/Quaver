@@ -3,6 +3,7 @@ using System.Linq;
 using ImGuiNET;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
+using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Scripting;
 using Wobble.Graphics.ImGUI;
@@ -16,6 +17,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     The current time in the song
         /// </summary>
         public int SongTime { get; [MoonSharpVisible(false)] set; }
+
+        /// <summary>
+        ///     The game mode of the map
+        /// </summary>
+        public GameMode GameMode { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
         ///     The slider velocities present in the map

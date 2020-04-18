@@ -304,6 +304,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void RemoveHitObject(HitObjectInfo h) => Perform(new EditorActionRemoveHitObject(this, WorkingMap, h));
 
         /// <summary>
+        ///     Removes a list of objects from the map
+        /// </summary>
+        /// <param name="objects"></param>
+        public void RemoveHitObjectBatch(List<HitObjectInfo> objects) =>
+            Perform(new EditorActionRemoveHitObjectBatch(this, WorkingMap, objects));
+
+        /// <summary>
         ///     Resizes a hitobject/long note to a given time
         /// </summary>
         /// <param name="h"></param>
@@ -335,7 +342,6 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// <param name="svs"></param>
         /// <param name="offset"></param>
         public void ChangeScrollVelocityOffsetBatch(List<SliderVelocityInfo> svs, float offset) => Perform(new EditorActionChangeScrollVelocityOffsetBatch(this, WorkingMap, svs, offset));
-
 
         /// <summary>
         ///     Changes the multiplier of a batch of scroll velocities

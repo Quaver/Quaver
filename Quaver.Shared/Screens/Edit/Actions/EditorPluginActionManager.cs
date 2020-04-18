@@ -51,6 +51,12 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        /// <param name="hitObjects"></param>
+        public void RemoveHitObjectBatch(List<HitObjectInfo> hitObjects) =>
+            ActionManager.RemoveHitObjectBatch(hitObjects);
+
+        /// <summary>
+        /// </summary>
         /// <param name="h"></param>
         /// <param name="originalTime"></param>
         /// <param name="time"></param>
@@ -65,6 +71,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="svs"></param>
         public void PlaceScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.PlaceScrollVelocityBatch(svs);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sv"></param>
+        public void RemoveScrollVelocity(SliderVelocityInfo sv) => ActionManager.RemoveScrollVelocityBatch(new List<SliderVelocityInfo> { sv });
+
+        /// <summary>
+        /// </summary>
+        /// <param name="svs"></param>
+        public void RemoveScrollVelocityBatch(List<SliderVelocityInfo> svs) => ActionManager.RemoveScrollVelocityBatch(svs);
 
         /// <summary>
         /// </summary>
