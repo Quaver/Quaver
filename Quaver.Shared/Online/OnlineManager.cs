@@ -32,6 +32,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Online.Username;
@@ -262,6 +263,7 @@ namespace Quaver.Shared.Online
             Client.OnSpectatorJoined += OnSpectatorJoined;
             Client.OnSpectatorLeft += OnSpectatorLeft;
             Client.OnSpectatorReplayFrames += OnSpectatorReplayFrames;
+            Client.OnSpectateMultiplayerGame += OnSpectateMultiplayerGame;
             Client.OnGameEnded += OnGameEnded;
             Client.OnGameStarted += OnGameStarted;
             Client.OnGamePlayerNoMap += OnGamePlayerNoMap;
@@ -723,6 +725,31 @@ namespace Quaver.Shared.Online
         }
 
         /// <summary>
+        ///     Called when joining a game to spectate
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnSpectateMultiplayerGame(object sender, SpectateMultiplayerGameEventArgs e)
+        {
+            if (!MultiplayerGames.ContainsKey(e.GameId))
+            {
+                Logger.Warning($"Server tried to place us in game: {e.GameId}, but it doesn't exist!", LogType.Runtime);
+                return;
+            }
+
+            CurrentGame = MultiplayerGames[e.GameId];
+            CurrentGame.IsSpectating = true;
+
+            var game = (QuaverGame) GameBase.Game;
+
+            game.CurrentScreen.Exit(() =>
+            {
+                Logger.Important($"Successfully joined game to spectate: {CurrentGame.Id} | {CurrentGame.Name} | {CurrentGame.HasPassword}", LogType.Network);
+                return new MultiplayerGameScreen();
+            });
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1129,6 +1156,14 @@ namespace Quaver.Shared.Online
             CurrentGame.RedTeamPlayers.Remove(e.UserId);
             CurrentGame.BlueTeamPlayers.Remove(e.UserId);
             CurrentGame.Players.Remove(OnlineUsers[e.UserId].OnlineUser);
+
+            if (CurrentGame.PlayerIds.Count == 0)
+            {
+                var quaver = (QuaverGame) GameBase.Game;
+
+                if (quaver.CurrentScreen.Type == QuaverScreenType.Multiplayer)
+                    quaver.CurrentScreen.Exit(() => new MultiplayerLobbyScreen());
+            }
         }
 
         /// <summary>
@@ -1173,6 +1208,16 @@ namespace Quaver.Shared.Online
 
             if (CurrentGame.IsSpectating || CurrentGame.RefereeUserId == Self.OnlineUser.Id)
             {
+                MultiplayerGameScreen.SelectMultiplayerMap();
+
+                if (MapManager.Selected.Value == null)
+                {
+                    NotificationManager.Show(NotificationLevel.Warning, "Cannot start tournament viewer, as you do not have the map!");
+                    return;
+                }
+
+                BackgroundHelper.Load(MapManager.Selected.Value);
+
                 if (!game.CurrentScreen.Exiting)
                 {
                     foreach (var spect in SpectatorClients.Values)
