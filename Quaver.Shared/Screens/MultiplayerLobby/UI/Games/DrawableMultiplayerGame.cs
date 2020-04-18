@@ -17,6 +17,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs;
 using Quaver.Shared.Screens.Selection.UI.Mapsets;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -243,6 +244,12 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             };
 
             ClickableButton.Clicked += OnClicked;
+
+            ClickableButton.RightClicked += (o, e) =>
+            {
+                var game = (QuaverGame) GameBase.Game;
+                game.CurrentScreen.ActivateRightClickOptions(new MultiplayerGameRightClickOptions(Item));
+            };
         }
 
         /// <summary>
