@@ -687,6 +687,7 @@ namespace Quaver.Shared.Config
             Directory.CreateDirectory(_songDirectory);
 
             Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Plugins");
+            Directory.CreateDirectory($"{WobbleGame.WorkingDirectory}/Tournament");
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
