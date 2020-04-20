@@ -223,6 +223,25 @@ namespace Quaver.Shared.Config
         }
 
         /// <summary>
+        ///     Reads an XNA Vector2 from a string
+        /// </summary>
+        /// <param name="defaultVector2"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static Vector2 ReadVector2(Vector2 defaultVector2, string newVal)
+        {
+            try
+            {
+                var vectorSplit = newVal.Split(',');
+                return new Vector2(int.Parse(vectorSplit[0]), int.Parse(vectorSplit[1]));
+            }
+            catch (Exception)
+            {
+                return defaultVector2;
+            }
+        }
+
+        /// <summary>
         ///     Reads an enum.
         /// </summary>
         /// <param name="defaultVal"></param>
