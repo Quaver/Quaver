@@ -12,34 +12,21 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
     {
         private Qua Qua { get; }
 
-        private Bindable<bool> ShouldDisplay { get; }
+        private TournamentDrawableSettings Settings { get; }
 
-        private BindableInt TextSize { get; }
-
-        private Bindable<Vector2> TextPosition { get; }
-
-        private Bindable<Alignment> Aligning { get; }
-
-        private Bindable<Color> Color { get; }
-
-        public TournamentSongArtistAndTitle(Qua qua, Bindable<bool> shouldDisplay, BindableInt textSize, Bindable<Vector2> position,
-            Bindable<Alignment> alignment, Bindable<Color> col)
+        public TournamentSongArtistAndTitle(Qua qua, TournamentDrawableSettings settings)
             : base(FontManager.GetWobbleFont(Fonts.LatoBlack), "", 22)
         {
             Qua = qua;
-            ShouldDisplay = shouldDisplay;
-            TextSize = textSize;
-            TextPosition = position;
-            Aligning = alignment;
-            Color = col;
+            Settings = settings;
 
             SetText();
 
-            ShouldDisplay.ValueChanged += (sender, args) => SetText();
-            TextSize.ValueChanged += (sender, args) => SetText();
-            TextPosition.ValueChanged += (sender, args) => SetText();
-            Aligning.ValueChanged += (sender, args) => SetText();
-            Color.ValueChanged += (sender, args) => SetText();
+            Settings.Visible.ValueChanged += (sender, args) => SetText();
+            Settings.FontSize.ValueChanged += (sender, args) => SetText();
+            Settings.Position.ValueChanged += (sender, args) => SetText();
+            Settings.Alignment.ValueChanged += (sender, args) => SetText();
+            Settings.Tint.ValueChanged += (sender, args) => SetText();
         }
 
         /// <summary>
@@ -48,12 +35,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         {
             ScheduleUpdate(() =>
             {
-                FontSize = TextSize.Value;
+                FontSize = Settings.FontSize.Value;
                 Text = $"{Qua.Artist} - {Qua.Title}";
-                Visible = ShouldDisplay.Value;
-                Position = new ScalableVector2(TextPosition.Value.X, TextPosition.Value.Y);
-                Alignment = Aligning.Value;
-                Tint = Color.Value;
+                Visible = Settings.Visible.Value;
+                Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
+                Alignment = Settings.Alignment.Value;
+                Tint = Settings.Tint.Value;
             });
         }
     }

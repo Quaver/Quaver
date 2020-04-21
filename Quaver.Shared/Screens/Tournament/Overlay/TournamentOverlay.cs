@@ -51,98 +51,24 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         private string SettingsPath => $"{Directory}/settings.ini";
 
         /// <summary>
-        ///     Determines if the names of the players will be displayed
         /// </summary>
-        public Bindable<bool> DisplayPlayerNames { get; } = new Bindable<bool>(true);
-
-        /// <summary>
-        ///     The font size of each player
-        /// </summary>
-        public BindableInt PlayerNameFontSize { get; } = new BindableInt(22, 1, int.MaxValue);
-
-        /// <summary>
-        ///     The position of player 1's username
-        /// </summary>
-        public Bindable<Vector2> Player1NamePosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
-
-        /// <summary>
-        ///     The position of player 2's username
-        /// </summary>
-        public Bindable<Vector2> Player2NamePosition { get; } = new Bindable<Vector2>(new Vector2(0, 100));
-
-        /// <summary>
-        ///     If true, the username and flag will have their positions inverted
-        /// </summary>
-        public Bindable<bool> Player1InvertFlagAndUsername { get; } = new Bindable<bool>(false);
-
-        /// <summary>
-        ///     If true, the username and flag will have their positions inverted
-        /// </summary>
-        public Bindable<bool> Player2InvertFlagAndUsername { get; } = new Bindable<bool>(true);
-
-        /// <summary>
-        ///     The text alignment of the first player
-        /// </summary>
-        public Bindable<Alignment> Player1TextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
-
-        /// <summary>
-        ///     The text alignment of the second player
-        /// </summary>
-        public Bindable<Alignment> Player2TextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
-
-        /// <summary>
-        ///     The text color of player 1's username
-        /// </summary>
-        public Bindable<Color> Player1TextColor { get; } = new Bindable<Color>(Color.White);
-
-        /// <summary>
-        ///     The text color of player 2's username
-        /// </summary>
-        public Bindable<Color> Player2TextColor { get; } = new Bindable<Color>(Color.White);
-
-        /// <summary>
-        ///     If true, the number of wins each player has will be displayed
-        /// </summary>
-        public Bindable<bool> DisplayWinCounts { get; } = new Bindable<bool>(true);
+        public TournamentDrawableSettings SongTitleSettings { get; } = new TournamentDrawableSettings("SongTitle");
 
         /// <summary>
         /// </summary>
-        public BindableInt WinCountFontSize { get; } = new BindableInt(22, 1, int.MaxValue);
+        public TournamentDrawableSettings Player1WinCountSettings { get; } = new TournamentDrawableSettings("Player1WinCount");
 
         /// <summary>
-        ///     The position of player 1's win count
         /// </summary>
-        public Bindable<Vector2> Player1WinCountPosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
+        public TournamentDrawableSettings Player2WinCountSettings { get; } = new TournamentDrawableSettings("Player2WinCount");
 
         /// <summary>
-        ///     The position of player 2's win count
         /// </summary>
-        public Bindable<Vector2> Player2WinCountPosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
+        public TournamentDrawableSettings Player1UsernameSettings { get; } = new TournamentDrawableSettings("Player1Username");
 
         /// <summary>
-        ///     If true, the song artist and title will be displayed
         /// </summary>
-        public Bindable<bool> DisplaySongArtistAndTitle { get; } = new Bindable<bool>(true);
-
-        /// <summary>
-        ///     The font size of <see cref="SongTitle"/>
-        /// </summary>
-        public BindableInt SongTitleFontSize { get; } = new BindableInt(22, 1, int.MaxValue);
-
-        /// <summary>
-        ///     The position of <see cref="SongTitle"/>
-        /// </summary>
-        public Bindable<Vector2> SongTitlePosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
-
-        /// <summary>
-        ///     The text alignment of <see cref="SongTitle"/>
-        /// </summary>
-        public Bindable<Alignment> SongTitleTextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
-
-        /// <summary>
-        ///     The text color of <see cref="SongTitle"/>
-        /// </summary>
-        public Bindable<Color> SongTitleColor { get; } = new Bindable<Color>(Color.White);
+        public TournamentDrawableSettings Player2UsernameSettings { get; } = new TournamentDrawableSettings("Player2Username");
 
         /// <summary>
         ///     Displays the usernames of the users
@@ -197,24 +123,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// </summary>
         public override void Destroy()
         {
-            DisplayPlayerNames.Dispose();
-            PlayerNameFontSize.Dispose();
-            Player1NamePosition.Dispose();
-            Player2NamePosition.Dispose();
-            Player1InvertFlagAndUsername.Dispose();
-            Player2InvertFlagAndUsername.Dispose();
-            DisplayWinCounts.Dispose();
-            WinCountFontSize.Dispose();
-            Player1WinCountPosition.Dispose();
-            Player2WinCountPosition.Dispose();
-            DisplaySongArtistAndTitle.Dispose();
-            SongTitleFontSize.Dispose();
-            SongTitleTextAlignment.Dispose();
-            SongTitleColor.Dispose();
-            Player1TextAlignment.Dispose();
-            Player2TextAlignment.Dispose();
-            Player1TextColor.Dispose();
-            Player2TextColor.Dispose();
+            SongTitleSettings.Dispose();
+            Player1WinCountSettings.Dispose();
+            Player2WinCountSettings.Dispose();
+            Player1UsernameSettings.Dispose();
+            Player2UsernameSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -257,29 +170,14 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(SettingsPath);
 
             var players = data["Players"];
-            DisplayPlayerNames.Value = ConfigHelper.ReadBool(DisplayPlayerNames.Default, players["DisplayPlayerNames"]);
-            PlayerNameFontSize.Value = ConfigHelper.ReadInt32(PlayerNameFontSize.Default, players["PlayerNameFontSize"]);
-            Player1NamePosition.Value = ConfigHelper.ReadVector2(Player1NamePosition.Default, players["Player1NamePosition"]);
-            Player2NamePosition.Value = ConfigHelper.ReadVector2(Player2NamePosition.Default, players["Player2NamePosition"]);
-            Player1InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player1InvertFlagAndUsername.Default,players["Player1InvertFlagAndUsername"]);
-            Player2InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player2InvertFlagAndUsername.Default,players["Player2InvertFlagAndUsername"]);
-            Player1TextAlignment.Value = ConfigHelper.ReadEnum(Player1TextAlignment.Default, players["Player1TextAlignment"]);
-            Player2TextAlignment.Value = ConfigHelper.ReadEnum(Player2TextAlignment.Default, players["Player2TextAlignment"]);
-            Player1TextColor.Value = ConfigHelper.ReadColor(Player1TextColor.Default, players["Player1TextColor"]);
-            Player2TextColor.Value = ConfigHelper.ReadColor(Player2TextColor.Default, players["Player2TextColor"]);
+            Player1UsernameSettings.Load(players);
+            Player2UsernameSettings.Load(players);
 
             var wins = data["Wins"];
-            DisplayWinCounts.Value = ConfigHelper.ReadBool(DisplayWinCounts.Default, wins["DisplayWinCounts"]);
-            WinCountFontSize.Value = ConfigHelper.ReadInt32(WinCountFontSize.Default, wins["WinCountFontSize"]);
-            Player1WinCountPosition.Value = ConfigHelper.ReadVector2(Player1WinCountPosition.Default, wins["Player1WinCountPosition"]);
-            Player2WinCountPosition.Value = ConfigHelper.ReadVector2(Player2WinCountPosition.Default, wins["Player2WinCountPosition"]);
+            Player1WinCountSettings.Load(wins);
+            Player2WinCountSettings.Load(wins);
 
-            var song = data["Song"];
-            DisplaySongArtistAndTitle.Value = ConfigHelper.ReadBool(DisplaySongArtistAndTitle.Default, song["DisplaySongArtistAndTitle"]);
-            SongTitleFontSize.Value = ConfigHelper.ReadInt32(SongTitleFontSize.Default, song["SongTitleFontSize"]);
-            SongTitlePosition.Value = ConfigHelper.ReadVector2(SongTitlePosition.Default, song["SongTitlePosition"]);
-            SongTitleTextAlignment.Value = ConfigHelper.ReadEnum(SongTitleTextAlignment.Default, song["SongTitleTextAlignment"]);
-            SongTitleColor.Value = ConfigHelper.ReadColor(SongTitleColor.Default, song["SongTitleColor"]);
+            SongTitleSettings.Load(data["Song"]);
         }
 
         /// <summary>
@@ -293,13 +191,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             {
                 var isFirstPlayer = player == Players.First();
 
-                var position = isFirstPlayer ? Player1NamePosition : Player2NamePosition;
-                var invertFlagAndUsername = isFirstPlayer ? Player1InvertFlagAndUsername : Player2InvertFlagAndUsername;
-                var alignment = isFirstPlayer ? Player1TextAlignment : Player2TextAlignment;
-                var color = isFirstPlayer ? Player1TextColor : Player2TextColor;
+                var settings = isFirstPlayer ? Player1UsernameSettings : Player2UsernameSettings;
 
-                var username = new TournamentPlayerUsername(player, DisplayPlayerNames, PlayerNameFontSize, position,
-                    invertFlagAndUsername, alignment, color)
+                var username = new TournamentPlayerUsername(player, settings)
                 {
                     Parent = this
                 };
@@ -317,23 +211,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
             foreach (var player in Players)
             {
-                var position = player == Players.First() ? Player1WinCountPosition : Player2WinCountPosition;
-
-                var winCount = new TournamentPlayerWinCount(Game, player, DisplayWinCounts, WinCountFontSize, position) {Parent = this};
-                WinCounts.Add(winCount);
+                var settings = player == Players.First() ? Player1WinCountSettings : Player2WinCountSettings;
+                WinCounts.Add(new TournamentPlayerWinCount(Game, player, settings) {Parent = this});
             }
         }
 
-        /// <summary>
-        ///     Creates <see cref="SongTitle"/>
-        /// </summary>
-        private void CreateSongArtistAndTitle()
-        {
-            SongTitle = new TournamentSongArtistAndTitle(Qua, DisplaySongArtistAndTitle, SongTitleFontSize, SongTitlePosition,
-                    SongTitleTextAlignment, SongTitleColor)
-            {
-                Parent = this
-            };
-        }
+        private void CreateSongArtistAndTitle() => SongTitle = new TournamentSongArtistAndTitle(Qua, SongTitleSettings) { Parent = this };
     }
 }

@@ -11,109 +11,58 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
     public class TournamentPlayerUsername : Container
     {
-        /// <summary>
-        /// </summary>
         private TournamentPlayer Player { get; }
 
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> DisplayPlayerNames { get; }
+        private TournamentDrawableSettings Settings { get; }
 
-        /// <summary>
-        /// </summary>
-        private BindableInt FontSize { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<Vector2> UsernamePosition { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> InvertFlagAndUsername { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<Alignment> Aligning { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<Color> Color { get; }
-
-        /// <summary>
-        /// </summary>
         private SpriteTextPlus TextUsername { get; set; }
 
-        /// <summary>
-        /// </summary>
         private Sprite Flag { get; set; }
 
         /// <summary>
         /// </summary>
         /// <param name="player"></param>
-        /// <param name="displayPlayerNames"></param>
-        /// <param name="fontSize"></param>
-        /// <param name="position"></param>
-        /// <param name="invertFlagAndUsername"></param>
-        /// <param name="textAlignment"></param>
-        /// <param name="col"></param>
-        public TournamentPlayerUsername(TournamentPlayer player, Bindable<bool> displayPlayerNames, BindableInt fontSize,
-            Bindable<Vector2> position, Bindable<bool> invertFlagAndUsername, Bindable<Alignment> textAlignment, Bindable<Color> col)
+        /// <param name="settings"></param>
+        public TournamentPlayerUsername(TournamentPlayer player, TournamentDrawableSettings settings)
         {
             Player = player;
-            DisplayPlayerNames = displayPlayerNames;
-            FontSize = fontSize;
-            UsernamePosition = position;
-            InvertFlagAndUsername = invertFlagAndUsername;
-            Aligning = textAlignment;
-            Color = col;
+            Settings = settings;
 
             CreateFlag();
             CreateUsername();
             Align();
 
-            DisplayPlayerNames.ValueChanged += (sender, args) => Align();
-            FontSize.ValueChanged += (sender, args) => Align();
-            UsernamePosition.ValueChanged += (sender, args) => Align();
-            InvertFlagAndUsername.ValueChanged += (sender, args) => Align();
-            Aligning.ValueChanged += (sender, args) => Align();
-            Color.ValueChanged += (sender, args) => Align();
+            Settings.Visible.ValueChanged += (sender, args) => Align();
+            Settings.FontSize.ValueChanged += (sender, args) => Align();
+            Settings.Position.ValueChanged += (sender, args) => Align();
+            Settings.Alignment.ValueChanged += (sender, args) => Align();
+            Settings.Tint.ValueChanged += (sender, args) => Align();
+            Settings.Inverted.ValueChanged += (sender, args) => Align();
         }
 
-        /// <summary>
-        /// </summary>
-        private void CreateFlag()
+        private void CreateFlag() => Flag = new Sprite
         {
-            Flag = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(FontSize.Value, FontSize.Value),
-                Image = Flags.Get(Player.User.OnlineUser.CountryFlag)
-            };
-        }
+            Parent = this,
+            Alignment = Alignment.MidLeft,
+            Image = Flags.Get(Player.User.OnlineUser.CountryFlag)
+        };
 
-        /// <summary>
-        /// </summary>
-        private void CreateUsername()
+        private void CreateUsername() => TextUsername = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
+            Player.User.OnlineUser.Username)
         {
-            TextUsername = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), Player.User.OnlineUser.Username, FontSize.Value)
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft
-            };
-        }
+            Parent = this,
+            Alignment = Alignment.MidLeft
+        };
 
-        /// <summary>
-        /// </summary>
         private void Align() => ScheduleUpdate(() =>
         {
-            Visible = DisplayPlayerNames.Value;
+            Visible = Settings.Visible.Value;
 
             const int spacing = 12;
-            TextUsername.FontSize = FontSize.Value;
-            Flag.Size = new ScalableVector2(FontSize.Value, FontSize.Value);
+            TextUsername.FontSize = Settings.FontSize.Value;
+            Flag.Size = new ScalableVector2(Settings.FontSize.Value, Settings.FontSize.Value);
 
-            if (!InvertFlagAndUsername.Value)
+            if (!Settings.Inverted.Value)
             {
                 Flag.Alignment = Alignment.MidLeft;
                 TextUsername.Alignment = Alignment.MidLeft;
@@ -129,9 +78,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Height = Math.Max(Flag.Height, TextUsername.Height);
             Width = Flag.Width + spacing + TextUsername.Width;
 
-            Position = new ScalableVector2(UsernamePosition.Value.X, UsernamePosition.Value.Y);
-            Alignment = Aligning.Value;
-            TextUsername.Tint = Color.Value;
+            Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
+            Alignment = Settings.Alignment.Value;
+            TextUsername.Tint = Settings.Tint.Value;
         });
     }
 }
