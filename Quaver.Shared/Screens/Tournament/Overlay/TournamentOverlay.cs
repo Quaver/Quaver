@@ -74,9 +74,33 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public Bindable<bool> Player2InvertFlagAndUsername { get; } = new Bindable<bool>(true);
 
         /// <summary>
+        ///     If true, the number of wins each player has will be displayed
+        /// </summary>
+        public Bindable<bool> DisplayWinCounts { get; } = new Bindable<bool>(true);
+
+        /// <summary>
+        /// </summary>
+        public BindableInt WinCountFontSize { get; } = new BindableInt(22, 1, int.MaxValue);
+
+        /// <summary>
+        ///     The position of player 1's win count
+        /// </summary>
+        public Bindable<Vector2> Player1WinCountPosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
+
+        /// <summary>
+        ///     The position of player 2's win count
+        /// </summary>
+        public Bindable<Vector2> Player2WinCountPosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
+
+        /// <summary>
+        ///     Displays the win counts of each player
+        /// </summary>
+        private List<TournamentPlayerWinCount> WinCounts { get; set; }
 
         /// <summary>
         /// </summary>
@@ -96,6 +120,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             ReadSettingsFile();
 
             CreateUsernames();
+            CreateWinCounts();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -116,6 +141,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             PlayerNameFontSize.Dispose();
             Player1NamePosition.Dispose();
             Player2NamePosition.Dispose();
+            Player1InvertFlagAndUsername.Dispose();
+            Player2InvertFlagAndUsername.Dispose();
+            DisplayWinCounts.Dispose();
+            WinCountFontSize.Dispose();
+            Player1WinCountPosition.Dispose();
+            Player2WinCountPosition.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -160,10 +191,16 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             var players = data["Players"];
             DisplayPlayerNames.Value = ConfigHelper.ReadBool(DisplayPlayerNames.Default, players["DisplayPlayerNames"]);
             PlayerNameFontSize.Value = ConfigHelper.ReadInt32(PlayerNameFontSize.Default, players["PlayerNameFontSize"]);
-            Player1NamePosition.Value =ConfigHelper.ReadVector2(Player1NamePosition.Default, players["Player1NamePosition"]);
+            Player1NamePosition.Value = ConfigHelper.ReadVector2(Player1NamePosition.Default, players["Player1NamePosition"]);
             Player2NamePosition.Value = ConfigHelper.ReadVector2(Player2NamePosition.Default, players["Player2NamePosition"]);
             Player1InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player1InvertFlagAndUsername.Default,players["Player1InvertFlagAndUsername"]);
             Player2InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player2InvertFlagAndUsername.Default,players["Player2InvertFlagAndUsername"]);
+
+            var wins = data["Wins"];
+            DisplayWinCounts.Value = ConfigHelper.ReadBool(DisplayWinCounts.Default, wins["DisplayWinCounts"]);
+            WinCountFontSize.Value = ConfigHelper.ReadInt32(WinCountFontSize.Default, wins["WinCountFontSize"]);
+            Player1WinCountPosition.Value = ConfigHelper.ReadVector2(Player1WinCountPosition.Default, wins["Player1WinCountPosition"]);
+            Player2WinCountPosition.Value = ConfigHelper.ReadVector2(Player2WinCountPosition.Default, wins["Player2WinCountPosition"]);
         }
 
         /// <summary>
@@ -185,6 +222,22 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 };
 
                 DrawableUsernames.Add(username);
+            }
+        }
+
+        /// <summary>
+        ///     Creates <see cref="WinCounts"/>
+        /// </summary>
+        private void CreateWinCounts()
+        {
+            WinCounts = new List<TournamentPlayerWinCount>();
+
+            foreach (var player in Players)
+            {
+                var position = player == Players.First() ? Player1WinCountPosition : Player2WinCountPosition;
+
+                var winCount = new TournamentPlayerWinCount(Game, player, DisplayWinCounts, WinCountFontSize, position) {Parent = this};
+                WinCounts.Add(winCount);
             }
         }
     }
