@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using IniFileParser;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
@@ -13,6 +14,7 @@ using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
 using Wobble.Window;
@@ -21,6 +23,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 {
     public class TournamentOverlay : Sprite
     {
+        /// <summary>
+        ///     The map that is currently being played
+        /// </summary>
+        private Qua Qua { get; }
+
         /// <summary>
         ///     The current multiplayer game in progress
         /// </summary>
@@ -93,6 +100,31 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public Bindable<Vector2> Player2WinCountPosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
 
         /// <summary>
+        ///     If true, the song artist and title will be displayed
+        /// </summary>
+        public Bindable<bool> DisplaySongArtistAndTitle { get; } = new Bindable<bool>(true);
+
+        /// <summary>
+        ///     The font size of <see cref="SongTitle"/>
+        /// </summary>
+        public BindableInt SongTitleFontSize { get; } = new BindableInt(22, 1, int.MaxValue);
+
+        /// <summary>
+        ///     The position of <see cref="SongTitle"/>
+        /// </summary>
+        public Bindable<Vector2> SongTitlePosition { get; } = new Bindable<Vector2>(new Vector2(0, 0));
+
+        /// <summary>
+        ///     The text alignment of <see cref="SongTitle"/>
+        /// </summary>
+        public Bindable<Alignment> SongTitleTextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
+
+        /// <summary>
+        ///     The text color of <see cref="SongTitle"/>
+        /// </summary>
+        public Bindable<Color> SongTitleColor { get; } = new Bindable<Color>(Color.White);
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -103,15 +135,22 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         private List<TournamentPlayerWinCount> WinCounts { get; set; }
 
         /// <summary>
+        ///     Displays the name of the song being played
+        /// </summary>
+        private TournamentSongArtistAndTitle SongTitle { get; set; }
+
+        /// <summary>
         /// </summary>
         private FileSystemWatcher Watcher { get; }
 
         /// <summary>
         /// </summary>
+        /// <param name="qua"></param>
         /// <param name="game"></param>
         /// <param name="players"></param>
-        public TournamentOverlay(MultiplayerGame game, List<TournamentPlayer> players)
+        public TournamentOverlay(Qua qua, MultiplayerGame game, List<TournamentPlayer> players)
         {
+            Qua = qua;
             Game = game;
             Players = players;
 
@@ -121,6 +160,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
             CreateUsernames();
             CreateWinCounts();
+            CreateSongArtistAndTitle();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -147,6 +187,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             WinCountFontSize.Dispose();
             Player1WinCountPosition.Dispose();
             Player2WinCountPosition.Dispose();
+            DisplaySongArtistAndTitle.Dispose();
+            SongTitleFontSize.Dispose();
+            SongTitleTextAlignment.Dispose();
+            SongTitleColor.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -201,6 +245,13 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             WinCountFontSize.Value = ConfigHelper.ReadInt32(WinCountFontSize.Default, wins["WinCountFontSize"]);
             Player1WinCountPosition.Value = ConfigHelper.ReadVector2(Player1WinCountPosition.Default, wins["Player1WinCountPosition"]);
             Player2WinCountPosition.Value = ConfigHelper.ReadVector2(Player2WinCountPosition.Default, wins["Player2WinCountPosition"]);
+
+            var map = data["Song"];
+            DisplaySongArtistAndTitle.Value = ConfigHelper.ReadBool(DisplaySongArtistAndTitle.Default, map["DisplaySongArtistAndTitle"]);
+            SongTitleFontSize.Value = ConfigHelper.ReadInt32(SongTitleFontSize.Default, map["SongTitleFontSize"]);
+            SongTitlePosition.Value = ConfigHelper.ReadVector2(SongTitlePosition.Default, map["SongTitlePosition"]);
+            SongTitleTextAlignment.Value = ConfigHelper.ReadEnum(SongTitleTextAlignment.Default, map["SongTitleTextAlignment"]);
+            SongTitleColor.Value = ConfigHelper.ReadColor(SongTitleColor.Default, map["SongTitleColor"]);
         }
 
         /// <summary>
@@ -239,6 +290,18 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 var winCount = new TournamentPlayerWinCount(Game, player, DisplayWinCounts, WinCountFontSize, position) {Parent = this};
                 WinCounts.Add(winCount);
             }
+        }
+
+        /// <summary>
+        ///     Creates <see cref="SongTitle"/>
+        /// </summary>
+        private void CreateSongArtistAndTitle()
+        {
+            SongTitle = new TournamentSongArtistAndTitle(Qua, DisplaySongArtistAndTitle, SongTitleFontSize, SongTitlePosition,
+                    SongTitleTextAlignment, SongTitleColor)
+            {
+                Parent = this
+            };
         }
     }
 }
