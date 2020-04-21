@@ -246,12 +246,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player1WinCountPosition.Value = ConfigHelper.ReadVector2(Player1WinCountPosition.Default, wins["Player1WinCountPosition"]);
             Player2WinCountPosition.Value = ConfigHelper.ReadVector2(Player2WinCountPosition.Default, wins["Player2WinCountPosition"]);
 
-            var map = data["Song"];
-            DisplaySongArtistAndTitle.Value = ConfigHelper.ReadBool(DisplaySongArtistAndTitle.Default, map["DisplaySongArtistAndTitle"]);
-            SongTitleFontSize.Value = ConfigHelper.ReadInt32(SongTitleFontSize.Default, map["SongTitleFontSize"]);
-            SongTitlePosition.Value = ConfigHelper.ReadVector2(SongTitlePosition.Default, map["SongTitlePosition"]);
-            SongTitleTextAlignment.Value = ConfigHelper.ReadEnum(SongTitleTextAlignment.Default, map["SongTitleTextAlignment"]);
-            SongTitleColor.Value = ConfigHelper.ReadColor(SongTitleColor.Default, map["SongTitleColor"]);
+            var song = data["Song"];
+            DisplaySongArtistAndTitle.Value = ConfigHelper.ReadBool(DisplaySongArtistAndTitle.Default, song["DisplaySongArtistAndTitle"]);
+            SongTitleFontSize.Value = ConfigHelper.ReadInt32(SongTitleFontSize.Default, song["SongTitleFontSize"]);
+            SongTitlePosition.Value = ConfigHelper.ReadVector2(SongTitlePosition.Default, song["SongTitlePosition"]);
+            SongTitleTextAlignment.Value = ConfigHelper.ReadEnum(SongTitleTextAlignment.Default, song["SongTitleTextAlignment"]);
+            SongTitleColor.Value = ConfigHelper.ReadColor(SongTitleColor.Default, song["SongTitleColor"]);
         }
 
         /// <summary>
