@@ -92,7 +92,20 @@ namespace Quaver.Shared.Screens.Tests.Tournaments
 
             var game = new MultiplayerGame()
             {
-                Type = MultiplayerGameType.Friendly
+                Type = MultiplayerGameType.Friendly,
+                PlayerWins = new List<MultiplayerPlayerWins>()
+                {
+                    new MultiplayerPlayerWins()
+                    {
+                        UserId = 1,
+                        Wins = 10
+                    },
+                    new MultiplayerPlayerWins()
+                    {
+                        UserId = 2,
+                        Wins = 5
+                    }
+                }
             };
 
             // ReSharper disable once ObjectCreationAsStatement
