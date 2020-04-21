@@ -71,6 +71,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentDrawableSettings Player2UsernameSettings { get; } = new TournamentDrawableSettings("Player2Username");
 
         /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings DifficultyNameSettings { get; } = new TournamentDrawableSettings("DifficultyName");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -107,6 +111,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateUsernames();
             CreateWinCounts();
             CreateSongArtistAndTitle();
+            CreateDifficultyNameSettings();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -128,6 +133,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player2WinCountSettings.Dispose();
             Player1UsernameSettings.Dispose();
             Player2UsernameSettings.Dispose();
+            DifficultyNameSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -178,6 +184,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player2WinCountSettings.Load(wins);
 
             SongTitleSettings.Load(data["Song"]);
+            DifficultyNameSettings.Load(data["DifficultyName"]);
         }
 
         /// <summary>
@@ -217,5 +224,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         }
 
         private void CreateSongArtistAndTitle() => SongTitle = new TournamentSongArtistAndTitle(Qua, SongTitleSettings) { Parent = this };
+
+        // ReSharper disable once ObjectCreationAsStatement
+        private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings) {Parent = this};
     }
 }

@@ -8,7 +8,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
-    public class TournamentPlayerWinCount : SpriteTextPlus
+    public sealed class TournamentPlayerWinCount : TournamentOverlaySpriteText
     {
         private MultiplayerGame Game { get; }
 
@@ -23,37 +23,20 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         /// <param name="player"></param>
         /// <param name="settings"></param>
         public TournamentPlayerWinCount(MultiplayerGame game, TournamentPlayer player, TournamentDrawableSettings settings)
-            : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
-            "0", 22)
+            : base(settings)
         {
             Game = game;
             Player = player;
             Settings = settings;
 
             SetText();
-
-            Settings.Visible.ValueChanged += (sender, args) => SetText();
-            Settings.FontSize.ValueChanged += (sender, args) => SetText();
-            Settings.Position.ValueChanged += (sender, args) => SetText();
-            Settings.Alignment.ValueChanged += (sender, args) => SetText();
-            Settings.Tint.ValueChanged += (sender, args) => SetText();
         }
 
-        /// <summary>
-        /// </summary>
-        private void SetText()
+        public override void UpdateState()
         {
             var wins = Game.PlayerWins?.Find(x => x.UserId == Player.User.OnlineUser.Id)?.Wins ?? 0;
-
-            ScheduleUpdate(() =>
-            {
-                FontSize = Settings.FontSize.Value;
-                Text = $"{wins:n0}";
-                Visible = Settings.Visible.Value;
-                Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
-                Alignment = Settings.Alignment.Value;
-                Tint = Settings.Tint.Value;
-            });
+            Text = $"{wins:n0}";
+            base.UpdateState();
         }
     }
 }
