@@ -10,48 +10,33 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 {
     public class TournamentPlayerWinCount : SpriteTextPlus
     {
-        /// <summary>
-        /// </summary>
         private MultiplayerGame Game { get; }
 
-        /// <summary>
-        /// </summary>
         private TournamentPlayer Player { get; }
 
-        /// <summary>
-        /// </summary>
-        private Bindable<bool> DisplayWinCounts { get; }
-
-        /// <summary>
-        /// </summary>
-        private BindableInt TextSize { get; }
-
-        /// <summary>
-        /// </summary>
-        private Bindable<Vector2> TextPosition { get; }
+        private TournamentDrawableSettings Settings { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="game"></param>
         /// <param name="player"></param>
-        /// <param name="displayWinCounts"></param>
-        /// <param name="textSize"></param>
-        /// <param name="position"></param>
-        public TournamentPlayerWinCount(MultiplayerGame game, TournamentPlayer player, Bindable<bool> displayWinCounts,
-            BindableInt textSize, Bindable<Vector2> position) : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
+        /// <param name="settings"></param>
+        public TournamentPlayerWinCount(MultiplayerGame game, TournamentPlayer player, TournamentDrawableSettings settings)
+            : base(FontManager.GetWobbleFont(Fonts.LatoBlack),
             "0", 22)
         {
             Game = game;
             Player = player;
-            DisplayWinCounts = displayWinCounts;
-            TextSize = textSize;
-            TextPosition = position;
+            Settings = settings;
 
             SetText();
-            DisplayWinCounts.ValueChanged += (sender, args) => SetText();
-            TextSize.ValueChanged += (sender, args) => SetText();
-            TextPosition.ValueChanged += (sender, args) => SetText();
+
+            Settings.Visible.ValueChanged += (sender, args) => SetText();
+            Settings.FontSize.ValueChanged += (sender, args) => SetText();
+            Settings.Position.ValueChanged += (sender, args) => SetText();
+            Settings.Alignment.ValueChanged += (sender, args) => SetText();
+            Settings.Tint.ValueChanged += (sender, args) => SetText();
         }
 
         /// <summary>
@@ -62,10 +47,12 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
             ScheduleUpdate(() =>
             {
-                FontSize = TextSize.Value;
+                FontSize = Settings.FontSize.Value;
                 Text = $"{wins:n0}";
-                Visible = DisplayWinCounts.Value;
-                Position = new ScalableVector2(TextPosition.Value.X, TextPosition.Value.Y);
+                Visible = Settings.Visible.Value;
+                Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
+                Alignment = Settings.Alignment.Value;
+                Tint = Settings.Tint.Value;
             });
         }
     }
