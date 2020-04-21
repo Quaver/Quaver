@@ -109,7 +109,7 @@ namespace Quaver.Shared.Screens.Tests.Tournaments
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new TournamentOverlay(game, players)
+            new TournamentOverlay(map, game, players)
             {
                 Parent = Container,
             };
