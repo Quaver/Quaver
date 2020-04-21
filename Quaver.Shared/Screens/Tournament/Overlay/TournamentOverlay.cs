@@ -81,6 +81,26 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public Bindable<bool> Player2InvertFlagAndUsername { get; } = new Bindable<bool>(true);
 
         /// <summary>
+        ///     The text alignment of the first player
+        /// </summary>
+        public Bindable<Alignment> Player1TextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
+
+        /// <summary>
+        ///     The text alignment of the second player
+        /// </summary>
+        public Bindable<Alignment> Player2TextAlignment { get; } = new Bindable<Alignment>(Alignment.TopLeft);
+
+        /// <summary>
+        ///     The text color of player 1's username
+        /// </summary>
+        public Bindable<Color> Player1TextColor { get; } = new Bindable<Color>(Color.White);
+
+        /// <summary>
+        ///     The text color of player 2's username
+        /// </summary>
+        public Bindable<Color> Player2TextColor { get; } = new Bindable<Color>(Color.White);
+
+        /// <summary>
         ///     If true, the number of wins each player has will be displayed
         /// </summary>
         public Bindable<bool> DisplayWinCounts { get; } = new Bindable<bool>(true);
@@ -191,6 +211,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             SongTitleFontSize.Dispose();
             SongTitleTextAlignment.Dispose();
             SongTitleColor.Dispose();
+            Player1TextAlignment.Dispose();
+            Player2TextAlignment.Dispose();
+            Player1TextColor.Dispose();
+            Player2TextColor.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -239,6 +263,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player2NamePosition.Value = ConfigHelper.ReadVector2(Player2NamePosition.Default, players["Player2NamePosition"]);
             Player1InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player1InvertFlagAndUsername.Default,players["Player1InvertFlagAndUsername"]);
             Player2InvertFlagAndUsername.Value = ConfigHelper.ReadBool(Player2InvertFlagAndUsername.Default,players["Player2InvertFlagAndUsername"]);
+            Player1TextAlignment.Value = ConfigHelper.ReadEnum(Player1TextAlignment.Default, players["Player1TextAlignment"]);
+            Player2TextAlignment.Value = ConfigHelper.ReadEnum(Player2TextAlignment.Default, players["Player2TextAlignment"]);
+            Player1TextColor.Value = ConfigHelper.ReadColor(Player1TextColor.Default, players["Player1TextColor"]);
+            Player2TextColor.Value = ConfigHelper.ReadColor(Player2TextColor.Default, players["Player2TextColor"]);
 
             var wins = data["Wins"];
             DisplayWinCounts.Value = ConfigHelper.ReadBool(DisplayWinCounts.Default, wins["DisplayWinCounts"]);
@@ -263,11 +291,15 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
             foreach (var player in Players)
             {
-                var position = player == Players.First() ? Player1NamePosition : Player2NamePosition;
-                var invertFlagAndUsername = player == Players.First() ? Player1InvertFlagAndUsername : Player2InvertFlagAndUsername;
+                var isFirstPlayer = player == Players.First();
+
+                var position = isFirstPlayer ? Player1NamePosition : Player2NamePosition;
+                var invertFlagAndUsername = isFirstPlayer ? Player1InvertFlagAndUsername : Player2InvertFlagAndUsername;
+                var alignment = isFirstPlayer ? Player1TextAlignment : Player2TextAlignment;
+                var color = isFirstPlayer ? Player1TextColor : Player2TextColor;
 
                 var username = new TournamentPlayerUsername(player, DisplayPlayerNames, PlayerNameFontSize, position,
-                    invertFlagAndUsername)
+                    invertFlagAndUsername, alignment, color)
                 {
                     Parent = this
                 };

@@ -33,6 +33,14 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
         /// <summary>
         /// </summary>
+        private Bindable<Alignment> Aligning { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<Color> Color { get; }
+
+        /// <summary>
+        /// </summary>
         private SpriteTextPlus TextUsername { get; set; }
 
         /// <summary>
@@ -46,14 +54,18 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         /// <param name="fontSize"></param>
         /// <param name="position"></param>
         /// <param name="invertFlagAndUsername"></param>
+        /// <param name="textAlignment"></param>
+        /// <param name="col"></param>
         public TournamentPlayerUsername(TournamentPlayer player, Bindable<bool> displayPlayerNames, BindableInt fontSize,
-            Bindable<Vector2> position, Bindable<bool> invertFlagAndUsername)
+            Bindable<Vector2> position, Bindable<bool> invertFlagAndUsername, Bindable<Alignment> textAlignment, Bindable<Color> col)
         {
             Player = player;
             DisplayPlayerNames = displayPlayerNames;
             FontSize = fontSize;
             UsernamePosition = position;
             InvertFlagAndUsername = invertFlagAndUsername;
+            Aligning = textAlignment;
+            Color = col;
 
             CreateFlag();
             CreateUsername();
@@ -63,6 +75,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             FontSize.ValueChanged += (sender, args) => Align();
             UsernamePosition.ValueChanged += (sender, args) => Align();
             InvertFlagAndUsername.ValueChanged += (sender, args) => Align();
+            Aligning.ValueChanged += (sender, args) => Align();
+            Color.ValueChanged += (sender, args) => Align();
         }
 
         /// <summary>
@@ -114,7 +128,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
             Height = Math.Max(Flag.Height, TextUsername.Height);
             Width = Flag.Width + spacing + TextUsername.Width;
+
             Position = new ScalableVector2(UsernamePosition.Value.X, UsernamePosition.Value.Y);
+            Alignment = Aligning.Value;
+            TextUsername.Tint = Color.Value;
         });
     }
 }
