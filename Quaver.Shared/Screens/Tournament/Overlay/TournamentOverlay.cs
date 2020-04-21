@@ -75,6 +75,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentDrawableSettings DifficultyNameSettings { get; } = new TournamentDrawableSettings("DifficultyName");
 
         /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings SongLengthSettings { get; } = new TournamentDrawableSettings("SongLength");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -112,6 +116,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateWinCounts();
             CreateSongArtistAndTitle();
             CreateDifficultyNameSettings();
+            CreateSongLength();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -134,6 +139,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player1UsernameSettings.Dispose();
             Player2UsernameSettings.Dispose();
             DifficultyNameSettings.Dispose();
+            SongLengthSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -185,6 +191,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
             SongTitleSettings.Load(data["Song"]);
             DifficultyNameSettings.Load(data["DifficultyName"]);
+            SongLengthSettings.Load(data["SongLength"]);
         }
 
         /// <summary>
@@ -225,7 +232,9 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
 
         private void CreateSongArtistAndTitle() => SongTitle = new TournamentSongArtistAndTitle(Qua, SongTitleSettings) { Parent = this };
 
-        // ReSharper disable once ObjectCreationAsStatement
+        // ReSharper disable twice ObjectCreationAsStatement
         private void CreateDifficultyNameSettings() => new TournamentDifficultyName(Qua, DifficultyNameSettings) {Parent = this};
+
+        private void CreateSongLength() => new TournamentSongLength(Qua, SongLengthSettings) {Parent = this};
     }
 }
