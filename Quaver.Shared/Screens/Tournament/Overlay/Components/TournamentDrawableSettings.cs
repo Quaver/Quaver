@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Name = name;
         }
 
-        public void Load(KeyDataCollection ini)
+        public virtual void Load(KeyDataCollection ini)
         {
             Visible.Value = ConfigHelper.ReadBool(Visible.Default, ini[$"{Name}Visible"]);
             FontSize.Value = ConfigHelper.ReadInt32(FontSize.Default, ini[$"{Name}FontSize"]);
@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             Visible?.Dispose();
             FontSize?.Dispose();

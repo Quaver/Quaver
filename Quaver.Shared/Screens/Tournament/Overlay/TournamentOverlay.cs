@@ -83,6 +83,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentDrawableSettings SongBpmSettings { get; } = new TournamentDrawableSettings("SongBpm");
 
         /// <summary>
+        /// </summary>
+        public TournamentSettingsDifficultyRating DifficultyRatingSettings { get; } = new TournamentSettingsDifficultyRating("DifficultyRating");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -122,6 +126,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateDifficultyNameSettings();
             CreateSongLength();
             CreateSongBpm();
+            CreateDifficultyRating();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -146,6 +151,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             DifficultyNameSettings.Dispose();
             SongLengthSettings.Dispose();
             SongBpmSettings.Dispose();
+            DifficultyRatingSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -199,6 +205,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             DifficultyNameSettings.Load(data["DifficultyName"]);
             SongLengthSettings.Load(data["SongLength"]);
             SongBpmSettings.Load(data["SongBpm"]);
+            DifficultyRatingSettings.Load(data["DifficultyRating"]);
         }
 
         /// <summary>
@@ -245,5 +252,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         private void CreateSongLength() => new TournamentSongLength(Qua, SongLengthSettings) {Parent = this};
 
         private void CreateSongBpm() => new TournamentBpm(Qua, SongBpmSettings) {Parent = this};
+
+        private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings) {Parent = this};
     }
 }
