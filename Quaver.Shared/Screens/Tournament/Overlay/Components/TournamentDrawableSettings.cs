@@ -51,6 +51,16 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public Bindable<string> Font { get; } = new Bindable<string>(Fonts.LatoBlack);
 
         /// <summary>
+        ///     If true, the value will dim when the individual player is losing
+        /// </summary>
+        public Bindable<bool> DimWhenLosing { get; } = new Bindable<bool>(false);
+
+        /// <summary>
+        ///     The font size when the user is losing if <see cref="DimWhenLosing"/> is true
+        /// </summary>
+        public BindableInt FontSizeWhenLosing { get; } = new BindableInt(20, 1, int.MaxValue);
+
+        /// <summary>
         /// </summary>
         /// <param name="name"></param>
         public TournamentDrawableSettings(string name)
@@ -67,6 +77,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Alignment.Value = ConfigHelper.ReadEnum(Alignment.Default, ini[$"{Name}Alignment"]);
             Tint.Value = ConfigHelper.ReadColor(Tint.Default, ini[$"{Name}Color"]);
             Inverted.Value = ConfigHelper.ReadBool(Inverted.Default, ini[$"{Name}Inverted"]);
+            DimWhenLosing.Value = ConfigHelper.ReadBool(DimWhenLosing.Default, ini[$"{Name}DimWhenLosing"]);
+            FontSizeWhenLosing.Value = ConfigHelper.ReadInt32(FontSizeWhenLosing.Default, ini[$"{Name}FontSizeWhenLosing"]);
         }
 
         /// <inheritdoc />
@@ -81,6 +93,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Tint.Dispose();
             Inverted.Dispose();
             Font.Dispose();
+            DimWhenLosing.Dispose();
+            FontSizeWhenLosing.Dispose();
         }
     }
 }
