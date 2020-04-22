@@ -33,6 +33,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Align();
 
             Settings.Visible.ValueChanged += (sender, args) => Align();
+            Settings.Font.ValueChanged += (sender, args) => Align();
             Settings.FontSize.ValueChanged += (sender, args) => Align();
             Settings.Position.ValueChanged += (sender, args) => Align();
             Settings.Alignment.ValueChanged += (sender, args) => Align();
@@ -57,6 +58,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         private void Align() => ScheduleUpdate(() =>
         {
             Visible = Settings.Visible.Value;
+
+            if (!string.IsNullOrEmpty(Settings.Font.Value) && FontManager.WobbleFonts.ContainsKey(Settings.Font.Value))
+                TextUsername.Font = FontManager.GetWobbleFont(Settings.Font.Value);
+            else
+                TextUsername.Font = FontManager.GetWobbleFont(Settings.Font.Default);
 
             const int spacing = 12;
             TextUsername.FontSize = Settings.FontSize.Value;

@@ -1,6 +1,7 @@
 using System;
 using IniFileParser.Model;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -45,6 +46,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public Bindable<bool> Inverted { get; } = new Bindable<bool>(false);
 
         /// <summary>
+        ///     The font to be used for the text
+        /// </summary>
+        public Bindable<string> Font { get; } = new Bindable<string>(Fonts.LatoBlack);
+
+        /// <summary>
         /// </summary>
         /// <param name="name"></param>
         public TournamentDrawableSettings(string name)
@@ -55,6 +61,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         public virtual void Load(KeyDataCollection ini)
         {
             Visible.Value = ConfigHelper.ReadBool(Visible.Default, ini[$"{Name}Visible"]);
+            Font.Value = ini[$"{Name}Font"];
             FontSize.Value = ConfigHelper.ReadInt32(FontSize.Default, ini[$"{Name}FontSize"]);
             Position.Value = ConfigHelper.ReadVector2(Position.Default, ini[$"{Name}Position"]);
             Alignment.Value = ConfigHelper.ReadEnum(Alignment.Default, ini[$"{Name}Alignment"]);
@@ -73,6 +80,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Alignment?.Dispose();
             Tint.Dispose();
             Inverted.Dispose();
+            Font.Dispose();
         }
     }
 }

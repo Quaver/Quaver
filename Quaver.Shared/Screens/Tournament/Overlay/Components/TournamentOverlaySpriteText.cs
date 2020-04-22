@@ -14,6 +14,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
             Settings = settings;
 
             Settings.Visible.ValueChanged += (sender, args) => SetText();
+            Settings.Font.ValueChanged += (sender, args) => SetText();
             Settings.FontSize.ValueChanged += (sender, args) => SetText();
             Settings.Position.ValueChanged += (sender, args) => SetText();
             Settings.Alignment.ValueChanged += (sender, args) => SetText();
@@ -25,6 +26,11 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
 
         public virtual void UpdateState()
         {
+            if (!string.IsNullOrEmpty(Settings.Font.Value) && FontManager.WobbleFonts.ContainsKey(Settings.Font.Value))
+                Font = FontManager.GetWobbleFont(Settings.Font.Value);
+            else
+                Font = FontManager.GetWobbleFont(Settings.Font.Default);
+
             FontSize = Settings.FontSize.Value;
             Visible = Settings.Visible.Value;
             Position = new ScalableVector2(Settings.Position.Value.X, Settings.Position.Value.Y);
