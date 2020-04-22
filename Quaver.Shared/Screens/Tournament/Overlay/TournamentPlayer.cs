@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Quaver.API.Maps.Processors.Difficulty;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
 using Quaver.API.Maps.Processors.Rating;
@@ -30,6 +32,29 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             User = user;
             Scoring = scoring;
             Rating = new RatingProcessorKeys(difficultyRating);
+        }
+
+        /// <summary>
+        ///     Returns if the player is winning
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool IsWinning(TournamentPlayer player)
+        {
+            var ourRating = Rating.CalculateRating(Scoring);
+            var otherRating = player.Rating.CalculateRating(player.Scoring);
+
+            if (ourRating > otherRating)
+                return true;
+
+            if (ourRating < otherRating)
+                return false;
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (ourRating == otherRating)
+                return true;
+
+            return true;
         }
     }
 }

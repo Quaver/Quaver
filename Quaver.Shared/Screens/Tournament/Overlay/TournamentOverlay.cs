@@ -88,6 +88,22 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentSettingsDifficultyRating DifficultyRatingSettings { get; } = new TournamentSettingsDifficultyRating("DifficultyRating");
 
         /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings Player1AccuracySettings { get; } = new TournamentDrawableSettings("Player1Accuracy");
+
+        /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings Player2AccuracySettings { get; } = new TournamentDrawableSettings("Player2Accuracy");
+
+        /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings Player1RatingSettings { get; } = new TournamentDrawableSettings("Player1Rating");
+
+        /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings Player2RatingSettings { get; } = new TournamentDrawableSettings("Player2Rating");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -128,6 +144,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateSongLength();
             CreateSongBpm();
             CreateDifficultyRating();
+            CreateAccuracyDisplays();
+            CreateRatingDisplays();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -153,6 +171,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             SongLengthSettings.Dispose();
             SongBpmSettings.Dispose();
             DifficultyRatingSettings.Dispose();
+            Player1AccuracySettings.Dispose();
+            Player2AccuracySettings.Dispose();
+            Player1RatingSettings.Dispose();
+            Player2RatingSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -192,23 +214,38 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         /// </summary>
         private void ReadSettingsFile()
         {
-            var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(SettingsPath);
+            try
+            {
+                var data = new IniFileParser.IniFileParser(new ConcatenateDuplicatedKeysIniDataParser()).ReadFile(SettingsPath);
 
-            var players = data["Players"];
-            Player1UsernameSettings.Load(players);
-            Player2UsernameSettings.Load(players);
+                var players = data["Players"];
+                Player1UsernameSettings.Load(players);
+                Player2UsernameSettings.Load(players);
 
-            var wins = data["Wins"];
-            Player1WinCountSettings.Load(wins);
-            Player2WinCountSettings.Load(wins);
+                var wins = data["Wins"];
+                Player1WinCountSettings.Load(wins);
+                Player2WinCountSettings.Load(wins);
 
-            SongTitleSettings.Load(data["Song"]);
-            DifficultyNameSettings.Load(data["DifficultyName"]);
-            SongLengthSettings.Load(data["SongLength"]);
-            SongBpmSettings.Load(data["SongBpm"]);
-            DifficultyRatingSettings.Load(data["DifficultyRating"]);
+                SongTitleSettings.Load(data["Song"]);
+                DifficultyNameSettings.Load(data["DifficultyName"]);
+                SongLengthSettings.Load(data["SongLength"]);
+                SongBpmSettings.Load(data["SongBpm"]);
+                DifficultyRatingSettings.Load(data["DifficultyRating"]);
 
-            LoadFonts();
+                var accuracy = data["Accuracy"];
+                Player1AccuracySettings.Load(accuracy);
+                Player2AccuracySettings.Load(accuracy);
+
+                var rating = data["Rating"];
+                Player1RatingSettings.Load(rating);
+                Player2RatingSettings.Load(rating);
+
+                LoadFonts();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
@@ -281,5 +318,23 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         private void CreateSongBpm() => new TournamentBpm(Qua, SongBpmSettings) {Parent = this};
 
         private void CreateDifficultyRating() => new TournamentDifficultyRating(Qua, DifficultyRatingSettings) {Parent = this};
+
+        private void CreateAccuracyDisplays()
+        {
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1AccuracySettings : Player2AccuracySettings;
+                new TournamentPlayerAccuracy(settings, player, Players) {Parent = this};
+            }
+        }
+
+        private void CreateRatingDisplays()
+        {
+            foreach (var player in Players)
+            {
+                var settings = player == Players.First() ? Player1RatingSettings : Player2RatingSettings;
+                new TournamentPlayerRating(settings, player, Players) {Parent = this};
+            }
+        }
     }
 }
