@@ -242,7 +242,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Tournament", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Display 1v1 Tournament Overlay", ConfigManager.Display1v1TournamentOverlay)
+                        new OptionsItemCheckbox(containerRect, "Display 1v1 Tournament Overlay", ConfigManager.Display1v1TournamentOverlay),
+                        new OptionsItemCheckbox(containerRect, "Display 1v1 Playfield Scores", ConfigManager.TournamentDisplay1v1PlayfieldScores)
                     }),
                     new OptionsSubcategory("Configuration", new List<OptionsItem>()
                     {

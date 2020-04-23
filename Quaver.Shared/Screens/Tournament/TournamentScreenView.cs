@@ -183,6 +183,9 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void PositionPlayfieldItems()
         {
+            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+                return;
+
             foreach (var screen in TournamentScreen.GameplayScreens)
             {
                 var view = (GameplayScreenView) screen.View;
@@ -213,6 +216,9 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void CreateUsernames()
         {
+            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+                return;
+
             Usernames = new List<SpriteTextPlus>();
 
             for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)

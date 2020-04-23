@@ -518,6 +518,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> Display1v1TournamentOverlay { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> TournamentDisplay1v1PlayfieldScores { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -863,6 +867,7 @@ namespace Quaver.Shared.Config
             VisualOffset = ReadInt(@"VisualOffset", 0, -300, 300, data);
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
+            TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1013,6 +1018,7 @@ namespace Quaver.Shared.Config
                     VisualOffset.ValueChanged += AutoSaveConfiguration;
                     TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
                     Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;
+                    TournamentDisplay1v1PlayfieldScores.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
