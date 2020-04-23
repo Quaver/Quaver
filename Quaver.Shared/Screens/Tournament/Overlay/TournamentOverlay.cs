@@ -104,6 +104,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentDrawableSettings Player2RatingSettings { get; } = new TournamentDrawableSettings("Player2Rating");
 
         /// <summary>
+        /// </summary>
+        public TournamentSettingsBanner BannerSettings { get; } = new TournamentSettingsBanner("Banner");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -146,6 +150,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateDifficultyRating();
             CreateAccuracyDisplays();
             CreateRatingDisplays();
+            CreateBanner();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -175,6 +180,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player2AccuracySettings.Dispose();
             Player1RatingSettings.Dispose();
             Player2RatingSettings.Dispose();
+            BannerSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -240,6 +246,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 Player1RatingSettings.Load(rating);
                 Player2RatingSettings.Load(rating);
 
+                BannerSettings.Load(data["Banner"]);
                 LoadFonts();
             }
             catch (Exception e)
@@ -336,5 +343,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 new TournamentPlayerRating(settings, player, Players) {Parent = this};
             }
         }
+
+        private void CreateBanner() => new TournamentMapBanner(BannerSettings, new ScalableVector2(300, 200)) { Parent = this };
     }
 }
