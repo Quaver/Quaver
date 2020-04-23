@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Tournament.Gameplay;
+using Quaver.Shared.Screens.Tournament.Overlay;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -38,6 +46,10 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private List<SpriteTextPlus> Usernames { get; set; }
 
+        /// <summary>
+        /// </summary>
+        private TournamentOverlay Overlay { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -48,6 +60,7 @@ namespace Quaver.Shared.Screens.Tournament
             SetPlayfieldPositions();
             PositionPlayfieldItems();
             CreateUsernames();
+            CreateOverlay();
         }
 
         /// <inheritdoc />
@@ -74,11 +87,11 @@ namespace Quaver.Shared.Screens.Tournament
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
-            Container?.Draw(gameTime);
             Background?.Draw(gameTime);
             DrawPlayfields(gameTime);
             DrawProgressBar(gameTime);
             DrawSkipDisplay(gameTime);
+            Container?.Draw(gameTime);
         }
 
         /// <inheritdoc />
@@ -170,6 +183,9 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void PositionPlayfieldItems()
         {
+            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+                return;
+
             foreach (var screen in TournamentScreen.GameplayScreens)
             {
                 var view = (GameplayScreenView) screen.View;
@@ -200,6 +216,9 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private void CreateUsernames()
         {
+            if (TournamentScreen.GameplayScreens.Count == 2 &&!ConfigManager.TournamentDisplay1v1PlayfieldScores.Value)
+                return;
+
             Usernames = new List<SpriteTextPlus>();
 
             for (var i = 0; i < TournamentScreen.GameplayScreens.Count; i++)
@@ -216,6 +235,47 @@ namespace Quaver.Shared.Screens.Tournament
 
                 Usernames.Add(username);
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateOverlay()
+        {
+            if (TournamentScreen.GameplayScreens.Count > 2 || !ConfigManager.Display1v1TournamentOverlay.Value)
+                return;
+
+            var players = new List<TournamentPlayer>();
+
+            // Create overlay for spectator
+            if (OnlineManager.CurrentGame != null)
+            {
+                foreach (var screen in TournamentScreen.GameplayScreens)
+                {
+                    var difficulty = screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty;
+
+                    players.Add(new TournamentPlayer(screen.SpectatorClient.Player, screen.Ruleset.ScoreProcessor, difficulty));
+                }
+
+                Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, OnlineManager.CurrentGame, players) { Parent = Container };
+                return;
+            }
+
+            // Create players for "local multiplayer game"
+            players.AddRange(TournamentScreen.GameplayScreens.Select((screen, i) => new TournamentPlayer(new User(new OnlineUser
+            {
+                Username = screen.LoadedReplay?.PlayerName ?? $"Player {i + 1}",
+                CountryFlag = "US",
+                Id = i + 1,
+                UserGroups = UserGroups.Normal
+            }), screen.Ruleset.ScoreProcessor, screen.Map.SolveDifficulty(screen.Ruleset.ScoreProcessor.Mods).OverallDifficulty)));
+
+            var game = new MultiplayerGame
+            {
+                Type = MultiplayerGameType.Friendly,
+                Ruleset = MultiplayerGameRuleset.Free_For_All,
+            };
+
+            Overlay = new TournamentOverlay(TournamentScreen.MainGameplayScreen.Map, game, players) { Parent = Container };
         }
 
         /// <summary>
