@@ -240,6 +240,10 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsItemExportSkin(containerRect, "Export Skin"),
                         new OptionsItemUploadSkinToWorkshop(containerRect, "Upload Skin To Steam Workshop")
                     }),
+                    new OptionsSubcategory("Tournament", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Display 1v1 Tournament Overlay", ConfigManager.Display1v1TournamentOverlay)
+                    }),
                     new OptionsSubcategory("Configuration", new List<OptionsItem>()
                     {
                         new OptionsSlider(containerRect, "Note & Receptor Size Scale", ConfigManager.GameplayNoteScale, i => $"{i / 100f:0.00}x")
