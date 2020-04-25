@@ -58,6 +58,7 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             ScheduleUpdate(() =>
             {
                 Checkbox.Name.Text = item.GetName();
+                Checkbox.Name.TruncateWithEllipsis((int) (Width - Checkbox.Sprite.Width) - 46);
                 Checkbox.Sprite.Image = FontAwesome.Get(Item.IsSelected ? FontAwesomeIcon.fa_check : FontAwesomeIcon.fa_check_box_empty);
             });
         }
@@ -69,6 +70,10 @@ namespace Quaver.Shared.Graphics.Form.Checkboxes
             Checkbox = new Checkbox(Size)
             {
                 Parent = this,
+                UsePreviousSpriteBatchOptions = true,
+                Name = { UsePreviousSpriteBatchOptions = true, },
+                Sprite = { UsePreviousSpriteBatchOptions = true },
+                Button = { UsePreviousSpriteBatchOptions = true }
             };
 
             Checkbox.Button.Clicked += (sender, args) =>
