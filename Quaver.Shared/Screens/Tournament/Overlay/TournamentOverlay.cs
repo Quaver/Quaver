@@ -108,6 +108,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
         public TournamentSettingsBanner BannerSettings { get; } = new TournamentSettingsBanner("Banner");
 
         /// <summary>
+        /// </summary>
+        public TournamentDrawableSettings MapCreatorSettings { get; } = new TournamentDrawableSettings("MapCreator");
+
+        /// <summary>
         ///     Displays the usernames of the users
         /// </summary>
         private List<TournamentPlayerUsername> DrawableUsernames { get; set; }
@@ -141,6 +145,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             InitializeOverlaySprite();
             ReadSettingsFile();
 
+            CreateBanner();
             CreateUsernames();
             CreateWinCounts();
             CreateSongArtistAndTitle();
@@ -150,7 +155,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             CreateDifficultyRating();
             CreateAccuracyDisplays();
             CreateRatingDisplays();
-            CreateBanner();
+            CreateMapCreator();
 
             Watcher = new FileSystemWatcher(Directory)
             {
@@ -181,6 +186,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
             Player1RatingSettings.Dispose();
             Player2RatingSettings.Dispose();
             BannerSettings.Dispose();
+            MapCreatorSettings.Dispose();
             Watcher.Dispose();
 
             base.Destroy();
@@ -237,6 +243,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 SongLengthSettings.Load(data["SongLength"]);
                 SongBpmSettings.Load(data["SongBpm"]);
                 DifficultyRatingSettings.Load(data["DifficultyRating"]);
+                MapCreatorSettings.Load(data["MapCreator"]);
 
                 var accuracy = data["Accuracy"];
                 Player1AccuracySettings.Load(accuracy);
@@ -343,6 +350,8 @@ namespace Quaver.Shared.Screens.Tournament.Overlay
                 new TournamentPlayerRating(settings, player, Players) {Parent = this};
             }
         }
+
+        private void CreateMapCreator() => new TournamentMapCreator(Qua, MapCreatorSettings) {Parent = this};
 
         private void CreateBanner() => new TournamentMapBanner(BannerSettings, new ScalableVector2(300, 200)) { Parent = this };
     }
