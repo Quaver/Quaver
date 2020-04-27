@@ -14,24 +14,30 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
     {
         /// <summary>
         /// </summary>
-        private Sprite Background { get; set; }
+        protected Sprite Background { get; set; }
 
         /// <summary>
         /// </summary>
-        private Sprite Darkness { get; set; }
+        protected Sprite Darkness { get; set; }
 
         /// <summary>
         /// </summary>
-        private float DarknessVisibleAlpha { get; } = 0.7f;
+        protected float DarknessVisibleAlpha { get; set; } = 0.7f;
+
+        /// <summary>
+        /// </summary>
+        private bool LoadBackground { get; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        public MusicControllerBackground(ScalableVector2 size) : base(size, size)
+        /// <param name="loadBackground"></param>
+        public MusicControllerBackground(ScalableVector2 size, bool loadBackground = true) : base(size, size)
         {
             Alpha = 0;
             InputEnabled = false;
+            LoadBackground = loadBackground;
 
             CreateBackground();
             CreateDarkness();
@@ -40,7 +46,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             MapManager.Selected.ValueChanged += OnMapChanged;
             BackgroundHelper.Loaded += OnBackgroundLoaded;
 
-            BackgroundHelper.Load(MapManager.Selected.Value);
+            if (LoadBackground)
+                BackgroundHelper.Load(MapManager.Selected.Value);
         }
 
         /// <inheritdoc />
@@ -64,7 +71,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Alignment = Alignment.MidCenter,
                 Y = -100,
                 Size = new ScalableVector2(1920, 1080),
-                Image = UserInterface.MenuBackgroundClear
+                Image = BackgroundHelper.RawTexture.IsDisposed ? UserInterface.MenuBackgroundRaw : BackgroundHelper.RawTexture
             };
 
             AddContainedDrawable(Background);
@@ -102,7 +109,8 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
             Darkness.ClearAnimations();
             Darkness.FadeTo(1, Easing.Linear, 150);
 
-            BackgroundHelper.Load(e.Value);
+            if (LoadBackground)
+                BackgroundHelper.Load(e.Value);
         }
 
         /// <summary>
