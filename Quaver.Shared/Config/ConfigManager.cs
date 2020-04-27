@@ -522,6 +522,10 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> TournamentDisplay1v1PlayfieldScores { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -868,6 +872,7 @@ namespace Quaver.Shared.Config
             TintHitLightingBasedOnJudgementColor = ReadValue(@"TintHitLightingBasedOnJudgementColor", false, data);
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
+            EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1019,6 +1024,7 @@ namespace Quaver.Shared.Config
                     TintHitLightingBasedOnJudgementColor.ValueChanged += AutoSaveConfiguration;
                     Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;
                     TournamentDisplay1v1PlayfieldScores.ValueChanged += AutoSaveConfiguration;
+                    EnableRealtimeOnlineScoreboard.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

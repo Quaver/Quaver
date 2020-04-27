@@ -580,8 +580,13 @@ namespace Quaver.Shared.Screens.Gameplay
                 // since we don't have access to their judgement breakdown.
                 if (mapScores[i].IsOnline)
                 {
+                    var judgements = mapScores[i].OnlineJudgements;
+
+                    if (!ConfigManager.EnableRealtimeOnlineScoreboard.Value || judgements == null || !OnlineManager.IsDonator)
+                        judgements = new List<Judgement>();
+
                     user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name}",
-                        new List<Judgement>(), UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
+                        judgements, UserInterface.UnknownAvatar, (ModIdentifier) mapScores[i].Mods, mapScores[i])
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft
@@ -605,8 +610,11 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
 
-                    user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
-                    user.Combo.Text = $"{processor.MaxCombo}x";
+                    if (judgements.Count == 0)
+                    {
+                        user.Score.Text = $"{user.RatingProcessor.CalculateRating(processor.Accuracy):0.00} / {StringHelper.AccuracyToString(processor.Accuracy)}";
+                        user.Combo.Text = $"{processor.MaxCombo}x";
+                    }
                 }
                 // Allow the user to play against their own local scores.
                 else
