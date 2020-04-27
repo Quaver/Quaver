@@ -203,7 +203,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Scoreboard", new List<OptionsItem>()
                     {
                         new OptionsItemCheckbox(containerRect, "Display Scoreboard", ConfigManager.ScoreboardVisible),
-                        new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
+                        new OptionsItemCheckbox(containerRect, "[Donator] Enable Real-time Top 5 Online Scoreboard", ConfigManager.EnableRealtimeOnlineScoreboard),
                         new OptionsItemCheckbox(containerRect, "Display Unbeatable Scores", ConfigManager.DisplayUnbeatableScoresDuringGameplay)
                     }),
                     new OptionsSubcategory("Progress Bar", new List<OptionsItem>()
