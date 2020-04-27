@@ -284,7 +284,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 var oldProcessor = Processor;
                 Processor = Screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor;
                 var rating = CalculateRating();
-                Processor = oldProcessor;
+
+                if (Screen.InReplayMode)
+                    Processor = Screen.Ruleset.ScoreProcessor;
+                else
+                    Processor = oldProcessor;
 
                 Score.Text = $"{StringHelper.RatingToString(rating)} / {StringHelper.AccuracyToString(Processor.Accuracy)}";
                 Combo.Text = Processor.Combo.ToString("N0") + "x";
