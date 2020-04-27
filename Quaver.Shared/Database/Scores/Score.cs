@@ -11,8 +11,10 @@ using System.Globalization;
 using System.IO;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
@@ -230,6 +232,12 @@ namespace Quaver.Shared.Database.Scores
         public string Country { get; set; }
 
         /// <summary>
+        ///     The judgements received from online for the scoreboard
+        /// </summary>
+        [Ignore]
+        public List<Judgement> OnlineJudgements { get; set; }
+
+        /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
         /// <param name="processor"></param>
@@ -301,6 +309,33 @@ namespace Quaver.Shared.Database.Scores
                 Mods = (long) score.Mods,
                 Country = score.Country
             };
+
+            if (score.Hits == null)
+                return localScore;
+
+            localScore.OnlineJudgements = new List<Judgement>();
+            var processor = new ScoreProcessorKeys(new Qua(), score.Mods);
+
+            foreach (var hit in score.Hits)
+            {
+                var split = hit.Split("L");
+                var deviance = int.Parse(split[0]);
+
+                // Early miss
+                if (deviance == int.MinValue)
+                {
+                    localScore.OnlineJudgements.Add(Judgement.Miss);
+                    continue;
+                }
+
+                var judgement = processor.CalculateScore(deviance,
+                    hit.Contains("L") ? KeyPressType.Release : KeyPressType.Press);
+
+                if (judgement == Judgement.Ghost)
+                    continue;
+
+                localScore.OnlineJudgements.Add(judgement);
+            }
 
             return localScore;
         }
