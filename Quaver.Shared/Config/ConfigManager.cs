@@ -1250,9 +1250,8 @@ namespace Quaver.Shared.Config
     /// </summary>
     public enum DefaultSkins
     {
-        Bar,
         Arrow,
+        Bar,
         Circle,
-        Barv2
     }
 }
