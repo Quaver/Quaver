@@ -228,17 +228,17 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             }
 
             // Create username text.
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 20)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), GetUsernameFormatted(), 21)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                X = RankText.X + RankText.Width + 18,
+                X = RankText.X + RankText.Width + 20,
                 Y = 8,
             };
 
             // Create score text.
-            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 20, false)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "0.00 / 0.00%", 19, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
