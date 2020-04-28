@@ -406,11 +406,25 @@ namespace Quaver.Shared.Screens.Selection
                 return;
 
             var index = (int) ConfigManager.LeaderboardSection.Value;
+            var length = Enum.GetNames(typeof(LeaderboardType)).Length;
 
-            if (index + 1 < Enum.GetNames(typeof(LeaderboardType)).Length)
-                ConfigManager.LeaderboardSection.Value = (LeaderboardType) index + 1;
+            int newIndex;
+            if (KeyboardManager.IsShiftDown())
+            {
+                if (index - 1 >= 0)
+                    newIndex = index - 1;
+                else
+                    newIndex = length - 1;
+            }
             else
-                ConfigManager.LeaderboardSection.Value = LeaderboardType.Local;
+            {
+                if (index + 1 < length)
+                    newIndex = index + 1;
+                else
+                    newIndex = 0;
+            }
+
+            ConfigManager.LeaderboardSection.Value = (LeaderboardType) newIndex;
         }
 
         /// <summary>
