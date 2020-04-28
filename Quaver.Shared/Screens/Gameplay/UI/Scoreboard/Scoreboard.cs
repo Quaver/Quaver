@@ -334,7 +334,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                         users[i].TargetYPosition = (Type == ScoreboardType.FreeForAll && Users.Count != 1)
                                                    &&  OnlineManager.CurrentGame?.Ruleset != MultiplayerGameRuleset.Battle_Royale
                             ? Math.Min(users.Count, 5) * -users[i].Height / 2f
-                            : 4 * -users[i].Height / 2f + 14;
+                            : 4 * -users[i].Height / 2f + 60;
 
                     }
                     catch (Exception e)
