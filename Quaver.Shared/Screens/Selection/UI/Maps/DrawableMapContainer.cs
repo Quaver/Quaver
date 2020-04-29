@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
                 OnlineGrade.Visible = true;
                 OnlineGrade.Image = SkinManager.Skin.Grades[map.OnlineGrade];
-                OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Width / OnlineGrade.Image.Height * width);
+                OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Height / OnlineGrade.Image.Width * width);
 
                 Name.X = OnlineGrade.X + OnlineGrade.Width + 16;
                 ByText.X = Name.X;
