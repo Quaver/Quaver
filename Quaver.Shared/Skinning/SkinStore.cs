@@ -20,6 +20,7 @@ using Quaver.Shared.Config;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
+using Wobble.Graphics.UI.Form;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Skinning
@@ -231,6 +232,7 @@ namespace Quaver.Shared.Skinning
         internal AudioSample SoundFailure { get; private set; }
         internal AudioSample SoundRetry { get; private set; }
         internal List<AudioSample> SoundComboAlerts { get; private set; }
+        internal List<AudioSample> SoundMenuKeyClick { get; private set; }
 
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
@@ -654,6 +656,13 @@ namespace Quaver.Shared.Skinning
 
             for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundComboAlert}-{i + 1}.wav"); i++)
                 SoundComboAlerts.Add(LoadSoundEffect($"{sfxFolder}/{soundComboAlert}-{i + 1}", soundComboAlert + "-" + i + 1, "Menu"));
+
+            const string soundMenuKeyClick = "sound-menu-keyclick";
+            SoundMenuKeyClick = new List<AudioSample>();
+
+            for (var i = 0; i < 100 && File.Exists($"{sfxFolder}/{soundMenuKeyClick}-{i + 1}.wav"); i++)
+                SoundMenuKeyClick.Add(LoadSoundEffect($"{sfxFolder}/{soundMenuKeyClick}-{i + 1}", soundMenuKeyClick + "-" + i + 1, "Menu"));
+            Textbox.KeyClickSamples = SoundMenuKeyClick;
         }
 
         /// <summary>
