@@ -56,7 +56,23 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <summary>
         ///     The X size of the playfield.
         /// </summary>
-        public float Width => (LaneSize + ReceptorPadding) * Screen.Map.GetKeyCount() + Padding * 2 - ReceptorPadding;
+        public float Width
+        {
+            get
+            {
+                var skin = SkinManager.Skin.Keys[Screen.Map.Mode];
+                var padding = Padding * 2 - ReceptorPadding;
+                var width = (LaneSize + ReceptorPadding) * Screen.Map.GetKeyCount(false) + padding;
+
+                if (Screen.Map.HasScratchKey)
+                {
+                    var size = skin.ScratchLaneSize <= 0 ? LaneSize : skin.ScratchLaneSize;
+                    width += size + ReceptorPadding;
+                }
+
+                return width;
+            }
+        }
 
         /// <summary>
         ///     Padding of the playfield.

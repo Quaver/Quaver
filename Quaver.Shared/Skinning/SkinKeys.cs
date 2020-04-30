@@ -228,6 +228,9 @@ namespace Quaver.Shared.Skinning
 
         internal bool UseAndRotateHitObjectSheet { get; private set; }
 
+        [FixedScale]
+        internal float ScratchLaneSize { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -358,6 +361,7 @@ namespace Quaver.Shared.Skinning
             ReadConfig(true);
             ReadConfig(false);
             FixScale();
+            FixValues();
             LoadTextures();
         }
 
@@ -377,6 +381,15 @@ namespace Quaver.Shared.Skinning
                     property.SetValue(this, f * QuaverGame.SkinScalingFactor);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Fixes any invalid values
+        /// </summary>
+        private void FixValues()
+        {
+            if (ScratchLaneSize <= 0)
+                ScratchLaneSize = ColumnSize;
         }
 
         /// <summary>
@@ -470,6 +483,7 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
+            ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
         }
 
         /// <summary>

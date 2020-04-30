@@ -359,14 +359,14 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         private void InitializeInfoPool(Qua map, bool skipObjects = false)
         {
             // Initialize collections
-            var keyCount = Ruleset.Map.GetKeyCount();
+            var keyCount = Ruleset.Map.GetKeyCount(map.HasScratchKey);
             HitObjectQueueLanes = new List<Queue<HitObjectInfo>>(keyCount);
             ActiveNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             DeadNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
             HeldLongNoteLanes = new List<Queue<GameplayHitObjectKeys>>(keyCount);
 
             // Add HitObject Info to Info pool
-            for (var i = 0; i < Ruleset.Map.GetKeyCount(); i++)
+            for (var i = 0; i < keyCount; i++)
             {
                 HitObjectQueueLanes.Add(new Queue<HitObjectInfo>());
                 ActiveNoteLanes.Add(new Queue<GameplayHitObjectKeys>(InitialPoolSizePerLane));
