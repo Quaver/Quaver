@@ -390,26 +390,56 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
             {
                 case GameMode.Keys4:
                     // Initialize 4K Input button container.
-                    BindingStore = new List<InputBindingKeys>
+                    if (!Ruleset.Screen.Map.HasScratchKey)
                     {
-                        new InputBindingKeys(ConfigManager.KeyMania4K1),
-                        new InputBindingKeys(ConfigManager.KeyMania4K2),
-                        new InputBindingKeys(ConfigManager.KeyMania4K3),
-                        new InputBindingKeys(ConfigManager.KeyMania4K4)
-                    };
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyMania4K1),
+                            new InputBindingKeys(ConfigManager.KeyMania4K2),
+                            new InputBindingKeys(ConfigManager.KeyMania4K3),
+                            new InputBindingKeys(ConfigManager.KeyMania4K4)
+                        };
+                    }
+                    else
+                    {
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch1),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch2),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch3),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch4),
+                            new InputBindingKeys(ConfigManager.KeyLayout4KScratch5),
+                        };
+                    }
                     break;
                 case GameMode.Keys7:
-                    // Initialize 7K input button container.
-                    BindingStore = new List<InputBindingKeys>
+                    if (!Ruleset.Screen.Map.HasScratchKey)
                     {
-                        new InputBindingKeys(ConfigManager.KeyMania7K1),
-                        new InputBindingKeys(ConfigManager.KeyMania7K2),
-                        new InputBindingKeys(ConfigManager.KeyMania7K3),
-                        new InputBindingKeys(ConfigManager.KeyMania7K4),
-                        new InputBindingKeys(ConfigManager.KeyMania7K5),
-                        new InputBindingKeys(ConfigManager.KeyMania7K6),
-                        new InputBindingKeys(ConfigManager.KeyMania7K7)
-                    };
+                        BindingStore = new List<InputBindingKeys>
+                        {
+                            new InputBindingKeys(ConfigManager.KeyMania7K1),
+                            new InputBindingKeys(ConfigManager.KeyMania7K2),
+                            new InputBindingKeys(ConfigManager.KeyMania7K3),
+                            new InputBindingKeys(ConfigManager.KeyMania7K4),
+                            new InputBindingKeys(ConfigManager.KeyMania7K5),
+                            new InputBindingKeys(ConfigManager.KeyMania7K6),
+                            new InputBindingKeys(ConfigManager.KeyMania7K7)
+                        };
+                    }
+                    else
+                    {
+                        BindingStore = new List<InputBindingKeys>()
+                        {
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch1),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch2),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch3),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch4),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch5),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch6),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch7),
+                            new InputBindingKeys(ConfigManager.KeyLayout7KScratch8),
+                        };
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
