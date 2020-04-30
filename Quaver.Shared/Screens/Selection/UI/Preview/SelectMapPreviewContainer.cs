@@ -486,6 +486,10 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                     playfield.Container.X -= SeekBar.X;
                     playfield.Container.X -= SeekBar.Width / 3f;
+
+                    if (qua.HasScratchKey)
+                        SeekBar.X += SkinManager.Skin.Keys[qua.Mode].ScratchLaneSize / 2f;
+
                     playfield.Container.X += 2;
                 }
 
