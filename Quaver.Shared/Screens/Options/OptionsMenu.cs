@@ -177,6 +177,11 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i / 10f:0.0}"),
                         new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i / 10f:0.0}"),
                     }),
+                    new OptionsSubcategory("Scratch Lane", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Place 4K Scratch Lane On Left", ConfigManager.ScratchLaneLeft4K),
+                        new OptionsItemCheckbox(containerRect, "Place 7K Scratch Lane On Left", ConfigManager.ScratchLaneLeft7K)
+                    }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                        new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),

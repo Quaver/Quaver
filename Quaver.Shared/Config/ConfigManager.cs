@@ -526,6 +526,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft4K { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -822,18 +830,18 @@ namespace Quaver.Shared.Config
 
             KeyLayout4KScratch1 = ReadValue(@"KeyLayout4KScratch1", Keys.A, data);
             KeyLayout4KScratch2 = ReadValue(@"KeyLayout4KScratch2", Keys.S, data);
-            KeyLayout4KScratch3 = ReadValue(@"KeyLayout4KScratch3", Keys.K, data);
-            KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.L, data);
-            KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.OemSemicolon, data);
+            KeyLayout4KScratch3 = ReadValue(@"KeyLayout4KScratch3", Keys.D, data);
+            KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
+            KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
 
             KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
             KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
             KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
-            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.Space, data);
-            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
-            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
-            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
-            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.OemSemicolon, data);
+            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.F, data);
+            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.Space, data);
+            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.J, data);
+            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.K, data);
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.L, data);
 
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
@@ -910,6 +918,8 @@ namespace Quaver.Shared.Config
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
+            ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
+            ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1075,6 +1085,8 @@ namespace Quaver.Shared.Config
                     KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
