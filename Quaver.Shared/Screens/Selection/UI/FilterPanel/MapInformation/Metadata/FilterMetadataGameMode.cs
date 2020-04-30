@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         public FilterMetadataGameMode() : base("Mode:", "0K", 20, ColorHelper.HexToColor($"#ffe76b"))
         {
             if (MapManager.Selected.Value != null)
-                Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode);
+                Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode, MapManager.Selected.Value.HasScratchKey);
 
             MapManager.Selected.ValueChanged += OnMapChanged;
         }
@@ -38,7 +38,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
                     return;
                 }
 
-                Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode);
+                Value.Text = ModeHelper.ToShortHand(MapManager.Selected.Value.Mode, MapManager.Selected.Value.HasScratchKey);
             });
         }
     }

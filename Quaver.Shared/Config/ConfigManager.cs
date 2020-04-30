@@ -594,6 +594,27 @@ namespace Quaver.Shared.Config
         internal static Bindable<Keys> KeyCoop2P7K7 { get; private set; }
 
         /// <summary>
+        ///     Scratch key layout for 4K+1
+        /// </summary>
+        internal static Bindable<Keys> KeyLayout4KScratch1 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch2 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch3 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch4 { get; private set; }
+        internal static Bindable<Keys> KeyLayout4KScratch5 { get; private set; }
+
+        /// <summary>
+        ///     Scratch key layout for 7K+1
+        /// </summary>
+        internal static Bindable<Keys> KeyLayout7KScratch1 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch2 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch3 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch4 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch5 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch6 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch7 { get; private set; }
+        internal static Bindable<Keys> KeyLayout7KScratch8 { get; private set; }
+
+        /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
         internal static Bindable<Keys> KeyPause { get; private set; }
@@ -798,6 +819,22 @@ namespace Quaver.Shared.Config
             KeyCoop2P7K5 = ReadValue(@"KeyCoop2P7K5", Keys.M, data);
             KeyCoop2P7K6 = ReadValue(@"KeyCoop2P7K6", Keys.OemComma, data);
             KeyCoop2P7K7 = ReadValue(@"KeyCoop2P7K7", Keys.OemPeriod, data);
+
+            KeyLayout4KScratch1 = ReadValue(@"KeyLayout4KScratch1", Keys.A, data);
+            KeyLayout4KScratch2 = ReadValue(@"KeyLayout4KScratch2", Keys.S, data);
+            KeyLayout4KScratch3 = ReadValue(@"KeyLayout4KScratch3", Keys.K, data);
+            KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.L, data);
+            KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.OemSemicolon, data);
+
+            KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
+            KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
+            KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
+            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.Space, data);
+            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
+            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
+            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.OemSemicolon, data);
+
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
@@ -1025,6 +1062,19 @@ namespace Quaver.Shared.Config
                     Display1v1TournamentOverlay.ValueChanged += AutoSaveConfiguration;
                     TournamentDisplay1v1PlayfieldScores.ValueChanged += AutoSaveConfiguration;
                     EnableRealtimeOnlineScoreboard.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch1.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch2.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch3.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch4.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout4KScratch5.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch1.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch2.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch3.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch4.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch5.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
+                    KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

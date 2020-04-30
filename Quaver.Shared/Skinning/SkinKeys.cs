@@ -93,6 +93,7 @@ namespace Quaver.Shared.Skinning
             Color.Transparent,
             Color.Transparent,
             Color.Transparent,
+            Color.Transparent,
         };
 
         internal float BgMaskAlpha { get; private set;  }
@@ -611,9 +612,9 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 8; i++)
             {
-                if (i == 4 && Mode == GameMode.Keys4)
+                if (i == 5 && Mode == GameMode.Keys4)
                     break;
 
                 // Column Colors
