@@ -346,7 +346,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Receptors = new List<Sprite>();
             ColumnLightingObjects = new List<ColumnLighting>();
 
-            var scratchLaneLeft = true;
+            var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
 
             // Go through and create the receptors and column lighting objects.
             for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)

@@ -526,6 +526,14 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> EnableRealtimeOnlineScoreboard { get; private set; }
 
         /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft4K { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        internal static Bindable<bool> ScratchLaneLeft7K { get; private set; }
+
+        /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
@@ -910,6 +918,8 @@ namespace Quaver.Shared.Config
             Display1v1TournamentOverlay = ReadValue(@"Display1v1TournamentOverlay", true, data);
             TournamentDisplay1v1PlayfieldScores = ReadValue(@"TournamentDisplay1v1PlayfieldScores", true, data);
             EnableRealtimeOnlineScoreboard = ReadValue(@"EnableRealtimeOnlineScoreboard", false, data);
+            ScratchLaneLeft4K = ReadValue(@"ScratchLaneLeft4K", true, data);
+            ScratchLaneLeft7K = ReadValue(@"ScratchLaneLeft7K", true, data);
 
             // Have to do this manually.
             if (string.IsNullOrEmpty(Username.Value))
@@ -1075,6 +1085,8 @@ namespace Quaver.Shared.Config
                     KeyLayout7KScratch6.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch7.ValueChanged += AutoSaveConfiguration;
                     KeyLayout7KScratch8.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft4K.ValueChanged += AutoSaveConfiguration;
+                    ScratchLaneLeft7K.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
