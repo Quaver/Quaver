@@ -204,6 +204,11 @@ namespace Quaver.Shared.Database.Maps
         public int TimesPlayed { get; set; }
 
         /// <summary>
+        ///     If the Qua file is using the scratch key (4K+1, 7K+1)
+        /// </summary>
+        public bool HasScratchKey { get; set; }
+
+        /// <summary>
         ///    Returns the notes per second a map has
         /// </summary>
         [Ignore]
@@ -325,6 +330,7 @@ namespace Quaver.Shared.Database.Maps
                 Mode = qua.Mode,
                 RegularNoteCount = qua.HitObjects.Count(x => !x.IsLongNote),
                 LongNoteCount = qua.HitObjects.Count(x => x.IsLongNote),
+                HasScratchKey = qua.HasScratchKey
             };
 
             if (!skipPathSetting)
