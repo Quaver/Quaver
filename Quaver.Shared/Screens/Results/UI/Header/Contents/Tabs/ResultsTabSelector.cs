@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
                     X = posX
                 };
 
-                posX -= sprite.Width / 2f + 8;
+                posX -= sprite.Width - 4;
                 ModifierSprites.Add(sprite);
             }
         }
