@@ -225,5 +225,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D EditorDeleteLayer => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-delete-layer.png");
         public static Texture2D NoYellowButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/no-yellow-button.png");
         public static Texture2D MetadataPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Editor/editor-metadata-panel.png");
+        public static Texture2D ResultsAvatarBorder => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-avatar-border.png");
+        public static Texture2D ResultsAvatarMask => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-avatar-mask.png");
+        public static Texture2D ResultsBackgroundFilter => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-background-filter.png");
+        public static Texture2D ResultsTabSelectorBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-tab-selector-background.png");
     }
 }
