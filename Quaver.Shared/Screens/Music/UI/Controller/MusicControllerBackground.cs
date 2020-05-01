@@ -71,7 +71,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
                 Alignment = Alignment.MidCenter,
                 Y = -100,
                 Size = new ScalableVector2(1920, 1080),
-                Image = BackgroundHelper.RawTexture.IsDisposed ? UserInterface.MenuBackgroundRaw : BackgroundHelper.RawTexture
+                Image = BackgroundHelper.RawTexture == null || BackgroundHelper.RawTexture.IsDisposed ? UserInterface.MenuBackgroundClear : BackgroundHelper.RawTexture
             };
 
             AddContainedDrawable(Background);
