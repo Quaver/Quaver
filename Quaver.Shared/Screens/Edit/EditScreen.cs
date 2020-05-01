@@ -58,6 +58,10 @@ namespace Quaver.Shared.Screens.Edit
 {
     public sealed class EditScreen : QuaverScreen, IHasLeftPanel
     {
+        /// <summary>
+        /// </summary>
+        private EditScreen Screen { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -636,6 +640,18 @@ namespace Quaver.Shared.Screens.Edit
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.X))
                 CutSelectedObjects();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.U))
+                UploadMapset();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.E))
+                ExportToZip();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Q))
+                MapManager.Selected.Value.OpenFile();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.W))
+                MapManager.Selected.Value.OpenFolder();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
             {
@@ -1284,6 +1300,29 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new difficulty.");
                 }
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UploadMapset()
+        {
+            if (!OnlineManager.Connected)
+                NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
+            else
+                DialogManager.Show(new EditorUploadConfirmationDialog(Screen));
+        }
+       
+        /// <summary>
+        /// </summary>
+        public void ExportToZip()
+        {
+            NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
+
+            ThreadScheduler.Run(() =>
+            {
+                MapManager.Selected.Value.Mapset.ExportToZip();
+                NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
             });
         }
 
