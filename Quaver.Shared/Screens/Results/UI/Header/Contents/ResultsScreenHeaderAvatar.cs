@@ -1,0 +1,36 @@
+using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
+using Wobble.Assets;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+
+namespace Quaver.Shared.Screens.Results.UI.Header.Contents
+{
+    public class ResultsScreenHeaderAvatar : Sprite
+    {
+        /// <summary>
+        ///     The offset of the size/position. Also the size of the outer layer/border
+        /// </summary>
+        public static int OFFSET { get; } = 10;
+
+        /// <summary>
+        /// </summary>
+        private CircleAvatar Avatar { get; }
+
+        public ResultsScreenHeaderAvatar(float size)
+        {
+            Size = new ScalableVector2(size, size);
+            Image = UserInterface.ResultsAvatarBorder;
+
+            var avatarSize = size - OFFSET * 2;
+
+            Avatar = new CircleAvatar(new ScalableVector2(avatarSize, avatarSize), UserInterface.UnknownAvatar)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Image = UserInterface.ResultsAvatarMask
+            };
+        }
+    }
+}
