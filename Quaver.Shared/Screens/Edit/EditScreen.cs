@@ -637,6 +637,18 @@ namespace Quaver.Shared.Screens.Edit
             if (KeyboardManager.IsUniqueKeyPress(Keys.X))
                 CutSelectedObjects();
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.U))
+                UploadMapset();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.E))
+                ExportToZip();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Q))
+                Map.OpenFile();
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.W))
+                Map.OpenFolder();
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
             {
                 if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
@@ -1284,6 +1296,29 @@ namespace Quaver.Shared.Screens.Edit
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new difficulty.");
                 }
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        public void UploadMapset()
+        {
+            if (!OnlineManager.Connected)
+                NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
+            else
+                DialogManager.Show(new EditorUploadConfirmationDialog(this));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExportToZip()
+        {
+            NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
+
+            ThreadScheduler.Run(() =>
+            {
+                MapManager.Selected.Value.Mapset.ExportToZip();
+                NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
             });
         }
 

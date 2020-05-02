@@ -117,29 +117,20 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Upload", "", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Upload", "CTRL+U", false, Screen.Map.Game == MapGame.Quaver))
             {
-                if (!OnlineManager.Connected)
-                    NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
-                else
-                    DialogManager.Show(new EditorUploadConfirmationDialog(Screen));
+                Screen.UploadMapset();
             }
 
-            if (ImGui.MenuItem("Export", "", false))
+            if (ImGui.MenuItem("Export", "CTRL+E", false))
             {
-                NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
-
-                ThreadScheduler.Run(() =>
-                {
-                    Screen.Map.Mapset.ExportToZip();
-                    NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
-                });
+                Screen.ExportToZip();
             }
 
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Open Song Folder", "", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open Song Folder", "CTRL+W", false, Screen.Map.Game == MapGame.Quaver))
             {
                 try
                 {
@@ -151,7 +142,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 }
             }
 
-            if (ImGui.MenuItem("Open .qua File", "", false, Screen.Map.Game == MapGame.Quaver))
+            if (ImGui.MenuItem("Open .qua File", "CTRL+Q", false, Screen.Map.Game == MapGame.Quaver))
             {
                 try
                 {
