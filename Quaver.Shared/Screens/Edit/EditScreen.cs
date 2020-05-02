@@ -644,10 +644,10 @@ namespace Quaver.Shared.Screens.Edit
                 ExportToZip();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Q))
-                MapManager.Selected.Value.OpenFile();
+                Map.OpenFile();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.W))
-                MapManager.Selected.Value.OpenFolder();
+                Map.OpenFolder();
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.A))
             {
