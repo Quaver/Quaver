@@ -58,10 +58,6 @@ namespace Quaver.Shared.Screens.Edit
 {
     public sealed class EditScreen : QuaverScreen, IHasLeftPanel
     {
-        /// <summary>
-        /// </summary>
-        private EditScreen Screen { get; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -1310,9 +1306,9 @@ namespace Quaver.Shared.Screens.Edit
             if (!OnlineManager.Connected)
                 NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
             else
-                DialogManager.Show(new EditorUploadConfirmationDialog(Screen));
+                DialogManager.Show(new EditorUploadConfirmationDialog(this));
         }
-       
+
         /// <summary>
         /// </summary>
         public void ExportToZip()
