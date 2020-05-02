@@ -57,6 +57,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 Items.Add(new LocalProfileTableItem("Country Rank", GetRankString(stats.CountryRank)));
             }
 
+            if (!Profile.Value.IsOnline)
+            {
+                Items.Add(new LocalProfileTableItem("Highest Rated Score",
+                    $"{(topScore != null ? StringHelper.RatingToString(topScore.PerformanceRating) : "Never Played")}"));
+
+                Items.Add(new LocalProfileTableItem("Total Pauses", $"{stats.PauseCount:n0}"));
+            }
+
             Items.AddRange(new []
             {
                 new LocalProfileTableItem("Overall Rating", StringHelper.RatingToString(stats.OverallRating)),
@@ -68,14 +76,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 new LocalProfileTableItem("Max Combo", $"{stats.MaxCombo:n0}x"),
                 new LocalProfileTableItem("Marvelous/Perfect Ratio", $"{ratio:0.00}"),
             });
-
-            if (!Profile.Value.IsOnline)
-            {
-                Items.Add(new LocalProfileTableItem("Highest Rated Score",
-                    $"{(topScore != null ? StringHelper.RatingToString(topScore.PerformanceRating) : "Never Played")}"));
-
-                Items.Add(new LocalProfileTableItem("Total Pauses", $"{stats.PauseCount:n0}"));
-            }
 
             for (var i = 0; i < Items.Count; i++)
             {
