@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Results
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
-            Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f,
+            Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f + 4,
         };
     }
 }

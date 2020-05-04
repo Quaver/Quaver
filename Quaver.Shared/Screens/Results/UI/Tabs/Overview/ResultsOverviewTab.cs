@@ -4,6 +4,8 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -37,6 +39,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
 
         /// <summary>
         /// </summary>
+        private ResultsOverviewGraphContainer GraphContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
         private static Color TextDarkGray { get; } = ColorHelper.HexToColor("#808080");
 
         /// <inheritdoc />
@@ -53,6 +59,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
             CreateDateAndTime();
             CreatePlayedBy();
             CreateScoreContainer();
+            CreateGraphContainer();
         }
 
         /// <summary>
@@ -107,6 +114,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         {
             Parent = this,
             Y = JudgementWindows.Y + JudgementWindows.Height + 10,
+            X = PADDING_X
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateGraphContainer() => GraphContainer = new ResultsOverviewGraphContainer(Map, Processor)
+        {
+            Parent = this,
+            Alignment = Alignment.BotLeft,
             X = PADDING_X
         };
     }
