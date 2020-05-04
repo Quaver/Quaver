@@ -35,6 +35,10 @@ namespace Quaver.Shared.Screens.Results.UI.Header
 
         /// <summary>
         /// </summary>
+        public static int HEIGHT { get; } = 270;
+
+        /// <summary>
+        /// </summary>
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="activeTab"></param>
@@ -44,7 +48,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
             Processor = processor;
             ActiveTab = activeTab;
 
-            Size = new ScalableVector2(WindowManager.Width, 270);
+            Size = new ScalableVector2(WindowManager.Width, HEIGHT);
 
             CreateBackground();
             CreateContentContainer();
