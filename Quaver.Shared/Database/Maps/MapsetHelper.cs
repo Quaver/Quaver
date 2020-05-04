@@ -596,7 +596,7 @@ namespace Quaver.Shared.Database.Maps
                                     exitLoop = true;
 
                                 var objectCount = map.LongNoteCount + map.RegularNoteCount;
-                                var nps = (int) (objectCount / (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
+                                var nps = (objectCount / (map.SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods))));
 
                                 if (!CompareValues(nps, valNps, searchQuery.Operator))
                                     exitLoop = true;
