@@ -10,7 +10,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs
 {
-    public class ResultsTabContainer : Container
+    public class ResultsTabContainer : Sprite
     {
         /// <summary>
         /// </summary>
@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs
 
         /// <summary>
         /// </summary>
-        public static int PADDING_Y = 68;
+        public static int PADDING_Y = 50;
 
         /// <summary>
         /// </summary>
@@ -45,6 +45,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs
 
             var height = WindowManager.Height - MenuBorder.HEIGHT * 2 - ResultsScreenHeader.HEIGHT - PADDING_Y;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH, height);
+            Alpha = 0;
         }
     }
 }

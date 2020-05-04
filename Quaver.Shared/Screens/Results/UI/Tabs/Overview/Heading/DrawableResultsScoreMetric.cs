@@ -6,7 +6,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
+namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 {
     public class DrawableResultsScoreMetric : Sprite
     {
