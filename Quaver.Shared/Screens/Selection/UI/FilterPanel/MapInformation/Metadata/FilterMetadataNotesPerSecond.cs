@@ -4,6 +4,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Wobble.Bindables;
+using System;
 
 namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
 {
@@ -39,12 +40,12 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private int GetNotesPerSecond()
+        private double GetNotesPerSecond()
         {
             if (MapManager.Selected.Value == null)
                 return 0;
 
-            return MapManager.Selected.Value.NotesPerSecond;
+            return Math.Round(MapManager.Selected.Value.NotesPerSecond,1);
         }
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => SetText();
