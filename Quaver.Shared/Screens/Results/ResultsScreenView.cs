@@ -4,6 +4,8 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Header;
+using Quaver.Shared.Screens.Results.UI.Tabs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Graphics;
@@ -35,9 +37,13 @@ namespace Quaver.Shared.Screens.Results
         private ResultsScreenHeader ScreenHeader { get; set; }
 
         /// <summary>
+        /// </summary>
+        private ResultsOverviewTab OverviewTab { get; set; }
+
+        /// <summary>
         ///     The width of the screen content
         /// </summary>
-        public static int CONTENT_WIDTH { get; } = 1670;
+        public static int CONTENT_WIDTH { get; } = 1692;
 
         /// <inheritdoc />
         /// <summary>
@@ -49,6 +55,7 @@ namespace Quaver.Shared.Screens.Results
             CreateHeader();
             CreateFooter();
             CreateScreenHeader();
+            CreateOverviewTab();
 
             Header.Parent = Container;
             Footer.Parent = Container;
@@ -104,6 +111,16 @@ namespace Quaver.Shared.Screens.Results
             Parent = Container,
             Alignment = Alignment.TopLeft,
             Y = Header.Height
+        };
+
+        /// <summary>
+        /// </summary>
+        private void CreateOverviewTab() => OverviewTab = new ResultsOverviewTab(ResultsScreen.Map, ResultsScreen.Processor,
+            ResultsScreen.ActiveTab)
+        {
+            Parent = Container,
+            Alignment = Alignment.TopCenter,
+            Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f,
         };
     }
 }

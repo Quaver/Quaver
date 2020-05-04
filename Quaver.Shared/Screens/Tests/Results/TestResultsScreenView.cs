@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Shared.Database.Maps;
@@ -23,6 +25,8 @@ namespace Quaver.Shared.Screens.Tests.Results
 
         private Score TestScore { get; } = new Score()
         {
+            Name = "ExampleUser86",
+            DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
             Accuracy = 93.42,
             MaxCombo = 1234,
             TotalScore = 1000000,
