@@ -1,4 +1,6 @@
+using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
@@ -32,7 +34,23 @@ namespace Quaver.Shared.Screens.Results
         public ResultsScreen(Map map, Score score)
         {
             Map = map;
-            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(score.ToReplay()));
+
+            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(score.ToReplay()))
+            {
+                Value =
+                {
+                    Windows = new JudgementWindows
+                    {
+                        Name = score.JudgementWindowPreset,
+                        Marvelous = score.JudgementWindowMarv,
+                        Perfect = score.JudgementWindowPerf,
+                        Great = score.JudgementWindowGreat,
+                        Good = score.JudgementWindowGood,
+                        Okay = score.JudgementWindowOkay,
+                        Miss = score.JudgementWindowMiss
+                    }
+                }
+            };
 
             View = new ResultsScreenView(this);
         }
