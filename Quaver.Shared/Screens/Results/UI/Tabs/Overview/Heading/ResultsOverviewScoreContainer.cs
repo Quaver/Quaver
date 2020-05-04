@@ -5,12 +5,11 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
-using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
+namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 {
     public class ResultsOverviewScoreContainer : Sprite
     {
