@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             if (MapManager.Selected.Value == null)
                 return 0;
 
-            return Math.Round(MapManager.Selected.Value.NotesPerSecond,1);
+            return Math.Round(MapManager.Selected.Value.NotesPerSecond,2);
         }
 
         private void OnModsChanged(object sender, ModsChangedEventArgs e) => SetText();
