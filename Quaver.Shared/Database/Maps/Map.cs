@@ -212,14 +212,14 @@ namespace Quaver.Shared.Database.Maps
         ///    Returns the notes per second a map has
         /// </summary>
         [Ignore]
-        public int NotesPerSecond
+        public float NotesPerSecond
         {
             get
             {
                 var objectCount = LongNoteCount + RegularNoteCount;
                 var nps = objectCount / (SongLength / (1000 * ModHelper.GetRateFromMods(ModManager.Mods)));
 
-                return (int) nps.Clamp(0, int.MaxValue);
+                return nps.Clamp(0, float.MaxValue);
             }
         }
 
