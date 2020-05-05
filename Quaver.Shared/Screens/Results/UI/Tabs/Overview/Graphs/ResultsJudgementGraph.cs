@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Tint = GetColor()
+                Tint = GetColor(Judgement)
             };
 
             UpdateTextCount();
@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             Parent = this,
             Size = new ScalableVector2(4, Height),
-            Tint = GetColor()
+            Tint = GetColor(Judgement)
         };
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             {
                 Parent = this,
                 Size = new ScalableVector2(0, Height),
-                Tint = GetColor(),
+                Tint = GetColor(Judgement),
                 Image = UserInterface.OptionsSidebarButtonBackground,
                 X = FlagMarker.Width,
             };
@@ -210,7 +210,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             Parent = this,
             Alignment = Alignment.MidLeft,
             X = JudgementSprite.X + JudgementSprite.Width + 10,
-            Tint = GetColor()
+            Tint = GetColor(Judgement)
         };
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             Bar.ChangeWidthTo((int) (Width * percent), Easing.OutQuint, animTime);
 
-            Percentage.Text = $"({percent * 100:0.00}%)";
+            Percentage.Text = Processor.Value.CurrentJudgements[Judgement] == 0 ? "(0.00%)" : $"({percent * 100:0.00}%)";
 
             CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
                 Processor.Value.CurrentJudgements[Judgement], animTime);
@@ -236,9 +236,9 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private Color GetColor()
+        public static Color GetColor(Judgement j)
         {
-            switch (Judgement)
+            switch (j)
             {
                 case Judgement.Marv:
                     return new Color(251,255,182);
