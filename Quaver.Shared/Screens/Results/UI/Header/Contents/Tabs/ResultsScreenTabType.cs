@@ -4,7 +4,6 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
     {
         Overview,
         Leaderboards,
-        Graphs,
         Multiplayer
     }
 }
