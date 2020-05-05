@@ -96,7 +96,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         /// </summary>
         public override void Destroy()
         {
-            RenderTarget.Dispose();
+            if (!RenderTarget.IsDisposed)
+                RenderTarget.Dispose();
+
             base.Destroy();
         }
 
