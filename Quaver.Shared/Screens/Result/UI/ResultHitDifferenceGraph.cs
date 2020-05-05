@@ -14,9 +14,12 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Skinning;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Result.UI
 {
@@ -69,25 +72,34 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         private float LargestHitWindow { get; }
 
+        /// <summary>
+        /// </summary>
+        public List<HitDifferenceGraphLineData> LineData { get; } = new List<HitDifferenceGraphLineData>();
+
+        /// <summary>
+        /// </summary>
+        public Sprite MiddleLine { get; private set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
         /// <param name="processor"></param>
-        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor)
+        public ResultHitDifferenceGraph(ScalableVector2 size, ScoreProcessor processor, bool fakeStats = false)
         {
             Tint = Color.Black;
-            Alpha = 0.2f;
+            Alpha = 0f;
             Size = size;
 
             Processor = processor;
             LargestHitWindow = Processor.JudgementWindow.Values.Max();
 
-            CreateMiddleLine();
             CreateJudgementAreas();
+            CreateMiddleLine();
 
             // Make some fake hits for debugging.
-            // CreateFakeHitStats();
+            if (fakeStats)
+                CreateFakeHitStats();
 
             // Draw the dots if there are any.
             if (Processor.Stats != null)
@@ -96,11 +108,6 @@ namespace Quaver.Shared.Screens.Result.UI
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
             }
-
-            CreateEarlyLateText();
-
-            AddBorder(Color.White);
-            Border.Alpha = 0.6f;
         }
 
         /// <summary>
@@ -149,12 +156,12 @@ namespace Quaver.Shared.Screens.Result.UI
         ///     Creates the middle line at 0 ms hit difference.
         /// </summary>
         // ReSharper disable once ObjectCreationAsStatement
-        private void CreateMiddleLine() => new Sprite
+        private void CreateMiddleLine() => MiddleLine = new Sprite
         {
             Parent = this,
-            Alpha = 0.7f,
+            Alpha = 0f,
             Alignment = Alignment.MidCenter,
-            Size = new ScalableVector2(Width, 1),
+            Size = new ScalableVector2(Width, 2),
         };
 
         /// <summary>
@@ -183,15 +190,17 @@ namespace Quaver.Shared.Screens.Result.UI
                 foreach (var k in new[] {-1, 1})
                 {
                     // ReSharper disable once ObjectCreationAsStatement
-                    new Sprite()
+                    var line = new Sprite()
                     {
                         Parent = this,
-                        Alpha = 0.3f,
-                        Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[judgement],
+                        Alpha = 0.5f,
+                        Tint = ResultsJudgementGraphBar.GetColor(judgement),
                         Alignment = Alignment.MidCenter,
                         Y = k * HitDifferenceToY(difference) - k * height / 2,
-                        Size = new ScalableVector2(Width, height),
+                        Size = new ScalableVector2(Width, 2),
                     };
+
+                    LineData.Add(new HitDifferenceGraphLineData(judgement, line, difference * k));
                 }
             }
         }
@@ -203,23 +212,24 @@ namespace Quaver.Shared.Screens.Result.UI
         {
             var unscaledLargestHitWindow = LargestHitWindow / ModHelper.GetRateFromMods(Processor.Mods);
 
+            var x = 8;
+            var y = 6;
+
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Late (+{unscaledLargestHitWindow} ms)")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Late (+{unscaledLargestHitWindow} ms)", 18, false)
             {
                 Parent = this,
-                X = 4,
-                Y = 5,
-                FontSize = 14
+                X = x,
+                Y = y
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextBitmap(FontsBitmap.GothamRegular, $"Early (-{unscaledLargestHitWindow} ms)")
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"Early (-{unscaledLargestHitWindow} ms)", 20, false)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                X = 4,
-                Y = -5,
-                FontSize = 14
+                X = x,
+                Y = -y,
             };
         }
 
@@ -278,7 +288,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[breakdown.Judgement],
+                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(DotSize, DotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (DotSize / 2),
@@ -303,7 +313,7 @@ namespace Quaver.Shared.Screens.Result.UI
                 new Sprite
                 {
                     Parent = this,
-                    Tint = SkinManager.Skin.Keys[GameMode.Keys4].JudgeColors[breakdown.Judgement],
+                    Tint = ResultsJudgementGraphBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(MissDotSize, MissDotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (MissDotSize / 2),
