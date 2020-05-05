@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header
             if (ratio > 16 / 9f)
                 Background.Size = new ScalableVector2(game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
 
-            Background.Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/PrincessOfWinter/Princess of Winter.png"));
+            //Background.Image = AssetLoader.LoadTexture2D(GameBase.Game.Resources.Get($"Quaver.Resources/Maps/PrincessOfWinter/Princess of Winter.png"));
             CreateDarknessFilter();
         }
 

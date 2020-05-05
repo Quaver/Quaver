@@ -1,9 +1,13 @@
+using System;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Common.Objects;
+using Quaver.Shared.Config;
+using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Wobble.Bindables;
@@ -28,6 +32,27 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         /// </summary>
         public Bindable<ResultsScreenTabType> ActiveTab { get; } = new Bindable<ResultsScreenTabType>(ResultsScreenTabType.Overview);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="screen"></param>
+        public ResultsScreen(GameplayScreen screen)
+        {
+            Map = MapManager.Selected.Value;
+
+            Processor = new Bindable<ScoreProcessor>(screen.Ruleset.ScoreProcessor)
+            {
+                Value =
+                {
+                    PlayerName = ConfigManager.Username.Value,
+                    Date = DateTime.Now,
+                    Windows = JudgementWindowsDatabaseCache.Selected.Value,
+                    StandardizedProcessor = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor,
+                }
+            };
+
+            View = new ResultsScreenView(this);
+        }
 
         /// <summary>
         /// </summary>

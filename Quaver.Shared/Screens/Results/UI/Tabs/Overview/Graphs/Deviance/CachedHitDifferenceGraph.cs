@@ -1,28 +1,36 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Shared.Assets;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Screens.Result.UI;
 using Wobble;
-using Wobble.Graphics.Animations;
+using Wobble.Bindables;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Logging;
 using Wobble.Window;
 
-namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
+namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
 {
-    public class CachedDifficultyBarDisplay : CacheableContainer, IDrawableMapComponent
+    public class CachedHitDifferenceGraph : CacheableContainer
     {
         /// <summary>
         /// </summary>
-        public DifficultyBarDisplay DifficultyBar { get; }
+        private Map Map { get; }
 
         /// <summary>
         /// </summary>
-        public Sprite Background { get; }
+        private Bindable<ScoreProcessor> Processor { get; }
 
         /// <summary>
-        ///     Displays the cached version of <see cref="DifficultyBar"/>
+        /// </summary>
+        private HitDifferenceGraph HitDifferenceGraph { get; set; }
+
+        /// <summary>
+        ///     Displays the cached version of <see cref="ResultHitDifferenceGraph"/>
         /// </summary>
         public Sprite CachedSprite { get; }
 
@@ -33,35 +41,26 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
 
         /// <summary>
         /// </summary>
-        /// <param name="bar"></param>
-        public CachedDifficultyBarDisplay(DifficultyBarDisplay bar)
+        /// <param name="map"></param>
+        /// <param name="processor"></param>
+        /// <param name="size"></param>
+        public CachedHitDifferenceGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
         {
-            DifficultyBar = bar;
+            Map = map;
+            Processor = processor;
+            Size = size;
 
-            Size = DifficultyBar.Size;
-
-            Background = new Sprite()
-            {
-                Parent = this,
-                Size = DifficultyBar.Size,
-                Image = UserInterface.DifficultyBarBackground,
-                SetChildrenVisibility = true,
-                SetChildrenAlpha = true,
-                Alpha = 0,
-                Visible = false
-            };
+            CreateHitDifferenceGraph();
 
             CachedSprite = new Sprite
             {
-                Parent = Background,
-                Size = DifficultyBar.Size,
-                Alpha = 0,
-                Visible = false,
-                UsePreviousSpriteBatchOptions = true
+                Size = Size,
+                SpriteBatchOptions = new SpriteBatchOptions { BlendState = BlendState.AlphaBlend }
             };
 
             var (pixelWidth, pixelHeight) = AbsoluteSize * WindowManager.ScreenScale;
 
+            // ReSharper disable twice CompareOfFloatsByEqualityOperator
             if (pixelWidth == 0)
                 pixelWidth = 1;
 
@@ -77,28 +76,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            if (Visible)
-            {
-                DifficultyBar.Update(gameTime);
-
-                if (DifficultyBar.Container.Animations.Count != 0)
-                    NeedsToCache = true;
-            }
-
-            base.Update(gameTime);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         public override void Destroy()
         {
-            if (!RenderTarget.IsDisposed)
-                RenderTarget.Dispose();
-
+            RenderTarget?.Dispose();
             base.Destroy();
         }
 
@@ -117,11 +97,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
                     GameBase.Game.GraphicsDevice.SetRenderTarget(RenderTarget);
                     GameBase.Game.GraphicsDevice.Clear(Color.Transparent);
 
-                    DifficultyBar.Draw(new GameTime());
+                    HitDifferenceGraph.Draw(new GameTime());
                     GameBase.Game.SpriteBatch.End();
 
                     GameBase.Game.GraphicsDevice.SetRenderTarget(null);
                     CachedSprite.Image = RenderTarget;
+                    CachedSprite.Parent = this;
                 }
                 catch (Exception e)
                 {
@@ -130,25 +111,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps.Components.Difficulty
             });
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public void Open()
-        {
-            Background.ClearAnimations();
-            Background.Wait(200);
-            Background.FadeTo(1, Easing.Linear, 250);
-            Visible = true;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public void Close()
-        {
-            Background.ClearAnimations();
-            Background.Alpha = 0;
-            Background.Visible = false;
-        }
+        private void CreateHitDifferenceGraph() => HitDifferenceGraph = new HitDifferenceGraph(Map, Processor, Size);
     }
 }

@@ -1,6 +1,8 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online;
+using Steamworks;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -31,6 +33,9 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
                 Alignment = Alignment.MidCenter,
                 Image = UserInterface.ResultsAvatarMask
             };
+
+            if (SteamManager.UserAvatars != null)
+                Avatar.AvatarSprite.Image = SteamManager.UserAvatars[SteamUser.GetSteamID().m_SteamID];
         }
     }
 }
