@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
@@ -91,7 +92,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             Image = UserInterface.ResultsGraphContainerPanel;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
 
-            Statistics = Processor.Value?.GetHitStatistics() ?? new HitStatistics();
+            Statistics = Processor.Value.Stats != null ? Processor.Value.GetHitStatistics() : new HitStatistics();
 
             CreateFooterContainer();
             CreateContentContainer();
