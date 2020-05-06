@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -30,7 +32,19 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> IsSubmittingScore { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<ScoreSubmissionResponse> ScoreSubmissionStats { get; }
+
+        /// <summary>
+        /// </summary>
         private Container FooterContainer { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private ResultsOverviewFooter Footer { get; set; }
 
         /// <summary>
         /// </summary>
@@ -84,10 +98,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         /// <param name="map"></param>
         /// <param name="processor"></param>
-        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor)
+        /// <param name="isSubmittingScore"></param>
+        /// <param name="scoreSubmissionStats"></param>
+        public ResultsOverviewGraphContainer(Map map, Bindable<ScoreProcessor> processor, Bindable<bool> isSubmittingScore,
+            Bindable<ScoreSubmissionResponse> scoreSubmissionStats)
         {
             Map = map;
             Processor = processor;
+            IsSubmittingScore = isSubmittingScore;
+            ScoreSubmissionStats = scoreSubmissionStats;
 
             Image = UserInterface.ResultsGraphContainerPanel;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
@@ -110,12 +129,20 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateFooterContainer() => FooterContainer = new Container
+        private void CreateFooterContainer()
         {
-            Parent = this,
-            Alignment = Alignment.BotLeft,
-            Size = new ScalableVector2(Width, 69),
-        };
+            FooterContainer = new Container
+            {
+                Parent = this,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(Width, 69),
+            };
+
+            Footer = new ResultsOverviewFooter(Map, Processor, IsSubmittingScore, ScoreSubmissionStats, FooterContainer.Size)
+            {
+                Parent = FooterContainer
+            };
+        }
 
         /// <summary>
         /// </summary>

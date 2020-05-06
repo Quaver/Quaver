@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         /// </summary>
         private void CreateOverviewTab() => OverviewTab = new ResultsOverviewTab(ResultsScreen.Map, ResultsScreen.Processor,
-            ResultsScreen.ActiveTab)
+            ResultsScreen.ActiveTab, ResultsScreen.IsSubmittingScore, ResultsScreen.ScoreSubmissionStats)
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
