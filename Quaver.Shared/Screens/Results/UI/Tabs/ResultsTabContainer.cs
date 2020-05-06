@@ -1,4 +1,5 @@
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Screens.Results.UI.Header;
@@ -26,6 +27,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs
 
         /// <summary>
         /// </summary>
+        protected Bindable<bool> IsSubmittingScore { get; }
+
+        /// <summary>
+        /// </summary>
+        protected Bindable<ScoreSubmissionResponse> ScoreSubmissionStats { get; }
+
+        /// <summary>
+        /// </summary>
         public static int PADDING_Y = 50;
 
         /// <summary>
@@ -37,11 +46,16 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="activeTab"></param>
-        public ResultsTabContainer(Map map, Bindable<ScoreProcessor> processor, Bindable<ResultsScreenTabType> activeTab)
+        /// <param name="isSubmittingScore"></param>
+        /// <param name="scoreSubmissionStats"></param>
+        public ResultsTabContainer(Map map, Bindable<ScoreProcessor> processor, Bindable<ResultsScreenTabType> activeTab,
+            Bindable<bool> isSubmittingScore, Bindable<ScoreSubmissionResponse> scoreSubmissionStats)
         {
             Map = map;
             Processor = processor;
             ActiveTab = activeTab;
+            IsSubmittingScore = isSubmittingScore;
+            ScoreSubmissionStats = scoreSubmissionStats;
 
             var height = WindowManager.Height - MenuBorder.HEIGHT * 2 - ResultsScreenHeader.HEIGHT - PADDING_Y;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH, height);

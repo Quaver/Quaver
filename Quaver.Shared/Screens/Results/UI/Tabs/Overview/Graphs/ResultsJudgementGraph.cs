@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
             Bar.ChangeWidthTo((int) (Width * percent), Easing.OutQuint, animTime);
 
-            Percentage.Text = Processor.Value.CurrentJudgements[Judgement] == 0 ? "(0.00%)" : $"({percent * 100:0.00}%)";
+            Percentage.Text = Processor.Value.CurrentJudgements[Judgement] == 0 ? $"(0.00%)" : $"({percent * 100:0.00}%)";
 
             CountAnimation = new Animation(AnimationProperty.X, Easing.OutQuint, 0,
                 Processor.Value.CurrentJudgements[Judgement], animTime);

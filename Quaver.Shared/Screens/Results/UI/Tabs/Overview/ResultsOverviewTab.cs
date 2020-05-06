@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
@@ -51,8 +52,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         /// <param name="map"></param>
         /// <param name="processor"></param>
         /// <param name="activeTab"></param>
-        public ResultsOverviewTab(Map map, Bindable<ScoreProcessor> processor, Bindable<ResultsScreenTabType> activeTab)
-            : base(map, processor, activeTab)
+        /// <param name="isSubmittingScore"></param>
+        /// <param name="scoreSubmissionStats"></param>
+        public ResultsOverviewTab(Map map, Bindable<ScoreProcessor> processor, Bindable<ResultsScreenTabType> activeTab,
+            Bindable<bool> isSubmittingScore, Bindable<ScoreSubmissionResponse> scoreSubmissionStats)
+            : base(map, processor, activeTab, isSubmittingScore, scoreSubmissionStats)
         {
             CreateContentContainer();
             CreateJudgementWindowPreset();
@@ -119,7 +123,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
 
         /// <summary>
         /// </summary>
-        private void CreateGraphContainer() => GraphContainer = new ResultsOverviewGraphContainer(Map, Processor)
+        private void CreateGraphContainer() => GraphContainer = new ResultsOverviewGraphContainer(Map, Processor,
+            IsSubmittingScore, ScoreSubmissionStats)
         {
             Parent = this,
             Alignment = Alignment.BotLeft,

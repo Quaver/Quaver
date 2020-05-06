@@ -1,7 +1,10 @@
 using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
+using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
@@ -11,6 +14,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Wobble.Bindables;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Results
 {
@@ -32,6 +36,14 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         /// </summary>
         public Bindable<ResultsScreenTabType> ActiveTab { get; } = new Bindable<ResultsScreenTabType>(ResultsScreenTabType.Overview);
+
+        /// <summary>
+        /// </summary>
+        public Bindable<bool> IsSubmittingScore { get; } = new Bindable<bool>(false);
+
+        /// <summary>
+        /// </summary>
+        public Bindable<ScoreSubmissionResponse> ScoreSubmissionStats { get; } = new Bindable<ScoreSubmissionResponse>(null);
 
         /// <summary>
         /// </summary>
@@ -87,6 +99,8 @@ namespace Quaver.Shared.Screens.Results
         {
             Processor.Dispose();
             ActiveTab.Dispose();
+            IsSubmittingScore.Dispose();
+            ScoreSubmissionStats.Dispose();
             base.Destroy();
         }
 
