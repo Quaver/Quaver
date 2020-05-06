@@ -36,7 +36,13 @@ namespace Quaver.Shared.Screens.Tests.Results
             CountGood = 13,
             CountOkay = 4,
             CountMiss = 45,
-            Mods = (long) (ModIdentifier.Speed12X | ModIdentifier.Mirror | ModIdentifier.NoLongNotes | ModIdentifier.NoFail)
+            Mods = (long) (ModIdentifier.Speed12X | ModIdentifier.Mirror | ModIdentifier.NoLongNotes | ModIdentifier.NoFail),
+            JudgementWindowMarv = 16,
+            JudgementWindowPerf = 43,
+            JudgementWindowGreat = 76,
+            JudgementWindowGood = 106,
+            JudgementWindowOkay = 127,
+            JudgementWindowMiss = 164,
         };
 
         public TestResultsScreenView(Screen screen) : base(screen)
