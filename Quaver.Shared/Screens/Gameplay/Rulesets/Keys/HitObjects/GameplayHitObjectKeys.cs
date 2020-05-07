@@ -225,7 +225,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             Info = info;
 
             var scale = ConfigManager.GameplayNoteScale.Value / 100f;
-            var laneSize = playfield.LaneSize * scale;
+            var skin = SkinManager.Skin.Keys[Ruleset.Map.Mode];
+            var objectWidth = playfield.LaneSize;
+
+            if (Ruleset.Screen.Map.HasScratchKey)
+            {
+                if (info.Lane == Ruleset.Screen.Map.GetKeyCount())
+                    objectWidth = skin.ScratchLaneSize;
+            }
+
+            var laneSize = objectWidth * scale;
+            var defaultLaneSize = playfield.LaneSize;
 
             Tint = Color.White;
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
@@ -240,7 +250,9 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
-            HitObjectSprite.Size = new ScalableVector2(laneSize, laneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            HitObjectSprite.Size = new ScalableVector2(laneSize, defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+            LongNoteBodySprite.Width = laneSize;
+            LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
 
             // Update Hit Object State depending if its an LN or not

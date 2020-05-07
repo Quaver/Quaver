@@ -622,14 +622,18 @@ namespace Quaver.Shared.Database.Maps
                                         if (!float.TryParse(searchQuery.Value, out var val4k))
                                             exitLoop = true;
 
-                                        if (!CompareValues(4, val4k, searchQuery.Operator))
+                                        var keyCount = map.HasScratchKey ? 5 : 4;
+
+                                        if (!CompareValues(keyCount, val4k, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     case GameMode.Keys7:
                                         if (!float.TryParse(searchQuery.Value, out var val7k))
                                             exitLoop = true;
 
-                                        if (!CompareValues(7, val7k, searchQuery.Operator))
+                                        var keyCount7k = map.HasScratchKey ? 8 : 7;
+
+                                        if (!CompareValues(keyCount7k, val7k, searchQuery.Operator))
                                             exitLoop = true;
                                         break;
                                     default:

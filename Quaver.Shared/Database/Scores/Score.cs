@@ -158,7 +158,7 @@ namespace Quaver.Shared.Database.Scores
         /// <summary>
         ///     The judgement windows used on the score
         /// </summary>
-        public string JudgementWindowPreset { get; set; }
+        public string JudgementWindowPreset { get; set; } = "Standard*";
 
         /// <summary>
         ///     The marv judgement window used on the score
@@ -246,9 +246,13 @@ namespace Quaver.Shared.Database.Scores
         /// <param name="scrollSpeed"></param>
         /// <param name="pauseCount"></param>
         /// <param name="seed"></param>
+        /// <param name="windows"></param>
         /// <returns></returns>
-        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount, int seed)
+        public static Score FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed, int pauseCount,
+            int seed, JudgementWindows windows = null)
         {
+            windows = windows ?? new JudgementWindows();
+
             var score = new Score()
             {
                 MapMd5 = md5,
@@ -270,6 +274,13 @@ namespace Quaver.Shared.Database.Scores
                 PauseCount =  pauseCount,
                 RandomizeModifierSeed = seed,
                 JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()),
+                JudgementWindowPreset = windows.Name,
+                JudgementWindowMarv = windows.Marvelous,
+                JudgementWindowPerf = windows.Perfect,
+                JudgementWindowGreat = windows.Great,
+                JudgementWindowGood = windows.Good,
+                JudgementWindowOkay = windows.Okay,
+                JudgementWindowMiss = windows.Miss,
             };
 
             return score;
@@ -346,6 +357,7 @@ namespace Quaver.Shared.Database.Scores
         /// <returns></returns>
         public Replay ToReplay() => new Replay(Mode, Name, (ModIdentifier) Mods, MapMd5)
         {
+            PlayerName = Name ?? "",
             Date = Convert.ToDateTime(DateTime, CultureInfo.InvariantCulture),
             Score = TotalScore,
             Accuracy = (float)Accuracy,

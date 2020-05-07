@@ -177,6 +177,11 @@ namespace Quaver.Shared.Screens.Options
                         new OptionsSlider(containerRect, "4K Scroll Speed", ConfigManager.ScrollSpeed4K, i => $"{i / 10f:0.0}"),
                         new OptionsSlider(containerRect, "7K Scroll Speed", ConfigManager.ScrollSpeed7K, i => $"{i / 10f:0.0}"),
                     }),
+                    new OptionsSubcategory("Scratch Lane", new List<OptionsItem>()
+                    {
+                        new OptionsItemCheckbox(containerRect, "Place 4K Scratch Lane On Left", ConfigManager.ScratchLaneLeft4K),
+                        new OptionsItemCheckbox(containerRect, "Place 7K Scratch Lane On Left", ConfigManager.ScratchLaneLeft7K)
+                    }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
                     {
                        new OptionsSlider(containerRect, "Background Brightness", ConfigManager.BackgroundBrightness),
@@ -264,6 +269,14 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyMania4K3,
                             ConfigManager.KeyMania4K4
                         }),
+                        new OptionsItemKeybindMultiple(containerRect, "4K + 1 Gameplay Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyLayout4KScratch1,
+                            ConfigManager.KeyLayout4KScratch2,
+                            ConfigManager.KeyLayout4KScratch3,
+                            ConfigManager.KeyLayout4KScratch4,
+                            ConfigManager.KeyLayout4KScratch5,
+                        }),
                         new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<Keys>>()
                         {
                             ConfigManager.KeyMania7K1,
@@ -273,6 +286,17 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyMania7K5,
                             ConfigManager.KeyMania7K6,
                             ConfigManager.KeyMania7K7,
+                        }),
+                        new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
+                        {
+                            ConfigManager.KeyLayout7KScratch1,
+                            ConfigManager.KeyLayout7KScratch2,
+                            ConfigManager.KeyLayout7KScratch3,
+                            ConfigManager.KeyLayout7KScratch4,
+                            ConfigManager.KeyLayout7KScratch5,
+                            ConfigManager.KeyLayout7KScratch6,
+                            ConfigManager.KeyLayout7KScratch7,
+                            ConfigManager.KeyLayout7KScratch8,
                         }),
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()

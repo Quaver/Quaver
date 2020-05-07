@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
                     OnlineGrade.Visible = true;
                     OnlineGrade.Image = SkinManager.Skin.Grades[map.OnlineGrade];
-                    OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Width / OnlineGrade.Image.Height * width);
+                    OnlineGrade.Size = new ScalableVector2(width, OnlineGrade.Image.Height / OnlineGrade.Image.Width * width);
 
                     Title.X = OnlineGrade.X + OnlineGrade.Width + 16;
                     Artist.X = Title.X;

@@ -93,6 +93,7 @@ namespace Quaver.Shared.Skinning
             Color.Transparent,
             Color.Transparent,
             Color.Transparent,
+            Color.Transparent,
         };
 
         internal float BgMaskAlpha { get; private set;  }
@@ -227,6 +228,9 @@ namespace Quaver.Shared.Skinning
 
         internal bool UseAndRotateHitObjectSheet { get; private set; }
 
+        [FixedScale]
+        internal float ScratchLaneSize { get; private set; }
+
         #endregion
 
 #region TEXTURES
@@ -357,6 +361,7 @@ namespace Quaver.Shared.Skinning
             ReadConfig(true);
             ReadConfig(false);
             FixScale();
+            FixValues();
             LoadTextures();
         }
 
@@ -376,6 +381,15 @@ namespace Quaver.Shared.Skinning
                     property.SetValue(this, f * QuaverGame.SkinScalingFactor);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Fixes any invalid values
+        /// </summary>
+        private void FixValues()
+        {
+            if (ScratchLaneSize <= 0)
+                ScratchLaneSize = ColumnSize;
         }
 
         /// <summary>
@@ -469,6 +483,7 @@ namespace Quaver.Shared.Skinning
             HealthBarPosOffsetX = ConfigHelper.ReadInt32((int) HealthBarPosOffsetX, ini["HealthBarPosOffsetX"]);
             HealthBarPosOffsetY = ConfigHelper.ReadInt32((int) HealthBarPosOffsetY, ini["HealthBarPosOffsetY"]);
             UseAndRotateHitObjectSheet = ConfigHelper.ReadBool(UseAndRotateHitObjectSheet, ini["UseAndRotateHitObjectSheet"]);
+            ScratchLaneSize = ConfigHelper.ReadFloat(ScratchLaneSize, ini["ScratchLaneSize"]);
         }
 
         /// <summary>
@@ -611,9 +626,9 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         private void LoadLaneSpecificElements()
         {
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 8; i++)
             {
-                if (i == 4 && Mode == GameMode.Keys4)
+                if (i == 5 && Mode == GameMode.Keys4)
                     break;
 
                 // Column Colors

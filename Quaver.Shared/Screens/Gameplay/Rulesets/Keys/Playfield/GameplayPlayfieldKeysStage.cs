@@ -346,12 +346,35 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             Receptors = new List<Sprite>();
             ColumnLightingObjects = new List<ColumnLighting>();
 
+            var scratchLaneLeft = Screen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScratchLaneLeft4K.Value : ConfigManager.ScratchLaneLeft7K.Value;
+
             // Go through and create the receptors and column lighting objects.
-            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
                 var scale = ConfigManager.GameplayNoteScale.Value / 100f;
+                var laneSize = Playfield.LaneSize;
+                var defaultLanePos = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                var posX = defaultLanePos;
 
-                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                // Handle scratch key positioning
+                if (Screen.Map.HasScratchKey)
+                {
+                    if (i == Screen.Map.GetKeyCount() - 1)
+                        laneSize = Skin.ScratchLaneSize;
+
+                    if (scratchLaneLeft)
+                    {
+                        if (i == Screen.Map.GetKeyCount() - 1)
+                            posX = Playfield.Padding;
+                        else
+                            posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding +
+                                   Skin.ScratchLaneSize + Playfield.ReceptorPadding;
+                    }
+                }
+                else
+                {
+                    posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                }
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (scale != 1)
@@ -361,11 +384,10 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 Receptors.Add(new Sprite
                 {
                     Parent = Playfield.ForegroundContainer,
-                    Size = new ScalableVector2(Playfield.LaneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
+                    Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
-                    // todo: case statement for scroll direction
                     SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 });
 
@@ -534,7 +556,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         {
             HitLightingObjects = new List<HitLighting>();
 
-            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
+            for (var i = 0; i < Screen.Map.GetKeyCount(Screen.Map.HasScratchKey); i++)
             {
                 var hl = new HitLighting()
                 {
