@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
@@ -18,6 +19,7 @@ using Quaver.Shared.Scheduling;
 using Steamworks;
 using Wobble;
 using Wobble.Logging;
+using Wobble.Platform.Linux;
 
 namespace Quaver.Shared.Online
 {
@@ -146,7 +148,10 @@ namespace Quaver.Shared.Online
 
             InitializeCallbacks();
             StartAuthSession();
-            RefreshWorkshopSkins();
+
+            // Prevents a crash on OSX for the time being
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                RefreshWorkshopSkins();
 
             // DANGEROUS: Uncomment to reset all achievements
             // SteamUserStats.ResetAllStats(true);
