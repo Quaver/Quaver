@@ -1,12 +1,18 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
+using Quaver.API.Replays.Virtual;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
@@ -15,6 +21,8 @@ using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
+using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Results.UI;
@@ -100,6 +108,10 @@ namespace Quaver.Shared.Screens.Results
             ActiveTab.Dispose();
             IsSubmittingScore.Dispose();
             ScoreSubmissionStats.Dispose();
+
+            if (OnlineManager.Client != null)
+                OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
+
             base.Destroy();
         }
 
@@ -143,7 +155,6 @@ namespace Quaver.Shared.Screens.Results
             }
 
             Processor.Value.PlayerName = ConfigManager.Username.Value;
-
             SubmitScore(screen);
         }
 
@@ -175,7 +186,18 @@ namespace Quaver.Shared.Screens.Results
             replay.RandomizeModifierSeed = screen.Map.RandomizeModifierSeed;
             replay.FromScoreProcessor(processor);
 
-            SubmitLocalScore(screen, replay);
+            // Mark score as submitting online
+            if (OnlineManager.Status.Value != ConnectionStatus.Disconnected)
+            {
+                IsSubmittingScore.Value = true;
+                OnlineManager.Client.OnScoreSubmitted += OnScoreSubmitted;
+            }
+
+            ThreadScheduler.Run(() =>
+            {
+                SubmitLocalScore(screen, replay);
+                IsSubmittingScore.Value = SubmitOnlineScore(screen, replay);
+            });
         }
 
         /// <summary>
@@ -232,6 +254,135 @@ namespace Quaver.Shared.Screens.Results
                 NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
                 Logger.Error(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Handles submission of scores to the server
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="replay"></param>
+        private bool SubmitOnlineScore(GameplayScreen screen, Replay replay)
+        {
+            const string skipping = "Skipping online score submission due to:";
+
+            // Don't submit scores if disconnected from the server completely.
+            if (OnlineManager.Status.Value == ConnectionStatus.Disconnected)
+            {
+                Logger.Important($"{skipping} being fully disconnected", LogType.Network);
+                return false;
+            }
+
+            // Don't submit scores that have unranked modifiers
+            if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
+            {
+                IsSubmittingScore.Value = false;
+                Logger.Important($"{skipping} having unranked modifiers activated", LogType.Network);
+                return false;
+            }
+
+            // User paused during gameplay
+            if (screen.PauseCount != 0 || screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.Paused))
+            {
+                IsSubmittingScore.Value = false;
+                Logger.Important($"{skipping} pausing during gameplay.", LogType.Runtime);
+                return false;
+            }
+
+            // Playing in a multiplayer, but the match was aborted.
+            if (screen.IsMultiplayerGame && !screen.IsPlayComplete)
+            {
+                IsSubmittingScore.Value = false;
+                Logger.Important($"{skipping} play was not completed (exited early in multiplayer match)", LogType.Runtime);
+                return false;
+            }
+
+            var processor = screen.Ruleset.ScoreProcessor;
+
+            // If the user fails the score on custom judgements, don't submit the score.
+            if (JudgementWindowsDatabaseCache.Selected.Value != JudgementWindowsDatabaseCache.Standard &&
+                processor.Failed)
+            {
+                Logger.Important($"{skipping} due to failing on custom judgements", LogType.Runtime);
+                return false;
+            }
+
+            // User is playing on different windows (or multiplayer), so their score needs to be converted to Standard*.
+            // This will validate if the user failed at any point during the play as well. Their score will need
+            // to be submitted at the point of failure in both scenarios.
+            if (JudgementWindowsDatabaseCache.Selected.Value != JudgementWindowsDatabaseCache.Standard || screen.IsMultiplayerGame)
+            {
+                var virtualPlayer = new VirtualReplayPlayer(screen.ReplayCapturer.Replay, screen.Map, new JudgementWindows(), true);
+                var originalProcessor = screen.Ruleset.ScoreProcessor;
+                processor = virtualPlayer.ScoreProcessor;
+
+                Logger.Important($"Player used non-standard judgement windows for their play. Converting score...", LogType.Runtime);
+
+                foreach (var _ in virtualPlayer.Replay.Frames)
+                {
+                    virtualPlayer.PlayNextFrame();
+
+                    // Stop at the point of failure in the converted version
+                    if (virtualPlayer.ScoreProcessor.Failed)
+                    {
+                        Logger.Important($"Player failed on Standard* windows during the conversion. Submitting at the point of failure", LogType.Runtime);
+                        break;
+                    }
+                }
+
+                Logger.Important($"Original Acc: {originalProcessor.Accuracy}% | Standard* Acc: {processor.Accuracy}%", LogType.Runtime);
+            }
+
+            // Start score submission process
+            Logger.Important($"Beginning to submit score on map: {screen.MapHash} to the server...", LogType.Network);
+
+            var submissionMd5 = screen.MapHash;
+
+            // For non-Quaver maps, get the .qua md5 checksum of the map.
+            if (Map.Game != MapGame.Quaver)
+                submissionMd5 = Map.GetAlternativeMd5();
+
+            // For any unsubmitted maps, ask the server if it has the .qua already cached
+            // if it doesn't, then we need to provide it.
+            if (Map.RankedStatus == RankedStatus.NotSubmitted && OnlineManager.IsDonator)
+            {
+                var info = OnlineManager.Client?.RetrieveMapInfo(submissionMd5);
+
+                // Map is not uploaded, so we have to provide the server with it.
+                if (info == null)
+                {
+                    Logger.Important($"Unsubmitted map is not cached on the server. Need to provide!", LogType.Network);
+                    var success = OnlineManager.Client?.UploadUnsubmittedMap(Map.LoadQua(), submissionMd5, Map.Md5Checksum);
+
+                    // The map upload wasn't successful, so we can assume that our score shouldn't be submitted
+                    if (success != null && !success.Value)
+                    {
+                        Logger.Error($"Unsubmitted map upload was not successful. Skipping score submission", LogType.Network);
+                        return false;
+                    }
+
+                    Logger.Important($"Successfully uploaded unsubmitted map to the server!", LogType.Network);
+                }
+            }
+
+            var scrollSpeed = Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+
+            // Submit score to the server...
+            OnlineManager.Client?.Submit(new OnlineScore(submissionMd5, replay, processor, scrollSpeed,
+                ModHelper.GetRateFromMods(ModManager.Mods), TimeHelper.GetUnixTimestampMilliseconds(),
+                SteamManager.PTicket));
+
+            return true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnScoreSubmitted(object sender, ScoreSubmissionEventArgs e)
+        {
+            IsSubmittingScore.Value = false;
+            ScoreSubmissionStats.Value = e.Response;
+            Logger.Important($"Received score submission response with status: {e.Response.Status}", LogType.Network);
         }
 
         /// <inheritdoc />
