@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -10,7 +11,9 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Wobble.Bindables;
@@ -31,7 +34,7 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        public Bindable<ScoreProcessor> Processor { get; }
+        public Bindable<ScoreProcessor> Processor { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -52,16 +55,7 @@ namespace Quaver.Shared.Screens.Results
         {
             Map = MapManager.Selected.Value;
 
-            Processor = new Bindable<ScoreProcessor>(screen.Ruleset.ScoreProcessor)
-            {
-                Value =
-                {
-                    PlayerName = ConfigManager.Username.Value,
-                    Date = DateTime.Now,
-                    Windows = JudgementWindowsDatabaseCache.Selected.Value,
-                    StandardizedProcessor = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor,
-                }
-            };
+            InitializeGameplayResultsScreen(screen);
 
             View = new ResultsScreenView(this);
         }
@@ -102,6 +96,44 @@ namespace Quaver.Shared.Screens.Results
             IsSubmittingScore.Dispose();
             ScoreSubmissionStats.Dispose();
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void InitializeGameplayResultsScreen(GameplayScreen screen)
+        {
+            Processor = new Bindable<ScoreProcessor>(screen.Ruleset.ScoreProcessor)
+            {
+                Value =
+                {
+                    Windows = JudgementWindowsDatabaseCache.Selected.Value,
+                    Date = DateTime.Now,
+                    StandardizedProcessor = screen.Ruleset.StandardizedReplayPlayer.ScoreProcessor,
+                    Stats = screen.Ruleset.ScoreProcessor.Stats
+                }
+            };
+
+            var inputManager = (KeysInputManager) screen.Ruleset.InputManager;
+
+            if (screen.InReplayMode)
+            {
+                Processor.Value.PlayerName = screen.LoadedReplay.PlayerName;
+                Processor.Value.Stats = inputManager.ReplayInputManager.VirtualPlayer.ScoreProcessor.Stats;
+
+                if (ModManager.Mods.HasFlag(ModIdentifier.Autoplay))
+                    Processor.Value = screen.Ruleset.ScoreProcessor;
+                else if (screen.SpectatorClient != null)
+                {
+                    Processor.Value = inputManager.ReplayInputManager.VirtualPlayer.ScoreProcessor;
+                    Processor.Value.Windows = JudgementWindowsDatabaseCache.Standard;
+                }
+                else
+                    Processor.Value.Date = screen.LoadedReplay.Date;
+
+                return;
+            }
+
+            Processor.Value.PlayerName = ConfigManager.Username.Value;
         }
 
         /// <inheritdoc />
