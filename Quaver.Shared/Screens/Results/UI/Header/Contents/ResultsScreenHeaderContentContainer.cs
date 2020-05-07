@@ -168,24 +168,11 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         {
             var grade = Processor.Value.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(Processor.Value.Accuracy);
 
-            Texture2D tex;
-
-            // For visual testing purposes
-            if (SkinManager.Skin == null)
-            {
-                var resource = GameBase.Game.Resources.Get($@"Quaver.Resources/Textures/Skins/Shared/Grades/grade-small-{grade.ToString().ToLower()}.png");
-                tex = AssetLoader.LoadTexture2D(resource);
-            }
-            else
-            {
-                tex = SkinManager.Skin.Grades[grade];
-            }
-
-            GradeSprite.Image = tex;
+            GradeSprite.Image = TextureManager.Load($@"Quaver.Resources/Textures/UI/Results/grade-large-{grade.ToString().ToLower()}.png");
 
             const int width = 110;
 
-            GradeSprite.Size = new ScalableVector2(width, tex.Height / tex.Width * width);
+            GradeSprite.Size = new ScalableVector2(width, GradeSprite.Image.Height / GradeSprite.Image.Width * width);
             GradeSprite.Y = -TabSelector.Height - 22;
         }
     }
