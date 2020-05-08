@@ -17,6 +17,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Converters.Malody;
 using Quaver.Shared.Converters.Osu;
 using Quaver.Shared.Converters.StepMania;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens;
@@ -26,6 +27,7 @@ using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Skinning;
 using SharpCompress.Archives;
@@ -163,18 +165,21 @@ namespace Quaver.Shared.Database.Maps
                         return;
                     }
 
-                    MapManager.Selected.Value = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
+                    var map = mapset.Maps.Find(x => x.Md5Checksum == replay.MapMd5);
 
-                    screen.Exit(() =>
+                    if (map == null)
                     {
-                        if (AudioEngine.Track != null)
-                        {
-                            lock (AudioEngine.Track)
-                                AudioEngine.Track.Fade(10, 300);
-                        }
+                        NotificationManager.Show(NotificationLevel.Error, "You do not have the map associated with this replay.");
+                        return;
+                    }
 
-                        return new ResultScreen(replay);
-                    });
+                    MapManager.Selected.Value = map;
+
+                    BackgroundHelper.Load(map);
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track?.Play();
+
+                    screen.Exit(() => new ResultsScreen(MapManager.Selected.Value, replay));
                 }
                 catch (Exception ex)
                 {

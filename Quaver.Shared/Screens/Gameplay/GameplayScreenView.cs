@@ -41,6 +41,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Replays;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Select;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
@@ -782,7 +783,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         return new SelectionScreen();
                     }
 
-                    return new ResultScreen(Screen);
+                    return new ResultsScreen(Screen);
                 }, Screen.Failed ? Screen.FailFadeTime : 500);
 
                 ResultsScreenLoadInitiated = true;

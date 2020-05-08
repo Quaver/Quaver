@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -7,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.API.Replays;
 using Quaver.API.Replays.Virtual;
 using Quaver.Server.Client;
@@ -19,18 +21,26 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
+using Quaver.Shared.Screens.Loading;
+using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Results.UI;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
+using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
+using Wobble;
 using Wobble.Bindables;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Results
 {
@@ -43,7 +53,26 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
+        public ResultsScreenType ScreenType { get; }
+
+        /// <summary>
+        /// </summary>
         public Map Map { get; }
+
+        /// <summary>
+        ///     The gameplay screen if <see cref="ScreenType"/> is Gameplay.
+        /// </summary>
+        public GameplayScreen Gameplay { get; }
+
+        /// <summary>
+        ///     The local/online score if <see cref="ScreenType"/> is Score.
+        /// </summary>
+        public Score Score { get; }
+
+        /// <summary>
+        ///     The replay of the score if <see cref="ScreenType"/> is Replay.
+        /// </summary>
+        public Replay Replay { get; }
 
         /// <summary>
         /// </summary>
@@ -66,6 +95,8 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
         {
+            ScreenType = ResultsScreenType.Gameplay;
+            Gameplay = screen;
             Map = MapManager.Selected.Value;
 
             InitializeGameplayResultsScreen(screen);
@@ -77,6 +108,8 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public ResultsScreen(Map map, Score score)
         {
+            ScreenType = ResultsScreenType.Score;
+            Score = score;
             Map = map;
 
             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(score.ToReplay()))
@@ -96,7 +129,84 @@ namespace Quaver.Shared.Screens.Results
                 }
             };
 
+            // Check to see if the replay exists for this score and virtually play it, so HitStats
+            // can be retrieved.
+            if (!score.IsOnline)
+            {
+                var path = $"{ConfigManager.DataDirectory}/r/{score.Id}.qr";
+
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        var qua = MapManager.Selected.Value.LoadQua();
+                        qua.ApplyMods((ModIdentifier) score.Mods);
+
+                        var replay = new Replay(path);
+
+                        var virtualPlayer = new VirtualReplayPlayer(replay, qua, Processor.Value.Windows);
+                        virtualPlayer.PlayAllFrames();
+
+                        Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("Failed to virtual play local score replay!", LogType.Runtime);
+                        Logger.Error(e, LogType.Runtime);
+                    }
+                }
+            }
+
             View = new ResultsScreenView(this);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="replay"></param>
+        public ResultsScreen(Map map, Replay replay)
+        {
+            Replay = replay;
+            Map = map;
+            ScreenType = ResultsScreenType.Replay;
+
+            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(replay));
+
+            try
+            {
+                var qua = map.LoadQua();
+                qua.ApplyMods(replay.Mods);
+
+                var virtualPlayer = new VirtualReplayPlayer(replay, qua);
+                virtualPlayer.PlayAllFrames();
+
+                Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+
+            View = new ResultsScreenView(this);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void OnFirstUpdate()
+        {
+            GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            base.OnFirstUpdate();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            HandleInput();
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -113,6 +223,137 @@ namespace Quaver.Shared.Screens.Results
                 OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
 
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExitToMenu()
+        {
+            if (OnlineManager.CurrentGame != null)
+                Exit(() => new MultiplayerGameScreen());
+            else
+                Exit(() => new SelectionScreen());
+        }
+
+        /// <summary>
+        /// </summary>
+        public void RetryMap() => Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+
+        /// <summary>
+        /// </summary>
+        public void WatchReplay()
+        {
+            var replay = GetReplay();
+
+            if (replay == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while retrieving the replay for this score!");
+                return;
+            }
+
+            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value, replay));
+        }
+
+        /// <summary>
+        /// </summary>
+        public void ExportReplay()
+        {
+            var replay = GetReplay();
+
+            if (replay == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "There was an issue while retrieving the replay for this score!");
+                return;
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, "Please wait while your replay is being exported...");
+
+            ThreadScheduler.Run(() =>
+            {
+                try
+                {
+                    var path = $@"{ConfigManager.ReplayDirectory.Value}/{replay.PlayerName} - " +
+                               $"{StringHelper.FileNameSafeString($"{Map.Artist} - {Map.Title} - {Map.DifficultyName}")}.qr";
+
+                    replay.Write(path);
+                    Utils.NativeUtils.HighlightInFileManager(path);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Error, "An error occured while exporting the replay!");
+                }
+            });
+        }
+
+        /// <summary>
+        /// </summary>
+        public void FixLocalOffset()
+        {
+            if (Processor.Value.Stats == null || Processor.Value.Stats.Count == 0)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "There is no data to be able to fix your local offset!");
+                return;
+            }
+
+            var stats = Processor.Value.GetHitStatistics();
+
+            // Local offset is scaled with rate, so the adjustment depends on the rate the
+            // score was played on.
+            var change = stats.Mean * ModHelper.GetRateFromMods(Processor.Value.Mods);
+            var newOffset = (int) Math.Round(Map.LocalOffset - change);
+
+            var dialog = new YesNoDialog("FIX LOCAL OFFSET",
+                $"Your local offset for this map will be changed from {Map.LocalOffset} ms to {newOffset} ms...", () =>
+                {
+                    Map.LocalOffset = newOffset;
+                    MapDatabaseCache.UpdateMap(Map);
+                    NotificationManager.Show(NotificationLevel.Success, $"Local offset for this map was set to {Map.LocalOffset} ms.");
+                });
+
+            DialogManager.Show(dialog);
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleInput()
+        {
+            HandleKeyPressEscape();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressEscape()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                return;
+
+            ExitToMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        private Replay GetReplay()
+        {
+            switch (ScreenType)
+            {
+                case ResultsScreenType.Gameplay:
+                    return Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
+                case ResultsScreenType.Score:
+                    if (!Score.IsOnline)
+                    {
+                        var path = $"{ConfigManager.DataDirectory}/r/{Score.Id}.qr";
+                        return File.Exists(path) ? new Replay(path) : null;
+                    }
+                    break;
+                case ResultsScreenType.Replay:
+                    return Replay;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return null;
         }
 
         /// <summary>
