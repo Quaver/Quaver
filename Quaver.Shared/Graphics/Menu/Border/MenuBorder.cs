@@ -103,7 +103,7 @@ namespace Quaver.Shared.Graphics.Menu.Border
         /// <summary>
         ///     Aligns the drawables from left to right
         /// </summary>
-        private void AlignLeftItems()
+        protected void AlignLeftItems()
         {
             if (LeftAlignedItems == null || LeftAlignedItems.Count == 0)
                 return;
