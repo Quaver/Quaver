@@ -243,6 +243,12 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public void WatchReplay()
         {
+            if (ScreenType == ResultsScreenType.Score && Score.IsOnline)
+            {
+                WatchOnlineReplay();
+                return;
+            }
+
             var replay = GetReplay();
 
             if (replay == null)
@@ -256,8 +262,53 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
+        /// <returns></returns>
+        private Replay DownloadOnlineReplay()
+        {
+            var onlineReplay = Score.DownloadOnlineReplay();
+
+            if (onlineReplay == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "The replay for this score could not be downloaded.");
+                return null;
+            }
+
+            return onlineReplay;
+        }
+
+        /// <summary>
+        ///     Shows a dialog to download and watch an online score's replay
+        /// </summary>
+        private void WatchOnlineReplay()
+        {
+            DialogManager.Show(new LoadingDialog("FETCHING REPLAY", "Downloading replay! Please wait...",
+                DownloadAndWatchOnlineReplay));
+        }
+
+        /// <summary>
+        ///     Downloads <see cref="Score"/>'s online replay and watches it
+        /// </summary>
+        private void DownloadAndWatchOnlineReplay()
+        {
+            var onlineReplay = DownloadOnlineReplay();
+
+            if (onlineReplay == null)
+                return;
+
+            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value, onlineReplay));
+        }
+
+        /// <summary>
+        ///     Handles the entire export process for each results screen type
+        /// </summary>
         public void ExportReplay()
         {
+            if (ScreenType == ResultsScreenType.Score && Score.IsOnline)
+            {
+                ExportOnlineReplay();
+                return;
+            }
+
             var replay = GetReplay();
 
             if (replay == null)
@@ -267,7 +318,15 @@ namespace Quaver.Shared.Screens.Results
             }
 
             NotificationManager.Show(NotificationLevel.Info, "Please wait while your replay is being exported...");
+            ExportAndHighlightReplay(replay);
+        }
 
+        /// <summary>
+        ///     Writes a replay file and opens it in the file manager
+        /// </summary>
+        /// <param name="replay"></param>
+        private void ExportAndHighlightReplay(Replay replay)
+        {
             ThreadScheduler.Run(() =>
             {
                 try
@@ -284,6 +343,27 @@ namespace Quaver.Shared.Screens.Results
                     NotificationManager.Show(NotificationLevel.Error, "An error occured while exporting the replay!");
                 }
             });
+        }
+
+        /// <summary>
+        ///     Shows a dialog to download and export the online replay
+        /// </summary>
+        private void ExportOnlineReplay()
+        {
+            DialogManager.Show(new LoadingDialog("FETCHING REPLAY", "Downloading replay! Please wait...",
+                DownloadAndExportOnlineReplay));
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DownloadAndExportOnlineReplay()
+        {
+            var onlineReplay = DownloadOnlineReplay();
+
+            if (onlineReplay == null)
+                return;
+
+            ExportAndHighlightReplay(onlineReplay);
         }
 
         /// <summary>

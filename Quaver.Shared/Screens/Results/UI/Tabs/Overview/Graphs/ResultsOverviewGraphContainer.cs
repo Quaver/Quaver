@@ -254,14 +254,28 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateDevianceGraph() => DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
-            new ScalableVector2(RightContainer.Width + GraphDropdown.X * 2 + 12, 300))
+        private void CreateDevianceGraph()
         {
-            Parent = RightContainer,
-            Alignment = Alignment.TopLeft,
-            X = -GraphDropdown.X - 12,
-            Y = GraphDropdown.Y + GraphDropdown.Height + 40,
-            Visible = true
-        };
+            if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
+            {
+                DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
+                    new ScalableVector2(RightContainer.Width + GraphDropdown.X * 2 + 12, 300))
+                {
+                    Parent = RightContainer,
+                    Alignment = Alignment.TopLeft,
+                    X = -GraphDropdown.X - 12,
+                    Y = GraphDropdown.Y + GraphDropdown.Height + 40,
+                    Visible = true
+                };
+
+                return;
+            }
+
+            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
+            {
+                Parent = RightContainer,
+                Alignment = Alignment.MidCenter
+            };
+        }
     }
 }
