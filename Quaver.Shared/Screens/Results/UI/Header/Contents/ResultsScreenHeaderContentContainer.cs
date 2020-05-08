@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -93,7 +94,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private void CreateAvatar() => Avatar = new ResultsScreenHeaderAvatar(Height)
+        private void CreateAvatar() => Avatar = new ResultsScreenHeaderAvatar(Height, Processor)
         {
             Parent = this,
             Y = 10

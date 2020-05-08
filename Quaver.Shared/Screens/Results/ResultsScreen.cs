@@ -125,7 +125,8 @@ namespace Quaver.Shared.Screens.Results
                         Good = score.JudgementWindowGood,
                         Okay = score.JudgementWindowOkay,
                         Miss = score.JudgementWindowMiss
-                    }
+                    },
+                    SteamId = (ulong) score.SteamId
                 }
             };
 
