@@ -121,7 +121,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
 
             LastKeyPressState = GetKeyPressState();
 
-            if (Screen.IsPlayComplete)
+            if (Screen.IsPlayComplete || Screen.Failed)
                 ShouldCapture = false;
         }
 

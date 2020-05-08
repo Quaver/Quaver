@@ -16,6 +16,7 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Quaver.Shared.Skinning;
 using SQLite;
@@ -268,7 +269,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 if (OnlineManager.CurrentGame != null)
                     return;
 
-                game?.CurrentScreen?.Exit(() => new ResultScreen(Score.Item));
+                game?.CurrentScreen?.Exit(() => new ResultsScreen(MapManager.Selected.Value, Score.Item));
             };
 
             Button.RightClicked += (sender, args) =>

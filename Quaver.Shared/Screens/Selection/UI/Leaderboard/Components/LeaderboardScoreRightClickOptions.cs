@@ -15,6 +15,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Selection.UI.Leaderboard.Dialogs;
 using Wobble;
 using Wobble.Graphics;
@@ -58,7 +59,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 switch (args.Text)
                 {
                     case ViewResults:
-                        game.CurrentScreen.Exit(() => new ResultScreen(Score));
+                        game.CurrentScreen.Exit(() => new ResultsScreen(MapManager.Selected.Value, Score));
                         break;
                     case WatchReplay:
                         // Download Online Replay

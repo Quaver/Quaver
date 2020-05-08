@@ -3,6 +3,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Results.UI.Footer;
 using Quaver.Shared.Screens.Results.UI.Header;
 using Quaver.Shared.Screens.Results.UI.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
@@ -97,7 +98,7 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        private void CreateFooter() => Footer = new TestMenuBorderFooter
+        private void CreateFooter() => Footer = new ResultsScreenFooter(ResultsScreen)
         {
             Parent = Container,
             Alignment = Alignment.BotLeft

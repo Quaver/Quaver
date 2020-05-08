@@ -99,7 +99,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
         /// <param name="e"></param>
         private void OnScoreSubmissionStatsChanged(object sender, BindableValueChangedEventArgs<ScoreSubmissionResponse> e)
         {
-            if (e.Value == null || e.Value.Status != 200 || e.Value.Map.Md5 != Map.Md5Checksum || e.Value.Stats == null)
+            if (e.Value == null || e.Value.Status != 200  || e.Value.Stats == null)
                 return;
 
             var stats = new List<ResultsOverviewFooterStat>()
