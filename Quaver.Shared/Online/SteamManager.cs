@@ -58,7 +58,12 @@ namespace Quaver.Shared.Online
         /// <summary>
         ///     The avatars for steam users.
         /// </summary>
-        public static Dictionary<ulong, Texture2D> UserAvatars { get; set; }
+        public static Dictionary<ulong, Texture2D> UserAvatars { get; private set; }
+
+        /// <summary>
+        ///     Large Steam user avatars
+        /// </summary>
+        public static Dictionary<ulong, Texture2D> UserAvatarsLarge { get; private set; }
 
         /// <summary>
         ///     A user's steam avatar has loaded.
@@ -121,6 +126,7 @@ namespace Quaver.Shared.Online
             IsInitialized = SteamAPI.Init();
 
             UserAvatars = new Dictionary<ulong, Texture2D>();
+            UserAvatarsLarge = new Dictionary<ulong, Texture2D>();
 
             if (!IsInitialized)
             {
@@ -322,6 +328,8 @@ namespace Quaver.Shared.Online
             var tex = LoadAvatar(steamId) ?? UserInterface.UnknownAvatar;
 
             UserAvatars[steamId] = tex;
+            UserAvatarsLarge[steamId] = LoadAvatar(steamId, true) ?? UserInterface.UnknownAvatar;
+
             SteamUserAvatarLoaded?.Invoke(typeof(SteamManager), new SteamAvatarLoadedEventArgs(steamId, tex));
 
             Logger.Debug($"Loaded Steam Avatar for user: {steamId}", LogType.Network);
@@ -331,10 +339,10 @@ namespace Quaver.Shared.Online
         ///     Loads a user's avatar from steam
         /// </summary>
         /// <returns></returns>
-        private static Texture2D LoadAvatar(ulong steamId)
+        private static Texture2D LoadAvatar(ulong steamId, bool large = false)
         {
             // Get the icon type as a integer.
-            var icon = SteamFriends.GetMediumFriendAvatar(new CSteamID(steamId));
+            var icon = large ? SteamFriends.GetLargeFriendAvatar(new CSteamID(steamId)) : SteamFriends.GetMediumFriendAvatar(new CSteamID(steamId));
 
             // Check if we got an icon type.
             if (icon != 0)

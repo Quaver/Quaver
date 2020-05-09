@@ -44,8 +44,8 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
                 if (ConfigManager.Username.Value == processor.Value.PlayerName)
                     steamId = SteamUser.GetSteamID().m_SteamID;
 
-                if (steamId != 0 && SteamManager.UserAvatars.ContainsKey(steamId))
-                    Avatar.AvatarSprite.Image = SteamManager.UserAvatars[steamId];
+                if (steamId != 0 && SteamManager.UserAvatarsLarge.ContainsKey(steamId))
+                    Avatar.AvatarSprite.Image = SteamManager.UserAvatarsLarge[steamId];
             }
         }
     }
