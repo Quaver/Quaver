@@ -113,6 +113,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        private bool FinalizedWindowsAfterAnimation { get; set; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="judgement"></param>
         /// <param name="processor"></param>
         /// <param name="size"></param>
@@ -140,6 +144,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             if (CountAnimation != null && !CountAnimation.Done)
                 TextCount.Text = $"{(int) CountAnimation?.PerformInterpolation(gameTime):n0}";
+
+            if (CountAnimation != null && CountAnimation.Done && !FinalizedWindowsAfterAnimation)
+            {
+                UpdateTextCount();
+                FinalizedWindowsAfterAnimation = true;
+            }
 
             base.Update(gameTime);
         }
