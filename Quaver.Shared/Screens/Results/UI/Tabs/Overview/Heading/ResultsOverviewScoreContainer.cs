@@ -45,15 +45,15 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
         private void CreateItems()
         {
             var rating = new RatingProcessorKeys(Map.DifficultyFromMods(Processor.Value.Mods));
+            var accuracy = Processor.Value?.StandardizedProcessor?.Accuracy ?? Processor.Value.Accuracy;
 
             Items.AddRange(new []
             {
                 new DrawableResultsScoreMetric(UserInterface.ResultsLabelMaxCombo, $"{Processor.Value.MaxCombo:n0}x"),
                 new DrawableResultsScoreMetric(UserInterface.ResultsLabelAccuracy, StringHelper.AccuracyToString(Processor.Value.Accuracy)),
                 new DrawableResultsScoreMetric(UserInterface.ResultsLabelPerformanceRating,
-                    $"{StringHelper.RatingToString(rating.CalculateRating(Processor.Value))}", ColorHelper.HexToColor("#E9B736")),
-                new DrawableResultsScoreMetric(UserInterface.ResultsLabelRankedAccuracy,
-                    StringHelper.AccuracyToString(Processor.Value?.StandardizedProcessor?.Accuracy ?? Processor.Value.Accuracy)),
+                    $"{StringHelper.RatingToString(rating.CalculateRating(accuracy))}", ColorHelper.HexToColor("#E9B736")),
+                new DrawableResultsScoreMetric(UserInterface.ResultsLabelRankedAccuracy, StringHelper.AccuracyToString(accuracy)),
                 new DrawableResultsScoreMetric(UserInterface.ResultsLabelTotalScore,
                     $"{Processor.Value.Score:n0}"),
             });
