@@ -61,6 +61,11 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
                 };
 
                 posX += item.Width + 44;
+
+                if ((ResultsScreenTabType) i != ResultsScreenTabType.Overview)
+                    item.Button.IsClickable = false;
+
+                item.SetTint();
             }
         }
 

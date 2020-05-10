@@ -26,7 +26,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
 
         /// <summary>
         /// </summary>
-        private ImageButton Button { get; set; }
+        public ImageButton Button { get; private set; }
 
         /// <summary>
         ///     The color when <see cref="ActiveTab"/> is <see cref="Type"/>
@@ -37,6 +37,11 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
         ///     The color when the item is not hovered and isn't active
         /// </summary>
         private static Color InactiveColor { get; } = ColorHelper.HexToColor("#CACACA");
+
+        /// <summary>
+        ///     The color when the tab is disabled
+        /// </summary>
+        private static Color DisabledColor { get; } = ColorHelper.HexToColor("#5B5B5B");
 
         /// <inheritdoc />
         /// <summary>
@@ -60,28 +65,39 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (ActiveTab.Value == Type)
+            SetTint();
+            base.Update(gameTime);
+        }
+
+        public void SetTint()
+        {
+            if (!Button.IsClickable)
+                Tint = DisabledColor;
+            else if (ActiveTab.Value == Type)
                 Tint = ActiveColor;
             else if (Button.IsHovered)
                 Tint = Colors.MainAccent;
             else
                 Tint = InactiveColor;
-
-            base.Update(gameTime);
         }
 
         /// <summary>
         /// </summary>
-        private void CreateButton() => Button = new ImageButton(UserInterface.BlankBox, (sender, args) =>
+        private void CreateButton()
+        {
+            Button = new ImageButton(UserInterface.BlankBox, (sender, args) =>
             {
                 if (ActiveTab.Value != Type)
                     ActiveTab.Value = Type;
             })
-        {
-            Parent = this,
-            Size = new ScalableVector2(Width, SelectorHeight),
-            Y = -Height,
-            Alpha = 0
-        };
+            {
+                Parent = this,
+                Size = new ScalableVector2(Width, SelectorHeight),
+                Y = -Height,
+                Alpha = 0
+            };
+
+            SetTint();
+        }
     }
 }
