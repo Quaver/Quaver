@@ -91,6 +91,11 @@ namespace Quaver.Shared.Screens.Results
         public Bindable<ScoreSubmissionResponse> ScoreSubmissionStats { get; } = new Bindable<ScoreSubmissionResponse>(null);
 
         /// <summary>
+        ///     If the user is in progress of converting their score
+        /// </summary>
+        private bool IsConvertingScore { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
@@ -100,6 +105,7 @@ namespace Quaver.Shared.Screens.Results
             Map = MapManager.Selected.Value;
 
             InitializeGameplayResultsScreen(screen);
+            Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
 
             View = new ResultsScreenView(this);
         }
@@ -126,7 +132,7 @@ namespace Quaver.Shared.Screens.Results
                         Okay = score.JudgementWindowOkay,
                         Miss = score.JudgementWindowMiss
                     },
-                    SteamId = (ulong) score.SteamId
+                    SteamId = (ulong) score.SteamId,
                 }
             };
 
@@ -149,6 +155,9 @@ namespace Quaver.Shared.Screens.Results
                         virtualPlayer.PlayAllFrames();
 
                         Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
+                        Processor.Value.StandardizedProcessor = new ScoreProcessorKeys(qua, (ModIdentifier) score.Mods) { Accuracy = (float) score.RankedAccuracy };
+
+                        Replay = replay;
                     }
                     catch (Exception e)
                     {
@@ -705,6 +714,52 @@ namespace Quaver.Shared.Screens.Results
             IsSubmittingScore.Value = false;
             ScoreSubmissionStats.Value = e.Response;
             Logger.Important($"Received score submission response with status: {e.Response.Status}", LogType.Network);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="windows"></param>
+        public void ConvertScoreToJudgementWindows(JudgementWindows windows)
+        {
+            if (Replay == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "There is no replay data available to convert this score!");
+                return;
+            }
+
+            if (IsConvertingScore)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "Please wait! Your score is already being converted!");
+                return;
+            }
+
+            IsConvertingScore = true;
+
+            ThreadScheduler.Run(() =>
+            {
+                lock (Processor.Value)
+                {
+                    var qua = Map.LoadQua();
+                    qua.ApplyMods(Replay.Mods);
+
+                    var virtualPlayer = new VirtualReplayPlayer(Replay, qua, windows, true);
+
+                    virtualPlayer.ScoreProcessor.PlayerName = Processor.Value.PlayerName;
+                    virtualPlayer.ScoreProcessor.Date = Processor.Value.Date;
+                    virtualPlayer.ScoreProcessor.StandardizedProcessor = Processor.Value.StandardizedProcessor;
+
+                    foreach (var _ in virtualPlayer.Replay.Frames)
+                    {
+                        if (virtualPlayer.ScoreProcessor.Failed)
+                            break;
+
+                        virtualPlayer.PlayNextFrame();
+                    }
+
+                    Processor.Value = virtualPlayer.ScoreProcessor;
+                    IsConvertingScore = false;
+                }
+            });
         }
 
         /// <inheritdoc />
