@@ -24,6 +24,9 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
             if (screen.ScreenType == ResultsScreenType.Gameplay && screen.Gameplay.LoadedReplay == null)
                 LeftAlignedItems.Add(new ResultsFooterFixOffsetButton(screen));
 
+            if (screen.Replay != null)
+                LeftAlignedItems.Add(new ResultsFooterConvertScoreButton(screen));
+
             AlignRightItems();
             AlignLeftItems();
         }

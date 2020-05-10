@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Menu.Border;
@@ -9,6 +10,7 @@ using Quaver.Shared.Screens.Results.UI.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
@@ -60,6 +62,8 @@ namespace Quaver.Shared.Screens.Results
 
             Header.Parent = Container;
             Footer.Parent = Container;
+
+            ResultsScreen.Processor.ValueChanged += OnProcessorValueChanged;
         }
 
         /// <inheritdoc />
@@ -81,7 +85,12 @@ namespace Quaver.Shared.Screens.Results
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            ResultsScreen.Processor.ValueChanged -= OnProcessorValueChanged;
+            Container?.Destroy();
+        }
 
         /// <summary>
         /// </summary>
@@ -123,5 +132,18 @@ namespace Quaver.Shared.Screens.Results
             Alignment = Alignment.TopCenter,
             Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f + 4,
         };
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnProcessorValueChanged(object sender, BindableValueChangedEventArgs<ScoreProcessor> e)
+        {
+            Container.ScheduleUpdate(() =>
+            {
+                OverviewTab.Destroy();
+                CreateOverviewTab();
+            });
+        }
     }
 }

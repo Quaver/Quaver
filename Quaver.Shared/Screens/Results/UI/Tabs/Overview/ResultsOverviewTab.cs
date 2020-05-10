@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         private void CreateJudgementWindowPreset() => JudgementWindows = new TextKeyValue("Judgement Preset:", Processor.Value.Windows.Name,
             22, Color.White)
         {
-            Parent = this,
+            Parent = ContentContainer,
             X = PADDING_X,
             Key = { Tint =  TextDarkGray },
             Value = { Tint = ColorHelper.HexToColor("#FFE76B")}
@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
             DateAndTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 $"on {Processor.Value.Date.ToShortDateString()} @ {time}", 22)
             {
-                Parent = this,
+                Parent = ContentContainer,
                 Alignment = Alignment.TopRight,
                 Tint = TextDarkGray
             };
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         /// </summary>
         private void CreatePlayedBy() => PlayedBy = new TextKeyValue("Played by", $"{Processor.Value.PlayerName}", 22, Color.White)
         {
-            Parent = this,
+            Parent = ContentContainer,
             Alignment = Alignment.TopRight,
             X = -DateAndTime.Width - 4,
             Key = { Tint =  TextDarkGray },
@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         /// </summary>
         private void CreateScoreContainer() => ScoreContainer = new ResultsOverviewScoreContainer(Map, Processor)
         {
-            Parent = this,
+            Parent = ContentContainer,
             Y = JudgementWindows.Y + JudgementWindows.Height + 10,
             X = PADDING_X
         };
@@ -126,7 +126,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
         private void CreateGraphContainer() => GraphContainer = new ResultsOverviewGraphContainer(Map, Processor,
             IsSubmittingScore, ScoreSubmissionStats)
         {
-            Parent = this,
+            Parent = ContentContainer,
             Alignment = Alignment.BotLeft,
             X = PADDING_X
         };

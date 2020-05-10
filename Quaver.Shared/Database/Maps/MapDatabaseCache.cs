@@ -40,6 +40,7 @@ namespace Quaver.Shared.Database.Maps
         /// </summary>
         private static List<string> DefaultMapsetFiles { get; } = new List<string>()
         {
+            "+TEK - Stars and Bunnies",
             "HyuN - CrossOver",
             "HyuN - Princess Of Winter",
             "Rabbit House - Have A Party Time!",

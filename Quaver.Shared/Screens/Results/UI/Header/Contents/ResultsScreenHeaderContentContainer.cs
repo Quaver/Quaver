@@ -90,6 +90,18 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
             CreateDifficulty();
             CreateCreator();
             CreateGrade();
+
+            Processor.ValueChanged += OnProcessorValueChanged;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public override void Destroy()
+        {
+            // ReSharper disable once DelegateSubtraction
+            Processor.ValueChanged -= OnProcessorValueChanged;
+            base.Destroy();
         }
 
         /// <summary>
@@ -176,5 +188,12 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
             GradeSprite.Size = new ScalableVector2(width, GradeSprite.Image.Height / GradeSprite.Image.Width * width);
             GradeSprite.Y = -TabSelector.Height - 22;
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnProcessorValueChanged(object sender, BindableValueChangedEventArgs<ScoreProcessor> e) =>
+            UpdateGradeTextureAndSize();
     }
 }
