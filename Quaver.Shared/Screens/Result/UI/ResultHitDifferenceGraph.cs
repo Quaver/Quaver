@@ -196,7 +196,7 @@ namespace Quaver.Shared.Screens.Result.UI
                         Alpha = 0.5f,
                         Tint = ResultsJudgementGraphBar.GetColor(judgement),
                         Alignment = Alignment.MidCenter,
-                        Y = k * HitDifferenceToY(difference) - k * height / 2,
+                        Y = k * HitDifferenceToY(difference) - k * height,
                         Size = new ScalableVector2(Width, 2),
                     };
 

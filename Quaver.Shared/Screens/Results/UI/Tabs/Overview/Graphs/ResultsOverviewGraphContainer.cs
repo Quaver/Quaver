@@ -259,12 +259,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
                 DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
-                    new ScalableVector2(RightContainer.Width + GraphDropdown.X * 2 + 12, 300))
+                    new ScalableVector2(RightContainer.Width + GraphDropdown.X * 2 + 12, 350))
                 {
                     Parent = RightContainer,
                     Alignment = Alignment.TopLeft,
                     X = -GraphDropdown.X - 12,
-                    Y = GraphDropdown.Y + GraphDropdown.Height + 40,
+                    Y = GraphDropdown.Y + GraphDropdown.Height + 14,
                     Visible = true
                 };
 
