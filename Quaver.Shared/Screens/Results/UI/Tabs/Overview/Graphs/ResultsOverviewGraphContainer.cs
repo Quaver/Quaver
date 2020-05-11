@@ -256,24 +256,32 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateDevianceGraph()
         {
+            const int headerHeight = 68;
+
+            var container = new Sprite()
+            {
+                Parent = RightContainer,
+                Size = new ScalableVector2(RightContainer.Width, RightContainer.Height - headerHeight),
+                Y = headerHeight,
+                Alpha = 0,
+            };
+
             if (Processor.Value.Stats != null && Processor.Value.Stats.Count > 0)
             {
                 DevianceGraph = new CachedHitDifferenceGraph(Map, Processor,
-                    new ScalableVector2(RightContainer.Width + GraphDropdown.X * 2 + 12, 350))
+                    new ScalableVector2(container.Width * 0.95f, container.Height * 0.95f))
                 {
-                    Parent = RightContainer,
-                    Alignment = Alignment.TopLeft,
-                    X = -GraphDropdown.X - 12,
-                    Y = GraphDropdown.Y + GraphDropdown.Height + 14,
+                    Parent = container,
+                    Alignment = Alignment.MidCenter,
+                    X = -5,
                     Visible = true
                 };
-
                 return;
             }
 
             var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), "Statistics Not Available", 22)
             {
-                Parent = RightContainer,
+                Parent = container,
                 Alignment = Alignment.MidCenter
             };
         }
