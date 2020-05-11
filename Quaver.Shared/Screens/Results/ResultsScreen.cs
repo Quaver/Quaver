@@ -93,7 +93,7 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         ///     If the user is in progress of converting their score
         /// </summary>
-        private bool IsConvertingScore { get; set; }
+        public bool IsConvertingScore { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -724,12 +724,6 @@ namespace Quaver.Shared.Screens.Results
             if (Replay == null)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "There is no replay data available to convert this score!");
-                return;
-            }
-
-            if (IsConvertingScore)
-            {
-                NotificationManager.Show(NotificationLevel.Warning, "Please wait! Your score is already being converted!");
                 return;
             }
 
