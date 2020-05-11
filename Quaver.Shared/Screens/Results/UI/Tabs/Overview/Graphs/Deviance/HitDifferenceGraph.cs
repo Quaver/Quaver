@@ -64,14 +64,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
         /// </summary>
         private void CreateAxesValues()
         {
-            var data = Graph.LineData.OrderBy(x => x.Deviance).ToList();
-
-            foreach (var line in data)
+            foreach (var line in Graph.LineData)
             {
                 if (line.Judgement != Judgement.Miss && line.Judgement != Judgement.Great)
                     continue;
 
-                var window = line.Deviance / ModHelper.GetRateFromMods(Processor.Value.Mods);
+                var window = -line.Deviance / ModHelper.GetRateFromMods(Processor.Value.Mods);
 
                 var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack), $"{(int) window}", 20,
                     false)
