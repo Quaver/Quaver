@@ -32,6 +32,10 @@ namespace Quaver.Shared.Screens.Results.UI.Footer
 
             Items.ForEach(x =>
             {
+                var originalText = x.Text.Text;
+                x.Text.TruncateWithEllipsis((int) (Width * 0.50f));
+                Options[x.Text.Text] = Options[originalText];
+
                 var scale = 0.50f;
 
                 // ReSharper disable once ObjectCreationAsStatement
