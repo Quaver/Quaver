@@ -96,6 +96,11 @@ namespace Quaver.Shared.Screens.Results
         public bool IsConvertingScore { get; private set; }
 
         /// <summary>
+        ///     If the user has already fixed their local offset
+        /// </summary>
+        public bool FixedLocalOffset { get; private set; }
+
+        /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
@@ -380,6 +385,12 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public void FixLocalOffset()
         {
+            if (FixedLocalOffset)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "You have already fixed your local offset for this map! There's no need to do it again.");
+                return;
+            }
+
             if (Processor.Value.Stats == null || Processor.Value.Stats.Count == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning, "There is no data to be able to fix your local offset!");
@@ -399,6 +410,7 @@ namespace Quaver.Shared.Screens.Results
                     Map.LocalOffset = newOffset;
                     MapDatabaseCache.UpdateMap(Map);
                     NotificationManager.Show(NotificationLevel.Success, $"Local offset for this map was set to {Map.LocalOffset} ms.");
+                    FixedLocalOffset = true;
                 });
 
             DialogManager.Show(dialog);
