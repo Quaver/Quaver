@@ -136,9 +136,11 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
         private void CreateDifficulty()
         {
             var difficulty = Map.DifficultyFromMods(Processor.Value.Mods);
+            var rate = ModHelper.GetRateFromMods(Processor.Value.Mods);
 
+            var rateStr = rate != 1.0f ? $" {rate:0.0}x" : "";
             Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
-                $"[{Map.DifficultyName}] - {StringHelper.RatingToString(difficulty)}", 26)
+                $"[{Map.DifficultyName}{rateStr}] ({StringHelper.RatingToString(difficulty)})", 26)
             {
                 Parent = this,
                 X = SongTitle.X,
