@@ -138,7 +138,8 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
             var difficulty = Map.DifficultyFromMods(Processor.Value.Mods);
             var rate = ModHelper.GetRateFromMods(Processor.Value.Mods);
 
-            var rateStr = rate != 1.0f ? $" {rate:0.0}x" : "";
+            var rateStr = rate != 1.0f ? $" {rate}x" : "";
+            
             Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.LatoBlack),
                 $"[{Map.DifficultyName}{rateStr}] ({StringHelper.RatingToString(difficulty)})", 26)
             {
