@@ -179,7 +179,6 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Scratch Lane", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Place 4K Scratch Lane On Left", ConfigManager.ScratchLaneLeft4K),
                         new OptionsItemCheckbox(containerRect, "Place 7K Scratch Lane On Left", ConfigManager.ScratchLaneLeft7K)
                     }),
                     new OptionsSubcategory("Background", new List<OptionsItem>()
@@ -269,14 +268,6 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyMania4K3,
                             ConfigManager.KeyMania4K4
                         }),
-                        new OptionsItemKeybindMultiple(containerRect, "4K + 1 Gameplay Layout", new List<Bindable<Keys>>()
-                        {
-                            ConfigManager.KeyLayout4KScratch1,
-                            ConfigManager.KeyLayout4KScratch2,
-                            ConfigManager.KeyLayout4KScratch3,
-                            ConfigManager.KeyLayout4KScratch4,
-                            ConfigManager.KeyLayout4KScratch5,
-                        }),
                         new OptionsItemKeybindMultiple(containerRect, "7K Gameplay Layout", new List<Bindable<Keys>>()
                         {
                             ConfigManager.KeyMania7K1,
@@ -289,6 +280,7 @@ namespace Quaver.Shared.Screens.Options
                         }),
                         new OptionsItemKeybindMultiple(containerRect, "7K + 1 Gameplay Layout", new List<Bindable<Keys>>()
                         {
+                            ConfigManager.KeyLayout7KScratch8,
                             ConfigManager.KeyLayout7KScratch1,
                             ConfigManager.KeyLayout7KScratch2,
                             ConfigManager.KeyLayout7KScratch3,
@@ -296,7 +288,6 @@ namespace Quaver.Shared.Screens.Options
                             ConfigManager.KeyLayout7KScratch5,
                             ConfigManager.KeyLayout7KScratch6,
                             ConfigManager.KeyLayout7KScratch7,
-                            ConfigManager.KeyLayout7KScratch8,
                         }),
                     }),
                     new OptionsSubcategory("Co-op Gameplay", new List<OptionsItem>()
