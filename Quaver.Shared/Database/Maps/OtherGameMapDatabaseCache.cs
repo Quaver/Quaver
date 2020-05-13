@@ -273,7 +273,7 @@ namespace Quaver.Shared.Database.Maps
                 MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
 
                 // Find all osu! maps that are 4K and 7K and order them by their difficulty value.
-                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && ( x.CircleSize == 4 || x.CircleSize == 7  || x.CircleSize == 5 || x.CircleSize == 8)).ToList();
+                var osuBeatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7  || x.CircleSize == 8)).ToList();
                 osuBeatmaps = osuBeatmaps.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var osuToQuaverMaps = new List<OtherGameMap>();
@@ -305,7 +305,8 @@ namespace Quaver.Shared.Database.Maps
                         BackgroundPath = "",
                         RegularNoteCount = map.CountHitCircles,
                         LongNoteCount = map.CountSliders,
-                        LocalOffset = map.OffsetLocal
+                        LocalOffset = map.OffsetLocal,
+                        HasScratchKey = map.CircleSize == 8
                     };
 
                     // Get the BPM of the osu! maps
