@@ -172,7 +172,11 @@ namespace Quaver.Shared.Graphics.Graphs
 
             foreach (var s in groupedSamples)
             {
-                var qua = new Qua { Mode = Map.Mode };
+                var qua = new Qua
+                {
+                    Mode = Map.Mode,
+                    HasScratchKey = Map.HasScratchKey
+                };
 
                 if (s.Count != 0)
                     s.ForEach(x => qua.HitObjects.Add(x));
