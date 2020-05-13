@@ -9,6 +9,7 @@ using Quaver.Shared.Screens.Results.UI.Footer;
 using Quaver.Shared.Screens.Results.UI.Header;
 using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs;
+using Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
@@ -47,6 +48,10 @@ namespace Quaver.Shared.Screens.Results
         private ResultsOverviewTab OverviewTab { get; set; }
 
         /// <summary>
+        /// </summary>
+        private ResultsMultiplayerTab MultiplayerTab { get; set; }
+
+        /// <summary>
         ///     The width of the screen content
         /// </summary>
         public static int CONTENT_WIDTH { get; } = 1692;
@@ -66,6 +71,7 @@ namespace Quaver.Shared.Screens.Results
             CreateFooter();
             CreateScreenHeader();
             CreateOverviewTab();
+            CreateMultiplayerTab();
 
             Header.Parent = Container;
             Footer.Parent = Container;
@@ -146,6 +152,22 @@ namespace Quaver.Shared.Screens.Results
             };
 
             TabContainers[ResultsScreenTabType.Overview] = OverviewTab;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateMultiplayerTab()
+        {
+            MultiplayerTab = new ResultsMultiplayerTab(ResultsScreen.Map, ResultsScreen.Processor,
+                ResultsScreen.ActiveTab, ResultsScreen.MultiplayerGame, ResultsScreen.MultiplayerTeam1Users, ResultsScreen.MultiplayerTeam2Users)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = OverviewTab.Y
+            };
+
+            MultiplayerTab.X = -Container.Width - 50;
+            TabContainers[ResultsScreenTabType.Multiplayer] = MultiplayerTab;
         }
 
         /// <summary>
