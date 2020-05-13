@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
@@ -6,12 +7,14 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Results.UI.Footer;
 using Quaver.Shared.Screens.Results.UI.Header;
+using Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs;
 using Quaver.Shared.Screens.Results.UI.Tabs.Overview;
 using Quaver.Shared.Screens.Tests.UI.Borders;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 
@@ -48,6 +51,10 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public static int CONTENT_WIDTH { get; } = 1692;
 
+        /// <summary>
+        /// </summary>
+        private Dictionary<ResultsScreenTabType, ResultsTabContainer> TabContainers { get; } = new Dictionary<ResultsScreenTabType, ResultsTabContainer>();
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -64,6 +71,7 @@ namespace Quaver.Shared.Screens.Results
             Footer.Parent = Container;
 
             ResultsScreen.Processor.ValueChanged += OnProcessorValueChanged;
+            ResultsScreen.ActiveTab.ValueChanged += OnActiveTabChanged;
         }
 
         /// <inheritdoc />
@@ -87,8 +95,10 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public override void Destroy()
         {
-            // ReSharper disable once DelegateSubtraction
+            // ReSharper disable twice DelegateSubtraction
             ResultsScreen.Processor.ValueChanged -= OnProcessorValueChanged;
+            ResultsScreen.ActiveTab.ValueChanged -= OnActiveTabChanged;
+
             Container?.Destroy();
         }
 
@@ -125,13 +135,18 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        private void CreateOverviewTab() => OverviewTab = new ResultsOverviewTab(ResultsScreen.Map, ResultsScreen.Processor,
-            ResultsScreen.ActiveTab, ResultsScreen.IsSubmittingScore, ResultsScreen.ScoreSubmissionStats)
+        private void CreateOverviewTab()
         {
-            Parent = Container,
-            Alignment = Alignment.TopCenter,
-            Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f + 4,
-        };
+            OverviewTab = new ResultsOverviewTab(ResultsScreen.Map, ResultsScreen.Processor,
+                ResultsScreen.ActiveTab, ResultsScreen.IsSubmittingScore, ResultsScreen.ScoreSubmissionStats)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                Y = ScreenHeader.Y + ScreenHeader.Height + ResultsTabContainer.PADDING_Y / 2f + 4,
+            };
+
+            TabContainers[ResultsScreenTabType.Overview] = OverviewTab;
+        }
 
         /// <summary>
         /// </summary>
@@ -144,6 +159,27 @@ namespace Quaver.Shared.Screens.Results
                 OverviewTab.Destroy();
                 CreateOverviewTab();
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnActiveTabChanged(object sender, BindableValueChangedEventArgs<ResultsScreenTabType> e)
+        {
+            const int animTime = 500;
+
+            foreach (var tab in TabContainers)
+            {
+                var container = tab.Value;
+
+                container.ClearAnimations();
+
+                if (tab.Key == e.Value)
+                    container.MoveToX(0, Easing.OutQuint, animTime);
+                else
+                    container.MoveToX(-Container.Width - 50, Easing.OutQuint, animTime);
+            }
         }
     }
 }
