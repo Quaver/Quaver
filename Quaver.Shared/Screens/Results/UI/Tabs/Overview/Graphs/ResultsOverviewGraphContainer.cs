@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// </summary>
         private void CreateMean()
         {
-            Mean = new TextKeyValue("Mean:", $"{Statistics.Mean:0.00} ms", 22, Color.White)
+            Mean = new TextKeyValue("Mean:", $"{-Statistics.Mean:0.00} ms", 22, Color.White)
             {
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
