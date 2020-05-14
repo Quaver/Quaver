@@ -541,6 +541,14 @@ namespace Quaver.Shared.Screens.Results
                     }
                 }
             }
+
+            // TODO: Place player on the correct team processor list
+            if (MultiplayerGame != null)
+            {
+                // Temporary
+                for (var i = 0; i < 4; i++)
+                    MultiplayerTeam1Users.Add(Processor.Value);
+            }
         }
         /// <summary>
         ///     Handles both the online and local score submission process
