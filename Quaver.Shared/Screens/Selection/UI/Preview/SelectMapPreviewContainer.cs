@@ -494,6 +494,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 }
 
                 TestPlayPrompt.X = -SeekBar.Width / 2f + 2;
+
+                if (oldSeekBar != null)
+                {
+                    SeekBar.X = oldSeekBar.X;
+                    SeekBar.Y = oldSeekBar.Y;
+                }
             });
         }
 

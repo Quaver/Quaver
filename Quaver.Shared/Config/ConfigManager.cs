@@ -834,14 +834,14 @@ namespace Quaver.Shared.Config
             KeyLayout4KScratch4 = ReadValue(@"KeyLayout4KScratch4", Keys.K, data);
             KeyLayout4KScratch5 = ReadValue(@"KeyLayout4KScratch5", Keys.L, data);
 
+            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.CapsLock, data);
             KeyLayout7KScratch1 = ReadValue(@"KeyLayout7KScratch1", Keys.A, data);
             KeyLayout7KScratch2 = ReadValue(@"KeyLayout7KScratch2", Keys.S, data);
             KeyLayout7KScratch3 = ReadValue(@"KeyLayout7KScratch3", Keys.D, data);
-            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.F, data);
-            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.Space, data);
-            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.J, data);
-            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.K, data);
-            KeyLayout7KScratch8 = ReadValue(@"KeyLayout7KScratch8", Keys.L, data);
+            KeyLayout7KScratch4 = ReadValue(@"KeyLayout7KScratch4", Keys.Space, data);
+            KeyLayout7KScratch5 = ReadValue(@"KeyLayout7KScratch5", Keys.J, data);
+            KeyLayout7KScratch6 = ReadValue(@"KeyLayout7KScratch6", Keys.K, data);
+            KeyLayout7KScratch7 = ReadValue(@"KeyLayout7KScratch7", Keys.L, data);
 
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);

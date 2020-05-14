@@ -87,6 +87,7 @@ using Quaver.Shared.Screens.Tests.Options;
 using Quaver.Shared.Screens.Tests.Profiles;
 using Quaver.Shared.Screens.Tests.ReplayControllers;
 using Quaver.Shared.Screens.Tests.Results;
+using Quaver.Shared.Screens.Tests.ResultsMulti;
 using Quaver.Shared.Screens.Tests.Tournaments;
 using Quaver.Shared.Screens.Tests.Volume;
 using Quaver.Shared.Screens.Theater;
@@ -200,6 +201,7 @@ namespace Quaver.Shared
         /// </summary>
         private Dictionary<string, Type> VisualTests { get; } = new Dictionary<string, Type>()
         {
+            {"ResultsScreen (Multi)", typeof(TestResultsMultiScreen)},
             {"ResultsScreen", typeof(TestResultsScreen)},
             {"TournamentOverlay", typeof(TestTournamentOverlayScreen)},
             {"Editor", typeof(TestEditorScreen)},
