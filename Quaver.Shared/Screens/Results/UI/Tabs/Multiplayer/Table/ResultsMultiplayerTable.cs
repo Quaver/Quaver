@@ -186,11 +186,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             var players = new List<ScoreProcessor>(Team1Players);
             players = players.Concat(Team2Players).ToList();
 
-            // Order all players by performance rating
             switch (Game.Ruleset)
             {
                 case MultiplayerGameRuleset.Free_For_All:
-                    players = players.OrderBy(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
+                    players = players.OrderByDescending(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
                     break;
                 case MultiplayerGameRuleset.Team:
                     break;
@@ -199,8 +198,6 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            // TODO: Remove players who quit early/no longer in the game
 
             return players;
         }

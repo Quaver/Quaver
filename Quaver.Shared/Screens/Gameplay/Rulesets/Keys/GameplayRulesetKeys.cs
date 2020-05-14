@@ -23,6 +23,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Lines;
 using Quaver.Shared.Skinning;
+using Steamworks;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 {
@@ -117,14 +118,22 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
         protected override ScoreProcessor CreateScoreProcessor(Qua map)
         {
             var windows = JudgementWindowsDatabaseCache.Selected.Value;
+            ScoreProcessor processor;
 
             if (Screen.IsMultiplayerGame)
             {
-                return new ScoreProcessorKeys(map, ModManager.Mods,
+                processor = new ScoreProcessorKeys(map, ModManager.Mods,
                     new ScoreProcessorMultiplayer((MultiplayerHealthType) OnlineManager.CurrentGame.HealthType, OnlineManager.CurrentGame.Lives), windows);
             }
+            else
+            {
+                processor = new ScoreProcessorKeys(map, ModManager.Mods, windows);
+            }
 
-            return new ScoreProcessorKeys(map, ModManager.Mods, windows);
+            processor.PlayerName = ConfigManager.Username.Value;
+            processor.SteamId = SteamUser.GetSteamID().m_SteamID;
+
+            return processor;
         }
 
         /// <inheritdoc />

@@ -610,6 +610,8 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.Accuracy = (float) mapScores[i].Accuracy;
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
+                    processor.PlayerName = mapScores[i].Name;
+                    processor.SteamId = (ulong) mapScores[i].SteamId;
 
                     if (judgements.Count == 0)
                     {
@@ -866,7 +868,9 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             Screen.IsPaused = true;
-            Screen.Exit(() => new ResultScreen(Screen, GetScoreboardUsers()));
+
+            Screen.Exit(() => new ResultsScreen(Screen, OnlineManager.CurrentGame,
+                GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)));
         }
 
         private List<ScoreboardUser> GetScoreboardUsers()
@@ -886,6 +890,24 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             return scoreboardUsers;
+        }
+
+        private List<ScoreProcessor> GetProcessorsFromScoreboard(Scoreboard scoreboard)
+        {
+            var processors = new List<ScoreProcessor>();
+
+            if (scoreboard == null)
+                return processors;
+
+            foreach (var user in scoreboard.Users)
+            {
+                if (user.HasQuit)
+                    continue;
+
+                processors.Add(user.Processor);
+            }
+
+            return processors;
         }
 
         /// <summary>

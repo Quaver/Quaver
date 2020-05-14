@@ -133,6 +133,27 @@ namespace Quaver.Shared.Screens.Results
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="game"></param>
+        /// <param name="team1"></param>
+        /// <param name="team2"></param>
+        public ResultsScreen(GameplayScreen screen, MultiplayerGame game, List<ScoreProcessor> team1,
+            List<ScoreProcessor> team2)
+        {
+            ScreenType = ResultsScreenType.Gameplay;
+            Gameplay = screen;
+            Map = MapManager.Selected.Value;
+            MultiplayerGame = game;
+            MultiplayerTeam1Users = team1;
+            MultiplayerTeam2Users = team2;
+
+            InitializeGameplayResultsScreen(screen);
+            Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
+            View = new ResultsScreenView(this);
+        }
+
+        /// <summary>
         ///     Multiplayer game results screen from a Score object
         /// </summary>
         /// <param name="map"></param>
