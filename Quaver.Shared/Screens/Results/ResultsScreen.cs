@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
+using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
@@ -72,7 +74,22 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         ///     The replay of the score if <see cref="ScreenType"/> is Replay.
         /// </summary>
-        public Replay Replay { get; }
+        public Replay Replay { get; private set; }
+
+        /// <summary>
+        ///     Active multiplayer game for this results screen if one exists
+        /// </summary>
+        public MultiplayerGame MultiplayerGame { get; }
+
+        /// <summary>
+        ///     Players on team 1 in the multiplayer game
+        /// </summary>
+        public List<ScoreProcessor> MultiplayerTeam1Users { get; }
+
+        /// <summary>
+        ///     Players on team 2 in the multiplayer game
+        /// </summary>
+        public List<ScoreProcessor> MultiplayerTeam2Users { get; }
 
         /// <summary>
         /// </summary>
@@ -116,6 +133,27 @@ namespace Quaver.Shared.Screens.Results
         }
 
         /// <summary>
+        ///     Multiplayer game results screen from a Score object
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="game"></param>
+        /// <param name="score"></param>
+        /// <param name="team1"></param>
+        /// <param name="team2"></param>
+        public ResultsScreen(Map map, MultiplayerGame game, Score score, List<ScoreProcessor> team1, List<ScoreProcessor> team2)
+        {
+            ScreenType = ResultsScreenType.Score;
+            Score = score;
+            Map = map;
+            MultiplayerGame = game;
+            MultiplayerTeam1Users = team1;
+            MultiplayerTeam2Users = team2;
+
+            InitializeScoreResultsScreen();
+            View = new ResultsScreenView(this);
+        }
+
+        /// <summary>
         /// </summary>
         public ResultsScreen(Map map, Score score)
         {
@@ -123,55 +161,7 @@ namespace Quaver.Shared.Screens.Results
             Score = score;
             Map = map;
 
-            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(score.ToReplay()))
-            {
-                Value =
-                {
-                    Windows = new JudgementWindows
-                    {
-                        Name = score.JudgementWindowPreset,
-                        Marvelous = score.JudgementWindowMarv,
-                        Perfect = score.JudgementWindowPerf,
-                        Great = score.JudgementWindowGreat,
-                        Good = score.JudgementWindowGood,
-                        Okay = score.JudgementWindowOkay,
-                        Miss = score.JudgementWindowMiss
-                    },
-                    SteamId = (ulong) score.SteamId,
-                }
-            };
-
-            // Check to see if the replay exists for this score and virtually play it, so HitStats
-            // can be retrieved.
-            if (!score.IsOnline)
-            {
-                var path = $"{ConfigManager.DataDirectory}/r/{score.Id}.qr";
-
-                if (File.Exists(path))
-                {
-                    try
-                    {
-                        var qua = MapManager.Selected.Value.LoadQua();
-                        qua.ApplyMods((ModIdentifier) score.Mods);
-
-                        var replay = new Replay(path);
-
-                        var virtualPlayer = new VirtualReplayPlayer(replay, qua, Processor.Value.Windows);
-                        virtualPlayer.PlayAllFrames();
-
-                        Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
-                        Processor.Value.StandardizedProcessor = new ScoreProcessorKeys(qua, (ModIdentifier) score.Mods) { Accuracy = (float) score.RankedAccuracy };
-
-                        Replay = replay;
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error("Failed to virtual play local score replay!", LogType.Runtime);
-                        Logger.Error(e, LogType.Runtime);
-                    }
-                }
-            }
-
+            InitializeScoreResultsScreen();
             View = new ResultsScreenView(this);
         }
 
@@ -501,6 +491,65 @@ namespace Quaver.Shared.Screens.Results
             SubmitScore(screen);
         }
 
+        private void InitializeScoreResultsScreen()
+        {
+             Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
+            {
+                Value =
+                {
+                    Windows = new JudgementWindows
+                    {
+                        Name = Score.JudgementWindowPreset,
+                        Marvelous = Score.JudgementWindowMarv,
+                        Perfect = Score.JudgementWindowPerf,
+                        Great = Score.JudgementWindowGreat,
+                        Good = Score.JudgementWindowGood,
+                        Okay = Score.JudgementWindowOkay,
+                        Miss = Score.JudgementWindowMiss
+                    },
+                    SteamId = (ulong) Score.SteamId,
+                }
+            };
+
+            // Check to see if the replay exists for this Score and virtually play it, so HitStats
+            // can be retrieved.
+            if (!Score.IsOnline)
+            {
+                var path = $"{ConfigManager.DataDirectory}/r/{Score.Id}.qr";
+
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        var qua = MapManager.Selected.Value.LoadQua();
+                        qua.ApplyMods((ModIdentifier) Score.Mods);
+
+                        var replay = new Replay(path);
+
+                        var virtualPlayer = new VirtualReplayPlayer(replay, qua, Processor.Value.Windows);
+                        virtualPlayer.PlayAllFrames();
+
+                        Processor.Value.Stats = virtualPlayer.ScoreProcessor.Stats;
+                        Processor.Value.StandardizedProcessor = new ScoreProcessorKeys(qua, (ModIdentifier) Score.Mods) { Accuracy = (float) Score.RankedAccuracy };
+
+                        Replay = replay;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("Failed to virtual play local score replay!", LogType.Runtime);
+                        Logger.Error(e, LogType.Runtime);
+                    }
+                }
+            }
+
+            // TODO: Place player on the correct team processor list
+            if (MultiplayerGame != null)
+            {
+                // Temporary
+                for (var i = 0; i < 4; i++)
+                    MultiplayerTeam1Users.Add(Processor.Value);
+            }
+        }
         /// <summary>
         ///     Handles both the online and local score submission process
         /// </summary>

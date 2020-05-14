@@ -236,5 +236,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultsLabelTotalScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-total-score.png");
         public static Texture2D ResultsScoreContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/overview-score-container-panel.png");
         public static Texture2D ResultsGraphContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-overview-graph-container.png");
+        public static Texture2D ResultsMultiplayerFFAPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/multiplayer-table-ffa.png");
     }
 }
