@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             {
                 case MultiplayerGameRuleset.Free_For_All:
                 case MultiplayerGameRuleset.Battle_Royale:
-                    Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\swan\desktop\multiplayer-table-ffa.png");
+                    Image = UserInterface.ResultsMultiplayerFFAPanel;
                     Height = Image.Height + 4;
                     break;
                 case MultiplayerGameRuleset.Team:
