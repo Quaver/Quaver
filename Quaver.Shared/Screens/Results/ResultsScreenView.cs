@@ -71,7 +71,9 @@ namespace Quaver.Shared.Screens.Results
             CreateFooter();
             CreateScreenHeader();
             CreateOverviewTab();
-            CreateMultiplayerTab();
+
+            if (ResultsScreen.MultiplayerGame != null)
+                CreateMultiplayerTab();
 
             Header.Parent = Container;
             Footer.Parent = Container;
