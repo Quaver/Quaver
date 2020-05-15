@@ -5,6 +5,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Online;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -62,8 +63,8 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
 
                 posX += item.Width + 44;
 
-                //if ((ResultsScreenTabType) i != ResultsScreenTabType.Overview)
-               //    item.Button.IsClickable = false;
+                if ((ResultsScreenTabType) i == ResultsScreenTabType.Multiplayer && OnlineManager.CurrentGame == null)
+                    item.Button.IsClickable = false;
 
                 item.SetTint();
             }
