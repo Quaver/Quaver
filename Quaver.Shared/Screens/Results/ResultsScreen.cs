@@ -15,6 +15,7 @@ using Quaver.API.Replays.Virtual;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -881,6 +882,6 @@ namespace Quaver.Shared.Screens.Results
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => null;
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "", 1, "", 0);
     }
 }
