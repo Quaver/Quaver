@@ -73,10 +73,15 @@ namespace Quaver.Shared.Screens.Results
             CreateOverviewTab();
 
             if (ResultsScreen.MultiplayerGame != null)
+            {
                 CreateMultiplayerTab();
+                ResultsScreen.ActiveTab.Value = ResultsScreenTabType.Multiplayer;
+                SnapTabPositions();
+            }
 
             Header.Parent = Container;
             Footer.Parent = Container;
+
 
             ResultsScreen.Processor.ValueChanged += OnProcessorValueChanged;
             ResultsScreen.ActiveTab.ValueChanged += OnActiveTabChanged;
@@ -182,6 +187,7 @@ namespace Quaver.Shared.Screens.Results
             {
                 OverviewTab.Destroy();
                 CreateOverviewTab();
+                SnapTabPositions();
             });
         }
 
@@ -203,6 +209,19 @@ namespace Quaver.Shared.Screens.Results
                     container.MoveToX(0, Easing.OutQuint, animTime);
                 else
                     container.MoveToX(-Container.Width - 50, Easing.OutQuint, animTime);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private void SnapTabPositions()
+        {
+            foreach (var tab in TabContainers)
+            {
+                var container = tab.Value;
+
+                container.ClearAnimations();
+                container.X = tab.Key == ResultsScreen.ActiveTab.Value ? 0 : -Container.Width - 50;
             }
         }
     }

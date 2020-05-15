@@ -128,6 +128,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 Avatar.Image = UserInterface.UnknownAvatar;
 
             Username.Text = $"{item.PlayerName ?? ""}";
+            Username.Tint = GetUsernameColor();
         }
 
         /// <summary>
@@ -137,6 +138,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
             Button = new ImageButton(UserInterface.BlankBox)
             {
                 Parent = this,
+                X = -6,
                 Image = UserInterface.OptionsSidebarButtonBackground,
                 Size = Size,
                 Alpha = 0
@@ -197,8 +199,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 new ResultsTableColumnData("Rating", $"{StringHelper.RatingToString(rating)}", ColorHelper.HexToColor("#F2C94C")),
                 new ResultsTableColumnData("Grade", "", Color.White),
                 new ResultsTableColumnData("Accuracy", $"{StringHelper.AccuracyToString(Processor.Accuracy)}",
-                    Color.White),
-                new ResultsTableColumnData("Max Combo", $"{Processor.MaxCombo:n0}x", Color.White),
+                    GetUsernameColor()),
+                new ResultsTableColumnData("Max Combo", $"{Processor.MaxCombo:n0}x", GetUsernameColor()),
                 new ResultsTableColumnData("Mods", ModHelper.GetModsString(Processor.Mods), ColorHelper.HexToColor("#808080"))
             };
 
@@ -263,6 +265,24 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 val.X = header.X - header.Width / 2f;
                 val.X += val.Width / 2f;
             }
+        }
+
+        private Color GetUsernameColor()
+        {
+            if (Game.Ruleset != MultiplayerGameRuleset.Team)
+                return Color.White;
+
+            var team = ResultsMultiplayerTable.GetTeamFromScoreProcessor(Game, Item);
+
+            switch (team)
+            {
+                case MultiplayerTeam.Red:
+                    return ColorHelper.HexToColor("#F9645D");
+                case MultiplayerTeam.Blue:
+                    return ColorHelper.HexToColor("#0587E5");
+            }
+
+            return Color.White;
         }
     }
 }

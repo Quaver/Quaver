@@ -15,7 +15,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
     {
         /// <summary>
         /// </summary>
-        private Map Map { get; }
+        public Map Map { get; }
 
         /// <summary>
         /// </summary>
@@ -23,7 +23,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
         /// <summary>
         /// </summary>
-        private List<DrawableResultsScoreMetric> Items { get; } = new List<DrawableResultsScoreMetric>();
+        protected List<DrawableResultsScoreMetric> Items { get; set; } = new List<DrawableResultsScoreMetric>();
 
         /// <summary>
         /// </summary>
@@ -36,13 +36,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
 
             Image = UserInterface.ResultsScoreContainerPanel;
             Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
-
-            CreateItems();
         }
 
         /// <summary>
         /// </summary>
-        private void CreateItems()
+        protected virtual void SetItems()
         {
             var rating = new RatingProcessorKeys(Map.DifficultyFromMods(Processor.Value.Mods));
             var accuracy = Processor.Value?.StandardizedProcessor?.Accuracy ?? Processor.Value.Accuracy;
@@ -57,6 +55,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
                 new DrawableResultsScoreMetric(UserInterface.ResultsLabelTotalScore,
                     $"{Processor.Value.Score:n0}"),
             });
+        }
+
+        /// <summary>
+        /// </summary>
+        public void CreateItems()
+        {
+            SetItems();
 
             var widthSum = Items.First().Width * Items.Count;
             var widthPer = (Width- widthSum) / (Items.Count + 1);

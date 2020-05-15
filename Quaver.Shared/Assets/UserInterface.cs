@@ -234,6 +234,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D ResultsLabelPerformanceRating => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-performance-rating.png");
         public static Texture2D ResultsLabelRankedAccuracy => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-ranked-accuracy.png");
         public static Texture2D ResultsLabelTotalScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/label-total-score.png");
+        public static Texture2D ResultsLabelScore => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-score.png");
+        public static Texture2D ResultsLabelBlueTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-blue-team.png");
+        public static Texture2D ResultsLabelRedTeam => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-label-red-team.png");
+        public static Texture2D ResultsMultiplayerTeamPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/multiplayer-team-panel.png");
         public static Texture2D ResultsScoreContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/overview-score-container-panel.png");
         public static Texture2D ResultsGraphContainerPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/results-overview-graph-container.png");
         public static Texture2D ResultsMultiplayerFFAPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/Results/multiplayer-table-ffa.png");

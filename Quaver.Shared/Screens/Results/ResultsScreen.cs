@@ -431,7 +431,11 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void HandleInput()
         {
+            if (DialogManager.Dialogs.Count > 0)
+                return;
+
             HandleKeyPressEscape();
+            HandleKeyPressTab();
         }
 
         /// <summary>
@@ -442,6 +446,40 @@ namespace Quaver.Shared.Screens.Results
                 return;
 
             ExitToMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressTab()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            var index = (int) ActiveTab.Value;
+            var length = Enum.GetNames(typeof(ResultsScreenTabType)).Length;
+
+            int newIndex;
+            if (KeyboardManager.IsShiftDown())
+            {
+                if (index - 1 >= 0)
+                    newIndex = index - 1;
+                else
+                    newIndex = length - 1;
+            }
+            else
+            {
+                if (index + 1 < length)
+                    newIndex = index + 1;
+                else
+                    newIndex = 0;
+            }
+
+            var val = (ResultsScreenTabType) newIndex;
+
+            if (val == ResultsScreenTabType.Multiplayer && MultiplayerGame == null)
+                return;
+
+            ActiveTab.Value = val;
         }
 
         /// <summary>
@@ -529,6 +567,7 @@ namespace Quaver.Shared.Screens.Results
                         Miss = Score.JudgementWindowMiss
                     },
                     SteamId = (ulong) Score.SteamId,
+                    UserId = Score.PlayerId
                 }
             };
 

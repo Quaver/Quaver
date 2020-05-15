@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -80,6 +81,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                     Height = Image.Height + 4;
                     break;
                 case MultiplayerGameRuleset.Team:
+                    Image = UserInterface.ResultsMultiplayerTeamPanel;
+                    Height = Image.Height;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -188,18 +191,34 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
 
             switch (Game.Ruleset)
             {
+                case MultiplayerGameRuleset.Battle_Royale:
                 case MultiplayerGameRuleset.Free_For_All:
                     players = players.OrderByDescending(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
                     break;
                 case MultiplayerGameRuleset.Team:
-                    break;
-                case MultiplayerGameRuleset.Battle_Royale:
+                    players = players.OrderByDescending(x => GetTeamFromScoreProcessor(Game, x))
+                        .ThenByDescending(x => new RatingProcessorKeys(Map.DifficultyFromMods(x.Mods)).CalculateRating(x)).ToList();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             return players;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <returns></returns>
+        public static MultiplayerTeam GetTeamFromScoreProcessor(MultiplayerGame game, ScoreProcessor processor)
+        {
+            if (game.RedTeamPlayers.Contains(processor.UserId))
+                return MultiplayerTeam.Red;
+
+            if (game.BlueTeamPlayers.Contains(processor.UserId))
+                return MultiplayerTeam.Blue;
+
+            return MultiplayerTeam.Red;
         }
     }
 }

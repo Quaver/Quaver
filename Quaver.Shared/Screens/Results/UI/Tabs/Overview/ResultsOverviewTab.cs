@@ -114,12 +114,17 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview
 
         /// <summary>
         /// </summary>
-        private void CreateScoreContainer() => ScoreContainer = new ResultsOverviewScoreContainer(Map, Processor)
+        private void CreateScoreContainer()
         {
-            Parent = ContentContainer,
-            Y = JudgementWindows.Y + JudgementWindows.Height + 10,
-            X = PADDING_X
-        };
+            ScoreContainer = new ResultsOverviewScoreContainer(Map, Processor)
+            {
+                Parent = ContentContainer,
+                Y = JudgementWindows.Y + JudgementWindows.Height + 10,
+                X = PADDING_X
+            };
+
+            ScoreContainer.CreateItems();
+        }
 
         /// <summary>
         /// </summary>
