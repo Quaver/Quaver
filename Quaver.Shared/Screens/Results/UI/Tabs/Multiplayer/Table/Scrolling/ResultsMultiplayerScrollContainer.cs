@@ -1,11 +1,16 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 {
@@ -38,10 +43,32 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
             Headers = headers;
             Map = map;
 
-            Scrollbar.Width = 2;
+            InputEnabled = true;
+            EasingType = Easing.OutQuint;
+            TimeToCompleteScroll = 1200;
+            ScrollSpeed = 320;
+
+            Scrollbar.Width = 4;
+            Scrollbar.X = 6;
+            Scrollbar.Tint = Color.White;
+
             Alpha = 0;
             CreatePool();
             RecalculateContainerHeight();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
+                           && DialogManager.Dialogs.Count == 0
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                           && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
+
+            base.Update(gameTime);
         }
 
         /// <inheritdoc />
