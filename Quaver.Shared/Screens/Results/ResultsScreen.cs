@@ -24,6 +24,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -130,6 +131,7 @@ namespace Quaver.Shared.Screens.Results
             InitializeGameplayResultsScreen(screen);
             Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
 
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -151,6 +153,8 @@ namespace Quaver.Shared.Screens.Results
 
             InitializeGameplayResultsScreen(screen);
             Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -172,6 +176,8 @@ namespace Quaver.Shared.Screens.Results
             MultiplayerTeam2Users = team2;
 
             InitializeScoreResultsScreen();
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -184,6 +190,8 @@ namespace Quaver.Shared.Screens.Results
             Map = map;
 
             InitializeScoreResultsScreen();
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -878,6 +886,28 @@ namespace Quaver.Shared.Screens.Results
             });
         }
 
+        /// <summary>
+        /// </summary>
+        public void SetDiscordRichPresence()
+        {
+            try
+            {
+                DiscordHelper.Presence.Details = "Results Screen";
+                DiscordHelper.Presence.State = "In the menus";
+                DiscordHelper.Presence.PartySize = 0;
+                DiscordHelper.Presence.PartyMax = 0;
+                DiscordHelper.Presence.StartTimestamp = 0;
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
         /// <inheritdoc />
         /// <summary>
         /// </summary>
