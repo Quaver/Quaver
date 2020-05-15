@@ -132,6 +132,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
 
             processor.PlayerName = ConfigManager.Username.Value;
             processor.SteamId = SteamUser.GetSteamID().m_SteamID;
+            processor.UserId = OnlineManager.Self?.OnlineUser?.Id ?? 0;
 
             return processor;
         }

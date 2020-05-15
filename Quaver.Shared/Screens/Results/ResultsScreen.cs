@@ -15,6 +15,7 @@ using Quaver.API.Replays.Virtual;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Scores;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
@@ -23,6 +24,7 @@ using Quaver.Shared.Database.Judgements;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Profiles;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
@@ -129,6 +131,7 @@ namespace Quaver.Shared.Screens.Results
             InitializeGameplayResultsScreen(screen);
             Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
 
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -150,6 +153,8 @@ namespace Quaver.Shared.Screens.Results
 
             InitializeGameplayResultsScreen(screen);
             Replay = Gameplay.LoadedReplay ?? Gameplay.ReplayCapturer.Replay;
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -171,6 +176,8 @@ namespace Quaver.Shared.Screens.Results
             MultiplayerTeam2Users = team2;
 
             InitializeScoreResultsScreen();
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -183,6 +190,8 @@ namespace Quaver.Shared.Screens.Results
             Map = map;
 
             InitializeScoreResultsScreen();
+
+            SetDiscordRichPresence();
             View = new ResultsScreenView(this);
         }
 
@@ -431,7 +440,11 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void HandleInput()
         {
+            if (DialogManager.Dialogs.Count > 0)
+                return;
+
             HandleKeyPressEscape();
+            HandleKeyPressTab();
         }
 
         /// <summary>
@@ -442,6 +455,40 @@ namespace Quaver.Shared.Screens.Results
                 return;
 
             ExitToMenu();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void HandleKeyPressTab()
+        {
+            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+                return;
+
+            var index = (int) ActiveTab.Value;
+            var length = Enum.GetNames(typeof(ResultsScreenTabType)).Length;
+
+            int newIndex;
+            if (KeyboardManager.IsShiftDown())
+            {
+                if (index - 1 >= 0)
+                    newIndex = index - 1;
+                else
+                    newIndex = length - 1;
+            }
+            else
+            {
+                if (index + 1 < length)
+                    newIndex = index + 1;
+                else
+                    newIndex = 0;
+            }
+
+            var val = (ResultsScreenTabType) newIndex;
+
+            if (val == ResultsScreenTabType.Multiplayer && MultiplayerGame == null)
+                return;
+
+            ActiveTab.Value = val;
         }
 
         /// <summary>
@@ -529,6 +576,7 @@ namespace Quaver.Shared.Screens.Results
                         Miss = Score.JudgementWindowMiss
                     },
                     SteamId = (ulong) Score.SteamId,
+                    UserId = Score.PlayerId
                 }
             };
 
@@ -838,10 +886,32 @@ namespace Quaver.Shared.Screens.Results
             });
         }
 
+        /// <summary>
+        /// </summary>
+        public void SetDiscordRichPresence()
+        {
+            try
+            {
+                DiscordHelper.Presence.Details = "Results Screen";
+                DiscordHelper.Presence.State = "In the menus";
+                DiscordHelper.Presence.PartySize = 0;
+                DiscordHelper.Presence.PartyMax = 0;
+                DiscordHelper.Presence.StartTimestamp = 0;
+                DiscordHelper.Presence.EndTimestamp = 0;
+                DiscordHelper.Presence.LargeImageText = OnlineManager.GetRichPresenceLargeKeyText(ConfigManager.SelectedGameMode.Value);
+                DiscordHelper.Presence.SmallImageKey = ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value).ToLower();
+                DiscordHelper.Presence.SmallImageText = ModeHelper.ToLongHand(ConfigManager.SelectedGameMode.Value);
+                DiscordRpc.UpdatePresence(ref DiscordHelper.Presence);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, LogType.Runtime);
+            }
+        }
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override UserClientStatus GetClientStatus() => null;
+        public override UserClientStatus GetClientStatus() => new UserClientStatus(ClientStatus.InMenus, -1, "", 1, "", 0);
     }
 }

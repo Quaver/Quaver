@@ -611,6 +611,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     processor.MaxCombo = mapScores[i].MaxCombo;
                     processor.Score = mapScores[i].TotalScore;
                     processor.PlayerName = mapScores[i].Name;
+                    processor.UserId = mapScores[i].PlayerId;
                     processor.SteamId = (ulong) mapScores[i].SteamId;
 
                     if (judgements.Count == 0)
