@@ -394,20 +394,29 @@ namespace Quaver.Shared.Scripting
         public static bool OpenPopupOnItemClick() => ImGui.OpenPopupOnItemClick();
         public static bool OpenPopupOnItemClick(string str_id) => ImGui.OpenPopupOnItemClick(str_id);
         public static bool OpenPopupOnItemClick(string str_id, int mouse_button) => ImGui.OpenPopupOnItemClick(str_id, mouse_button);
-        public static void PlotHistogram(string label, ref float values, int values_count) => ImGui.PlotHistogram(label, ref values, values_count);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset) => ImGui.PlotHistogram(label, ref values, values_count, values_offset);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset, string overlay_text) => ImGui.PlotHistogram(label, ref values, values_count, values_offset, overlay_text);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min) => ImGui.PlotHistogram(label, ref values, values_count, values_offset, overlay_text, scale_min);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max) => ImGui.PlotHistogram(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGui.PlotHistogram(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
-        public static void PlotHistogram(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGui.PlotHistogram(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
-        public static void PlotLines(string label, ref float values, int values_count) => ImGui.PlotLines(label, ref values, values_count);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset) => ImGui.PlotLines(label, ref values, values_count, values_offset);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset, string overlay_text) => ImGui.PlotLines(label, ref values, values_count, values_offset, overlay_text);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min) => ImGui.PlotLines(label, ref values, values_count, values_offset, overlay_text, scale_min);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max) => ImGui.PlotLines(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGui.PlotLines(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
-        public static void PlotLines(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGui.PlotLines(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+
+        /*
+         * The ImGui.NET repository wrote their code in a way, that requires the reference of the first
+         * element in the array to be given, instead of taking an array, which is what one would usually put.
+         * This is not possible in lua, as references do not exist there. Therefore, the wrapper for the plot
+         * functions has been edited so it passes the reference to the first element to the ImGui function.
+         */
+
+        public static void PlotHistogram(string label, ref float[] values, int values_count) => ImGui.PlotHistogram(label, ref values[0], values_count);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset, string overlay_text) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset, overlay_text);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset, overlay_text, scale_min);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+        public static void PlotHistogram(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGui.PlotHistogram(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+        public static void PlotLines(string label, ref float[] values, int values_count) => ImGui.PlotLines(label, ref values[0], values_count);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset) => ImGui.PlotLines(label, ref values[0], values_count, values_offset);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset, string overlay_text) => ImGui.PlotLines(label, ref values[0], values_count, values_offset, overlay_text);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min) => ImGui.PlotLines(label, ref values[0], values_count, values_offset, overlay_text, scale_min);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max) => ImGui.PlotLines(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGui.PlotLines(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+        public static void PlotLines(string label, ref float[] values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGui.PlotLines(label, ref values[0], values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+
         public static void PopAllowKeyboardFocus() => ImGui.PopAllowKeyboardFocus();
         public static void PopButtonRepeat() => ImGui.PopButtonRepeat();
         public static void PopClipRect() => ImGui.PopClipRect();
