@@ -19,26 +19,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public int SongTime { get; [MoonSharpVisible(false)] set; }
 
         /// <summary>
-        ///     The game mode of the map
-        /// </summary>
-        public GameMode GameMode { get; [MoonSharpVisible(false)] set; }
-
-        /// <summary>
-        ///     The slider velocities present in the map
-        /// </summary>
-        public List<SliderVelocityInfo> ScrollVelocities { get; [MoonSharpVisible(false)] set; }
-
-        /// <summary>
-        ///     The HitObjects that are currently in the map
-        /// </summary>
-        public List<HitObjectInfo> HitObjects { get; [MoonSharpVisible(false)] set; }
-
-        /// <summary>
-        ///     The timing points that are currently in the map
-        /// </summary>
-        public List<TimingPointInfo> TimingPoints { get; [MoonSharpVisible(false)] set; }
-
-        /// <summary>
         ///     The objects that are currently selected by the user
         /// </summary>
         public List<HitObjectInfo> SelectedHitObjects { get; [MoonSharpVisible(false)] set; }
@@ -51,7 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     ImGui options used to set styles/fonts for the window
         /// </summary>
-        [MoonSharpVisible((false))]
+        [MoonSharpVisible(false)]
         private ImGuiOptions Options { get; }
 
         [MoonSharpVisible(false)]
