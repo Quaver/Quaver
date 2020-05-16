@@ -7,15 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using MoonSharp.Interpreter;
-using MoonSharp.Interpreter.Interop;
-using Quaver.API.Enums;
-using Quaver.API.Maps;
-using Quaver.API.Maps.Structures;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Quaver.Shared.Screens.Edit.Plugins
 {
     [MoonSharpUserData]
@@ -52,6 +43,33 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             ScrollVelocities = Map.SliderVelocities; // Original name was SliderVelocities but that name doesn't really make sense
             HitObjects = Map.HitObjects;
         }
+
+        /// <summary>
+        ///     Finds the most common BPM in the current map
+        /// </summary>
+        /// <returns></returns>
+        public float GetCommonBpm() => Map.GetCommonBpm();
+
+        /// <summary>
+        ///     Gets the timing point at a particular time in the current map.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public TimingPointInfo GetTimingPointAt(double time) => Map.GetTimingPointAt(time);
+
+        /// <summary>
+        ///     Gets the scroll velocity at a particular time in the current map
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public SliderVelocityInfo GetScrollVelocityAt(double time) => Map.GetScrollVelocityAt(time);
+
+        /// <summary>
+        ///    Finds the length of a timing point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public double GetTimingPointLength(TimingPointInfo point) => Map.GetTimingPointLength(point);
 
     }
 }
