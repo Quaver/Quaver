@@ -893,7 +893,7 @@ namespace Quaver.Shared.Screens.Gameplay
             return scoreboardUsers;
         }
 
-        private List<ScoreProcessor> GetProcessorsFromScoreboard(Scoreboard scoreboard)
+        public List<ScoreProcessor> GetProcessorsFromScoreboard(Scoreboard scoreboard)
         {
             var processors = new List<ScoreProcessor>();
 

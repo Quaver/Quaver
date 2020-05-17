@@ -1084,7 +1084,7 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public void SetRichPresence()
         {
-            if (IsSongSelectPreview)
+            if (IsSongSelectPreview || (this is TournamentGameplayScreen && InReplayMode))
                 return;
 
             DiscordHelper.Presence.Details = Map.ToString();
