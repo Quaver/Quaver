@@ -4,12 +4,14 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Common.Objects;
 using Quaver.Server.Common.Objects.Multiplayer;
 using Quaver.Shared.Audio;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
@@ -18,6 +20,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Input;
 using Quaver.Shared.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Result;
+using Quaver.Shared.Screens.Results;
 using Quaver.Shared.Screens.Tournament.Gameplay;
 using Wobble;
 using Wobble.Input;
@@ -242,7 +245,34 @@ namespace Quaver.Shared.Screens.Tournament
             if (!Exiting)
             {
                 if (GameplayScreens.All(x => x.IsPlayComplete))
-                    Exit(() => new ResultScreen(MainGameplayScreen));
+                {
+                    var processors = new List<ScoreProcessor>();
+
+                    for (var i = 0; i < GameplayScreens.Count; i++)
+                    {
+                        var screen = GameplayScreens[i];
+
+                        switch (TournamentType)
+                        {
+                            case TournamentScreenType.Replay:
+                                screen.Ruleset.ScoreProcessor.PlayerName = screen.LoadedReplay.PlayerName;
+                                screen.Ruleset.ScoreProcessor.SteamId = 0;
+                                break;
+                            case TournamentScreenType.Spectator:
+                                break;
+                            case TournamentScreenType.Coop:
+                                screen.Ruleset.ScoreProcessor.PlayerName = $"Player {i + 1}";
+                                screen.Ruleset.ScoreProcessor.SteamId = 0;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
+                        processors.Add(screen.Ruleset.ScoreProcessor);
+                    }
+
+                    Exit(() => new ResultsScreen(MainGameplayScreen, new MultiplayerGame(), processors, new List<ScoreProcessor>()));
+                }
             }
         }
 
@@ -299,8 +329,14 @@ namespace Quaver.Shared.Screens.Tournament
 
             try
             {
-                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete) || !OnlineManager.CurrentGame.InProgress && hasNoFrames || matchEndedPrematurely))
-                    Exit(() => new ResultScreen(MainGameplayScreen, GetScoreboardUsers()));
+                var view = (GameplayScreenView) MainGameplayScreen.View;
+
+                if (!Exiting && (GameplayScreens.All(x => x.IsPlayComplete) ||
+                                 !OnlineManager.CurrentGame.InProgress && hasNoFrames || matchEndedPrematurely))
+                {
+                    Exit(() => new ResultsScreen(MainGameplayScreen, OnlineManager.CurrentGame,
+                        view.GetProcessorsFromScoreboard(view.ScoreboardLeft), view.GetProcessorsFromScoreboard(view.ScoreboardRight)));
+                }
             }
             catch (Exception e)
             {

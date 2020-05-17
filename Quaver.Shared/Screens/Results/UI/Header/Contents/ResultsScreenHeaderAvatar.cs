@@ -45,7 +45,16 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
                     steamId = SteamUser.GetSteamID().m_SteamID;
 
                 if (steamId != 0 && SteamManager.UserAvatarsLarge.ContainsKey(steamId))
-                    Avatar.AvatarSprite.Image = SteamManager.UserAvatarsLarge[steamId];
+                {
+                    var tex = SteamManager.UserAvatarsLarge[steamId];
+
+                    if (tex != UserInterface.UnknownAvatar && SteamManager.UserAvatarsLarge.ContainsKey(steamId))
+                        Avatar.AvatarSprite.Image = tex;
+                    else if (tex == UserInterface.UnknownAvatar && SteamManager.UserAvatars.ContainsKey(steamId))
+                        Avatar.AvatarSprite.Image = SteamManager.UserAvatars[steamId];
+                    else
+                        Avatar.AvatarSprite.Image = UserInterface.UnknownAvatar;
+                }
             }
         }
     }
