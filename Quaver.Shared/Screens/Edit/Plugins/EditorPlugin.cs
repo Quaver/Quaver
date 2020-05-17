@@ -39,6 +39,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public bool IsBuiltIn { get; set; }
 
+        public EditorPluginMap EditorPluginMap { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -55,6 +57,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             Author = author;
             Description = description;
             IsBuiltIn = isResource;
+
+            EditorPluginMap = new EditorPluginMap();
 
             UserData.RegisterType<GameMode>();
             UserData.RegisterType<HitSounds>();
@@ -79,16 +83,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             WorkingScript.Globals["time_signature"] = typeof(TimeSignature);
             WorkingScript.Globals["actions"] = Editor.ActionManager.PluginActionManager;
 
-            var state = (EditorPluginState) State;
+            var state = (EditorPluginState)State;
 
-            state.SongTime = (int) Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
-            state.GameMode = Editor.WorkingMap.Mode;
+            state.SongTime = (int)Math.Round(Editor.Track.Time, MidpointRounding.AwayFromZero);
             state.UnixTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            state.ScrollVelocities = Editor.WorkingMap.SliderVelocities;
-            state.HitObjects = Editor.WorkingMap.HitObjects;
-            state.TimingPoints = Editor.WorkingMap.TimingPoints;
             state.SelectedHitObjects = Editor.SelectedHitObjects.Value;
             state.CurrentTimingPoint = Editor.WorkingMap.GetTimingPointAt(state.SongTime);
+
+            EditorPluginMap.Map = Editor.WorkingMap;
+            EditorPluginMap.SetFrameState();
+            WorkingScript.Globals["map"] = EditorPluginMap;
 
             base.SetFrameState();
 

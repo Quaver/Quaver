@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
-using osu_database_reader.Components.HitObjects;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Quaver.Shared.Helpers;
 using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Edit.Plugins
@@ -72,6 +72,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <param name="time"></param>
         /// <returns></returns>
         public static string MillisecondsToTime(float time) => TimeSpan.FromMilliseconds(time).ToString(@"mm\:ss\.fff");
+
+        public static void OpenUrl(string url, bool forceNormalBrowser = false) => BrowserHelper.OpenURL(url, forceNormalBrowser);
 
         public static bool IsKeyPressed(Keys k) => KeyboardManager.IsUniqueKeyPress(k);
 
