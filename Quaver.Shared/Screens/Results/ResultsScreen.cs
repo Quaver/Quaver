@@ -272,7 +272,13 @@ namespace Quaver.Shared.Screens.Results
 
         /// <summary>
         /// </summary>
-        public void RetryMap() => Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+        public void RetryMap()
+        {
+            if (ModManager.IsActivated(ModIdentifier.Coop))
+                ModManager.RemoveMod(ModIdentifier.Coop);
+
+            Exit(() => new MapLoadingScreen(MapManager.Selected.Value.Scores.Value));
+        }
 
         /// <summary>
         /// </summary>
