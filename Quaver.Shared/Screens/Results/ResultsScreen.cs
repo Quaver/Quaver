@@ -425,7 +425,7 @@ namespace Quaver.Shared.Screens.Results
             var newOffset = (int) Math.Round(Map.LocalOffset - change);
 
             var dialog = new YesNoDialog("FIX LOCAL OFFSET",
-                $"Your local offset for this map will be changed from {Map.LocalOffset} ms to {newOffset} ms...", () =>
+                $"Your local offset for this map will be changed from {Map.LocalOffset} ms to {newOffset} ms.", () =>
                 {
                     Map.LocalOffset = newOffset;
                     MapDatabaseCache.UpdateMap(Map);
