@@ -827,7 +827,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         public void UpdateCurrentTrackPosition()
         {
             // Use necessary visual offset
-            CurrentAudioPosition = Ruleset.Screen.Timing.Time + ConfigManager.GlobalAudioOffset.Value * AudioEngine.Track.Rate - MapManager.Selected.Value.LocalOffset;
+            CurrentAudioPosition = Ruleset.Screen.Timing.Time + (ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.Value.LocalOffset) * AudioEngine.Track.Rate; 
 
             // Update SV index if necessary. Afterwards update Position.
             while (CurrentSvIndex < Map.SliderVelocities.Count && CurrentAudioPosition + ConfigManager.VisualOffset.Value * AudioEngine.Track.Rate >= Map.SliderVelocities[CurrentSvIndex].StartTime)
